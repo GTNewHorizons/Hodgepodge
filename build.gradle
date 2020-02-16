@@ -34,24 +34,46 @@ targetCompatibility = 1.8
 
 minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"
-    runDir = "eclipse"
     mappings = "stable_12"
+}
+
+configurations {
+    // configuration that holds jars to include in the jar
+    shade
+}
+
+def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + "mixins.hodgepodge.refmap.json"
+
+
+dependencies {
+    //noinspection GroovyAssignabilityCheck
+    shade implementation('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
+        // Mixin includes a lot of dependencies that are too up-to-date
+        exclude module: 'launchwrapper'
+        exclude module: 'guava'
+        exclude module: 'gson'
+        exclude module: 'commons-io'
+        exclude module: 'log4j-core'
+    }
 }
 
 
 jar {
-    manifest.attributes(
-            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
-            "MixinConfigs": "mixins.hodgepodge.json",
-            "ForceLoadAsMod": true,
-            "MixinCompatibilityLevel": "JAVA_8",
-            "FMLCorePluginContainsFMLMod": "true",
-            "FMLAT": "hodgepodge_at.cfg"
-    )
-}
+    appendix = minecraft.version
 
-dependencies {
-    compile group: "org.spongepowered", name: "mixin", version: "0.7.11-SNAPSHOT", changing: true
+    from refMap
+    configurations.shade.copyRecursive().setTransitive(false).each { artifact ->
+        from (zipTree(artifact))
+    }
+
+    manifest.attributes(
+        "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+        "MixinConfigs": "mixins.hodgepodge.json",
+        "ForceLoadAsMod": true,
+        "MixinCompatibilityLevel": "JAVA_8",
+        "FMLCorePluginContainsFMLMod": "true",
+        "FMLAT": "hodgepodge_at.cfg"
+    )
 }
 
 processResources
@@ -77,8 +99,21 @@ processResources
     }
 }
 
-idea { module { inheritOutputDirs = true } }
+def mixinSrg = "${tasks.reobf.temporaryDir}" + File.separator + "mixins.srg"
+
+reobf {
+    addExtraSrgFile mixinSrg
+}
+
+afterEvaluate {
+    tasks.compileJava.options.compilerArgs += ["-AreobfSrgFile=${tasks.reobf.srg}", "-AoutSrgFile=${mixinSrg}", "-AoutRefMapFile=${refMap}"]
+}
 
 sourceSets {
-    main { output.resourcesDir = output.classesDir }
+    main {
+        output.resourcesDir = output.classesDir
+        ext.refMap = "mixins.hodgepodge.refmap.json"
+    }
 }
+
+idea { module { inheritOutputDirs = true } }

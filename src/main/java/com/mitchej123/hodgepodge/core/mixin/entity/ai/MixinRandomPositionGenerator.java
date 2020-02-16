@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 public class MixinRandomPositionGenerator {
     /**
      * @author mitchej123
+     * @reason Fix north/west bias
      */
     @Overwrite()
     private static Vec3 findRandomTargetBlock(EntityCreature p_75462_0_, int p_75462_1_, int p_75462_2_, Vec3 p_75462_3_) {
