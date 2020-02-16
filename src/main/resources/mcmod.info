@@ -1,14 +1,14 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+  "modid": "hodgepodge",
+  "name": "Hodgepodge",
+  "description": "A Hodgepodge of patches",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "authorList": ["mitchej123"],
+  "credits": "",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
