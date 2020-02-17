@@ -67,8 +67,8 @@ jar {
     }
 
     manifest.attributes(
+        "FMLCorePlugin": "com.mitchej123.hodgepodge.core.HodgepodgeLoadingPlugin",
         "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
-        "MixinConfigs": "mixins.hodgepodge.json",
         "ForceLoadAsMod": true,
         "MixinCompatibilityLevel": "JAVA_8",
         "FMLCorePluginContainsFMLMod": "true",

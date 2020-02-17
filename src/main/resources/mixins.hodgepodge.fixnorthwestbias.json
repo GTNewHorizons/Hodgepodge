@@ -1,5 +1,6 @@
 {
-  "package": "com.mitchej123.hodgepodge.core.mixin",
+  "package": "com.mitchej123.hodgepodge.fixnorthwestbias.mixins",
+  "plugin": "com.mitchej123.hodgepodge.core.HodgepodgeMixinPlugin",
   "refmap": "mixins.hodgepodge.refmap.json",
   "target": "@env(DEFAULT)",
   "minVersion": "0.5.10",

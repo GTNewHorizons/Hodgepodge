@@ -9,5 +9,5 @@
 
 If running in dev add the following arguments: 
 ```
---tweakClass org.spongepowered.asm.launch.MixinTweaker --mixin mixins.hodgepodge.json
+-Dfml.coreMods.load=com.mitchej123.hodgepodge.core.HodgepodgeLoadingPlugin
 ```

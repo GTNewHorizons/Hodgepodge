@@ -5,7 +5,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 
-@Mod(modid = Hodgepodge.MODID, version = Hodgepodge.VERSION, name= Hodgepodge.NAME)
+@Mod(modid = Hodgepodge.MODID, version = Hodgepodge.VERSION, name = Hodgepodge.NAME, acceptableRemoteVersions = "*")
 public class Hodgepodge
 {
 

@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.core.mixin.entity.ai;
+package com.mitchej123.hodgepodge.fixnorthwestbias.mixins.entity.ai;
 
 import com.mitchej123.hodgepodge.XSTR;
 import net.minecraft.entity.EntityCreature;
