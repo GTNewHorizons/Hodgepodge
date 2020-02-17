@@ -1,7 +1,7 @@
 # A Hodgepodge of Fixes
 
 ## Fixes:
-* RandomPositionGenerator - Backports removal of the North/West bias [WIP]
+* RandomPositionGenerator - Backports removal of the North/West bias
 
 
 ## Running
