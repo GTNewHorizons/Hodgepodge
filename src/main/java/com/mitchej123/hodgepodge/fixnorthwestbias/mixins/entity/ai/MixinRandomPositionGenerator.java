@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.fixnorthwestbias.mixins.entity.ai;
 
-import com.mitchej123.hodgepodge.XSTR;
+import com.mitchej123.hodgepodge.Hodgepodge;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.util.MathHelper;
@@ -10,33 +10,33 @@ import org.spongepowered.asm.mixin.Overwrite;
 
 @Mixin(RandomPositionGenerator.class)
 public class MixinRandomPositionGenerator {
-    private static XSTR RNG = new XSTR();
     /**
      * @author mitchej123
-     * @reason Fix north/west bias
+     * @reason Backported fix north/west bias
      */
     @Overwrite()
     private static Vec3 findRandomTargetBlock(EntityCreature entityCreature, int hor, int ver, Vec3 facing) {
         boolean found = false;
-        double tx = 0;
-        double ty = 0;
-        double tz = 0;
+        double tx = 0, ty = 0, tz = 0;
         float bestValue = -99999.0F;
         boolean tooFar = false;
 
         if (entityCreature.hasHome()) {
-            final double d0 = entityCreature.getHomePosition().getDistanceSquared(MathHelper.floor_double(entityCreature.posX), MathHelper.floor_double(entityCreature.posY), MathHelper.floor_double(entityCreature.posZ)) + 4.0F;
+            final double d0 = entityCreature.getHomePosition().getDistanceSquared(
+                MathHelper.floor_double(entityCreature.posX),
+                MathHelper.floor_double(entityCreature.posY),
+                MathHelper.floor_double(entityCreature.posZ)) + 4.0F;
             final double d1 = entityCreature.getMaximumHomeDistance() + (double) hor;
             tooFar = d0 < d1 * d1;
         }
 
         for (int i = 0; i < 10; ++i) {
-            final int x1 = RNG.nextInt(2 * hor) - hor;
-            final int y1 = RNG.nextInt(2 * ver) - ver;
-            final int z1 = RNG.nextInt(2 * hor) - hor;
+            final int x1 = Hodgepodge.RNG.nextInt(2 * hor + 1) - hor;
+            final int y1 = Hodgepodge.RNG.nextInt(2 * ver + 1) - ver;
+            final int z1 = Hodgepodge.RNG.nextInt(2 * hor + 1) - hor;
 
             if (facing == null || (double) x1 * facing.xCoord + (double) z1 * facing.zCoord >= 0.0D) {
-                // Use the rounded coordinates for comparision
+                // Use the rounded coordinates for comparision since `isWithinHomeDistance` takes int params
                 final int x2 = x1 + MathHelper.floor_double(entityCreature.posX);
                 final int y2 = y1 + MathHelper.floor_double(entityCreature.posY);
                 final int z2 = z1 + MathHelper.floor_double(entityCreature.posZ);

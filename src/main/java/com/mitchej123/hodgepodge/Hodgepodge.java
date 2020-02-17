@@ -12,7 +12,8 @@ public class Hodgepodge
     public static final String MODID = "hodgepodge";
     public static final String VERSION = "1.0";
     public static final String NAME = "A Hodgepodge of Patches";
-    
+    public static XSTR RNG = new XSTR();
+
     @EventHandler
     public void init(FMLInitializationEvent event)
     {

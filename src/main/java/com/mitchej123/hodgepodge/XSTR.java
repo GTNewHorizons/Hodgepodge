@@ -218,7 +218,7 @@ public class XSTR extends Random {
         last ^= (last >>> 35);
         last ^= (last << 4);
         seed = last;
-        int out = (int) last % bound;
+        final int out = (int) last % bound;
         return (out < 0) ? -out : out;
     }
 
