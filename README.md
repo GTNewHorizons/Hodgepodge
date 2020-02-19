@@ -2,7 +2,7 @@
 
 ## Fixes:
 * RandomPositionGenerator - Backports removal of the North/West bias
-
+* FixGrassChunkLoads - Stops grass tick/spread from loading chunks
 
 ## Running
 
