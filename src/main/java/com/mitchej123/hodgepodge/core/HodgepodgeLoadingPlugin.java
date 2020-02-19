@@ -59,7 +59,7 @@ public class HodgepodgeLoadingPlugin implements IFMLLoadingPlugin {
         MixinBootstrap.init();
 
         if (config.fixNorthWestBias) initPlugin("Fix Northwest Bias", "mixins.hodgepodge.fixnorthwestbias.json");
-
+        if (config.fixGrassChunkLoads) initPlugin("Fix Grass loading chunks", "mixins.hodgepodge.fixgrasschunkloads.json");
     }
 
     public static void initPlugin(String name, String plugin) {
