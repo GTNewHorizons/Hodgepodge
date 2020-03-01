@@ -1,0 +1,12 @@
+{
+  "package": "com.mitchej123.hodgepodge.fixic2directinventoryaccess.mixins",
+  "plugin": "com.mitchej123.hodgepodge.core.HodgepodgeMixinPlugin",
+  "refmap": "mixins.hodgepodge.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.7.11",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "core.item.MixinItemCropSeed",
+    "core.crop.MixinTileEntityCrop"
+  ]
+}
