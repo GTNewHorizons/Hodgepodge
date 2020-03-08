@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.Mixins;
+
 import sun.misc.URLClassPath;
 
 import java.io.File;
@@ -39,6 +40,7 @@ public class HodgepodgeLoadingPlugin implements IFMLLoadingPlugin {
         givePriorityInClasspath(url, (URLClassLoader) ClassLoader.getSystemClassLoader());
     }
 
+    @SuppressWarnings("sunapi")    
     private static void givePriorityInClasspath(URL url, URLClassLoader classLoader) {
         try {
             Field ucpField = URLClassLoader.class.getDeclaredField("ucp");
@@ -60,6 +62,7 @@ public class HodgepodgeLoadingPlugin implements IFMLLoadingPlugin {
 
         if (config.fixNorthWestBias) initPlugin("Fix Northwest Bias", "mixins.hodgepodge.fixnorthwestbias.json");
         if (config.fixGrassChunkLoads) initPlugin("Fix Grass loading chunks", "mixins.hodgepodge.fixgrasschunkloads.json");
+        if (config.fixFenceConnections) initPlugin("Fix Fence Connections", "mixins.hodgepodge.fixfenceconnections.json");
         if (config.fixIc2DirectInventoryAccess) initPlugin("Fix IC2 direct inventory access", "mixins.hodgepodge.fixic2directinventoryaccess.json");
     }
 

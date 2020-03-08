@@ -31,7 +31,7 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'forge'
 
-version = "1.2.0"
+version = "1.3.0"
 group= "com.mitchej123.hodgepodge" 
 archivesBaseName = "hodgepodge"
 sourceCompatibility = 1.8
@@ -125,6 +125,7 @@ afterEvaluate {
             // So as a hacky workaround... ship with 0.7.11, but use the AP from 0.8 for compiling    
             "-processorpath", "./ap/mixin-0.8-SNAPSHOT.jar",
             "-processor", "org.spongepowered.tools.obfuscation.MixinObfuscationProcessorInjection,org.spongepowered.tools.obfuscation.MixinObfuscationProcessorTargets",
+            "-Xlint:-sunapi", "-XDenableSunApiLintControl", "-XDignore.symbol.file",
             "-AreobfSrgFile=${tasks.reobf.srg}", "-AoutSrgFile=${mixinSrg}", "-AoutRefMapFile=${refMap}"
         ]
     }
