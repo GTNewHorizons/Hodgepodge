@@ -9,7 +9,7 @@
 ## Running
 
 
-If running in dev add the following arguments: 
+If running in dev add the following Program arguments: 
 ```
--Dfml.coreMods.load=com.mitchej123.hodgepodge.core.HodgepodgeLoadingPlugin
+--tweakClass org.spongepowered.asm.launch.MixinTweaker --mixin mixins.hodgepodge.json
 ```
