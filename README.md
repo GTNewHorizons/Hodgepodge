@@ -1,5 +1,7 @@
 # A Hodgepodge of Fixes
 
+Requires SpongeMixins mod (https://github.com/GTNewHorizons/SpongeMixins) to work.
+
 ## Fixes:
 * RandomPositionGenerator - Backports removal of the North/West bias
 * FixGrassChunkLoads - Stops grass tick/spread from loading chunks
