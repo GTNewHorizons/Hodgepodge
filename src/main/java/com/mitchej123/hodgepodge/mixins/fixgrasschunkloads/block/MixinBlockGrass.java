@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.fixgrasschunkloads.mixins.block;
+package com.mitchej123.hodgepodge.mixins.fixgrasschunkloads.block;
 
 import net.minecraft.block.BlockGrass;
 import net.minecraft.world.World;

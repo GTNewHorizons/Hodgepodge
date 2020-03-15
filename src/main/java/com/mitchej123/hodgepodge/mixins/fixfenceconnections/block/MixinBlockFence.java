@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.fixfenceconnections.mixins.block;
+package com.mitchej123.hodgepodge.mixins.fixfenceconnections.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
@@ -17,7 +17,7 @@ public class MixinBlockFence {
     public boolean canConnectFenceTo(IBlockAccess world, int x, int y, int z) {
         Block block = world.getBlock(x, y, z);
         return block == (BlockFence)(Object) this
-            || block instanceof net.minecraft.block.BlockFence && block.blockMaterial == ((BlockFence)(Object)this).blockMaterial
+            || block instanceof BlockFence && block.blockMaterial == ((BlockFence)(Object)this).blockMaterial
             || block instanceof net.minecraft.block.BlockFenceGate
             || block.blockMaterial.isOpaque() && block.renderAsNormalBlock() && block.blockMaterial != Material.gourd;
     }

@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.fixic2directinventoryaccess.mixins.core.item;
+package com.mitchej123.hodgepodge.mixins.fixic2directinventoryaccess.item;
 
 import ic2.core.item.ItemCropSeed;
 import net.minecraft.entity.player.EntityPlayer;

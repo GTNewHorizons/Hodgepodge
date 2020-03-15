@@ -5,10 +5,10 @@ import net.minecraftforge.common.config.Configuration;
 import java.io.File;
 
 public class LoadingConfig {
-    public boolean fixNorthWestBias = true;
-    public boolean fixGrassChunkLoads = true;
-    public boolean fixFenceConnections = true;
-    public boolean fixIc2DirectInventoryAccess =  true;
+    public boolean fixNorthWestBias;
+    public boolean fixGrassChunkLoads;
+    public boolean fixFenceConnections;
+    public boolean fixIc2DirectInventoryAccess;
     public static Configuration config;
 
     public LoadingConfig(File file) {

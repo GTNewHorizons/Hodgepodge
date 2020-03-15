@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.fixnorthwestbias.mixins.entity.ai;
+package com.mitchej123.hodgepodge.mixins.fixnorthwestbias.entity.ai;
 
 import com.mitchej123.hodgepodge.Hodgepodge;
 import net.minecraft.entity.EntityCreature;
@@ -23,10 +23,10 @@ public class MixinRandomPositionGenerator {
 
         if (entityCreature.hasHome()) {
             final double d0 = entityCreature.getHomePosition().getDistanceSquared(
-                MathHelper.floor_double(entityCreature.posX),
-                MathHelper.floor_double(entityCreature.posY),
-                MathHelper.floor_double(entityCreature.posZ)) + 4.0F;
-            final double d1 = entityCreature.getMaximumHomeDistance() + (double) hor;
+                    MathHelper.floor_double(entityCreature.posX),
+                    MathHelper.floor_double(entityCreature.posY),
+                    MathHelper.floor_double(entityCreature.posZ)) + 4.0F;
+            final double d1 = entityCreature.func_110174_bM()/*getMaximumHomeDistance()*/ + (double) hor;
             tooFar = d0 < d1 * d1;
         }
 
