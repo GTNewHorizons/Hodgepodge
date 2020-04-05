@@ -17,10 +17,21 @@ import java.util.function.Supplier;
 public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
     private static final Logger log = LogManager.getLogger("Hodgepodge");
     public static LoadingConfig config;
+    public static boolean thermosTainted;
 
     static {
         log.info("Initializing Hodgepodge");
         config = new LoadingConfig(new File(Launch.minecraftHome, "config/hodgepodge.cfg"));
+        log.info("Looking for Thermos/Bukkit taint.");
+        try {
+            Class.forName("org.bukkit.World");
+            thermosTainted = true;
+            log.warn("Thermos/Bukkit detected; This is an unsupported configuration -- Things may not function properly. (I'm looking to you, Kane)");
+        } catch (ClassNotFoundException e) {
+            thermosTainted = false;
+            log.info("Thermos/Bukkit NOT detected :-D");
+        }
+
     }
 
     @Override
@@ -68,7 +79,7 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
                 () -> config.fixFenceConnections,
                 "fixfenceconnections.block.MixinBlockFence"),
         GRASS_CHUNK_LOADING_FIX("Grass loads chunks Fix",
-                () -> config.fixGrassChunkLoads,
+                () -> (config.fixGrassChunkLoads && !thermosTainted),
                 "fixgrasschunkloads.block.MixinBlockGrass"),
         NORTHWEST_BIAS_FIX("Northwest Bias Fix",
                 () -> config.fixNorthWestBias,
