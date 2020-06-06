@@ -12,24 +12,29 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath group: 'com.google.guava', name: 'guava', version: '24.1.1-jre'
     }
 }
 
-apply plugin: 'java'
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.3.50"
+    id "org.jetbrains.kotlin.kapt" version "1.3.50"
+}
+
 apply plugin: 'idea'
 apply plugin: 'forge'
 
+
 repositories {
     maven {
-        // IC2
-        name = "ic2"
-        url = "http://maven.ic2.player.to/"
+        name = "gt"
+        url = "https://gregtech.overminddl1.com/"
     }
 }
 
-version = "1.4.1"
-group = "com.mitchej123.hodgepodge"
-archivesBaseName = "hodgepodge"
+version = "0.0.1"
+group = "com.github.bartimaeusnek.modmixins"
+archivesBaseName = "modmixins"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -46,16 +51,14 @@ configurations {
 }
 
 dependencies {
-    provided "net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev"
+    compileOnly "mods.railcraft:Railcraft_1.7.10:9.12.3.0:dev"
+    compile "net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev"
+    compileOnly "thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev"
+    compileOnly "com.azanor.baubles:Baubles:1.7.10-1.0.1.10:deobf"
 }
-
 
 jar {
     appendix = minecraft.version
-
-    manifest.attributes(
-            "FMLAT": "hodgepodge_at.cfg"
-    )
 }
 
 processResources {
@@ -80,14 +83,15 @@ processResources {
     }
 }
 
-idea { module { inheritOutputDirs = true } }
+idea.module.downloadJavadoc = true
+idea.module.downloadSources = true
+idea.module.inheritOutputDirs = true
 
 //##########################################################################################################
 //########################################    Mixin  Part   ################################################
 //##########################################################################################################
-def yourMixinConfig = 'mixins.hodgepodge.json'
-def refMapForYourConfig = 'mixins.hodgepodge.refmap.json'
-def relativePathToMixinAP = 'tools/mixin-0.8-SNAPSHOT.jar'
+def yourMixinConfig = 'mixins.modmixins.json'
+//def refMapForYourConfig = 'mixins.modmixins.refmap.json'
 
 repositories {
     maven {
@@ -97,6 +101,15 @@ repositories {
 }
 
 dependencies {
+    kapt(group: 'com.google.guava', name: 'guava', version: '24.1.1-jre')
+    kapt('org.spongepowered:mixin:0.8-SNAPSHOT') {
+        // Mixin includes a lot of dependencies that are too up-to-date
+        exclude module: 'launchwrapper'
+        exclude module: 'guava'
+        exclude module: 'gson'
+        exclude module: 'commons-io'
+        exclude module: 'log4j-core'
+    }
     compile('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
         // Mixin includes a lot of dependencies that are too up-to-date
         exclude module: 'launchwrapper'
@@ -107,49 +120,40 @@ dependencies {
     }
 }
 
-def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + refMapForYourConfig
-
-def mixinSrg = "${tasks.reobf.temporaryDir}" + File.separator + "mixins.srg"
+//def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + refMapForYourConfig
+//
+//def mixinSrg = "${tasks.reobf.temporaryDir}" + File.separator + "mixins.srg"
 
 jar {
-    from refMap
+//    from refMap
     manifest {
         attributes.put("TweakClass", "org.spongepowered.asm.launch.MixinTweaker")
-        attributes.put("FMLCorePluginContainsFMLMod", true)
-        attributes.put("ForceLoadAsMod", true)
+        //attributes.put("FMLCorePluginContainsFMLMod", true)
+        //attributes.put("ForceLoadAsMod", true)
         attributes.put("MixinConfigs", yourMixinConfig)
     }
 }
 
+kapt {
+    correctErrorTypes = true
+    includeCompileClasspath = false
+}
+/*
 reobf {
     addExtraSrgFile mixinSrg
 }
-
+*/
 afterEvaluate {
-    def fixedRelPathToAP = relativePathToMixinAP
-    if(fixedRelPathToAP.startsWith('./') || fixedRelPathToAP.startsWith('.\\')){
-        fixedRelPathToAP = fixedRelPathToAP.substring(2)
-    } else if(fixedRelPathToAP.startsWith('/') || fixedRelPathToAP.startsWith('\\')){
-        fixedRelPathToAP = fixedRelPathToAP.substring(1)
-    }
-
-    tasks.compileJava {
-        println "Path: " + projectDir.absolutePath
-        options.compilerArgs += [
-                // There's a bug in the AnnotationProcessor for 0.7.11 that will generate the annotations pointing to the parent class instead of subclass
-                // resulting in the mixin not being applied.  This is fixed in 0.8, however 0.8 needs guava > 21.0, and minecraft ships with 17.0.
-                // So as a hacky workaround... ship with 0.7.11, but use the AP from 0.8 for compiling
-                "-processorpath", projectDir.absolutePath + '/' + fixedRelPathToAP,
-                "-processor", "org.spongepowered.tools.obfuscation.MixinObfuscationProcessorInjection,org.spongepowered.tools.obfuscation.MixinObfuscationProcessorTargets",
-                "-Xlint:-sunapi", "-XDenableSunApiLintControl", "-XDignore.symbol.file",
-                "-AreobfSrgFile=${tasks.reobf.srg}", "-AoutSrgFile=${mixinSrg}", "-AoutRefMapFile=${refMap}"
-        ]
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+		kotlinOptions {
+            jvmTarget = '1.8'
+        }
     }
 }
 
-sourceSets {
-    main {
-        output.resourcesDir = output.classesDir
-        ext.refMap = refMapForYourConfig
-    }
-}
+//sourceSets {
+//    main {
+//        output.resourcesDir = output.classesDir
+//        ext.refMap = refMapForYourConfig
+//    }
+//}
