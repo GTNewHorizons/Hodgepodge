@@ -1,16 +1,16 @@
 [
-  {
-    "modid": "modmixins",
-    "name": "Mod Mixins",
-    "description": "Mixins for Mods",
-    "version": "${version}",
-    "mcversion": "${mcversion}",
-    "url": "",
-    "updateUrl": "",
-    "authorList": ["bartimaeusnek"],
-    "credits": "mitchej123 for Hodgepodge",
-    "logoFile": "",
-    "screenshots": [],
-    "dependencies": ["required-after: forgelin;required-after: spongemixins@[1.1.0,);"]
-  }
+{
+  "modid": "hodgepodge",
+  "name": "Hodgepodge",
+  "description": "A Hodgepodge of patches",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["mitchej123"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
 ]

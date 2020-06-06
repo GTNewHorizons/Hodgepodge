@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "minVersion": "0.7.11",
+  "package": "com.mitchej123.hodgepodge.mixins",
+  "plugin": "com.mitchej123.hodgepodge.core.HodgepodgeMixinPlugin",
+  "refmap": "mixins.hodgepodge.refmap.json",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8"
+}
