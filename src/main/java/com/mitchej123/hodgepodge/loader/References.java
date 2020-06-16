@@ -5,14 +5,17 @@ import com.mitchej123.hodgepodge.loader.util.ClassRef;
 public class References {
 
     public static ClassRef cIBlockAccess, cBlockDoublePlant;
-    public static ClassRef gt_API;
     public static ClassRef cHogClient, cRenderBlocks, cBlock;
     public static ClassRef bopFoliageRenderer;
+    public static ClassRef gt_PollutionRenderer;
 
     static
     {
-        gt_API = new ClassRef("gregtech.api.GregTech_API");
-        gt_API.addMethod("getClientPollutionAt", ClassRef.INT, ClassRef.INT, ClassRef.INT);
+        gt_PollutionRenderer = new ClassRef("gregtech.common.render.GT_PollutionRenderer");
+        gt_PollutionRenderer.addMethod("colorGrass", ClassRef.INT, ClassRef.INT, ClassRef.INT, ClassRef.INT);
+        gt_PollutionRenderer.addMethod("colorLeaves", ClassRef.INT, ClassRef.INT, ClassRef.INT, ClassRef.INT);
+        gt_PollutionRenderer.addMethod("colorLiquid", ClassRef.INT, ClassRef.INT, ClassRef.INT, ClassRef.INT);
+        gt_PollutionRenderer.addMethod("colorFoliage", ClassRef.INT, ClassRef.INT, ClassRef.INT, ClassRef.INT);
 
         cHogClient = new ClassRef("com.mitchej123.hodgepodge.core.HodgePodgeClient");
         cIBlockAccess = new ClassRef("net.minecraft.world.IBlockAccess", "ahl");

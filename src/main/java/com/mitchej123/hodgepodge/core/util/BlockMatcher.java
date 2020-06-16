@@ -34,6 +34,7 @@ public class BlockMatcher {
 		whiteList.clear();
 		blackList.clear();
 		for (String line : cfg) {
+			Hodgepodge.log.info("Checking for block:" + line);
 			String[] lines = line.split(":");
 			ColorOverrideType type = null;
 			if (lines.length > 1) {
@@ -48,6 +49,7 @@ public class BlockMatcher {
 			if(lines[0].startsWith("-")) {
 				try {
 					blackList.add(Class.forName(lines[0].substring(1)));
+					Hodgepodge.log.info("\t added blacklist:" + lines[0].substring(1));
 				} catch (ClassNotFoundException ignored) {
 				}
 			}
@@ -59,6 +61,7 @@ public class BlockMatcher {
 
 				try {
 					whiteList.put(Class.forName(lines[0]), type);
+					Hodgepodge.log.info("\t added whitelist:" + lines[0]);
 				} catch (ClassNotFoundException ignored) {}
 			}
 		}

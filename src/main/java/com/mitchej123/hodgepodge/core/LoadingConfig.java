@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.core;
 
 import com.mitchej123.hodgepodge.core.util.BlockMatcher;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
@@ -30,47 +31,51 @@ public class LoadingConfig {
             config.save();
     }
 
-    public void postInitClient() {
+    public static void postInitClient() {
         //need to be done later cause it initializes classes
-        config.getCategory("pollutionrecolor").clear();
-        if (!FMLLaunchHandler.side().name().equals("SERVER")) {
-            config.getCategory("Color by pollution").setComment(
-                    "Blocks that should be colored by pollution. \n" +
-                    "\tGrouped by the render type. \n" +
-                    "\tFormat: [BlockClass]:[colortype] \n" +
-                    "\tValid types: GRASS, LEAVES, FLOWERS, LIQUID \n" +
-                    "\tAdd [-] first to blacklist.");
-            standardBlocks.updateClassList(config.get("pollutionrecolor", "renderStandardBlock",
-                    new String[]{
-                            "net.minecraft.block.BlockGrass:GRASS",
-                            "net.minecraft.block.BlockLeavesBase:LEAVES",
-                            "biomesoplenty.common.blocks.BlockOriginGrass:GRASS",
-                            "biomesoplenty.common.blocks.BlockLongGrass:GRASS",
-                            "biomesoplenty.common.blocks.BlockNewGrass:GRASS",
-                            "tconstruct.blocks.slime.SlimeGrass:GRASS",
-                            "thaumcraft.common.blocks.BlockMagicalLeaves:LEAVES",
-                    }).getStringList());
-            liquidBlocks.updateClassList(config.get("pollutionrecolor", "renderBlockLiquid",
-                    new String[]{
-                            "net.minecraft.block.BlockLiquid:LIQUID",
-                    }).getStringList());
-            doublePlants.updateClassList(config.get("pollutionrecolor", "renderBlockDoublePlant",
-                    new String[]{
-                            "net.minecraft.block.BlockDoublePlant:FLOWER",
-                    }).getStringList());
-            crossedSquares.updateClassList(config.get("pollutionrecolor", "renderCrossedSquares",
-                    new String[]{
-                            "net.minecraft.block.BlockTallGrass:FLOWER",
-                            "net.minecraft.block.BlockFlower:FLOWER",
-                            "biomesoplenty.common.blocks.BlockBOPFlower:FLOWER",
-                            "biomesoplenty.common.blocks.BlockBOPFlower2:FLOWER",
-                            "biomesoplenty.common.blocks.BlockBOPFoliage:FLOWER",
-                    }).getStringList());
-            blockVine.updateClassList(config.get("pollutionrecolor", "renderblockVine",
-                    new String[]{
-                            "net.minecraft.block.BlockVine:FLOWER",
-                    }).getStringList());
+        if (config == null) {
+            System.err.println("Didnt load HODGE");
+            config = new Configuration(new File(Launch.minecraftHome, "config/hodgepodge.cfg"));
         }
+
+
+        standardBlocks.updateClassList(config.get("pollutionrecolor", "renderStandardBlock",
+                new String[]{
+                        "net.minecraft.block.BlockGrass:GRASS",
+                        "net.minecraft.block.BlockLeavesBase:LEAVES",
+                        "biomesoplenty.common.blocks.BlockOriginGrass:GRASS",
+                        "biomesoplenty.common.blocks.BlockLongGrass:GRASS",
+                        "biomesoplenty.common.blocks.BlockNewGrass:GRASS",
+                        "tconstruct.blocks.slime.SlimeGrass:GRASS",
+                        "thaumcraft.common.blocks.BlockMagicalLeaves:LEAVES",
+                }).getStringList());
+        liquidBlocks.updateClassList(config.get("pollutionrecolor", "renderBlockLiquid",
+                new String[]{
+                        "net.minecraft.block.BlockLiquid:LIQUID",
+                }).getStringList());
+        doublePlants.updateClassList(config.get("pollutionrecolor", "renderBlockDoublePlant",
+                new String[]{
+                        "net.minecraft.block.BlockDoublePlant:FLOWER",
+                }).getStringList());
+        crossedSquares.updateClassList(config.get("pollutionrecolor", "renderCrossedSquares",
+                new String[]{
+                        "net.minecraft.block.BlockTallGrass:FLOWER",
+                        "net.minecraft.block.BlockFlower:FLOWER",
+                        "biomesoplenty.common.blocks.BlockBOPFlower:FLOWER",
+                        "biomesoplenty.common.blocks.BlockBOPFlower2:FLOWER",
+                        "biomesoplenty.common.blocks.BlockBOPFoliage:FLOWER",
+                }).getStringList());
+        blockVine.updateClassList(config.get("pollutionrecolor", "renderblockVine",
+                new String[]{
+                        "net.minecraft.block.BlockVine:FLOWER",
+                }).getStringList());
+
+        config.getCategory("pollutionrecolor").setComment(
+                "Blocks that should be colored by pollution. \n" +
+                        "\tGrouped by the render type. \n" +
+                        "\tFormat: [BlockClass]:[colortype] \n" +
+                        "\tValid types: GRASS, LEAVES, FLOWERS, LIQUID \n" +
+                        "\tAdd [-] first to blacklist.");
 
         if (config.hasChanged())
             config.save();

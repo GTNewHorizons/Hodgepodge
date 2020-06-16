@@ -15,7 +15,7 @@ public class Hodgepodge {
 
     public static final Logger log = LogManager.getLogger("Hodgepodge");
     public static final String MODID = "hodgepodge";
-    public static final String VERSION = "1.4.0";
+    public static final String VERSION = "1.4.2";
     public static final String NAME = "A Hodgepodge of Patches";
     public static XSTR RNG = new XSTR();
 
@@ -23,7 +23,7 @@ public class Hodgepodge {
     public void init(FMLInitializationEvent asd) {
     }
 
-    @Mod.EventHandler
+    @EventHandler
     public void postInit(FMLPostInitializationEvent event)  {
         if (event.getSide() == Side.CLIENT) {
             HodgePodgeClient.postInit();
