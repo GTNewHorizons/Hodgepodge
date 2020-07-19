@@ -16,7 +16,6 @@ public class HodgePodgeClient {
         colorLiquid = References.gt_PollutionRenderer.getMethod("colorLiquid").resolve();
         colorLeaves = References.gt_PollutionRenderer.getMethod("colorLeaves").resolve();
         colorFoliage = References.gt_PollutionRenderer.getMethod("colorFoliage").resolve();
-        System.out.println("HODGER POSTINIT");
         if (colorGrass != null) {
             LoadingConfig.postInitClient();
             MinecraftForge.EVENT_BUS.register(LoadingConfig.standardBlocks);

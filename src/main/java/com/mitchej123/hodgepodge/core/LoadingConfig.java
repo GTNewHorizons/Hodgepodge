@@ -1,7 +1,6 @@
 package com.mitchej123.hodgepodge.core;
 
 import com.mitchej123.hodgepodge.core.util.BlockMatcher;
-import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.config.Configuration;
 
@@ -74,7 +73,7 @@ public class LoadingConfig {
                 "Blocks that should be colored by pollution. \n" +
                         "\tGrouped by the render type. \n" +
                         "\tFormat: [BlockClass]:[colortype] \n" +
-                        "\tValid types: GRASS, LEAVES, FLOWERS, LIQUID \n" +
+                        "\tValid types: GRASS, LEAVES, FLOWER, LIQUID \n" +
                         "\tAdd [-] first to blacklist.");
 
         if (config.hasChanged())

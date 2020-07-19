@@ -10,7 +10,10 @@ public class HodgePodgeClassTransformer extends AbstractClassTransformer {
 
     public HodgePodgeClassTransformer ()
     {
+
         if (!FMLLaunchHandler.side().name().equals("SERVER")) {
+            boolean optifinePresent = isOptifinePresent();
+
             /*
              * Grabs various methods in RenderBlocks when they query for colorMultiplier and overrides the value.
              */
@@ -63,11 +66,24 @@ public class HodgePodgeClassTransformer extends AbstractClassTransformer {
                 @Override
                 public void transform() {
                     log.info("Injecting RenderBlocks.renderBlockVine");
-                    insertBefore(matchVarInsn(Opcodes.ISTORE, 7),
-                            new VarInsnNode(Opcodes.ALOAD, 1), //add block
-                            new VarInsnNode(Opcodes.ILOAD, 2), //add x
-                            new VarInsnNode(Opcodes.ILOAD, 4), //add z
-                            createInvokeStatic(References.cHogClient.getMethod("renderBlockVine_colorMultiplier")));
+                    //InsnList ls = currentMethod.instructions;
+                    //for (int i = 0; i < ls.size(); i++) {
+                    //    log.info(insnToString(ls.get(i)));
+                    //}
+                    if (optifinePresent) {
+                        log.info("\tfound optifine, inserting after CustomColorizer.getColorMultiplier");
+                        insertAfter(matchMethodInsn(Opcodes.INVOKESTATIC, "CustomColorizer", "getColorMultiplier", "(Laji;Lahl;III)I"),
+                                new VarInsnNode(Opcodes.ALOAD, 1), //add block
+                                new VarInsnNode(Opcodes.ILOAD, 2), //add x
+                                new VarInsnNode(Opcodes.ILOAD, 4), //add z
+                                createInvokeStatic(References.cHogClient.getMethod("renderBlockVine_colorMultiplier")));
+                    } else {
+                        insertBefore(matchVarInsn(Opcodes.ISTORE, 7),
+                                new VarInsnNode(Opcodes.ALOAD, 1), //add block
+                                new VarInsnNode(Opcodes.ILOAD, 2), //add x
+                                new VarInsnNode(Opcodes.ILOAD, 4), //add z
+                                createInvokeStatic(References.cHogClient.getMethod("renderBlockVine_colorMultiplier")));
+                    }
                 }
             });
 
@@ -83,9 +99,21 @@ public class HodgePodgeClassTransformer extends AbstractClassTransformer {
                             new VarInsnNode(Opcodes.ILOAD, 2), //add x
                             new VarInsnNode(Opcodes.ILOAD, 4), //add z
                             createInvokeStatic(References.cHogClient.getMethod("renderCrossedSquares_colorMultiplier")));
+
+
                 }
             });
 
+        }
+    }
+
+    protected boolean isOptifinePresent() {
+        try {
+            @SuppressWarnings("unused")
+            Class<?> optifine = Class.forName("optifine.OptiFineClassTransformer");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
         }
     }
 }

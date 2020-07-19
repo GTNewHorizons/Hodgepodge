@@ -40,12 +40,12 @@ public abstract class AbstractClassTransformer implements IClassTransformer {
 
         for (Map.Entry<MethodRef, AbstractMethodTransformer> entry : methodTransformers.entrySet()) {
             if (transformedName.equals(entry.getKey().parent.getName(Namespace.MCP))) {
-                log.info(String.format("Found class: %s -> %s", name, transformedName));
-                log.debug(String.format("Searching for method: %s %s -> %s %s",
-                        entry.getKey().getName(Namespace.OBF), entry.getKey().getAsmDescriptor(Namespace.OBF),
-                        entry.getKey().getName(Namespace.MCP), entry.getKey().getAsmDescriptor(Namespace.MCP)));
+                //log.debug(String.format("Found class: %s -> %s", name, transformedName));
+                //log.debug(String.format("Searching for method: %s %s -> %s %s",
+                //        entry.getKey().getName(Namespace.OBF), entry.getKey().getAsmDescriptor(Namespace.OBF),
+                //        entry.getKey().getName(Namespace.MCP), entry.getKey().getAsmDescriptor(Namespace.MCP)));
                 for (MethodNode methodNode : classNode.methods) {
-                    log.debug(String.format("    %s, %s", methodNode.name, methodNode.desc));
+                    //log.debug(String.format("    %s, %s", methodNode.name, methodNode.desc));
                     // try to match against both namespaces - mods sometimes have deobfed class names in signatures
                     if (entry.getKey().getName(Namespace.MCP).equals(methodNode.name) && entry.getKey().getAsmDescriptor(Namespace.MCP).equals(methodNode.desc) ||
                             entry.getKey().getName(Namespace.OBF).equals(methodNode.name) && entry.getKey().getAsmDescriptor(Namespace.OBF).equals(methodNode.desc)) {

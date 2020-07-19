@@ -93,8 +93,6 @@ public class BlockMatcher {
 	public void handleWorldLoad(WorldEvent.Load event) {
 		if (event.world instanceof WorldClient) {
 			updateBlockIDs();
-
-			System.out.println(this.getClass().getName() + " handleWorldLoad");
 		}
 	}
 }

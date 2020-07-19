@@ -2,12 +2,20 @@ package com.mitchej123.hodgepodge.loader.util;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
+import org.objectweb.asm.util.Printer;
+import org.objectweb.asm.util.Textifier;
+import org.objectweb.asm.util.TraceMethodVisitor;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 // Shamelessly Taken from BetterFoliage by octarine-noise
 
 public abstract class AbstractMethodTransformer {
 
-    /** Instruction node filter
+    /**
+     * Instruction node filter
+     *
      * @author octarine-noise
      */
     public static interface IInstructionMatch {
@@ -36,7 +44,7 @@ public abstract class AbstractMethodTransformer {
 
     protected AbstractInsnNode findNext(AbstractInsnNode start, IInstructionMatch match) {
         AbstractInsnNode current = start;
-        while(current != null) {
+        while (current != null) {
             if (match.matches(current)) break;
             current = current.getNext();
         }
@@ -45,7 +53,7 @@ public abstract class AbstractMethodTransformer {
 
     protected AbstractInsnNode findPrevious(AbstractInsnNode start, IInstructionMatch match) {
         AbstractInsnNode current = start;
-        while(current != null) {
+        while (current != null) {
             if (match.matches(current)) break;
             current = current.getPrevious();
         }
@@ -56,6 +64,18 @@ public abstract class AbstractMethodTransformer {
         return new IInstructionMatch() {
             public boolean matches(AbstractInsnNode node) {
                 return node.getOpcode() == opcode;
+            }
+        };
+    }
+
+    protected IInstructionMatch matchMethodInsn(final int opcode, final String owner, String name, String desc) {
+        return new IInstructionMatch() {
+            public boolean matches(AbstractInsnNode node) {
+                if (node instanceof MethodInsnNode) {
+                    MethodInsnNode n = (MethodInsnNode) node;
+                    return n.getOpcode() == opcode && n.owner.equals(owner) && n.name.equals(name) && n.desc.equals(desc);
+                }
+                return false;
             }
         };
     }
@@ -83,4 +103,14 @@ public abstract class AbstractMethodTransformer {
         return new TypeInsnNode(Opcodes.CHECKCAST, clazz.getName(environment).replace(".", "/"));
     }
 
+
+    private static final Printer printer = new Textifier();
+    private static final TraceMethodVisitor mp = new TraceMethodVisitor(printer);
+    public static String insnToString(AbstractInsnNode insn){
+        insn.accept(mp);
+        StringWriter sw = new StringWriter();
+        printer.print(new PrintWriter(sw));
+        printer.getText().clear();
+        return sw.toString();
+    }
 }

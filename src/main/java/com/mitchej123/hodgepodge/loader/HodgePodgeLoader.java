@@ -5,7 +5,7 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import java.util.Map;
 
 @IFMLLoadingPlugin.MCVersion("1.7.10")
-@IFMLLoadingPlugin.TransformerExclusions({"com.mitchej123.hodgepode.loader"})
+@IFMLLoadingPlugin.TransformerExclusions({"com.mitchej123.hodgepode.loader", "optifine"})
 public class HodgePodgeLoader implements IFMLLoadingPlugin {
     @Override
     public String[] getASMTransformerClass() {
