@@ -54,7 +54,9 @@ jar {
     appendix = minecraft.version
 
     manifest.attributes(
-            "FMLAT": "hodgepodge_at.cfg"
+            "FMLAT": "hodgepodge_at.cfg",
+            "FMLCorePlugin": "com.mitchej123.hodgepodge.loader.HodgePodgeLoader",
+            "FMLCorePluginContainsFMLMod": "com.mitchej123.hodgepodge.HodgePodge"
     )
 }
 
