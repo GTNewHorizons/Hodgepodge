@@ -78,6 +78,9 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
         FENCE_CONNECTIONS_FIX("Fence Connections Fix",
                 () -> config.fixFenceConnections,
                 "fixfenceconnections.block.MixinBlockFence"),
+        CHUNK_COORDINATES_HASHCODE("Speedup ChunkCoordinates Hashcode",
+                () -> config.speedupChunkCoordinatesHashCode,
+                "speedupChunkCoordinatesHashCode.MixinChunkCoordinates"),
         GRASS_CHUNK_LOADING_FIX("Grass loads chunks Fix",
                 () -> (config.fixGrassChunkLoads && !thermosTainted),
                 "fixgrasschunkloads.block.MixinBlockGrass"),
@@ -90,9 +93,9 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
                 "fixic2directinventoryaccess.crop.MixinTileEntityCrop");
 
 
-        private String name;
-        private Supplier<Boolean> applyIf;
-        private String[] mixinClasses;
+        private final String name;
+        private final Supplier<Boolean> applyIf;
+        private final String[] mixinClasses;
 
         MixinSets(String name, Supplier<Boolean> applyIf, String... mixinClasses) {
             this.name = name;

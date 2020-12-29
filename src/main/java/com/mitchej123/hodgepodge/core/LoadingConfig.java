@@ -11,6 +11,7 @@ public class LoadingConfig {
     public boolean fixGrassChunkLoads;
     public boolean fixFenceConnections;
     public boolean fixIc2DirectInventoryAccess;
+    public boolean speedupChunkCoordinatesHashCode;
     public static Configuration config;
 
     public static BlockMatcher standardBlocks = new BlockMatcher();
@@ -25,6 +26,7 @@ public class LoadingConfig {
         fixGrassChunkLoads = config.get("fixes", "fixGrassChunkLoads", true, "Fix grass spreading from loading chunks").getBoolean();
         fixFenceConnections = config.get("fixes", "fixFenceConnections", true, "Fix fence connections with other types of fence").getBoolean();
         fixIc2DirectInventoryAccess = config.get("fixes", "fixIc2DirectInventoryAccess", true, "Fix IC2's direct inventory access").getBoolean();
+        speedupChunkCoordinatesHashCode = config.get("speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
 
         if (config.hasChanged())
             config.save();
