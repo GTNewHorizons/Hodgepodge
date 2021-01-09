@@ -90,7 +90,12 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
         IC2_DIRECT_INV_ACCESS("IC2 Direct Inventory Access Fix",
                 () -> config.fixIc2DirectInventoryAccess,
                 "fixic2directinventoryaccess.item.MixinItemCropSeed",
-                "fixic2directinventoryaccess.crop.MixinTileEntityCrop");
+                "fixic2directinventoryaccess.crop.MixinTileEntityCrop"),
+        IC2_NIGHT_VISION("IC2 Nightvision adjustment",
+                 () -> config.fixIc2Nightvision,
+                 "fixIc2Nightvision.MixinIc2NanoSuitNightVision",
+                 "fixIc2Nightvision.MixinIc2QuantumSuitNightVision"
+         );
 
 
         private final String name;
