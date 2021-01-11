@@ -8,6 +8,8 @@ Requires SpongeMixins mod (https://github.com/GTNewHorizons/SpongeMixins) to wor
 * FixFenceConnections - Tweaks fence connection logic to work with other mods
 * FixIc2DirectInventoryAccess - Swaps out direct inventory access in crop functions with `setInventorySlotContents` so they work with OC robots
 * SpeedupChunkCoordinatesHashCode - Swaps out the HashCode function for ChunkCoordinates with one that provides better performance with HashSet
+* FixIc2Nightvision - Prevents IC2 night vision from blinding you when it's bright out, making it on par with other nightvision available
+* FixHungerOverhaul - Patches unintended mod interaction with Spice Of Life - Carrot Edition
 ## Running
 
 

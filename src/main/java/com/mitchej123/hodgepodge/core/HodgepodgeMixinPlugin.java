@@ -6,10 +6,13 @@ import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.lib.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
+import ru.timeconqueror.spongemixins.MinecraftURLClassPath;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -26,7 +29,7 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
         try {
             Class.forName("org.bukkit.World");
             thermosTainted = true;
-            log.warn("Thermos/Bukkit detected; This is an unsupported configuration -- Things may not function properly. (I'm looking to you, Kane)");
+            log.warn("Thermos/Bukkit detected; This is an unsupported configuration -- Things may not function properly.");
         } catch (ClassNotFoundException e) {
             thermosTainted = false;
             log.info("Thermos/Bukkit NOT detected :-D");
@@ -55,10 +58,10 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
     @Override
     public List<String> getMixins() {
         List<String> mixins = new ArrayList<>();
-        for (MixinSets set : MixinSets.values()) {
-            if (set.applied()) {
-                mixins.addAll(Arrays.asList(set.mixinClasses));
-                log.info("Loading hodgepodge plugin '{}' with mixins: {}", set.name, set.mixinClasses);
+        for (MixinSets mixin : MixinSets.values()) {
+            if (mixin.shouldBeLoaded() && mixin.loadJar()) {
+                mixins.addAll(mixin.mixinClasses);
+                log.info("Loading hodgepodge plugin '{}' with mixins: {}", mixin.name, mixin.mixinClasses);
             }
         }
 
@@ -77,39 +80,77 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
     public enum MixinSets {
         FENCE_CONNECTIONS_FIX("Fence Connections Fix",
                 () -> config.fixFenceConnections,
-                "fixfenceconnections.block.MixinBlockFence"),
+                Collections.singletonList("fixfenceconnections.block.MixinBlockFence")
+        ),
         CHUNK_COORDINATES_HASHCODE("Speedup ChunkCoordinates Hashcode",
                 () -> config.speedupChunkCoordinatesHashCode,
-                "speedupChunkCoordinatesHashCode.MixinChunkCoordinates"),
+               Collections.singletonList("speedupChunkCoordinatesHashCode.MixinChunkCoordinates")
+        ),
         GRASS_CHUNK_LOADING_FIX("Grass loads chunks Fix",
                 () -> (config.fixGrassChunkLoads && !thermosTainted),
-                "fixgrasschunkloads.block.MixinBlockGrass"),
+                Collections.singletonList("fixgrasschunkloads.block.MixinBlockGrass")
+        ),
         NORTHWEST_BIAS_FIX("Northwest Bias Fix",
                 () -> config.fixNorthWestBias,
-                "fixnorthwestbias.entity.ai.MixinRandomPositionGenerator"),
+                Collections.singletonList("fixnorthwestbias.entity.ai.MixinRandomPositionGenerator")
+        ),
         IC2_DIRECT_INV_ACCESS("IC2 Direct Inventory Access Fix",
                 () -> config.fixIc2DirectInventoryAccess,
-                "fixic2directinventoryaccess.item.MixinItemCropSeed",
-                "fixic2directinventoryaccess.crop.MixinTileEntityCrop"),
+                Arrays.asList(
+                    "fixic2directinventoryaccess.item.MixinItemCropSeed",
+                    "fixic2directinventoryaccess.crop.MixinTileEntityCrop"
+                 )
+        ),
         IC2_NIGHT_VISION("IC2 Nightvision adjustment",
                  () -> config.fixIc2Nightvision,
-                 "fixIc2Nightvision.MixinIc2NanoSuitNightVision",
-                 "fixIc2Nightvision.MixinIc2QuantumSuitNightVision"
-         );
+                 Arrays.asList(
+                     "fixIc2Nightvision.MixinIc2NanoSuitNightVision",
+                     "fixIc2Nightvision.MixinIc2QuantumSuitNightVision"
+                  )
+         ),
+        HUNGER_OVERHAUL_FIX("Hunger Overhaul Fix",
+                () -> config.fixHungerOverhaul,
+                "HungerOverhaul",
+                Collections.singletonList("fixHungerOverhaul.MixinHungerOverhaulLowStatEffect")
+        );
 
 
         private final String name;
         private final Supplier<Boolean> applyIf;
-        private final String[] mixinClasses;
+        private final List<String> mixinClasses;
+        private final String jarName;
 
-        MixinSets(String name, Supplier<Boolean> applyIf, String... mixinClasses) {
+        MixinSets(String name, Supplier<Boolean> applyIf, List<String> mixinClasses) {
             this.name = name;
             this.applyIf = applyIf;
             this.mixinClasses = mixinClasses;
+            this.jarName = null;
+        }        
+        
+        MixinSets(String name, Supplier<Boolean> applyIf, String jarName, List<String> mixinClasses) {
+            this.name = name;
+            this.applyIf = applyIf;
+            this.mixinClasses = mixinClasses;
+            this.jarName = jarName; 
         }
 
-        public boolean applied() {
+        public boolean shouldBeLoaded() {
             return applyIf.get();
+        }
+        
+        public boolean loadJar() {
+            try {
+                if( jarName == null) return true;
+                File jar = MinecraftURLClassPath.getJarInModPath(jarName);
+                log.info("Attempting to add " + jar.toString() + " to the URL Class Path");
+                if(!jar.exists())
+                    throw new FileNotFoundException(jar.toString());
+                MinecraftURLClassPath.addJar(jar);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
         }
     }
 }
