@@ -8,10 +8,12 @@ import java.io.File;
 
 public class LoadingConfig {
     public boolean fixNorthWestBias;
-    public boolean fixGrassChunkLoads;
     public boolean fixFenceConnections;
     public boolean fixIc2DirectInventoryAccess;
     public boolean fixIc2Nightvision;
+    public boolean fixVanillaUnprotectedGetBlock;
+    public boolean fixIc2UnprotectedGetBlock;
+    public boolean fixThaumcraftUnprotectedGetBlock;
     public boolean speedupChunkCoordinatesHashCode;
     public boolean fixHungerOverhaul;
     public static Configuration config;
@@ -25,10 +27,12 @@ public class LoadingConfig {
     public LoadingConfig(File file) {
         config = new Configuration(file);
         fixNorthWestBias = config.get("fixes", "fixNorthWestBias", true, "Fix northwest bias on RandomPositionGenerator").getBoolean();
-        fixGrassChunkLoads = config.get("fixes", "fixGrassChunkLoads", true, "Fix grass spreading from loading chunks").getBoolean();
         fixFenceConnections = config.get("fixes", "fixFenceConnections", true, "Fix fence connections with other types of fence").getBoolean();
         fixIc2DirectInventoryAccess = config.get("fixes", "fixIc2DirectInventoryAccess", true, "Fix IC2's direct inventory access").getBoolean();
         fixIc2Nightvision = config.get("fixes", "fixIc2Nightvision", true, "Prevent IC2's nightvision from blinding you").getBoolean();
+        fixVanillaUnprotectedGetBlock = config.get("fixes", "fixIc2UnprotectedGetBlock", true, "Fixes various unchecked getBlock() methods").getBoolean();
+        fixIc2UnprotectedGetBlock = config.get("fixes", "fixIc2UnprotectedGetBlock", true, "Fixes various unchecked IC2 getBlock() methods").getBoolean();
+        fixThaumcraftUnprotectedGetBlock = config.get("fixes", "fixThaumcraft", true, "Various Thaumcraft patches").getBoolean();
         fixHungerOverhaul = config.get("fixes", "fixHungerOverhaul", true, "Fix hunger overhaul low stat effects").getBoolean();
         speedupChunkCoordinatesHashCode = config.get("speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
 

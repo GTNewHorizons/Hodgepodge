@@ -86,9 +86,28 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
                 () -> config.speedupChunkCoordinatesHashCode,
                Collections.singletonList("speedupChunkCoordinatesHashCode.MixinChunkCoordinates")
         ),
-        GRASS_CHUNK_LOADING_FIX("Grass loads chunks Fix",
-                () -> (config.fixGrassChunkLoads && !thermosTainted),
-                Collections.singletonList("fixgrasschunkloads.block.MixinBlockGrass")
+        VANILLA_UNPROTECTED_GET_BLOCK_FIX("Various vanilla unprotected getBlock fixes ",
+                () -> config.fixVanillaUnprotectedGetBlock,
+                Arrays.asList(
+                    "fixUnprotectedGetBlock.vanilla.MixinBlockGrass",
+                    "fixUnprotectedGetBlock.vanilla.MixinBlockFire",
+                    "fixUnprotectedGetBlock.vanilla.MixinVillageCollection",
+                    "fixUnprotectedGetBlock.vanilla.MixinBlockFluidClassic"
+                )
+        ),
+        IC2_UNPROTECTED_GET_BLOCK_FIX("IC2 unprotected getBlock fixes",
+               () -> config.fixIc2UnprotectedGetBlock,
+               Collections.singletonList(
+                  "fixUnprotectedGetBlock.ic2.MixinIc2WaterKinetic"
+               )
+        ),
+        THAUMCRAFT_UNPROTECTED_GET_BLOCK_FIX("Thaumcraft unprotected getBlock fixes",
+             () -> config.fixThaumcraftUnprotectedGetBlock,
+             "Thaumcraft-1.7.10",
+             Arrays.asList(
+                 "fixUnprotectedGetBlock.thaumcraft.fixArcaneLampGetBlock",
+                 "fixUnprotectedGetBlock.thaumcraft.fixEntityWispGetBlock"
+              )
         ),
         NORTHWEST_BIAS_FIX("Northwest Bias Fix",
                 () -> config.fixNorthWestBias,
@@ -142,6 +161,11 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
             try {
                 if( jarName == null) return true;
                 File jar = MinecraftURLClassPath.getJarInModPath(jarName);
+                if(jar == null) {
+                    log.info("Jar not found: " + jarName);
+                    return false;
+                }
+                
                 log.info("Attempting to add " + jar.toString() + " to the URL Class Path");
                 if(!jar.exists())
                     throw new FileNotFoundException(jar.toString());
