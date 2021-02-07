@@ -92,6 +92,7 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
                     "fixUnprotectedGetBlock.vanilla.MixinBlockGrass",
                     "fixUnprotectedGetBlock.vanilla.MixinBlockFire",
                     "fixUnprotectedGetBlock.vanilla.MixinVillageCollection",
+                    "fixUnprotectedGetBlock.vanilla.MixinVillage",
                     "fixUnprotectedGetBlock.vanilla.MixinBlockFluidClassic"
                 )
         ),
