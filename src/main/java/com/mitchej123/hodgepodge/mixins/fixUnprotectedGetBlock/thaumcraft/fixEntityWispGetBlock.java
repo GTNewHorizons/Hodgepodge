@@ -34,7 +34,7 @@ public class fixEntityWispGetBlock {
         remap = false
     )
     public boolean isAirBlock(World world, int x, int y, int z) {
-        System.out.println("HMMMMMMMMMMMMMMM WISP isCourseTraversable isAirBlock");
+//        System.out.println("HMMMMMMMMMMMMMMM WISP isCourseTraversable isAirBlock");
         if (!world.blockExists(x, y, z))
             return true;
 
