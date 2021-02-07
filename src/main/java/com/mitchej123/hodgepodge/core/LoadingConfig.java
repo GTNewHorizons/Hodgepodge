@@ -32,8 +32,9 @@ public class LoadingConfig {
         fixIc2Nightvision = config.get("fixes", "fixIc2Nightvision", true, "Prevent IC2's nightvision from blinding you").getBoolean();
         fixVanillaUnprotectedGetBlock = config.get("fixes", "fixVanillaUnprotectedGetBlock", true, "Fixes various unchecked vanilla getBlock() methods").getBoolean();
         fixIc2UnprotectedGetBlock = config.get("fixes", "fixIc2UnprotectedGetBlock", true, "Fixes various unchecked IC2 getBlock() methods").getBoolean();
-        fixThaumcraftUnprotectedGetBlock = config.get("fixes", "fixThaumcraft", true, "Various Thaumcraft patches").getBoolean();
+        fixThaumcraftUnprotectedGetBlock = config.get("fixes", "fixThaumcraftUnprotectedGetBlocks", true, "Various Thaumcraft patches").getBoolean();
         fixHungerOverhaul = config.get("fixes", "fixHungerOverhaul", true, "Fix hunger overhaul low stat effects").getBoolean();
+        
         speedupChunkCoordinatesHashCode = config.get("speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
 
         if (config.hasChanged())
