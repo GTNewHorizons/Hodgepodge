@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Hodgepodge.MODID, version = Hodgepodge.VERSION, name = Hodgepodge.NAME, acceptableRemoteVersions = "*",
-        dependencies = "required-after:spongemixins@[1.1.0,);")
+        dependencies = "required-after:spongemixins@[1.3.0,);")
 public class Hodgepodge {
 
     public static final Logger log = LogManager.getLogger("Hodgepodge");
