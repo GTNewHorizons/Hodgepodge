@@ -14,10 +14,15 @@ import java.util.function.Supplier;
 
 @IFMLLoadingPlugin.MCVersion("1.7.10")
 @IFMLLoadingPlugin.TransformerExclusions({"com.mitchej123.hodgepodge.asm", "optifine"})
-@IFMLLoadingPlugin.SortingIndex(2000)
+@IFMLLoadingPlugin.SortingIndex(1002)
 @IFMLLoadingPlugin.DependsOn("cofh.asm.LoadingPlugin")
 public class HodgePodgeASMLoader implements IFMLLoadingPlugin {
     private static final Logger log = LogManager.getLogger("Hodgepodge");
+    public static final SortingIndex index = HodgePodgeASMLoader.class.getAnnotation(IFMLLoadingPlugin.SortingIndex.class);
+    
+    public static int getSortingIndex() {
+        return index != null ? index.value() : 0;
+    }
     
     public enum AsmTransformers {
         POLLUTION_TRANSFORMER(
@@ -47,6 +52,7 @@ public class HodgePodgeASMLoader implements IFMLLoadingPlugin {
     
     @Override
     public String[] getASMTransformerClass() {
+        
         return Arrays.stream(AsmTransformers.values()).map(asmTransformer -> {
             if (asmTransformer.shouldBeLoaded()) {
                 log.info("Loading hodgepodge transformers {}", asmTransformer.name);
