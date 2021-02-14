@@ -16,6 +16,7 @@ public class LoadingConfig {
     public boolean fixThaumcraftUnprotectedGetBlock;
     public boolean speedupChunkCoordinatesHashCode;
     public boolean fixHungerOverhaul;
+    public boolean removeUpdateChecks;
     public static Configuration config;
 
     public static BlockMatcher standardBlocks = new BlockMatcher();
@@ -34,7 +35,7 @@ public class LoadingConfig {
         fixIc2UnprotectedGetBlock = config.get("fixes", "fixIc2UnprotectedGetBlock", true, "Fixes various unchecked IC2 getBlock() methods").getBoolean();
         fixThaumcraftUnprotectedGetBlock = config.get("fixes", "fixThaumcraftUnprotectedGetBlock", true, "Various Thaumcraft unchecked getBlock() patches").getBoolean();
         fixHungerOverhaul = config.get("fixes", "fixHungerOverhaul", true, "Fix hunger overhaul low stat effects").getBoolean();
-        
+        removeUpdateChecks = config.get("fixes", "removeUpdateChecks", true, "Remove old/stale/outdated update checks.").getBoolean();
         speedupChunkCoordinatesHashCode = config.get("speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
 
         if (config.hasChanged())

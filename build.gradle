@@ -27,7 +27,7 @@ repositories {
     }
 }
 
-version = "1.5.0"
+version = "1.6.0"
 group = "com.mitchej123.hodgepodge"
 archivesBaseName = "hodgepodge"
 sourceCompatibility = 1.8
@@ -47,9 +47,11 @@ configurations {
 
 dependencies {
     compile "net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev"
+    
     compileOnly files("libs/SpongeMixins-1.3.0-dev.jar")
     compileOnly files("libs/HungerOverhaul-1.7.10-1.0.2.jar")
     compileOnly files("libs/Thaumcraft-1.7.10-4.2.3.5-dev.jar")
+    compileOnly files("libs/CoFHCore-[1.7.10]3.1.4-329-dev.jar")
 }
 
 

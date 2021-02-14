@@ -15,7 +15,7 @@ public class Hodgepodge {
 
     public static final Logger log = LogManager.getLogger("Hodgepodge");
     public static final String MODID = "hodgepodge";
-    public static final String VERSION = "1.5.0";
+    public static final String VERSION = "1.6.0";
     public static final String NAME = "A Hodgepodge of Patches";
     public static XSTR RNG = new XSTR();
 
