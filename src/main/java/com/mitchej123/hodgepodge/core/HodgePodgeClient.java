@@ -1,7 +1,7 @@
 package com.mitchej123.hodgepodge.core;
 
 import com.mitchej123.hodgepodge.core.util.ColorOverrideType;
-import com.mitchej123.hodgepodge.loader.References;
+import com.mitchej123.hodgepodge.asm.References;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.common.MinecraftForge;

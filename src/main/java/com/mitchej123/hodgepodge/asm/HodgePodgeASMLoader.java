@@ -1,0 +1,79 @@
+package com.mitchej123.hodgepodge.asm;
+
+import com.mitchej123.hodgepodge.core.HodgepodgeMixinPlugin;
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Supplier;
+
+@IFMLLoadingPlugin.MCVersion("1.7.10")
+@IFMLLoadingPlugin.TransformerExclusions({"com.mitchej123.hodgepodge.asm", "optifine"})
+@IFMLLoadingPlugin.SortingIndex(2000)
+@IFMLLoadingPlugin.DependsOn("cofh.asm.LoadingPlugin")
+public class HodgePodgeASMLoader implements IFMLLoadingPlugin {
+    private static final Logger log = LogManager.getLogger("Hodgepodge");
+    
+    public enum AsmTransformers {
+        POLLUTION_TRANSFORMER(
+            "Pollution Transformer",
+            () -> HodgepodgeMixinPlugin.config.pollutionAsm,
+            Collections.singletonList("com.mitchej123.hodgepodge.asm.PollutionClassTransformer")
+        ),
+        CoFHWorldTransformer(
+            "World Transformer - Remove CoFH tile entity cache",
+            () -> HodgepodgeMixinPlugin.config.cofhWorldTransformer,
+            Collections.singletonList("com.mitchej123.hodgepodge.asm.WorldTransformer")
+        );
+        
+        private final String name;
+        private final Supplier<Boolean> applyIf;
+        private final List<String> asmTransformers;
+        
+        AsmTransformers(String name, Supplier<Boolean> applyIf, List<String> asmTransformers) {
+            this.name = name;
+            this.applyIf = applyIf;
+            this.asmTransformers = asmTransformers;
+        }
+        public boolean shouldBeLoaded() {
+            return applyIf.get();
+        }
+    }
+    
+    @Override
+    public String[] getASMTransformerClass() {
+        return Arrays.stream(AsmTransformers.values()).map(asmTransformer -> {
+            if (asmTransformer.shouldBeLoaded()) {
+                log.info("Loading hodgepodge transformers {}", asmTransformer.name);
+                return asmTransformer.asmTransformers;
+            } else {
+                return null;
+            }
+        }).filter(Objects::nonNull).flatMap(List::stream).toArray(String[]::new);
+    }
+
+    @Override
+    public String getModContainerClass() {
+        return null;
+    }
+
+    @Override
+    public String getSetupClass() {
+        return null;
+    }
+
+    @Override
+    public void injectData(Map<String, Object> data) {
+
+    }
+
+    @Override
+    public String getAccessTransformerClass() {
+        return null;
+    }
+}

@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.loader.util;
+package com.mitchej123.hodgepodge.asm.util;
 
 /** 
  * Namespace for Minecraft code elements.

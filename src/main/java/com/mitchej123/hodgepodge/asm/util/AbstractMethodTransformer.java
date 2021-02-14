@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.loader.util;
+package com.mitchej123.hodgepodge.asm.util;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;

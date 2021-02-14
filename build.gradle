@@ -60,7 +60,7 @@ jar {
 
     manifest.attributes(
             "FMLAT": "hodgepodge_at.cfg",
-            "FMLCorePlugin": "com.mitchej123.hodgepodge.loader.HodgePodgeLoader",
+            "FMLCorePlugin": "com.mitchej123.hodgepodge.asm.HodgePodgeASMLoader",
             "FMLCorePluginContainsFMLMod": "com.mitchej123.hodgepodge.HodgePodge"
     )
 }

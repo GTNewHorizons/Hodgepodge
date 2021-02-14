@@ -1,6 +1,6 @@
-package com.mitchej123.hodgepodge.loader;
+package com.mitchej123.hodgepodge.asm;
 
-import com.mitchej123.hodgepodge.loader.util.ClassRef;
+import com.mitchej123.hodgepodge.asm.util.ClassRef;
 
 public class References {
 
