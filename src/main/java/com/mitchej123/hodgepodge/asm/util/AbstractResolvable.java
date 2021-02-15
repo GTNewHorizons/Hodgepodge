@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.loader.util;
+package com.mitchej123.hodgepodge.asm.util;
 
 public abstract class AbstractResolvable<T> {
 

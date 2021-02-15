@@ -1,14 +1,14 @@
-package com.mitchej123.hodgepodge.loader;
+package com.mitchej123.hodgepodge.asm;
 
-import com.mitchej123.hodgepodge.loader.util.AbstractClassTransformer;
-import com.mitchej123.hodgepodge.loader.util.AbstractMethodTransformer;
+import com.mitchej123.hodgepodge.asm.util.AbstractClassTransformer;
+import com.mitchej123.hodgepodge.asm.util.AbstractMethodTransformer;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.VarInsnNode;
 
-public class HodgePodgeClassTransformer extends AbstractClassTransformer {
+public class PollutionClassTransformer extends AbstractClassTransformer {
 
-    public HodgePodgeClassTransformer ()
+    public PollutionClassTransformer()
     {
 
         if (!FMLLaunchHandler.side().name().equals("SERVER")) {
@@ -66,10 +66,6 @@ public class HodgePodgeClassTransformer extends AbstractClassTransformer {
                 @Override
                 public void transform() {
                     log.info("Injecting RenderBlocks.renderBlockVine");
-                    //InsnList ls = currentMethod.instructions;
-                    //for (int i = 0; i < ls.size(); i++) {
-                    //    log.info(insnToString(ls.get(i)));
-                    //}
                     if (optifinePresent) {
                         log.info("\tfound optifine, inserting after CustomColorizer.getColorMultiplier");
                         insertAfter(matchMethodInsn(Opcodes.INVOKESTATIC, "CustomColorizer", "getColorMultiplier", "(Laji;Lahl;III)I"),

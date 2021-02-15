@@ -1,6 +1,7 @@
-package com.mitchej123.hodgepodge.loader.util;
+package com.mitchej123.hodgepodge.asm.util;
 
 import com.google.common.collect.Maps;
+import com.mitchej123.hodgepodge.asm.HodgePodgeASMLoader;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,8 +30,9 @@ public abstract class AbstractClassTransformer implements IClassTransformer {
 
         // test the environment - a name mismatch indicates the presence of obfuscated code
         if (!transformedName.equals(name)) {
-            environment = Namespace.OBF;
-        }
+            if (HodgePodgeASMLoader.getSortingIndex() >= 1001) environment = Namespace.SRG;
+            else                                               environment = Namespace.OBF;                                            
+        } 
 
         // read class data
         ClassNode classNode = new ClassNode();
@@ -46,9 +48,10 @@ public abstract class AbstractClassTransformer implements IClassTransformer {
                 //        entry.getKey().getName(Namespace.MCP), entry.getKey().getAsmDescriptor(Namespace.MCP)));
                 for (MethodNode methodNode : classNode.methods) {
                     //log.debug(String.format("    %s, %s", methodNode.name, methodNode.desc));
-                    // try to match against both namespaces - mods sometimes have deobfed class names in signatures
+                    // try to match against MCP, SRG, and OBF namespaces - mods sometimes have deobfed class names in signatures
                     if (entry.getKey().getName(Namespace.MCP).equals(methodNode.name) && entry.getKey().getAsmDescriptor(Namespace.MCP).equals(methodNode.desc) ||
-                            entry.getKey().getName(Namespace.OBF).equals(methodNode.name) && entry.getKey().getAsmDescriptor(Namespace.OBF).equals(methodNode.desc)) {
+                        entry.getKey().getName(Namespace.SRG).equals(methodNode.name) && entry.getKey().getAsmDescriptor(Namespace.SRG).equals(methodNode.desc) ||
+                        entry.getKey().getName(Namespace.OBF).equals(methodNode.name) && entry.getKey().getAsmDescriptor(Namespace.OBF).equals(methodNode.desc)) {
                         AbstractMethodTransformer transformer = entry.getValue();
                         hasTransformed = true;
 

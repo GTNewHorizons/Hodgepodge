@@ -7,6 +7,7 @@ import net.minecraftforge.common.config.Configuration;
 import java.io.File;
 
 public class LoadingConfig {
+    // Mixins
     public boolean fixNorthWestBias;
     public boolean fixFenceConnections;
     public boolean fixIc2DirectInventoryAccess;
@@ -16,6 +17,12 @@ public class LoadingConfig {
     public boolean fixThaumcraftUnprotectedGetBlock;
     public boolean speedupChunkCoordinatesHashCode;
     public boolean fixHungerOverhaul;
+    public boolean removeUpdateChecks;
+    
+    // ASM
+    public boolean pollutionAsm;
+    public boolean cofhWorldTransformer;
+    
     public static Configuration config;
 
     public static BlockMatcher standardBlocks = new BlockMatcher();
@@ -34,9 +41,13 @@ public class LoadingConfig {
         fixIc2UnprotectedGetBlock = config.get("fixes", "fixIc2UnprotectedGetBlock", true, "Fixes various unchecked IC2 getBlock() methods").getBoolean();
         fixThaumcraftUnprotectedGetBlock = config.get("fixes", "fixThaumcraftUnprotectedGetBlock", true, "Various Thaumcraft unchecked getBlock() patches").getBoolean();
         fixHungerOverhaul = config.get("fixes", "fixHungerOverhaul", true, "Fix hunger overhaul low stat effects").getBoolean();
+        removeUpdateChecks = config.get("fixes", "removeUpdateChecks", true, "Remove old/stale/outdated update checks.").getBoolean();
         
         speedupChunkCoordinatesHashCode = config.get("speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
 
+        pollutionAsm = config.get("asm", "pollutionAsm", true, "Enable pollution rendering ASM").getBoolean();
+        cofhWorldTransformer = config.get("asm", "cofhWorldTransformer", true, "Enable Glease's ASM patch to disable unused CoFH tileentity cache").getBoolean();
+        
         if (config.hasChanged())
             config.save();
     }
