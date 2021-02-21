@@ -20,7 +20,7 @@ public class MixinBlockFire {
         )
     )
     protected Block getBlock(IBlockAccess world, int x, int y, int z) {
-        if (world instanceof World && !((World)world).blockExists(x, y, z))
+        if (!(world instanceof World) || !((World) world).blockExists(x, y, z))
             return Blocks.air;
 
         return world.getBlock(x, y, z);
