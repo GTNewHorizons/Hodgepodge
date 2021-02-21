@@ -135,6 +135,10 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
         REMOVE_COFH_CORE_UPDATE_CHECKS("Remove outdated COFH Core update check",
                  () -> config.removeUpdateChecks,
                  Collections.singletonList("removeUpdateChecks.CoFHCore.MixinCoFHCoreUpdateCheck")
+        ),
+        PREVENT_PICKUP_LOOT("Prevent monsters from picking up loot",
+                 () -> config.preventPickupLoot,
+                 Collections.singletonList("preventPickupLoot.MixinEntityLiving")
         );
 
 
