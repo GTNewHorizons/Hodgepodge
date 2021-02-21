@@ -16,13 +16,12 @@ public class MixinBlockFluidClassic {
         method = "Lnet/minecraftforge/fluids/BlockFluidClassic;canFlowInto(Lnet/minecraft/world/IBlockAccess;III)Z", 
         at = @At( 
             value = "INVOKE", 
-            target="Lnet/minecraft/world/IBlockAccess;getBlock(III)Lnet/minecraft/block/Block;",
-            ordinal = 0
+            target="Lnet/minecraft/world/IBlockAccess;getBlock(III)Lnet/minecraft/block/Block;"
         ),
         remap = false
     )
     protected Block getBlock(IBlockAccess world, int x, int y, int z) {
-        if (world instanceof World && !((World)world).blockExists(x, y, z))
+        if (!(world instanceof World) || !((World) world).blockExists(x, y, z))
             return Blocks.air;
 
         return world.getBlock(x, y, z);
