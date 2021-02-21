@@ -18,6 +18,7 @@ public class LoadingConfig {
     public boolean speedupChunkCoordinatesHashCode;
     public boolean fixHungerOverhaul;
     public boolean removeUpdateChecks;
+    public boolean preventPickupLoot;
     
     // ASM
     public boolean pollutionAsm;
@@ -42,6 +43,8 @@ public class LoadingConfig {
         fixThaumcraftUnprotectedGetBlock = config.get("fixes", "fixThaumcraftUnprotectedGetBlock", true, "Various Thaumcraft unchecked getBlock() patches").getBoolean();
         fixHungerOverhaul = config.get("fixes", "fixHungerOverhaul", true, "Fix hunger overhaul low stat effects").getBoolean();
         removeUpdateChecks = config.get("fixes", "removeUpdateChecks", true, "Remove old/stale/outdated update checks.").getBoolean();
+
+        preventPickupLoot = config.get("tweaks", "preventPickupLoot", true, "Prevent monsters from picking up loot.").getBoolean();
         
         speedupChunkCoordinatesHashCode = config.get("speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
 
