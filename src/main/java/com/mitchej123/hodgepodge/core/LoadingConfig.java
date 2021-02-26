@@ -19,6 +19,7 @@ public class LoadingConfig {
     public boolean fixHungerOverhaul;
     public boolean removeUpdateChecks;
     public boolean preventPickupLoot;
+	public boolean dropPickedLootOnDespawn;
     
     // ASM
     public boolean pollutionAsm;
@@ -45,7 +46,8 @@ public class LoadingConfig {
         removeUpdateChecks = config.get("fixes", "removeUpdateChecks", true, "Remove old/stale/outdated update checks.").getBoolean();
 
         preventPickupLoot = config.get("tweaks", "preventPickupLoot", true, "Prevent monsters from picking up loot.").getBoolean();
-        
+        dropPickedLootOnDespawn = config.get("tweaks", "dropPickedLootOnDespawn", true, "Drop picked loot on entity despawn").getBoolean();
+
         speedupChunkCoordinatesHashCode = config.get("speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
 
         pollutionAsm = config.get("asm", "pollutionAsm", true, "Enable pollution rendering ASM").getBoolean();
