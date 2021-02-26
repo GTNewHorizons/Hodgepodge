@@ -139,6 +139,10 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
         PREVENT_PICKUP_LOOT("Prevent monsters from picking up loot",
                  () -> config.preventPickupLoot,
                  Collections.singletonList("preventPickupLoot.MixinEntityLiving")
+        ),
+        DROP_PICKED_LOOT_ON_DESPAWN("Drop picked loot on entity despawn",
+                () -> config.dropPickedLootOnDespawn,
+                Collections.singletonList("dropPickedLootOnDespawn.MixinEntityLiving")
         );
 
 
@@ -152,8 +156,8 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
             this.applyIf = applyIf;
             this.mixinClasses = mixinClasses;
             this.jarName = null;
-        }        
-        
+        }
+
         MixinSets(String name, Supplier<Boolean> applyIf, String jarName, List<String> mixinClasses) {
             this.name = name;
             this.applyIf = applyIf;
