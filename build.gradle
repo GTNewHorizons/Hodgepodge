@@ -35,6 +35,10 @@ targetCompatibility = 1.8
 
 minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"
+
+    replaceIn "src/main/java/com/mitchej123/hodgepodge/Hodgepodge.java"
+    replace "GRADLETOKEN_VERSION", ((String) project.version)
+
 }
 
 configurations {
