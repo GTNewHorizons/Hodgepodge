@@ -12,7 +12,6 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 
 import com.mitchej123.hodgepodge.Hodgepodge;
-import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import io.netty.buffer.ByteBuf;
@@ -24,27 +23,18 @@ public class AnchorAlarm {
     private static final String NBT_KEY = "GT_RC_AnchorAlarmList";
     public static void addNewAnchor(EntityLivingBase entityliving, TileEntity te) {
         if (entityliving instanceof EntityPlayerMP) {
-            GameProfile owner = ((EntityPlayerMP)entityliving).getGameProfile();
-            for(Object obj : te.getWorldObj().playerEntities) {
-                if (obj instanceof EntityPlayerMP) {
-                    EntityPlayerMP player = (EntityPlayerMP) obj;
-                    if (PlayerPlugin.isSamePlayer(player.getGameProfile(), owner)) {
-                        byte[] oldbuf = null;
-                        if (player.getEntityData().hasKey(NBT_KEY)) {
-                            oldbuf = player.getEntityData().getByteArray(NBT_KEY);
-                        }
-                        byte[] newbuf = new byte[(oldbuf == null ? 0 : oldbuf.length) + 16];
-                        ByteBuf newbufwrap = Unpooled.wrappedBuffer(newbuf);
-                        newbufwrap.setIndex(0,0);
-                        if (oldbuf != null)
-                            newbufwrap.writeBytes(oldbuf);
-                        saveCoordinatesToPlayer(player, newbufwrap, newbuf, te);
-                    }
-                }
-            }
+            byte[] oldbuf = null;
+            if (entityliving.getEntityData().hasKey(NBT_KEY))
+                oldbuf = entityliving.getEntityData().getByteArray(NBT_KEY);
+            byte[] newbuf = new byte[(oldbuf == null ? 0 : oldbuf.length) + 16];
+            ByteBuf newbufwrap = Unpooled.wrappedBuffer(newbuf);
+            newbufwrap.setIndex(0, 0);
+            if (oldbuf != null)
+                newbufwrap.writeBytes(oldbuf);
+            saveCoordinatesToPlayer(entityliving, newbufwrap, newbuf, te);
         }
     }
-    private static void saveCoordinatesToPlayer(EntityPlayerMP player, ByteBuf buf, byte[] bytes, TileEntity te) {
+    private static void saveCoordinatesToPlayer(EntityLivingBase player, ByteBuf buf, byte[] bytes, TileEntity te) {
         buf.writeInt(te.getWorldObj().provider.dimensionId);
         buf.writeInt(te.xCoord);
         buf.writeInt(te.yCoord);
