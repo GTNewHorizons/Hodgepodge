@@ -144,6 +144,13 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
         DROP_PICKED_LOOT_ON_DESPAWN("Drop picked loot on entity despawn",
                 () -> config.dropPickedLootOnDespawn,
                 Collections.singletonList("dropPickedLootOnDespawn.MixinEntityLiving")
+        ),
+        WAKE_ANCHORS_ON_LOGIN("Wake up personal anchors on owner login",
+            () -> config.installAnchorAlarm,
+            "Railcraft_1.7.10",
+            Arrays.asList(
+                "wakePersonalAnchors.MixinTileAnchorPassive",
+                "wakePersonalAnchors.MixinTileAnchorPersonal")
         );
 
 

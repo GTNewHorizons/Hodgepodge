@@ -1,6 +1,8 @@
 package com.mitchej123.hodgepodge;
 
 import com.mitchej123.hodgepodge.core.HodgePodgeClient;
+import com.mitchej123.hodgepodge.core.util.AnchorAlarm;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -18,9 +20,11 @@ public class Hodgepodge {
     public static final String VERSION = "GRADLETOKEN_VERSION";
     public static final String NAME = "A Hodgepodge of Patches";
     public static XSTR RNG = new XSTR();
+    public final static AnchorAlarm ANCHOR_ALARM = new AnchorAlarm();
 
     @EventHandler
-    public void init(FMLInitializationEvent asd) {
+    public void init(FMLInitializationEvent event) {
+        FMLCommonHandler.instance().bus().register(ANCHOR_ALARM);
     }
 
     @EventHandler
