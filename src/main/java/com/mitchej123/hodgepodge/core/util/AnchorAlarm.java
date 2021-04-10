@@ -59,6 +59,10 @@ public class AnchorAlarm {
                         int y = buf.readInt();
                         int z = buf.readInt();
                         WorldServer w = DimensionManager.getWorld(dim);
+                        if (w == null) {
+                            DimensionManager.initDimension(dim);
+                            w = DimensionManager.getWorld(dim);
+                        }
                         if (w != null) {
                             // if there is some different tile at the place, ok, we will load this chunk one last time
                             w.getChunkProvider().loadChunk(x >> 4, z >> 4);
