@@ -27,7 +27,7 @@ repositories {
     }
 }
 
-version = "1.6.3"
+version = "1.6.4"
 group = "com.mitchej123.hodgepodge"
 archivesBaseName = "hodgepodge"
 sourceCompatibility = 1.8
