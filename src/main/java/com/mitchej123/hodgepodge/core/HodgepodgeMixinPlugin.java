@@ -145,6 +145,10 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
                 () -> config.dropPickedLootOnDespawn,
                 Collections.singletonList("dropPickedLootOnDespawn.MixinEntityLiving")
         ),
+        GAMEOVER_GUI_LOCKED_DISABLED("Game Over GUI buttons disabled if switching fullscreen Fix",
+                () -> config.fixGuiGameOver,
+                Collections.singletonList("fixGuiGameOver.MixinGuiGameOver")
+        ),
         WAKE_ANCHORS_ON_LOGIN("Wake up personal anchors on owner login",
             () -> config.installAnchorAlarm,
             "Railcraft_1.7.10",
