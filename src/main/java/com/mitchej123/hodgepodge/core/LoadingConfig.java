@@ -17,10 +17,11 @@ public class LoadingConfig {
     public boolean fixThaumcraftUnprotectedGetBlock;
     public boolean speedupChunkCoordinatesHashCode;
     public boolean fixHungerOverhaul;
+    public boolean fixGuiGameOver;
+    public boolean fixHopperHitBox;
     public boolean removeUpdateChecks;
     public boolean preventPickupLoot;
     public boolean dropPickedLootOnDespawn;
-    public boolean fixGuiGameOver;
     public boolean installAnchorAlarm;
     // ASM
     public boolean pollutionAsm;
@@ -46,8 +47,9 @@ public class LoadingConfig {
         fixHungerOverhaul = config.get("fixes", "fixHungerOverhaul", true, "Fix hunger overhaul low stat effects").getBoolean();
         removeUpdateChecks = config.get("fixes", "removeUpdateChecks", true, "Remove old/stale/outdated update checks.").getBoolean();
         fixGuiGameOver = config.get("fixes", "fixGuiGameOver", true, "Fix Game Over GUI buttons disabled if switching fullscreen").getBoolean();
+        fixHopperHitBox = config.get("fixes", "fixHopperHitBox", true, "Fix vanilla hopper hit box").getBoolean();
+        
         installAnchorAlarm = config.get("tweaks", "installAnchorAlarm", true, "Wake up passive & personal anchors on player login").getBoolean();
-
         preventPickupLoot = config.get("tweaks", "preventPickupLoot", true, "Prevent monsters from picking up loot.").getBoolean();
         dropPickedLootOnDespawn = config.get("tweaks", "dropPickedLootOnDespawn", true, "Drop picked loot on entity despawn").getBoolean();
 
