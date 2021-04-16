@@ -155,7 +155,11 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
             Arrays.asList(
                 "wakePersonalAnchors.MixinTileAnchorPassive",
                 "wakePersonalAnchors.MixinTileAnchorPersonal")
-        );
+        ),
+        FIX_HOPPER_HIT_BOX("Fix vanilla hopper hit box",
+            () -> config.fixHopperHitBox,
+            Collections.singletonList("fixHopperHitBox.MixinBlockHopper"))
+        ;
 
 
         private final String name;
