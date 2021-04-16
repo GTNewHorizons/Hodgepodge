@@ -56,7 +56,7 @@ dependencies {
     compileOnly files("libs/HungerOverhaul-1.7.10-1.0.2.jar")
     compileOnly files("libs/Thaumcraft-1.7.10-4.2.3.5-dev.jar")
     compileOnly files("libs/CoFHCore-[1.7.10]3.1.4-329-dev.jar")
-    compileOnly files("libs/railcraft-1.7.10-9.12.2.0.jar")
+    compileOnly files("libs/railcraft-1.7.10-9.12.2.0-dev.jar")
 }
 
 
