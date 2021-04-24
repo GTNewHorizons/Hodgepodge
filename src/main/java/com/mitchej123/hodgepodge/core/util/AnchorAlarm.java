@@ -102,7 +102,7 @@ public class AnchorAlarm {
                         }
                         if (w != null) {
                             // if there is some different tile at the place, ok, we will load this chunk one last time
-                            w.getChunkProvider().loadChunk(x >> 4, z >> 4);
+                            w.getChunkProvider().provideChunk(x >> 4, z >> 4);
                             TileEntity t = w.getTileEntity(x, y, z);
                             if (loadedTiles.contains(t))
                                 continue;
