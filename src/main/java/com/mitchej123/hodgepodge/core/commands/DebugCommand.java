@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 
 import com.mitchej123.hodgepodge.core.util.AnchorAlarm;
@@ -24,7 +25,7 @@ public class DebugCommand extends CommandBase {
     private void printHelp(ICommandSender sender) {
         sender.addChatMessage(new ChatComponentText("Usage: hp <toggle|anchor>"));
         sender.addChatMessage(new ChatComponentText("\"toggle anchordebug\" - toggles RC anchor debugging"));
-        sender.addChatMessage(new ChatComponentText("\"anchor list <player>\" - list RC anchors placed by the player (empty for current player)"));
+        sender.addChatMessage(new ChatComponentText("\"anchor list [player]\" - list RC anchors placed by the player (empty for current player)"));
     }
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] ss) {
@@ -40,8 +41,11 @@ public class DebugCommand extends CommandBase {
                 l.add("anchordebug");
         } else if (test.equals("anchor")) {
             String test1 = ss[1].trim();
-            if (test1.isEmpty() || "list".startsWith(test1))
+            if (test1.isEmpty() || ("list".startsWith(test1) && !"list".equals(test1)))
                 l.add("list");
+            else if ("list".equals(test1) && ss.length > 2) {
+                l.addAll(getListOfStringsMatchingLastWord(ss, MinecraftServer.getServer().getAllUsernames()));
+            }
         }
         return l;
     }
