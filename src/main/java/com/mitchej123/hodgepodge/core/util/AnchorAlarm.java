@@ -111,6 +111,8 @@ public class AnchorAlarm {
                                 System.out.println("[AnchorDebug] Loading anchor at (" + x + ", " + y + ", " + z + ") at dim " + dim);
                             if (t instanceof TileAnchorWorld) {
                                 if (PlayerPlugin.isSamePlayer(((TileAnchorWorld)t).getOwner(), event.player.getGameProfile())) {
+                                    // Thermos skips remotely loaded entities
+                                    t.updateEntity();
                                     // if there is still our tile there, save it for later
                                     ++validAlarmCount;
                                     newbuf.writeInt(dim);
