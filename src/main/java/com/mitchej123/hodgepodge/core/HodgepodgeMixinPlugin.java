@@ -128,6 +128,14 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
                      "fixIc2Nightvision.MixinIc2QuantumSuitNightVision"
                   )
          ),
+        IC2_REACTOR_DUPE("IC2 Reactor Dupe",
+                () -> config.fixIc2ReactorDupe,
+                Collections.singletonList("fixIc2ReactorDupe.MixinTileEntityReactorChamberElectric")
+        ),
+        HIDE_IC2_REACTOR_COOLANT_SLOTS("IC2 Reactor Accessible Slots",
+                () -> config.hideIc2ReactorSlots,
+                Collections.singletonList("hideIc2ReactorCoolantSlots.MixinTileEntityNuclearReactorElectric")
+        ),
         HUNGER_OVERHAUL_FIX("Hunger Overhaul Fix",
                 () -> config.fixHungerOverhaul,
                 "HungerOverhaul",
@@ -178,13 +186,13 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
             this.name = name;
             this.applyIf = applyIf;
             this.mixinClasses = mixinClasses;
-            this.jarName = jarName; 
+            this.jarName = jarName;
         }
 
         public boolean shouldBeLoaded() {
             return applyIf.get();
         }
-        
+
         public boolean loadJar() {
             try {
                 if( jarName == null) return true;
@@ -193,7 +201,7 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
                     log.info("Jar not found: " + jarName);
                     return false;
                 }
-                
+
                 log.info("Attempting to add " + jar.toString() + " to the URL Class Path");
                 if(!jar.exists())
                     throw new FileNotFoundException(jar.toString());

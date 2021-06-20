@@ -11,6 +11,7 @@ public class LoadingConfig {
     public boolean fixNorthWestBias;
     public boolean fixFenceConnections;
     public boolean fixIc2DirectInventoryAccess;
+    public boolean fixIc2ReactorDupe;
     public boolean fixIc2Nightvision;
     public boolean fixVanillaUnprotectedGetBlock;
     public boolean fixIc2UnprotectedGetBlock;
@@ -23,6 +24,7 @@ public class LoadingConfig {
     public boolean preventPickupLoot;
     public boolean dropPickedLootOnDespawn;
     public boolean installAnchorAlarm;
+    public boolean hideIc2ReactorSlots;
     // ASM
     public boolean pollutionAsm;
     public boolean cofhWorldTransformer;
@@ -40,6 +42,7 @@ public class LoadingConfig {
         fixNorthWestBias = config.get("fixes", "fixNorthWestBias", true, "Fix northwest bias on RandomPositionGenerator").getBoolean();
         fixFenceConnections = config.get("fixes", "fixFenceConnections", true, "Fix fence connections with other types of fence").getBoolean();
         fixIc2DirectInventoryAccess = config.get("fixes", "fixIc2DirectInventoryAccess", true, "Fix IC2's direct inventory access").getBoolean();
+        fixIc2ReactorDupe = config.get("fixes", "fixIc2ReactorDupe", true, "Fix IC2's reactor dupe").getBoolean();
         fixIc2Nightvision = config.get("fixes", "fixIc2Nightvision", true, "Prevent IC2's nightvision from blinding you").getBoolean();
         fixVanillaUnprotectedGetBlock = config.get("fixes", "fixVanillaUnprotectedGetBlock", true, "Fixes various unchecked vanilla getBlock() methods").getBoolean();
         fixIc2UnprotectedGetBlock = config.get("fixes", "fixIc2UnprotectedGetBlock", true, "Fixes various unchecked IC2 getBlock() methods").getBoolean();
@@ -52,12 +55,13 @@ public class LoadingConfig {
         installAnchorAlarm = config.get("tweaks", "installAnchorAlarm", true, "Wake up passive & personal anchors on player login").getBoolean();
         preventPickupLoot = config.get("tweaks", "preventPickupLoot", true, "Prevent monsters from picking up loot.").getBoolean();
         dropPickedLootOnDespawn = config.get("tweaks", "dropPickedLootOnDespawn", true, "Drop picked loot on entity despawn").getBoolean();
+        hideIc2ReactorSlots = config.get("tweaks", "hideIc2ReactorSlots", true, "Prevent IC2's reactor's coolant slots from being accessed by automations if not a fluid reactor").getBoolean();
 
         speedupChunkCoordinatesHashCode = config.get("speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
 
         pollutionAsm = config.get("asm", "pollutionAsm", true, "Enable pollution rendering ASM").getBoolean();
         cofhWorldTransformer = config.get("asm", "cofhWorldTransformer", true, "Enable Glease's ASM patch to disable unused CoFH tileentity cache").getBoolean();
-        
+
         if (config.hasChanged())
             config.save();
     }
