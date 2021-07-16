@@ -169,7 +169,10 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
             Collections.singletonList("fixHopperHitBox.MixinBlockHopper")),
         FIX_GET_BLOCK_LIGHT_VALUE("Fix vanilla light value calculation NPE",
                 () -> config.fixGetBlockLightValue,
-                Collections.singletonList("fixGetBlockLightValue.MixinWorld"))
+                Collections.singletonList("fixGetBlockLightValue.MixinWorld")),
+        FIX_FIRE_SPREAD("Fix vanilla fire spread NPE",
+                () -> config.fixFireSpread,
+                Collections.singletonList("fixFireSpread.MixinBlockFire"))
         ;
 
 
