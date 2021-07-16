@@ -166,7 +166,10 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
         ),
         FIX_HOPPER_HIT_BOX("Fix vanilla hopper hit box",
             () -> config.fixHopperHitBox,
-            Collections.singletonList("fixHopperHitBox.MixinBlockHopper"))
+            Collections.singletonList("fixHopperHitBox.MixinBlockHopper")),
+        FIX_GET_BLOCK_LIGHT_VALUE("Fix vanilla light value calculation NPE",
+                () -> config.fixGetBlockLightValue,
+                Collections.singletonList("fixGetBlockLightValue.MixinWorld"))
         ;
 
 

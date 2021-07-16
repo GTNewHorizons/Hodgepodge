@@ -25,6 +25,7 @@ public class LoadingConfig {
     public boolean dropPickedLootOnDespawn;
     public boolean installAnchorAlarm;
     public boolean hideIc2ReactorSlots;
+    public boolean fixGetBlockLightValue;
     // ASM
     public boolean pollutionAsm;
     public boolean cofhWorldTransformer;
@@ -51,7 +52,8 @@ public class LoadingConfig {
         removeUpdateChecks = config.get("fixes", "removeUpdateChecks", true, "Remove old/stale/outdated update checks.").getBoolean();
         fixGuiGameOver = config.get("fixes", "fixGuiGameOver", true, "Fix Game Over GUI buttons disabled if switching fullscreen").getBoolean();
         fixHopperHitBox = config.get("fixes", "fixHopperHitBox", true, "Fix vanilla hopper hit box").getBoolean();
-        
+        fixGetBlockLightValue = config.get("fixes", "fixGetBlockLightValue", true, "Fix vanilla light calculation sometimes cause NPE on thermos").getBoolean();
+
         installAnchorAlarm = config.get("tweaks", "installAnchorAlarm", true, "Wake up passive & personal anchors on player login").getBoolean();
         preventPickupLoot = config.get("tweaks", "preventPickupLoot", true, "Prevent monsters from picking up loot.").getBoolean();
         dropPickedLootOnDespawn = config.get("tweaks", "dropPickedLootOnDespawn", true, "Drop picked loot on entity despawn").getBoolean();
