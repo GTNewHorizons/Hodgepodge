@@ -34,7 +34,11 @@ public class HodgePodgeASMLoader implements IFMLLoadingPlugin {
             "World Transformer - Remove CoFH tile entity cache",
             () -> HodgepodgeMixinPlugin.config.cofhWorldTransformer,
             Collections.singletonList("com.mitchej123.hodgepodge.asm.WorldTransformer")
-        );
+        ),
+        FIX_POTION_EFFECT_RENDERING("Move vanilla potion effect status rendering before everything else",
+            () -> HodgepodgeMixinPlugin.config.fixPotionEffectRender,
+            Collections.singletonList("com.mitchej123.hodgepodge.asm.InventoryEffectRendererTransformer"))
+        ;
         
         private final String name;
         private final Supplier<Boolean> applyIf;
