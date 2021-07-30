@@ -132,6 +132,10 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
                 () -> config.fixIc2ReactorDupe,
                 Collections.singletonList("fixIc2ReactorDupe.MixinTileEntityReactorChamberElectric")
         ),
+        IC2_HAZMAT("IC2 Hazmat",
+                () -> config.fixIc2Hazmat,
+                Collections.singletonList("fixIc2Hazmat.MixinIc2Hazmat")
+        ),
         HIDE_IC2_REACTOR_COOLANT_SLOTS("IC2 Reactor Accessible Slots",
                 () -> config.hideIc2ReactorSlots,
                 Collections.singletonList("hideIc2ReactorCoolantSlots.MixinTileEntityNuclearReactorElectric")

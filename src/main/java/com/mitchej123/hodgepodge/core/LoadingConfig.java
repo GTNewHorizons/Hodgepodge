@@ -13,6 +13,7 @@ public class LoadingConfig {
     public boolean fixIc2DirectInventoryAccess;
     public boolean fixIc2ReactorDupe;
     public boolean fixIc2Nightvision;
+    public boolean fixIc2Hazmat;
     public boolean fixVanillaUnprotectedGetBlock;
     public boolean fixIc2UnprotectedGetBlock;
     public boolean fixThaumcraftUnprotectedGetBlock;
@@ -46,6 +47,7 @@ public class LoadingConfig {
         fixIc2DirectInventoryAccess = config.get("fixes", "fixIc2DirectInventoryAccess", true, "Fix IC2's direct inventory access").getBoolean();
         fixIc2ReactorDupe = config.get("fixes", "fixIc2ReactorDupe", true, "Fix IC2's reactor dupe").getBoolean();
         fixIc2Nightvision = config.get("fixes", "fixIc2Nightvision", true, "Prevent IC2's nightvision from blinding you").getBoolean();
+        fixIc2Hazmat = config.get("fixes", "fixIc2Hazmat", true,"Fix IC2 armors to avoid giving poison").getBoolean();
         fixVanillaUnprotectedGetBlock = config.get("fixes", "fixVanillaUnprotectedGetBlock", true, "Fixes various unchecked vanilla getBlock() methods").getBoolean();
         fixIc2UnprotectedGetBlock = config.get("fixes", "fixIc2UnprotectedGetBlock", true, "Fixes various unchecked IC2 getBlock() methods").getBoolean();
         fixThaumcraftUnprotectedGetBlock = config.get("fixes", "fixThaumcraftUnprotectedGetBlock", true, "Various Thaumcraft unchecked getBlock() patches").getBoolean();
