@@ -8,6 +8,7 @@ public class References {
     public static ClassRef cHogClient, cRenderBlocks, cBlock;
     public static ClassRef bopFoliageRenderer;
     public static ClassRef gt_PollutionRenderer;
+    public static ClassRef cEffectRenderer;
 
     static
     {
@@ -40,5 +41,8 @@ public class References {
 
         bopFoliageRenderer = new ClassRef("biomesoplenty.client.render.blocks.FoliageRenderer");
         bopFoliageRenderer.addMethod("renderCrossedSquares", ClassRef.BOOLEAN, cBlock, ClassRef.INT, ClassRef.INT, ClassRef.INT, cRenderBlocks);
+
+        cEffectRenderer = new ClassRef("net.minecraft.client.renderer.InventoryEffectRenderer", "bfo");
+        cEffectRenderer.addMethod("drawScreen", "func_73863_a", "a", ClassRef.VOID, ClassRef.INT, ClassRef.INT, ClassRef.FLOAT);
     }
 }
