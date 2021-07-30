@@ -7,8 +7,10 @@ import org.spongepowered.asm.mixin.Overwrite;
 import gregtech.api.util.GT_Utility;
 
 @Mixin(value = ItemArmorHazmat.class, remap = false)
+
 public class MixinIc2Hazmat {
     @Overwrite()
+    //IC2 logic superseeded by GT check
     public static boolean hasCompleteHazmat(EntityLivingBase entity) {
         if(GT_Utility.isWearingFullRadioHazmat(entity)) {
             return true;
