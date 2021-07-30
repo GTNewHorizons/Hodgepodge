@@ -29,6 +29,10 @@ repositories {
         name = "ic2"
         url = "http://maven.ic2.player.to/"
     }
+    maven {
+        name = "jitpack"
+        url("https://jitpack.io")
+    }
 }
 
 version = "1.6.9"
@@ -61,6 +65,9 @@ dependencies {
     compileOnly files("libs/Thaumcraft-1.7.10-4.2.3.5-dev.jar")
     compileOnly files("libs/CoFHCore-[1.7.10]3.1.4-329-dev.jar")
     compileOnly files("libs/railcraft-1.7.10-9.12.2.0-dev.jar")
+    compile("com.github.GTNewHorizons:GT5-Unofficial:experimental-SNAPSHOT:dev") {
+        transitive = false
+    }
 }
 
 
