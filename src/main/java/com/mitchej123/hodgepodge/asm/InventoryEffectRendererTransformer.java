@@ -9,11 +9,12 @@ import org.objectweb.asm.tree.InsnList;
 public class InventoryEffectRendererTransformer extends AbstractClassTransformer {
     public InventoryEffectRendererTransformer()
     {
-        methodTransformers.put(References.cEffectRederer.getMethod("drawScreen"), new AbstractMethodTransformer() {
+        methodTransformers.put(References.cEffectRenderer.getMethod("drawScreen"), new AbstractMethodTransformer() {
             @Override
             public void transform() {
                 // Cut out super.drawScreen() sequence
                 AbstractInsnNode start = findNext(currentMethod.instructions.getFirst(), matchOpcode(Opcodes.ALOAD));
+                // this cannot be InsnList, because it would prematurely take ownership of the removed instructions
                 AbstractInsnNode[] instToMove = new AbstractInsnNode[5];
                 for (int i = 0; i < 5; ++i) {
                     instToMove[i] = start;
