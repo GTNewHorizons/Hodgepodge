@@ -143,7 +143,10 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
         HUNGER_OVERHAUL_FIX("Hunger Overhaul Fix",
                 () -> config.fixHungerOverhaul,
                 "HungerOverhaul",
-                Collections.singletonList("fixHungerOverhaul.MixinHungerOverhaulLowStatEffect")
+                Arrays.asList(
+                    "fixHungerOverhaul.MixinHungerOverhaulLowStatEffect",
+                    "fixHungerOverhaul.MixinHungerOverhaulHealthRegen"
+                )
         ),
         REMOVE_COFH_CORE_UPDATE_CHECKS("Remove outdated COFH Core update check",
                  () -> config.removeUpdateChecks,

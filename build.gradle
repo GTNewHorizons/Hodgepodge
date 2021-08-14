@@ -33,9 +33,13 @@ repositories {
         name = "jitpack"
         url("https://jitpack.io")
     }
+    maven {
+        name = "Applecore"
+        url = "https://www.ryanliptak.com/maven/"
+    }
 }
 
-version = "1.6.9"
+version = "1.6.10"
 group = "com.mitchej123.hodgepodge"
 archivesBaseName = "hodgepodge"
 sourceCompatibility = 1.8
@@ -59,6 +63,7 @@ configurations {
 
 dependencies {
     compile "net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev"
+    compile "applecore:AppleCore:1.7.10-1.3.9:deobf"
     
     compileOnly files("libs/SpongeMixins-1.3.0-dev.jar")
     compileOnly files("libs/HungerOverhaul-1.7.10-1.0.2.jar")
