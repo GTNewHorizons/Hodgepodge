@@ -147,7 +147,6 @@ sourceSets.main {
 tasks {
     val yourMixinConfig = "mixins.hodgepodge.json"
     val refMapForYourConfig = "mixins.hodgepodge.refmap.json"
-    val relativePathToMixinAP = "tools" + File.separator + "mixin-0.8-SNAPSHOT.jar"
     lateinit var refMapFile: String
     lateinit var srgFile: String
     lateinit var mixinSrgFile: String
@@ -237,7 +236,7 @@ tasks {
     }
     artifacts {
         archives(sourcesJar)
-        //archives(javadocJar)fixme: bunch of small errors breaking this
+        archives(javadocJar)
         archives(devJar)
     }
 }

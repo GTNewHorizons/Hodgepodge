@@ -22,7 +22,7 @@ public class MixinHungerOverhaulLowStatEffect {
 
     /**
      * @author mitchej123
-     * @reason Fix bad interaction with SoL Carrot Eddition
+     * //@reason Fix bad interaction with SoL Carrot Eddition
      */
     @Overwrite()
     @SubscribeEvent

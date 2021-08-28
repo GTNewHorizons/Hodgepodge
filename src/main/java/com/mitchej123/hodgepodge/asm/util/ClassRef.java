@@ -45,7 +45,7 @@ public class ClassRef extends AbstractResolvable<Class<?>> {
     
     /** Internal factory for primitive types
      * @param name
-     * @param special
+     * //@param special
      * @return
      */
     protected static ClassRef primitive(String name, Class<?> classObj) {

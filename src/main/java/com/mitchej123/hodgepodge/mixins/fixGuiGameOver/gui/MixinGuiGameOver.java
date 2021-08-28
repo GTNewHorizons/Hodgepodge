@@ -17,7 +17,7 @@ public class MixinGuiGameOver {
 
     /**
      * @author ElNounch
-     * @reason Fix Game Over GUI buttons disabled if switching fullscreen
+     * //@reason Fix Game Over GUI buttons disabled if switching fullscreen
      */
     @Inject(method = "initGui", at = @At("HEAD"))
     public void resetedInitGui(CallbackInfo ci) {
