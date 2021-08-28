@@ -105,6 +105,7 @@ dependencies {
     localAnnotationProcessor(fileTree("annotationProcessor") { include("*.jar") })
 
     val mixinVersion: String by project
+    val applecoreVersion: String by project
     val ic2Version: String by project
     val gt5uVersion: String by project
     val codechickenlibVersion: String by project
@@ -123,16 +124,20 @@ dependencies {
     }
 
     // Runtime dependencies
+    runtimeOnly("applecore:$applecoreVersion:deobf")
     compile("net.industrial-craft:industrialcraft-2:$ic2Version:dev")
     compile("com.github.GTNewHorizons:GT5-Unofficial:$gt5uVersion:dev") {
+        exclude(module = "appliedenergistics2")
+        exclude(module = "EnderCore")
+        exclude(module = "EnderIO")
         isChanging = true
     }
 
     // Optional dependencies for testing
-    runtimeOnly("codechicken:CodeChickenLib:$codechickenlibVersion:dev")
-    runtimeOnly("codechicken:CodeChickenCore:$codechickencoreVersion:dev")
-    runtimeOnly("codechicken:NotEnoughItems:$neiVersion:dev")
-    runtimeOnly("mcp.mobius.waila:Waila:$wailaVersion")
+    //runtimeOnly("codechicken:CodeChickenLib:$codechickenlibVersion:dev")
+    //runtimeOnly("codechicken:CodeChickenCore:$codechickencoreVersion:dev")
+    //runtimeOnly("codechicken:NotEnoughItems:$neiVersion:dev")
+    //runtimeOnly("mcp.mobius.waila:Waila:$wailaVersion")
 }
 
 sourceSets.main {
