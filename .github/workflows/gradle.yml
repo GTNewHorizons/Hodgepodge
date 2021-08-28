@@ -5,9 +5,9 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ 1.7.10-kts ]
+    branches: [ master ]
   pull_request:
-    branches: [ 1.7.10-kts ]
+    branches: [ master ]
 
 jobs:
   build:
@@ -33,17 +33,6 @@ jobs:
     - name: Build the mod
       run: ./gradlew build
       
-    - name: git
-      run: |
-        # setup the username and email. I tend to use 'GitHub Actions Bot' with no email by default
-        git status
-      
-    #- name: Uploading artifacts
-    #  uses: actions/upload-artifact@v2
-    #  with:
-    #    name: Release
-    #    path: build/libs/
-        
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
