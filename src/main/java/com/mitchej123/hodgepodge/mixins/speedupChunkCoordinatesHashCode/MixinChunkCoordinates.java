@@ -18,7 +18,7 @@ public class MixinChunkCoordinates {
 
     /**
      * @author mitchej123
-     * @reason Swap out the default (terrible) hashCode function with a better one
+     * //@reason Swap out the default (terrible) hashCode function with a better one
      */
     @Overwrite()
     public int hashCode() {

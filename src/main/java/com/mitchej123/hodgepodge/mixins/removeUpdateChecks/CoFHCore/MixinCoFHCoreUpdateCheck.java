@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 public class MixinCoFHCoreUpdateCheck {
     /**
      * @author mitchej123
-     * @reason Update URL is long since gone
+     * //@reason Update URL is long since gone
      */
     @Overwrite(remap = false)
     public void run() {

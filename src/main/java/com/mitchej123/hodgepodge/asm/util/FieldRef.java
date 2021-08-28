@@ -92,7 +92,7 @@ public class FieldRef extends AbstractResolvable<Field> {
     }
     
     /** Get static field value
-     * @param instance
+     * //@param instance
      * @return field value
      */
     public <T> T getStaticField() {

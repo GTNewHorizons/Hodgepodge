@@ -12,7 +12,7 @@ public class MixinEntityLiving {
     
     /**
      * @author mitchej123
-     * @reason Stop monsters from picking up loot and not despawning
+     * //@reason Stop monsters from picking up loot and not despawning
      */
     @Overwrite()
     public void setCanPickUpLoot(boolean canPickUpLoot) {
@@ -21,7 +21,7 @@ public class MixinEntityLiving {
     
     /**
      * @author mitchej123
-     * @reason Stop monsters from picking up loot and not despawning
+     * //@reason Stop monsters from picking up loot and not despawning
      */
     @Overwrite
     public boolean canPickUpLoot() {

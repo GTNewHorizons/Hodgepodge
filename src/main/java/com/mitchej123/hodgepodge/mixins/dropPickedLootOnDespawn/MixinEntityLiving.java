@@ -22,7 +22,7 @@ public class MixinEntityLiving {
 
     /**
      * @author ElNounch
-     * @reason Don't disable despawning for loot picking reasons
+     * //@reason Don't disable despawning for loot picking reasons
      */
     @Redirect(method="onLivingUpdate()V", at = @At(value="FIELD", target="Lnet/minecraft/entity/EntityLiving;persistenceRequired:Z", opcode=PUTFIELD))
     public void dontSetPersistenceRequired(EntityLiving o, boolean newVal) {
@@ -30,7 +30,7 @@ public class MixinEntityLiving {
 
     /**
      * @author ElNounch
-     * @reason Drop picked up items when despawning
+     * // Drop picked up items when despawning
      */
     @Inject(method = "despawnEntity()V", at = @At(value="INVOKE", target="Lnet/minecraft/entity/EntityLiving;setDead()V"))
     public void despawnEntity_dropPickedLoot(CallbackInfo ci) {
