@@ -176,7 +176,10 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
                 Collections.singletonList("fixGetBlockLightValue.MixinWorld")),
         FIX_FIRE_SPREAD("Fix vanilla fire spread NPE",
                 () -> config.fixFireSpread,
-                Collections.singletonList("fixFireSpread.MixinBlockFire"))
+                Collections.singletonList("fixFireSpread.MixinBlockFire")),
+        FIX_ALPHA_PASS_NONNATURALBUFFERINDEXILLARGE("Fixes crash on rendering of transparent/translucent blocks when they do not draw nothing",
+                () -> config.fixAlphaPassNonNaturalBufferIndexIllArgE,
+                Collections.singletonList("fixAlphaPassNonNaturalBufferIndexIllArgE.MixinTesselator"))
         ;
 
 
