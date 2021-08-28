@@ -106,6 +106,9 @@ dependencies {
 
     val mixinVersion: String by project
     val applecoreVersion: String by project
+    val baublesVersion: String by project
+    val thaumcraftVersion: String by project
+    val railcraftVersion: String by project
     val ic2Version: String by project
     val gt5uVersion: String by project
     val codechickenlibVersion: String by project
@@ -123,8 +126,11 @@ dependencies {
         exclude(module = "log4j-core")
     }
 
-    // Runtime dependencies
-    runtimeOnly("applecore:$applecoreVersion:deobf")
+    // Hard dependencies
+    runtimeOnly("applecore:AppleCore:$applecoreVersion:deobf")
+    compile("thaumcraft:Thaumcraft:$thaumcraftVersion:dev")
+    runtimeOnly("com.azanor.baubles:Baubles:$baublesVersion:deobf")
+    compile("mods.railcraft:Railcraft_1.7.10:$railcraftVersion:dev")
     compile("net.industrial-craft:industrialcraft-2:$ic2Version:dev")
     compile("com.github.GTNewHorizons:GT5-Unofficial:$gt5uVersion:dev") {
         exclude(module = "appliedenergistics2")
@@ -134,10 +140,10 @@ dependencies {
     }
 
     // Optional dependencies for testing
-    //runtimeOnly("codechicken:CodeChickenLib:$codechickenlibVersion:dev")
-    //runtimeOnly("codechicken:CodeChickenCore:$codechickencoreVersion:dev")
-    //runtimeOnly("codechicken:NotEnoughItems:$neiVersion:dev")
-    //runtimeOnly("mcp.mobius.waila:Waila:$wailaVersion")
+    runtimeOnly("codechicken:CodeChickenLib:$codechickenlibVersion:dev")
+    runtimeOnly("codechicken:CodeChickenCore:$codechickencoreVersion:dev")
+    runtimeOnly("codechicken:NotEnoughItems:$neiVersion:dev")
+    runtimeOnly("mcp.mobius.waila:Waila:$wailaVersion")
 }
 
 sourceSets.main {
