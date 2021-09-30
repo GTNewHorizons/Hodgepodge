@@ -176,7 +176,10 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
                 Collections.singletonList("fixGetBlockLightValue.MixinWorld")),
         FIX_FIRE_SPREAD("Fix vanilla fire spread NPE",
                 () -> config.fixFireSpread,
-                Collections.singletonList("fixFireSpread.MixinBlockFire"))
+                Collections.singletonList("fixFireSpread.MixinBlockFire")),
+        TILE_RENDERER_PROFILER("Shows renderer's impact on FPS in vanilla lagometer",
+                () -> config.enableTileRendererProfiler,
+                Arrays.asList("profiler.TileEntityRendererDispatcherMixin", "profiler.MinecraftMixin"))
         ;
 
 

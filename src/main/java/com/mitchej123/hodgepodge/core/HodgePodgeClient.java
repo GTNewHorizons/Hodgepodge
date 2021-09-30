@@ -1,7 +1,9 @@
 package com.mitchej123.hodgepodge.core;
 
+import com.mitchej123.hodgepodge.client.ClientTicker;
 import com.mitchej123.hodgepodge.core.util.ColorOverrideType;
 import com.mitchej123.hodgepodge.asm.References;
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.common.MinecraftForge;
@@ -24,6 +26,8 @@ public class HodgePodgeClient {
             MinecraftForge.EVENT_BUS.register(LoadingConfig.crossedSquares);
             MinecraftForge.EVENT_BUS.register(LoadingConfig.blockVine);
         }
+
+        FMLCommonHandler.instance().bus().register(ClientTicker.INSTANCE);
     }
 
     // ASM hookers
