@@ -16,4 +16,8 @@ repositories {
         name = "Applecore"
         url = "https://www.ryanliptak.com/maven/"
     }
+    ivy {
+        name = 'gtnh_download_source'
+        artifactPattern("http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]-[revision].[ext]")
+    }
 }
