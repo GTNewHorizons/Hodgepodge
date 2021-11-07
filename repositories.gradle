@@ -1,0 +1,19 @@
+repositories {
+    maven {
+        name = "gt"
+        url = "https://gregtech.overminddl1.com/"
+    }
+    maven {
+        // IC2
+        name = "ic2"
+        url = "http://maven.ic2.player.to/"
+    }
+    maven {
+        name = "jitpack"
+        url("https://jitpack.io")
+    }
+    maven {
+        name = "Applecore"
+        url = "https://www.ryanliptak.com/maven/"
+    }
+}
