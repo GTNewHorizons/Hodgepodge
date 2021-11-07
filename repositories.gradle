@@ -20,4 +20,8 @@ repositories {
         name = 'gtnh_download_source'
         artifactPattern("http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]-[revision].[ext]")
     }
+    maven {
+        name = "hungeroverhaul"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
 }
