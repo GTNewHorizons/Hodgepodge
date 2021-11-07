@@ -1,15 +1,19 @@
 dependencies {
-    compile "net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev"
-    compile "applecore:AppleCore:1.7.10-1.3.9:deobf"
-
-    compileOnly files("dependencies/HungerOverhaul-1.7.10-1.0.2.jar")
-    compileOnly files("dependencies/Thaumcraft-1.7.10-4.2.3.5-dev.jar")
-    compileOnly files("dependencies/CoFHCore-[1.7.10]3.1.4-329-dev.jar")
-    compileOnly files("dependencies/Railcraft_1.7.10-9.12.2.0-dev.jar")
     compile("com.github.GTNewHorizons:GT5-Unofficial:experimental-SNAPSHOT:dev") {
         transitive = false
+        setChanging(true)
     }
-    compile ("com.github.GTNewHorizons:StructureLib:1.0.6:deobf")
-    compile "codechicken:CodeChickenLib:1.7.10-1.1.3.140:dev"
-    compile "codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev"
+
+    // GT5U Dependencies
+    compile("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
+    compile("com.github.GTNewHorizons:StructureLib:1.0.6:deobf")
+    compile("codechicken:CodeChickenLib:1.7.10-1.1.3.140:dev")
+    compile("codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev")
+    compile("codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev")
+
+    compileOnly("applecore:AppleCore:1.7.10-1.3.9:deobf")
+    compileOnly("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev")
+    compileOnly files("dependencies/HungerOverhaul-1.7.10-1.0.2.jar")
+    compileOnly files("dependencies/CoFHCore-[1.7.10]3.1.4-329-dev.jar")
+    compileOnly files("dependencies/Railcraft_1.7.10-9.12.2.0-dev.jar")
 }
