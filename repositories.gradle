@@ -9,10 +9,6 @@ repositories {
         url = "https://maven.ic2.player.to/"
     }
     maven {
-        name = "jitpack"
-        url("https://jitpack.io")
-    }
-    maven {
         name = "Applecore"
         url = "https://www.ryanliptak.com/maven/"
     }
@@ -23,5 +19,9 @@ repositories {
     maven {
         name = "hungeroverhaul"
         url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        name = "jitpack"
+        url("https://jitpack.io")
     }
 }
