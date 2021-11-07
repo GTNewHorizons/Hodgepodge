@@ -6,7 +6,7 @@ repositories {
     maven {
         // IC2
         name = "ic2"
-        url = "http://maven.ic2.player.to/"
+        url = "https://maven.ic2.player.to/"
     }
     maven {
         name = "jitpack"
