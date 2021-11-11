@@ -182,7 +182,10 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
                 Collections.singletonList("fixFireSpread.MixinBlockFire")),
         TILE_RENDERER_PROFILER("Shows renderer's impact on FPS in vanilla lagometer",
                 () -> config.enableTileRendererProfiler,
-                Arrays.asList("profiler.TileEntityRendererDispatcherMixin", "profiler.MinecraftMixin"))
+                Arrays.asList("profiler.TileEntityRendererDispatcherMixin", "profiler.MinecraftMixin")),
+        ADD_CV_SUPPORT_TO_WAND_PEDESTAL("Add CV support to Thaumcraft wand recharge pedestal",
+                ()->config.addCVSupportToWandPedestal,
+            Collections.singletonList("wandPedestalCV.MixinTileWandPedestal"))
         ;
 
 
