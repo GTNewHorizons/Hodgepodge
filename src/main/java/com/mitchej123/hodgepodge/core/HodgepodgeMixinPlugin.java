@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
-    private static final Logger log = LogManager.getLogger("Hodgepodge");
+    public static final Logger log = LogManager.getLogger("Hodgepodge");
     public static LoadingConfig config;
     public static boolean thermosTainted;
 
