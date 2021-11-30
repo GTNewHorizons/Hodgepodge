@@ -7,6 +7,8 @@ import net.minecraftforge.common.config.Configuration;
 import java.io.File;
 
 public class LoadingConfig {
+    // Adjustments
+    public int ic2SeedMaxStackSize;
     // Mixins
     public boolean fixNorthWestBias;
     public boolean fixFenceConnections;
@@ -29,6 +31,7 @@ public class LoadingConfig {
     public boolean fixGetBlockLightValue;
     public boolean fixFireSpread;
     public boolean fixPotionEffectRender;
+    public boolean addCVSupportToWandPedestal;
     // ASM
     public boolean pollutionAsm;
     public boolean cofhWorldTransformer;
@@ -59,13 +62,17 @@ public class LoadingConfig {
         fixHopperHitBox = config.get("fixes", "fixHopperHitBox", true, "Fix vanilla hopper hit box").getBoolean();
         fixGetBlockLightValue = config.get("fixes", "fixGetBlockLightValue", true, "Fix vanilla light calculation sometimes cause NPE on thermos").getBoolean();
         fixFireSpread = config.get("fixes", "fixFireSpread", true, "Fix vanilla fire spread sometimes cause NPE on thermos").getBoolean();
+        
         fixPotionEffectRender = config.get("tweaks", "fixPotionEffectRender", true, "Move vanilla potion effect status rendering before everything else").getBoolean();
         installAnchorAlarm = config.get("tweaks", "installAnchorAlarm", true, "Wake up passive & personal anchors on player login").getBoolean();
         preventPickupLoot = config.get("tweaks", "preventPickupLoot", true, "Prevent monsters from picking up loot.").getBoolean();
         dropPickedLootOnDespawn = config.get("tweaks", "dropPickedLootOnDespawn", true, "Drop picked loot on entity despawn").getBoolean();
         hideIc2ReactorSlots = config.get("tweaks", "hideIc2ReactorSlots", true, "Prevent IC2's reactor's coolant slots from being accessed by automations if not a fluid reactor").getBoolean();
         enableTileRendererProfiler = config.get("tweaks", "enableTileRendererProfiler", true, "Shows renderer's impact on FPS in vanilla lagometer").getBoolean();
+        addCVSupportToWandPedestal = config.get("tweaks", "addCVSupportToWandPedestal", true, "Add CV support to Thaumcraft wand recharge pedestal").getBoolean();
 
+        ic2SeedMaxStackSize = config.get("tweaks", "ic2SeedMaxStackSize", 64, "IC2 seed max stack size").getInt();
+        
         speedupChunkCoordinatesHashCode = config.get("speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
 
         pollutionAsm = config.get("asm", "pollutionAsm", true, "Enable pollution rendering ASM").getBoolean();
