@@ -125,7 +125,8 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
                  () -> config.fixIc2Nightvision,
                  Arrays.asList(
                      "fixIc2Nightvision.MixinIc2NanoSuitNightVision",
-                     "fixIc2Nightvision.MixinIc2QuantumSuitNightVision"
+                     "fixIc2Nightvision.MixinIc2QuantumSuitNightVision",
+                     "fixIc2Nightvision.MixinIc2NightVisionGoggles"
                   )
          ),
         IC2_REACTOR_DUPE("IC2 Reactor Dupe",
