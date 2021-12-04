@@ -35,6 +35,11 @@ public class HodgePodgeASMLoader implements IFMLLoadingPlugin {
             () -> HodgepodgeMixinPlugin.config.cofhWorldTransformer,
             Collections.singletonList("com.mitchej123.hodgepodge.asm.WorldTransformer")
         ),
+        SpeedupProgressBar(
+            "Speed up Progress Bar by speeding up stripSpecialCharacters",
+            () -> HodgepodgeMixinPlugin.config.speedupProgressBar,
+            Collections.singletonList("com.mitchej123.hodgepodge.asm.SpeedupProgressBarTransformer")
+        ),
         FIX_POTION_EFFECT_RENDERING("Move vanilla potion effect status rendering before everything else",
             () -> HodgepodgeMixinPlugin.config.fixPotionEffectRender,
             Collections.singletonList("com.mitchej123.hodgepodge.asm.InventoryEffectRendererTransformer"))

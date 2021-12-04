@@ -32,6 +32,7 @@ public class LoadingConfig {
     public boolean fixFireSpread;
     public boolean fixPotionEffectRender;
     public boolean addCVSupportToWandPedestal;
+    public boolean speedupProgressBar;
     // ASM
     public boolean pollutionAsm;
     public boolean cofhWorldTransformer;
@@ -74,7 +75,8 @@ public class LoadingConfig {
         ic2SeedMaxStackSize = config.get("tweaks", "ic2SeedMaxStackSize", 64, "IC2 seed max stack size").getInt();
         
         speedupChunkCoordinatesHashCode = config.get("speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
-
+        
+        speedupProgressBar = config.get("asm", "speedupProgressBar", true, "Speedup progressbar").getBoolean();
         pollutionAsm = config.get("asm", "pollutionAsm", true, "Enable pollution rendering ASM").getBoolean();
         cofhWorldTransformer = config.get("asm", "cofhWorldTransformer", true, "Enable Glease's ASM patch to disable unused CoFH tileentity cache").getBoolean();
 
