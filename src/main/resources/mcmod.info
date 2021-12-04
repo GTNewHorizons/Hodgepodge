@@ -1,16 +1,16 @@
 [
-{
-  "modid": "hodgepodge",
-  "name": "Hodgepodge",
-  "description": "A Hodgepodge of patches",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authorList": ["mitchej123"],
-  "credits": "",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
-}
+    {
+        "modid": "${modId}",
+        "name": "${modName}",
+        "description": "A Hodgepodge of patches",
+        "version": "${modVersion}",
+        "mcversion": "${minecraftVersion}",
+        "url": "",
+        "updateUrl": "",
+        "authorList": ["mitchej123"],
+        "credits": "",
+        "logoFile": "",
+        "screenshots": [],
+        "dependencies": []
+    }
 ]

@@ -11,7 +11,7 @@ import thaumcraft.common.tiles.TileArcaneLamp;
 @Mixin(TileArcaneLamp.class)
 public class fixArcaneLampGetBlock {
     @Redirect(
-        method = "Lthaumcraft/common/tiles/TileArcaneLamp;func_145845_h()V",
+        method = "func_145845_h",
         at = @At(
             value = "INVOKE",
             target="Lnet/minecraft/world/World;func_147439_a(III)Lnet/minecraft/block/Block;"
