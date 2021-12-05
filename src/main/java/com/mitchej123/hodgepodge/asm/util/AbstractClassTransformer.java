@@ -73,7 +73,7 @@ public abstract class AbstractClassTransformer implements IClassTransformer {
         }
 
         // return result
-        ClassWriter writer = new ClassWriter(0);
+        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
         if (hasTransformed) classNode.accept(writer);
         return !hasTransformed ? basicClass : writer.toByteArray();
     }

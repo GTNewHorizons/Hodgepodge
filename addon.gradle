@@ -1,3 +1,0 @@
-runClient {
-    jvmArgs "-noverify"
-}
