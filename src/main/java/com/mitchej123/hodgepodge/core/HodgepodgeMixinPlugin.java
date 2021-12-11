@@ -176,17 +176,23 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
             () -> config.fixHopperHitBox,
             Collections.singletonList("fixHopperHitBox.MixinBlockHopper")),
         FIX_GET_BLOCK_LIGHT_VALUE("Fix vanilla light value calculation NPE",
-                () -> config.fixGetBlockLightValue,
-                Collections.singletonList("fixGetBlockLightValue.MixinWorld")),
+            () -> config.fixGetBlockLightValue,
+            Collections.singletonList("fixGetBlockLightValue.MixinWorld")),
         FIX_FIRE_SPREAD("Fix vanilla fire spread NPE",
-                () -> config.fixFireSpread,
-                Collections.singletonList("fixFireSpread.MixinBlockFire")),
+            () -> config.fixFireSpread,
+            Collections.singletonList("fixFireSpread.MixinBlockFire")),
         TILE_RENDERER_PROFILER("Shows renderer's impact on FPS in vanilla lagometer",
-                () -> config.enableTileRendererProfiler,
-                Arrays.asList("profiler.TileEntityRendererDispatcherMixin", "profiler.MinecraftMixin")),
+            () -> config.enableTileRendererProfiler,
+            Arrays.asList("profiler.TileEntityRendererDispatcherMixin", "profiler.MinecraftMixin")),
         ADD_CV_SUPPORT_TO_WAND_PEDESTAL("Add CV support to Thaumcraft wand recharge pedestal",
-                ()->config.addCVSupportToWandPedestal,
-            Collections.singletonList("wandPedestalCV.MixinTileWandPedestal"))
+            ()->config.addCVSupportToWandPedestal,
+            Collections.singletonList("wandPedestalCV.MixinTileWandPedestal")),
+        FIX_FORGE_URL_DETECTION("Fix URISyntaxException in Forge Chat",
+            () -> config.fixUrlDetection,
+            Collections.singletonList("fixUrlDetection.MixinForgeHooks")),
+        SPEEDUP_VANILLA_FURNACE("Speedup vanilla furnace recipe lookup",
+            () -> config.speedupVanillaFurnace,
+            Collections.singletonList("speedupVanillaFurnace.MixinFurnaceRecipes"))
         ;
 
 

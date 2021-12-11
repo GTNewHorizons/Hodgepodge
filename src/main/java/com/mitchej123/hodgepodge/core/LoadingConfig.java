@@ -33,6 +33,8 @@ public class LoadingConfig {
     public boolean fixPotionEffectRender;
     public boolean addCVSupportToWandPedestal;
     public boolean speedupProgressBar;
+    public boolean fixUrlDetection;
+    public boolean speedupVanillaFurnace;
     // ASM
     public boolean pollutionAsm;
     public boolean cofhWorldTransformer;
@@ -63,6 +65,7 @@ public class LoadingConfig {
         fixHopperHitBox = config.get("fixes", "fixHopperHitBox", true, "Fix vanilla hopper hit box").getBoolean();
         fixGetBlockLightValue = config.get("fixes", "fixGetBlockLightValue", true, "Fix vanilla light calculation sometimes cause NPE on thermos").getBoolean();
         fixFireSpread = config.get("fixes", "fixFireSpread", true, "Fix vanilla fire spread sometimes cause NPE on thermos").getBoolean();
+        fixUrlDetection = config.get("fixes", "fixUrlDetection", true, "Fix URISyntaxException in forge.").getBoolean();
         
         fixPotionEffectRender = config.get("tweaks", "fixPotionEffectRender", true, "Move vanilla potion effect status rendering before everything else").getBoolean();
         installAnchorAlarm = config.get("tweaks", "installAnchorAlarm", true, "Wake up passive & personal anchors on player login").getBoolean();
@@ -75,6 +78,7 @@ public class LoadingConfig {
         ic2SeedMaxStackSize = config.get("tweaks", "ic2SeedMaxStackSize", 64, "IC2 seed max stack size").getInt();
         
         speedupChunkCoordinatesHashCode = config.get("speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
+        speedupVanillaFurnace = config.get("speedups", "speedupVanillaFurnace", true, "Speedup Vanilla Furnace recipe lookup").getBoolean();
         
         speedupProgressBar = config.get("asm", "speedupProgressBar", true, "Speedup progressbar").getBoolean();
         pollutionAsm = config.get("asm", "pollutionAsm", true, "Enable pollution rendering ASM").getBoolean();
