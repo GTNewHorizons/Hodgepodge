@@ -66,11 +66,10 @@ public abstract class MixinFurnaceRecipes {
     @Overwrite(remap = false)
     public void func_151394_a /* addSmeltingRecipe */ (ItemStack input, ItemStack stack, float experience) {
         if (getSmeltingResult(input) != null) {
-            HodgepodgeMixinPlugin.log.info("Ignored smelting recipe with conflicting input: {} = {}", input, stack); return;
-        } else {
-            this.smeltingList.put(input, stack);
-            this.experienceList.put(stack, experience);
+            HodgepodgeMixinPlugin.log.info("Overwriting smelting recipe for input: {} and output {} with {}", input, getSmeltingResult(input), stack); 
         }
+        this.smeltingList.put(input, stack);
+        this.experienceList.put(stack, experience);
     }
 
     /**

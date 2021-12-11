@@ -14,7 +14,7 @@ public class ItemStackHashingStrategy implements HashingStrategy<ItemStack> {
     
     @Override
     public int computeHashCode(ItemStack stack) {
-        return stack.getItem().hashCode() ^ stack.getItemDamage() ^ (stack.hasTagCompound() ? stack.stackTagCompound.hashCode() : 0);
+        return stack.getItem().hashCode() ^ (stack.getItemDamage() * 31) ^ (stack.hasTagCompound() ? stack.stackTagCompound.hashCode() : 0);
     }
 
     @Override
