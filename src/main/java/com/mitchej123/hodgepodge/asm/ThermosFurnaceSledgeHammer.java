@@ -25,7 +25,7 @@ public class ThermosFurnaceSledgeHammer implements IClassTransformer {
             final ClassWriter cw = new ClassWriter(0);
 
             final ClassNode cn = new ClassNode(ASM5);
-            cr.accept(cn, ClassReader.EXPAND_FRAMES);
+            cr.accept(cn, 0);
             for (MethodNode m : cn.methods) {
                 if ("resetRecipes".equals(m.name)) {
                     LOGGER.info("Taking a sledgehammer to CraftServer.resetRecipes()");
@@ -33,6 +33,7 @@ public class ThermosFurnaceSledgeHammer implements IClassTransformer {
                     InsnList insnList = new InsnList();
                     insnList.add(new InsnNode(Opcodes.RETURN));
                     m.instructions = insnList;
+                    m.maxStack = 0;
                 }
             }
             cn.accept(cw);
