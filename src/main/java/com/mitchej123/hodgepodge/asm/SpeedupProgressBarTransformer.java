@@ -51,7 +51,8 @@ public class SpeedupProgressBarTransformer implements IClassTransformer {
             }
             cn.accept(cw);
             return cw.toByteArray();
-        } else {
+        } 
+        else {
             return basicClass;
         }
     }

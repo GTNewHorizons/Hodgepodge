@@ -42,7 +42,11 @@ public class HodgePodgeASMLoader implements IFMLLoadingPlugin {
         ),
         FIX_POTION_EFFECT_RENDERING("Move vanilla potion effect status rendering before everything else",
             () -> HodgepodgeMixinPlugin.config.fixPotionEffectRender,
-            Collections.singletonList("com.mitchej123.hodgepodge.asm.InventoryEffectRendererTransformer"))
+            Collections.singletonList("com.mitchej123.hodgepodge.asm.InventoryEffectRendererTransformer")),
+        THERMOS_SLEDGEHAMMER_FURNACE_FIX("Take a sledgehammer to CraftServer.resetRecipes() to prevent it from breaking our Furnace Fix", 
+            ()-> HodgepodgeMixinPlugin.thermosTainted && HodgepodgeMixinPlugin.config.speedupVanillaFurnace,
+            Collections.singletonList("com.mitchej123.hodgepodge.asm.ThermosFurnaceSledgeHammer")
+        )
         ;
         
         private final String name;

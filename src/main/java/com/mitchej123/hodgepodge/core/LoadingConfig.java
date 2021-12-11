@@ -39,6 +39,9 @@ public class LoadingConfig {
     public boolean pollutionAsm;
     public boolean cofhWorldTransformer;
     public boolean enableTileRendererProfiler;
+
+    public String thermosCraftServerClass;
+    
     
     public static Configuration config;
 
@@ -84,14 +87,16 @@ public class LoadingConfig {
         pollutionAsm = config.get("asm", "pollutionAsm", true, "Enable pollution rendering ASM").getBoolean();
         cofhWorldTransformer = config.get("asm", "cofhWorldTransformer", true, "Enable Glease's ASM patch to disable unused CoFH tileentity cache").getBoolean();
 
+        thermosCraftServerClass = config.get("asm", "thermosCraftServerClass", "org.bukkit.craftbukkit.v1_7_R4.CraftServer", "If using Bukkit/Thermos, the CraftServer package.").getString();
+
         if (config.hasChanged())
             config.save();
     }
 
     public static void postInitClient() {
-        //need to be done later cause it initializes classes
+        // need to be done later cause it initializes classes
         if (config == null) {
-            System.err.println("Didnt load HODGE");
+            System.err.println("Didn't load HODGEPODGE");
             config = new Configuration(new File(Launch.minecraftHome, "config/hodgepodge.cfg"));
         }
 

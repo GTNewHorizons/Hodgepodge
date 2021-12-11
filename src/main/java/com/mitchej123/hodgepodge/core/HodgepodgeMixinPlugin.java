@@ -30,6 +30,7 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
             Class.forName("org.bukkit.World");
             thermosTainted = true;
             log.warn("Thermos/Bukkit detected; This is an unsupported configuration -- Things may not function properly.");
+            log.warn(" Using `{}` for CraftServer Package.  If this is not correct, please update your config file!", config.thermosCraftServerClass);
         } catch (ClassNotFoundException e) {
             thermosTainted = false;
             log.info("Thermos/Bukkit NOT detected :-D");
