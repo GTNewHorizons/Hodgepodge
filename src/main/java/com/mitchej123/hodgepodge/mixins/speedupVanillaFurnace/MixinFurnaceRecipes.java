@@ -87,9 +87,15 @@ public abstract class MixinFurnaceRecipes {
      */
     @Overwrite(remap = false)
     public float func_151398_b /* getSmeltingExperience */ (ItemStack stack) {
+        if (stack == null || stack.getItem() == null) return 0f;
+        
         float exp = stack.getItem().getSmeltingExperience(stack);
         if (exp == -1) {
-            exp = (Float) (this.experienceList.get(stack));
+            if(this.experienceList == null) {
+                HodgepodgeMixinPlugin.log.info("WTF, why is experienceList null");
+                return 0f;
+            }
+            exp = (Float) (this.experienceList.getOrDefault(stack, 0f));
         }
         return exp;
     }
