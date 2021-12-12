@@ -14,11 +14,14 @@ public class ItemStackHashingStrategy implements HashingStrategy<ItemStack> {
     
     @Override
     public int computeHashCode(ItemStack stack) {
-        return stack.getItem().hashCode() ^ (stack.getItemDamage() * 31) ^ (stack.hasTagCompound() ? stack.stackTagCompound.hashCode() : 0);
+        // Purposely allowing meta to collide (stupid wildcard), and resolving via equals
+        return stack.getItem().hashCode()*31;
     }
 
     @Override
     public boolean equals(ItemStack stack1, ItemStack stack2) {
-        return stack1 != null && stack1.isItemEqual(stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+        if (stack1 == null || stack2 == null) return false;
+        return stack1.getItem() == stack2.getItem() && 
+            (stack1.getItemDamage() == stack2.getItemDamage() || stack2.getItemDamage() == Short.MAX_VALUE || stack1.getItemDamage() == Short.MAX_VALUE);
     }
 }
