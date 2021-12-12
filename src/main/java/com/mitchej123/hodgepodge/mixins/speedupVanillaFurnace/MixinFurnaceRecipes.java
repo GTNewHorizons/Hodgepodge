@@ -91,10 +91,6 @@ public abstract class MixinFurnaceRecipes {
         
         float exp = stack.getItem().getSmeltingExperience(stack);
         if (exp == -1) {
-            if(this.experienceList == null) {
-                HodgepodgeMixinPlugin.log.info("WTF, why is experienceList null");
-                return 0f;
-            }
             exp = (Float) (this.experienceList.getOrDefault(stack, 0f));
         }
         return exp;
