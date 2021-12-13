@@ -1,8 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.speedupVanillaFurnace;
 
 import com.mitchej123.hodgepodge.core.HodgepodgeMixinPlugin;
-import com.mitchej123.hodgepodge.core.util.ItemStackHashingStrategy;
-import gnu.trove.map.hash.TCustomHashMap;
+import com.mitchej123.hodgepodge.core.util.ItemStackMap;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -45,11 +44,11 @@ public abstract class MixinFurnaceRecipes {
     
             Field smeltingList = clazz.getDeclaredField(devEnv ? "smeltingList" : "field_77604_b");
             smeltingList.setAccessible(true);
-            smeltingList.set(instance, new TCustomHashMap<ItemStack, ItemStack>(ItemStackHashingStrategy.INSTANCE));
+            smeltingList.set(instance, new ItemStackMap<ItemStack>());
     
             Field experienceList = clazz.getDeclaredField(devEnv ? "experienceList" : "field_77605_c");
             experienceList.setAccessible(true);
-            experienceList.set(instance, new TCustomHashMap<ItemStack, Float>(ItemStackHashingStrategy.INSTANCE));
+            experienceList.set(instance, new ItemStackMap<Float>());
             
             HodgepodgeMixinPlugin.log.info("Successfully swapped the lists in FurnaceRecipes");
 
