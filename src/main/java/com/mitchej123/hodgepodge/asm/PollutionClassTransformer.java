@@ -17,7 +17,7 @@ public class PollutionClassTransformer extends AbstractClassTransformer {
             /*
              * Grabs various methods in RenderBlocks when they query for colorMultiplier and overrides the value.
              */
-            methodTransformers.put(References.cRenderBlocks.getMethod("renderStandardBlock"), new AbstractMethodTransformer() {
+            addMethodTransformer(References.cRenderBlocks.getMethod("renderStandardBlock"), new AbstractMethodTransformer() {
                 @Override
                 public void transform() {
                     log.info("Injecting RenderBlocks.renderStandardBlock");
@@ -28,7 +28,7 @@ public class PollutionClassTransformer extends AbstractClassTransformer {
                             createInvokeStatic(References.cHogClient.getMethod("renderStandardBlock_colorMultiplier")));
                 }
             });
-            methodTransformers.put(References.cRenderBlocks.getMethod("renderBlockLiquid"), new AbstractMethodTransformer() {
+            addMethodTransformer(References.cRenderBlocks.getMethod("renderBlockLiquid"), new AbstractMethodTransformer() {
                 @Override
                 public void transform() {
                     log.info("Injecting RenderBlocks.renderBlockLiquid");
@@ -39,7 +39,7 @@ public class PollutionClassTransformer extends AbstractClassTransformer {
                             createInvokeStatic(References.cHogClient.getMethod("renderBlockLiquid_colorMultiplier")));
                 }
             });
-            methodTransformers.put(References.cRenderBlocks.getMethod("renderBlockDoublePlant"), new AbstractMethodTransformer() {
+            addMethodTransformer(References.cRenderBlocks.getMethod("renderBlockDoublePlant"), new AbstractMethodTransformer() {
                 @Override
                 public void transform() {
                     log.info("Injecting RenderBlocks.renderBlockDoublePlant");
@@ -51,7 +51,7 @@ public class PollutionClassTransformer extends AbstractClassTransformer {
                             createInvokeStatic(References.cHogClient.getMethod("renderBlockDoublePlant_colorMultiplier")));
                 }
             });
-            methodTransformers.put(References.cRenderBlocks.getMethod("renderCrossedSquares"), new AbstractMethodTransformer() {
+            addMethodTransformer(References.cRenderBlocks.getMethod("renderCrossedSquares"), new AbstractMethodTransformer() {
                 @Override
                 public void transform() {
                     log.info("Injecting RenderBlocks.renderCrossedSquares");
@@ -62,7 +62,7 @@ public class PollutionClassTransformer extends AbstractClassTransformer {
                             createInvokeStatic(References.cHogClient.getMethod("renderCrossedSquares_colorMultiplier")));
                 }
             });
-            methodTransformers.put(References.cRenderBlocks.getMethod("renderBlockVine"), new AbstractMethodTransformer() {
+            addMethodTransformer(References.cRenderBlocks.getMethod("renderBlockVine"), new AbstractMethodTransformer() {
                 @Override
                 public void transform() {
                     log.info("Injecting RenderBlocks.renderBlockVine");
@@ -86,7 +86,7 @@ public class PollutionClassTransformer extends AbstractClassTransformer {
             /*
              * Grabs various methods in biomesoplenty.client.render.blocks.FoliageRenderer when they query for colorMultiplier and overrides the value.
              */
-            methodTransformers.put(References.bopFoliageRenderer.getMethod("renderCrossedSquares"), new AbstractMethodTransformer() {
+            addMethodTransformer(References.bopFoliageRenderer.getMethod("renderCrossedSquares"), new AbstractMethodTransformer() {
                 @Override
                 public void transform() {
                     log.info("Injecting biomesoplenty.client.render.blocks.FoliageRenderer.");

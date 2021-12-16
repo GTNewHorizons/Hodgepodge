@@ -21,7 +21,11 @@ public abstract class AbstractClassTransformer implements IClassTransformer {
     /** The kind of environment we are in. Assume MCP until proven otherwise */
     protected Namespace environment = Namespace.MCP;
 
-    protected Map<MethodRef, AbstractMethodTransformer> methodTransformers = Maps.newHashMap();
+    private final Map<String, Map<MethodRef, AbstractMethodTransformer>> methodTransformers = Maps.newHashMap();
+
+    protected void addMethodTransformer(MethodRef ref, AbstractMethodTransformer methodTransformer) {
+        methodTransformers.computeIfAbsent(ref.parent.getName(Namespace.MCP), n -> Maps.newHashMap()).put(ref, methodTransformer);
+    }
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
@@ -32,7 +36,10 @@ public abstract class AbstractClassTransformer implements IClassTransformer {
         if (!transformedName.equals(name)) {
             if (HodgePodgeASMLoader.getSortingIndex() >= 1001) environment = Namespace.SRG;
             else                                               environment = Namespace.OBF;                                            
-        } 
+        }
+
+        Map<MethodRef, AbstractMethodTransformer> transformers = methodTransformers.get(transformedName);
+        if (transformers == null) return basicClass; // nothing to transform
 
         // read class data
         ClassNode classNode = new ClassNode();
@@ -40,7 +47,7 @@ public abstract class AbstractClassTransformer implements IClassTransformer {
         classReader.accept(classNode, 0);
         boolean hasTransformed = false;
 
-        for (Map.Entry<MethodRef, AbstractMethodTransformer> entry : methodTransformers.entrySet()) {
+        for (Map.Entry<MethodRef, AbstractMethodTransformer> entry : transformers.entrySet()) {
             if (transformedName.equals(entry.getKey().parent.getName(Namespace.MCP))) {
                 //log.debug(String.format("Found class: %s -> %s", name, transformedName));
                 //log.debug(String.format("Searching for method: %s %s -> %s %s",
