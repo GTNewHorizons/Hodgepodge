@@ -9,7 +9,7 @@ import org.objectweb.asm.tree.InsnList;
 public class InventoryEffectRendererTransformer extends AbstractClassTransformer {
     public InventoryEffectRendererTransformer()
     {
-        methodTransformers.put(References.cEffectRenderer.getMethod("drawScreen"), new AbstractMethodTransformer() {
+        addMethodTransformer(References.cEffectRenderer.getMethod("drawScreen"), new AbstractMethodTransformer() {
             @Override
             public void transform() {
                 // Cut out super.drawScreen() sequence
