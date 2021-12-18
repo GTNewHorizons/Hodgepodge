@@ -10,6 +10,7 @@ public class LoadingConfig {
     // Adjustments
     public int ic2SeedMaxStackSize;
     // Mixins
+    public boolean fixWorldGetBlock;
     public boolean fixNorthWestBias;
     public boolean fixFenceConnections;
     public boolean fixIc2DirectInventoryAccess;
@@ -53,6 +54,7 @@ public class LoadingConfig {
 
     public LoadingConfig(File file) {
         config = new Configuration(file);
+        fixWorldGetBlock = config.get("fixes", "fixWorldGetBlock", true, "Fix unprotected getBlock() in World").getBoolean();
         fixNorthWestBias = config.get("fixes", "fixNorthWestBias", true, "Fix northwest bias on RandomPositionGenerator").getBoolean();
         fixFenceConnections = config.get("fixes", "fixFenceConnections", true, "Fix fence connections with other types of fence").getBoolean();
         fixIc2DirectInventoryAccess = config.get("fixes", "fixIc2DirectInventoryAccess", true, "Fix IC2's direct inventory access").getBoolean();

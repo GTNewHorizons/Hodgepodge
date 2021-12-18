@@ -168,7 +168,7 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
         ),
         WAKE_ANCHORS_ON_LOGIN("Wake up personal anchors on owner login",
             () -> config.installAnchorAlarm,
-            "Railcraft_1.7.10",
+            "Railcraft-1.7.10",
             Arrays.asList(
                 "wakePersonalAnchors.MixinTileAnchorPassive",
                 "wakePersonalAnchors.MixinTileAnchorPersonal")
@@ -193,7 +193,10 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
             Collections.singletonList("fixUrlDetection.MixinForgeHooks")),
         SPEEDUP_VANILLA_FURNACE("Speedup vanilla furnace recipe lookup",
             () -> config.speedupVanillaFurnace,
-            Collections.singletonList("speedupVanillaFurnace.MixinFurnaceRecipes"))
+            Collections.singletonList("speedupVanillaFurnace.MixinFurnaceRecipes")),
+        FIX_WORLD_GET_BLOCK("Fix unprotected getBlock() in World",
+            () -> config.fixWorldGetBlock,
+            Collections.singletonList("mixinWorld.fixGetBlock"))
         ;
 
 
