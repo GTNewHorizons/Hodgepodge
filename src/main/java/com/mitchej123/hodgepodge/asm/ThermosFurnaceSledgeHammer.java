@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.asm;
 
-import com.mitchej123.hodgepodge.core.HodgepodgeMixinPlugin;
+import com.mitchej123.hodgepodge.Hodgepodge;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +19,7 @@ public class ThermosFurnaceSledgeHammer implements IClassTransformer {
     private static final Logger LOGGER = LogManager.getLogger("ThermosFurnaceSledgeHammer");
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
-        if (HodgepodgeMixinPlugin.config.thermosCraftServerClass.equals(transformedName)) {
+        if (Hodgepodge.config.thermosCraftServerClass.equals(transformedName)) {
             LOGGER.info("Patching Thermos or derivative to not break our furnace fix");
             final ClassReader cr = new ClassReader(basicClass);
             final ClassWriter cw = new ClassWriter(0);

@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.asm;
 
-import com.mitchej123.hodgepodge.core.HodgepodgeMixinPlugin;
+import com.mitchej123.hodgepodge.Hodgepodge;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,24 +27,24 @@ public class HodgePodgeASMLoader implements IFMLLoadingPlugin {
     public enum AsmTransformers {
         POLLUTION_TRANSFORMER(
             "Pollution Transformer",
-            () -> HodgepodgeMixinPlugin.config.pollutionAsm,
+            () -> Hodgepodge.config.pollutionAsm,
             Collections.singletonList("com.mitchej123.hodgepodge.asm.PollutionClassTransformer")
         ),
         CoFHWorldTransformer(
             "World Transformer - Remove CoFH tile entity cache",
-            () -> HodgepodgeMixinPlugin.config.cofhWorldTransformer,
+            () -> Hodgepodge.config.cofhWorldTransformer,
             Collections.singletonList("com.mitchej123.hodgepodge.asm.WorldTransformer")
         ),
         SpeedupProgressBar(
             "Speed up Progress Bar by speeding up stripSpecialCharacters",
-            () -> HodgepodgeMixinPlugin.config.speedupProgressBar,
+            () -> Hodgepodge.config.speedupProgressBar,
             Collections.singletonList("com.mitchej123.hodgepodge.asm.SpeedupProgressBarTransformer")
         ),
         FIX_POTION_EFFECT_RENDERING("Move vanilla potion effect status rendering before everything else",
-            () -> HodgepodgeMixinPlugin.config.fixPotionEffectRender,
+            () -> Hodgepodge.config.fixPotionEffectRender,
             Collections.singletonList("com.mitchej123.hodgepodge.asm.InventoryEffectRendererTransformer")),
         THERMOS_SLEDGEHAMMER_FURNACE_FIX("Take a sledgehammer to CraftServer.resetRecipes() to prevent it from breaking our Furnace Fix", 
-            ()-> HodgepodgeMixinPlugin.thermosTainted && HodgepodgeMixinPlugin.config.speedupVanillaFurnace,
+            ()-> Hodgepodge.thermosTainted && Hodgepodge.config.speedupVanillaFurnace,
             Collections.singletonList("com.mitchej123.hodgepodge.asm.ThermosFurnaceSledgeHammer")
         )
         ;
