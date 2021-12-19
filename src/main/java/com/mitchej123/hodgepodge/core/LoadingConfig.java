@@ -1,12 +1,16 @@
 package com.mitchej123.hodgepodge.core;
 
 import com.mitchej123.hodgepodge.core.util.BlockMatcher;
+import com.mitchej123.hodgepodge.mixins.TargetedMod;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class LoadingConfig {
+    public String[] requiredMods;
+    
     // Adjustments
     public int ic2SeedMaxStackSize;
     // Mixins
@@ -42,7 +46,7 @@ public class LoadingConfig {
     public boolean enableTileRendererProfiler;
 
     public String thermosCraftServerClass;
-    
+        
     
     public static Configuration config;
 
@@ -52,8 +56,12 @@ public class LoadingConfig {
     public static BlockMatcher crossedSquares = new BlockMatcher();
     public static BlockMatcher blockVine = new BlockMatcher();
 
+
     public LoadingConfig(File file) {
         config = new Configuration(file);
+        
+        requiredMods = config.get("overall", "requiredMods", defaultRequiredMods, "Subset of TargetMods that are required").getStringList();
+                
         fixWorldGetBlock = config.get("fixes", "fixWorldGetBlock", true, "Fix unprotected getBlock() in World").getBoolean();
         fixNorthWestBias = config.get("fixes", "fixNorthWestBias", true, "Fix northwest bias on RandomPositionGenerator").getBoolean();
         fixFenceConnections = config.get("fixes", "fixFenceConnections", true, "Fix fence connections with other types of fence").getBoolean();
@@ -103,45 +111,57 @@ public class LoadingConfig {
         }
 
 
-        standardBlocks.updateClassList(config.get("pollutionrecolor", "renderStandardBlock",
-                new String[]{
-                        "net.minecraft.block.BlockGrass:GRASS",
-                        "net.minecraft.block.BlockLeavesBase:LEAVES",
-                        "biomesoplenty.common.blocks.BlockOriginGrass:GRASS",
-                        "biomesoplenty.common.blocks.BlockLongGrass:GRASS",
-                        "biomesoplenty.common.blocks.BlockNewGrass:GRASS",
-                        "tconstruct.blocks.slime.SlimeGrass:GRASS",
-                        "thaumcraft.common.blocks.BlockMagicalLeaves:LEAVES",
-                }).getStringList());
-        liquidBlocks.updateClassList(config.get("pollutionrecolor", "renderBlockLiquid",
-                new String[]{
-                        "net.minecraft.block.BlockLiquid:LIQUID",
-                }).getStringList());
-        doublePlants.updateClassList(config.get("pollutionrecolor", "renderBlockDoublePlant",
-                new String[]{
-                        "net.minecraft.block.BlockDoublePlant:FLOWER",
-                }).getStringList());
-        crossedSquares.updateClassList(config.get("pollutionrecolor", "renderCrossedSquares",
-                new String[]{
-                        "net.minecraft.block.BlockTallGrass:FLOWER",
-                        "net.minecraft.block.BlockFlower:FLOWER",
-                        "biomesoplenty.common.blocks.BlockBOPFlower:FLOWER",
-                        "biomesoplenty.common.blocks.BlockBOPFlower2:FLOWER",
-                        "biomesoplenty.common.blocks.BlockBOPFoliage:FLOWER",
-                }).getStringList());
-        blockVine.updateClassList(config.get("pollutionrecolor", "renderblockVine",
-                new String[]{
-                        "net.minecraft.block.BlockVine:FLOWER",
-                }).getStringList());
+        standardBlocks.updateClassList(config.get("pollutionrecolor", "renderStandardBlock", defaultPollutionRenderStandardBlock).getStringList());
+        liquidBlocks.updateClassList(config.get("pollutionrecolor", "renderBlockLiquid", defaultPollutionRenderLiquidBlocks).getStringList());
+        doublePlants.updateClassList(config.get("pollutionrecolor", "renderBlockDoublePlant", defaultPollutionRenderDoublePlant).getStringList());
+        crossedSquares.updateClassList(config.get("pollutionrecolor", "renderCrossedSquares", defaultPollutionRenderCrossedSquares).getStringList());
+        blockVine.updateClassList(config.get("pollutionrecolor", "renderblockVine", defaultPollutionRenderblockVine).getStringList());
 
-        config.getCategory("pollutionrecolor").setComment(
-                "Blocks that should be colored by pollution. \n" +
-                        "\tGrouped by the render type. \n" +
-                        "\tFormat: [BlockClass]:[colortype] \n" +
-                        "\tValid types: GRASS, LEAVES, FLOWER, LIQUID \n" +
-                        "\tAdd [-] first to blacklist.");
+        config.getCategory("pollutionrecolor").setComment(pollutionRecolorComment);
 
         if (config.hasChanged())
             config.save();
     }
+
+    /*
+     * Defaults
+     */
+
+    // Default to all mods being required
+    private static final String[] defaultRequiredMods = Arrays.stream(TargetedMod.values()).map(f -> f.modName).toArray(String[]::new);
+    public static final String[] defaultPollutionRenderStandardBlock = new String[]{
+        "net.minecraft.block.BlockGrass:GRASS",
+        "net.minecraft.block.BlockLeavesBase:LEAVES",
+        "biomesoplenty.common.blocks.BlockOriginGrass:GRASS",
+        "biomesoplenty.common.blocks.BlockLongGrass:GRASS",
+        "biomesoplenty.common.blocks.BlockNewGrass:GRASS",
+        "tconstruct.blocks.slime.SlimeGrass:GRASS",
+        "thaumcraft.common.blocks.BlockMagicalLeaves:LEAVES",
+    };
+
+    public static final String[] defaultPollutionRenderLiquidBlocks = new String[]{
+        "net.minecraft.block.BlockLiquid:LIQUID",
+    };
+
+    public static final String[] defaultPollutionRenderDoublePlant = new String[]{
+        "net.minecraft.block.BlockDoublePlant:FLOWER",
+    };
+
+    public static final String[] defaultPollutionRenderCrossedSquares = new String[]{
+        "net.minecraft.block.BlockTallGrass:FLOWER",
+        "net.minecraft.block.BlockFlower:FLOWER",
+        "biomesoplenty.common.blocks.BlockBOPFlower:FLOWER",
+        "biomesoplenty.common.blocks.BlockBOPFlower2:FLOWER",
+        "biomesoplenty.common.blocks.BlockBOPFoliage:FLOWER",
+    };
+    public static final String[] defaultPollutionRenderblockVine = new String[]{
+        "net.minecraft.block.BlockVine:FLOWER",
+    };
+    
+    public static final String pollutionRecolorComment =  "Blocks that should be colored by pollution. \n" +
+        "\tGrouped by the render type. \n" +
+        "\tFormat: [BlockClass]:[colortype] \n" +
+        "\tValid types: GRASS, LEAVES, FLOWER, LIQUID \n" +
+        "\tAdd [-] first to blacklist.";
+
 }
