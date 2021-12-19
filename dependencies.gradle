@@ -1,21 +1,17 @@
 dependencies {
     compile("com.github.GTNewHorizons:GT5-Unofficial:master-SNAPSHOT:dev")
 
-    compile("com.github.GTNewHorizons:AppleCore:master-SNAPSHOT:dev") {
-        transitive = false
-    }
-    compileOnly("com.github.GTNewHorizons:Railcraft:master-SNAPSHOT:dev") {
+    compile("com.github.GTNewHorizons:AppleCore:master-SNAPSHOT:dev")
+    
+    compile("com.github.GTNewHorizons:Railcraft:master-SNAPSHOT:dev") {
+        // RC Depends on BuildCraft & Baubles and a few others, use transitive to pull thoes in for `runClient`
         transitive = true
     }
-    compile("com.github.GTNewHorizons:HungerOverhaul:master-SNAPSHOT:dev") {
-        transitive = false
-    }
-
-    compile("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev") {
-        transitive = false
-    }
-    compile("curse.maven:cofh-core-69162:2388751") {
-        transitive = false
-    }
+    compile("com.github.GTNewHorizons:HungerOverhaul:master-SNAPSHOT:dev")
+    compile("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev")
+    compile("curse.maven:cofh-core-69162:2388751")
+    
+   
+    // Thermos Compat, compile only not run in dev by default
     compileOnly files("dependencies/Thermos-1.7.10-1614-stripped.jar")
 }
