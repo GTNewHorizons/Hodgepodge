@@ -18,7 +18,7 @@ import thaumcraft.common.tiles.TileWandPedestal;
 
 import java.util.ArrayList;
 
-@Mixin(value = TileWandPedestal.class, remap = false)
+@Mixin(value = TileWandPedestal.class)
 public class MixinTileWandPedestal extends TileThaumcraft {
     @Shadow
     ArrayList<ChunkCoordinates> nodes = null;
