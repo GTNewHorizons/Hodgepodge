@@ -46,7 +46,9 @@ public class HodgePodgeASMLoader implements IFMLLoadingPlugin {
         THERMOS_SLEDGEHAMMER_FURNACE_FIX("Take a sledgehammer to CraftServer.resetRecipes() to prevent it from breaking our Furnace Fix", 
             ()-> Hodgepodge.thermosTainted && Hodgepodge.config.speedupVanillaFurnace,
             Collections.singletonList("com.mitchej123.hodgepodge.asm.ThermosFurnaceSledgeHammer")
-        )
+        ),
+        BIBLIOCRAFT_RECIPE_SLEDGEHAMMER("Remove recipes from Bibliocraft BlockLoader and Itemloader : addRecipies()", () -> Hodgepodge.config.biblocraftRecipes,
+            Collections.singletonList("com.mitchej123.hodgepodge.asm.BibliocraftTransformer"))
         ;
         
         private final String name;
