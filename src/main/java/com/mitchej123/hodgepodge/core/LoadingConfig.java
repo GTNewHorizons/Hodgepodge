@@ -40,11 +40,13 @@ public class LoadingConfig {
     public boolean speedupProgressBar;
     public boolean fixUrlDetection;
     public boolean speedupVanillaFurnace;
+    
     // ASM
     public boolean pollutionAsm;
     public boolean cofhWorldTransformer;
     public boolean enableTileRendererProfiler;
-
+    public boolean biblocraftRecipes;
+    
     public String thermosCraftServerClass;
         
     
@@ -96,7 +98,8 @@ public class LoadingConfig {
         speedupProgressBar = config.get("asm", "speedupProgressBar", true, "Speedup progressbar").getBoolean();
         pollutionAsm = config.get("asm", "pollutionAsm", true, "Enable pollution rendering ASM").getBoolean();
         cofhWorldTransformer = config.get("asm", "cofhWorldTransformer", true, "Enable Glease's ASM patch to disable unused CoFH tileentity cache").getBoolean();
-
+        biblocraftRecipes = config.get("asm", "biblocraftRecipes", true, "Remove recipe generation from BiblioCraft").getBoolean();
+        
         thermosCraftServerClass = config.get("asm", "thermosCraftServerClass", "org.bukkit.craftbukkit.v1_7_R4.CraftServer", "If using Bukkit/Thermos, the CraftServer package.").getString();
 
         if (config.hasChanged())
