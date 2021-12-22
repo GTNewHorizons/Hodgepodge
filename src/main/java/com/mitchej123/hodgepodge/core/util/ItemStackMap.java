@@ -19,11 +19,10 @@ package com.mitchej123.hodgepodge.core.util;
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import com.google.common.base.Objects;
+
 import com.google.common.collect.Iterators;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,8 +34,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import static codechicken.lib.inventory.InventoryUtils.actualDamage;
-import static codechicken.lib.inventory.InventoryUtils.newItemStack;
 import static net.minecraftforge.oredict.OreDictionary.WILDCARD_VALUE;
 
 /**
@@ -45,37 +42,18 @@ import static net.minecraftforge.oredict.OreDictionary.WILDCARD_VALUE;
  * This map does NOT support null values or null keys! null will be silently ignored!
  * <p>
  * Originally created by CodeChicken for NotEnoughItems. Adapted to {@code Map<ItemStack, T>} interface by glee8e
+ * <p>
+ * Edited later to ignore NBT tags to match vanilla furnace recipe map behavior.
+ *
  * @author CodeChiken
  * @author glee8e
  */
 public final class ItemStackMap<T> extends AbstractMap<ItemStack, T> {
-    public static final NBTTagCompound WILDCARD_TAG;
-
-    static {
-        WILDCARD_TAG = new NBTTagCompound();
-        WILDCARD_TAG.setBoolean("*", true);
-    }
-
     private final HashMap<Item, DetailMap> itemMap = new HashMap<>();
     private int size;
 
-    static int getKeyType(int damage, NBTTagCompound tag) {
-        int i = 0;
-        if (isWildcard(damage)) i = 1;
-        if (isWildcard(tag)) i |= 2;
-        return i;
-    }
-
     static ItemStack wildcard(Item item) {
-        return newItemStack(item, 1, WILDCARD_VALUE, WILDCARD_TAG);
-    }
-
-    static boolean isWildcard(int damage) {
-        return damage == WILDCARD_VALUE;
-    }
-
-    static boolean isWildcard(NBTTagCompound tag) {
-        return tag != null && tag.getBoolean("*");
+        return new ItemStack(item, 1, WILDCARD_VALUE);
     }
 
     @Override
@@ -119,33 +97,9 @@ public final class ItemStackMap<T> extends AbstractMap<ItemStack, T> {
     }
 
     @Override
+    @Nonnull
     public Set<Map.Entry<ItemStack, T>> entrySet() {
         return new SetView();
-    }
-
-    private static class StackMetaKey {
-        public final int damage;
-        public final NBTTagCompound tag;
-
-        public StackMetaKey(int damage, NBTTagCompound tag) {
-            this.damage = damage;
-            this.tag = tag;
-        }
-
-        public StackMetaKey(ItemStack key) {
-            this(actualDamage(key), key.stackTagCompound);
-        }
-
-        public int hashCode() {
-            return Objects.hashCode(damage, tag);
-        }
-
-        public boolean equals(Object o) {
-            if (!(o instanceof StackMetaKey))
-                return false;
-            StackMetaKey t = (StackMetaKey) o;
-            return damage == t.damage && Objects.equal(tag, t.tag);
-        }
     }
 
     private static class DetailIter<T> implements Iterator<Map.Entry<ItemStack, T>> {
@@ -153,18 +107,12 @@ public final class ItemStackMap<T> extends AbstractMap<ItemStack, T> {
         private final ItemStackMap<T>.DetailMap backing;
         @Nullable
         private final Iterator<Map.Entry<Integer, T>> damageIter;
-        @Nullable
-        private final Iterator<Map.Entry<NBTTagCompound, T>> tagIter;
-        @Nullable
-        private final Iterator<Map.Entry<StackMetaKey, T>> metaIter;
         private DetailIterState state = DetailIterState.NOT_STARTED;
         private boolean removed = false;
         private DetailIter(Map.Entry<Item, ItemStackMap<T>.DetailMap> input) {
             this.owner = input.getKey();
             this.backing = input.getValue();
             damageIter = backing.damageMap != null ? backing.damageMap.entrySet().iterator() : null;
-            tagIter = backing.tagMap != null ? backing.tagMap.entrySet().iterator() : null;
-            metaIter = backing.metaMap != null ? backing.metaMap.entrySet().iterator() : null;
         }
 
         private DetailIterState nextState() {
@@ -174,10 +122,6 @@ public final class ItemStackMap<T> extends AbstractMap<ItemStack, T> {
                 case WILDCARD:
                 case DAMAGE:
                     if (damageIter != null && damageIter.hasNext()) return DetailIterState.DAMAGE;
-                case TAG:
-                    if (tagIter != null && tagIter.hasNext()) return DetailIterState.TAG;
-                case META:
-                    if (metaIter != null && metaIter.hasNext()) return DetailIterState.META;
                 case DONE:
                     return DetailIterState.DONE;
                 default:
@@ -254,41 +198,13 @@ public final class ItemStackMap<T> extends AbstractMap<ItemStack, T> {
                 <T> Map.Entry<ItemStack, T> get(DetailIter<T> iter) {
                     assert iter.damageIter != null;
                     Map.Entry<Integer, T> entry = iter.damageIter.next();
-                    return new ItemStackEntry<>(newItemStack(iter.owner, 1, entry.getKey(), WILDCARD_TAG), entry);
+                    return new ItemStackEntry<>(new ItemStack(iter.owner, 1, entry.getKey()), entry);
                 }
 
                 @Override
                 <T> void remove(DetailIter<T> iter) {
                     assert iter.damageIter != null;
                     iter.damageIter.remove();
-                }
-            },
-            TAG {
-                @Override
-                <T> Map.Entry<ItemStack, T> get(DetailIter<T> iter) {
-                    assert iter.tagIter != null;
-                    Map.Entry<NBTTagCompound, T> entry = iter.tagIter.next();
-                    return new ItemStackEntry<>(newItemStack(iter.owner, 1, WILDCARD_VALUE, entry.getKey()), entry);
-                }
-
-                @Override
-                <T> void remove(DetailIter<T> iter) {
-                    assert iter.tagIter != null;
-                    iter.tagIter.remove();
-                }
-            },
-            META {
-                @Override
-                <T> Map.Entry<ItemStack, T> get(DetailIter<T> iter) {
-                    assert iter.metaIter != null;
-                    Map.Entry<StackMetaKey, T> entry = iter.metaIter.next();
-                    return new ItemStackEntry<>(newItemStack(iter.owner, 1, entry.getKey().damage, entry.getKey().tag), entry);
-                }
-
-                @Override
-                <T> void remove(DetailIter<T> iter) {
-                    assert iter.metaIter != null;
-                    iter.metaIter.remove();
                 }
             },
             DONE {
@@ -338,8 +254,6 @@ public final class ItemStackMap<T> extends AbstractMap<ItemStack, T> {
         private boolean hasWildcard;
         private T wildcard;
         private HashMap<Integer, T> damageMap;
-        private HashMap<NBTTagCompound, T> tagMap;
-        private HashMap<StackMetaKey, T> metaMap;
         private int size;
 
         public T get(ItemStack key) {
@@ -347,68 +261,46 @@ public final class ItemStackMap<T> extends AbstractMap<ItemStack, T> {
                 return wildcard;
 
             if (damageMap != null) {
-                final T ret = damageMap.get(actualDamage(key));
+                final T ret = damageMap.get(key.getItemDamage());
                 if (ret != null) return ret;
             }
-            if (tagMap != null) {
-                final T ret = tagMap.get(key.stackTagCompound);
-                if (ret != null) return ret;
-            }
-            if (metaMap != null)
-                return metaMap.get(new StackMetaKey(key));
 
             return null;
         }
 
         public T put(ItemStack key, T value) {
             try {
-                switch (getKeyType(actualDamage(key), key.stackTagCompound)) {
-                    case 0:
-                        if (metaMap == null) metaMap = new HashMap<>();
-                        return metaMap.put(new StackMetaKey(key), value);
-                    case 1:
-                        if (tagMap == null) tagMap = new HashMap<>();
-                        return tagMap.put(key.stackTagCompound, value);
-                    case 2:
-                        if (damageMap == null) damageMap = new HashMap<>();
-                        return damageMap.put(actualDamage(key), value);
-                    case 3:
-                        T ret = wildcard;
-                        wildcard = value;
-                        hasWildcard = true;
-                        return ret;
+                if (key.getItemDamage() == WILDCARD_VALUE) {
+                    T ret = wildcard;
+                    wildcard = value;
+                    hasWildcard = true;
+                    return ret;
+                } else {
+                    if (damageMap == null) damageMap = new HashMap<>();
+                    return damageMap.put(key.getItemDamage(), value);
                 }
             } finally {
                 updateSize();
             }
-            return null;
         }
 
         public T remove(ItemStack key) {
             try {
-                switch (getKeyType(actualDamage(key), key.stackTagCompound)) {
-                    case 0:
-                        return metaMap != null ? metaMap.remove(new StackMetaKey(key)) : null;
-                    case 1:
-                        return tagMap != null ? tagMap.remove(key.stackTagCompound) : null;
-                    case 2:
-                        return damageMap != null ? damageMap.remove(actualDamage(key)) : null;
-                    case 3:
-                        T ret = wildcard;
-                        wildcard = null;
-                        hasWildcard = false;
-                        return ret;
+                if (key.getItemDamage() == WILDCARD_VALUE) {
+                    T ret = wildcard;
+                    wildcard = null;
+                    hasWildcard = false;
+                    return ret;
+                } else {
+                    return damageMap != null ? damageMap.remove(key.getItemDamage()) : null;
                 }
             } finally {
                 updateSize();
             }
-            return null;
         }
 
         private void updateSize() {
             int newSize = (hasWildcard ? 1 : 0) +
-                (metaMap != null ? metaMap.size() : 0) +
-                (tagMap != null ? tagMap.size() : 0) +
                 (damageMap != null ? damageMap.size() : 0);
 
             if (newSize != size) {
