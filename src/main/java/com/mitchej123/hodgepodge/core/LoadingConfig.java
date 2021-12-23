@@ -14,31 +14,32 @@ public class LoadingConfig {
     // Adjustments
     public int ic2SeedMaxStackSize;
     // Mixins
-    public boolean fixWorldGetBlock;
-    public boolean fixNorthWestBias;
+    public boolean addCVSupportToWandPedestal;
+    public boolean dropPickedLootOnDespawn;
     public boolean fixFenceConnections;
-    public boolean fixIc2DirectInventoryAccess;
-    public boolean fixIc2ReactorDupe;
-    public boolean fixIc2Nightvision;
-    public boolean fixIc2Hazmat;
-    public boolean fixVanillaUnprotectedGetBlock;
-    public boolean fixIc2UnprotectedGetBlock;
-    public boolean fixThaumcraftUnprotectedGetBlock;
-    public boolean speedupChunkCoordinatesHashCode;
-    public boolean fixHungerOverhaul;
+    public boolean fixFireSpread;
+    public boolean fixGetBlockLightValue;
     public boolean fixGuiGameOver;
     public boolean fixHopperHitBox;
-    public boolean removeUpdateChecks;
-    public boolean preventPickupLoot;
-    public boolean dropPickedLootOnDespawn;
-    public boolean installAnchorAlarm;
-    public boolean hideIc2ReactorSlots;
-    public boolean fixGetBlockLightValue;
-    public boolean fixFireSpread;
+    public boolean fixHungerOverhaul;
+    public boolean fixIc2DirectInventoryAccess;
+    public boolean fixIc2Hazmat;
+    public boolean fixIc2Nightvision;
+    public boolean fixIc2ReactorDupe;
+    public boolean fixIc2UnprotectedGetBlock;
+    public boolean fixNorthWestBias;
     public boolean fixPotionEffectRender;
-    public boolean addCVSupportToWandPedestal;
-    public boolean speedupProgressBar;
+    public boolean fixThaumcraftUnprotectedGetBlock;
     public boolean fixUrlDetection;
+    public boolean fixVanillaUnprotectedGetBlock;
+    public boolean fixWorldGetBlock;
+    public boolean fixDimensionChangeHearts;
+    public boolean hideIc2ReactorSlots;
+    public boolean installAnchorAlarm;
+    public boolean preventPickupLoot;
+    public boolean removeUpdateChecks;
+    public boolean speedupChunkCoordinatesHashCode;
+    public boolean speedupProgressBar;
     public boolean speedupVanillaFurnace;
     
     // ASM
@@ -81,6 +82,7 @@ public class LoadingConfig {
         fixGetBlockLightValue = config.get("fixes", "fixGetBlockLightValue", true, "Fix vanilla light calculation sometimes cause NPE on thermos").getBoolean();
         fixFireSpread = config.get("fixes", "fixFireSpread", true, "Fix vanilla fire spread sometimes cause NPE on thermos").getBoolean();
         fixUrlDetection = config.get("fixes", "fixUrlDetection", true, "Fix URISyntaxException in forge.").getBoolean();
+        fixDimensionChangeHearts = config.get("fixes", "fixDimensionChangeHearts", true, "Fix losing bonus hearts on dimension change").getBoolean();
         
         fixPotionEffectRender = config.get("tweaks", "fixPotionEffectRender", true, "Move vanilla potion effect status rendering before everything else").getBoolean();
         installAnchorAlarm = config.get("tweaks", "installAnchorAlarm", true, "Wake up passive & personal anchors on player login").getBoolean();
