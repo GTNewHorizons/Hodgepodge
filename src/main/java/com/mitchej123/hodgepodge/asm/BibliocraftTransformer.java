@@ -17,9 +17,9 @@ public class BibliocraftTransformer implements IClassTransformer {
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if ("jds.bibliocraft.blocks.BlockLoader".equals(transformedName) ||
             "jds.bibliocraft.items.ItemLoader".equals(transformedName) ||
-            "jds.bibliowood.forestrywood.WoodLoader".equals(transformedName) ||
-            "jds.bibliowood.naturawood.WoodLoader".equals(transformedName) ||
-            "jds.bibliowood.bopwood.WoodLoader".equals(transformedName)
+            "jds.bibliowood.forestrywood.WoodsLoader".equals(transformedName) ||
+            "jds.bibliowood.naturawood.WoodsLoader".equals(transformedName) ||
+            "jds.bibliowood.bopwood.WoodsLoader".equals(transformedName)
         ) {
             Hodgepodge.log.info("Patching Bibliocraft {}", transformedName);
             final ClassReader cr = new ClassReader(basicClass);
