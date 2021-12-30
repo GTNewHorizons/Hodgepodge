@@ -69,7 +69,10 @@ public class MixinBlockHopper extends Block {
     public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end) {
         final Vec3 pos = Vec3.createVectorHelper(x, y, z);
         final EnumFacing facing = EnumFacing.values()[(BlockHopper.getDirectionFromMetadata(world.getBlockMetadata(x, y, z)))];
-        return bounds.get(facing).stream()
+        List<AxisAlignedBB> list = bounds.get(facing);
+        if (list == null)
+            return super.collisionRayTrace(world, x, y, z, start, end);
+        return list.stream()
             .map(bb -> rayTrace(pos, start, end, bb))
             .anyMatch(Objects::nonNull) ? super.collisionRayTrace(world, x, y, z, start, end) : null;
     }
