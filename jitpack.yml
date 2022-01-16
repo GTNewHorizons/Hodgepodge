@@ -1,2 +1,3 @@
-before_install:
-  - ./gradlew setupDecompWorkspace
+install:
+  - ./gradlew setupDecompWorkspace build publishToMavenLocal
+
