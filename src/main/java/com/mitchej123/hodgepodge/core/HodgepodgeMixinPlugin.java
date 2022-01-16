@@ -55,7 +55,7 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
             if(loadedMods.contains(mod)) {
                 Hodgepodge.log.info("Found Mod " + mod.modName + "!");
             }
-            else if (ArrayUtils.contains(Hodgepodge.config.requiredMods, mod.modName)){
+            else if (ArrayUtils.contains(Hodgepodge.config.requiredMods, mod.modName) && (!isDevelopmentEnvironment || Hodgepodge.config.requiredModsInDev)){
                 Hodgepodge.log.error("CRITICAL ERROR: Could not find required jar {}.  If this mod is not required please remove it from the 'requiredMods' section of the config.", mod.modName);
                 FMLCommonHandler.instance().exitJava(-1, true);
             } else {

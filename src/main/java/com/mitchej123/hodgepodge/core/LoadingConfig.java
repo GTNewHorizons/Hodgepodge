@@ -10,6 +10,7 @@ import java.util.Arrays;
 
 public class LoadingConfig {
     public String[] requiredMods;
+    public boolean requiredModsInDev;
     
     // Adjustments
     public int ic2SeedMaxStackSize;
@@ -64,6 +65,7 @@ public class LoadingConfig {
         config = new Configuration(file);
         
         requiredMods = config.get("overall", "requiredMods", defaultRequiredMods, "Subset of TargetMods that are required").getStringList();
+        requiredModsInDev = config.get("overall", "requiredModsInDev", false, "Require the Required Mods in dev").getBoolean();
                 
         fixWorldGetBlock = config.get("fixes", "fixWorldGetBlock", true, "Fix unprotected getBlock() in World").getBoolean();
         fixNorthWestBias = config.get("fixes", "fixNorthWestBias", true, "Fix northwest bias on RandomPositionGenerator").getBoolean();
