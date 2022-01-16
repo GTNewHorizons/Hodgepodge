@@ -1,4 +1,4 @@
-before_install
+before_install:
   - ./gradlew setupCiWorkspace
   - ./gradlew setupDecompWorkspace
 
