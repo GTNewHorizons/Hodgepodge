@@ -1,9 +1,9 @@
-//version: 1641429628
+//version: 1642394973
 /*
 DO NOT CHANGE THIS FILE!
 
 Also, you may replace this file at any time if there is an update available.
-Please check https://github.com/SinTh0r4s/ExampleMod1.7.10/blob/main/build.gradle for updates.
+Please check https://github.com/GTNewHorizons/ExampleMod1.7.10/blob/main/build.gradle for updates.
  */
 
 
@@ -223,7 +223,7 @@ dependencies {
         annotationProcessor("com.google.code.gson:gson:2.8.6")
         annotationProcessor("org.spongepowered:mixin:0.8-SNAPSHOT")
         // using 0.8 to workaround a issue in 0.7 which fails mixin application
-        compile("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
+        compile("com.github.GTNewHorizons:SpongePoweredMixin:0.7.12-GTNH") {
             // Mixin includes a lot of dependencies that are too up-to-date
             exclude module: "launchwrapper"
             exclude module: "guava"
@@ -231,7 +231,7 @@ dependencies {
             exclude module: "commons-io"
             exclude module: "log4j-core"
         }
-        compile("com.github.GTNewHorizons:SpongeMixins:1.4.0:dev")
+        compile("com.github.GTNewHorizons:SpongeMixins:1.5.0")
     }
 }
 
@@ -537,7 +537,7 @@ if (isNewBuildScriptVersionAvailable(projectDir.toString())) {
 }
 
 static URL availableBuildScriptUrl() {
-    new URL("https://raw.githubusercontent.com/SinTh0r4s/ExampleMod1.7.10/main/build.gradle")
+    new URL("https://raw.githubusercontent.com/GTNewHorizons/ExampleMod1.7.10/main/build.gradle")
 }
 
 boolean performBuildScriptUpdate(String projectDir) {
@@ -579,7 +579,7 @@ configure(updateBuildScript) {
 
 def checkPropertyExists(String propertyName) {
     if (project.hasProperty(propertyName) == false) {
-        throw new GradleException("This project requires a property \"" + propertyName + "\"! Please add it your \"gradle.properties\". You can find all properties and their description here: https://github.com/SinTh0r4s/ExampleMod1.7.10/blob/main/gradle.properties")
+        throw new GradleException("This project requires a property \"" + propertyName + "\"! Please add it your \"gradle.properties\". You can find all properties and their description here: https://github.com/GTNewHorizons/ExampleMod1.7.10/blob/main/gradle.properties")
     }
 }
 
