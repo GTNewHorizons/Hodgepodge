@@ -1,10 +1,10 @@
 dependencies {
-    compile("com.github.GTNewHorizons:GT5-Unofficial:master-SNAPSHOT:dev")
-
-    compile("com.github.GTNewHorizons:AppleCore:master-SNAPSHOT:dev")
+    compile("com.github.GTNewHorizons:GT5-Unofficial:5.09.40.19:dev")
+    compile("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
+    compile("com.github.GTNewHorizons:AppleCore:3.1.7:dev")
     
-    compile("com.github.GTNewHorizons:Railcraft:master-SNAPSHOT:dev") {
-        // RC Depends on BuildCraft & Baubles and a few others, use transitive to pull thoes in for `runClient`
+    compile("com.github.GTNewHorizons:Railcraft:9.13.5:dev") {
+        // RC Depends on BuildCraft & Baubles and a few others, use transitive to pull those in for `runClient`
         transitive = true
     }
     compile("com.github.GTNewHorizons:HungerOverhaul:master-SNAPSHOT:dev")
