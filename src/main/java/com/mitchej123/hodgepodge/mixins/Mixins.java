@@ -24,6 +24,7 @@ public enum Mixins {
     TILE_RENDERER_PROFILER_MINECRAFT("minecraft.profiler.MinecraftMixin", Side.CLIENT, () -> Hodgepodge.config.enableTileRendererProfiler, TargetedMod.VANILLA),
     DIMENSION_CHANGE_FIX("minecraft.MixinServerConfigurationManager", Side.BOTH, () -> Hodgepodge.config.fixDimensionChangeHearts, TargetedMod.VANILLA),
     CLONE_PLAYER_HEART_FIX("minecraft.MixinEntityPlayerMP", Side.BOTH, () -> Hodgepodge.config.fixDimensionChangeHearts, TargetedMod.VANILLA),
+    INCREASE_PARTICLE_LIMIT("minecraft.MixinEffectRenderer", Side.BOTH, () -> true, TargetedMod.VANILLA),
     
     // Potentially obsolete vanilla fixes
     GRASS_GET_BLOCK_FIX("minecraft.MixinBlockGrass", () -> Hodgepodge.config.fixVanillaUnprotectedGetBlock, TargetedMod.VANILLA),
