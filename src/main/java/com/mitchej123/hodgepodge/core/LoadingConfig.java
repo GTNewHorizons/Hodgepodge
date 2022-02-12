@@ -14,6 +14,8 @@ public class LoadingConfig {
     
     // Adjustments
     public int ic2SeedMaxStackSize;
+    public int particleLimit;
+    
     // Mixins
     public boolean addCVSupportToWandPedestal;
     public boolean dropPickedLootOnDespawn;
@@ -35,6 +37,7 @@ public class LoadingConfig {
     public boolean fixVanillaUnprotectedGetBlock;
     public boolean fixWorldGetBlock;
     public boolean fixDimensionChangeHearts;
+    public boolean increaseParticleLimit;
     public boolean hideIc2ReactorSlots;
     public boolean installAnchorAlarm;
     public boolean preventPickupLoot;
@@ -86,6 +89,8 @@ public class LoadingConfig {
         fixUrlDetection = config.get("fixes", "fixUrlDetection", true, "Fix URISyntaxException in forge.").getBoolean();
         fixDimensionChangeHearts = config.get("fixes", "fixDimensionChangeHearts", true, "Fix losing bonus hearts on dimension change").getBoolean();
         
+        increaseParticleLimit = config.get("tweaks", "increaseParticleLimit", true, "Increase particle limit").getBoolean();
+        particleLimit = Math.max(Math.min(config.get("tweaks", "particleLimit", 8000, "Particle limit [4000-16000]").getInt(), 16000), 4000);
         fixPotionEffectRender = config.get("tweaks", "fixPotionEffectRender", true, "Move vanilla potion effect status rendering before everything else").getBoolean();
         installAnchorAlarm = config.get("tweaks", "installAnchorAlarm", true, "Wake up passive & personal anchors on player login").getBoolean();
         preventPickupLoot = config.get("tweaks", "preventPickupLoot", true, "Prevent monsters from picking up loot.").getBoolean();
