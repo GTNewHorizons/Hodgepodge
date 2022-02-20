@@ -11,6 +11,7 @@ Requires SpongeMixins mod (https://github.com/GTNewHorizons/SpongeMixins) to wor
 * FixThaumcraftUnprotectedGetBlock - Fixes various unprotected Thaumcraft getBlock() calls, making sure the chunk is loaded first.
 * FixIc2Nightvision - Prevents IC2 night vision from blinding you when it's bright out, making it on par with other nightvision available
 * FixHungerOverhaul - Patches unintended mod interaction with Spice Of Life - Carrot Edition
+* FixPotionLimit - Support all 256 potion slots by fixing the incorrect signed byte conversions.
 * RemoveUpdateChecks - Removes outdated update checks
 ## Speedups
 * SpeedupChunkCoordinatesHashCode - Swaps out the HashCode function for ChunkCoordinates with one that provides better performance with HashSet

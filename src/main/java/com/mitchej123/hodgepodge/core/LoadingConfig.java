@@ -32,6 +32,7 @@ public class LoadingConfig {
     public boolean fixIc2UnprotectedGetBlock;
     public boolean fixNorthWestBias;
     public boolean fixPotionEffectRender;
+    public boolean fixPotionLimit;
     public boolean fixThaumcraftUnprotectedGetBlock;
     public boolean fixUrlDetection;
     public boolean fixVanillaUnprotectedGetBlock;
@@ -88,7 +89,8 @@ public class LoadingConfig {
         fixFireSpread = config.get("fixes", "fixFireSpread", true, "Fix vanilla fire spread sometimes cause NPE on thermos").getBoolean();
         fixUrlDetection = config.get("fixes", "fixUrlDetection", true, "Fix URISyntaxException in forge.").getBoolean();
         fixDimensionChangeHearts = config.get("fixes", "fixDimensionChangeHearts", true, "Fix losing bonus hearts on dimension change").getBoolean();
-        
+        fixPotionLimit = config.get("fixes", "fixPotionLimit", true, "Fix potions >= 128").getBoolean();
+
         increaseParticleLimit = config.get("tweaks", "increaseParticleLimit", true, "Increase particle limit").getBoolean();
         particleLimit = Math.max(Math.min(config.get("tweaks", "particleLimit", 8000, "Particle limit [4000-16000]").getInt(), 16000), 4000);
         fixPotionEffectRender = config.get("tweaks", "fixPotionEffectRender", true, "Move vanilla potion effect status rendering before everything else").getBoolean();
