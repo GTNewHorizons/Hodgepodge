@@ -25,6 +25,7 @@ public enum Mixins {
     DIMENSION_CHANGE_FIX("minecraft.MixinServerConfigurationManager", Side.BOTH, () -> Hodgepodge.config.fixDimensionChangeHearts, TargetedMod.VANILLA),
     CLONE_PLAYER_HEART_FIX("minecraft.MixinEntityPlayerMP", Side.BOTH, () -> Hodgepodge.config.fixDimensionChangeHearts, TargetedMod.VANILLA),
     INCREASE_PARTICLE_LIMIT("minecraft.MixinEffectRenderer", Side.CLIENT, () -> Hodgepodge.config.increaseParticleLimit, TargetedMod.VANILLA),
+    FIX_POTION_LIMIT("minecraft.MixinPotionEffect", Side.BOTH, () -> Hodgepodge.config.fixPotionLimit, TargetedMod.VANILLA),
     
     // Potentially obsolete vanilla fixes
     GRASS_GET_BLOCK_FIX("minecraft.MixinBlockGrass", () -> Hodgepodge.config.fixVanillaUnprotectedGetBlock, TargetedMod.VANILLA),
