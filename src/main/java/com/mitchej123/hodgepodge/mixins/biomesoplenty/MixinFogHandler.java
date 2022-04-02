@@ -56,9 +56,9 @@ public class MixinFogHandler {
         renderFog(event.fogMode, fogFarPlaneDistance, farPlaneDistanceScale);
     }
     
-    public static AtomicInteger ticks = new AtomicInteger(-100);
+    private static AtomicInteger ticks = new AtomicInteger(-100);
     
-    public class ClientTickThread extends Thread {
+    private class ClientTickThread extends Thread {
         
         @Override
         public void run() {
