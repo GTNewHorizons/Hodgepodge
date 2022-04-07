@@ -44,7 +44,8 @@ public enum Mixins {
     IC2_REACTOR_DUPE("ic2.MixinTileEntityReactorChamberElectric",  () -> Hodgepodge.config.fixIc2ReactorDupe, TargetedMod.IC2),
     HIDE_IC2_REACTOR_COOLANT_SLOTS("ic2.MixinTileEntityNuclearReactorElectric", () -> Hodgepodge.config.hideIc2ReactorSlots, TargetedMod.IC2),
     IC2_HAZMAT("ic2.MixinIc2Hazmat", () -> Hodgepodge.config.fixIc2Hazmat, TargetedMod.IC2, TargetedMod.GT5U),
-    
+    IC2_FLUID_CONTAINER_TOOLTIP("ic2.MixinItemIC2FluidContainer", () -> Hodgepodge.config.displayIc2FluidLocalizedName, TargetedMod.IC2),
+
     // COFH
     COFH_CORE_UPDATE_CHECK("cofhcore.MixinCoFHCoreUpdateCheck", () -> Hodgepodge.config.removeUpdateChecks, TargetedMod.COFH_CORE),
 

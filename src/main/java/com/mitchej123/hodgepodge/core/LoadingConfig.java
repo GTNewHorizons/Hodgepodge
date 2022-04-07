@@ -40,6 +40,7 @@ public class LoadingConfig {
     public boolean fixDimensionChangeHearts;
     public boolean increaseParticleLimit;
     public boolean hideIc2ReactorSlots;
+    public boolean displayIc2FluidLocalizedName;
     public boolean installAnchorAlarm;
     public boolean preventPickupLoot;
     public boolean removeUpdateChecks;
@@ -98,6 +99,7 @@ public class LoadingConfig {
         preventPickupLoot = config.get("tweaks", "preventPickupLoot", true, "Prevent monsters from picking up loot.").getBoolean();
         dropPickedLootOnDespawn = config.get("tweaks", "dropPickedLootOnDespawn", true, "Drop picked loot on entity despawn").getBoolean();
         hideIc2ReactorSlots = config.get("tweaks", "hideIc2ReactorSlots", true, "Prevent IC2's reactor's coolant slots from being accessed by automations if not a fluid reactor").getBoolean();
+        displayIc2FluidLocalizedName = config.get("tweaks", "displayIc2FluidLocalizedName", true, "Display fluid localized name in IC2 fluid cell tooltip").getBoolean();
         enableTileRendererProfiler = config.get("tweaks", "enableTileRendererProfiler", true, "Shows renderer's impact on FPS in vanilla lagometer").getBoolean();
         addCVSupportToWandPedestal = config.get("tweaks", "addCVSupportToWandPedestal", true, "Add CV support to Thaumcraft wand recharge pedestal").getBoolean();
 
