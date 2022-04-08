@@ -24,7 +24,9 @@ public class MixinTileEntityHopper {
                 if (decreased != null && decreased.stackSize != 0) {
                     ItemStack space = hopper.getStackInSlot(spaceSlot);
                     if (space == null) {
-                        hopper.setInventorySlotContents(spaceSlot, oneSizedCopy(is));
+                        space = is.copy();
+                        space.stackSize = 1;
+                        hopper.setInventorySlotContents(spaceSlot, space);
                     } else {
                         space.stackSize += 1;
                     }
@@ -43,16 +45,10 @@ public class MixinTileEntityHopper {
                 return i;
             }
             if (space.stackSize < Math.min(space.getMaxStackSize(), hopper.getInventoryStackLimit()))
-                if (ItemStack.areItemStacksEqual(oneSizedCopy(is), oneSizedCopy(space))) {
+                if (is.isItemEqual(space) && ItemStack.areItemStackTagsEqual(is, space)) {
                     return i;
                 }
         }
         return -1;
-    }
-
-    private static ItemStack oneSizedCopy(ItemStack is) {
-        is = is.copy();
-        is.stackSize = 1;
-        return is;
     }
 }
