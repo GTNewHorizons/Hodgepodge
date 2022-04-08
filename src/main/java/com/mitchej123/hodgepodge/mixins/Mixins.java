@@ -62,6 +62,11 @@ public enum Mixins {
     THAUMCRAFT_ARCANE_LAMP_GET_BLOCK_FIX("thaumcraft.MixinArcaneLamp", () -> Hodgepodge.config.fixThaumcraftUnprotectedGetBlock, TargetedMod.THAUMCRAFT),
     THAUMCRAFT_WISP_GET_BLOCK_FIX("thaumcraft.MixinEntityWisp", () -> Hodgepodge.config.fixThaumcraftUnprotectedGetBlock, TargetedMod.THAUMCRAFT),
     ADD_CV_SUPPORT_TO_WAND_PEDESTAL("thaumcraft.MixinTileWandPedestal", () -> Hodgepodge.config.addCVSupportToWandPedestal, TargetedMod.THAUMCRAFT),
+    
+    // BOP
+    DEDUPLICATE_FORESTRY_COMPAT_IN_BOP("biomesoplenty.MixinForestryIntegration", () -> Hodgepodge.config.deduplicateForestryCompatInBOP, TargetedMod.BOP),
+    SPEEDUP_BOP_BIOME_FOG("biomesoplenty.MixinFogHandler", Side.CLIENT, () -> Hodgepodge.config.speedupBOPFogHandling, TargetedMod.BOP),
+    BIG_FIR_TREES("biomesoplenty.MixinBlockBOPSapling", () -> Hodgepodge.config.makeBigFirsPlantable, TargetedMod.BOP)
     ;
     
     public final String mixinClass;

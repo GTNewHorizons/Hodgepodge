@@ -48,6 +48,9 @@ public class LoadingConfig {
     public boolean speedupChunkCoordinatesHashCode;
     public boolean speedupProgressBar;
     public boolean speedupVanillaFurnace;
+    public boolean deduplicateForestryCompatInBOP;
+    public boolean speedupBOPFogHandling;
+    public boolean makeBigFirsPlantable;
     
     // ASM
     public boolean pollutionAsm;
@@ -92,6 +95,7 @@ public class LoadingConfig {
         fixUrlDetection = config.get("fixes", "fixUrlDetection", true, "Fix URISyntaxException in forge.").getBoolean();
         fixDimensionChangeHearts = config.get("fixes", "fixDimensionChangeHearts", true, "Fix losing bonus hearts on dimension change").getBoolean();
         fixPotionLimit = config.get("fixes", "fixPotionLimit", true, "Fix potions >= 128").getBoolean();
+        deduplicateForestryCompatInBOP = config.get("fixes", "deduplicateForestryCompatInBOP", true, "Removes duplicate Fermenter and Squeezer recipes and flower registration").getBoolean();
         fixHopperVoidingItems = config.get("fixes", "fixHopperVoidingItems", true, "Fix Drawer + Hopper voiding items").getBoolean();
 
         increaseParticleLimit = config.get("tweaks", "increaseParticleLimit", true, "Increase particle limit").getBoolean();
@@ -104,11 +108,12 @@ public class LoadingConfig {
         displayIc2FluidLocalizedName = config.get("tweaks", "displayIc2FluidLocalizedName", true, "Display fluid localized name in IC2 fluid cell tooltip").getBoolean();
         enableTileRendererProfiler = config.get("tweaks", "enableTileRendererProfiler", true, "Shows renderer's impact on FPS in vanilla lagometer").getBoolean();
         addCVSupportToWandPedestal = config.get("tweaks", "addCVSupportToWandPedestal", true, "Add CV support to Thaumcraft wand recharge pedestal").getBoolean();
-
+        makeBigFirsPlantable = config.get("tweaks", "makeBigFirsPlantable", true, "Allow 5 Fir Sapling planted together ('+' shape) to grow to a big fir tree").getBoolean();
         ic2SeedMaxStackSize = config.get("tweaks", "ic2SeedMaxStackSize", 64, "IC2 seed max stack size").getInt();
         
         speedupChunkCoordinatesHashCode = config.get("speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
         speedupVanillaFurnace = config.get("speedups", "speedupVanillaFurnace", true, "Speedup Vanilla Furnace recipe lookup").getBoolean();
+        speedupBOPFogHandling = config.get("speedups", "speedupBOPFogHandling", true, "Speedup biome fog rendering in BiomesOPlenty").getBoolean();
         
         speedupProgressBar = config.get("asm", "speedupProgressBar", true, "Speedup progressbar").getBoolean();
         pollutionAsm = config.get("asm", "pollutionAsm", true, "Enable pollution rendering ASM").getBoolean();

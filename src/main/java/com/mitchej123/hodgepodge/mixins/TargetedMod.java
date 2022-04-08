@@ -7,7 +7,8 @@ public enum TargetedMod {
     HUNGER_OVERHAUL("HungerOverhaul", "HungerOverhaul"),
     RAILCRAFT("Railcraft", "Railcraft"),
     THAUMCRAFT("Thaumcraft", "Thaumcraft-1.7.10"),
-    COFH_CORE("CoFHCore", "CoFHCore", "cofh-core")
+    COFH_CORE("CoFHCore", "CoFHCore", "cofh-core"),
+    BOP("BiomesOPlenty", "BiomesOPlenty-1.7.10")
     ;
 
     public final String modName;

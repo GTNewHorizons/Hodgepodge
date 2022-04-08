@@ -20,13 +20,16 @@ import java.util.ArrayList;
 
 @Mixin(value = TileWandPedestal.class)
 public class MixinTileWandPedestal extends TileThaumcraft {
-    @Shadow
+	
+    @Shadow(remap = false)
     ArrayList<ChunkCoordinates> nodes = null;
-    @Shadow int counter = 0;
+    
+    @Shadow(remap = false)
+    int counter = 0;
 
     @Redirect(
         method ="Lthaumcraft/common/tiles/TileWandPedestal;updateEntity()V",
-        at=@At(value = "INVOKE",target="Lthaumcraft/common/items/wands/ItemWandCasting;getAspectsWithRoom(Lnet/minecraft/item/ItemStack;)Lthaumcraft/api/aspects/AspectList;"),
+        at=@At(value = "INVOKE",target="Lthaumcraft/common/items/wands/ItemWandCasting;getAspectsWithRoom(Lnet/minecraft/item/ItemStack;)Lthaumcraft/api/aspects/AspectList;", remap = false),
         require = 1
     )
     AspectList getAspectsWithRoomReplacement(ItemWandCasting wand, ItemStack wandstack)
