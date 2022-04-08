@@ -33,6 +33,7 @@ public class LoadingConfig {
     public boolean fixNorthWestBias;
     public boolean fixPotionEffectRender;
     public boolean fixPotionLimit;
+    public boolean fixHopperVoidingItems;
     public boolean fixThaumcraftUnprotectedGetBlock;
     public boolean fixUrlDetection;
     public boolean fixVanillaUnprotectedGetBlock;
@@ -40,6 +41,7 @@ public class LoadingConfig {
     public boolean fixDimensionChangeHearts;
     public boolean increaseParticleLimit;
     public boolean hideIc2ReactorSlots;
+    public boolean displayIc2FluidLocalizedName;
     public boolean installAnchorAlarm;
     public boolean preventPickupLoot;
     public boolean removeUpdateChecks;
@@ -94,6 +96,7 @@ public class LoadingConfig {
         fixDimensionChangeHearts = config.get("fixes", "fixDimensionChangeHearts", true, "Fix losing bonus hearts on dimension change").getBoolean();
         fixPotionLimit = config.get("fixes", "fixPotionLimit", true, "Fix potions >= 128").getBoolean();
         deduplicateForestryCompatInBOP = config.get("fixes", "deduplicateForestryCompatInBOP", true, "Removes duplicate Fermenter and Squeezer recipes and flower registration").getBoolean();
+        fixHopperVoidingItems = config.get("fixes", "fixHopperVoidingItems", true, "Fix Drawer + Hopper voiding items").getBoolean();
 
         increaseParticleLimit = config.get("tweaks", "increaseParticleLimit", true, "Increase particle limit").getBoolean();
         particleLimit = Math.max(Math.min(config.get("tweaks", "particleLimit", 8000, "Particle limit [4000-16000]").getInt(), 16000), 4000);
@@ -102,6 +105,7 @@ public class LoadingConfig {
         preventPickupLoot = config.get("tweaks", "preventPickupLoot", true, "Prevent monsters from picking up loot.").getBoolean();
         dropPickedLootOnDespawn = config.get("tweaks", "dropPickedLootOnDespawn", true, "Drop picked loot on entity despawn").getBoolean();
         hideIc2ReactorSlots = config.get("tweaks", "hideIc2ReactorSlots", true, "Prevent IC2's reactor's coolant slots from being accessed by automations if not a fluid reactor").getBoolean();
+        displayIc2FluidLocalizedName = config.get("tweaks", "displayIc2FluidLocalizedName", true, "Display fluid localized name in IC2 fluid cell tooltip").getBoolean();
         enableTileRendererProfiler = config.get("tweaks", "enableTileRendererProfiler", true, "Shows renderer's impact on FPS in vanilla lagometer").getBoolean();
         addCVSupportToWandPedestal = config.get("tweaks", "addCVSupportToWandPedestal", true, "Add CV support to Thaumcraft wand recharge pedestal").getBoolean();
         makeBigFirsPlantable = config.get("tweaks", "makeBigFirsPlantable", true, "Allow 5 Fir Sapling planted together ('+' shape) to grow to a big fir tree").getBoolean();

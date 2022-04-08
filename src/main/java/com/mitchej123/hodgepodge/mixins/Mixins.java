@@ -26,7 +26,8 @@ public enum Mixins {
     CLONE_PLAYER_HEART_FIX("minecraft.MixinEntityPlayerMP", Side.BOTH, () -> Hodgepodge.config.fixDimensionChangeHearts, TargetedMod.VANILLA),
     INCREASE_PARTICLE_LIMIT("minecraft.MixinEffectRenderer", Side.CLIENT, () -> Hodgepodge.config.increaseParticleLimit, TargetedMod.VANILLA),
     FIX_POTION_LIMIT("minecraft.MixinPotionEffect", Side.BOTH, () -> Hodgepodge.config.fixPotionLimit, TargetedMod.VANILLA),
-    
+    FIX_HOPPER_VOIDING_ITEMS("minecraft.MixinTileEntityHopper", () -> Hodgepodge.config.fixHopperVoidingItems, TargetedMod.VANILLA),
+
     // Potentially obsolete vanilla fixes
     GRASS_GET_BLOCK_FIX("minecraft.MixinBlockGrass", () -> Hodgepodge.config.fixVanillaUnprotectedGetBlock, TargetedMod.VANILLA),
     FIRE_GET_BLOCK_FIX("minecraft.MixinBlockFireGetBlock", () -> Hodgepodge.config.fixVanillaUnprotectedGetBlock, TargetedMod.VANILLA),
@@ -44,7 +45,8 @@ public enum Mixins {
     IC2_REACTOR_DUPE("ic2.MixinTileEntityReactorChamberElectric",  () -> Hodgepodge.config.fixIc2ReactorDupe, TargetedMod.IC2),
     HIDE_IC2_REACTOR_COOLANT_SLOTS("ic2.MixinTileEntityNuclearReactorElectric", () -> Hodgepodge.config.hideIc2ReactorSlots, TargetedMod.IC2),
     IC2_HAZMAT("ic2.MixinIc2Hazmat", () -> Hodgepodge.config.fixIc2Hazmat, TargetedMod.IC2, TargetedMod.GT5U),
-    
+    IC2_FLUID_CONTAINER_TOOLTIP("ic2.MixinItemIC2FluidContainer", () -> Hodgepodge.config.displayIc2FluidLocalizedName, TargetedMod.IC2),
+
     // COFH
     COFH_CORE_UPDATE_CHECK("cofhcore.MixinCoFHCoreUpdateCheck", () -> Hodgepodge.config.removeUpdateChecks, TargetedMod.COFH_CORE),
 
