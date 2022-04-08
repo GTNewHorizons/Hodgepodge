@@ -13,6 +13,15 @@ repositories {
         }
     }
     maven {
+        // IC2
+        name = "ic2"
+        url = "https://maven2.ic2.player.to/"
+        metadataSources {
+            mavenPom()
+            artifact()
+        }
+    }
+    maven {
         name = "hungeroverhaul"
         url = "https://dvs1.progwml6.com/files/maven/"
     }
