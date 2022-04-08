@@ -26,7 +26,8 @@ public enum Mixins {
     CLONE_PLAYER_HEART_FIX("minecraft.MixinEntityPlayerMP", Side.BOTH, () -> Hodgepodge.config.fixDimensionChangeHearts, TargetedMod.VANILLA),
     INCREASE_PARTICLE_LIMIT("minecraft.MixinEffectRenderer", Side.CLIENT, () -> Hodgepodge.config.increaseParticleLimit, TargetedMod.VANILLA),
     FIX_POTION_LIMIT("minecraft.MixinPotionEffect", Side.BOTH, () -> Hodgepodge.config.fixPotionLimit, TargetedMod.VANILLA),
-    
+    FIX_HOPPER_VOIDING_ITEMS("minecraft.MixinTileEntityHopper", () -> Hodgepodge.config.fixHopperVoidingItems, TargetedMod.VANILLA),
+
     // Potentially obsolete vanilla fixes
     GRASS_GET_BLOCK_FIX("minecraft.MixinBlockGrass", () -> Hodgepodge.config.fixVanillaUnprotectedGetBlock, TargetedMod.VANILLA),
     FIRE_GET_BLOCK_FIX("minecraft.MixinBlockFireGetBlock", () -> Hodgepodge.config.fixVanillaUnprotectedGetBlock, TargetedMod.VANILLA),
