@@ -51,6 +51,7 @@ public class LoadingConfig {
     public boolean deduplicateForestryCompatInBOP;
     public boolean speedupBOPFogHandling;
     public boolean makeBigFirsPlantable;
+    public boolean fixHudLightingGlitch;
     
     // ASM
     public boolean pollutionAsm;
@@ -110,6 +111,7 @@ public class LoadingConfig {
         addCVSupportToWandPedestal = config.get("tweaks", "addCVSupportToWandPedestal", true, "Add CV support to Thaumcraft wand recharge pedestal").getBoolean();
         makeBigFirsPlantable = config.get("tweaks", "makeBigFirsPlantable", true, "Allow 5 Fir Sapling planted together ('+' shape) to grow to a big fir tree").getBoolean();
         ic2SeedMaxStackSize = config.get("tweaks", "ic2SeedMaxStackSize", 64, "IC2 seed max stack size").getInt();
+        fixHudLightingGlitch = config.get("tweaks", "fixHudLightingGlitch", true, "Fix hotbars being dark when Project Red is installed").getBoolean();
         
         speedupChunkCoordinatesHashCode = config.get("speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
         speedupVanillaFurnace = config.get("speedups", "speedupVanillaFurnace", true, "Speedup Vanilla Furnace recipe lookup").getBoolean();

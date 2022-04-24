@@ -66,7 +66,10 @@ public enum Mixins {
     // BOP
     DEDUPLICATE_FORESTRY_COMPAT_IN_BOP("biomesoplenty.MixinForestryIntegration", () -> Hodgepodge.config.deduplicateForestryCompatInBOP, TargetedMod.BOP),
     SPEEDUP_BOP_BIOME_FOG("biomesoplenty.MixinFogHandler", Side.CLIENT, () -> Hodgepodge.config.speedupBOPFogHandling, TargetedMod.BOP),
-    BIG_FIR_TREES("biomesoplenty.MixinBlockBOPSapling", () -> Hodgepodge.config.makeBigFirsPlantable, TargetedMod.BOP)
+    BIG_FIR_TREES("biomesoplenty.MixinBlockBOPSapling", () -> Hodgepodge.config.makeBigFirsPlantable, TargetedMod.BOP),
+
+    // MrTJPCore (Project Red)
+    FIX_HUD_LIGHTING_GLITCH("mrtjpcore.MixinFXEngine", () -> Hodgepodge.config.fixHudLightingGlitch, TargetedMod.MRTJPCORE)
     ;
     
     public final String mixinClass;
