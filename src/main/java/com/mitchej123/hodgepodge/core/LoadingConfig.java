@@ -60,7 +60,11 @@ public class LoadingConfig {
     public boolean biblocraftRecipes;
     
     public String thermosCraftServerClass;
-        
+
+    // internals
+    public boolean internalAsmCheckBytecode;
+    public boolean internalAsmAlwaysDumpClasses;
+    public String internalAsmDumpFoldername;
     
     public static Configuration config;
 
@@ -123,6 +127,10 @@ public class LoadingConfig {
         biblocraftRecipes = config.get("asm", "biblocraftRecipes", true, "Remove recipe generation from BiblioCraft").getBoolean();
         
         thermosCraftServerClass = config.get("asm", "thermosCraftServerClass", "org.bukkit.craftbukkit.v1_7_R4.CraftServer", "If using Bukkit/Thermos, the CraftServer package.").getString();
+
+        internalAsmCheckBytecode = config.get("internal", "asmCheckBytecode", false, "Developpers use only - Check bytecode input and output").getBoolean();
+        internalAsmAlwaysDumpClasses = config.get("internal", "asmDumpAll", false, "Developpers use only - Dump input and output bytecode and Asm in success").getBoolean();
+        internalAsmDumpFoldername = config.get("internal", "asmDumpWhere", ".asm", "Developpers use only - Relative path to dump bytecode and Asm to").getString();
 
         if (config.hasChanged())
             config.save();
