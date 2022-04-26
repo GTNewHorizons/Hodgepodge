@@ -53,6 +53,7 @@ public class LoadingConfig {
     public boolean makeBigFirsPlantable;
     public boolean fixHudLightingGlitch;
     public boolean thirstyTankContainer;
+    public boolean fixWorldServerLeakingUnloadedEntities;
     
     // ASM
     public boolean pollutionAsm;
@@ -99,6 +100,7 @@ public class LoadingConfig {
         fixPotionLimit = config.get("fixes", "fixPotionLimit", true, "Fix potions >= 128").getBoolean();
         deduplicateForestryCompatInBOP = config.get("fixes", "deduplicateForestryCompatInBOP", true, "Removes duplicate Fermenter and Squeezer recipes and flower registration").getBoolean();
         fixHopperVoidingItems = config.get("fixes", "fixHopperVoidingItems", true, "Fix Drawer + Hopper voiding items").getBoolean();
+        fixWorldServerLeakingUnloadedEntities = config.get("fixes", "fixWorldServerLeakingUnloadedEntities", true, "Fix WorldServer leaking entities when no players are present in a dimension").getBoolean();
 
         increaseParticleLimit = config.get("tweaks", "increaseParticleLimit", true, "Increase particle limit").getBoolean();
         particleLimit = Math.max(Math.min(config.get("tweaks", "particleLimit", 8000, "Particle limit [4000-16000]").getInt(), 16000), 4000);
