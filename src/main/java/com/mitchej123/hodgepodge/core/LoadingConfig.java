@@ -43,6 +43,7 @@ public class LoadingConfig {
     public boolean fixWorldGetBlock;
     public boolean fixDimensionChangeHearts;
     public boolean increaseParticleLimit;
+    public boolean fixGlStateBugs;
     public boolean hideIc2ReactorSlots;
     public boolean displayIc2FluidLocalizedName;
     public boolean installAnchorAlarm;
@@ -101,6 +102,7 @@ public class LoadingConfig {
         fixUrlDetection = config.get("fixes", "fixUrlDetection", true, "Fix URISyntaxException in forge.").getBoolean();
         fixDimensionChangeHearts = config.get("fixes", "fixDimensionChangeHearts", true, "Fix losing bonus hearts on dimension change").getBoolean();
         fixPotionLimit = config.get("fixes", "fixPotionLimit", true, "Fix potions >= 128").getBoolean();
+        fixGlStateBugs = config.get("fixes", "fixGlStateBugs", true, "Fix vanilla GL state bugs causing lighting glitches in various perspectives (MC-10135).").getBoolean();
         deduplicateForestryCompatInBOP = config.get("fixes", "deduplicateForestryCompatInBOP", true, "Removes duplicate Fermenter and Squeezer recipes and flower registration").getBoolean();
         fixHopperVoidingItems = config.get("fixes", "fixHopperVoidingItems", true, "Fix Drawer + Hopper voiding items").getBoolean();
         fixHugeChatKick = config.get("fixes", "fixHugeChatKick", true, "Fix oversized chat message kicking player.").getBoolean();
