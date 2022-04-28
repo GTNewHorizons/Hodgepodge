@@ -68,7 +68,7 @@ public class PollutionClassTransformer extends AbstractClassTransformer {
                     log.info("Injecting RenderBlocks.renderBlockVine");
                     if (optifinePresent) {
                         log.info("\tfound optifine, inserting after CustomColorizer.getColorMultiplier");
-                        insertAfter(matchMethodInsn(Opcodes.INVOKESTATIC, "CustomColorizer", "getColorMultiplier", "(Laji;Lahl;III)I"),
+                        insertAfter(matchMethodInsn(Opcodes.INVOKESTATIC, "CustomColorizer", "getColorMultiplier", "(Lnet/minecraft/block/Block;Lnet/minecraft/world/IBlockAccess;III)I"),
                                 new VarInsnNode(Opcodes.ALOAD, 1), //add block
                                 new VarInsnNode(Opcodes.ILOAD, 2), //add x
                                 new VarInsnNode(Opcodes.ILOAD, 4), //add z
