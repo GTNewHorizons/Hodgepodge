@@ -52,6 +52,7 @@ public class LoadingConfig {
     public boolean speedupBOPFogHandling;
     public boolean makeBigFirsPlantable;
     public boolean fixHudLightingGlitch;
+    public boolean thirstyTankContainer;
     
     // ASM
     public boolean pollutionAsm;
@@ -112,6 +113,7 @@ public class LoadingConfig {
         makeBigFirsPlantable = config.get("tweaks", "makeBigFirsPlantable", true, "Allow 5 Fir Sapling planted together ('+' shape) to grow to a big fir tree").getBoolean();
         ic2SeedMaxStackSize = config.get("tweaks", "ic2SeedMaxStackSize", 64, "IC2 seed max stack size").getInt();
         fixHudLightingGlitch = config.get("tweaks", "fixHudLightingGlitch", true, "Fix hotbars being dark when Project Red is installed").getBoolean();
+        thirstyTankContainer = config.get("tweaks", "thirstyTankContainer", true, "Implement container for thirsty tank").getBoolean();
         
         speedupChunkCoordinatesHashCode = config.get("speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
         speedupVanillaFurnace = config.get("speedups", "speedupVanillaFurnace", true, "Speedup Vanilla Furnace recipe lookup").getBoolean();
