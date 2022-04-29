@@ -69,7 +69,10 @@ public enum Mixins {
     BIG_FIR_TREES("biomesoplenty.MixinBlockBOPSapling", () -> Hodgepodge.config.makeBigFirsPlantable, TargetedMod.BOP),
 
     // MrTJPCore (Project Red)
-    FIX_HUD_LIGHTING_GLITCH("mrtjpcore.MixinFXEngine", () -> Hodgepodge.config.fixHudLightingGlitch, TargetedMod.MRTJPCORE)
+    FIX_HUD_LIGHTING_GLITCH("mrtjpcore.MixinFXEngine", () -> Hodgepodge.config.fixHudLightingGlitch, TargetedMod.MRTJPCORE),
+    
+    // Automagy
+    IMPLEMENTS_CONTAINER_FOR_THIRSTY_TANK("automagy.MixinItemBlockThirstyTank", () -> Hodgepodge.config.thirstyTankContainer, TargetedMod.AUTOMAGY)
     ;
     
     public final String mixinClass;
