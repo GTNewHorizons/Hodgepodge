@@ -32,7 +32,7 @@ public class DebugScreenHandler {
     
     @SubscribeEvent
     public void onRenderGameOverlayTextEvent(RenderGameOverlayEvent.Text event) {
-        if(Minecraft.getMinecraft().gameSettings.showDebugInfo) {
+        if (Minecraft.getMinecraft().gameSettings.showDebugInfo) {
             event.right.add(2, null); //Empty Line
             event.right.add(3, "Java: " + this.javaVersion + (this.is64bit ? " 64bit (" : " 32bit (") + this.javaVendor + ")");
             event.right.add(4, "GPU: " + this.gpuName);
@@ -44,9 +44,9 @@ public class DebugScreenHandler {
     
     private static boolean check64bit() {
         String[] keys = {"sun.arch.data.model", "com.ibm.vm.bitmode", "os.arch"};
-        for(String key : keys) {
+        for (String key : keys) {
             String value = System.getProperty(key);
-            if(value != null && value.contains("64")) {
+            if (value != null && value.contains("64")) {
                 return true;
             }
         }
