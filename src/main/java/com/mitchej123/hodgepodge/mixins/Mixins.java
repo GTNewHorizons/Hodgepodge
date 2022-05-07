@@ -27,6 +27,7 @@ public enum Mixins {
     INCREASE_PARTICLE_LIMIT("minecraft.MixinEffectRenderer", Side.CLIENT, () -> Hodgepodge.config.increaseParticleLimit, TargetedMod.VANILLA),
     FIX_POTION_LIMIT("minecraft.MixinPotionEffect", Side.BOTH, () -> Hodgepodge.config.fixPotionLimit, TargetedMod.VANILLA),
     FIX_HOPPER_VOIDING_ITEMS("minecraft.MixinTileEntityHopper", () -> Hodgepodge.config.fixHopperVoidingItems, TargetedMod.VANILLA),
+    FIX_HUGE_CHAT_KICK("minecraft.MixinS02PacketChat", () -> Hodgepodge.config.fixHugeChatKick, TargetedMod.VANILLA),
     FIX_WORLD_SERVER_LEAKING_UNLOADED_ENTITIES("minecraft.MixinWorldServerUpdateEntities", () -> Hodgepodge.config.fixWorldServerLeakingUnloadedEntities, TargetedMod.VANILLA),
 
     // Potentially obsolete vanilla fixes

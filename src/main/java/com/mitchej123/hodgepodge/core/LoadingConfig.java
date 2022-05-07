@@ -34,6 +34,8 @@ public class LoadingConfig {
     public boolean fixPotionEffectRender;
     public boolean fixPotionLimit;
     public boolean fixHopperVoidingItems;
+    public boolean fixHugeChatKick;
+    public boolean logHugeChat;
     public boolean fixThaumcraftUnprotectedGetBlock;
     public boolean fixUrlDetection;
     public boolean fixVanillaUnprotectedGetBlock;
@@ -54,7 +56,7 @@ public class LoadingConfig {
     public boolean fixHudLightingGlitch;
     public boolean thirstyTankContainer;
     public boolean fixWorldServerLeakingUnloadedEntities;
-    
+
     // ASM
     public boolean pollutionAsm;
     public boolean cofhWorldTransformer;
@@ -100,6 +102,8 @@ public class LoadingConfig {
         fixPotionLimit = config.get("fixes", "fixPotionLimit", true, "Fix potions >= 128").getBoolean();
         deduplicateForestryCompatInBOP = config.get("fixes", "deduplicateForestryCompatInBOP", true, "Removes duplicate Fermenter and Squeezer recipes and flower registration").getBoolean();
         fixHopperVoidingItems = config.get("fixes", "fixHopperVoidingItems", true, "Fix Drawer + Hopper voiding items").getBoolean();
+        fixHugeChatKick = config.get("fixes", "fixHugeChatKick", true, "Fix oversized chat message kicking player.").getBoolean();
+        logHugeChat = config.get("fixes", "logHugeChat", true, "Log oversized chat message to console. WARNING: might create huge log files if this happens very often.").getBoolean();
         fixWorldServerLeakingUnloadedEntities = config.get("fixes", "fixWorldServerLeakingUnloadedEntities", true, "Fix WorldServer leaking entities when no players are present in a dimension").getBoolean();
 
         increaseParticleLimit = config.get("tweaks", "increaseParticleLimit", true, "Increase particle limit").getBoolean();
