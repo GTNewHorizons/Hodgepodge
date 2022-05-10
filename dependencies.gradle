@@ -3,6 +3,8 @@ dependencies {
     compile("com.github.GTNewHorizons:StructureLib:1.0.15:dev")
     compile("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
     compile("com.github.GTNewHorizons:AppleCore:3.1.9:dev")
+    compile("mrtjp:MrTJPCore:1.7.10-1.1.0.33:dev")
+    compile("curse.maven:automagy-222153:2285272")
     
     compileOnly("com.github.GTNewHorizons:Railcraft:9.13.6:dev") {
         // RC Depends on BuildCraft & Baubles and a few others, use transitive to pull those in for `runClient`

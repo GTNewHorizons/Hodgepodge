@@ -32,4 +32,12 @@ repositories {
         name = "jitpack"
         url("https://jitpack.io")
     }
+    maven {
+        name "mvnmrtjp"
+        url "http://files.projectredwiki.com/maven"
+        metadataSources {
+            mavenPom()
+            artifact()
+        }
+    }
 }

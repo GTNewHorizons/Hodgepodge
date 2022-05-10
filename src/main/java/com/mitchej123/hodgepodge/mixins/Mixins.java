@@ -27,6 +27,8 @@ public enum Mixins {
     INCREASE_PARTICLE_LIMIT("minecraft.MixinEffectRenderer", Side.CLIENT, () -> Hodgepodge.config.increaseParticleLimit, TargetedMod.VANILLA),
     FIX_POTION_LIMIT("minecraft.MixinPotionEffect", Side.BOTH, () -> Hodgepodge.config.fixPotionLimit, TargetedMod.VANILLA),
     FIX_HOPPER_VOIDING_ITEMS("minecraft.MixinTileEntityHopper", () -> Hodgepodge.config.fixHopperVoidingItems, TargetedMod.VANILLA),
+    FIX_HUGE_CHAT_KICK("minecraft.MixinS02PacketChat", () -> Hodgepodge.config.fixHugeChatKick, TargetedMod.VANILLA),
+    FIX_WORLD_SERVER_LEAKING_UNLOADED_ENTITIES("minecraft.MixinWorldServerUpdateEntities", () -> Hodgepodge.config.fixWorldServerLeakingUnloadedEntities, TargetedMod.VANILLA),
 
     // Potentially obsolete vanilla fixes
     GRASS_GET_BLOCK_FIX("minecraft.MixinBlockGrass", () -> Hodgepodge.config.fixVanillaUnprotectedGetBlock, TargetedMod.VANILLA),
@@ -66,7 +68,13 @@ public enum Mixins {
     // BOP
     DEDUPLICATE_FORESTRY_COMPAT_IN_BOP("biomesoplenty.MixinForestryIntegration", () -> Hodgepodge.config.deduplicateForestryCompatInBOP, TargetedMod.BOP),
     SPEEDUP_BOP_BIOME_FOG("biomesoplenty.MixinFogHandler", Side.CLIENT, () -> Hodgepodge.config.speedupBOPFogHandling, TargetedMod.BOP),
-    BIG_FIR_TREES("biomesoplenty.MixinBlockBOPSapling", () -> Hodgepodge.config.makeBigFirsPlantable, TargetedMod.BOP)
+    BIG_FIR_TREES("biomesoplenty.MixinBlockBOPSapling", () -> Hodgepodge.config.makeBigFirsPlantable, TargetedMod.BOP),
+
+    // MrTJPCore (Project Red)
+    FIX_HUD_LIGHTING_GLITCH("mrtjpcore.MixinFXEngine", () -> Hodgepodge.config.fixHudLightingGlitch, TargetedMod.MRTJPCORE),
+    
+    // Automagy
+    IMPLEMENTS_CONTAINER_FOR_THIRSTY_TANK("automagy.MixinItemBlockThirstyTank", () -> Hodgepodge.config.thirstyTankContainer, TargetedMod.AUTOMAGY)
     ;
     
     public final String mixinClass;

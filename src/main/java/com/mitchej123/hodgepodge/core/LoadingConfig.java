@@ -35,6 +35,8 @@ public class LoadingConfig {
     public boolean fixPotionEffectRender;
     public boolean fixPotionLimit;
     public boolean fixHopperVoidingItems;
+    public boolean fixHugeChatKick;
+    public boolean logHugeChat;
     public boolean fixThaumcraftUnprotectedGetBlock;
     public boolean fixUrlDetection;
     public boolean fixVanillaUnprotectedGetBlock;
@@ -52,7 +54,10 @@ public class LoadingConfig {
     public boolean deduplicateForestryCompatInBOP;
     public boolean speedupBOPFogHandling;
     public boolean makeBigFirsPlantable;
-    
+    public boolean fixHudLightingGlitch;
+    public boolean thirstyTankContainer;
+    public boolean fixWorldServerLeakingUnloadedEntities;
+
     // ASM
     public boolean pollutionAsm;
     public boolean cofhWorldTransformer;
@@ -98,6 +103,9 @@ public class LoadingConfig {
         fixPotionLimit = config.get("fixes", "fixPotionLimit", true, "Fix potions >= 128").getBoolean();
         deduplicateForestryCompatInBOP = config.get("fixes", "deduplicateForestryCompatInBOP", true, "Removes duplicate Fermenter and Squeezer recipes and flower registration").getBoolean();
         fixHopperVoidingItems = config.get("fixes", "fixHopperVoidingItems", true, "Fix Drawer + Hopper voiding items").getBoolean();
+        fixHugeChatKick = config.get("fixes", "fixHugeChatKick", true, "Fix oversized chat message kicking player.").getBoolean();
+        logHugeChat = config.get("fixes", "logHugeChat", true, "Log oversized chat message to console. WARNING: might create huge log files if this happens very often.").getBoolean();
+        fixWorldServerLeakingUnloadedEntities = config.get("fixes", "fixWorldServerLeakingUnloadedEntities", true, "Fix WorldServer leaking entities when no players are present in a dimension").getBoolean();
 
         increaseParticleLimit = config.get("tweaks", "increaseParticleLimit", true, "Increase particle limit").getBoolean();
         particleLimit = Math.max(Math.min(config.get("tweaks", "particleLimit", 8000, "Particle limit [4000-16000]").getInt(), 16000), 4000);
@@ -112,6 +120,8 @@ public class LoadingConfig {
         makeBigFirsPlantable = config.get("tweaks", "makeBigFirsPlantable", true, "Allow 5 Fir Sapling planted together ('+' shape) to grow to a big fir tree").getBoolean();
         ic2SeedMaxStackSize = config.get("tweaks", "ic2SeedMaxStackSize", 64, "IC2 seed max stack size").getInt();
         addSystemInfo = config.get("tweaks", "addSystemInfo", true, "Adds system info to the F3 overlay (Java version and vendor; GPU name; OpenGL version; CPU cores; OS name, version and architecture)").getBoolean();
+        fixHudLightingGlitch = config.get("tweaks", "fixHudLightingGlitch", true, "Fix hotbars being dark when Project Red is installed").getBoolean();
+        thirstyTankContainer = config.get("tweaks", "thirstyTankContainer", true, "Implement container for thirsty tank").getBoolean();
         
         speedupChunkCoordinatesHashCode = config.get("speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
         speedupVanillaFurnace = config.get("speedups", "speedupVanillaFurnace", true, "Speedup Vanilla Furnace recipe lookup").getBoolean();

@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.minecraft;
 
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.IHopper;
 import net.minecraft.tileentity.TileEntityHopper;
@@ -17,24 +18,24 @@ public class MixinTileEntityHopper {
     @Redirect(method = "func_145891_a(Lnet/minecraft/tileentity/IHopper;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/tileentity/TileEntityHopper;func_145892_a(Lnet/minecraft/tileentity/IHopper;Lnet/minecraft/inventory/IInventory;II)Z"))
     private static boolean redirect_func_145891_a(IHopper hopper, IInventory inventory, int slot, int side) {
         ItemStack is = inventory.getStackInSlot(slot);
-        if (is != null && is.stackSize != 0) {
-            int spaceSlot = getSpaceSlot(hopper, is);
-            if (spaceSlot != -1) {
-                ItemStack decreased = inventory.decrStackSize(slot, 1);
-                if (decreased != null && decreased.stackSize != 0) {
-                    ItemStack space = hopper.getStackInSlot(spaceSlot);
-                    if (space == null) {
-                        space = is.copy();
-                        space.stackSize = 1;
-                        hopper.setInventorySlotContents(spaceSlot, space);
-                    } else {
-                        space.stackSize += 1;
-                    }
-                    return true;
-                }
-            }
+        if (is == null || is.stackSize == 0) return false;
+        if (inventory instanceof ISidedInventory) {
+            ISidedInventory sidedInventory = (ISidedInventory) inventory;
+            if (!sidedInventory.canExtractItem(slot, is, side)) return false;
         }
-        return false;
+        int spaceSlot = getSpaceSlot(hopper, is);
+        if (spaceSlot == -1) return false;
+        ItemStack decreased = inventory.decrStackSize(slot, 1);
+        if (decreased == null || decreased.stackSize == 0) return false;
+        ItemStack space = hopper.getStackInSlot(spaceSlot);
+        if (space == null) {
+            space = is.copy();
+            space.stackSize = 1;
+            hopper.setInventorySlotContents(spaceSlot, space);
+        } else {
+            space.stackSize += 1;
+        }
+        return true;
     }
 
     private static int getSpaceSlot(IHopper hopper, ItemStack is) {

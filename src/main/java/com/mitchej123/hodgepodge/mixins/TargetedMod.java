@@ -8,7 +8,9 @@ public enum TargetedMod {
     RAILCRAFT("Railcraft", "Railcraft"),
     THAUMCRAFT("Thaumcraft", "Thaumcraft-1.7.10"),
     COFH_CORE("CoFHCore", "CoFHCore", "cofh-core"),
-    BOP("BiomesOPlenty", "BiomesOPlenty-1.7.10")
+    BOP("BiomesOPlenty", "BiomesOPlenty-1.7.10"),
+    MRTJPCORE("MrTJPCore", "MrTJPCore"),
+    AUTOMAGY("Automagy", "Automagy-1.7.10")
     ;
 
     public final String modName;
