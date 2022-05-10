@@ -1,6 +1,5 @@
 package com.mitchej123.hodgepodge.client;
 
-import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 
