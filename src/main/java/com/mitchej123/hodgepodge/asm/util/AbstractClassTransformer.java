@@ -157,7 +157,7 @@ public abstract class AbstractClassTransformer implements IClassTransformer {
                 if (resultClass != null) {
                     Files.write(Paths.get(Hodgepodge.config.internalAsmDumpFoldername, name + "-after.class"), resultClass);
                     if (Hodgepodge.config.internalAsmProduceAsmDmpFiles && (resultDump.toString() != null) && (resultDump.toString().length() > 0)) {
-                        Files.write(Paths.get(Hodgepodge.config.internalAsmDumpFoldername, name + "-before.asm-dmp"), resultDump.toString().getBytes("UTF-8"));
+                        Files.write(Paths.get(Hodgepodge.config.internalAsmDumpFoldername, name + "-after.asm-dmp"), resultDump.toString().getBytes("UTF-8"));
                     }
                 }
             } catch (Exception e) {
