@@ -15,6 +15,7 @@ public class LoadingConfig {
     // Adjustments
     public int ic2SeedMaxStackSize;
     public int particleLimit;
+    public boolean addSystemInfo;
     
     // Mixins
     public boolean addCVSupportToWandPedestal;
@@ -64,8 +65,6 @@ public class LoadingConfig {
     public boolean biblocraftRecipes;
     
     public String thermosCraftServerClass;
-
-    // internals
     public boolean internalAsmAlwaysDumpClasses;
     public boolean internalAsmProduceAsmDmpFiles;
     public String internalAsmDumpFoldername;
@@ -122,6 +121,7 @@ public class LoadingConfig {
         addCVSupportToWandPedestal = config.get("tweaks", "addCVSupportToWandPedestal", true, "Add CV support to Thaumcraft wand recharge pedestal").getBoolean();
         makeBigFirsPlantable = config.get("tweaks", "makeBigFirsPlantable", true, "Allow 5 Fir Sapling planted together ('+' shape) to grow to a big fir tree").getBoolean();
         ic2SeedMaxStackSize = config.get("tweaks", "ic2SeedMaxStackSize", 64, "IC2 seed max stack size").getInt();
+        addSystemInfo = config.get("tweaks", "addSystemInfo", true, "Adds system info to the F3 overlay (Java version and vendor; GPU name; OpenGL version; CPU cores; OS name, version and architecture)").getBoolean();
         fixHudLightingGlitch = config.get("tweaks", "fixHudLightingGlitch", true, "Fix hotbars being dark when Project Red is installed").getBoolean();
         thirstyTankContainer = config.get("tweaks", "thirstyTankContainer", true, "Implement container for thirsty tank").getBoolean();
         
