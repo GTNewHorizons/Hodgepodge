@@ -14,6 +14,7 @@ dependencies {
     compileOnly("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev")
     compile("curse.maven:cofh-core-69162:2388751")
     compile("curse.maven:biomes-o-plenty-220318:2499612")
+    compile("curse.maven:projecte-226410:2340786")
     
    
     // Thermos Compat, compile only not run in dev by default
