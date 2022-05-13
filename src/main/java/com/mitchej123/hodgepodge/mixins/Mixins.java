@@ -75,7 +75,10 @@ public enum Mixins {
     FIX_HUD_LIGHTING_GLITCH("mrtjpcore.MixinFXEngine", () -> Hodgepodge.config.fixHudLightingGlitch, TargetedMod.MRTJPCORE),
     
     // Automagy
-    IMPLEMENTS_CONTAINER_FOR_THIRSTY_TANK("automagy.MixinItemBlockThirstyTank", () -> Hodgepodge.config.thirstyTankContainer, TargetedMod.AUTOMAGY)
+    IMPLEMENTS_CONTAINER_FOR_THIRSTY_TANK("automagy.MixinItemBlockThirstyTank", () -> Hodgepodge.config.thirstyTankContainer, TargetedMod.AUTOMAGY),
+
+    // ProjectE
+    FIX_FURNACE_ITERATION("projecte.MixinObjHandler", () -> Hodgepodge.config.speedupVanillaFurnace, TargetedMod.PROJECTE),
     ;
     
     public final String mixinClass;
