@@ -164,8 +164,11 @@ public class LoadingConfig {
      * Defaults
      */
 
-    // Default to all mods being required
-    private static final String[] defaultRequiredMods = Arrays.stream(TargetedMod.values()).map(f -> f.modName).toArray(String[]::new);
+    // Default to all non-optional mods being required
+    private static final String[] defaultRequiredMods = Arrays.stream(TargetedMod.values())
+        .filter(mod -> !mod.optional)
+        .map(f -> f.modName).toArray(String[]::new);
+
     public static final String[] defaultPollutionRenderStandardBlock = new String[]{
         "net.minecraft.block.BlockGrass:GRASS",
         "net.minecraft.block.BlockLeavesBase:LEAVES",

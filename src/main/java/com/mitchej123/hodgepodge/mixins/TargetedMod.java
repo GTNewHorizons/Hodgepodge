@@ -11,24 +11,33 @@ public enum TargetedMod {
     BOP("BiomesOPlenty", "BiomesOPlenty-1.7.10"),
     MRTJPCORE("MrTJPCore", "MrTJPCore"),
     AUTOMAGY("Automagy", "Automagy-1.7.10"),
-    PROJECTE("ProjectE", "ProjectE-1.7.10", "projecte")
+    PROJECTE("ProjectE", "ProjectE-1.7.10", "projecte", true),
     ;
 
     public final String modName;
     public final String jarName;
     public final String devJarName;
-    
+    public final Boolean optional;
+
     TargetedMod(String modName, String jarName) {
-        this.modName = modName;
-        this.jarName = jarName;
-        this.devJarName = jarName;
+        this(modName, jarName, false);
     }
+
     TargetedMod(String modName, String jarName, String devJarName) {
+        this(modName, jarName, devJarName, false);
+    }
+
+    TargetedMod(String modName, String jarName, Boolean optional) {
+        this(modName, jarName, jarName, optional);
+    }
+
+    TargetedMod(String modName, String jarName, String devJarName, Boolean optional) {
         this.modName = modName;
         this.jarName = jarName;
         this.devJarName = devJarName;
+        this.optional = optional;
     }
-    
+
     @Override
     public String toString() {
         return "TargetedMod{modName='" + modName + "', jarName='" + jarName + "', devJarName='" + devJarName + "'}";
