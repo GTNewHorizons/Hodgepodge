@@ -73,7 +73,9 @@ public enum Mixins {
 
     // MrTJPCore (Project Red)
     FIX_HUD_LIGHTING_GLITCH("mrtjpcore.MixinFXEngine", () -> Hodgepodge.config.fixHudLightingGlitch, TargetedMod.MRTJPCORE),
-    
+    FIX_POPPING_OFF("mrtjpcore.MixinPlacementLib", () -> Hodgepodge.config.fixComponentsPoppingOff, TargetedMod.MRTJPCORE),
+
+
     // Automagy
     IMPLEMENTS_CONTAINER_FOR_THIRSTY_TANK("automagy.MixinItemBlockThirstyTank", () -> Hodgepodge.config.thirstyTankContainer, TargetedMod.AUTOMAGY),
 
