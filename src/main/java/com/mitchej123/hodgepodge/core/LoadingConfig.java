@@ -56,6 +56,7 @@ public class LoadingConfig {
     public boolean speedupBOPFogHandling;
     public boolean makeBigFirsPlantable;
     public boolean fixHudLightingGlitch;
+    public boolean fixComponentsPoppingOff;
     public boolean thirstyTankContainer;
     public boolean fixWorldServerLeakingUnloadedEntities;
 
@@ -123,6 +124,7 @@ public class LoadingConfig {
         ic2SeedMaxStackSize = config.get("tweaks", "ic2SeedMaxStackSize", 64, "IC2 seed max stack size").getInt();
         addSystemInfo = config.get("tweaks", "addSystemInfo", true, "Adds system info to the F3 overlay (Java version and vendor; GPU name; OpenGL version; CPU cores; OS name, version and architecture)").getBoolean();
         fixHudLightingGlitch = config.get("tweaks", "fixHudLightingGlitch", true, "Fix hotbars being dark when Project Red is installed").getBoolean();
+        fixComponentsPoppingOff = config.get("tweaks", "fixComponentsPoppingOff", true, "Fix Project Red components popping off on unloaded chunks").getBoolean();
         thirstyTankContainer = config.get("tweaks", "thirstyTankContainer", true, "Implement container for thirsty tank").getBoolean();
         
         speedupChunkCoordinatesHashCode = config.get("speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
