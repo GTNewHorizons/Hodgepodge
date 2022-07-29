@@ -30,6 +30,7 @@ public enum Mixins {
     FIX_HUGE_CHAT_KICK("minecraft.MixinS02PacketChat", () -> Hodgepodge.config.fixHugeChatKick, TargetedMod.VANILLA),
     FIX_WORLD_SERVER_LEAKING_UNLOADED_ENTITIES("minecraft.MixinWorldServerUpdateEntities", () -> Hodgepodge.config.fixWorldServerLeakingUnloadedEntities, TargetedMod.VANILLA),
     FIX_ARROW_WRONG_LIGHTING("minecraft.MixinRendererLivingEntity", Side.CLIENT, () -> Hodgepodge.config.fixGlStateBugs, TargetedMod.VANILLA),
+    FIX_FULLSCREEN_RESIZABLE("minecraft.MixinMinecraft", Side.CLIENT, () -> Hodgepodge.config.fixFullscreenResizable, TargetedMod.VANILLA),
 
     // Potentially obsolete vanilla fixes
     GRASS_GET_BLOCK_FIX("minecraft.MixinBlockGrass", () -> Hodgepodge.config.fixVanillaUnprotectedGetBlock, TargetedMod.VANILLA),

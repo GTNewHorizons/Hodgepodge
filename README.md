@@ -13,6 +13,7 @@ Requires SpongeMixins mod (https://github.com/GTNewHorizons/SpongeMixins) to wor
 * FixHungerOverhaul - Patches unintended mod interaction with Spice Of Life - Carrot Edition
 * FixPotionLimit - Support all 256 potion slots by fixing the incorrect signed byte conversions.
 * RemoveUpdateChecks - Removes outdated update checks
+* FixFullscreenResizable - Fix game window is not resizeable after exiting fullscreen
 ## Speedups
 * SpeedupChunkCoordinatesHashCode - Swaps out the HashCode function for ChunkCoordinates with one that provides better performance with HashSet
 
