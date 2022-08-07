@@ -134,7 +134,8 @@ public class LoadingConfig {
         speedupBOPFogHandling = config.get("speedups", "speedupBOPFogHandling", true, "Speedup biome fog rendering in BiomesOPlenty").getBoolean();
         
         speedupProgressBar = config.get("asm", "speedupProgressBar", true, "Speedup progressbar").getBoolean();
-        pollutionAsm = config.get("asm", "pollutionAsm", true, "Enable pollution rendering ASM").getBoolean();
+        // Disable for now as it is not compatible with anything modifying RenderBlocks
+        pollutionAsm = config.get("asm", "pollutionAsm", false, "Enable pollution rendering ASM").getBoolean();
         cofhWorldTransformer = config.get("asm", "cofhWorldTransformer", true, "Enable Glease's ASM patch to disable unused CoFH tileentity cache").getBoolean();
         biblocraftRecipes = config.get("asm", "biblocraftRecipes", true, "Remove recipe generation from BiblioCraft").getBoolean();
         

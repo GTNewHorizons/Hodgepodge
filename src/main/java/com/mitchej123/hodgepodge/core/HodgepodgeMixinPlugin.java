@@ -66,7 +66,7 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
         List<String> mixins = new ArrayList<>();
         for (Mixins mixin : Mixins.values()) {
             if (mixin.shouldLoad(loadedMods)) {
-                mixins.add(mixin.mixinClass);
+                mixins.addAll(mixin.mixinClass);
                 Hodgepodge.log.debug("Loading hodgepodge mixin: " + mixin.mixinClass);
             }
         }

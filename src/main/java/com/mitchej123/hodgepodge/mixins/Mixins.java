@@ -4,6 +4,7 @@ import com.mitchej123.hodgepodge.Hodgepodge;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -31,6 +32,14 @@ public enum Mixins {
     FIX_WORLD_SERVER_LEAKING_UNLOADED_ENTITIES("minecraft.MixinWorldServerUpdateEntities", () -> Hodgepodge.config.fixWorldServerLeakingUnloadedEntities, TargetedMod.VANILLA),
     FIX_ARROW_WRONG_LIGHTING("minecraft.MixinRendererLivingEntity", Side.CLIENT, () -> Hodgepodge.config.fixGlStateBugs, TargetedMod.VANILLA),
     FIX_FULLSCREEN_RESIZABLE("minecraft.MixinMinecraft", Side.CLIENT, () -> Hodgepodge.config.fixFullscreenResizable, TargetedMod.VANILLA),
+    SPEEDUP_VANILLA_ANIMATIONS(() -> true, Side.CLIENT, TargetedMod.VANILLA,
+            "minecraft.textures.client.MixinTextureAtlasSprite",
+            "minecraft.textures.client.MixinTextureMap",
+            "minecraft.textures.client.MixinRenderItem",
+            "minecraft.textures.client.MixinChunkCache",
+            "minecraft.textures.client.MixinRenderBlocks",
+            "minecraft.textures.client.MixinWorldRenderer",
+            "minecraft.textures.client.MixinRenderGlobal"),
 
     // Potentially obsolete vanilla fixes
     GRASS_GET_BLOCK_FIX("minecraft.MixinBlockGrass", () -> Hodgepodge.config.fixVanillaUnprotectedGetBlock, TargetedMod.VANILLA),
@@ -84,21 +93,27 @@ public enum Mixins {
     FIX_FURNACE_ITERATION("projecte.MixinObjHandler", () -> Hodgepodge.config.speedupVanillaFurnace, TargetedMod.PROJECTE),
     ;
     
-    public final String mixinClass;
+    public final List<String> mixinClass;
     private final Supplier<Boolean> applyIf;
     private final Side side;
     public final List<TargetedMod> targetedMods;
-    
+
+    Mixins(Supplier<Boolean> applyIf, Side side, TargetedMod targetedMod, String... mixinClass) {
+        this.mixinClass = Arrays.asList(mixinClass);
+        this.side = side;
+        this.applyIf = applyIf;
+        this.targetedMods = Collections.singletonList(targetedMod);
+    }
 
     Mixins(String mixinClass, Side side, Supplier<Boolean> applyIf, TargetedMod... targetedMods) {
-        this.mixinClass = mixinClass;
+        this.mixinClass = Collections.singletonList(mixinClass);
         this.side = side;
         this.applyIf = applyIf;
         this.targetedMods = Arrays.asList(targetedMods);
     }
 
     Mixins(String mixinClass, Supplier<Boolean> applyIf, TargetedMod... targetedMods) {
-        this.mixinClass = mixinClass;
+        this.mixinClass = Collections.singletonList(mixinClass);
         this.side = Side.BOTH;
         this.applyIf = applyIf;
         this.targetedMods = Arrays.asList(targetedMods);
