@@ -38,8 +38,7 @@ public enum Mixins {
             "minecraft.textures.client.MixinRenderItem",
             "minecraft.textures.client.MixinChunkCache",
             "minecraft.textures.client.MixinRenderBlocks",
-            "minecraft.textures.client.MixinWorldRenderer",
-            "minecraft.textures.client.MixinRenderGlobal"),
+            "minecraft.textures.client.MixinWorldRenderer"),
 
     // Potentially obsolete vanilla fixes
     GRASS_GET_BLOCK_FIX("minecraft.MixinBlockGrass", () -> Hodgepodge.config.fixVanillaUnprotectedGetBlock, TargetedMod.VANILLA),
