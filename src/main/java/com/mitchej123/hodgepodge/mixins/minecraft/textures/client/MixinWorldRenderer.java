@@ -30,8 +30,8 @@ public class MixinWorldRenderer implements ITexturesCache {
 
     @Inject(method = "getGLCallListForPass", at = @At("HEAD"))
     private void getGLCallListForPass(int pass, CallbackInfoReturnable<Integer> cir) {
-        if (isInFrustum && pass == 0) {
-            for (IIcon icon : getRenderedTextures()) {
+        if (isInFrustum && pass == 0 && renderedIcons != null) {
+            for (IIcon icon : renderedIcons) {
                 ((IPatchedTextureAtlasSprite) icon).markNeedsAnimationUpdate();
             }
         }
