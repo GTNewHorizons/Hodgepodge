@@ -3,8 +3,10 @@ package com.mitchej123.hodgepodge.mixins.minecraft.textures.client;
 import com.mitchej123.hodgepodge.core.textures.IPatchedTextureAtlasSprite;
 import com.mitchej123.hodgepodge.core.textures.ITexturesCache;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,6 +20,8 @@ public class MixinRenderBlocks {
 
     @Shadow
     public IBlockAccess blockAccess;
+    @Shadow
+    public IIcon overrideBlockTexture;
 
     /**
      * @author laetansky
@@ -30,19 +34,21 @@ public class MixinRenderBlocks {
      */
     @Inject(method = "*(Lnet/minecraft/block/Block;DDDLnet/minecraft/util/IIcon;)V", at = @At("HEAD"))
     public void beforeRenderFace(Block p_147761_1_, double p_147761_2_, double p_147761_4_, double p_147761_6_, IIcon icon, CallbackInfo ci) {
-        if (icon instanceof TextureAtlasSprite) {
+        if (overrideBlockTexture != null) {
+            icon = overrideBlockTexture;
+        }
 
-            TextureAtlasSprite textureAtlasSprite = (TextureAtlasSprite) icon;
+        TextureMap textureMap = Minecraft.getMinecraft().getTextureMapBlocks();
+        TextureAtlasSprite textureAtlasSprite = textureMap.getAtlasSprite(icon.getIconName());
 
-            if (textureAtlasSprite.hasAnimationMetadata()) {
-                // null if called by anything but chunk render cache update (for example to get blocks rendered as items in inventory)
-                if (blockAccess != null) {
-                    if (blockAccess instanceof ITexturesCache) {
-                        ((ITexturesCache) blockAccess).getRenderedTextures().add(icon);
-                    }
-                } else {
-                    ((IPatchedTextureAtlasSprite) icon).markNeedsAnimationUpdate();
+        if (textureAtlasSprite != null && textureAtlasSprite.hasAnimationMetadata()) {
+            // null if called by anything but chunk render cache update (for example to get blocks rendered as items in inventory)
+            if (blockAccess != null) {
+                if (blockAccess instanceof ITexturesCache) {
+                    ((ITexturesCache) blockAccess).getRenderedTextures().add(textureAtlasSprite);
                 }
+            } else {
+                ((IPatchedTextureAtlasSprite) textureAtlasSprite).markNeedsAnimationUpdate();
             }
         }
     }
