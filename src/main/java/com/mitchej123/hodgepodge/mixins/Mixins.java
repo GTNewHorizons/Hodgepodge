@@ -32,7 +32,7 @@ public enum Mixins {
     FIX_WORLD_SERVER_LEAKING_UNLOADED_ENTITIES("minecraft.MixinWorldServerUpdateEntities", () -> Hodgepodge.config.fixWorldServerLeakingUnloadedEntities, TargetedMod.VANILLA),
     FIX_ARROW_WRONG_LIGHTING("minecraft.MixinRendererLivingEntity", Side.CLIENT, () -> Hodgepodge.config.fixGlStateBugs, TargetedMod.VANILLA),
     FIX_FULLSCREEN_RESIZABLE("minecraft.MixinMinecraft", Side.CLIENT, () -> Hodgepodge.config.fixFullscreenResizable, TargetedMod.VANILLA),
-    SPEEDUP_VANILLA_ANIMATIONS(() -> true, Side.CLIENT, TargetedMod.VANILLA,
+    SPEEDUP_VANILLA_ANIMATIONS(() -> Hodgepodge.config.speedupAnimations, Side.CLIENT, TargetedMod.VANILLA,
             "minecraft.textures.client.MixinTextureAtlasSprite",
             "minecraft.textures.client.MixinTextureMap",
             "minecraft.textures.client.MixinRenderItem",
