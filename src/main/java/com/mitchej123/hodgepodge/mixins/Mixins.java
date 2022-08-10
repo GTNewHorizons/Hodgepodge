@@ -38,6 +38,7 @@ public enum Mixins {
             "minecraft.textures.client.MixinRenderItem",
             "minecraft.textures.client.MixinChunkCache",
             "minecraft.textures.client.MixinRenderBlocks",
+            "minecraft.textures.client.MixinRenderBlockFluid",
             "minecraft.textures.client.MixinWorldRenderer"),
 
     // Potentially obsolete vanilla fixes

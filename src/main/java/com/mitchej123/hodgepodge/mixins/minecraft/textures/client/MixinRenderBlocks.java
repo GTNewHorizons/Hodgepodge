@@ -1,15 +1,14 @@
 package com.mitchej123.hodgepodge.mixins.minecraft.textures.client;
 
-import com.mitchej123.hodgepodge.core.textures.IPatchedTextureAtlasSprite;
-import com.mitchej123.hodgepodge.core.textures.ITexturesCache;
+import com.mitchej123.hodgepodge.core.textures.AnimationsRenderUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -39,27 +38,6 @@ public class MixinRenderBlocks {
             icon = overrideBlockTexture;
         }
 
-        markBlockTextureForUpdate(icon);
-    }
-
-    @ModifyVariable(method = "renderBlockLiquid", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIconFromSideAndMetadata(Lnet/minecraft/block/Block;II)Lnet/minecraft/util/IIcon;"))
-    public IIcon markFluidAnimationForUpdate(IIcon icon) {
-        markBlockTextureForUpdate(icon);
-
-        return icon;
-    }
-
-    private void markBlockTextureForUpdate(IIcon icon) {
-        TextureMap textureMap = Minecraft.getMinecraft().getTextureMapBlocks();
-        TextureAtlasSprite textureAtlasSprite = textureMap.getAtlasSprite(icon.getIconName());
-
-        if (textureAtlasSprite != null && textureAtlasSprite.hasAnimationMetadata()) {
-            // null if called by anything but chunk render cache update (for example to get blocks rendered as items in inventory)
-            if (blockAccess instanceof ITexturesCache) {
-                ((ITexturesCache) blockAccess).getRenderedTextures().add(textureAtlasSprite);
-            } else {
-                ((IPatchedTextureAtlasSprite) textureAtlasSprite).markNeedsAnimationUpdate();
-            }
-        }
+        AnimationsRenderUtils.markBlockTextureForUpdate(icon, blockAccess);
     }
 }
