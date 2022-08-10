@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderBlocks.class)
@@ -38,15 +39,24 @@ public class MixinRenderBlocks {
             icon = overrideBlockTexture;
         }
 
+        markBlockTextureForUpdate(icon);
+    }
+
+    @ModifyVariable(method = "renderBlockLiquid", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIconFromSideAndMetadata(Lnet/minecraft/block/Block;II)Lnet/minecraft/util/IIcon;"))
+    public IIcon markFluidAnimationForUpdate(IIcon icon) {
+        markBlockTextureForUpdate(icon);
+
+        return icon;
+    }
+
+    private void markBlockTextureForUpdate(IIcon icon) {
         TextureMap textureMap = Minecraft.getMinecraft().getTextureMapBlocks();
         TextureAtlasSprite textureAtlasSprite = textureMap.getAtlasSprite(icon.getIconName());
 
         if (textureAtlasSprite != null && textureAtlasSprite.hasAnimationMetadata()) {
             // null if called by anything but chunk render cache update (for example to get blocks rendered as items in inventory)
-            if (blockAccess != null) {
-                if (blockAccess instanceof ITexturesCache) {
-                    ((ITexturesCache) blockAccess).getRenderedTextures().add(textureAtlasSprite);
-                }
+            if (blockAccess instanceof ITexturesCache) {
+                ((ITexturesCache) blockAccess).getRenderedTextures().add(textureAtlasSprite);
             } else {
                 ((IPatchedTextureAtlasSprite) textureAtlasSprite).markNeedsAnimationUpdate();
             }
