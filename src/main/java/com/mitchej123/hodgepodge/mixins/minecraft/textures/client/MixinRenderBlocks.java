@@ -40,4 +40,11 @@ public class MixinRenderBlocks {
 
         AnimationsRenderUtils.markBlockTextureForUpdate(icon, blockAccess);
     }
+
+    @ModifyVariable(method = "renderBlockLiquid", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIconFromSideAndMetadata(Lnet/minecraft/block/Block;II)Lnet/minecraft/util/IIcon;"))
+    public IIcon markFluidAnimationForUpdate(IIcon icon) {
+        AnimationsRenderUtils.markBlockTextureForUpdate(icon, blockAccess);
+
+        return icon;
+    }
 }
