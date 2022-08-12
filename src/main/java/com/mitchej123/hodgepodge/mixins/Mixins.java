@@ -35,6 +35,7 @@ public enum Mixins {
     SPEEDUP_VANILLA_ANIMATIONS(() -> Hodgepodge.config.speedupAnimations, Side.CLIENT, TargetedMod.VANILLA,
             "minecraft.textures.client.MixinTextureAtlasSprite",
             "minecraft.textures.client.MixinTextureMap",
+            "minecraft.textures.client.MixinBlockFire",
             "minecraft.textures.client.MixinRenderItem",
             "minecraft.textures.client.MixinChunkCache",
             "minecraft.textures.client.MixinRenderBlocks",

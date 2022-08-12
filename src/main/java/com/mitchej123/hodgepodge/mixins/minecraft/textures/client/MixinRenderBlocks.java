@@ -2,18 +2,17 @@ package com.mitchej123.hodgepodge.mixins.minecraft.textures.client;
 
 import com.mitchej123.hodgepodge.core.textures.AnimationsRenderUtils;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
+import net.minecraft.block.BlockFire;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RenderBlocks.class)
 public class MixinRenderBlocks {
@@ -41,7 +40,15 @@ public class MixinRenderBlocks {
         AnimationsRenderUtils.markBlockTextureForUpdate(icon, blockAccess);
     }
 
-    @ModifyVariable(method = "renderBlockLiquid", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIconFromSideAndMetadata(Lnet/minecraft/block/Block;II)Lnet/minecraft/util/IIcon;"))
+    @Inject(method = "renderBlockFire", at = @At("HEAD"))
+    public void markFireBlockAnimationForUpdate(BlockFire p_147801_1_, int p_147801_2_, int p_147801_3_, int p_147801_4_, CallbackInfoReturnable<Boolean> cir) {
+        AnimationsRenderUtils.markBlockTextureForUpdate(p_147801_1_.getFireIcon(0), blockAccess);
+        AnimationsRenderUtils.markBlockTextureForUpdate(p_147801_1_.getFireIcon(1), blockAccess);
+    }
+
+    @ModifyVariable(method = "renderBlockLiquid", at = @At(
+            value = "INVOKE_ASSIGN",
+            target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIconFromSideAndMetadata(Lnet/minecraft/block/Block;II)Lnet/minecraft/util/IIcon;"))
     public IIcon markFluidAnimationForUpdate(IIcon icon) {
         AnimationsRenderUtils.markBlockTextureForUpdate(icon, blockAccess);
 

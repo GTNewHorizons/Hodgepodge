@@ -8,6 +8,10 @@ import net.minecraft.world.IBlockAccess;
 
 public class AnimationsRenderUtils {
 
+    public static void markBlockTextureForUpdate(IIcon icon) {
+        markBlockTextureForUpdate(icon, null);
+    }
+
     public static void markBlockTextureForUpdate(IIcon icon, IBlockAccess blockAccess) {
         TextureMap textureMap = Minecraft.getMinecraft().getTextureMapBlocks();
         TextureAtlasSprite textureAtlasSprite = textureMap.getAtlasSprite(icon.getIconName());
