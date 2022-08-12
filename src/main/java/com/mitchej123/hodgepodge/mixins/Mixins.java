@@ -36,7 +36,7 @@ public enum Mixins {
             "minecraft.textures.client.MixinTextureAtlasSprite",
             "minecraft.textures.client.MixinTextureMap",
             "minecraft.textures.client.MixinBlockFire",
-            "minecraft.textures.client.MixinRenderItem",
+            "minecraft.textures.client.MixinMinecraftForgeClient",
             "minecraft.textures.client.MixinChunkCache",
             "minecraft.textures.client.MixinRenderBlocks",
             "minecraft.textures.client.MixinRenderBlockFluid",
