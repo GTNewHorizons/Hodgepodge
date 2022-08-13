@@ -22,9 +22,11 @@ public abstract class AbstractClassTransformer implements IClassTransformer {
     protected Namespace environment = Namespace.MCP;
 
     private final Map<String, Map<MethodRef, AbstractMethodTransformer>> methodTransformers = Maps.newHashMap();
+    private final Map<String, Integer> classWriterFlags = Maps.newHashMap();
 
-    protected void addMethodTransformer(MethodRef ref, AbstractMethodTransformer methodTransformer) {
+    protected void addMethodTransformer(MethodRef ref, int classWriterFlag, AbstractMethodTransformer methodTransformer) {
         methodTransformers.computeIfAbsent(ref.parent.getName(Namespace.MCP), n -> Maps.newHashMap()).put(ref, methodTransformer);
+        classWriterFlags.merge(ref.parent.getName(Namespace.MCP), classWriterFlag, Integer::max);
     }
 
     @Override
@@ -80,7 +82,7 @@ public abstract class AbstractClassTransformer implements IClassTransformer {
         }
 
         // return result
-        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        ClassWriter writer = new ClassWriter(classWriterFlags.getOrDefault(transformedName, ClassWriter.COMPUTE_FRAMES));
         if (hasTransformed) classNode.accept(writer);
         return !hasTransformed ? basicClass : writer.toByteArray();
     }

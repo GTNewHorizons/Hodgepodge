@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.asm;
 
 import com.mitchej123.hodgepodge.asm.util.AbstractClassTransformer;
 import com.mitchej123.hodgepodge.asm.util.AbstractMethodTransformer;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnList;
@@ -9,7 +10,7 @@ import org.objectweb.asm.tree.InsnList;
 public class InventoryEffectRendererTransformer extends AbstractClassTransformer {
     public InventoryEffectRendererTransformer()
     {
-        addMethodTransformer(References.cEffectRenderer.getMethod("drawScreen"), new AbstractMethodTransformer() {
+        addMethodTransformer(References.cEffectRenderer.getMethod("drawScreen"), ClassWriter.COMPUTE_FRAMES, new AbstractMethodTransformer() {
             @Override
             public void transform() {
                 // Cut out super.drawScreen() sequence
