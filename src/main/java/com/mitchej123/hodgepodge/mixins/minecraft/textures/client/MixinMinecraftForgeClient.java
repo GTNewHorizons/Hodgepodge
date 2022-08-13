@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.mixins.minecraft.textures.client;
 
 import com.mitchej123.hodgepodge.core.textures.IPatchedTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
@@ -19,10 +20,13 @@ public class MixinMinecraftForgeClient {
      * We can just mark any item texture that gets rendered for an update
      */
     @Inject(method = "getItemRenderer", at = @At("HEAD"), remap = false)
-    private static void beforeRenderItem(ItemStack item, IItemRenderer.ItemRenderType type, CallbackInfoReturnable<IItemRenderer> cir) {
-        IIcon icon = item.getIconIndex();
-        if (icon instanceof TextureAtlasSprite) {
-            ((IPatchedTextureAtlasSprite) icon).markNeedsAnimationUpdate();
+    private static void beforeRenderItem(ItemStack itemStack, IItemRenderer.ItemRenderType type, CallbackInfoReturnable<IItemRenderer> cir) {
+        Item item = itemStack.getItem();
+        for (int i = 0; i < item.getRenderPasses(itemStack.getItemDamage()); i++) {
+            IIcon icon = item.getIcon(itemStack, i);
+            if (icon instanceof TextureAtlasSprite) {
+                ((IPatchedTextureAtlasSprite) icon).markNeedsAnimationUpdate();
+            }
         }
     }
 }
