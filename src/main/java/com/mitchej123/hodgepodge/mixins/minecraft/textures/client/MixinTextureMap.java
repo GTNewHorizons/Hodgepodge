@@ -35,13 +35,18 @@ public abstract class MixinTextureMap extends AbstractTexture {
 
         mc.mcProfiler.startSection("updateAnimations");
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.getGlTextureId());
-        for (TextureAtlasSprite texture : listAnimatedSprites) {
-            if (renderAllAnimations || (renderVisibleAnimations && ((IPatchedTextureAtlasSprite) texture).needsAnimationUpdate())) {
-                mc.mcProfiler.startSection(texture.getIconName());
-                texture.updateAnimation();
-                ((IPatchedTextureAtlasSprite) texture).unmarkNeedsAnimationUpdate();
+        // C Style loop should be faster
+        for (int i = 0; i < listAnimatedSprites.size(); i++) {
+            TextureAtlasSprite textureAtlasSprite = listAnimatedSprites.get(i);
+            IPatchedTextureAtlasSprite patchedTextureAtlasSprite = ((IPatchedTextureAtlasSprite) textureAtlasSprite);
+
+            if (renderAllAnimations || (renderVisibleAnimations && patchedTextureAtlasSprite.needsAnimationUpdate())) {
+                mc.mcProfiler.startSection(textureAtlasSprite.getIconName());
+                textureAtlasSprite.updateAnimation();
+                patchedTextureAtlasSprite.unmarkNeedsAnimationUpdate();
                 mc.mcProfiler.endSection();
             }
+
         }
         mc.mcProfiler.endSection();
     }
