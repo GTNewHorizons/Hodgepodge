@@ -1,7 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.minecraft;
 
+import com.gtnewhorizon.gtnhlib.util.map.ItemStackMap;
 import com.mitchej123.hodgepodge.Hodgepodge;
-import com.mitchej123.hodgepodge.core.util.ItemStackMap;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -44,11 +44,11 @@ public abstract class MixinFurnaceRecipes {
     
             Field smeltingList = clazz.getDeclaredField(devEnv ? "smeltingList" : "field_77604_b");
             smeltingList.setAccessible(true);
-            smeltingList.set(instance, new ItemStackMap<ItemStack>());
+            smeltingList.set(instance, new ItemStackMap<ItemStack>(false));
     
             Field experienceList = clazz.getDeclaredField(devEnv ? "experienceList" : "field_77605_c");
             experienceList.setAccessible(true);
-            experienceList.set(instance, new ItemStackMap<Float>());
+            experienceList.set(instance, new ItemStackMap<Float>(false));
             
             Hodgepodge.log.info("Successfully swapped the lists in FurnaceRecipes");
 
