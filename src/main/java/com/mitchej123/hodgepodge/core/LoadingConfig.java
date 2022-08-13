@@ -60,6 +60,7 @@ public class LoadingConfig {
     public boolean thirstyTankContainer;
     public boolean fixWorldServerLeakingUnloadedEntities;
     public boolean fixFullscreenResizable;
+    public boolean fixPotionIterating;
 
     // ASM
     public boolean pollutionAsm;
@@ -111,6 +112,7 @@ public class LoadingConfig {
         logHugeChat = config.get("fixes", "logHugeChat", true, "Log oversized chat message to console. WARNING: might create huge log files if this happens very often.").getBoolean();
         fixWorldServerLeakingUnloadedEntities = config.get("fixes", "fixWorldServerLeakingUnloadedEntities", true, "Fix WorldServer leaking entities when no players are present in a dimension").getBoolean();
         fixFullscreenResizable = config.get("fixes", "fixFullscreenResizable", true, "Fix game window becoming not resizable after toggling fullscrean in any way").getBoolean();
+        fixPotionIterating = config.get("fixes", "fixPotionIterating", true, "Fix crashes with ConcurrentModificationException because of incorrectly iterating over active potions").getBoolean();
 
         increaseParticleLimit = config.get("tweaks", "increaseParticleLimit", true, "Increase particle limit").getBoolean();
         particleLimit = Math.max(Math.min(config.get("tweaks", "particleLimit", 8000, "Particle limit [4000-16000]").getInt(), 16000), 4000);
