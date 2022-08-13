@@ -22,8 +22,15 @@ public class MixinMinecraftForgeClient {
     @Inject(method = "getItemRenderer", at = @At("HEAD"), remap = false)
     private static void beforeRenderItem(ItemStack itemStack, IItemRenderer.ItemRenderType type, CallbackInfoReturnable<IItemRenderer> cir) {
         Item item = itemStack.getItem();
-        for (int i = 0; i < item.getRenderPasses(itemStack.getItemDamage()); i++) {
-            IIcon icon = item.getIcon(itemStack, i);
+        if (item.requiresMultipleRenderPasses()) {
+            for (int i = 0; i < item.getRenderPasses(itemStack.getItemDamage()); i++) {
+                IIcon icon = item.getIcon(itemStack, i);
+                if (icon instanceof TextureAtlasSprite) {
+                    ((IPatchedTextureAtlasSprite) icon).markNeedsAnimationUpdate();
+                }
+            }
+        } else {
+            IIcon icon = itemStack.getIconIndex();
             if (icon instanceof TextureAtlasSprite) {
                 ((IPatchedTextureAtlasSprite) icon).markNeedsAnimationUpdate();
             }
