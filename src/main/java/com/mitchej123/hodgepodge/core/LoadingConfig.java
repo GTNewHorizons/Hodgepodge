@@ -60,6 +60,7 @@ public class LoadingConfig {
     public boolean thirstyTankContainer;
     public boolean fixWorldServerLeakingUnloadedEntities;
     public boolean fixFullscreenResizable;
+    public boolean speedupAnimations;
     public boolean fixPotionIterating;
 
     // ASM
@@ -112,6 +113,7 @@ public class LoadingConfig {
         logHugeChat = config.get("fixes", "logHugeChat", true, "Log oversized chat message to console. WARNING: might create huge log files if this happens very often.").getBoolean();
         fixWorldServerLeakingUnloadedEntities = config.get("fixes", "fixWorldServerLeakingUnloadedEntities", true, "Fix WorldServer leaking entities when no players are present in a dimension").getBoolean();
         fixFullscreenResizable = config.get("fixes", "fixFullscreenResizable", true, "Fix game window becoming not resizable after toggling fullscrean in any way").getBoolean();
+        speedupAnimations = config.get("fixes", "speedupAnimations", true, "Drastically speedup animated textures (Basically the same as with optifine animations off but animations are working)").getBoolean();
         fixPotionIterating = config.get("fixes", "fixPotionIterating", true, "Fix crashes with ConcurrentModificationException because of incorrectly iterating over active potions").getBoolean();
 
         increaseParticleLimit = config.get("tweaks", "increaseParticleLimit", true, "Increase particle limit").getBoolean();
@@ -136,7 +138,8 @@ public class LoadingConfig {
         speedupBOPFogHandling = config.get("speedups", "speedupBOPFogHandling", true, "Speedup biome fog rendering in BiomesOPlenty").getBoolean();
         
         speedupProgressBar = config.get("asm", "speedupProgressBar", true, "Speedup progressbar").getBoolean();
-        pollutionAsm = config.get("asm", "pollutionAsm", true, "Enable pollution rendering ASM").getBoolean();
+        // Disable for now as it is not compatible with anything modifying RenderBlocks
+        pollutionAsm = config.get("asm", "pollutionAsm", false, "Enable pollution rendering ASM").getBoolean();
         cofhWorldTransformer = config.get("asm", "cofhWorldTransformer", true, "Enable Glease's ASM patch to disable unused CoFH tileentity cache").getBoolean();
         biblocraftRecipes = config.get("asm", "biblocraftRecipes", true, "Remove recipe generation from BiblioCraft").getBoolean();
         

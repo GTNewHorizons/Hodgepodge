@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.core;
 
 import com.mitchej123.hodgepodge.client.ClientTicker;
 import com.mitchej123.hodgepodge.client.DebugScreenHandler;
+import com.mitchej123.hodgepodge.core.handlers.ClientKeyListener;
 import com.mitchej123.hodgepodge.core.util.ColorOverrideType;
 import com.mitchej123.hodgepodge.Hodgepodge;
 import com.mitchej123.hodgepodge.asm.References;
@@ -14,6 +15,8 @@ import java.lang.reflect.Method;
 
 public class HodgePodgeClient {
     public static Method colorGrass, colorLiquid, colorLeaves, colorFoliage;
+    // 0 - render no animations 1 - render visible animations 2 - render all animations
+    public static int animationsMode = 1;
 
     public static void postInit() {
         colorGrass = References.gt_PollutionRenderer.getMethod("colorGrass").resolve();
@@ -33,6 +36,10 @@ public class HodgePodgeClient {
         
         if (Hodgepodge.config.addSystemInfo) {
             MinecraftForge.EVENT_BUS.register(DebugScreenHandler.INSTANCE);
+        }
+
+        if (Hodgepodge.config.speedupAnimations) {
+            FMLCommonHandler.instance().bus().register(new ClientKeyListener());
         }
     }
 
