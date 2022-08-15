@@ -61,6 +61,7 @@ public class LoadingConfig {
     public boolean fixWorldServerLeakingUnloadedEntities;
     public boolean fixFullscreenResizable;
     public boolean speedupAnimations;
+    public boolean fixPotionIterating;
 
     // ASM
     public boolean pollutionAsm;
@@ -113,6 +114,7 @@ public class LoadingConfig {
         fixWorldServerLeakingUnloadedEntities = config.get("fixes", "fixWorldServerLeakingUnloadedEntities", true, "Fix WorldServer leaking entities when no players are present in a dimension").getBoolean();
         fixFullscreenResizable = config.get("fixes", "fixFullscreenResizable", true, "Fix game window becoming not resizable after toggling fullscrean in any way").getBoolean();
         speedupAnimations = config.get("fixes", "speedupAnimations", true, "Drastically speedup animated textures (Basically the same as with optifine animations off but animations are working)").getBoolean();
+        fixPotionIterating = config.get("fixes", "fixPotionIterating", true, "Fix crashes with ConcurrentModificationException because of incorrectly iterating over active potions").getBoolean();
 
         increaseParticleLimit = config.get("tweaks", "increaseParticleLimit", true, "Increase particle limit").getBoolean();
         particleLimit = Math.max(Math.min(config.get("tweaks", "particleLimit", 8000, "Particle limit [4000-16000]").getInt(), 16000), 4000);
