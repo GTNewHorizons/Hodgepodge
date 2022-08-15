@@ -41,6 +41,7 @@ public enum Mixins {
             "minecraft.textures.client.MixinRenderBlocks",
             "minecraft.textures.client.MixinRenderBlockFluid",
             "minecraft.textures.client.MixinWorldRenderer"),
+    SPEEDUP_VANILLA_ANIMATIONS_FC("minecraft.textures.client.fastcraft.MixinTextureMap", Side.CLIENT, () -> Hodgepodge.config.speedupAnimations, TargetedMod.FASTCRAFT),
 
     // Potentially obsolete vanilla fixes
     GRASS_GET_BLOCK_FIX("minecraft.MixinBlockGrass", () -> Hodgepodge.config.fixVanillaUnprotectedGetBlock, TargetedMod.VANILLA),

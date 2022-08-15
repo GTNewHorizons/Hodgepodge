@@ -12,6 +12,7 @@ public enum TargetedMod {
     MRTJPCORE("MrTJPCore", "MrTJPCore"),
     AUTOMAGY("Automagy", "Automagy-1.7.10"),
     PROJECTE("ProjectE", "ProjectE-1.7.10", "projecte", true),
+    FASTCRAFT("FastCraft", "fastcraft", true),
     ;
 
     public final String modName;
