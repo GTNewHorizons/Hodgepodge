@@ -94,6 +94,10 @@ public enum Mixins {
 
     // ProjectE
     FIX_FURNACE_ITERATION("projecte.MixinObjHandler", () -> Hodgepodge.config.speedupVanillaFurnace, TargetedMod.PROJECTE),
+    
+    // Pam's Harvest the Nether
+    FIX_IGNIS_FRUIT_AABB("harvestthenether.MixinBlockPamFruit", () -> Hodgepodge.config.fixIgnisFruitAABB, TargetedMod.HARVESTTHENETHER),
+    FIX_NETHER_LEAVES_FACE_RENDERING("harvestthenether.MixinBlockPamFruit", () -> Hodgepodge.config.fixIgnisFruitAABB, TargetedMod.HARVESTTHENETHER),
     ;
     
     public final List<String> mixinClass;

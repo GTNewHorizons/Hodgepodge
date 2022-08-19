@@ -2,13 +2,16 @@ package com.mitchej123.hodgepodge.core;
 
 import com.mitchej123.hodgepodge.client.ClientTicker;
 import com.mitchej123.hodgepodge.client.DebugScreenHandler;
+import com.mitchej123.hodgepodge.client.IGraphicsLevelSetter;
 import com.mitchej123.hodgepodge.core.handlers.ClientKeyListener;
 import com.mitchej123.hodgepodge.core.util.ColorOverrideType;
 import com.mitchej123.hodgepodge.Hodgepodge;
 import com.mitchej123.hodgepodge.asm.References;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.lang.reflect.Method;
@@ -40,6 +43,13 @@ public class HodgePodgeClient {
 
         if (Hodgepodge.config.speedupAnimations) {
             FMLCommonHandler.instance().bus().register(new ClientKeyListener());
+        }
+        
+        if (Hodgepodge.config.fixNetherLeavesFaceRendering) {
+            Block netherLeaves = GameRegistry.findBlock("harvestthenether", "netherLeaves");
+            if (netherLeaves != null) {
+                ((IGraphicsLevelSetter) netherLeaves).setGraphicsLevel(Minecraft.getMinecraft().gameSettings.fancyGraphics);
+            }
         }
     }
 

@@ -13,6 +13,7 @@ public enum TargetedMod {
     AUTOMAGY("Automagy", "Automagy-1.7.10"),
     PROJECTE("ProjectE", "ProjectE-1.7.10", "projecte", true),
     FASTCRAFT("FastCraft", "fastcraft", true),
+    HARVESTTHENETHER("harvestthenether", "Pam's Harvest the Nether"),
     // Temporary solution to force load it early
     GTNHLIB("GTNHLib", "gtnhlib"),
     ;
