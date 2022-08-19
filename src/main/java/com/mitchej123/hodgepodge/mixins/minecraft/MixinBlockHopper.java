@@ -45,8 +45,8 @@ public class MixinBlockHopper extends Block {
         bounds.get(EnumFacing.EAST).add(makeAABB(12, 4, 6, 16, 8, 10));
     }
 
-    protected MixinBlockHopper(Material p_i45394_1_) {
-        super(p_i45394_1_);
+    protected MixinBlockHopper(Material materialIn) {
+        super(materialIn);
     }
 
     private static AxisAlignedBB makeAABB(int fromX, int fromY, int fromZ, int toX, int toY, int toZ) {
