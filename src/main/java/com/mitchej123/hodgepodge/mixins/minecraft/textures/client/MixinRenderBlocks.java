@@ -19,6 +19,7 @@ public class MixinRenderBlocks {
 
     @Shadow
     public IBlockAccess blockAccess;
+
     @Shadow
     public IIcon overrideBlockTexture;
 
@@ -32,7 +33,13 @@ public class MixinRenderBlocks {
      * that we will only mark those textures for update that are visible (on the viewport) at the moment)
      */
     @Inject(method = "*(Lnet/minecraft/block/Block;DDDLnet/minecraft/util/IIcon;)V", at = @At("HEAD"))
-    public void beforeRenderFace(Block p_147761_1_, double p_147761_2_, double p_147761_4_, double p_147761_6_, IIcon icon, CallbackInfo ci) {
+    public void beforeRenderFace(
+            Block p_147761_1_,
+            double p_147761_2_,
+            double p_147761_4_,
+            double p_147761_6_,
+            IIcon icon,
+            CallbackInfo ci) {
         if (overrideBlockTexture != null) {
             icon = overrideBlockTexture;
         }
@@ -41,14 +48,23 @@ public class MixinRenderBlocks {
     }
 
     @Inject(method = "renderBlockFire", at = @At("HEAD"))
-    public void markFireBlockAnimationForUpdate(BlockFire p_147801_1_, int p_147801_2_, int p_147801_3_, int p_147801_4_, CallbackInfoReturnable<Boolean> cir) {
+    public void markFireBlockAnimationForUpdate(
+            BlockFire p_147801_1_,
+            int p_147801_2_,
+            int p_147801_3_,
+            int p_147801_4_,
+            CallbackInfoReturnable<Boolean> cir) {
         AnimationsRenderUtils.markBlockTextureForUpdate(p_147801_1_.getFireIcon(0), blockAccess);
         AnimationsRenderUtils.markBlockTextureForUpdate(p_147801_1_.getFireIcon(1), blockAccess);
     }
 
-    @ModifyVariable(method = "renderBlockLiquid", at = @At(
-            value = "INVOKE_ASSIGN",
-            target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIconFromSideAndMetadata(Lnet/minecraft/block/Block;II)Lnet/minecraft/util/IIcon;"))
+    @ModifyVariable(
+            method = "renderBlockLiquid",
+            at =
+                    @At(
+                            value = "INVOKE_ASSIGN",
+                            target =
+                                    "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIconFromSideAndMetadata(Lnet/minecraft/block/Block;II)Lnet/minecraft/util/IIcon;"))
     public IIcon markFluidAnimationForUpdate(IIcon icon) {
         AnimationsRenderUtils.markBlockTextureForUpdate(icon, blockAccess);
 

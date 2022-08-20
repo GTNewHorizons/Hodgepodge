@@ -18,7 +18,9 @@ public class MixinMinecraft {
     /*
      *  LWJGL bug https://bugs.mojang.com/browse/MC-68754?page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel&showAll=true
      */
-    @Inject(method = "toggleFullscreen", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/Display;setVSyncEnabled(Z)V", remap = false))
+    @Inject(
+            method = "toggleFullscreen",
+            at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/Display;setVSyncEnabled(Z)V", remap = false))
     private void toggleResizable(CallbackInfo ci) {
         if (!this.fullscreen && (Util.getOSType() == Util.EnumOS.WINDOWS)) {
             Display.setResizable(false);

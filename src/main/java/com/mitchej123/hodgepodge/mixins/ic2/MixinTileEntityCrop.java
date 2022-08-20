@@ -9,8 +9,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = TileEntityCrop.class)
 public class MixinTileEntityCrop {
-    @Inject(method = "rightClick", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/player/EntityPlayer;inventory:Lnet/minecraft/entity/player/InventoryPlayer;"), cancellable = true)
+    @Inject(
+            method = "rightClick",
+            at =
+                    @At(
+                            value = "FIELD",
+                            target =
+                                    "Lnet/minecraft/entity/player/EntityPlayer;inventory:Lnet/minecraft/entity/player/InventoryPlayer;"),
+            cancellable = true)
     public void rightClick(EntityPlayer player, CallbackInfoReturnable<Boolean> ci) {
         player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-    }   
+    }
 }

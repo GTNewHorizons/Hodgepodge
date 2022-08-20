@@ -1,5 +1,7 @@
 package com.mitchej123.hodgepodge.asm;
 
+import static org.objectweb.asm.Opcodes.ASM5;
+
 import com.mitchej123.hodgepodge.Hodgepodge;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.apache.logging.log4j.LogManager;
@@ -12,11 +14,10 @@ import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import static org.objectweb.asm.Opcodes.ASM5;
-
 @SuppressWarnings("unused")
 public class ThermosFurnaceSledgeHammer implements IClassTransformer {
     private static final Logger LOGGER = LogManager.getLogger("ThermosFurnaceSledgeHammer");
+
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (Hodgepodge.config.thermosCraftServerClass.equals(transformedName)) {
@@ -29,7 +30,7 @@ public class ThermosFurnaceSledgeHammer implements IClassTransformer {
             for (MethodNode m : cn.methods) {
                 if ("resetRecipes".equals(m.name)) {
                     LOGGER.info("Taking a sledgehammer to CraftServer.resetRecipes()");
-                    //Replace the body with a RETURN opcode
+                    // Replace the body with a RETURN opcode
                     InsnList insnList = new InsnList();
                     insnList.add(new InsnNode(Opcodes.RETURN));
                     m.instructions = insnList;
@@ -38,10 +39,8 @@ public class ThermosFurnaceSledgeHammer implements IClassTransformer {
             }
             cn.accept(cw);
             return cw.toByteArray();
-        }
-        else {
+        } else {
             return basicClass;
         }
     }
 }
-

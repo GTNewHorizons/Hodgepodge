@@ -17,7 +17,8 @@ public class AnimationsRenderUtils {
         TextureAtlasSprite textureAtlasSprite = textureMap.getAtlasSprite(icon.getIconName());
 
         if (textureAtlasSprite != null && textureAtlasSprite.hasAnimationMetadata()) {
-            // null if called by anything but chunk render cache update (for example to get blocks rendered as items in inventory)
+            // null if called by anything but chunk render cache update (for example to get blocks rendered as items in
+            // inventory)
             if (blockAccess instanceof ITexturesCache) {
                 ((ITexturesCache) blockAccess).getRenderedTextures().add(textureAtlasSprite);
             } else {

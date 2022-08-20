@@ -22,11 +22,14 @@ public class MixinRandomPositionGenerator {
         boolean tooFar = false;
 
         if (entityCreature.hasHome()) {
-            final double d0 = entityCreature.getHomePosition().getDistanceSquared(
-                    MathHelper.floor_double(entityCreature.posX),
-                    MathHelper.floor_double(entityCreature.posY),
-                    MathHelper.floor_double(entityCreature.posZ)) + 4.0F;
-            final double d1 = entityCreature.func_110174_bM()/*getMaximumHomeDistance()*/ + (double) hor;
+            final double d0 = entityCreature
+                            .getHomePosition()
+                            .getDistanceSquared(
+                                    MathHelper.floor_double(entityCreature.posX),
+                                    MathHelper.floor_double(entityCreature.posY),
+                                    MathHelper.floor_double(entityCreature.posZ))
+                    + 4.0F;
+            final double d1 = entityCreature.func_110174_bM() /*getMaximumHomeDistance()*/ + (double) hor;
             tooFar = d0 < d1 * d1;
         }
 
@@ -46,7 +49,8 @@ public class MixinRandomPositionGenerator {
 
                     if (blockPathWeight > bestValue) {
                         bestValue = blockPathWeight;
-                        // But use the un-rounded coordinates for moving (so we avoid chopping off fractional coordinates and biasing to the NW)
+                        // But use the un-rounded coordinates for moving (so we avoid chopping off fractional
+                        // coordinates and biasing to the NW)
                         tx = entityCreature.posX + x1;
                         ty = entityCreature.posY + y1;
                         tz = entityCreature.posZ + z1;

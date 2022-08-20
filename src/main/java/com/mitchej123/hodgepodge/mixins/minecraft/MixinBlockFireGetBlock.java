@@ -13,15 +13,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class MixinBlockFireGetBlock {
 
     @Redirect(
-        method = "getChanceToEncourageFire(Lnet/minecraft/world/IBlockAccess;IIIILnet/minecraftforge/common/util/ForgeDirection;)I", 
-        at = @At( 
-            value = "INVOKE", 
-            target="Lnet/minecraft/world/IBlockAccess;getBlock(III)Lnet/minecraft/block/Block;"
-        )
-    )
+            method =
+                    "getChanceToEncourageFire(Lnet/minecraft/world/IBlockAccess;IIIILnet/minecraftforge/common/util/ForgeDirection;)I",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target = "Lnet/minecraft/world/IBlockAccess;getBlock(III)Lnet/minecraft/block/Block;"))
     protected Block getBlock(IBlockAccess world, int x, int y, int z) {
-        if (!(world instanceof World) || !((World) world).blockExists(x, y, z))
-            return Blocks.air;
+        if (!(world instanceof World) || !((World) world).blockExists(x, y, z)) return Blocks.air;
 
         return world.getBlock(x, y, z);
     }

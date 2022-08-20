@@ -24,5 +24,4 @@ public class MixinChunkCoordinates {
     public int hashCode() {
         return this.posX * 8976890 + this.posY * 981131 + this.posZ;
     }
-    
 }

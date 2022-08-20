@@ -1,7 +1,6 @@
 package com.mitchej123.hodgepodge.core.util;
 
 import com.mitchej123.hodgepodge.core.HodgePodgeClient;
-
 import java.util.HashMap;
 
 public enum ColorOverrideType {
@@ -11,20 +10,23 @@ public enum ColorOverrideType {
     LIQUID("LIQUID");
 
     private static final HashMap<String, ColorOverrideType> byString = new HashMap<>();
+
     static {
         for (ColorOverrideType type : ColorOverrideType.values()) {
             byString.put(type.name, type);
         }
     }
+
     public String name;
 
-    ColorOverrideType(String name){
+    ColorOverrideType(String name) {
         this.name = name;
     }
 
     public static ColorOverrideType get(String name) {
         return byString.get(name);
     }
+
     public int getColor(int oColor, int x, int z) {
         try {
             switch (this) {
@@ -37,8 +39,8 @@ public enum ColorOverrideType {
                 case LIQUID:
                     return (int) HodgePodgeClient.colorLiquid.invoke(null, oColor, x, z);
             }
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
         return oColor;
     }
-
 }

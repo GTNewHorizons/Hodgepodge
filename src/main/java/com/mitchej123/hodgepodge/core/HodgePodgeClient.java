@@ -1,20 +1,16 @@
 package com.mitchej123.hodgepodge.core;
 
-import com.mitchej123.hodgepodge.client.ClientTicker;
-import com.mitchej123.hodgepodge.client.DebugScreenHandler;
-import com.mitchej123.hodgepodge.client.IGraphicsLevelSetter;
-import com.mitchej123.hodgepodge.core.handlers.ClientKeyListener;
-import com.mitchej123.hodgepodge.core.util.ColorOverrideType;
 import com.mitchej123.hodgepodge.Hodgepodge;
 import com.mitchej123.hodgepodge.asm.References;
+import com.mitchej123.hodgepodge.client.ClientTicker;
+import com.mitchej123.hodgepodge.client.DebugScreenHandler;
+import com.mitchej123.hodgepodge.core.handlers.ClientKeyListener;
+import com.mitchej123.hodgepodge.core.util.ColorOverrideType;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
+import java.lang.reflect.Method;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
-
-import java.lang.reflect.Method;
 
 public class HodgePodgeClient {
     public static Method colorGrass, colorLiquid, colorLeaves, colorFoliage;
@@ -36,7 +32,7 @@ public class HodgePodgeClient {
         }
 
         FMLCommonHandler.instance().bus().register(ClientTicker.INSTANCE);
-        
+
         if (Hodgepodge.config.addSystemInfo) {
             MinecraftForge.EVENT_BUS.register(DebugScreenHandler.INSTANCE);
         }
@@ -44,20 +40,12 @@ public class HodgePodgeClient {
         if (Hodgepodge.config.speedupAnimations) {
             FMLCommonHandler.instance().bus().register(new ClientKeyListener());
         }
-        
-        if (Hodgepodge.config.fixNetherLeavesFaceRendering) {
-            Block netherLeaves = GameRegistry.findBlock("harvestthenether", "netherLeaves");
-            if (netherLeaves != null) {
-                ((IGraphicsLevelSetter) netherLeaves).setGraphicsLevel(Minecraft.getMinecraft().gameSettings.fancyGraphics);
-            }
-        }
     }
 
     // ASM hookers
     public static int renderStandardBlock_colorMultiplier(int oColor, Block block, int x, int z) {
         ColorOverrideType type = LoadingConfig.standardBlocks.matchesID(block);
-        if (type == null)
-            return oColor;
+        if (type == null) return oColor;
         return type.getColor(oColor, x, z);
     }
 
@@ -71,22 +59,19 @@ public class HodgePodgeClient {
 
     public static int renderBlockDoublePlant_colorMultiplier(int oColor, Block block, int x, int z) {
         ColorOverrideType type = LoadingConfig.doublePlants.matchesID(block);
-        if (type == null)
-            return oColor;
+        if (type == null) return oColor;
         return type.getColor(oColor, x, z);
     }
 
     public static int renderCrossedSquares_colorMultiplier(int oColor, Block block, int x, int z) {
         ColorOverrideType type = LoadingConfig.crossedSquares.matchesID(block);
-        if (type == null)
-            return oColor;
+        if (type == null) return oColor;
         return type.getColor(oColor, x, z);
     }
 
     public static int renderBlockVine_colorMultiplier(int oColor, Block block, int x, int z) {
         ColorOverrideType type = LoadingConfig.blockVine.matchesID(block);
-        if (type == null)
-            return oColor;
+        if (type == null) return oColor;
         return type.getColor(oColor, x, z);
     }
 }

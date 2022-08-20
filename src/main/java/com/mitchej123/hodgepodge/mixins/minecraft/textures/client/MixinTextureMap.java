@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.mixins.minecraft.textures.client;
 
 import com.mitchej123.hodgepodge.core.HodgePodgeClient;
 import com.mitchej123.hodgepodge.core.textures.IPatchedTextureAtlasSprite;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -12,14 +13,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import java.util.List;
-
 @Mixin(TextureMap.class)
 public abstract class MixinTextureMap extends AbstractTexture {
 
     @Shadow
     @Final
     private List<TextureAtlasSprite> listAnimatedSprites;
+
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     /**
@@ -46,7 +46,6 @@ public abstract class MixinTextureMap extends AbstractTexture {
                 patchedTextureAtlasSprite.unmarkNeedsAnimationUpdate();
                 mc.mcProfiler.endSection();
             }
-
         }
         mc.mcProfiler.endSection();
     }

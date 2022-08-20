@@ -1,13 +1,12 @@
 package com.mitchej123.hodgepodge.asm.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 import org.objectweb.asm.util.Printer;
 import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceMethodVisitor;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 // Shamelessly Taken from BetterFoliage by octarine-noise
 
@@ -73,7 +72,10 @@ public abstract class AbstractMethodTransformer {
             public boolean matches(AbstractInsnNode node) {
                 if (node instanceof MethodInsnNode) {
                     MethodInsnNode n = (MethodInsnNode) node;
-                    return n.getOpcode() == opcode && n.owner.equals(owner) && n.name.equals(name) && n.desc.equals(desc);
+                    return n.getOpcode() == opcode
+                            && n.owner.equals(owner)
+                            && n.name.equals(name)
+                            && n.desc.equals(desc);
                 }
                 return false;
             }
@@ -84,7 +86,7 @@ public abstract class AbstractMethodTransformer {
         return new IInstructionMatch() {
             public boolean matches(AbstractInsnNode node) {
                 if (node instanceof VarInsnNode) {
-                    return (node.getOpcode() == opcode) && ( ((VarInsnNode) node).var == var);
+                    return (node.getOpcode() == opcode) && (((VarInsnNode) node).var == var);
                 }
                 return false;
             }
@@ -92,21 +94,30 @@ public abstract class AbstractMethodTransformer {
     }
 
     protected FieldInsnNode createGetField(FieldRef field) {
-        return new FieldInsnNode(Opcodes.GETFIELD, field.parent.getName(environment).replace(".", "/"), field.getName(environment), field.getAsmDescriptor(environment));
+        return new FieldInsnNode(
+                Opcodes.GETFIELD,
+                field.parent.getName(environment).replace(".", "/"),
+                field.getName(environment),
+                field.getAsmDescriptor(environment));
     }
 
     protected MethodInsnNode createInvokeStatic(MethodRef method) {
-        return new MethodInsnNode(Opcodes.INVOKESTATIC, method.parent.getName(environment).replace(".", "/"), method.getName(environment), method.getAsmDescriptor(environment), false);
+        return new MethodInsnNode(
+                Opcodes.INVOKESTATIC,
+                method.parent.getName(environment).replace(".", "/"),
+                method.getName(environment),
+                method.getAsmDescriptor(environment),
+                false);
     }
 
     protected TypeInsnNode createCheckCast(ClassRef clazz) {
         return new TypeInsnNode(Opcodes.CHECKCAST, clazz.getName(environment).replace(".", "/"));
     }
 
-
     private static final Printer printer = new Textifier();
     private static final TraceMethodVisitor mp = new TraceMethodVisitor(printer);
-    public static String insnToString(AbstractInsnNode insn){
+
+    public static String insnToString(AbstractInsnNode insn) {
         insn.accept(mp);
         StringWriter sw = new StringWriter();
         printer.print(new PrintWriter(sw));

@@ -13,10 +13,9 @@ public class MixinBlockPamFruit extends Block {
     private MixinBlockPamFruit(Material materialIn) {
         super(materialIn);
     }
-    
+
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World worldIn, int x, int y, int z) {
         return null;
     }
-
 }
