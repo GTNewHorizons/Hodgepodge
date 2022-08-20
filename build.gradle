@@ -1,4 +1,4 @@
-//version: 1660899027
+//version: 1660994461
 /*
  DO NOT CHANGE THIS FILE!
  Also, you may replace this file at any time if there is an update available.
@@ -59,7 +59,8 @@ plugins {
     id 'com.github.gmazzo.buildconfig'   version '3.0.3'        apply false
     id 'com.diffplug.spotless'           version '6.7.2'        apply false
 }
-verifySettingsGradle()
+if(verifySettingsGradle() || verifyGitAttributes())
+    throw new GradleException("Settings has been updated, please re-run task.")
 
 dependencies {
     implementation 'com.diffplug:blowdryer:1.6.0'
@@ -666,20 +667,38 @@ if (!project.getGradle().startParameter.isOffline() && isNewBuildScriptVersionAv
 }
 
 static URL availableBuildScriptUrl() {
-    new URL("https://raw.githubusercontent.com/GTNewHorizons/ExampleMod1.7.10/main/build.gradle")
+    new URL("https://raw.githubusercontent.com/GTNewHorizons/ExampleMod1.7.10/master/build.gradle")
 }
 static URL exampleSettingsGradleUrl() {
-    new URL("https://raw.githubusercontent.com/GTNewHorizons/ExampleMod1.7.10/main/settings.gradle.example")
+    new URL("https://raw.githubusercontent.com/GTNewHorizons/ExampleMod1.7.10/master/settings.gradle.example")
+}
+static URL exampleGitAttributesUrl() {
+    new URL("https://raw.githubusercontent.com/GTNewHorizons/ExampleMod1.7.10/master/.gitattributes")
 }
 
 
-def verifySettingsGradle() {
+boolean verifyGitAttributes() {
+    def gitattributesFile = getFile(".gitattributes")
+    if (!gitattributesFile.exists()) {
+        println("Downloading default .gitattributes")
+        exampleGitAttributesUrl().withInputStream { i -> gitattributesFile.withOutputStream { it << i } }
+        exec {
+            workingDir '.'
+            commandLine 'git', 'add', '--renormalize', '.'
+        }
+        return true
+    }
+    return false
+}
+
+boolean verifySettingsGradle() {
     def settingsFile = getFile("settings.gradle")
     if (!settingsFile.exists()) {
         println("Downloading default settings.gradle")
         exampleSettingsGradleUrl().withInputStream { i -> settingsFile.withOutputStream { it << i } }
-        throw new GradleException("Settings.gradle has been updated, please re-run task.")
+        return true
     }
+    return false
 }
 
 boolean performBuildScriptUpdate(String projectDir) {
@@ -687,7 +706,8 @@ boolean performBuildScriptUpdate(String projectDir) {
         def buildscriptFile = getFile("build.gradle")
         availableBuildScriptUrl().withInputStream { i -> buildscriptFile.withOutputStream { it << i } }
         out.style(Style.Success).print("Build script updated. Please REIMPORT the project or RESTART your IDE!")
-        verifySettingsGradle()
+        if(verifySettingsGradle() || verifyGitAttributes())
+            throw new GradleException("Settings has been updated, please re-run task.")
         return true
     }
     return false
