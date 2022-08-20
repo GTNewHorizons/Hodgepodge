@@ -1,16 +1,15 @@
 package com.mitchej123.hodgepodge.asm;
 
+import static org.objectweb.asm.Opcodes.ASM5;
+import static org.objectweb.asm.Opcodes.POP;
+
+import java.util.ListIterator;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.*;
-
-import java.util.ListIterator;
-
-import static org.objectweb.asm.Opcodes.ASM5;
-import static org.objectweb.asm.Opcodes.POP;
 
 public class WorldTransformer implements IClassTransformer {
     /**
@@ -28,7 +27,7 @@ public class WorldTransformer implements IClassTransformer {
      *    See the License for the specific language governing permissions and
      *    limitations under the License.
      *
-     *   Taken from from https://github.com/Glease/CoFHCoreFix 
+     *   Taken from from https://github.com/Glease/CoFHCoreFix
      *     * Removes cofh_recentTiles that is never used/cleaned up
      */
     private static final Logger LOGGER = LogManager.getLogger("CoFHCoreFix");
@@ -48,9 +47,9 @@ public class WorldTransformer implements IClassTransformer {
                     AbstractInsnNode node = it.next();
                     if (node instanceof MethodInsnNode) {
                         MethodInsnNode n = (MethodInsnNode) node;
-                        if ("cofh/lib/util/LinkedHashList".equals(n.owner) &&
-                            "push".equals(n.name) &&
-                            "(Ljava/lang/Object;)Z".equals(n.desc)) {
+                        if ("cofh/lib/util/LinkedHashList".equals(n.owner)
+                                && "push".equals(n.name)
+                                && "(Ljava/lang/Object;)Z".equals(n.desc)) {
                             LOGGER.debug("Replacing LinkedHashList::push inside {}{}", n.name, n.desc);
                             m.instructions.insertBefore(n, new InsnNode(POP));
                             m.instructions.remove(n);

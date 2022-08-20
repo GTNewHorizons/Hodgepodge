@@ -10,22 +10,31 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TileEntityRendererDispatcher.class)
 public class TileEntityRendererDispatcherMixin {
-    @Inject(method = "renderTileEntityAt",
-            at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/tileentity/TileEntitySpecialRenderer;renderTileEntityAt(Lnet/minecraft/tileentity/TileEntity;DDDF)V")
-    )
+    @Inject(
+            method = "renderTileEntityAt",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/renderer/tileentity/TileEntitySpecialRenderer;renderTileEntityAt(Lnet/minecraft/tileentity/TileEntity;DDDF)V"))
     public void startProfiler(TileEntity te, double x, double y, double z, float partialTicks, CallbackInfo ci) {
         if (Minecraft.getMinecraft().mcProfiler.profilingEnabled) {
-            String name = me().getSpecialRenderer(te).getClass().getName().replace(".", "/"); //replacing due to specific logic inside profiler based on dots
+            String name = me().getSpecialRenderer(te)
+                    .getClass()
+                    .getName()
+                    .replace(".", "/"); // replacing due to specific logic inside profiler based on dots
             Minecraft.getMinecraft().mcProfiler.startSection(name);
         }
     }
 
-    @Inject(method = "renderTileEntityAt",
-            at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/tileentity/TileEntitySpecialRenderer;renderTileEntityAt(Lnet/minecraft/tileentity/TileEntity;DDDF)V",
-            shift = At.Shift.AFTER)
-    )
+    @Inject(
+            method = "renderTileEntityAt",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/renderer/tileentity/TileEntitySpecialRenderer;renderTileEntityAt(Lnet/minecraft/tileentity/TileEntity;DDDF)V",
+                            shift = At.Shift.AFTER))
     public void endProfiler(TileEntity te, double x, double y, double z, float partialTicks, CallbackInfo ci) {
         if (Minecraft.getMinecraft().mcProfiler.profilingEnabled) {
             Minecraft.getMinecraft().mcProfiler.endSection();

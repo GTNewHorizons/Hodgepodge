@@ -40,16 +40,15 @@ public class XSTR extends Random {
     private static final long GAMMA = 0x9e3779b97f4a7c15L;
     private static final int PROBE_INCREMENT = 0x9e3779b9;
     private static final long SEEDER_INCREMENT = 0xbb67ae8584caa73bL;
-    private static final double DOUBLE_UNIT = 0x1.0p-53;  // 1.0  / (1L << 53)
+    private static final double DOUBLE_UNIT = 0x1.0p-53; // 1.0  / (1L << 53)
     private static final float FLOAT_UNIT = 0x1.0p-24f; // 1.0f / (1 << 24)
-    private static final AtomicLong seedUniquifier
-        = new AtomicLong(8682522807148012L);
+    private static final AtomicLong seedUniquifier = new AtomicLong(8682522807148012L);
     boolean haveNextNextGaussian = false;
 
     /*
-     MODIFIED BY: Robotia
-     Modification: Implemented Random class seed generator
-     */
+    MODIFIED BY: Robotia
+    Modification: Implemented Random class seed generator
+    */
     double nextNextGaussian = 0;
     private long seed;
     private long last;
@@ -139,7 +138,7 @@ public class XSTR extends Random {
         return (int) x;
     }
 
-    synchronized public double nextGaussian() {
+    public synchronized double nextGaussian() {
         // See Knuth, ACP, Section 3.4.1 Algorithm C.
         if (haveNextNextGaussian) {
             haveNextNextGaussian = false;
@@ -237,9 +236,8 @@ public class XSTR extends Random {
 
     public void nextBytes(byte[] bytes_arr) {
         for (int iba = 0, lenba = bytes_arr.length; iba < lenba; )
-            for (int rndba = nextInt(),
-                 nba = Math.min(lenba - iba, Integer.SIZE / Byte.SIZE);
-                 nba-- > 0; rndba >>= Byte.SIZE)
-                bytes_arr[iba++] = (byte) rndba;
+            for (int rndba = nextInt(), nba = Math.min(lenba - iba, Integer.SIZE / Byte.SIZE);
+                    nba-- > 0;
+                    rndba >>= Byte.SIZE) bytes_arr[iba++] = (byte) rndba;
     }
 }

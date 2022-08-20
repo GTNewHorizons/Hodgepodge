@@ -1,5 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.automagy;
 
+import java.util.Arrays;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
@@ -8,8 +9,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import tuhljin.automagy.blocks.ItemBlockThirstyTank;
 import tuhljin.automagy.tiles.ModTileEntity;
 import tuhljin.automagy.tiles.TileEntityThirstyTank;
-
-import java.util.Arrays;
 
 @Mixin(ItemBlockThirstyTank.class)
 public class MixinItemBlockThirstyTank implements IFluidContainerItem {
@@ -24,7 +23,9 @@ public class MixinItemBlockThirstyTank implements IFluidContainerItem {
         if (container != null && container.hasTagCompound()) {
             final int[] glyphs = ModTileEntity.getIntArrayFromNbtOrDefault(container.stackTagCompound, "Glyphs", 0, 6);
             final int glyphOfTheReservoirId = 8;
-            final int glyphOfTheReservoirCount = (int) Arrays.stream(glyphs).filter(glyph -> glyph == glyphOfTheReservoirId).count();
+            final int glyphOfTheReservoirCount = (int) Arrays.stream(glyphs)
+                    .filter(glyph -> glyph == glyphOfTheReservoirId)
+                    .count();
             capacityInBuckets += glyphOfTheReservoirCount * TileEntityThirstyTank.CAPACITY_IN_BUCKETS_PER_UPGRADE;
         }
         return capacityInBuckets * 1000;

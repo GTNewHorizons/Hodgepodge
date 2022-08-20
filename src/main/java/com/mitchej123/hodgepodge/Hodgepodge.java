@@ -11,19 +11,17 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.relauncher.Side;
+import java.io.File;
 import net.minecraft.launchwrapper.Launch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-
 @Mod(
-    modid = Hodgepodge.MODID, 
-    version = Hodgepodge.VERSION, 
-    name = Hodgepodge.NAME, 
-    acceptableRemoteVersions = "*",
-    dependencies = "required-after:spongemixins@[1.4.0,);"
-)
+        modid = Hodgepodge.MODID,
+        version = Hodgepodge.VERSION,
+        name = Hodgepodge.NAME,
+        acceptableRemoteVersions = "*",
+        dependencies = "required-after:spongemixins@[1.4.0,);")
 public class Hodgepodge {
     public static final Logger log = LogManager.getLogger("Hodgepodge");
     public static final String MODID = "hodgepodge";
@@ -34,7 +32,7 @@ public class Hodgepodge {
     public static boolean thermosTainted;
 
     public static XSTR RNG = new XSTR();
-    public final static AnchorAlarm ANCHOR_ALARM = new AnchorAlarm();
+    public static final AnchorAlarm ANCHOR_ALARM = new AnchorAlarm();
 
     static {
         Hodgepodge.log.info("Initializing Hodgepodge");
@@ -43,13 +41,15 @@ public class Hodgepodge {
         try {
             Class.forName("org.bukkit.World");
             thermosTainted = true;
-            Hodgepodge.log.warn("Thermos/Bukkit detected; This is an unsupported configuration -- Things may not function properly.");
-            Hodgepodge.log.warn(" Using `{}` for CraftServer Package.  If this is not correct, please update your config file!", config.thermosCraftServerClass);
+            Hodgepodge.log.warn(
+                    "Thermos/Bukkit detected; This is an unsupported configuration -- Things may not function properly.");
+            Hodgepodge.log.warn(
+                    " Using `{}` for CraftServer Package.  If this is not correct, please update your config file!",
+                    config.thermosCraftServerClass);
         } catch (ClassNotFoundException e) {
             thermosTainted = false;
             Hodgepodge.log.info("Thermos/Bukkit NOT detected :-D");
         }
-
     }
 
     @EventHandler
@@ -58,11 +58,12 @@ public class Hodgepodge {
     }
 
     @EventHandler
-    public void postInit(FMLPostInitializationEvent event)  {
+    public void postInit(FMLPostInitializationEvent event) {
         if (event.getSide() == Side.CLIENT) {
             HodgePodgeClient.postInit();
         }
     }
+
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent aEvent) {
         aEvent.registerServerCommand(new DebugCommand());

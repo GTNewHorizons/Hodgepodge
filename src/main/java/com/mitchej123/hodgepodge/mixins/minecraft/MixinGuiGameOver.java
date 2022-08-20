@@ -1,7 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.minecraft;
 
 import net.minecraft.client.gui.GuiGameOver;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

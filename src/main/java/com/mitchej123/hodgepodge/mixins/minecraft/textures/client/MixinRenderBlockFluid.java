@@ -20,7 +20,15 @@ public abstract class MixinRenderBlockFluid {
     private IBlockAccess currentBlockAccess;
 
     @Inject(method = "renderWorldBlock", at = @At(value = "HEAD"))
-    private void saveCurrentBlockAccess(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer, CallbackInfoReturnable<Boolean> cir) {
+    private void saveCurrentBlockAccess(
+            IBlockAccess world,
+            int x,
+            int y,
+            int z,
+            Block block,
+            int modelId,
+            RenderBlocks renderer,
+            CallbackInfoReturnable<Boolean> cir) {
         currentBlockAccess = world;
     }
 
@@ -29,12 +37,12 @@ public abstract class MixinRenderBlockFluid {
      * @reason mark texture for update
      */
     @Overwrite
-    private IIcon getIcon(IIcon icon)
-    {
+    private IIcon getIcon(IIcon icon) {
         if (icon != null) {
             AnimationsRenderUtils.markBlockTextureForUpdate(icon, currentBlockAccess);
             return icon;
         }
-        return ((TextureMap)Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.locationBlocksTexture)).getAtlasSprite("missingno");
+        return ((TextureMap) Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.locationBlocksTexture))
+                .getAtlasSprite("missingno");
     }
 }

@@ -11,13 +11,25 @@ import org.spongepowered.asm.mixin.injection.Slice;
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
 
-    @Redirect(method = "displayDebugInfo", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/FontRenderer;drawStringWithShadow(Ljava/lang/String;III)I", ordinal = 0),
-    slice = @Slice(from = @At(value = "CONSTANT", args = {"stringValue=[?] "})))
+    @Redirect(
+            method = "displayDebugInfo",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/FontRenderer;drawStringWithShadow(Ljava/lang/String;III)I",
+                            ordinal = 0),
+            slice =
+                    @Slice(
+                            from =
+                                    @At(
+                                            value = "CONSTANT",
+                                            args = {"stringValue=[?] "})))
     public int drawLongString(FontRenderer fontRenderer, String text, int x, int y, int color) {
         int offset = ClientTicker.INSTANCE.getDebugPieTextOffset();
 
         int length = text.length();
-        if(length >= 42) {
+        if (length >= 42) {
             int first = offset % length;
             text = text.substring(first) + " " + text.substring(0, first);
 

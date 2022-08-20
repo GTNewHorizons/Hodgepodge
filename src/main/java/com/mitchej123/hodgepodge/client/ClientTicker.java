@@ -11,10 +11,10 @@ public class ClientTicker {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if(event.phase == TickEvent.Phase.START) {
+        if (event.phase == TickEvent.Phase.START) {
             ticks++;
 
-            if(ticks % 5 == 0) {
+            if (ticks % 5 == 0) {
                 debugPieTextOffset++;
             }
         }

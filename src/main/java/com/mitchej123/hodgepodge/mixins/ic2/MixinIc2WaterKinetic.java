@@ -11,15 +11,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(TileEntityWaterKineticGenerator.class)
 public class MixinIc2WaterKinetic {
     @Redirect(
-        method = "checkSpace(IZ)I",
-        at = @At(
-            value = "INVOKE",
-            target="Lnet/minecraft/world/World;getBlock(III)Lnet/minecraft/block/Block;"
-        )
-    )
+            method = "checkSpace(IZ)I",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlock(III)Lnet/minecraft/block/Block;"))
     protected Block getBlock(World world, int x, int y, int z) {
-        if (!world.blockExists(x, y, z))
-            return Blocks.air;
+        if (!world.blockExists(x, y, z)) return Blocks.air;
 
         return world.getBlock(x, y, z);
     }

@@ -1,5 +1,9 @@
 package com.mitchej123.hodgepodge.mixins.minecraft;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
@@ -7,19 +11,16 @@ import net.minecraftforge.common.ForgeHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @Mixin(value = ForgeHooks.class, remap = false)
 public class MixinForgeHooks {
     private static final Pattern URL_PATTERN = Pattern.compile(
-        //         schema                          ipv4            OR        namespace                 port     path         ends
-        //   |-----------------|        |-------------------------|  |-------------------------|    |---------| |--|   |---------------|
-        "((?:[a-z0-9]{2,}:\\/\\/)?(?:(?:[0-9]{1,3}\\.){3}[0-9]{1,3}|(?:[-\\w_]{1,}\\.[a-z]{2,}?))(?::[0-9]{1,5})?.*?(?=[!\"\u00A7 \n]|$))",
-        Pattern.CASE_INSENSITIVE);
-    
+            //         schema                          ipv4            OR        namespace                 port     path
+            //         ends
+            //   |-----------------|        |-------------------------|  |-------------------------|    |---------| |--|
+            //   |---------------|
+            "((?:[a-z0-9]{2,}:\\/\\/)?(?:(?:[0-9]{1,3}\\.){3}[0-9]{1,3}|(?:[-\\w_]{1,}\\.[a-z]{2,}?))(?::[0-9]{1,5})?.*?(?=[!\"\u00A7 \n]|$))",
+            Pattern.CASE_INSENSITIVE);
+
     /**
      * @author LexManos
      * @reason Crash fix backported from https://github.com/MinecraftForge/MinecraftForge/commit/5b28eb53e8623448b1c2bdb46b8924662e690995
@@ -32,7 +33,7 @@ public class MixinForgeHooks {
         IChatComponent ichat = new ChatComponentText("");
         Matcher matcher = MixinForgeHooks.URL_PATTERN.matcher(string);
         int lastEnd = 0;
-        
+
         // Find all urls
         while (matcher.find()) {
             int start = matcher.start();
@@ -46,10 +47,8 @@ public class MixinForgeHooks {
 
             try {
                 // Add schema so client doesn't crash.
-                if ((new URI(url)).getScheme() == null)
-                    url = "http://" + url;
-            }
-            catch (URISyntaxException e) {
+                if ((new URI(url)).getScheme() == null) url = "http://" + url;
+            } catch (URISyntaxException e) {
                 // Bad syntax bail out!
                 ichat.appendText(url);
                 continue;

@@ -8,11 +8,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(World.class)
 public class MixinWorldLightValue {
-	@Redirect(
-			method = "getBlockLightValue_do",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/Chunk;getBlockLightValue(IIII)I")
-	)
-	public int getBlockLightValueNullSafe(Chunk chunk, int par1, int par2, int par3, int par4) {
-		return chunk != null ? chunk.getBlockLightValue(par1, par2, par3, par4) : 0;
-	}
+    @Redirect(
+            method = "getBlockLightValue_do",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/Chunk;getBlockLightValue(IIII)I"))
+    public int getBlockLightValueNullSafe(Chunk chunk, int par1, int par2, int par3, int par4) {
+        return chunk != null ? chunk.getBlockLightValue(par1, par2, par3, par4) : 0;
+    }
 }

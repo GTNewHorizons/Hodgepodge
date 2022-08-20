@@ -16,9 +16,12 @@ public class ClientKeyListener {
     public void keyUp(InputEvent.KeyInputEvent event) {
         int key = Keyboard.getEventKey();
         boolean released = !Keyboard.getEventKeyState();
-        if (Minecraft.getMinecraft().gameSettings.showDebugInfo && GuiScreen.isShiftKeyDown() && key == Keyboard.KEY_N && released) {
-            HodgePodgeClient.animationsMode = HodgePodgeClient.animationsMode == 2 ? 0 : ++HodgePodgeClient.animationsMode;
+        if (Minecraft.getMinecraft().gameSettings.showDebugInfo
+                && GuiScreen.isShiftKeyDown()
+                && key == Keyboard.KEY_N
+                && released) {
+            HodgePodgeClient.animationsMode =
+                    HodgePodgeClient.animationsMode == 2 ? 0 : ++HodgePodgeClient.animationsMode;
         }
     }
-
 }

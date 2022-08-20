@@ -11,11 +11,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class MixinTileEntityReactorChamberElectric {
     @Redirect(
             method = "getReactor",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/block/Block;onNeighborBlockChange(Lnet/minecraft/world/World;IIILnet/minecraft/block/Block;)V"
-            )
-    )
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/block/Block;onNeighborBlockChange(Lnet/minecraft/world/World;IIILnet/minecraft/block/Block;)V"))
     public void fixGetReactor(Block blk, World w, int x, int y, int z, Block blk2) {
         w.notifyBlockChange(x, y, z, blk);
     }

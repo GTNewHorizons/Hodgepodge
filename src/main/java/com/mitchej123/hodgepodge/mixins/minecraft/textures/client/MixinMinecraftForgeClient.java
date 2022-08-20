@@ -20,7 +20,8 @@ public class MixinMinecraftForgeClient {
      * We can just mark any item texture that gets rendered for an update
      */
     @Inject(method = "getItemRenderer", at = @At("HEAD"), remap = false)
-    private static void beforeRenderItem(ItemStack itemStack, IItemRenderer.ItemRenderType type, CallbackInfoReturnable<IItemRenderer> cir) {
+    private static void beforeRenderItem(
+            ItemStack itemStack, IItemRenderer.ItemRenderType type, CallbackInfoReturnable<IItemRenderer> cir) {
         Item item = itemStack.getItem();
         if (item.requiresMultipleRenderPasses()) {
             for (int i = 0; i < item.getRenderPasses(itemStack.getItemDamage()); i++) {
