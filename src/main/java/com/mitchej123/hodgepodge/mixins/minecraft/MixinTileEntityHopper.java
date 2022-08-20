@@ -15,7 +15,13 @@ public class MixinTileEntityHopper {
      * @author MuXiu1997
      * @reason Full hopper voiding items from drawer
      */
-    @Redirect(method = "func_145891_a(Lnet/minecraft/tileentity/IHopper;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/tileentity/TileEntityHopper;func_145892_a(Lnet/minecraft/tileentity/IHopper;Lnet/minecraft/inventory/IInventory;II)Z"))
+    @Redirect(
+            method = "func_145891_a(Lnet/minecraft/tileentity/IHopper;)Z",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/tileentity/TileEntityHopper;func_145892_a(Lnet/minecraft/tileentity/IHopper;Lnet/minecraft/inventory/IInventory;II)Z"))
     private static boolean redirect_func_145891_a(IHopper hopper, IInventory inventory, int slot, int side) {
         ItemStack is = inventory.getStackInSlot(slot);
         if (is == null || is.stackSize == 0) return false;

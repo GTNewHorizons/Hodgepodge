@@ -1,11 +1,10 @@
 package com.mitchej123.hodgepodge.mixins.minecraft.textures.client;
 
 import com.mitchej123.hodgepodge.core.textures.ITexturesCache;
+import java.util.HashSet;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.ChunkCache;
 import org.spongepowered.asm.mixin.Mixin;
-
-import java.util.HashSet;
 
 @Mixin(ChunkCache.class)
 public class MixinChunkCache implements ITexturesCache {

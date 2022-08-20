@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-
 @Mixin(WorldServer.class)
 public abstract class MixinWorldServerUpdateEntities extends World {
 
@@ -23,27 +22,27 @@ public abstract class MixinWorldServerUpdateEntities extends World {
      */
     @Overwrite
     public void updateEntities() {
-        if (this.playerEntities.isEmpty() && getPersistentChunks().isEmpty())
-        {
-            if (this.updateEntityTick++ >= 1200)
-            {
+        if (this.playerEntities.isEmpty() && getPersistentChunks().isEmpty()) {
+            if (this.updateEntityTick++ >= 1200) {
                 // Make sure to run cleanup code every 10s
-                if (this.updateEntityTick % 200 == 0)
-                {
+                if (this.updateEntityTick % 200 == 0) {
                     super.updateEntities();
                 }
                 return;
             }
-        }
-        else
-        {
+        } else {
             this.updateEntityTick = 0;
         }
 
         super.updateEntities();
     }
 
-    public MixinWorldServerUpdateEntities(ISaveHandler p_i45368_1_, String p_i45368_2_, WorldProvider p_i45368_3_, WorldSettings p_i45368_4_, Profiler p_i45368_5_) {
+    public MixinWorldServerUpdateEntities(
+            ISaveHandler p_i45368_1_,
+            String p_i45368_2_,
+            WorldProvider p_i45368_3_,
+            WorldSettings p_i45368_4_,
+            Profiler p_i45368_5_) {
         // Needed because we're extending from World
         super(p_i45368_1_, p_i45368_2_, p_i45368_3_, p_i45368_4_, p_i45368_5_);
     }

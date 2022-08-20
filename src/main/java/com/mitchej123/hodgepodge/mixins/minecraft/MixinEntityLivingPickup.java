@@ -9,8 +9,7 @@ import org.spongepowered.asm.mixin.Shadow;
 public class MixinEntityLivingPickup {
     @Shadow
     private boolean canPickUpLoot;
-    
-    
+
     /**
      * @author mitchej123
      * @reason Stop monsters from picking up loot and not despawning
@@ -19,7 +18,7 @@ public class MixinEntityLivingPickup {
     public void setCanPickUpLoot(boolean canPickUpLoot) {
         this.canPickUpLoot = false;
     }
-    
+
     /**
      * @author mitchej123
      * @reason Stop monsters from picking up loot and not despawning

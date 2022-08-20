@@ -12,15 +12,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class MixinBlockGrass {
 
     @Redirect(
-        method = "updateTick(Lnet/minecraft/world/World;IIILjava/util/Random;)V", 
-        at = @At( 
-            value = "INVOKE", 
-            target="Lnet/minecraft/world/World;getBlock(III)Lnet/minecraft/block/Block;"
-        )
-    )
+            method = "updateTick(Lnet/minecraft/world/World;IIILjava/util/Random;)V",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlock(III)Lnet/minecraft/block/Block;"))
     protected Block getBlock(World world, int x, int y, int z) {
-        if (!world.blockExists(x, y, z))
-            return Blocks.air;
+        if (!world.blockExists(x, y, z)) return Blocks.air;
 
         return world.getBlock(x, y, z);
     }

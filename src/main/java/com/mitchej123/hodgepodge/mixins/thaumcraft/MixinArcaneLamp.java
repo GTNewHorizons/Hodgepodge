@@ -11,18 +11,15 @@ import thaumcraft.common.tiles.TileArcaneLamp;
 @Mixin(TileArcaneLamp.class)
 public class MixinArcaneLamp {
     @Redirect(
-        method = "func_145845_h",
-        at = @At(
-            value = "INVOKE",
-            target="Lnet/minecraft/world/World;func_147439_a(III)Lnet/minecraft/block/Block;"
-        ),
-        remap = false
-    )
+            method = "func_145845_h",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target = "Lnet/minecraft/world/World;func_147439_a(III)Lnet/minecraft/block/Block;"),
+            remap = false)
     protected Block getBlock(World world, int x, int y, int z) {
-        if (!world.blockExists(x, y, z))
-            return Blocks.air;
+        if (!world.blockExists(x, y, z)) return Blocks.air;
 
         return world.getBlock(x, y, z);
-    }    
-
+    }
 }

@@ -9,10 +9,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(TextureMap.class)
 public abstract class MixinTextureMap {
 
-    @Redirect(method = "tick",
-            at = @At(value = "INVOKE",
-                    target = "Lfastcraft/HC;h(Lnet/minecraft/client/renderer/texture/TextureMap;)V",
-                    remap = false))
+    @Redirect(
+            method = "tick",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target = "Lfastcraft/HC;h(Lnet/minecraft/client/renderer/texture/TextureMap;)V",
+                            remap = false))
     private void disableUpdateAnimationsTweak(TextureMap map) {
         map.updateAnimations();
     }
