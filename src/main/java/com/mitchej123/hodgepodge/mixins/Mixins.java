@@ -86,7 +86,8 @@ public enum Mixins {
             "minecraft.textures.client.MixinChunkCache",
             "minecraft.textures.client.MixinRenderBlocks",
             "minecraft.textures.client.MixinRenderBlockFluid",
-            "minecraft.textures.client.MixinWorldRenderer"),
+            "minecraft.textures.client.MixinWorldRenderer",
+            "minecraft.textures.client.MixinRenderItem"),
     SPEEDUP_VANILLA_ANIMATIONS_FC(
             "minecraft.textures.client.fastcraft.MixinTextureMap",
             Side.CLIENT,
