@@ -203,7 +203,8 @@ public enum Mixins {
             () -> Hodgepodge.config.fixIgnisFruitAABB,
             TargetedMod.HARVESTTHENETHER),
     FIX_NETHER_LEAVES_FACE_RENDERING(
-            "harvestthenether.MixinBlockPamFruit",
+            "harvestthenether.MixinBlockNetherLeaves",
+            Side.CLIENT,
             () -> Hodgepodge.config.fixIgnisFruitAABB,
             TargetedMod.HARVESTTHENETHER),
     ;
