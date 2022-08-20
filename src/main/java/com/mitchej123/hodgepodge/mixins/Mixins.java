@@ -40,7 +40,8 @@ public enum Mixins {
             "minecraft.textures.client.MixinChunkCache",
             "minecraft.textures.client.MixinRenderBlocks",
             "minecraft.textures.client.MixinRenderBlockFluid",
-            "minecraft.textures.client.MixinWorldRenderer"),
+            "minecraft.textures.client.MixinWorldRenderer",
+            "minecraft.textures.client.MixinRenderItem"),
     SPEEDUP_VANILLA_ANIMATIONS_FC("minecraft.textures.client.fastcraft.MixinTextureMap", Side.CLIENT, () -> Hodgepodge.config.speedupAnimations, TargetedMod.FASTCRAFT),
     FIX_POTION_ITERATING("minecraft.MixinEntityLivingPotions", Side.BOTH, () -> Hodgepodge.config.fixPotionIterating, TargetedMod.VANILLA),
 
