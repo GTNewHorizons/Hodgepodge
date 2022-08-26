@@ -1,5 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.ic2;
 
+import java.lang.ref.WeakReference;
+
 import ic2.api.Direction;
 import ic2.core.block.reactor.tileentity.TileEntityNuclearReactorElectric;
 import ic2.core.block.reactor.tileentity.TileEntityReactorChamberElectric;
@@ -12,13 +14,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(TileEntityReactorChamberElectric.class)
 public class MixinTileEntityReactorChamberElectricInvSpeedup {
-    private TileEntityNuclearReactorElectric master;
+    private WeakReference<TileEntityNuclearReactorElectric> master;
 
     @Inject(method = "getReactor", remap = false, cancellable = true, at = @At(value = "HEAD"))
     public void onGetReactor(CallbackInfoReturnable<TileEntityNuclearReactorElectric> info) {
         if (master != null) {
-            info.setReturnValue(master);
-            info.cancel();
+            TileEntityNuclearReactorElectric ret;
+            if ((ret = master.get()) != null && !ret.isInvalid()) {
+                info.setReturnValue(ret);
+                info.cancel();
+            } else {
+                master = null;
+            }
         }
     }
 
@@ -33,7 +40,7 @@ public class MixinTileEntityReactorChamberElectricInvSpeedup {
     public TileEntity onGotReactor(Direction thiz, TileEntity te) {
         TileEntity o = thiz.applyToTileEntity(te);
         if (o instanceof TileEntityNuclearReactorElectric) {
-            master = (TileEntityNuclearReactorElectric) o;
+            master = new WeakReference<>((TileEntityNuclearReactorElectric) o);
             return o;
         }
         return null;
