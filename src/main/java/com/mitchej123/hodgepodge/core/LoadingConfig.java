@@ -29,6 +29,7 @@ public class LoadingConfig {
     public boolean fixIc2Hazmat;
     public boolean fixIc2Nightvision;
     public boolean fixIc2ReactorDupe;
+    public boolean optimizeIc2ReactorInventoryAccess;
     public boolean fixIc2UnprotectedGetBlock;
     public boolean fixNorthWestBias;
     public boolean fixPotionEffectRender;
@@ -101,6 +102,12 @@ public class LoadingConfig {
                         "fixes", "fixIc2DirectInventoryAccess", true, "Fix IC2's direct inventory access")
                 .getBoolean();
         fixIc2ReactorDupe = config.get("fixes", "fixIc2ReactorDupe", true, "Fix IC2's reactor dupe")
+                .getBoolean();
+        optimizeIc2ReactorInventoryAccess = config.get(
+                        "fixes",
+                        "optimizeIc2ReactorInventoryAccess",
+                        true,
+                        "Optimize inventory access to IC2 nuclear reactor")
                 .getBoolean();
         fixIc2Nightvision = config.get(
                         "fixes", "fixIc2Nightvision", true, "Prevent IC2's nightvision from blinding you")

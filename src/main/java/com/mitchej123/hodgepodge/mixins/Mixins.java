@@ -131,7 +131,13 @@ public enum Mixins {
     IC2_NIGHT_VISION_GOGGLES(
             "ic2.MixinIc2NightVisionGoggles", () -> Hodgepodge.config.fixIc2Nightvision, TargetedMod.IC2),
     IC2_REACTOR_DUPE(
-            "ic2.MixinTileEntityReactorChamberElectric", () -> Hodgepodge.config.fixIc2ReactorDupe, TargetedMod.IC2),
+            "ic2.MixinTileEntityReactorChamberElectricNoDupe",
+            () -> Hodgepodge.config.fixIc2ReactorDupe,
+            TargetedMod.IC2),
+    IC2_REACTOR_INVENTORY_SPEEDUP(
+            "ic2.MixinTileEntityReactorChamberElectricInvSpeedup",
+            () -> Hodgepodge.config.optimizeIc2ReactorInventoryAccess,
+            TargetedMod.IC2),
     HIDE_IC2_REACTOR_COOLANT_SLOTS(
             "ic2.MixinTileEntityNuclearReactorElectric", () -> Hodgepodge.config.hideIc2ReactorSlots, TargetedMod.IC2),
     IC2_HAZMAT("ic2.MixinIc2Hazmat", () -> Hodgepodge.config.fixIc2Hazmat, TargetedMod.IC2, TargetedMod.GT5U),
