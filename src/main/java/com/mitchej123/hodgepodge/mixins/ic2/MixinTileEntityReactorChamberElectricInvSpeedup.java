@@ -1,10 +1,9 @@
 package com.mitchej123.hodgepodge.mixins.ic2;
 
-import java.lang.ref.WeakReference;
-
 import ic2.api.Direction;
 import ic2.core.block.reactor.tileentity.TileEntityNuclearReactorElectric;
 import ic2.core.block.reactor.tileentity.TileEntityReactorChamberElectric;
+import java.lang.ref.WeakReference;
 import net.minecraft.tileentity.TileEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
