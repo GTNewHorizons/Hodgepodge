@@ -64,6 +64,7 @@ public class LoadingConfig {
     public boolean fixPotionIterating;
     public boolean fixIgnisFruitAABB;
     public boolean fixNetherLeavesFaceRendering;
+    public boolean optimizeASMDataTable;
 
     // ASM
     public boolean pollutionAsm;
@@ -208,6 +209,12 @@ public class LoadingConfig {
                         "fixNetherLeavesFaceRendering",
                         true,
                         "If fancy graphics are enabled, Nether Leaves render sides with other Nether Leaves adjacent too")
+                .getBoolean();
+        optimizeASMDataTable = config.get(
+                        "fixes",
+                        "optimizeASMDataTable",
+                        true,
+                        "Optimize ASMDataTable getAnnotationsFor for faster startup")
                 .getBoolean();
 
         increaseParticleLimit = config.get("tweaks", "increaseParticleLimit", true, "Increase particle limit")
