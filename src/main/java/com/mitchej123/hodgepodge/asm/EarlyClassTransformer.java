@@ -27,6 +27,8 @@ public class EarlyClassTransformer implements IClassTransformer {
         File configLocation = new File(Launch.minecraftHome, "config/hodgepodgeEarly.properties");
         try (Reader r = new BufferedReader(new FileReader(configLocation))) {
             config.load(r);
+        } catch (FileNotFoundException e) {
+            LOGGER.debug("No existing configuration file. Will use defaults");
         } catch (IOException e) {
             LOGGER.error("Error reading configuration file. Will use defaults", e);
         }
