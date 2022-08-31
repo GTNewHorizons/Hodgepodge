@@ -17,7 +17,8 @@ public class InventoryEffectRendererTransformer extends AbstractClassTransformer
 
                         final String NEIClientConfigClasspath = "codechicken/nei/NEIClientConfig";
                         try {
-                            if (this.getClass().getClassLoader().getResource(NEIClientConfigClasspath + ".class") == null) {
+                            if (this.getClass().getClassLoader().getResource(NEIClientConfigClasspath + ".class")
+                                    == null) {
                                 log.info("Skip reordering InventoryEffectRenderer.drawScreen since NEI is not loaded");
                                 return;
                             }
@@ -85,7 +86,8 @@ public class InventoryEffectRendererTransformer extends AbstractClassTransformer
                         L4
                          */
 
-                        AbstractInsnNode startNodeSuperCall = findNext(currentMethod.instructions.getFirst(), matchOpcode(Opcodes.ALOAD));
+                        AbstractInsnNode startNodeSuperCall =
+                                findNext(currentMethod.instructions.getFirst(), matchOpcode(Opcodes.ALOAD));
                         InsnList superCallInsnList = new InsnList();
                         for (int i = 0; i < 5; ++i) {
                             superCallInsnList.add(startNodeSuperCall.clone(null));
@@ -120,7 +122,8 @@ public class InventoryEffectRendererTransformer extends AbstractClassTransformer
                          */
                         LabelNode skipFirstIfLabel = new LabelNode();
                         InsnList headInjectionList = new InsnList();
-                        headInjectionList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, NEIClientConfigClasspath, "isHidden", "()Z", false));
+                        headInjectionList.add(new MethodInsnNode(
+                                Opcodes.INVOKESTATIC, NEIClientConfigClasspath, "isHidden", "()Z", false));
                         headInjectionList.add(new InsnNode(Opcodes.DUP));
                         headInjectionList.add(new VarInsnNode(Opcodes.ISTORE, 4));
                         headInjectionList.add(new JumpInsnNode(Opcodes.IFEQ, skipFirstIfLabel));
