@@ -222,7 +222,7 @@ public class LoadingConfig {
                         "tweaks",
                         "fixPotionEffectRender",
                         true,
-                        "Move vanilla potion effect status rendering before everything else")
+                        "Fix vanilla potion effects rendering above the NEI tooltips in the inventory")
                 .getBoolean();
         installAnchorAlarm = config.get(
                         "tweaks", "installAnchorAlarm", true, "Wake up passive & personal anchors on player login")
