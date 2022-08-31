@@ -99,10 +99,7 @@ public enum Mixins {
             () -> Hodgepodge.config.fixPotionIterating,
             TargetedMod.VANILLA),
     OPTIMIZE_ASMDATATABLE_INDEX(
-            "forge.MixinASMDataTable",
-            Side.BOTH,
-            () -> Hodgepodge.config.optimizeASMDataTable,
-            TargetedMod.VANILLA),
+            "forge.MixinASMDataTable", Side.BOTH, () -> Hodgepodge.config.optimizeASMDataTable, TargetedMod.VANILLA),
 
     // Potentially obsolete vanilla fixes
     GRASS_GET_BLOCK_FIX(
