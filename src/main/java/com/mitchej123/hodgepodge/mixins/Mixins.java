@@ -143,6 +143,14 @@ public enum Mixins {
     IC2_HAZMAT("ic2.MixinIc2Hazmat", () -> Hodgepodge.config.fixIc2Hazmat, TargetedMod.IC2, TargetedMod.GT5U),
     IC2_FLUID_CONTAINER_TOOLTIP(
             "ic2.MixinItemIC2FluidContainer", () -> Hodgepodge.config.displayIc2FluidLocalizedName, TargetedMod.IC2),
+    IC2_FLUID_RENDER_FIX(
+            "ic2.textures.MixinRenderLiquidCell", () -> Hodgepodge.config.speedupAnimations, TargetedMod.IC2),
+
+    // gregtech
+    GREGTECH_FLUID_RENDER_FIX(
+            "gregtech.textures.MixinGT_GeneratedMaterial_Renderer",
+            () -> Hodgepodge.config.speedupAnimations,
+            TargetedMod.GT5U),
 
     // COFH
     COFH_CORE_UPDATE_CHECK(
