@@ -43,7 +43,8 @@ public class DebugScreenHandler {
             event.right.add(7, "OS: " + this.osName + " (" + this.osVersion + ", " + this.osArch + ")");
 
             if (Hodgepodge.config.speedupAnimations) {
-                event.left.add("animationsMode: " + HodgePodgeClient.animationsMode);
+                event.right.add(8, null); // Empty Line
+                event.right.add(9, "animationsMode: " + HodgePodgeClient.animationsMode);
             }
         }
     }
