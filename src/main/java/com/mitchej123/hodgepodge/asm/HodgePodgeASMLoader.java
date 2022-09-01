@@ -38,7 +38,7 @@ public class HodgePodgeASMLoader implements IFMLLoadingPlugin {
                 () -> Hodgepodge.config.speedupProgressBar,
                 Collections.singletonList("com.mitchej123.hodgepodge.asm.SpeedupProgressBarTransformer")),
         FIX_POTION_EFFECT_RENDERING(
-                "Move vanilla potion effect status rendering before everything else",
+                "Fix vanilla potion effects rendering above the NEI tooltips in the inventory",
                 () -> Hodgepodge.config.fixPotionEffectRender,
                 Collections.singletonList("com.mitchej123.hodgepodge.asm.InventoryEffectRendererTransformer")),
         THERMOS_SLEDGEHAMMER_FURNACE_FIX(
