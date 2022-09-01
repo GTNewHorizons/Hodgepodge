@@ -14,6 +14,8 @@ public enum TargetedMod {
     PROJECTE("ProjectE", "ProjectE-1.7.10", "projecte", true),
     FASTCRAFT("FastCraft", "fastcraft", true),
     HARVESTTHENETHER("harvestthenether", "Pam's Harvest the Nether"),
+    GALACTICRAFT_CORE("GalacticraftCore", "Galacticraft"),
+    BAUBLES("Baubles", "Baubles"),
     // Temporary solution to force load it early
     GTNHLIB("GTNHLib", "gtnhlib"),
     ;

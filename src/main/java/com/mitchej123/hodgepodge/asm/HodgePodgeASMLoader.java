@@ -2,11 +2,7 @@ package com.mitchej123.hodgepodge.asm;
 
 import com.mitchej123.hodgepodge.Hodgepodge;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,6 +37,16 @@ public class HodgePodgeASMLoader implements IFMLLoadingPlugin {
                 "Move vanilla potion effect status rendering before everything else",
                 () -> Hodgepodge.config.fixPotionEffectRender,
                 Collections.singletonList("com.mitchej123.hodgepodge.asm.InventoryEffectRendererTransformer")),
+        FIX_TINKER_POTION_EFFECT_OFFSET(
+                "Prevents the inventory from shifting when the player has active potion effects",
+                () -> Hodgepodge.config.fixPotionRenderOffset,
+                Collections.singletonList(
+                        "com.mitchej123.hodgepodge.asm.transformers.tconstruct.TabRegistryTransformer")),
+        FIX_TRAVELLERSGEAR_POTION_EFFECT_OFFSET(
+                "Prevents the inventory from shifting when the player has active potion effects",
+                () -> Hodgepodge.config.fixPotionRenderOffset,
+                Collections.singletonList(
+                        "com.mitchej123.hodgepodge.asm.transformers.travellersgear.ClientProxyTransformer")),
         THERMOS_SLEDGEHAMMER_FURNACE_FIX(
                 "Take a sledgehammer to CraftServer.resetRecipes() to prevent it from breaking our Furnace Fix",
                 () -> Hodgepodge.thermosTainted && Hodgepodge.config.speedupVanillaFurnace,

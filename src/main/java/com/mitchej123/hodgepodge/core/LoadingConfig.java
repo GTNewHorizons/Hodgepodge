@@ -33,6 +33,7 @@ public class LoadingConfig {
     public boolean fixIc2UnprotectedGetBlock;
     public boolean fixNorthWestBias;
     public boolean fixPotionEffectRender;
+    public boolean fixPotionRenderOffset;
     public boolean fixPotionLimit;
     public boolean fixHopperVoidingItems;
     public boolean fixHugeChatKick;
@@ -223,6 +224,12 @@ public class LoadingConfig {
                         "fixPotionEffectRender",
                         true,
                         "Move vanilla potion effect status rendering before everything else")
+                .getBoolean();
+        fixPotionRenderOffset = config.get(
+                        "tweaks",
+                        "fixPotionRenderOffset",
+                        true,
+                        "Prevents the inventory from shifting when the player has active potion effects")
                 .getBoolean();
         installAnchorAlarm = config.get(
                         "tweaks", "installAnchorAlarm", true, "Wake up passive & personal anchors on player login")

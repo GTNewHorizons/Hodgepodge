@@ -17,7 +17,8 @@ dependencies {
     compile("curse.maven:biomes-o-plenty-220318:2499612")
     compileOnly("curse.maven:projecte-226410:2340786")
     compileOnly(deobf("https://mediafiles.forgecdn.net/files/2241/397/Pam%27s+Harvest+the+Nether+1.7.10a.jar"))
-
+    compileOnly("com.github.GTNewHorizons:Galacticraft:3.0.44-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:Baubles:1.0.1.14:dev")
 
     // Thermos Compat, compile only not run in dev by default
     compileOnly files("dependencies/Thermos-1.7.10-1614-stripped.jar")
