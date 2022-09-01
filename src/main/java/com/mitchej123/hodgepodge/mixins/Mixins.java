@@ -9,6 +9,11 @@ import java.util.function.Supplier;
 
 public enum Mixins {
     // Vanilla Fixes
+    FIX_INVENTORY_OFFSET_WITH_POTIONS(
+            "minecraft.MixinInventoryEffectRenderer",
+            Side.CLIENT,
+            () -> Hodgepodge.config.fixPotionRenderOffset,
+            TargetedMod.VANILLA),
     FENCE_CONNECTIONS_FIX(
             "minecraft.MixinBlockFence", () -> Hodgepodge.config.fixFenceConnections, TargetedMod.VANILLA),
     CHUNK_COORDINATES_HASHCODE(
@@ -214,7 +219,23 @@ public enum Mixins {
             Side.CLIENT,
             () -> Hodgepodge.config.fixIgnisFruitAABB,
             TargetedMod.HARVESTTHENETHER),
-    ;
+    FIX_BAUBLES_INVENTORY_OFFSET_WITH_POTIONS(
+            "baubles.MixinGuiEvents", Side.CLIENT, () -> Hodgepodge.config.fixPotionRenderOffset, TargetedMod.BAUBLES),
+    FIX_GALACTICRAFT_INVENTORY_OFFSET_WITH_POTIONS(
+            "galacticraftcore.MixinGuiExtendedInventory",
+            Side.CLIENT,
+            () -> Hodgepodge.config.fixPotionRenderOffset,
+            TargetedMod.GALACTICRAFT_CORE),
+    FIX_TINKERS_INVENTORY_OFFSET_WITH_POTIONS(
+            "tconstruct.MixinTabRegistry",
+            Side.CLIENT,
+            () -> Hodgepodge.config.fixPotionRenderOffset,
+            TargetedMod.TINKERSCONSTRUCT),
+    FIX_TRAVELLERSGEAR_INVENTORY_OFFSET_WITH_POTIONS(
+            "travellersgear.MixinClientProxy",
+            Side.CLIENT,
+            () -> Hodgepodge.config.fixPotionRenderOffset,
+            TargetedMod.TRAVELLERSGEAR);
 
     public final List<String> mixinClass;
     private final Supplier<Boolean> applyIf;
