@@ -42,9 +42,11 @@ public class DebugScreenHandler {
             event.right.add(6, "CPU Cores: " + Runtime.getRuntime().availableProcessors());
             event.right.add(7, "OS: " + this.osName + " (" + this.osVersion + ", " + this.osArch + ")");
 
-            if (Hodgepodge.config.speedupAnimations) {
+            if (Hodgepodge.config.speedupAnimations || Hodgepodge.config.renderDebug) {
                 event.right.add(8, null); // Empty Line
                 event.right.add(9, "animationsMode: " + HodgePodgeClient.animationsMode);
+                if (Hodgepodge.config.renderDebug)
+                    event.right.add(9, "renderDebugMode: " + HodgePodgeClient.renderDebugMode);
             }
         }
     }
