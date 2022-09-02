@@ -34,6 +34,7 @@ public class LoadingConfig {
     public boolean fixNorthWestBias;
     public boolean fixPotionEffectRender;
     public boolean fixPotionLimit;
+    public boolean fixPerspectiveCamera;
     public boolean fixHopperVoidingItems;
     public boolean fixHugeChatKick;
     public boolean logHugeChat;
@@ -153,6 +154,12 @@ public class LoadingConfig {
                         "fixes", "fixDimensionChangeHearts", true, "Fix losing bonus hearts on dimension change")
                 .getBoolean();
         fixPotionLimit = config.get("fixes", "fixPotionLimit", true, "Fix potions >= 128")
+                .getBoolean();
+        fixPerspectiveCamera = config.get(
+                        "fixes",
+                        "fixPerspectiveCamera",
+                        true,
+                        "Prevent tall grass and such to affect the perspective camera")
                 .getBoolean();
         fixGlStateBugs = config.get(
                         "fixes",
