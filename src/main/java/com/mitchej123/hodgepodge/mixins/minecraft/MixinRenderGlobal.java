@@ -45,7 +45,8 @@ public class MixinRenderGlobal {
         int renderDebugMode = HodgePodgeClient.renderDebugMode;
         if (renderDebugMode != 0)
             // this should be enough
-            GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_LIGHTING_BIT);
+            GL11.glPushAttrib(
+                    GL11.GL_ENABLE_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_LIGHTING_BIT);
 
         instance.renderTileEntity(j, k);
 
