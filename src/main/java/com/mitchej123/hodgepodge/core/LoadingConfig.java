@@ -66,6 +66,10 @@ public class LoadingConfig {
     public boolean fixNetherLeavesFaceRendering;
     public boolean optimizeASMDataTable;
 
+    // render debug
+    public boolean renderDebug;
+    public int renderDebugMode;
+
     // ASM
     public boolean pollutionAsm;
     public boolean cofhWorldTransformer;
@@ -211,7 +215,7 @@ public class LoadingConfig {
                         "If fancy graphics are enabled, Nether Leaves render sides with other Nether Leaves adjacent too")
                 .getBoolean();
         optimizeASMDataTable = config.get(
-                        "fixes",
+                        "speedups",
                         "optimizeASMDataTable",
                         true,
                         "Optimize ASMDataTable getAnnotationsFor for faster startup")
@@ -321,6 +325,15 @@ public class LoadingConfig {
                         "If using Bukkit/Thermos, the CraftServer package.")
                 .getString();
 
+        renderDebug = config.get(
+                        "debug",
+                        "renderDebug",
+                        true,
+                        "Enable GL state debug hooks. Will not do anything useful unless mode is changed to nonzero.")
+                .getBoolean();
+        renderDebugMode = config.get(
+                        "debug", "renderDebugMode", 0, "Default GL state debug mode. 0 - off, 1 - reduced, 2 - full")
+                .getInt();
         if (config.hasChanged()) config.save();
     }
 

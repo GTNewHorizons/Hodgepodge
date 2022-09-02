@@ -1,5 +1,6 @@
 package com.mitchej123.hodgepodge.core.handlers;
 
+import com.mitchej123.hodgepodge.Hodgepodge;
 import com.mitchej123.hodgepodge.core.HodgePodgeClient;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
@@ -16,12 +17,14 @@ public class ClientKeyListener {
     public void keyUp(InputEvent.KeyInputEvent event) {
         int key = Keyboard.getEventKey();
         boolean released = !Keyboard.getEventKeyState();
-        if (Minecraft.getMinecraft().gameSettings.showDebugInfo
-                && GuiScreen.isShiftKeyDown()
-                && key == Keyboard.KEY_N
-                && released) {
-            HodgePodgeClient.animationsMode =
-                    HodgePodgeClient.animationsMode == 2 ? 0 : ++HodgePodgeClient.animationsMode;
+        if (Minecraft.getMinecraft().gameSettings.showDebugInfo && GuiScreen.isShiftKeyDown() && released) {
+            if (key == Keyboard.KEY_N) {
+                HodgePodgeClient.animationsMode =
+                        HodgePodgeClient.animationsMode == 2 ? 0 : ++HodgePodgeClient.animationsMode;
+            } else if (key == Keyboard.KEY_D && Hodgepodge.config.renderDebug) {
+                HodgePodgeClient.renderDebugMode =
+                        HodgePodgeClient.renderDebugMode == 2 ? 0 : ++HodgePodgeClient.renderDebugMode;
+            }
         }
     }
 }

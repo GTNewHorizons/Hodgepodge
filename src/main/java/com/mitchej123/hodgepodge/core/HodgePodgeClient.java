@@ -16,12 +16,17 @@ public class HodgePodgeClient {
     public static Method colorGrass, colorLiquid, colorLeaves, colorFoliage;
     // 0 - render no animations 1 - render visible animations 2 - render all animations
     public static int animationsMode = 1;
+    // 0 - no debug 1 - reduced 2 - full
+    public static int renderDebugMode = 0;
 
     public static void postInit() {
         colorGrass = References.gt_PollutionRenderer.getMethod("colorGrass").resolve();
         colorLiquid = References.gt_PollutionRenderer.getMethod("colorLiquid").resolve();
         colorLeaves = References.gt_PollutionRenderer.getMethod("colorLeaves").resolve();
         colorFoliage = References.gt_PollutionRenderer.getMethod("colorFoliage").resolve();
+
+        renderDebugMode = Hodgepodge.config.renderDebug ? Hodgepodge.config.renderDebugMode : 0;
+
         if (colorGrass != null) {
             LoadingConfig.postInitClient();
             MinecraftForge.EVENT_BUS.register(LoadingConfig.standardBlocks);
