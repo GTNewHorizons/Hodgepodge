@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
-public class MixinMinecraft {
+public class MixinMinecraft_fixFullscreenResizable {
 
     @Shadow
     private boolean fullscreen;
@@ -21,7 +21,7 @@ public class MixinMinecraft {
     @Inject(
             method = "toggleFullscreen",
             at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/Display;setVSyncEnabled(Z)V", remap = false))
-    private void toggleResizable(CallbackInfo ci) {
+    private void hodgepodge$fixFullscreenResizable(CallbackInfo ci) {
         if (!this.fullscreen && (Util.getOSType() == Util.EnumOS.WINDOWS)) {
             Display.setResizable(false);
             Display.setResizable(true);
