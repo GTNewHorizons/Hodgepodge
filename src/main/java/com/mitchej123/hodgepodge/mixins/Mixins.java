@@ -70,10 +70,10 @@ public enum Mixins {
             Side.CLIENT,
             () -> Hodgepodge.config.fixGlStateBugs,
             TargetedMod.VANILLA),
-    FIX_FULLSCREEN_RESIZABLE(
-            "minecraft.MixinMinecraft_fixFullscreenResizable",
+    FIX_RESIZABLE_FULLSCREEN(
+            "minecraft.MixinMinecraft_ResizableFullscreen",
             Side.CLIENT,
-            () -> Hodgepodge.config.fixFullscreenResizable,
+            () -> Hodgepodge.config.fixResizableFullscreen,
             TargetedMod.VANILLA),
     FIX_UNFOCUSED_FULLSCREEN(
             "minecraft.MixinMinecraft_UnfocusedFullscreen",

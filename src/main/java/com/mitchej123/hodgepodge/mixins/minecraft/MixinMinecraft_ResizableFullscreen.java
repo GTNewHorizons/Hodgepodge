@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
-public class MixinMinecraft_fixFullscreenResizable {
+public class MixinMinecraft_ResizableFullscreen {
 
     @Shadow
     private boolean fullscreen;
