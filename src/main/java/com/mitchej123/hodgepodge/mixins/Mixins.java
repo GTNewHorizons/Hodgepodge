@@ -9,6 +9,8 @@ import java.util.function.Supplier;
 
 public enum Mixins {
     // Vanilla Fixes
+    FIX_PERSPECTIVE_CAMERA(
+            "minecraft.MixinEntityRenderer", () -> Hodgepodge.config.fixPerspectiveCamera, TargetedMod.VANILLA),
     FENCE_CONNECTIONS_FIX(
             "minecraft.MixinBlockFence", () -> Hodgepodge.config.fixFenceConnections, TargetedMod.VANILLA),
     CHUNK_COORDINATES_HASHCODE(
