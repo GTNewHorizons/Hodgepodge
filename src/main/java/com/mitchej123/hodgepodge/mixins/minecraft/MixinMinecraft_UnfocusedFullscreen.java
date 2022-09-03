@@ -9,8 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class MixinMinecraft_UnfocusedFullscreen {
     @Redirect(
             method = "runGameLoop",
-            at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/Display;isActive()Z"),
-            remap = false)
+            at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/Display;isActive()Z", remap = false))
     public boolean hodgepodge$fixUnfocusedFullscreen() {
         return true;
     }
