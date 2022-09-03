@@ -190,10 +190,7 @@ public class LoadingConfig {
                         "Fix game window becoming not resizable after toggling fullscrean in any way")
                 .getBoolean();
         fixUnfocusedFullscreen = config.get(
-                        "fixes",
-                        "fixUnfocusedFullscreen",
-                        true,
-                        "Fix exiting fullscreen when you tab out of the game")
+                        "fixes", "fixUnfocusedFullscreen", true, "Fix exiting fullscreen when you tab out of the game")
                 .getBoolean();
         speedupAnimations = config.get(
                         "fixes",
