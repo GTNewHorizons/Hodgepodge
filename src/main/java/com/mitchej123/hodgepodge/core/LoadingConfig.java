@@ -50,6 +50,7 @@ public class LoadingConfig {
     public boolean installAnchorAlarm;
     public boolean preventPickupLoot;
     public boolean removeUpdateChecks;
+    public boolean tcpNoDelay;
     public boolean speedupChunkCoordinatesHashCode;
     public boolean speedupProgressBar;
     public boolean speedupVanillaFurnace;
@@ -299,6 +300,13 @@ public class LoadingConfig {
                 .getBoolean();
         thirstyTankContainer = config.get(
                         "tweaks", "thirstyTankContainer", true, "Implement container for thirsty tank")
+                .getBoolean();
+
+        tcpNoDelay = config.get(
+                        "speedups",
+                        "tcpNoDelay",
+                        true,
+                        "Sets TCP_NODELAY to true, reducing network latency in multiplayer. Works on server as well as client. From makamys/CoreTweaks")
                 .getBoolean();
 
         speedupChunkCoordinatesHashCode = config.get(

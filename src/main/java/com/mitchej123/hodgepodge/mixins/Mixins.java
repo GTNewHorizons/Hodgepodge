@@ -17,6 +17,7 @@ public enum Mixins {
             "minecraft.MixinChunkCoordinates",
             () -> Hodgepodge.config.speedupChunkCoordinatesHashCode,
             TargetedMod.VANILLA),
+    TCP_NODELAY("minecraft.MixinTcpNoDelay", () -> Hodgepodge.config.tcpNoDelay, TargetedMod.VANILLA),
     WORLD_UNPROTECTED_GET_BLOCK(
             "minecraft.MixinWorldGetBlock", () -> Hodgepodge.config.fixVanillaUnprotectedGetBlock, TargetedMod.VANILLA),
     WORLD_UNPROTECTED_LIGHT_VALUE(
