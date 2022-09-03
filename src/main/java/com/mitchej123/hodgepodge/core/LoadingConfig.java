@@ -333,6 +333,8 @@ public class LoadingConfig {
                 .getBoolean();
         renderDebugMode = config.get(
                         "debug", "renderDebugMode", 0, "Default GL state debug mode. 0 - off, 1 - reduced, 2 - full")
+                .setMinValue(0)
+                .setMaxValue(2)
                 .getInt();
         if (config.hasChanged()) config.save();
     }

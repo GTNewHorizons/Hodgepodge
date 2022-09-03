@@ -19,11 +19,9 @@ public class ClientKeyListener {
         boolean released = !Keyboard.getEventKeyState();
         if (Minecraft.getMinecraft().gameSettings.showDebugInfo && GuiScreen.isShiftKeyDown() && released) {
             if (key == Keyboard.KEY_N) {
-                HodgePodgeClient.animationsMode =
-                        HodgePodgeClient.animationsMode == 2 ? 0 : ++HodgePodgeClient.animationsMode;
+                HodgePodgeClient.animationsMode.next();
             } else if (key == Keyboard.KEY_D && Hodgepodge.config.renderDebug) {
-                HodgePodgeClient.renderDebugMode =
-                        HodgePodgeClient.renderDebugMode == 2 ? 0 : ++HodgePodgeClient.renderDebugMode;
+                HodgePodgeClient.renderDebugMode.next();
             }
         }
     }

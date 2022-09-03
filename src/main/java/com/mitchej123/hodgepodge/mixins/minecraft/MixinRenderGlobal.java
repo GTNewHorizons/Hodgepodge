@@ -1,6 +1,8 @@
 package com.mitchej123.hodgepodge.mixins.minecraft;
 
 import com.mitchej123.hodgepodge.core.HodgePodgeClient;
+import com.mitchej123.hodgepodge.core.HodgePodgeClient.RenderDebugMode;
+import com.mitchej123.hodgepodge.core.util.ManagedEnum;
 import com.mitchej123.hodgepodge.core.util.RenderDebugHelper;
 import java.util.Collections;
 import java.util.Set;
@@ -42,15 +44,15 @@ public class MixinRenderGlobal {
                             target =
                                     "Lnet/minecraft/client/renderer/tileentity/TileEntityRendererDispatcher;renderTileEntity(Lnet/minecraft/tileentity/TileEntity;F)V"))
     public void postTESR(TileEntityRendererDispatcher instance, TileEntity j, float k) {
-        int renderDebugMode = HodgePodgeClient.renderDebugMode;
-        if (renderDebugMode != 0)
+        ManagedEnum<RenderDebugMode> renderDebugMode = HodgePodgeClient.renderDebugMode;
+        if (!renderDebugMode.is(RenderDebugMode.Off))
             // this should be enough
             GL11.glPushAttrib(
                     GL11.GL_ENABLE_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_LIGHTING_BIT);
 
         instance.renderTileEntity(j, k);
 
-        if (renderDebugMode == 0) {
+        if (renderDebugMode.is(RenderDebugMode.Off)) {
             knownIssues.clear();
             return;
         }

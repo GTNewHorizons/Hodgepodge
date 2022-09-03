@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.minecraft.textures.client;
 
 import com.mitchej123.hodgepodge.core.HodgePodgeClient;
+import com.mitchej123.hodgepodge.core.HodgePodgeClient.AnimationMode;
 import com.mitchej123.hodgepodge.core.textures.IPatchedTextureAtlasSprite;
 import java.util.List;
 import net.minecraft.client.Minecraft;
@@ -30,8 +31,8 @@ public abstract class MixinTextureMap extends AbstractTexture {
      */
     @Overwrite
     public void updateAnimations() {
-        boolean renderAllAnimations = HodgePodgeClient.animationsMode == 2;
-        boolean renderVisibleAnimations = HodgePodgeClient.animationsMode == 1;
+        boolean renderAllAnimations = HodgePodgeClient.animationsMode.is(AnimationMode.AnimateAll);
+        boolean renderVisibleAnimations = HodgePodgeClient.animationsMode.is(AnimationMode.AnimateVisible);
 
         mc.mcProfiler.startSection("updateAnimations");
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.getGlTextureId());

@@ -19,6 +19,7 @@ import static org.lwjgl.opengl.GL20.GL_VERTEX_PROGRAM_TWO_SIDE;
 
 import com.google.common.collect.ImmutableMap;
 import com.mitchej123.hodgepodge.core.HodgePodgeClient;
+import com.mitchej123.hodgepodge.core.HodgePodgeClient.RenderDebugMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -154,7 +155,7 @@ public class RenderDebugHelper {
     private static final List<String> errorBuffer = new ArrayList<>(32);
 
     public static void recordGLStates() {
-        if (HodgePodgeClient.renderDebugMode == 1) {
+        if (HodgePodgeClient.renderDebugMode.is(RenderDebugMode.Reduced)) {
             saved_GL_BLEND = GL11.glGetBoolean(GL_BLEND);
             saved_GL_ALPHA_TEST = GL11.glGetBoolean(GL_ALPHA_TEST);
             saved_GL_CULL_FACE = GL11.glGetBoolean(GL_CULL_FACE);
@@ -246,7 +247,7 @@ public class RenderDebugHelper {
 
     public static boolean checkGLStates() {
         errorBuffer.clear();
-        if (HodgePodgeClient.renderDebugMode == 1) {
+        if (HodgePodgeClient.renderDebugMode.is(RenderDebugMode.Reduced)) {
             if (GL11.glGetBoolean(GL_BLEND) != saved_GL_BLEND) errorBuffer.add("GL_BLEND");
             if (GL11.glGetBoolean(GL_ALPHA_TEST) != saved_GL_ALPHA_TEST) errorBuffer.add("GL_ALPHA_TEST");
             if (GL11.glGetBoolean(GL_CULL_FACE) != saved_GL_CULL_FACE) errorBuffer.add("GL_CULL_FACE");

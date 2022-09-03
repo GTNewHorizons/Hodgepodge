@@ -6,6 +6,7 @@ import com.mitchej123.hodgepodge.client.ClientTicker;
 import com.mitchej123.hodgepodge.client.DebugScreenHandler;
 import com.mitchej123.hodgepodge.core.handlers.ClientKeyListener;
 import com.mitchej123.hodgepodge.core.util.ColorOverrideType;
+import com.mitchej123.hodgepodge.core.util.ManagedEnum;
 import cpw.mods.fml.common.FMLCommonHandler;
 import java.lang.reflect.Method;
 import net.minecraft.block.Block;
@@ -14,10 +15,8 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class HodgePodgeClient {
     public static Method colorGrass, colorLiquid, colorLeaves, colorFoliage;
-    // 0 - render no animations 1 - render visible animations 2 - render all animations
-    public static int animationsMode = 1;
-    // 0 - no debug 1 - reduced 2 - full
-    public static int renderDebugMode = 0;
+    public static final ManagedEnum<AnimationMode> animationsMode = new ManagedEnum<>(AnimationMode.AnimateVisible);
+    public static final ManagedEnum<RenderDebugMode> renderDebugMode = new ManagedEnum<>(RenderDebugMode.Reduced);
 
     public static void postInit() {
         colorGrass = References.gt_PollutionRenderer.getMethod("colorGrass").resolve();
@@ -25,7 +24,11 @@ public class HodgePodgeClient {
         colorLeaves = References.gt_PollutionRenderer.getMethod("colorLeaves").resolve();
         colorFoliage = References.gt_PollutionRenderer.getMethod("colorFoliage").resolve();
 
-        renderDebugMode = Hodgepodge.config.renderDebug ? Hodgepodge.config.renderDebugMode : 0;
+        if (Hodgepodge.config.renderDebug) {
+            renderDebugMode.set(Hodgepodge.config.renderDebugMode);
+        } else {
+            renderDebugMode.set(RenderDebugMode.Off);
+        }
 
         if (colorGrass != null) {
             LoadingConfig.postInitClient();
@@ -78,5 +81,17 @@ public class HodgePodgeClient {
         ColorOverrideType type = LoadingConfig.blockVine.matchesID(block);
         if (type == null) return oColor;
         return type.getColor(oColor, x, z);
+    }
+
+    public enum AnimationMode {
+        NoAnimation,
+        AnimateVisible,
+        AnimateAll;
+    }
+
+    public enum RenderDebugMode {
+        Off,
+        Reduced,
+        Full;
     }
 }

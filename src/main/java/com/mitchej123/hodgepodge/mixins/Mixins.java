@@ -100,7 +100,7 @@ public enum Mixins {
             TargetedMod.VANILLA),
     OPTIMIZE_ASMDATATABLE_INDEX(
             "forge.MixinASMDataTable", Side.BOTH, () -> Hodgepodge.config.optimizeASMDataTable, TargetedMod.VANILLA),
-    RENDER_DEBUG("forge.MixinASMDataTable", Side.CLIENT, () -> Hodgepodge.config.renderDebug, TargetedMod.VANILLA),
+    RENDER_DEBUG("minecraft.MixinRenderGlobal", Side.CLIENT, () -> Hodgepodge.config.renderDebug, TargetedMod.VANILLA),
 
     // Potentially obsolete vanilla fixes
     GRASS_GET_BLOCK_FIX(
