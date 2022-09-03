@@ -60,7 +60,8 @@ public class LoadingConfig {
     public boolean fixComponentsPoppingOff;
     public boolean thirstyTankContainer;
     public boolean fixWorldServerLeakingUnloadedEntities;
-    public boolean fixFullscreenResizable;
+    public boolean fixResizableFullscreen;
+    public boolean fixUnfocusedFullscreen;
     public boolean speedupAnimations;
     public boolean fixPotionIterating;
     public boolean fixIgnisFruitAABB;
@@ -190,11 +191,14 @@ public class LoadingConfig {
                         true,
                         "Fix WorldServer leaking entities when no players are present in a dimension")
                 .getBoolean();
-        fixFullscreenResizable = config.get(
+        fixResizableFullscreen = config.get(
                         "fixes",
-                        "fixFullscreenResizable",
+                        "fixResizableFullscreen",
                         true,
                         "Fix game window becoming not resizable after toggling fullscrean in any way")
+                .getBoolean();
+        fixUnfocusedFullscreen = config.get(
+                        "fixes", "fixUnfocusedFullscreen", true, "Fix exiting fullscreen when you tab out of the game")
                 .getBoolean();
         speedupAnimations = config.get(
                         "fixes",
