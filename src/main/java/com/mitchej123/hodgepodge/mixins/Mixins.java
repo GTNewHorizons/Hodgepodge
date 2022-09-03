@@ -82,6 +82,11 @@ public enum Mixins {
             Side.CLIENT,
             () -> Hodgepodge.config.fixUnfocusedFullscreen,
             TargetedMod.VANILLA),
+    ADD_TOGGLE_DEBUG_MESSAGE(
+            "minecraft.MixinMinecraft_ToggleDebugMessage",
+            Side.CLIENT,
+            () -> Hodgepodge.config.addToggleDebugMessage,
+            TargetedMod.VANILLA),
     SPEEDUP_VANILLA_ANIMATIONS(
             () -> Hodgepodge.config.speedupAnimations,
             Side.CLIENT,
