@@ -9,12 +9,12 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 public class MixinInventoryEffectRenderer {
 
     @ModifyConstant(method = "initGui", constant = @Constant(intValue = 160, ordinal = 0))
-    public int Hodgepodge$fixPotionOffset1(int i) {
+    public int hodgepodge$fixPotionOffset1(int i) {
         return 0;
     }
 
     @ModifyConstant(method = "initGui", constant = @Constant(intValue = 200, ordinal = 0))
-    public int Hodgepodge$fixPotionOffset2(int i) {
+    public int hodgepodge$fixPotionOffset2(int i) {
         return 0;
     }
 }

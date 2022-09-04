@@ -16,7 +16,7 @@ public class MixinTabRegistry {
                             target = "Ltconstruct/client/tabs/TabRegistry;getPotionOffset()I",
                             remap = false),
             remap = false)
-    public int Hodgepodge$fixPotionOffset() {
+    public int hodgepodge$fixPotionOffset() {
         return 0;
     }
 }

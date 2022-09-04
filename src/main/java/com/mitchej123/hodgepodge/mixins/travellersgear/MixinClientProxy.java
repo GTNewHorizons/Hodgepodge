@@ -13,7 +13,7 @@ public class MixinClientProxy {
             method = "guiPostInit",
             at = @At(value = "INVOKE", target = "Ljava/util/Collection;isEmpty()Z", remap = false),
             remap = false)
-    public boolean Hodgepodge$fixPotionOffset(@SuppressWarnings("rawtypes") Collection instance) {
+    public boolean hodgepodge$fixPotionOffset(@SuppressWarnings("rawtypes") Collection instance) {
         return true;
     }
 }

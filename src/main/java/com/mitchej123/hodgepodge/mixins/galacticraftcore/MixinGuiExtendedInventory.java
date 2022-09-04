@@ -16,7 +16,7 @@ public class MixinGuiExtendedInventory {
                             target =
                                     "Lmicdoodle8/mods/galacticraft/core/client/gui/container/GuiExtendedInventory;getPotionOffset()I",
                             remap = false))
-    public int Hodgepodge$fixPotionOffset1(GuiExtendedInventory instance) {
+    public int hodgepodge$fixPotionOffset1(GuiExtendedInventory instance) {
         return 0;
     }
 
@@ -28,7 +28,7 @@ public class MixinGuiExtendedInventory {
                             target =
                                     "Lmicdoodle8/mods/galacticraft/core/client/gui/container/GuiExtendedInventory;getPotionOffsetNEI()I",
                             remap = false))
-    public int Hodgepodge$fixPotionOffset2(GuiExtendedInventory instance) {
+    public int hodgepodge$fixPotionOffset2(GuiExtendedInventory instance) {
         return 0;
     }
 }
