@@ -226,11 +226,6 @@ public enum Mixins {
             Side.CLIENT,
             () -> Hodgepodge.config.fixPotionRenderOffset,
             TargetedMod.GALACTICRAFT_CORE),
-    FIX_TINKERS_INVENTORY_OFFSET_WITH_POTIONS(
-            "tconstruct.MixinTabRegistry",
-            Side.CLIENT,
-            () -> Hodgepodge.config.fixPotionRenderOffset,
-            TargetedMod.TINKERSCONSTRUCT),
     FIX_TRAVELLERSGEAR_INVENTORY_OFFSET_WITH_POTIONS(
             "travellersgear.MixinClientProxy",
             Side.CLIENT,

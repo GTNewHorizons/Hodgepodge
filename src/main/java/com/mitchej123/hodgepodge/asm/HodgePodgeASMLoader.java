@@ -15,7 +15,8 @@ import org.apache.logging.log4j.Logger;
 @IFMLLoadingPlugin.TransformerExclusions({"com.mitchej123.hodgepodge.asm", "optifine"})
 @IFMLLoadingPlugin.SortingIndex(1002)
 @IFMLLoadingPlugin.DependsOn("cofh.asm.LoadingPlugin")
-public class HodgePodgeASMLoader implements IFMLLoadingPlugin {
+public class HodgePodgeASMLoader
+        implements IFMLLoadingPlugin { // TODO move the Transformers to the asm.transformers package
     private static final Logger log = LogManager.getLogger("Hodgepodge");
     public static final SortingIndex index =
             HodgePodgeASMLoader.class.getAnnotation(IFMLLoadingPlugin.SortingIndex.class);
@@ -41,6 +42,11 @@ public class HodgePodgeASMLoader implements IFMLLoadingPlugin {
                 "Move vanilla potion effect status rendering before everything else",
                 () -> Hodgepodge.config.fixPotionEffectRender,
                 Collections.singletonList("com.mitchej123.hodgepodge.asm.InventoryEffectRendererTransformer")),
+        FIX_TINKER_POTION_EFFECT_OFFSET(
+                "Prevents the inventory from shifting when the player has active potion effects",
+                () -> Hodgepodge.config.fixPotionRenderOffset,
+                Collections.singletonList(
+                        "com.mitchej123.hodgepodge.asm.transformers.tconstruct.TabRegistryTransformer")),
         THERMOS_SLEDGEHAMMER_FURNACE_FIX(
                 "Take a sledgehammer to CraftServer.resetRecipes() to prevent it from breaking our Furnace Fix",
                 () -> Hodgepodge.thermosTainted && Hodgepodge.config.speedupVanillaFurnace,

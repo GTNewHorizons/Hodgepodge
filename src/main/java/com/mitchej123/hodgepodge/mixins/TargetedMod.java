@@ -16,7 +16,6 @@ public enum TargetedMod {
     HARVESTTHENETHER("harvestthenether", "Pam's Harvest the Nether"),
     GALACTICRAFT_CORE("GalacticraftCore", "Galacticraft"),
     BAUBLES("Baubles", "Baubles"),
-    TINKERSCONSTRUCT("TConstruct", "TConstruct", "TinkersConstruct"),
     TRAVELLERSGEAR("TravellersGear", "TravellersGear"),
     // Temporary solution to force load it early
     GTNHLIB("GTNHLib", "gtnhlib"),
