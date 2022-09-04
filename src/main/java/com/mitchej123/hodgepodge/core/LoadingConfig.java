@@ -63,6 +63,7 @@ public class LoadingConfig {
     public boolean fixWorldServerLeakingUnloadedEntities;
     public boolean fixResizableFullscreen;
     public boolean fixUnfocusedFullscreen;
+    public boolean addToggleDebugMessage;
     public boolean speedupAnimations;
     public boolean fixPotionIterating;
     public boolean fixIgnisFruitAABB;
@@ -200,6 +201,12 @@ public class LoadingConfig {
                 .getBoolean();
         fixUnfocusedFullscreen = config.get(
                         "fixes", "fixUnfocusedFullscreen", true, "Fix exiting fullscreen when you tab out of the game")
+                .getBoolean();
+        addToggleDebugMessage = config.get(
+                        "tweaks",
+                        "addToggleDebugMessage",
+                        true,
+                        "Add a debug message in the chat when toggling vanilla debug options")
                 .getBoolean();
         speedupAnimations = config.get(
                         "fixes",
