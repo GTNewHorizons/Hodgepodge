@@ -33,6 +33,7 @@ public class LoadingConfig {
     public boolean fixIc2UnprotectedGetBlock;
     public boolean fixNorthWestBias;
     public boolean fixPotionEffectRender;
+    public boolean fixPotionRenderOffset;
     public boolean fixPotionLimit;
     public boolean fixPerspectiveCamera;
     public boolean fixHopperVoidingItems;
@@ -50,6 +51,7 @@ public class LoadingConfig {
     public boolean installAnchorAlarm;
     public boolean preventPickupLoot;
     public boolean removeUpdateChecks;
+    public boolean tcpNoDelay;
     public boolean speedupChunkCoordinatesHashCode;
     public boolean speedupProgressBar;
     public boolean speedupVanillaFurnace;
@@ -68,6 +70,10 @@ public class LoadingConfig {
     public boolean fixIgnisFruitAABB;
     public boolean fixNetherLeavesFaceRendering;
     public boolean optimizeASMDataTable;
+
+    // render debug
+    public boolean renderDebug;
+    public int renderDebugMode;
 
     // ASM
     public boolean pollutionAsm;
@@ -229,7 +235,7 @@ public class LoadingConfig {
                         "If fancy graphics are enabled, Nether Leaves render sides with other Nether Leaves adjacent too")
                 .getBoolean();
         optimizeASMDataTable = config.get(
-                        "fixes",
+                        "speedups",
                         "optimizeASMDataTable",
                         true,
                         "Optimize ASMDataTable getAnnotationsFor for faster startup")
@@ -248,6 +254,12 @@ public class LoadingConfig {
                         "fixPotionEffectRender",
                         true,
                         "Fix vanilla potion effects rendering above the NEI tooltips in the inventory")
+                .getBoolean();
+        fixPotionRenderOffset = config.get(
+                        "tweaks",
+                        "fixPotionRenderOffset",
+                        true,
+                        "Prevents the inventory from shifting when the player has active potion effects")
                 .getBoolean();
         installAnchorAlarm = config.get(
                         "tweaks", "installAnchorAlarm", true, "Wake up passive & personal anchors on player login")
@@ -308,6 +320,13 @@ public class LoadingConfig {
                         "tweaks", "thirstyTankContainer", true, "Implement container for thirsty tank")
                 .getBoolean();
 
+        tcpNoDelay = config.get(
+                        "speedups",
+                        "tcpNoDelay",
+                        true,
+                        "Sets TCP_NODELAY to true, reducing network latency in multiplayer. Works on server as well as client. From makamys/CoreTweaks")
+                .getBoolean();
+
         speedupChunkCoordinatesHashCode = config.get(
                         "speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode")
                 .getBoolean();
@@ -339,6 +358,17 @@ public class LoadingConfig {
                         "If using Bukkit/Thermos, the CraftServer package.")
                 .getString();
 
+        renderDebug = config.get(
+                        "debug",
+                        "renderDebug",
+                        true,
+                        "Enable GL state debug hooks. Will not do anything useful unless mode is changed to nonzero.")
+                .getBoolean();
+        renderDebugMode = config.get(
+                        "debug", "renderDebugMode", 0, "Default GL state debug mode. 0 - off, 1 - reduced, 2 - full")
+                .setMinValue(0)
+                .setMaxValue(2)
+                .getInt();
         if (config.hasChanged()) config.save();
     }
 
