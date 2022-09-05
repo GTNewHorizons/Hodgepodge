@@ -9,13 +9,13 @@ import java.util.function.Supplier;
 
 public enum Mixins {
     // Vanilla Fixes
+    FENCE_CONNECTIONS_FIX(
+            "minecraft.MixinBlockFence", () -> Hodgepodge.config.fixFenceConnections, TargetedMod.VANILLA),
     FIX_INVENTORY_OFFSET_WITH_POTIONS(
             "minecraft.MixinInventoryEffectRenderer",
             Side.CLIENT,
             () -> Hodgepodge.config.fixPotionRenderOffset,
             TargetedMod.VANILLA),
-    FENCE_CONNECTIONS_FIX(
-            "minecraft.MixinBlockFence", () -> Hodgepodge.config.fixFenceConnections, TargetedMod.VANILLA),
     CHUNK_COORDINATES_HASHCODE(
             "minecraft.MixinChunkCoordinates",
             () -> Hodgepodge.config.speedupChunkCoordinatesHashCode,
