@@ -6,6 +6,7 @@ import com.mitchej123.hodgepodge.client.ClientTicker;
 import com.mitchej123.hodgepodge.client.DebugScreenHandler;
 import com.mitchej123.hodgepodge.core.handlers.ClientKeyListener;
 import com.mitchej123.hodgepodge.core.util.ColorOverrideType;
+import com.mitchej123.hodgepodge.core.util.ManagedEnum;
 import cpw.mods.fml.common.FMLCommonHandler;
 import java.lang.reflect.Method;
 import net.minecraft.block.Block;
@@ -14,14 +15,21 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class HodgePodgeClient {
     public static Method colorGrass, colorLiquid, colorLeaves, colorFoliage;
-    // 0 - render no animations 1 - render visible animations 2 - render all animations
-    public static int animationsMode = 1;
+    public static final ManagedEnum<AnimationMode> animationsMode = new ManagedEnum<>(AnimationMode.VISIBLE_ONLY);
+    public static final ManagedEnum<RenderDebugMode> renderDebugMode = new ManagedEnum<>(RenderDebugMode.REDUCED);
 
     public static void postInit() {
         colorGrass = References.gt_PollutionRenderer.getMethod("colorGrass").resolve();
         colorLiquid = References.gt_PollutionRenderer.getMethod("colorLiquid").resolve();
         colorLeaves = References.gt_PollutionRenderer.getMethod("colorLeaves").resolve();
         colorFoliage = References.gt_PollutionRenderer.getMethod("colorFoliage").resolve();
+
+        if (Hodgepodge.config.renderDebug) {
+            renderDebugMode.set(Hodgepodge.config.renderDebugMode);
+        } else {
+            renderDebugMode.set(RenderDebugMode.OFF);
+        }
+
         if (colorGrass != null) {
             LoadingConfig.postInitClient();
             MinecraftForge.EVENT_BUS.register(LoadingConfig.standardBlocks);
@@ -73,5 +81,17 @@ public class HodgePodgeClient {
         ColorOverrideType type = LoadingConfig.blockVine.matchesID(block);
         if (type == null) return oColor;
         return type.getColor(oColor, x, z);
+    }
+
+    public enum AnimationMode {
+        NONE,
+        VISIBLE_ONLY,
+        ALL;
+    }
+
+    public enum RenderDebugMode {
+        OFF,
+        REDUCED,
+        FULL;
     }
 }
