@@ -15,8 +15,7 @@ public abstract class MixinInventoryEffectRenderer_PotionEffectRendering extends
     private boolean field_147045_u;
 
     @Shadow
-    private void func_147044_g() {
-    }
+    private void func_147044_g() {}
 
     /**
      * @author Alexdoru
@@ -41,5 +40,4 @@ public abstract class MixinInventoryEffectRenderer_PotionEffectRendering extends
     public MixinInventoryEffectRenderer_PotionEffectRendering(Container p_i1089_1_) {
         super(p_i1089_1_);
     }
-
 }
