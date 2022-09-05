@@ -33,6 +33,7 @@ public class LoadingConfig {
     public boolean fixIc2UnprotectedGetBlock;
     public boolean fixNorthWestBias;
     public boolean fixPotionEffectRender;
+    public boolean fixPotionRenderOffset;
     public boolean fixPotionLimit;
     public boolean fixPerspectiveCamera;
     public boolean fixHopperVoidingItems;
@@ -253,6 +254,12 @@ public class LoadingConfig {
                         "fixPotionEffectRender",
                         true,
                         "Fix vanilla potion effects rendering above the NEI tooltips in the inventory")
+                .getBoolean();
+        fixPotionRenderOffset = config.get(
+                        "tweaks",
+                        "fixPotionRenderOffset",
+                        true,
+                        "Prevents the inventory from shifting when the player has active potion effects")
                 .getBoolean();
         installAnchorAlarm = config.get(
                         "tweaks", "installAnchorAlarm", true, "Wake up passive & personal anchors on player login")

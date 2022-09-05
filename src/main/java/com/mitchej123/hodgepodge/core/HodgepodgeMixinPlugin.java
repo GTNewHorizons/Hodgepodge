@@ -85,7 +85,9 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
                 Hodgepodge.log.info("Jar not found for " + mod);
                 return false;
             }
-
+            // TODO it loads the wrong .jar for certain mods that contains the same same
+            //  for instance with TargetedMod = TINKERSCONSTRUCT("TConstruct", "TConstruct", "TinkersConstruct")
+            //  it loads IguanaTweaksTConstruct-1.7.10-2.2.2.jar instead
             Hodgepodge.log.info("Attempting to add " + jar + " to the URL Class Path");
             if (!jar.exists()) {
                 throw new FileNotFoundException(jar.toString());
