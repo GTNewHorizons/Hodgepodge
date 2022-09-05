@@ -14,7 +14,7 @@ public enum Mixins {
     FENCE_CONNECTIONS_FIX(
             "minecraft.MixinBlockFence", () -> Hodgepodge.config.fixFenceConnections, TargetedMod.VANILLA),
     FIX_INVENTORY_OFFSET_WITH_POTIONS(
-            "minecraft.MixinInventoryEffectRenderer",
+            "minecraft.MixinInventoryEffectRenderer_CenterInventory",
             Side.CLIENT,
             () -> Hodgepodge.config.fixPotionRenderOffset,
             TargetedMod.VANILLA),
@@ -298,6 +298,6 @@ public enum Mixins {
     enum Side {
         BOTH,
         CLIENT,
-        SERVER;
+        SERVER
     }
 }
