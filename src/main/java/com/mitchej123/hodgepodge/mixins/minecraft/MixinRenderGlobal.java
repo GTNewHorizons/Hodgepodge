@@ -45,14 +45,14 @@ public class MixinRenderGlobal {
                                     "Lnet/minecraft/client/renderer/tileentity/TileEntityRendererDispatcher;renderTileEntity(Lnet/minecraft/tileentity/TileEntity;F)V"))
     public void postTESR(TileEntityRendererDispatcher instance, TileEntity j, float k) {
         ManagedEnum<RenderDebugMode> renderDebugMode = HodgePodgeClient.renderDebugMode;
-        if (!renderDebugMode.is(RenderDebugMode.Off))
+        if (!renderDebugMode.is(RenderDebugMode.OFF))
             // this should be enough
             GL11.glPushAttrib(
                     GL11.GL_ENABLE_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_LIGHTING_BIT);
 
         instance.renderTileEntity(j, k);
 
-        if (renderDebugMode.is(RenderDebugMode.Off)) {
+        if (renderDebugMode.is(RenderDebugMode.OFF)) {
             knownIssues.clear();
             return;
         }

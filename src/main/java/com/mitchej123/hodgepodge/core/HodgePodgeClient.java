@@ -15,8 +15,8 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class HodgePodgeClient {
     public static Method colorGrass, colorLiquid, colorLeaves, colorFoliage;
-    public static final ManagedEnum<AnimationMode> animationsMode = new ManagedEnum<>(AnimationMode.AnimateVisible);
-    public static final ManagedEnum<RenderDebugMode> renderDebugMode = new ManagedEnum<>(RenderDebugMode.Reduced);
+    public static final ManagedEnum<AnimationMode> animationsMode = new ManagedEnum<>(AnimationMode.VISIBLE_ONLY);
+    public static final ManagedEnum<RenderDebugMode> renderDebugMode = new ManagedEnum<>(RenderDebugMode.REDUCED);
 
     public static void postInit() {
         colorGrass = References.gt_PollutionRenderer.getMethod("colorGrass").resolve();
@@ -27,7 +27,7 @@ public class HodgePodgeClient {
         if (Hodgepodge.config.renderDebug) {
             renderDebugMode.set(Hodgepodge.config.renderDebugMode);
         } else {
-            renderDebugMode.set(RenderDebugMode.Off);
+            renderDebugMode.set(RenderDebugMode.OFF);
         }
 
         if (colorGrass != null) {
@@ -84,14 +84,14 @@ public class HodgePodgeClient {
     }
 
     public enum AnimationMode {
-        NoAnimation,
-        AnimateVisible,
-        AnimateAll;
+        NONE,
+        VISIBLE_ONLY,
+        ALL;
     }
 
     public enum RenderDebugMode {
-        Off,
-        Reduced,
-        Full;
+        OFF,
+        REDUCED,
+        FULL;
     }
 }

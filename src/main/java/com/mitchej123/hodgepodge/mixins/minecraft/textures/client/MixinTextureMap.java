@@ -31,8 +31,8 @@ public abstract class MixinTextureMap extends AbstractTexture {
      */
     @Overwrite
     public void updateAnimations() {
-        boolean renderAllAnimations = HodgePodgeClient.animationsMode.is(AnimationMode.AnimateAll);
-        boolean renderVisibleAnimations = HodgePodgeClient.animationsMode.is(AnimationMode.AnimateVisible);
+        boolean renderAllAnimations = HodgePodgeClient.animationsMode.is(AnimationMode.ALL);
+        boolean renderVisibleAnimations = HodgePodgeClient.animationsMode.is(AnimationMode.VISIBLE_ONLY);
 
         mc.mcProfiler.startSection("updateAnimations");
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.getGlTextureId());

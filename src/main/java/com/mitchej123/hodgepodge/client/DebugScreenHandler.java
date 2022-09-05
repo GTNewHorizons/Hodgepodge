@@ -44,7 +44,8 @@ public class DebugScreenHandler {
 
             if (Hodgepodge.config.speedupAnimations || Hodgepodge.config.renderDebug) {
                 event.right.add(8, null); // Empty Line
-                event.right.add(9, "animationsMode: " + HodgePodgeClient.animationsMode);
+                if (Hodgepodge.config.speedupAnimations)
+                    event.right.add(9, "animationsMode: " + HodgePodgeClient.animationsMode);
                 if (Hodgepodge.config.renderDebug)
                     event.right.add(9, "renderDebugMode: " + HodgePodgeClient.renderDebugMode);
             }
