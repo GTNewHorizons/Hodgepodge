@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(InventoryEffectRenderer.class)
-public abstract class MixinInventoryEffectRenderer_CenterInventory extends GuiContainer {
+public abstract class MixinInventoryEffectRenderer_PotionOffset extends GuiContainer {
 
     @Redirect(
             method = "initGui",
@@ -23,7 +23,7 @@ public abstract class MixinInventoryEffectRenderer_CenterInventory extends GuiCo
     }
 
     /*Forced to have constructor matching super*/
-    public MixinInventoryEffectRenderer_CenterInventory(Container p_i1072_1_) {
+    public MixinInventoryEffectRenderer_PotionOffset(Container p_i1072_1_) {
         super(p_i1072_1_);
     }
 }
