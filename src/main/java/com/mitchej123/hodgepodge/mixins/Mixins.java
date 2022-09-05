@@ -18,6 +18,11 @@ public enum Mixins {
             Side.CLIENT,
             () -> Hodgepodge.config.fixPotionRenderOffset,
             TargetedMod.VANILLA),
+    FIX_POTION_EFFECT_RENDERING(
+            "minecraft.MixinInventoryEffectRenderer_PotionEffectRendering",
+            Side.CLIENT,
+            () -> Hodgepodge.config.fixPotionEffectRender,
+            TargetedMod.VANILLA),
     CHUNK_COORDINATES_HASHCODE(
             "minecraft.MixinChunkCoordinates",
             () -> Hodgepodge.config.speedupChunkCoordinatesHashCode,
