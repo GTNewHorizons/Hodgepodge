@@ -26,7 +26,14 @@ public class TabRegistryTransformer implements IClassTransformer {
                                 && insnNode.getOpcode() == Opcodes.INVOKESTATIC
                                 && ((MethodInsnNode) insnNode).name.equals("getPotionOffset")
                                 && ((MethodInsnNode) insnNode).desc.equals("()I")) {
-                            m.instructions.insert(insnNode, new InsnNode(Opcodes.ICONST_0));
+                            m.instructions.insert(
+                                    insnNode,
+                                    new MethodInsnNode(
+                                            Opcodes.INVOKESTATIC,
+                                            "com/mitchej123/hodgepodge/asm/hooks/tconstruct/TabRegistryHook",
+                                            "fixPotionOffset",
+                                            "()I",
+                                            false));
                             m.instructions.remove(insnNode);
                         }
                     }
