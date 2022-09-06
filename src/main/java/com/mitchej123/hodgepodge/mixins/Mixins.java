@@ -14,9 +14,14 @@ public enum Mixins {
     FENCE_CONNECTIONS_FIX(
             "minecraft.MixinBlockFence", () -> Hodgepodge.config.fixFenceConnections, TargetedMod.VANILLA),
     FIX_INVENTORY_OFFSET_WITH_POTIONS(
-            "minecraft.MixinInventoryEffectRenderer",
+            "minecraft.MixinInventoryEffectRenderer_PotionOffset",
             Side.CLIENT,
             () -> Hodgepodge.config.fixPotionRenderOffset,
+            TargetedMod.VANILLA),
+    FIX_POTION_EFFECT_RENDERING(
+            "minecraft.MixinInventoryEffectRenderer_PotionEffectRendering",
+            Side.CLIENT,
+            () -> Hodgepodge.config.fixPotionEffectRender,
             TargetedMod.VANILLA),
     CHUNK_COORDINATES_HASHCODE(
             "minecraft.MixinChunkCoordinates",
@@ -293,6 +298,6 @@ public enum Mixins {
     enum Side {
         BOTH,
         CLIENT,
-        SERVER;
+        SERVER
     }
 }

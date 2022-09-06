@@ -38,10 +38,6 @@ public class HodgePodgeASMLoader
                 "Speed up Progress Bar by speeding up stripSpecialCharacters",
                 () -> Hodgepodge.config.speedupProgressBar,
                 Collections.singletonList("com.mitchej123.hodgepodge.asm.SpeedupProgressBarTransformer")),
-        FIX_POTION_EFFECT_RENDERING(
-                "Fix vanilla potion effects rendering above the NEI tooltips in the inventory",
-                () -> Hodgepodge.config.fixPotionEffectRender,
-                Collections.singletonList("com.mitchej123.hodgepodge.asm.InventoryEffectRendererTransformer")),
         FIX_TINKER_POTION_EFFECT_OFFSET(
                 "Prevents the inventory from shifting when the player has active potion effects",
                 () -> Hodgepodge.config.fixPotionRenderOffset,
