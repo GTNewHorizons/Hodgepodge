@@ -242,10 +242,10 @@ public class LoadingConfig {
                         "Optimize ASMDataTable getAnnotationsFor for faster startup")
                 .getBoolean();
         squashBedErrorMessage = config.get(
-                "fixes",
-                "squashBedErrorMessage",
-                true,
-                "Stop \"You can only sleep at night\" message filling the chat")
+                        "fixes",
+                        "squashBedErrorMessage",
+                        true,
+                        "Stop \"You can only sleep at night\" message filling the chat")
                 .getBoolean();
 
         increaseParticleLimit = config.get("tweaks", "increaseParticleLimit", true, "Increase particle limit")
