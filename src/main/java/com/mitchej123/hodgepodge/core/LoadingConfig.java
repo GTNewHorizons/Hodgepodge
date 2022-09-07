@@ -70,6 +70,7 @@ public class LoadingConfig {
     public boolean fixIgnisFruitAABB;
     public boolean fixNetherLeavesFaceRendering;
     public boolean optimizeASMDataTable;
+    public boolean squashBedErrorMessage;
 
     // render debug
     public boolean renderDebug;
@@ -239,6 +240,12 @@ public class LoadingConfig {
                         "optimizeASMDataTable",
                         true,
                         "Optimize ASMDataTable getAnnotationsFor for faster startup")
+                .getBoolean();
+        squashBedErrorMessage = config.get(
+                "fixes",
+                "squashBedErrorMessage",
+                true,
+                "Stop \"You can only sleep at night\" message filling the chat")
                 .getBoolean();
 
         increaseParticleLimit = config.get("tweaks", "increaseParticleLimit", true, "Increase particle limit")

@@ -123,6 +123,7 @@ public enum Mixins {
             TargetedMod.VANILLA),
     OPTIMIZE_ASMDATATABLE_INDEX(
             "forge.MixinASMDataTable", Side.BOTH, () -> Hodgepodge.config.optimizeASMDataTable, TargetedMod.VANILLA),
+    SQUASH_BED_ERROR_MESSAGE("minecraft.MixinNetHandlePlayClient", Side.CLIENT, () -> Hodgepodge.config.squashBedErrorMessage, TargetedMod.VANILLA),
     RENDER_DEBUG("minecraft.MixinRenderGlobal", Side.CLIENT, () -> Hodgepodge.config.renderDebug, TargetedMod.VANILLA),
 
     // Potentially obsolete vanilla fixes
