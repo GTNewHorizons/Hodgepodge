@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(value = NetHandlerPlayClient.class)
 public class MixinNetHandlePlayClient {
 
+    private static final int randomChannel = 43284;
+
     @Shadow
     private Minecraft gameController;
 
@@ -27,7 +29,10 @@ public class MixinNetHandlePlayClient {
             if (event.message.equals(new ChatComponentTranslation("tile.bed.noSleep", new Object[0]))
                     || event.message.equals(new ChatComponentTranslation("tile.bed.notSafe", new Object[0]))
                     || event.message.equals(new ChatComponentTranslation("tile.bed.occupied", new Object[0]))) {
-                this.gameController.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(event.message, 3);
+                this.gameController
+                        .ingameGUI
+                        .getChatGUI()
+                        .printChatMessageWithOptionalDeletion(event.message, randomChannel);
             } else {
                 this.gameController.ingameGUI.getChatGUI().printChatMessage(event.message);
             }
