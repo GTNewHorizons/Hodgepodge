@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 
 public enum Mixins {
     // Vanilla Fixes
+    FIX_SAW_ICE_BREAK("minecraft.MixinBlockIce", () -> true, TargetedMod.VANILLA),
     FIX_PERSPECTIVE_CAMERA(
             "minecraft.MixinEntityRenderer", () -> Hodgepodge.config.fixPerspectiveCamera, TargetedMod.VANILLA),
     FENCE_CONNECTIONS_FIX(
