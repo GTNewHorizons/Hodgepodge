@@ -36,6 +36,7 @@ public class LoadingConfig {
     public boolean fixPotionRenderOffset;
     public boolean fixPotionLimit;
     public boolean fixPerspectiveCamera;
+    public boolean fixDebugBoundingBox;
     public boolean fixHopperVoidingItems;
     public boolean fixHugeChatKick;
     public boolean logHugeChat;
@@ -169,6 +170,9 @@ public class LoadingConfig {
                         "fixPerspectiveCamera",
                         true,
                         "Prevent tall grass and such to affect the perspective camera")
+                .getBoolean();
+        fixDebugBoundingBox = config.get(
+                        "fixes", "fixDebugBoundingBox", true, "Fixes the debug hitbox of the player beeing offset")
                 .getBoolean();
         fixGlStateBugs = config.get(
                         "fixes",
