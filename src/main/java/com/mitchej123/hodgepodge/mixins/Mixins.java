@@ -124,7 +124,11 @@ public enum Mixins {
     OPTIMIZE_ASMDATATABLE_INDEX(
             "forge.MixinASMDataTable", Side.BOTH, () -> Hodgepodge.config.optimizeASMDataTable, TargetedMod.VANILLA),
     RENDER_DEBUG("minecraft.MixinRenderGlobal", Side.CLIENT, () -> Hodgepodge.config.renderDebug, TargetedMod.VANILLA),
-    STATIC_LAN_PORT("minecraft.server.MixinHttpUtil", Side.CLIENT, () -> Hodgepodge.config.enableDefaultLanPort, TargetedMod.VANILLA),
+    STATIC_LAN_PORT(
+            "minecraft.server.MixinHttpUtil",
+            Side.CLIENT,
+            () -> Hodgepodge.config.enableDefaultLanPort,
+            TargetedMod.VANILLA),
 
     // Potentially obsolete vanilla fixes
     GRASS_GET_BLOCK_FIX(

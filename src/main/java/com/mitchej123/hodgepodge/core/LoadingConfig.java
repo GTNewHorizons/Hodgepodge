@@ -323,16 +323,14 @@ public class LoadingConfig {
         thirstyTankContainer = config.get(
                         "tweaks", "thirstyTankContainer", true, "Implement container for thirsty tank")
                 .getBoolean();
-        enableDefaultLanPort = config.get("tweaks",
-                "enableDefaultLanPort",
-                true,
-                "Open an integrated server on a static port.")
+        enableDefaultLanPort = config.get(
+                        "tweaks", "enableDefaultLanPort", true, "Open an integrated server on a static port.")
                 .getBoolean();
         defaultLanPort = config.get(
-                "tweaks",
-                "defaultLanPort",
-                25565,
-                "Specify default LAN port to open an integrated server on. Set to 0 to always open the server on an automatically allocated port.")
+                        "tweaks",
+                        "defaultLanPort",
+                        25565,
+                        "Specify default LAN port to open an integrated server on. Set to 0 to always open the server on an automatically allocated port.")
                 .getInt();
 
         tcpNoDelay = config.get(
