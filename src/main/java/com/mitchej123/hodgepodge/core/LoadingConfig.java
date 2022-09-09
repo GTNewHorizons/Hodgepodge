@@ -36,6 +36,7 @@ public class LoadingConfig {
     public boolean fixPotionRenderOffset;
     public boolean fixPotionLimit;
     public boolean fixPerspectiveCamera;
+    public boolean fixImmobileFireballs;
     public boolean fixHopperVoidingItems;
     public boolean fixHugeChatKick;
     public boolean logHugeChat;
@@ -169,6 +170,12 @@ public class LoadingConfig {
                         "fixPerspectiveCamera",
                         true,
                         "Prevent tall grass and such to affect the perspective camera")
+                .getBoolean();
+        fixImmobileFireballs = config.get(
+                        "fixes",
+                        "fixImmobileFireballs",
+                        true,
+                        "Fix the bug that makes fireballs stop moving when chunk unloads")
                 .getBoolean();
         fixGlStateBugs = config.get(
                         "fixes",

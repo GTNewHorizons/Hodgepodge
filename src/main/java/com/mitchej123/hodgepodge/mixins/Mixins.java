@@ -11,6 +11,8 @@ public enum Mixins {
     // Vanilla Fixes
     FIX_PERSPECTIVE_CAMERA(
             "minecraft.MixinEntityRenderer", () -> Hodgepodge.config.fixPerspectiveCamera, TargetedMod.VANILLA),
+    FIX_IMMOBILE_FIREBALLS(
+            "minecraft.MixinEntityFireball", ()-> Hodgepodge.config.fixImmobileFireballs, TargetedMod.VANILLA),
     FENCE_CONNECTIONS_FIX(
             "minecraft.MixinBlockFence", () -> Hodgepodge.config.fixFenceConnections, TargetedMod.VANILLA),
     FIX_INVENTORY_OFFSET_WITH_POTIONS(
