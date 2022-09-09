@@ -144,7 +144,7 @@ public class LoadingConfig {
                         "fixes",
                         "fixGTSawSpawningWaterWithIceBLock",
                         true,
-                        "Fixes GT bug that spawns a water block after breaking an ice block with a GT Saw")
+                        "Fixes GT bug that spawns a water source after breaking an ice block with a GT Saw")
                 .getBoolean();
         fixHungerOverhaul = config.get("fixes", "fixHungerOverhaul", true, "Fix hunger overhaul low stat effects")
                 .getBoolean();
