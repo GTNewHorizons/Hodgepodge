@@ -14,15 +14,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(EntityFireball.class)
 public abstract class MixinEntityFireball extends Entity {
 
-    @Shadow public double accelerationX;
+    @Shadow
+    public double accelerationX;
 
-    @Shadow public double accelerationY;
+    @Shadow
+    public double accelerationY;
 
-    @Shadow public double accelerationZ;
+    @Shadow
+    public double accelerationZ;
 
     @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
     public void hodgepodge$writeFireballAcceleration(NBTTagCompound p_70014_1_, CallbackInfo ci) {
-        p_70014_1_.setTag("acceleration", this.newDoubleNBTList(this.accelerationX, this.accelerationY, this.accelerationZ));
+        p_70014_1_.setTag(
+                "acceleration", this.newDoubleNBTList(this.accelerationX, this.accelerationY, this.accelerationZ));
     }
 
     @Inject(method = "readEntityFromNBT", at = @At(value = "TAIL"))
@@ -41,5 +45,4 @@ public abstract class MixinEntityFireball extends Entity {
     public MixinEntityFireball(World p_i1582_1_) {
         super(p_i1582_1_);
     }
-
 }
