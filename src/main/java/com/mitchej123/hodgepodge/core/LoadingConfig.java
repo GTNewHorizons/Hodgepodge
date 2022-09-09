@@ -30,6 +30,7 @@ public class LoadingConfig {
     public boolean fixIc2Hazmat;
     public boolean fixIc2Nightvision;
     public boolean fixIc2ReactorDupe;
+    public boolean longerChat;
     public boolean optimizeIc2ReactorInventoryAccess;
     public boolean fixIc2UnprotectedGetBlock;
     public boolean fixNorthWestBias;
@@ -154,6 +155,8 @@ public class LoadingConfig {
                         "Fix IC2's direct inventory access")
                 .getBoolean();
         fixIc2ReactorDupe = config.get(Category.FIXES.toString(), "fixIc2ReactorDupe", true, "Fix IC2's reactor dupe")
+                .getBoolean();
+        longerChat = config.get("tweaks", "longerChat", true, "Makes the chat history longer instead of 100 lines")
                 .getBoolean();
         optimizeIc2ReactorInventoryAccess = config.get(
                         Category.FIXES.toString(),
