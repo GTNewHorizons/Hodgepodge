@@ -41,6 +41,7 @@ public class LoadingConfig {
     public boolean fixHugeChatKick;
     public boolean logHugeChat;
     public boolean fixThaumcraftUnprotectedGetBlock;
+    public boolean fixGTSawSpawningWaterWithIceBLock;
     public boolean fixUrlDetection;
     public boolean fixVanillaUnprotectedGetBlock;
     public boolean fixWorldGetBlock;
@@ -139,6 +140,12 @@ public class LoadingConfig {
                         "fixThaumcraftUnprotectedGetBlock",
                         true,
                         "Various Thaumcraft unchecked getBlock() patches")
+                .getBoolean();
+        fixGTSawSpawningWaterWithIceBLock = config.get(
+                        "fixes",
+                        "fixGTSawSpawningWaterWithIceBLock",
+                        true,
+                        "Fixes GT bug that spawns a water source after breaking an ice block with a GT Saw")
                 .getBoolean();
         fixHungerOverhaul = config.get("fixes", "fixHungerOverhaul", true, "Fix hunger overhaul low stat effects")
                 .getBoolean();

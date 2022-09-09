@@ -185,6 +185,8 @@ public enum Mixins {
             "gregtech.textures.MixinGT_GeneratedMaterial_Renderer",
             () -> Hodgepodge.config.speedupAnimations,
             TargetedMod.GT5U),
+    FIX_SAW_ICE_BREAK(
+            "minecraft.MixinBlockIce", () -> Hodgepodge.config.fixGTSawSpawningWaterWithIceBLock, TargetedMod.GT5U),
 
     // COFH
     COFH_CORE_UPDATE_CHECK(
