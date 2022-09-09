@@ -26,6 +26,7 @@ public class MixinHttpUtil {
             serversocket = new ServerSocket(Hodgepodge.config.defaultLanPort);
         } catch (SecurityException securityException) {
             // Assign an automatically allocated port number
+            Hodgepodge.log.warn(String.format("Designated port %s is already in use, using automatically assigned instead", port));
             serversocket = new ServerSocket(0);
         } finally {
             if (serversocket != null) {
