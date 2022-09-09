@@ -9,7 +9,6 @@ import java.util.function.Supplier;
 
 public enum Mixins {
     // Vanilla Fixes
-    FIX_SAW_ICE_BREAK("minecraft.MixinBlockIce", () -> true, TargetedMod.VANILLA),
     FIX_PERSPECTIVE_CAMERA(
             "minecraft.MixinEntityRenderer", () -> Hodgepodge.config.fixPerspectiveCamera, TargetedMod.VANILLA),
     FENCE_CONNECTIONS_FIX(
@@ -178,6 +177,8 @@ public enum Mixins {
             "gregtech.textures.MixinGT_GeneratedMaterial_Renderer",
             () -> Hodgepodge.config.speedupAnimations,
             TargetedMod.GT5U),
+    FIX_SAW_ICE_BREAK(
+            "minecraft.MixinBlockIce", () -> Hodgepodge.config.fixGTSawSpawningWaterWithIceBLock, TargetedMod.GT5U),
 
     // COFH
     COFH_CORE_UPDATE_CHECK(
