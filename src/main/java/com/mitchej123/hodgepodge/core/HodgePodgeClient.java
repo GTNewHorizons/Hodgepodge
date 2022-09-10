@@ -30,6 +30,15 @@ public class HodgePodgeClient {
             renderDebugMode.set(RenderDebugMode.OFF);
         }
 
+        if (Hodgepodge.config.enableDefaultLanPort) {
+            if (Hodgepodge.config.defaultLanPort < 0 || Hodgepodge.config.defaultLanPort > 65535) {
+                Hodgepodge.log.error(String.format(
+                        "Default LAN port number must be in range of 0-65535, but %s was given. Defaulting to 0.",
+                        Hodgepodge.config.defaultLanPort));
+                Hodgepodge.config.defaultLanPort = 0;
+            }
+        }
+
         if (colorGrass != null) {
             LoadingConfig.postInitClient();
             MinecraftForge.EVENT_BUS.register(LoadingConfig.standardBlocks);
