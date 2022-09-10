@@ -10,15 +10,7 @@ import java.util.function.Supplier;
 public enum Mixins {
     // Vanilla Fixes
     FIX_PERSPECTIVE_CAMERA(
-            "minecraft.MixinEntityRenderer",
-            Side.CLIENT,
-            () -> Hodgepodge.config.fixPerspectiveCamera,
-            TargetedMod.VANILLA),
-    FIX_DEBUG_BOUNDING_BOX(
-            "minecraft.MixinRenderManager",
-            Side.CLIENT,
-            () -> Hodgepodge.config.fixDebugBoundingBox,
-            TargetedMod.VANILLA),
+            "minecraft.MixinEntityRenderer", () -> Hodgepodge.config.fixPerspectiveCamera, TargetedMod.VANILLA),
     FENCE_CONNECTIONS_FIX(
             "minecraft.MixinBlockFence", () -> Hodgepodge.config.fixFenceConnections, TargetedMod.VANILLA),
     FIX_INVENTORY_OFFSET_WITH_POTIONS(
