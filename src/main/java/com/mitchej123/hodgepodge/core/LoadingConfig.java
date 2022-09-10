@@ -35,6 +35,7 @@ public class LoadingConfig {
     public boolean fixPotionEffectRender;
     public boolean fixPotionRenderOffset;
     public boolean fixPotionLimit;
+    public boolean fixImmobileFireballs;
     public boolean fixPerspectiveCamera;
     public boolean fixDebugBoundingBox;
     public boolean fixHopperVoidingItems;
@@ -171,6 +172,12 @@ public class LoadingConfig {
                         "fixes", "fixDimensionChangeHearts", true, "Fix losing bonus hearts on dimension change")
                 .getBoolean();
         fixPotionLimit = config.get("fixes", "fixPotionLimit", true, "Fix potions >= 128")
+                .getBoolean();
+        fixImmobileFireballs = config.get(
+                        "fixes",
+                        "fixImmobileFireballs",
+                        true,
+                        "Fix the bug that makes fireballs stop moving when chunk unloads")
                 .getBoolean();
         fixPerspectiveCamera = config.get(
                         "fixes",

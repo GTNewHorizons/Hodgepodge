@@ -31,6 +31,8 @@ public enum Mixins {
             Side.CLIENT,
             () -> Hodgepodge.config.fixPotionEffectRender,
             TargetedMod.VANILLA),
+    FIX_IMMOBILE_FIREBALLS(
+            "minecraft.MixinEntityFireball", () -> Hodgepodge.config.fixImmobileFireballs, TargetedMod.VANILLA),
     CHUNK_COORDINATES_HASHCODE(
             "minecraft.MixinChunkCoordinates",
             () -> Hodgepodge.config.speedupChunkCoordinatesHashCode,
