@@ -155,6 +155,8 @@ public class RenderDebugHelper {
     private static final List<String> errorBuffer = new ArrayList<>(32);
 
     public static void recordGLStates() {
+        if (HodgePodgeClient.renderDebugMode.is(RenderDebugMode.OFF))
+            return;
         if (HodgePodgeClient.renderDebugMode.is(RenderDebugMode.REDUCED)) {
             saved_GL_BLEND = GL11.glGetBoolean(GL_BLEND);
             saved_GL_ALPHA_TEST = GL11.glGetBoolean(GL_ALPHA_TEST);
@@ -245,7 +247,14 @@ public class RenderDebugHelper {
         saved_GL_BLEND_SRC_RGB = GL11.glGetInteger(GL_BLEND_SRC_RGB);
     }
 
+    /**
+     *
+     * @return true if gl states is same as recorded
+     */
     public static boolean checkGLStates() {
+        if (HodgePodgeClient.renderDebugMode.is(RenderDebugMode.OFF))
+            return true;
+
         errorBuffer.clear();
         if (HodgePodgeClient.renderDebugMode.is(RenderDebugMode.REDUCED)) {
             if (GL11.glGetBoolean(GL_BLEND) != saved_GL_BLEND) errorBuffer.add("GL_BLEND");
