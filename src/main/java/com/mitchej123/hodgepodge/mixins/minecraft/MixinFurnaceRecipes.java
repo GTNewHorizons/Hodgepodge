@@ -2,17 +2,12 @@ package com.mitchej123.hodgepodge.mixins.minecraft;
 
 import com.gtnewhorizon.gtnhlib.util.map.ItemStackMap;
 import com.mitchej123.hodgepodge.Hodgepodge;
-import com.mitchej123.hodgepodge.core.HodgepodgeMixinPlugin;
-import java.lang.reflect.Field;
 import java.util.Map;
-import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(FurnaceRecipes.class)
 public abstract class MixinFurnaceRecipes {
@@ -22,49 +17,15 @@ public abstract class MixinFurnaceRecipes {
      *  2) No longer looping over every. single. recipe. in the list and using the .get()
      */
     @Shadow
-    private Map smeltingList;
+    private Map smeltingList = new ItemStackMap<ItemStack>(false);
 
     @Shadow
-    private Map experienceList;
+    private Map experienceList = new ItemStackMap<Float>(false);
 
-    @Redirect(
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/item/crafting/FurnaceRecipes;func_151393_a(Lnet/minecraft/block/Block;Lnet/minecraft/item/ItemStack;F)V",
-                            ordinal = 0),
-            method = "Lnet/minecraft/item/crafting/FurnaceRecipes;<init>()V")
-    private void doStuff(FurnaceRecipes instance, Block p_151393_1_, ItemStack p_151393_2_, float p_151393_3_)
-            throws NoSuchFieldException, IllegalAccessException {
-        Hodgepodge.log.info("Swapping out smeltingList and experienceList in FurnaceRecipes");
-
-        // Hack into the first call in the constructor and replace the lists with a new hashmap that has an ItemStackMi
-        // hashing strategy
-        try {
-            Class<?> clazz = Class.forName("net.minecraft.item.crafting.FurnaceRecipes");
-
-            Field smeltingList = clazz.getDeclaredField(
-                    HodgepodgeMixinPlugin.isEnvironmentDeobfuscated ? "smeltingList" : "field_77604_b");
-            smeltingList.setAccessible(true);
-            smeltingList.set(instance, new ItemStackMap<ItemStack>(false));
-
-            Field experienceList = clazz.getDeclaredField(
-                    HodgepodgeMixinPlugin.isEnvironmentDeobfuscated ? "experienceList" : "field_77605_c");
-            experienceList.setAccessible(true);
-            experienceList.set(instance, new ItemStackMap<Float>(false));
-
-            Hodgepodge.log.info("Successfully swapped the lists in FurnaceRecipes");
-
-        } catch (ClassNotFoundException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        instance.func_151393_a(p_151393_1_, p_151393_2_, p_151393_3_);
-    }
     /**
      * @author mitchej123
-     * @reason Significantly Faster
-     *  Inspired by later versions of forge
+     * @reason Significantly faster
+     * Inspired by later versions of forge
      */
     @SuppressWarnings("unchecked")
     @Overwrite(remap = false)
@@ -82,7 +43,7 @@ public abstract class MixinFurnaceRecipes {
 
     /**
      * @author mitchej123
-     * @reason Significantly Faster
+     * @reason Significantly faster
      */
     @Overwrite
     public ItemStack getSmeltingResult(ItemStack stack) {
@@ -91,12 +52,11 @@ public abstract class MixinFurnaceRecipes {
 
     /**
      * @author mitchej123
-     * @reason Significantly Faster
+     * @reason Significantly faster
      */
     @Overwrite(remap = false)
     public float func_151398_b /* getSmeltingExperience */(ItemStack stack) {
         if (stack == null || stack.getItem() == null) return 0f;
-
         float exp = stack.getItem().getSmeltingExperience(stack);
         if (exp == -1) {
             exp = (Float) (this.experienceList.getOrDefault(stack, 0f));
