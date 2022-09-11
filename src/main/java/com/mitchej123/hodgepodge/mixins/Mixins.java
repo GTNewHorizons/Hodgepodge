@@ -36,7 +36,7 @@ public enum Mixins {
     NORTHWEST_BIAS_FIX(
             "minecraft.MixinRandomPositionGenerator", () -> Hodgepodge.config.fixNorthWestBias, TargetedMod.VANILLA),
     SPEEDUP_VANILLA_FURNACE(
-            "minecraft.MixinFurnaceRecipes", () -> Hodgepodge.config.speedupVanillaFurnace, TargetedMod.VANILLA),
+            "minecraft.MixinFurnaceRecipes", () -> Hodgepodge.config.speedupVanillaFurnace, TargetedMod.GTNHLIB),
     GAMEOVER_GUI_LOCKED_DISABLED(
             "minecraft.MixinGuiGameOver", Side.CLIENT, () -> Hodgepodge.config.fixGuiGameOver, TargetedMod.VANILLA),
     PREVENT_PICKUP_LOOT(
@@ -97,7 +97,7 @@ public enum Mixins {
             "minecraft.MixinMinecraft_ToggleDebugMessage",
             Side.CLIENT,
             () -> Hodgepodge.config.addToggleDebugMessage,
-            TargetedMod.VANILLA),
+            TargetedMod.GTNHLIB),
     SPEEDUP_VANILLA_ANIMATIONS(
             () -> Hodgepodge.config.speedupAnimations,
             Side.CLIENT,
