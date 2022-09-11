@@ -19,6 +19,9 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import ru.timeconqueror.spongemixins.MinecraftURLClassPath;
 
 public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
+
+    public static boolean isEnvironmentDeobfuscated;
+
     @Override
     public void onLoad(String mixinPackage) {}
 
@@ -37,11 +40,11 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public List<String> getMixins() {
-        final boolean isDevelopmentEnvironment = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
+        isEnvironmentDeobfuscated = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 
         List<TargetedMod> loadedMods = Arrays.stream(TargetedMod.values())
                 .filter(mod -> (mod == TargetedMod.VANILLA
-                        || (isDevelopmentEnvironment && MinecraftURLClassPath.findJarInClassPath(mod.devJarName))
+                        || (isEnvironmentDeobfuscated && MinecraftURLClassPath.findJarInClassPath(mod.devJarName))
                         || loadModJar(mod)))
                 .collect(Collectors.toList());
 
@@ -49,7 +52,7 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
             if (loadedMods.contains(mod)) {
                 Hodgepodge.log.info("Found Mod " + mod.modName + "!");
             } else if (ArrayUtils.contains(Hodgepodge.config.requiredMods, mod.modName)
-                    && (!isDevelopmentEnvironment || Hodgepodge.config.requiredModsInDev)) {
+                    && (!isEnvironmentDeobfuscated || Hodgepodge.config.requiredModsInDev)) {
                 Hodgepodge.log.error(
                         "CRITICAL ERROR: Could not find required jar {}.  If this mod is not required please remove it from the 'requiredMods' section of the config.",
                         mod.modName);

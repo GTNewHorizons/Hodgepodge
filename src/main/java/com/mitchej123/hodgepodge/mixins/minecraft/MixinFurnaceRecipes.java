@@ -2,12 +2,12 @@ package com.mitchej123.hodgepodge.mixins.minecraft;
 
 import com.gtnewhorizon.gtnhlib.util.map.ItemStackMap;
 import com.mitchej123.hodgepodge.Hodgepodge;
+import com.mitchej123.hodgepodge.core.HodgepodgeMixinPlugin;
 import java.lang.reflect.Field;
 import java.util.Map;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.launchwrapper.Launch;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,9 +27,6 @@ public abstract class MixinFurnaceRecipes {
     @Shadow
     private Map experienceList;
 
-    @Shadow
-    abstract boolean func_151397_a(ItemStack p_151397_1_, ItemStack p_151397_2_);
-
     @Redirect(
             at =
                     @At(
@@ -44,15 +41,16 @@ public abstract class MixinFurnaceRecipes {
 
         // Hack into the first call in the constructor and replace the lists with a new hashmap that has an ItemStackMi
         // hashing strategy
-        boolean devEnv = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
         try {
             Class<?> clazz = Class.forName("net.minecraft.item.crafting.FurnaceRecipes");
 
-            Field smeltingList = clazz.getDeclaredField(devEnv ? "smeltingList" : "field_77604_b");
+            Field smeltingList = clazz.getDeclaredField(
+                    HodgepodgeMixinPlugin.isEnvironmentDeobfuscated ? "smeltingList" : "field_77604_b");
             smeltingList.setAccessible(true);
             smeltingList.set(instance, new ItemStackMap<ItemStack>(false));
 
-            Field experienceList = clazz.getDeclaredField(devEnv ? "experienceList" : "field_77605_c");
+            Field experienceList = clazz.getDeclaredField(
+                    HodgepodgeMixinPlugin.isEnvironmentDeobfuscated ? "experienceList" : "field_77605_c");
             experienceList.setAccessible(true);
             experienceList.set(instance, new ItemStackMap<Float>(false));
 
