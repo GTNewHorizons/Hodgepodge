@@ -58,6 +58,7 @@ public class LoadingConfig {
     public boolean speedupChunkCoordinatesHashCode;
     public boolean speedupProgressBar;
     public boolean speedupVanillaFurnace;
+    public boolean fixJourneymapKeybinds;
     public boolean deduplicateForestryCompatInBOP;
     public boolean speedupBOPFogHandling;
     public boolean makeBigFirsPlantable;
@@ -363,6 +364,12 @@ public class LoadingConfig {
                 .getBoolean();
         speedupVanillaFurnace = config.get(
                         "speedups", "speedupVanillaFurnace", true, "Speedup Vanilla Furnace recipe lookup")
+                .getBoolean();
+        fixJourneymapKeybinds = config.get(
+                        "fixes",
+                        "fixJourneymapKeybinds",
+                        true,
+                        "Prevent unbinded keybinds from triggering when pressing certain keys")
                 .getBoolean();
         speedupBOPFogHandling = config.get(
                         "speedups", "speedupBOPFogHandling", true, "Speedup biome fog rendering in BiomesOPlenty")
