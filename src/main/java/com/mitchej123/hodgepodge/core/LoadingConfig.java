@@ -58,6 +58,7 @@ public class LoadingConfig {
     public boolean speedupChunkCoordinatesHashCode;
     public boolean speedupProgressBar;
     public boolean speedupVanillaFurnace;
+    public boolean fixJourneymapKeybinds;
     public boolean deduplicateForestryCompatInBOP;
     public boolean speedupBOPFogHandling;
     public boolean makeBigFirsPlantable;
@@ -102,163 +103,185 @@ public class LoadingConfig {
     public LoadingConfig(File file) {
         config = new Configuration(file);
 
-        requiredMods = config.get(
-                        "overall", "requiredMods", defaultRequiredMods, "Subset of TargetMods that are required")
-                .getStringList();
-        requiredModsInDev = config.get("overall", "requiredModsInDev", false, "Require the Required Mods in dev")
-                .getBoolean();
+        final String CATEGORY_ASM = "asm";
+        final String CATEGORY_DEBUG = "debug";
+        final String CATEGORY_FIXES = "fixes";
+        final String CATEGORY_OVERALL = "overall";
+        final String CATEGORY_SPEEDUPS = "speedups";
+        final String CATEGORY_TWEAKS = "tweaks";
 
-        fixWorldGetBlock = config.get("fixes", "fixWorldGetBlock", true, "Fix unprotected getBlock() in World")
+        requiredMods = config.get(
+                        CATEGORY_OVERALL, "requiredMods", defaultRequiredMods, "Subset of TargetMods that are required")
+                .getStringList();
+        requiredModsInDev = config.get(CATEGORY_OVERALL, "requiredModsInDev", false, "Require the Required Mods in dev")
+                .getBoolean();
+        fixWorldGetBlock = config.get(CATEGORY_FIXES, "fixWorldGetBlock", true, "Fix unprotected getBlock() in World")
                 .getBoolean();
         fixNorthWestBias = config.get(
-                        "fixes", "fixNorthWestBias", true, "Fix northwest bias on RandomPositionGenerator")
+                        CATEGORY_FIXES, "fixNorthWestBias", true, "Fix northwest bias on RandomPositionGenerator")
                 .getBoolean();
         fixFenceConnections = config.get(
-                        "fixes", "fixFenceConnections", true, "Fix fence connections with other types of fence")
+                        CATEGORY_FIXES, "fixFenceConnections", true, "Fix fence connections with other types of fence")
                 .getBoolean();
         fixIc2DirectInventoryAccess = config.get(
-                        "fixes", "fixIc2DirectInventoryAccess", true, "Fix IC2's direct inventory access")
+                        CATEGORY_FIXES, "fixIc2DirectInventoryAccess", true, "Fix IC2's direct inventory access")
                 .getBoolean();
-        fixIc2ReactorDupe = config.get("fixes", "fixIc2ReactorDupe", true, "Fix IC2's reactor dupe")
+        fixIc2ReactorDupe = config.get(CATEGORY_FIXES, "fixIc2ReactorDupe", true, "Fix IC2's reactor dupe")
                 .getBoolean();
         optimizeIc2ReactorInventoryAccess = config.get(
-                        "fixes",
+                        CATEGORY_FIXES,
                         "optimizeIc2ReactorInventoryAccess",
                         true,
                         "Optimize inventory access to IC2 nuclear reactor")
                 .getBoolean();
         fixIc2Nightvision = config.get(
-                        "fixes", "fixIc2Nightvision", true, "Prevent IC2's nightvision from blinding you")
+                        CATEGORY_FIXES, "fixIc2Nightvision", true, "Prevent IC2's nightvision from blinding you")
                 .getBoolean();
-        fixIc2Hazmat = config.get("fixes", "fixIc2Hazmat", true, "Fix IC2 armors to avoid giving poison")
+        fixIc2Hazmat = config.get(CATEGORY_FIXES, "fixIc2Hazmat", true, "Fix IC2 armors to avoid giving poison")
                 .getBoolean();
         fixVanillaUnprotectedGetBlock = config.get(
-                        "fixes",
+                        CATEGORY_FIXES,
                         "fixVanillaUnprotectedGetBlock",
                         true,
                         "Fixes various unchecked vanilla getBlock() methods")
                 .getBoolean();
         fixIc2UnprotectedGetBlock = config.get(
-                        "fixes", "fixIc2UnprotectedGetBlock", true, "Fixes various unchecked IC2 getBlock() methods")
+                        CATEGORY_FIXES,
+                        "fixIc2UnprotectedGetBlock",
+                        true,
+                        "Fixes various unchecked IC2 getBlock() methods")
                 .getBoolean();
         fixThaumcraftUnprotectedGetBlock = config.get(
-                        "fixes",
+                        CATEGORY_FIXES,
                         "fixThaumcraftUnprotectedGetBlock",
                         true,
                         "Various Thaumcraft unchecked getBlock() patches")
                 .getBoolean();
         fixGTSawSpawningWaterWithIceBLock = config.get(
-                        "fixes",
+                        CATEGORY_FIXES,
                         "fixGTSawSpawningWaterWithIceBLock",
                         true,
                         "Fixes GT bug that spawns a water source after breaking an ice block with a GT Saw")
                 .getBoolean();
-        fixHungerOverhaul = config.get("fixes", "fixHungerOverhaul", true, "Fix hunger overhaul low stat effects")
+        fixHungerOverhaul = config.get(
+                        CATEGORY_FIXES, "fixHungerOverhaul", true, "Fix hunger overhaul low stat effects")
                 .getBoolean();
-        removeUpdateChecks = config.get("fixes", "removeUpdateChecks", true, "Remove old/stale/outdated update checks.")
+        removeUpdateChecks = config.get(
+                        CATEGORY_FIXES, "removeUpdateChecks", true, "Remove old/stale/outdated update checks.")
                 .getBoolean();
         fixGuiGameOver = config.get(
-                        "fixes", "fixGuiGameOver", true, "Fix Game Over GUI buttons disabled if switching fullscreen")
+                        CATEGORY_FIXES,
+                        "fixGuiGameOver",
+                        true,
+                        "Fix Game Over GUI buttons disabled if switching fullscreen")
                 .getBoolean();
-        fixHopperHitBox = config.get("fixes", "fixHopperHitBox", true, "Fix vanilla hopper hit box")
+        fixHopperHitBox = config.get(CATEGORY_FIXES, "fixHopperHitBox", true, "Fix vanilla hopper hit box")
                 .getBoolean();
         fixGetBlockLightValue = config.get(
-                        "fixes",
+                        CATEGORY_FIXES,
                         "fixGetBlockLightValue",
                         true,
                         "Fix vanilla light calculation sometimes cause NPE on thermos")
                 .getBoolean();
         fixFireSpread = config.get(
-                        "fixes", "fixFireSpread", true, "Fix vanilla fire spread sometimes cause NPE on thermos")
+                        CATEGORY_FIXES, "fixFireSpread", true, "Fix vanilla fire spread sometimes cause NPE on thermos")
                 .getBoolean();
-        fixUrlDetection = config.get("fixes", "fixUrlDetection", true, "Fix URISyntaxException in forge.")
+        fixUrlDetection = config.get(CATEGORY_FIXES, "fixUrlDetection", true, "Fix URISyntaxException in forge.")
                 .getBoolean();
         fixDimensionChangeHearts = config.get(
-                        "fixes", "fixDimensionChangeHearts", true, "Fix losing bonus hearts on dimension change")
+                        CATEGORY_FIXES, "fixDimensionChangeHearts", true, "Fix losing bonus hearts on dimension change")
                 .getBoolean();
-        fixPotionLimit = config.get("fixes", "fixPotionLimit", true, "Fix potions >= 128")
+        fixPotionLimit = config.get(CATEGORY_FIXES, "fixPotionLimit", true, "Fix potions >= 128")
                 .getBoolean();
         fixImmobileFireballs = config.get(
-                        "fixes",
+                        CATEGORY_FIXES,
                         "fixImmobileFireballs",
                         true,
                         "Fix the bug that makes fireballs stop moving when chunk unloads")
                 .getBoolean();
         fixPerspectiveCamera = config.get(
-                        "fixes",
+                        CATEGORY_FIXES,
                         "fixPerspectiveCamera",
                         true,
                         "Prevent tall grass and such to affect the perspective camera")
                 .getBoolean();
         fixDebugBoundingBox = config.get(
-                        "fixes", "fixDebugBoundingBox", true, "Fixes the debug hitbox of the player beeing offset")
+                        CATEGORY_FIXES,
+                        "fixDebugBoundingBox",
+                        true,
+                        "Fixes the debug hitbox of the player beeing offset")
                 .getBoolean();
         fixGlStateBugs = config.get(
-                        "fixes",
+                        CATEGORY_FIXES,
                         "fixGlStateBugs",
                         true,
                         "Fix vanilla GL state bugs causing lighting glitches in various perspectives (MC-10135).")
                 .getBoolean();
         deduplicateForestryCompatInBOP = config.get(
-                        "fixes",
+                        CATEGORY_FIXES,
                         "deduplicateForestryCompatInBOP",
                         true,
                         "Removes duplicate Fermenter and Squeezer recipes and flower registration")
                 .getBoolean();
-        fixHopperVoidingItems = config.get("fixes", "fixHopperVoidingItems", true, "Fix Drawer + Hopper voiding items")
+        fixHopperVoidingItems = config.get(
+                        CATEGORY_FIXES, "fixHopperVoidingItems", true, "Fix Drawer + Hopper voiding items")
                 .getBoolean();
-        fixHugeChatKick = config.get("fixes", "fixHugeChatKick", true, "Fix oversized chat message kicking player.")
+        fixHugeChatKick = config.get(
+                        CATEGORY_FIXES, "fixHugeChatKick", true, "Fix oversized chat message kicking player.")
                 .getBoolean();
         logHugeChat = config.get(
-                        "fixes",
+                        CATEGORY_FIXES,
                         "logHugeChat",
                         true,
                         "Log oversized chat message to console. WARNING: might create huge log files if this happens very often.")
                 .getBoolean();
         fixWorldServerLeakingUnloadedEntities = config.get(
-                        "fixes",
+                        CATEGORY_FIXES,
                         "fixWorldServerLeakingUnloadedEntities",
                         true,
                         "Fix WorldServer leaking entities when no players are present in a dimension")
                 .getBoolean();
         fixResizableFullscreen = config.get(
-                        "fixes",
+                        CATEGORY_FIXES,
                         "fixResizableFullscreen",
                         true,
                         "Fix game window becoming not resizable after toggling fullscrean in any way")
                 .getBoolean();
         fixUnfocusedFullscreen = config.get(
-                        "fixes", "fixUnfocusedFullscreen", true, "Fix exiting fullscreen when you tab out of the game")
+                        CATEGORY_FIXES,
+                        "fixUnfocusedFullscreen",
+                        true,
+                        "Fix exiting fullscreen when you tab out of the game")
                 .getBoolean();
         addToggleDebugMessage = config.get(
-                        "tweaks",
+                        CATEGORY_TWEAKS,
                         "addToggleDebugMessage",
                         true,
                         "Add a debug message in the chat when toggling vanilla debug options")
                 .getBoolean();
         speedupAnimations = config.get(
-                        "fixes",
+                        CATEGORY_FIXES,
                         "speedupAnimations",
                         true,
                         "Drastically speedup animated textures (Basically the same as with optifine animations off but animations are working)")
                 .getBoolean();
         fixPotionIterating = config.get(
-                        "fixes",
+                        CATEGORY_FIXES,
                         "fixPotionIterating",
                         true,
                         "Fix crashes with ConcurrentModificationException because of incorrectly iterating over active potions")
                 .getBoolean();
         fixIgnisFruitAABB = config.get(
-                        "fixes", "fixIgnisFruitAABB", true, "Fix Axis aligned Bounding Box of Ignis Fruit")
+                        CATEGORY_FIXES, "fixIgnisFruitAABB", true, "Fix Axis aligned Bounding Box of Ignis Fruit")
                 .getBoolean();
         fixNetherLeavesFaceRendering = config.get(
-                        "fixes",
+                        CATEGORY_FIXES,
                         "fixNetherLeavesFaceRendering",
                         true,
                         "If fancy graphics are enabled, Nether Leaves render sides with other Nether Leaves adjacent too")
                 .getBoolean();
         optimizeASMDataTable = config.get(
-                        "speedups",
+                        CATEGORY_SPEEDUPS,
                         "optimizeASMDataTable",
                         true,
                         "Optimize ASMDataTable getAnnotationsFor for faster startup")
@@ -270,140 +293,159 @@ public class LoadingConfig {
                         "Stop \"You can only sleep at night\" message filling the chat")
                 .getBoolean();
 
-        increaseParticleLimit = config.get("tweaks", "increaseParticleLimit", true, "Increase particle limit")
+        increaseParticleLimit = config.get(CATEGORY_TWEAKS, "increaseParticleLimit", true, "Increase particle limit")
                 .getBoolean();
         particleLimit = Math.max(
                 Math.min(
-                        config.get("tweaks", "particleLimit", 8000, "Particle limit [4000-16000]")
+                        config.get(CATEGORY_TWEAKS, "particleLimit", 8000, "Particle limit [4000-16000]")
                                 .getInt(),
                         16000),
                 4000);
         fixPotionEffectRender = config.get(
-                        "tweaks",
+                        CATEGORY_TWEAKS,
                         "fixPotionEffectRender",
                         true,
                         "Fix vanilla potion effects rendering above the NEI tooltips in the inventory")
                 .getBoolean();
         fixPotionRenderOffset = config.get(
-                        "tweaks",
+                        CATEGORY_TWEAKS,
                         "fixPotionRenderOffset",
                         true,
                         "Prevents the inventory from shifting when the player has active potion effects")
                 .getBoolean();
         installAnchorAlarm = config.get(
-                        "tweaks", "installAnchorAlarm", true, "Wake up passive & personal anchors on player login")
+                        CATEGORY_TWEAKS,
+                        "installAnchorAlarm",
+                        true,
+                        "Wake up passive & personal anchors on player login")
                 .getBoolean();
-        preventPickupLoot = config.get("tweaks", "preventPickupLoot", true, "Prevent monsters from picking up loot.")
+        preventPickupLoot = config.get(
+                        CATEGORY_TWEAKS, "preventPickupLoot", true, "Prevent monsters from picking up loot.")
                 .getBoolean();
         dropPickedLootOnDespawn = config.get(
-                        "tweaks", "dropPickedLootOnDespawn", true, "Drop picked loot on entity despawn")
+                        CATEGORY_TWEAKS, "dropPickedLootOnDespawn", true, "Drop picked loot on entity despawn")
                 .getBoolean();
         hideIc2ReactorSlots = config.get(
-                        "tweaks",
+                        CATEGORY_TWEAKS,
                         "hideIc2ReactorSlots",
                         true,
                         "Prevent IC2's reactor's coolant slots from being accessed by automations if not a fluid reactor")
                 .getBoolean();
         displayIc2FluidLocalizedName = config.get(
-                        "tweaks",
+                        CATEGORY_TWEAKS,
                         "displayIc2FluidLocalizedName",
                         true,
                         "Display fluid localized name in IC2 fluid cell tooltip")
                 .getBoolean();
         enableTileRendererProfiler = config.get(
-                        "tweaks",
+                        CATEGORY_TWEAKS,
                         "enableTileRendererProfiler",
                         true,
                         "Shows renderer's impact on FPS in vanilla lagometer")
                 .getBoolean();
         addCVSupportToWandPedestal = config.get(
-                        "tweaks",
+                        CATEGORY_TWEAKS,
                         "addCVSupportToWandPedestal",
                         true,
                         "Add CV support to Thaumcraft wand recharge pedestal")
                 .getBoolean();
         makeBigFirsPlantable = config.get(
-                        "tweaks",
+                        CATEGORY_TWEAKS,
                         "makeBigFirsPlantable",
                         true,
                         "Allow 5 Fir Sapling planted together ('+' shape) to grow to a big fir tree")
                 .getBoolean();
-        ic2SeedMaxStackSize = config.get("tweaks", "ic2SeedMaxStackSize", 64, "IC2 seed max stack size")
+        ic2SeedMaxStackSize = config.get(CATEGORY_TWEAKS, "ic2SeedMaxStackSize", 64, "IC2 seed max stack size")
                 .getInt();
         addSystemInfo = config.get(
-                        "tweaks",
+                        CATEGORY_TWEAKS,
                         "addSystemInfo",
                         true,
                         "Adds system info to the F3 overlay (Java version and vendor; GPU name; OpenGL version; CPU cores; OS name, version and architecture)")
                 .getBoolean();
         fixHudLightingGlitch = config.get(
-                        "tweaks", "fixHudLightingGlitch", true, "Fix hotbars being dark when Project Red is installed")
+                        CATEGORY_TWEAKS,
+                        "fixHudLightingGlitch",
+                        true,
+                        "Fix hotbars being dark when Project Red is installed")
                 .getBoolean();
         fixComponentsPoppingOff = config.get(
-                        "tweaks",
+                        CATEGORY_TWEAKS,
                         "fixComponentsPoppingOff",
                         true,
                         "Fix Project Red components popping off on unloaded chunks")
                 .getBoolean();
         thirstyTankContainer = config.get(
-                        "tweaks", "thirstyTankContainer", true, "Implement container for thirsty tank")
+                        CATEGORY_TWEAKS, "thirstyTankContainer", true, "Implement container for thirsty tank")
                 .getBoolean();
         enableDefaultLanPort = config.get(
-                        "tweaks", "enableDefaultLanPort", true, "Open an integrated server on a static port.")
+                        CATEGORY_TWEAKS, "enableDefaultLanPort", true, "Open an integrated server on a static port.")
                 .getBoolean();
         defaultLanPort = config.get(
-                        "tweaks",
+                        CATEGORY_TWEAKS,
                         "defaultLanPort",
                         25565,
                         "Specify default LAN port to open an integrated server on. Set to 0 to always open the server on an automatically allocated port.")
                 .getInt();
 
         tcpNoDelay = config.get(
-                        "speedups",
+                        CATEGORY_SPEEDUPS,
                         "tcpNoDelay",
                         true,
                         "Sets TCP_NODELAY to true, reducing network latency in multiplayer. Works on server as well as client. From makamys/CoreTweaks")
                 .getBoolean();
 
         speedupChunkCoordinatesHashCode = config.get(
-                        "speedups", "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode")
+                        CATEGORY_SPEEDUPS, "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode")
                 .getBoolean();
         speedupVanillaFurnace = config.get(
-                        "speedups", "speedupVanillaFurnace", true, "Speedup Vanilla Furnace recipe lookup")
+                        CATEGORY_SPEEDUPS, "speedupVanillaFurnace", true, "Speedup Vanilla Furnace recipe lookup")
+                .getBoolean();
+        fixJourneymapKeybinds = config.get(
+                        CATEGORY_FIXES,
+                        "fixJourneymapKeybinds",
+                        true,
+                        "Prevent unbinded keybinds from triggering when pressing certain keys")
                 .getBoolean();
         speedupBOPFogHandling = config.get(
-                        "speedups", "speedupBOPFogHandling", true, "Speedup biome fog rendering in BiomesOPlenty")
+                        CATEGORY_SPEEDUPS,
+                        "speedupBOPFogHandling",
+                        true,
+                        "Speedup biome fog rendering in BiomesOPlenty")
                 .getBoolean();
 
-        speedupProgressBar = config.get("asm", "speedupProgressBar", true, "Speedup progressbar")
+        speedupProgressBar = config.get(CATEGORY_ASM, "speedupProgressBar", true, "Speedup progressbar")
                 .getBoolean();
         // Disable for now as it is not compatible with anything modifying RenderBlocks
-        pollutionAsm = config.get("asm", "pollutionAsm", false, "Enable pollution rendering ASM")
+        pollutionAsm = config.get(CATEGORY_ASM, "pollutionAsm", false, "Enable pollution rendering ASM")
                 .getBoolean();
         cofhWorldTransformer = config.get(
-                        "asm",
+                        CATEGORY_ASM,
                         "cofhWorldTransformer",
                         true,
                         "Enable Glease's ASM patch to disable unused CoFH tileentity cache")
                 .getBoolean();
-        biblocraftRecipes = config.get("asm", "biblocraftRecipes", true, "Remove recipe generation from BiblioCraft")
+        biblocraftRecipes = config.get(
+                        CATEGORY_ASM, "biblocraftRecipes", true, "Remove recipe generation from BiblioCraft")
                 .getBoolean();
 
         thermosCraftServerClass = config.get(
-                        "asm",
+                        CATEGORY_ASM,
                         "thermosCraftServerClass",
                         "org.bukkit.craftbukkit.v1_7_R4.CraftServer",
                         "If using Bukkit/Thermos, the CraftServer package.")
                 .getString();
-
         renderDebug = config.get(
-                        "debug",
+                        CATEGORY_DEBUG,
                         "renderDebug",
                         true,
                         "Enable GL state debug hooks. Will not do anything useful unless mode is changed to nonzero.")
                 .getBoolean();
         renderDebugMode = config.get(
-                        "debug", "renderDebugMode", 0, "Default GL state debug mode. 0 - off, 1 - reduced, 2 - full")
+                        CATEGORY_DEBUG,
+                        "renderDebugMode",
+                        0,
+                        "Default GL state debug mode. 0 - off, 1 - reduced, 2 - full")
                 .setMinValue(0)
                 .setMaxValue(2)
                 .getInt();
@@ -417,22 +459,25 @@ public class LoadingConfig {
             config = new Configuration(new File(Launch.minecraftHome, "config/hodgepodge.cfg"));
         }
 
+        final String CATEGORY_POLLUTION_RECOLOR = "pollutionrecolor";
+
         standardBlocks.updateClassList(
-                config.get("pollutionrecolor", "renderStandardBlock", defaultPollutionRenderStandardBlock)
+                config.get(CATEGORY_POLLUTION_RECOLOR, "renderStandardBlock", defaultPollutionRenderStandardBlock)
                         .getStringList());
         liquidBlocks.updateClassList(
-                config.get("pollutionrecolor", "renderBlockLiquid", defaultPollutionRenderLiquidBlocks)
+                config.get(CATEGORY_POLLUTION_RECOLOR, "renderBlockLiquid", defaultPollutionRenderLiquidBlocks)
                         .getStringList());
         doublePlants.updateClassList(
-                config.get("pollutionrecolor", "renderBlockDoublePlant", defaultPollutionRenderDoublePlant)
+                config.get(CATEGORY_POLLUTION_RECOLOR, "renderBlockDoublePlant", defaultPollutionRenderDoublePlant)
                         .getStringList());
         crossedSquares.updateClassList(
-                config.get("pollutionrecolor", "renderCrossedSquares", defaultPollutionRenderCrossedSquares)
+                config.get(CATEGORY_POLLUTION_RECOLOR, "renderCrossedSquares", defaultPollutionRenderCrossedSquares)
                         .getStringList());
-        blockVine.updateClassList(config.get("pollutionrecolor", "renderblockVine", defaultPollutionRenderblockVine)
-                .getStringList());
+        blockVine.updateClassList(
+                config.get(CATEGORY_POLLUTION_RECOLOR, "renderblockVine", defaultPollutionRenderblockVine)
+                        .getStringList());
 
-        config.getCategory("pollutionrecolor").setComment(pollutionRecolorComment);
+        config.getCategory(CATEGORY_POLLUTION_RECOLOR).setComment(pollutionRecolorComment);
 
         if (config.hasChanged()) config.save();
     }
