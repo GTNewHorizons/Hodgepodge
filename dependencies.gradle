@@ -23,6 +23,7 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:Galacticraft:3.0.44-GTNH:dev")
     compileOnly("com.github.GTNewHorizons:Baubles:1.0.1.14:dev")
     compileOnly fileTree(dir: 'dependencies', includes: ['TravellersGear-1.7.10-1.16.8-GTNH.jar'])
+    compileOnly('curse.maven:journeymap-32274:2367915')
 
     // Thermos Compat, compile only not run in dev by default
     compileOnly files("dependencies/Thermos-1.7.10-1614-stripped.jar")

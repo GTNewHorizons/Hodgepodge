@@ -260,6 +260,9 @@ public enum Mixins {
     FIX_FURNACE_ITERATION(
             "projecte.MixinObjHandler", () -> Hodgepodge.config.speedupVanillaFurnace, TargetedMod.PROJECTE),
 
+    FIX_JOURNEYMAP_KEYBINDS(
+            "journeymap.MixinConstants", () -> Hodgepodge.config.fixJourneymapKeybinds, TargetedMod.JOURNEYMAP),
+
     // Pam's Harvest the Nether
     FIX_IGNIS_FRUIT_AABB(
             "harvestthenether.MixinBlockPamFruit",
