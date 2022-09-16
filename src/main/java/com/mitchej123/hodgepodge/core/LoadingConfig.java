@@ -14,6 +14,7 @@ public class LoadingConfig {
     // Adjustments
     public int ic2SeedMaxStackSize;
     public int particleLimit;
+    public int itemStacksPickedUpPerTick;
     public boolean addSystemInfo;
 
     // Mixins
@@ -75,6 +76,7 @@ public class LoadingConfig {
     public boolean fixNetherLeavesFaceRendering;
     public boolean optimizeASMDataTable;
     public boolean squashBedErrorMessage;
+    public boolean throttleItemPickupEvent;
 
     public boolean enableDefaultLanPort;
 
@@ -324,11 +326,21 @@ public class LoadingConfig {
                         "Prevent unbinded keybinds from triggering when pressing certain keys")
                 .getBoolean();
         squashBedErrorMessage = config.get(
-                        "fixes",
+                        Category.FIXES.toString(),
                         "squashBedErrorMessage",
                         true,
                         "Stop \"You can only sleep at night\" message filling the chat")
                 .getBoolean();
+        throttleItemPickupEvent = config.get(
+                        Category.FIXES.toString(),
+                        "throttleItemPickupEvent",
+                        true,
+                        "Limits the amount of times the ItemPickupEvent triggers per tick since it can lead to a lot of lag")
+                .getBoolean();
+        itemStacksPickedUpPerTick = Math.max(
+                1,
+                config.get(Category.TWEAKS.toString(), "itemStacksPickedUpPerTick", 36, "Stacks picked up per tick")
+                        .getInt());
 
         increaseParticleLimit = config.get(
                         Category.TWEAKS.toString(), "increaseParticleLimit", true, "Increase particle limit")
