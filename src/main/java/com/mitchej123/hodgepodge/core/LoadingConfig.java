@@ -126,6 +126,7 @@ public class LoadingConfig {
         requiredModsInDev = config.get(
                         Category.OVERALL.toString(), "requiredModsInDev", false, "Require the Required Mods in dev")
                 .getBoolean();
+
         fixWorldGetBlock = config.get(
                         Category.FIXES.toString(), "fixWorldGetBlock", true, "Fix unprotected getBlock() in World")
                 .getBoolean();
@@ -291,12 +292,6 @@ public class LoadingConfig {
                         true,
                         "Fix exiting fullscreen when you tab out of the game")
                 .getBoolean();
-        addToggleDebugMessage = config.get(
-                        Category.TWEAKS.toString(),
-                        "addToggleDebugMessage",
-                        true,
-                        "Add a debug message in the chat when toggling vanilla debug options")
-                .getBoolean();
         speedupAnimations = config.get(
                         Category.FIXES.toString(),
                         "speedupAnimations",
@@ -321,11 +316,11 @@ public class LoadingConfig {
                         true,
                         "If fancy graphics are enabled, Nether Leaves render sides with other Nether Leaves adjacent too")
                 .getBoolean();
-        optimizeASMDataTable = config.get(
-                        Category.SPEEDUPS.toString(),
-                        "optimizeASMDataTable",
+        fixJourneymapKeybinds = config.get(
+                        Category.FIXES.toString(),
+                        "fixJourneymapKeybinds",
                         true,
-                        "Optimize ASMDataTable getAnnotationsFor for faster startup")
+                        "Prevent unbinded keybinds from triggering when pressing certain keys")
                 .getBoolean();
 
         increaseParticleLimit = config.get(
@@ -433,14 +428,25 @@ public class LoadingConfig {
                         25565,
                         "Specify default LAN port to open an integrated server on. Set to 0 to always open the server on an automatically allocated port.")
                 .getInt();
+        addToggleDebugMessage = config.get(
+                        Category.TWEAKS.toString(),
+                        "addToggleDebugMessage",
+                        true,
+                        "Add a debug message in the chat when toggling vanilla debug options")
+                .getBoolean();
 
+        optimizeASMDataTable = config.get(
+                        Category.SPEEDUPS.toString(),
+                        "optimizeASMDataTable",
+                        true,
+                        "Optimize ASMDataTable getAnnotationsFor for faster startup")
+                .getBoolean();
         tcpNoDelay = config.get(
                         Category.SPEEDUPS.toString(),
                         "tcpNoDelay",
                         true,
                         "Sets TCP_NODELAY to true, reducing network latency in multiplayer. Works on server as well as client. From makamys/CoreTweaks")
                 .getBoolean();
-
         speedupChunkCoordinatesHashCode = config.get(
                         Category.SPEEDUPS.toString(),
                         "speedupChunkCoordinatesHashCode",
@@ -452,12 +458,6 @@ public class LoadingConfig {
                         "speedupVanillaFurnace",
                         true,
                         "Speedup Vanilla Furnace recipe lookup")
-                .getBoolean();
-        fixJourneymapKeybinds = config.get(
-                        Category.FIXES.toString(),
-                        "fixJourneymapKeybinds",
-                        true,
-                        "Prevent unbinded keybinds from triggering when pressing certain keys")
                 .getBoolean();
         speedupBOPFogHandling = config.get(
                         Category.SPEEDUPS.toString(),
@@ -480,7 +480,6 @@ public class LoadingConfig {
         biblocraftRecipes = config.get(
                         Category.ASM.toString(), "biblocraftRecipes", true, "Remove recipe generation from BiblioCraft")
                 .getBoolean();
-
         thermosCraftServerClass = config.get(
                         Category.ASM.toString(),
                         "thermosCraftServerClass",
