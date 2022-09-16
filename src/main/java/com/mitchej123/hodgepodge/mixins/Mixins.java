@@ -9,6 +9,11 @@ import java.util.function.Supplier;
 
 public enum Mixins {
     // Vanilla Fixes
+    THROTTLE_ITEMPICKUPEVENT(
+            "minecraft.MixinEntityPlayer",
+            Side.BOTH,
+            () -> Hodgepodge.config.throttleItemPickupEvent,
+            TargetedMod.VANILLA),
     FIX_PERSPECTIVE_CAMERA(
             "minecraft.MixinEntityRenderer",
             Side.CLIENT,
