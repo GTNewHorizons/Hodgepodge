@@ -23,11 +23,11 @@ public abstract class MixinEntityPlayer {
     @Inject(
             method = "onLivingUpdate",
             at =
-            @At(
-                    value = "INVOKE",
-                    target =
-                            "Lnet/minecraft/world/World;getEntitiesWithinAABBExcludingEntity(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/AxisAlignedBB;)Ljava/util/List;",
-                    shift = At.Shift.AFTER))
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/world/World;getEntitiesWithinAABBExcludingEntity(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/AxisAlignedBB;)Ljava/util/List;",
+                            shift = At.Shift.AFTER))
     public void hodgepodge$resetItemCounter(CallbackInfo ci) {
         hodgepodge$itemEntityCounter = 0;
     }
@@ -35,17 +35,17 @@ public abstract class MixinEntityPlayer {
     @Redirect(
             method = "onLivingUpdate",
             at =
-            @At(
-                    value = "INVOKE",
-                    target =
-                            "Lnet/minecraft/entity/player/EntityPlayer;collideWithPlayer(Lnet/minecraft/entity/Entity;)V"),
-            slice =
-            @Slice(
-                    from =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/world/World;getEntitiesWithinAABBExcludingEntity(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/AxisAlignedBB;)Ljava/util/List;")))
+                                    "Lnet/minecraft/entity/player/EntityPlayer;collideWithPlayer(Lnet/minecraft/entity/Entity;)V"),
+            slice =
+                    @Slice(
+                            from =
+                                    @At(
+                                            value = "INVOKE",
+                                            target =
+                                                    "Lnet/minecraft/world/World;getEntitiesWithinAABBExcludingEntity(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/AxisAlignedBB;)Ljava/util/List;")))
     public void hodgepodge$ThrottleItemPickupEvent(EntityPlayer instance, Entity entity) {
         if (entity instanceof EntityItem) {
             if (hodgepodge$itemEntityCounter < Hodgepodge.config.itemStacksPickedUpPerTick) {
