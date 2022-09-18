@@ -2,52 +2,41 @@ package com.mitchej123.hodgepodge.mixins;
 
 public enum TargetedMod {
     VANILLA("Minecraft", null),
-    IC2("IC2", "industrialcraft-2-"),
-    GT5U("GregTech5u", "gregtech-1.7.10-5", "GT5-Unofficial"),
-    HUNGER_OVERHAUL("HungerOverhaul", "HungerOverhaul"),
-    RAILCRAFT("Railcraft", "Railcraft"),
-    THAUMCRAFT("Thaumcraft", "Thaumcraft-1.7.10"),
-    COFH_CORE("CoFHCore", "CoFHCore", "cofh-core"),
-    BOP("BiomesOPlenty", "BiomesOPlenty-1.7.10"),
-    MRTJPCORE("MrTJPCore", "MrTJPCore"),
-    AUTOMAGY("Automagy", "Automagy-1.7.10"),
-    PROJECTE("ProjectE", "ProjectE-1.7.10", "projecte", true),
-    FASTCRAFT("FastCraft", "fastcraft", true),
-    HARVESTTHENETHER("harvestthenether", "Pam's Harvest the Nether"),
-    GALACTICRAFT_CORE("GalacticraftCore", "Galacticraft"),
-    BAUBLES("Baubles", "Baubles"),
-    TRAVELLERSGEAR("TravellersGear", "TravellersGear"),
-    // Temporary solution to force load it early
-    GTNHLIB("GTNHLib", "gtnhlib"),
-    JOURNEYMAP("journeymap", "journeymap", true);
-    // OPTIFINE("OptiFine", "OptiFine");
+    GTNHLIB("GTNHLib", "com.gtnewhorizon.gtnhlib.core.GTNHLibCore", "gtnhlib"),
+    IC2("IC2", "ic2.core.coremod.IC2core", "IC2"),
+    FASTCRAFT("FastCraft", "fastcraft.Tweaker"),
+    COFH_CORE("CoFHCore", "cofh.asm.LoadingPlugin", "CoFHCore"),
+    THAUMCRAFT("Thaumcraft", null, "Thaumcraft"), // "thaumcraft.codechicken.core.launch.DepLoader"
+    GT5U("GregTech5u", null, "gregtech"),
+    HUNGER_OVERHAUL("HungerOverhaul", null, "HungerOverhaul"),
+    RAILCRAFT("Railcraft", null, "Railcraft"),
+    BOP("BiomesOPlenty", null, "BiomesOPlenty"),
+    MRTJPCORE("MrTJPCore", null, "MrTJPCoreMod"),
+    AUTOMAGY("Automagy", null, "Automagy"),
+    PROJECTE("ProjectE", null, "projecte"),
+    HARVESTTHENETHER("harvestthenether", null, "harvestthenether"),
+    GALACTICRAFT_CORE("GalacticraftCore", null, "GalacticraftCore"),
+    BAUBLES("Baubles", null, "Baubles"),
+    TRAVELLERSGEAR("TravellersGear", null, "TravellersGear"),
+    JOURNEYMAP("JourneyMap", null, "journeymap"),
+    OPTIFINE("Optifine", null, "Opttifine");
 
     public final String modName;
-    public final String jarName;
-    public final String devJarName;
-    public final Boolean optional;
+    public final String coreModClass;
+    public final String modId;
 
-    TargetedMod(String modName, String jarName) {
-        this(modName, jarName, false);
+    TargetedMod(String modName, String coreModClass) {
+        this(modName, coreModClass, null);
     }
 
-    TargetedMod(String modName, String jarName, String devJarName) {
-        this(modName, jarName, devJarName, false);
-    }
-
-    TargetedMod(String modName, String jarName, Boolean optional) {
-        this(modName, jarName, jarName, optional);
-    }
-
-    TargetedMod(String modName, String jarName, String devJarName, Boolean optional) {
+    TargetedMod(String modName, String coreModClass, String modId) {
         this.modName = modName;
-        this.jarName = jarName;
-        this.devJarName = devJarName;
-        this.optional = optional;
+        this.coreModClass = coreModClass;
+        this.modId = modId;
     }
 
     @Override
     public String toString() {
-        return "TargetedMod{modName='" + modName + "', jarName='" + jarName + "', devJarName='" + devJarName + "'}";
+        return "TargetedMod{modName='" + modName + "', coreModClass='" + coreModClass + "', modId='" + modId + "'}";
     }
 }
