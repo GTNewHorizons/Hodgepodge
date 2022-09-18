@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.minecraft;
 
-import com.mitchej123.hodgepodge.Hodgepodge;
+import com.mitchej123.hodgepodge.Common;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ThreadLocalRandom;
 import net.minecraft.network.PacketBuffer;
@@ -32,7 +32,7 @@ public abstract class MixinS02PacketChat {
     public void redirectSerialize(PacketBuffer instance, String s) {
         byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
         if (bytes.length > 32767) {
-            if (Hodgepodge.config.logHugeChat) {
+            if (Common.config.logHugeChat) {
                 String incidentId = "" + System.currentTimeMillis()
                         + ThreadLocalRandom.current().nextInt(1000);
                 LOGGER.info("HUGE chat message caught. Incident ID {}. Serialized message {}.", incidentId, s);

@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.ic2;
 
-import com.mitchej123.hodgepodge.Hodgepodge;
+import com.mitchej123.hodgepodge.Common;
 import ic2.core.init.InternalName;
 import ic2.core.item.ItemCropSeed;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,9 +43,9 @@ public class MixinItemCropSeed extends Item {
 
     @Inject(at = @At("RETURN"), method = "<init>(Lic2/core/init/InternalName;)V", remap = false)
     public void AdjustMaxStackSize(InternalName internalName, CallbackInfo ci) {
-        final int maxStackSize = Hodgepodge.config.ic2SeedMaxStackSize;
+        final int maxStackSize = Common.config.ic2SeedMaxStackSize;
         if (maxStackSize != 1) {
-            Hodgepodge.log.info("Setting IC2 seed max stack size to " + maxStackSize);
+            Common.log.info("Setting IC2 seed max stack size to " + maxStackSize);
             setMaxStackSize(maxStackSize);
         }
     }

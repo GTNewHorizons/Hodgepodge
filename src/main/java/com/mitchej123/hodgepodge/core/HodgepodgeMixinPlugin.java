@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.core;
 
-import com.mitchej123.hodgepodge.Hodgepodge;
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.mixins.Mixins;
 import com.mitchej123.hodgepodge.mixins.TargetedMod;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -50,15 +50,15 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
 
         for (TargetedMod mod : TargetedMod.values()) {
             if (loadedMods.contains(mod)) {
-                Hodgepodge.log.info("Found Mod " + mod.modName + "!");
-            } else if (ArrayUtils.contains(Hodgepodge.config.requiredMods, mod.modName)
-                    && (!isEnvironmentDeobfuscated || Hodgepodge.config.requiredModsInDev)) {
-                Hodgepodge.log.error(
+                Common.log.info("Found Mod " + mod.modName + "!");
+            } else if (ArrayUtils.contains(Common.config.requiredMods, mod.modName)
+                    && (!isEnvironmentDeobfuscated || Common.config.requiredModsInDev)) {
+                Common.log.error(
                         "CRITICAL ERROR: Could not find required jar {}.  If this mod is not required please remove it from the 'requiredMods' section of the config.",
                         mod.modName);
                 FMLCommonHandler.instance().exitJava(-1, true);
             } else {
-                Hodgepodge.log.info("Could not find " + mod.modName + "! Skipping mixins....");
+                Common.log.info("Could not find " + mod.modName + "! Skipping mixins....");
             }
         }
 
@@ -66,9 +66,9 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
         for (Mixins mixin : Mixins.values()) {
             if (mixin.shouldLoad(loadedMods)) {
                 mixins.addAll(mixin.mixinClass);
-                Hodgepodge.log.info("Loading hodgepodge mixin: " + mixin.mixinClass);
+                Common.log.info("Loading hodgepodge mixin: " + mixin.mixinClass);
             } else {
-                Hodgepodge.log.info("NOT loading mixin: " + mixin.mixinClass);
+                Common.log.info("NOT loading mixin: " + mixin.mixinClass);
             }
         }
 
@@ -85,13 +85,13 @@ public class HodgepodgeMixinPlugin implements IMixinConfigPlugin {
         try {
             File jar = MinecraftURLClassPath.getJarInModPath(mod.jarName);
             if (jar == null) {
-                Hodgepodge.log.info("Jar not found for " + mod);
+                Common.log.info("Jar not found for " + mod);
                 return false;
             }
             // TODO it loads the wrong .jar for certain mods that contains the same same
             //  for instance with TargetedMod = TINKERSCONSTRUCT("TConstruct", "TConstruct", "TinkersConstruct")
             //  it loads IguanaTweaksTConstruct-1.7.10-2.2.2.jar instead
-            Hodgepodge.log.info("Attempting to add " + jar + " to the URL Class Path");
+            Common.log.info("Attempting to add " + jar + " to the URL Class Path");
             if (!jar.exists()) {
                 throw new FileNotFoundException(jar.toString());
             }

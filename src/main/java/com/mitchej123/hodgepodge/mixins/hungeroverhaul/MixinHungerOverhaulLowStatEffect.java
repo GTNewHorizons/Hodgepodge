@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.hungeroverhaul;
 
-import com.mitchej123.hodgepodge.Hodgepodge;
+import com.mitchej123.hodgepodge.Common;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import iguanaman.hungeroverhaul.config.IguanaConfig;
 import iguanaman.hungeroverhaul.util.IguanaEventHook;
@@ -29,8 +29,8 @@ public class MixinHungerOverhaulLowStatEffect {
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
         // Slow growth and egg rates
         if (event.entityLiving instanceof EntityAnimal) {
-            float rndBreed = RandomHelper.nextFloat(Hodgepodge.RNG, IguanaConfig.breedingTimeoutMultiplier);
-            float rndChild = RandomHelper.nextFloat(Hodgepodge.RNG, IguanaConfig.childDurationMultiplier);
+            float rndBreed = RandomHelper.nextFloat(Common.RNG, IguanaConfig.breedingTimeoutMultiplier);
+            float rndChild = RandomHelper.nextFloat(Common.RNG, IguanaConfig.childDurationMultiplier);
             EntityAgeable ageable = (EntityAgeable) event.entityLiving;
             int growingAge = ageable.getGrowingAge();
 
@@ -38,7 +38,7 @@ public class MixinHungerOverhaulLowStatEffect {
             else if (growingAge < 0 && rndChild >= 1) ageable.setGrowingAge(--growingAge);
 
             if (IguanaConfig.eggTimeoutMultiplier > 1 && event.entityLiving instanceof EntityChicken) {
-                float rnd = RandomHelper.nextFloat(Hodgepodge.RNG, IguanaConfig.eggTimeoutMultiplier);
+                float rnd = RandomHelper.nextFloat(Common.RNG, IguanaConfig.eggTimeoutMultiplier);
                 EntityChicken chicken = (EntityChicken) event.entityLiving;
                 if (chicken.timeUntilNextEgg > 0 && rnd >= 1) chicken.timeUntilNextEgg += 1;
             }

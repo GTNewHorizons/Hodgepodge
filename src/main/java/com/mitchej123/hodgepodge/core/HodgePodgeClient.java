@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.core;
 
-import com.mitchej123.hodgepodge.Hodgepodge;
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.asm.References;
 import com.mitchej123.hodgepodge.client.ClientTicker;
 import com.mitchej123.hodgepodge.client.DebugScreenHandler;
@@ -24,18 +24,18 @@ public class HodgePodgeClient {
         colorLeaves = References.gt_PollutionRenderer.getMethod("colorLeaves").resolve();
         colorFoliage = References.gt_PollutionRenderer.getMethod("colorFoliage").resolve();
 
-        if (Hodgepodge.config.renderDebug) {
-            renderDebugMode.set(Hodgepodge.config.renderDebugMode);
+        if (Common.config.renderDebug) {
+            renderDebugMode.set(Common.config.renderDebugMode);
         } else {
             renderDebugMode.set(RenderDebugMode.OFF);
         }
 
-        if (Hodgepodge.config.enableDefaultLanPort) {
-            if (Hodgepodge.config.defaultLanPort < 0 || Hodgepodge.config.defaultLanPort > 65535) {
-                Hodgepodge.log.error(String.format(
+        if (Common.config.enableDefaultLanPort) {
+            if (Common.config.defaultLanPort < 0 || Common.config.defaultLanPort > 65535) {
+                Common.log.error(String.format(
                         "Default LAN port number must be in range of 0-65535, but %s was given. Defaulting to 0.",
-                        Hodgepodge.config.defaultLanPort));
-                Hodgepodge.config.defaultLanPort = 0;
+                        Common.config.defaultLanPort));
+                Common.config.defaultLanPort = 0;
             }
         }
 
@@ -50,11 +50,11 @@ public class HodgePodgeClient {
 
         FMLCommonHandler.instance().bus().register(ClientTicker.INSTANCE);
 
-        if (Hodgepodge.config.addSystemInfo) {
+        if (Common.config.addSystemInfo) {
             MinecraftForge.EVENT_BUS.register(DebugScreenHandler.INSTANCE);
         }
 
-        if (Hodgepodge.config.speedupAnimations) {
+        if (Common.config.speedupAnimations) {
             FMLCommonHandler.instance().bus().register(new ClientKeyListener());
         }
     }

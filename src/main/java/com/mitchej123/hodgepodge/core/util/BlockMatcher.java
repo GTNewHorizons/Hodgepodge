@@ -2,7 +2,7 @@ package com.mitchej123.hodgepodge.core.util;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.mitchej123.hodgepodge.Hodgepodge;
+import com.mitchej123.hodgepodge.Common;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
 import cpw.mods.fml.common.registry.GameData;
@@ -32,14 +32,14 @@ public class BlockMatcher {
         whiteList.clear();
         blackList.clear();
         for (String line : cfg) {
-            Hodgepodge.log.info("Checking for block:" + line);
+            Common.log.info("Checking for block:" + line);
             String[] lines = line.split(":");
             ColorOverrideType type = null;
             if (lines.length > 1) {
                 try {
                     type = ColorOverrideType.get(lines[1].trim());
                 } catch (NumberFormatException e) {
-                    Hodgepodge.log.error(String.format("Invalid type [%s]", line));
+                    Common.log.error(String.format("Invalid type [%s]", line));
                     continue;
                 }
             }
@@ -47,18 +47,18 @@ public class BlockMatcher {
             if (lines[0].startsWith("-")) {
                 try {
                     blackList.add(Class.forName(lines[0].substring(1)));
-                    Hodgepodge.log.info("\t added blacklist:" + lines[0].substring(1));
+                    Common.log.info("\t added blacklist:" + lines[0].substring(1));
                 } catch (ClassNotFoundException ignored) {
                 }
             } else {
                 if (type == null) {
-                    Hodgepodge.log.error(String.format("Invalid type [%s]", line));
+                    Common.log.error(String.format("Invalid type [%s]", line));
                     continue;
                 }
 
                 try {
                     whiteList.put(Class.forName(lines[0]), type);
-                    Hodgepodge.log.info("\t added whitelist:" + lines[0]);
+                    Common.log.info("\t added whitelist:" + lines[0]);
                 } catch (ClassNotFoundException ignored) {
                 }
             }
