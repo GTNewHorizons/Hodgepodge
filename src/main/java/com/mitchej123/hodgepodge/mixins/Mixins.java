@@ -10,22 +10,15 @@ import java.util.function.Supplier;
 public enum Mixins {
     // Vanilla Fixes
     THROTTLE_ITEMPICKUPEVENT(
-            "minecraft.MixinEntityPlayer",
-            Side.BOTH,
-            () -> Common.config.throttleItemPickupEvent,
-            TargetedMod.VANILLA),
+            "minecraft.MixinEntityPlayer", Side.BOTH, () -> Common.config.throttleItemPickupEvent, TargetedMod.VANILLA),
     FIX_PERSPECTIVE_CAMERA(
             "minecraft.MixinEntityRenderer",
             Side.CLIENT,
             () -> Common.config.fixPerspectiveCamera,
             TargetedMod.VANILLA),
     FIX_DEBUG_BOUNDING_BOX(
-            "minecraft.MixinRenderManager",
-            Side.CLIENT,
-            () -> Common.config.fixDebugBoundingBox,
-            TargetedMod.VANILLA),
-    FENCE_CONNECTIONS_FIX(
-            "minecraft.MixinBlockFence", () -> Common.config.fixFenceConnections, TargetedMod.VANILLA),
+            "minecraft.MixinRenderManager", Side.CLIENT, () -> Common.config.fixDebugBoundingBox, TargetedMod.VANILLA),
+    FENCE_CONNECTIONS_FIX("minecraft.MixinBlockFence", () -> Common.config.fixFenceConnections, TargetedMod.VANILLA),
     FIX_INVENTORY_OFFSET_WITH_POTIONS(
             "minecraft.MixinInventoryEffectRenderer_PotionOffset",
             Side.CLIENT,
@@ -84,8 +77,7 @@ public enum Mixins {
             Side.CLIENT,
             () -> Common.config.increaseParticleLimit,
             TargetedMod.VANILLA),
-    FIX_POTION_LIMIT(
-            "minecraft.MixinPotionEffect", Side.BOTH, () -> Common.config.fixPotionLimit, TargetedMod.VANILLA),
+    FIX_POTION_LIMIT("minecraft.MixinPotionEffect", Side.BOTH, () -> Common.config.fixPotionLimit, TargetedMod.VANILLA),
     FIX_HOPPER_VOIDING_ITEMS(
             "minecraft.MixinTileEntityHopper", () -> Common.config.fixHopperVoidingItems, TargetedMod.VANILLA),
     FIX_HUGE_CHAT_KICK("minecraft.MixinS02PacketChat", () -> Common.config.fixHugeChatKick, TargetedMod.VANILLA),
@@ -154,19 +146,13 @@ public enum Mixins {
     GRASS_GET_BLOCK_FIX(
             "minecraft.MixinBlockGrass", () -> Common.config.fixVanillaUnprotectedGetBlock, TargetedMod.VANILLA),
     FIRE_GET_BLOCK_FIX(
-            "minecraft.MixinBlockFireGetBlock",
-            () -> Common.config.fixVanillaUnprotectedGetBlock,
-            TargetedMod.VANILLA),
+            "minecraft.MixinBlockFireGetBlock", () -> Common.config.fixVanillaUnprotectedGetBlock, TargetedMod.VANILLA),
     VILLAGE_GET_BLOCK_FIX(
             "minecraft.MixinVillage", () -> Common.config.fixVanillaUnprotectedGetBlock, TargetedMod.VANILLA),
     VILLAGE_COLLECTION_GET_BLOCK_FIX(
-            "minecraft.MixinVillageCollection",
-            () -> Common.config.fixVanillaUnprotectedGetBlock,
-            TargetedMod.VANILLA),
+            "minecraft.MixinVillageCollection", () -> Common.config.fixVanillaUnprotectedGetBlock, TargetedMod.VANILLA),
     FLUID_CLASSIC_GET_BLOCK_FIX(
-            "minecraft.MixinBlockFluidClassic",
-            () -> Common.config.fixVanillaUnprotectedGetBlock,
-            TargetedMod.VANILLA),
+            "minecraft.MixinBlockFluidClassic", () -> Common.config.fixVanillaUnprotectedGetBlock, TargetedMod.VANILLA),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(
@@ -175,16 +161,12 @@ public enum Mixins {
             "ic2.MixinItemCropSeed", () -> Common.config.fixIc2DirectInventoryAccess, TargetedMod.IC2),
     IC2_DIRECT_INV_ACCESS_CROP(
             "ic2.MixinTileEntityCrop", () -> Common.config.fixIc2DirectInventoryAccess, TargetedMod.IC2),
-    IC2_NIGHT_VISION_NANO(
-            "ic2.MixinIc2NanoSuitNightVision", () -> Common.config.fixIc2Nightvision, TargetedMod.IC2),
+    IC2_NIGHT_VISION_NANO("ic2.MixinIc2NanoSuitNightVision", () -> Common.config.fixIc2Nightvision, TargetedMod.IC2),
     IC2_NIGHT_VISION_QUANTUM(
             "ic2.MixinIc2QuantumSuitNightVision", () -> Common.config.fixIc2Nightvision, TargetedMod.IC2),
-    IC2_NIGHT_VISION_GOGGLES(
-            "ic2.MixinIc2NightVisionGoggles", () -> Common.config.fixIc2Nightvision, TargetedMod.IC2),
+    IC2_NIGHT_VISION_GOGGLES("ic2.MixinIc2NightVisionGoggles", () -> Common.config.fixIc2Nightvision, TargetedMod.IC2),
     IC2_REACTOR_DUPE(
-            "ic2.MixinTileEntityReactorChamberElectricNoDupe",
-            () -> Common.config.fixIc2ReactorDupe,
-            TargetedMod.IC2),
+            "ic2.MixinTileEntityReactorChamberElectricNoDupe", () -> Common.config.fixIc2ReactorDupe, TargetedMod.IC2),
     IC2_REACTOR_INVENTORY_SPEEDUP(
             "ic2.MixinTileEntityReactorChamberElectricInvSpeedup",
             () -> Common.config.optimizeIc2ReactorInventoryAccess,
@@ -194,8 +176,7 @@ public enum Mixins {
     IC2_HAZMAT("ic2.MixinIc2Hazmat", () -> Common.config.fixIc2Hazmat, TargetedMod.IC2, TargetedMod.GT5U),
     IC2_FLUID_CONTAINER_TOOLTIP(
             "ic2.MixinItemIC2FluidContainer", () -> Common.config.displayIc2FluidLocalizedName, TargetedMod.IC2),
-    IC2_FLUID_RENDER_FIX(
-            "ic2.textures.MixinRenderLiquidCell", () -> Common.config.speedupAnimations, TargetedMod.IC2),
+    IC2_FLUID_RENDER_FIX("ic2.textures.MixinRenderLiquidCell", () -> Common.config.speedupAnimations, TargetedMod.IC2),
 
     // gregtech
     GREGTECH_FLUID_RENDER_FIX(
@@ -227,17 +208,11 @@ public enum Mixins {
 
     // Thaumcraft
     THAUMCRAFT_ARCANE_LAMP_GET_BLOCK_FIX(
-            "thaumcraft.MixinArcaneLamp",
-            () -> Common.config.fixThaumcraftUnprotectedGetBlock,
-            TargetedMod.THAUMCRAFT),
+            "thaumcraft.MixinArcaneLamp", () -> Common.config.fixThaumcraftUnprotectedGetBlock, TargetedMod.THAUMCRAFT),
     THAUMCRAFT_WISP_GET_BLOCK_FIX(
-            "thaumcraft.MixinEntityWisp",
-            () -> Common.config.fixThaumcraftUnprotectedGetBlock,
-            TargetedMod.THAUMCRAFT),
+            "thaumcraft.MixinEntityWisp", () -> Common.config.fixThaumcraftUnprotectedGetBlock, TargetedMod.THAUMCRAFT),
     ADD_CV_SUPPORT_TO_WAND_PEDESTAL(
-            "thaumcraft.MixinTileWandPedestal",
-            () -> Common.config.addCVSupportToWandPedestal,
-            TargetedMod.THAUMCRAFT),
+            "thaumcraft.MixinTileWandPedestal", () -> Common.config.addCVSupportToWandPedestal, TargetedMod.THAUMCRAFT),
 
     // BOP
     DEDUPLICATE_FORESTRY_COMPAT_IN_BOP(
@@ -245,34 +220,26 @@ public enum Mixins {
             () -> Common.config.deduplicateForestryCompatInBOP,
             TargetedMod.BOP),
     SPEEDUP_BOP_BIOME_FOG(
-            "biomesoplenty.MixinFogHandler",
-            Side.CLIENT,
-            () -> Common.config.speedupBOPFogHandling,
-            TargetedMod.BOP),
+            "biomesoplenty.MixinFogHandler", Side.CLIENT, () -> Common.config.speedupBOPFogHandling, TargetedMod.BOP),
     BIG_FIR_TREES("biomesoplenty.MixinBlockBOPSapling", () -> Common.config.makeBigFirsPlantable, TargetedMod.BOP),
 
     // MrTJPCore (Project Red)
-    FIX_HUD_LIGHTING_GLITCH(
-            "mrtjpcore.MixinFXEngine", () -> Common.config.fixHudLightingGlitch, TargetedMod.MRTJPCORE),
-    FIX_POPPING_OFF(
-            "mrtjpcore.MixinPlacementLib", () -> Common.config.fixComponentsPoppingOff, TargetedMod.MRTJPCORE),
+    FIX_HUD_LIGHTING_GLITCH("mrtjpcore.MixinFXEngine", () -> Common.config.fixHudLightingGlitch, TargetedMod.MRTJPCORE),
+    FIX_POPPING_OFF("mrtjpcore.MixinPlacementLib", () -> Common.config.fixComponentsPoppingOff, TargetedMod.MRTJPCORE),
 
     // Automagy
     IMPLEMENTS_CONTAINER_FOR_THIRSTY_TANK(
             "automagy.MixinItemBlockThirstyTank", () -> Common.config.thirstyTankContainer, TargetedMod.AUTOMAGY),
 
     // ProjectE
-    FIX_FURNACE_ITERATION(
-            "projecte.MixinObjHandler", () -> Common.config.speedupVanillaFurnace, TargetedMod.PROJECTE),
+    FIX_FURNACE_ITERATION("projecte.MixinObjHandler", () -> Common.config.speedupVanillaFurnace, TargetedMod.PROJECTE),
 
     FIX_JOURNEYMAP_KEYBINDS(
             "journeymap.MixinConstants", () -> Common.config.fixJourneymapKeybinds, TargetedMod.JOURNEYMAP),
 
     // Pam's Harvest the Nether
     FIX_IGNIS_FRUIT_AABB(
-            "harvestthenether.MixinBlockPamFruit",
-            () -> Common.config.fixIgnisFruitAABB,
-            TargetedMod.HARVESTTHENETHER),
+            "harvestthenether.MixinBlockPamFruit", () -> Common.config.fixIgnisFruitAABB, TargetedMod.HARVESTTHENETHER),
     FIX_NETHER_LEAVES_FACE_RENDERING(
             "harvestthenether.MixinBlockNetherLeaves",
             Side.CLIENT,
