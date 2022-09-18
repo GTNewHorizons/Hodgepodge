@@ -8,9 +8,6 @@ import org.apache.logging.log4j.Logger;
 
 public class Common {
     public static final Logger log = LogManager.getLogger("Hodgepodge");
-    public static final String MODID = "hodgepodge";
-    public static final String VERSION = "GRADLETOKEN_VERSION";
-    public static final String NAME = "A Hodgepodge of Patches";
     public static LoadingConfig config;
     public static boolean thermosTainted;
     public static XSTR RNG = new XSTR();

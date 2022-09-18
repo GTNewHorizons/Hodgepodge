@@ -12,13 +12,16 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.relauncher.Side;
 
 @Mod(
-        modid = Common.MODID,
-        version = Common.VERSION,
-        name = Common.NAME,
+        modid = Hodgepodge.MODID,
+        version = Hodgepodge.VERSION,
+        name = Hodgepodge.NAME,
         acceptableRemoteVersions = "*",
         dependencies = "required-after:spongemixins@[1.4.0,);")
 public class Hodgepodge {
     public static final AnchorAlarm ANCHOR_ALARM = new AnchorAlarm();
+    public static final String MODID = "hodgepodge";
+    public static final String VERSION = "GRADLETOKEN_VERSION";
+    public static final String NAME = "A Hodgepodge of Patches";
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
