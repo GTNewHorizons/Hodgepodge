@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.minecraft;
 
-import com.mitchej123.hodgepodge.Hodgepodge;
+import com.mitchej123.hodgepodge.Common;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.util.MathHelper;
@@ -34,9 +34,9 @@ public class MixinRandomPositionGenerator {
         }
 
         for (int i = 0; i < 10; ++i) {
-            final int x1 = Hodgepodge.RNG.nextInt(2 * hor + 1) - hor;
-            final int y1 = Hodgepodge.RNG.nextInt(2 * ver + 1) - ver;
-            final int z1 = Hodgepodge.RNG.nextInt(2 * hor + 1) - hor;
+            final int x1 = Common.RNG.nextInt(2 * hor + 1) - hor;
+            final int y1 = Common.RNG.nextInt(2 * ver + 1) - ver;
+            final int z1 = Common.RNG.nextInt(2 * hor + 1) - hor;
 
             if (facing == null || (double) x1 * facing.xCoord + (double) z1 * facing.zCoord >= 0.0D) {
                 // Use the rounded coordinates for comparision since `isWithinHomeDistance` takes int params

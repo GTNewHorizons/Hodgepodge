@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.core.util;
 
-import com.mitchej123.hodgepodge.Hodgepodge;
+import com.mitchej123.hodgepodge.Common;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import io.netty.buffer.ByteBuf;
@@ -40,7 +40,7 @@ public class AnchorAlarm {
             if (((EntityPlayer) obj).getDisplayName().equals(playerName)) {
                 NBTTagCompound nbt = ((EntityPlayer) obj).getEntityData();
                 if (!nbt.hasKey(NBT_KEY)) {
-                    Hodgepodge.log.debug("[AnchorDebug] No anchors listed for player " + playerName);
+                    Common.log.debug("[AnchorDebug] No anchors listed for player " + playerName);
                 } else {
                     byte[] bytes = nbt.getByteArray(NBT_KEY);
                     ByteBuf buf = Unpooled.wrappedBuffer(bytes);
@@ -50,7 +50,7 @@ public class AnchorAlarm {
                         int x = buf.readInt();
                         int y = buf.readInt();
                         int z = buf.readInt();
-                        Hodgepodge.log.debug("[AnchorDebug] Anchor (" + x + ", " + y + ", " + z + ") at dim " + dim
+                        Common.log.debug("[AnchorDebug] Anchor (" + x + ", " + y + ", " + z + ") at dim " + dim
                                 + " for player " + playerName);
                     }
                 }
@@ -73,7 +73,7 @@ public class AnchorAlarm {
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.player instanceof EntityPlayerMP) {
             if (AnchorDebug) {
-                Hodgepodge.log.debug("[AnchorDebug] Loading anchors for player " + event.player.getDisplayName());
+                Common.log.debug("[AnchorDebug] Loading anchors for player " + event.player.getDisplayName());
             }
             if (event.player.getEntityData().hasKey(NBT_KEY)) {
                 byte[] bytes = event.player.getEntityData().getByteArray(NBT_KEY);
@@ -125,7 +125,7 @@ public class AnchorAlarm {
                         } else if (AnchorDebug) System.out.println("[AnchorDebug] Failed loading dimension " + dim);
                     }
                 } catch (IndexOutOfBoundsException ignored) {
-                    Hodgepodge.log.error("Error reading anchor list!");
+                    Common.log.error("Error reading anchor list!");
                 }
                 byte[] newbytes = new byte[validAlarmCount * 16];
                 newbuf.readBytes(newbytes);

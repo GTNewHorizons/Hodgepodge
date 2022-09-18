@@ -2,7 +2,7 @@ package com.mitchej123.hodgepodge.asm.transformers.tconstruct;
 
 import static org.objectweb.asm.Opcodes.ASM5;
 
-import com.mitchej123.hodgepodge.Hodgepodge;
+import com.mitchej123.hodgepodge.Common;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -14,7 +14,7 @@ public class TabRegistryTransformer implements IClassTransformer {
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if ("tconstruct.client.tabs.TabRegistry".equals(transformedName)) {
-            Hodgepodge.log.info("Patching TConstruct {}", transformedName);
+            Common.log.info("Patching TConstruct {}", transformedName);
             final ClassReader cr = new ClassReader(basicClass);
             final ClassWriter cw = new ClassWriter(0);
             final ClassNode cn = new ClassNode(ASM5);

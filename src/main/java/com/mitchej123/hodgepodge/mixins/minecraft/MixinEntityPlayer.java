@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.minecraft;
 
-import com.mitchej123.hodgepodge.Hodgepodge;
+import com.mitchej123.hodgepodge.Common;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,7 +48,7 @@ public abstract class MixinEntityPlayer {
                                                     "Lnet/minecraft/world/World;getEntitiesWithinAABBExcludingEntity(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/AxisAlignedBB;)Ljava/util/List;")))
     public void hodgepodge$ThrottleItemPickupEvent(EntityPlayer instance, Entity entity) {
         if (entity instanceof EntityItem) {
-            if (hodgepodge$itemEntityCounter < Hodgepodge.config.itemStacksPickedUpPerTick) {
+            if (hodgepodge$itemEntityCounter < Common.config.itemStacksPickedUpPerTick) {
                 this.collideWithPlayer(entity);
             }
             hodgepodge$itemEntityCounter++;

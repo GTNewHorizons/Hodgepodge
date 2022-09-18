@@ -1,7 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.minecraft;
 
 import com.gtnewhorizon.gtnhlib.util.map.ItemStackMap;
-import com.mitchej123.hodgepodge.Hodgepodge;
+import com.mitchej123.hodgepodge.Common;
 import java.util.Map;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -31,7 +31,7 @@ public abstract class MixinFurnaceRecipes {
     @Overwrite(remap = false)
     public void func_151394_a /* addSmeltingRecipe */(ItemStack input, ItemStack stack, float experience) {
         if (getSmeltingResult(input) != null) {
-            Hodgepodge.log.info(
+            Common.log.info(
                     "Overwriting smelting recipe for input: {} and output {} with {}",
                     input,
                     getSmeltingResult(input),

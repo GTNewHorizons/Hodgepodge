@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.minecraft;
 
-import com.mitchej123.hodgepodge.Hodgepodge;
+import com.mitchej123.hodgepodge.Common;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
@@ -23,7 +23,7 @@ public class MixinWorldGetBlock {
      */
     public Block getBlock(Chunk chunk, int x, int y, int z) {
         if (chunk == null) {
-            Hodgepodge.log.info("NULL chunk found at {}, {}, {}, returning Blocks.air", x, y, z);
+            Common.log.info("NULL chunk found at {}, {}, {}, returning Blocks.air", x, y, z);
             return Blocks.air;
         }
         return chunk.getBlock(x, y, z);

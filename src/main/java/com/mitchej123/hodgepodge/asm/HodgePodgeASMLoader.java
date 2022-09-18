@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.asm;
 
-import com.mitchej123.hodgepodge.Hodgepodge;
+import com.mitchej123.hodgepodge.Common;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,28 +28,28 @@ public class HodgePodgeASMLoader
     public enum AsmTransformers {
         POLLUTION_TRANSFORMER(
                 "Pollution Transformer",
-                () -> Hodgepodge.config.pollutionAsm,
+                () -> Common.config.pollutionAsm,
                 Collections.singletonList("com.mitchej123.hodgepodge.asm.PollutionClassTransformer")),
         CoFHWorldTransformer(
                 "World Transformer - Remove CoFH tile entity cache",
-                () -> Hodgepodge.config.cofhWorldTransformer,
+                () -> Common.config.cofhWorldTransformer,
                 Collections.singletonList("com.mitchej123.hodgepodge.asm.WorldTransformer")),
         SpeedupProgressBar(
                 "Speed up Progress Bar by speeding up stripSpecialCharacters",
-                () -> Hodgepodge.config.speedupProgressBar,
+                () -> Common.config.speedupProgressBar,
                 Collections.singletonList("com.mitchej123.hodgepodge.asm.SpeedupProgressBarTransformer")),
         FIX_TINKER_POTION_EFFECT_OFFSET(
                 "Prevents the inventory from shifting when the player has active potion effects",
-                () -> Hodgepodge.config.fixPotionRenderOffset,
+                () -> Common.config.fixPotionRenderOffset,
                 Collections.singletonList(
                         "com.mitchej123.hodgepodge.asm.transformers.tconstruct.TabRegistryTransformer")),
         THERMOS_SLEDGEHAMMER_FURNACE_FIX(
                 "Take a sledgehammer to CraftServer.resetRecipes() to prevent it from breaking our Furnace Fix",
-                () -> Hodgepodge.thermosTainted && Hodgepodge.config.speedupVanillaFurnace,
+                () -> Common.thermosTainted && Common.config.speedupVanillaFurnace,
                 Collections.singletonList("com.mitchej123.hodgepodge.asm.ThermosFurnaceSledgeHammer")),
         BIBLIOCRAFT_RECIPE_SLEDGEHAMMER(
                 "Remove recipes from Bibliocraft BlockLoader and Itemloader : addRecipies()",
-                () -> Hodgepodge.config.biblocraftRecipes,
+                () -> Common.config.biblocraftRecipes,
                 Collections.singletonList("com.mitchej123.hodgepodge.asm.BibliocraftTransformer"));
 
         private final String name;
