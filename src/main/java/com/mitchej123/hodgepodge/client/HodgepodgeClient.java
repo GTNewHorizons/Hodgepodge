@@ -1,9 +1,9 @@
 package com.mitchej123.hodgepodge.client;
 
 import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.LoadingConfig;
 import com.mitchej123.hodgepodge.asm.References;
 import com.mitchej123.hodgepodge.client.handlers.ClientKeyListener;
-import com.mitchej123.hodgepodge.LoadingConfig;
 import com.mitchej123.hodgepodge.util.ColorOverrideType;
 import com.mitchej123.hodgepodge.util.ManagedEnum;
 import cpw.mods.fml.common.FMLCommonHandler;
