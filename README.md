@@ -1,21 +1,6 @@
 # A Hodgepodge of Fixes
 
-Requires SpongeMixins mod (https://github.com/GTNewHorizons/SpongeMixins) to work.
-
-## Fixes:
-* FixNorthWestBias - Backports removal of the North/West bias
-* FixFenceConnections - Tweaks fence connection logic to work with other mods
-* FixIc2DirectInventoryAccess - Swaps out direct inventory access in crop functions with `setInventorySlotContents` so they work with OC robots
-* FixVanillaUnprotectedGetBlock - Fixes various unprotected Vanilla getBlock() calls, making sure the chunk is loaded first.  Includes the previous `fixGrassChunkLoads`
-* FixIc2UnprotectedGetBlock - Fixes various unprotected IC2 getBlock() calls, making sure the chunk is loaded first.
-* FixThaumcraftUnprotectedGetBlock - Fixes various unprotected Thaumcraft getBlock() calls, making sure the chunk is loaded first.
-* FixIc2Nightvision - Prevents IC2 night vision from blinding you when it's bright out, making it on par with other nightvision available
-* FixHungerOverhaul - Patches unintended mod interaction with Spice Of Life - Carrot Edition
-* FixPotionLimit - Support all 256 potion slots by fixing the incorrect signed byte conversions.
-* RemoveUpdateChecks - Removes outdated update checks
-* FixFullscreenResizable - Fix game window is not resizeable after exiting fullscreen
-## Speedups
-* SpeedupChunkCoordinatesHashCode - Swaps out the HashCode function for ChunkCoordinates with one that provides better performance with HashSet
+Requires GTNHMixins 2.0.0+ (https://github.com/GTNewHorizons/GTNHMixins) to work.
 
 ## Running
 

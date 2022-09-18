@@ -1,7 +1,7 @@
 package com.mitchej123.hodgepodge.asm.util;
 
 import com.google.common.collect.Maps;
-import com.mitchej123.hodgepodge.asm.HodgePodgeASMLoader;
+import com.mitchej123.hodgepodge.core.HodgepodgeCore;
 import java.util.Map;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.apache.logging.log4j.LogManager;
@@ -38,7 +38,7 @@ public abstract class AbstractClassTransformer implements IClassTransformer {
 
         // test the environment - a name mismatch indicates the presence of obfuscated code
         if (!transformedName.equals(name)) {
-            if (HodgePodgeASMLoader.getSortingIndex() >= 1001) environment = Namespace.SRG;
+            if (HodgepodgeCore.getSortingIndex() >= 1001) environment = Namespace.SRG;
             else environment = Namespace.OBF;
         }
 
