@@ -1,7 +1,6 @@
 package com.mitchej123.hodgepodge.client;
 
 import com.mitchej123.hodgepodge.Common;
-import com.mitchej123.hodgepodge.core.HodgePodgeClient;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -45,9 +44,9 @@ public class DebugScreenHandler {
             if (Common.config.speedupAnimations || Common.config.renderDebug) {
                 event.right.add(8, null); // Empty Line
                 if (Common.config.speedupAnimations)
-                    event.right.add(9, "animationsMode: " + HodgePodgeClient.animationsMode);
+                    event.right.add(9, "animationsMode: " + HodgepodgeClient.animationsMode);
                 if (Common.config.renderDebug)
-                    event.right.add(9, "renderDebugMode: " + HodgePodgeClient.renderDebugMode);
+                    event.right.add(9, "renderDebugMode: " + HodgepodgeClient.renderDebugMode);
             }
         }
     }

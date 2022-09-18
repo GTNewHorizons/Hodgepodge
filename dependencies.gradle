@@ -1,26 +1,30 @@
 dependencies {
     compile("com.github.GTNewHorizons:NotEnoughItems:2.3.1-GTNH:dev")
-    compile("com.github.GTNewHorizons:GT5-Unofficial:5.09.41.18:dev")
-    compileOnly("com.github.GTNewHorizons:ForestryMC:4.4.14:dev")
+    compile("com.github.GTNewHorizons:GT5-Unofficial:5.09.41.29:dev")
+    compile("com.github.GTNewHorizons:ForestryMC:4.4.14:dev")
     compileOnly("com.github.GTNewHorizons:EnderIO:2.3.1.43:dev")
-    compile("com.github.GTNewHorizons:StructureLib:1.0.15:dev")
-    compile("com.github.GTNewHorizons:GTNHLib:0.0.3:dev")
+    compile("com.github.GTNewHorizons:StructureLib:1.1.9:dev")
+    compile("com.github.GTNewHorizons:GTNHLib:0.0.5:dev")
+    compile('com.gtnewhorizon:gtnhmixins:2.0.0')
     compile("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
-    compile("com.github.GTNewHorizons:AppleCore:3.1.9:dev")
-    compile("mrtjp:MrTJPCore:1.7.10-1.1.0.33:dev")
+    compile("com.github.GTNewHorizons:AppleCore:3.2.0:dev")
+    compileOnly("mrtjp:MrTJPCore:1.7.10-1.1.0.33:dev")
     compileOnly("curse.maven:automagy-222153:2285272")
-
-    compileOnly("com.github.GTNewHorizons:Railcraft:9.13.6:dev") {
+    
+    compileOnly("com.github.GTNewHorizons:Railcraft:9.13.10:dev") {
         // RC Depends on BuildCraft & Baubles and a few others, use transitive to pull those in for `runClient`
         transitive = true
     }
-    compile("com.github.GTNewHorizons:HungerOverhaul:master-SNAPSHOT:dev")
+    compile("com.github.GTNewHorizons:HungerOverhaul:1.0.4-GTNH:dev")
+    
     compileOnly("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev")
     compile("curse.maven:cofh-core-69162:2388751")
     compile("curse.maven:biomes-o-plenty-220318:2499612")
     compileOnly("curse.maven:projecte-226410:2340786")
     compileOnly(deobf("https://mediafiles.forgecdn.net/files/2241/397/Pam%27s+Harvest+the+Nether+1.7.10a.jar"))
-    compileOnly("com.github.GTNewHorizons:Galacticraft:3.0.44-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:Galacticraft:3.0.44-GTNH:dev") {
+        transitive = false
+    }
     compileOnly("com.github.GTNewHorizons:Baubles:1.0.1.14:dev")
     compileOnly fileTree(dir: 'dependencies', includes: ['TravellersGear-1.7.10-1.16.8-GTNH.jar'])
     compileOnly('curse.maven:journeymap-32274:2367915')

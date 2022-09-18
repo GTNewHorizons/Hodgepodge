@@ -1,6 +1,12 @@
+configurations.all {
+    // Only needed for dev.  Transitioning to gtnhmixins and sponge mixins > 0.8.5
+    exclude group: 'com.github.GTNewHorizons', module: 'SpongePoweredMixin'
+    exclude group: 'com.github.GTNewHorizons', module: 'SpongeMixins'
+}
+
 jar {
     manifest {
         // I need a place to call add this IClassTransformer before CoFHCore loads its transformation target
-        attributes "CCTransformer": "com.mitchej123.hodgepodge.asm.EarlyClassTransformer"
+        attributes "CCTransformer": "com.mitchej123.hodgepodge.asm.transformers.early.EarlyClassTransformer"
     }
 }
