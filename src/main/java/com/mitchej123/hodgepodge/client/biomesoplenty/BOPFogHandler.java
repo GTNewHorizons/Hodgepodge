@@ -2,7 +2,7 @@ package com.mitchej123.hodgepodge.client.biomesoplenty;
 
 import biomesoplenty.client.fog.FogHandler;
 import biomesoplenty.client.fog.IBiomeFog;
-import com.mitchej123.hodgepodge.mixins.biomesoplenty.AccessorFogHandler;
+import com.mitchej123.hodgepodge.mixins.late.biomesoplenty.AccessorFogHandler;
 import java.util.concurrent.atomic.AtomicInteger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;

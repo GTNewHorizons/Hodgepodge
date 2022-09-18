@@ -1,8 +1,8 @@
 package com.mitchej123.hodgepodge;
 
-import com.mitchej123.hodgepodge.core.HodgePodgeClient;
-import com.mitchej123.hodgepodge.core.commands.DebugCommand;
-import com.mitchej123.hodgepodge.core.util.AnchorAlarm;
+import com.mitchej123.hodgepodge.client.HodgepodgeClient;
+import com.mitchej123.hodgepodge.commands.DebugCommand;
+import com.mitchej123.hodgepodge.util.AnchorAlarm;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.Side;
         version = Hodgepodge.VERSION,
         name = Hodgepodge.NAME,
         acceptableRemoteVersions = "*",
-        dependencies = "required-after:spongemixins@[1.4.0,);")
+        dependencies = "required-after:gtnhmixins@[2.0.0,);")
 public class Hodgepodge {
     public static final AnchorAlarm ANCHOR_ALARM = new AnchorAlarm();
     public static final String MODID = "hodgepodge";
@@ -31,7 +31,7 @@ public class Hodgepodge {
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         if (event.getSide() == Side.CLIENT) {
-            HodgePodgeClient.postInit();
+            HodgepodgeClient.postInit();
         }
     }
 

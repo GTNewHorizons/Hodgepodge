@@ -17,7 +17,7 @@ public class References {
         gt_PollutionRenderer.addMethod("colorLiquid", ClassRef.INT, ClassRef.INT, ClassRef.INT, ClassRef.INT);
         gt_PollutionRenderer.addMethod("colorFoliage", ClassRef.INT, ClassRef.INT, ClassRef.INT, ClassRef.INT);
 
-        cHogClient = new ClassRef("com.mitchej123.hodgepodge.core.HodgePodgeClient");
+        cHogClient = new ClassRef("com.mitchej123.hodgepodge.client.HodgePodgeClient");
         cIBlockAccess = new ClassRef("net.minecraft.world.IBlockAccess", "ahl");
         cBlock = new ClassRef("net.minecraft.block.Block", "aji");
 
