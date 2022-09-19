@@ -77,6 +77,7 @@ public class LoadingConfig {
     public boolean optimizeASMDataTable;
     public boolean squashBedErrorMessage;
     public boolean throttleItemPickupEvent;
+    public boolean hideCrosshairInThirdPerson;
     public boolean fixOptifineGuiScaleCrash;
 
     public boolean enableDefaultLanPort;
@@ -459,6 +460,12 @@ public class LoadingConfig {
                         "addToggleDebugMessage",
                         true,
                         "Add a debug message in the chat when toggling vanilla debug options")
+                .getBoolean();
+        hideCrosshairInThirdPerson = config.get(
+                        Category.TWEAKS.toString(),
+                        "hideCrosshairInThirdPerson",
+                        true,
+                        "Stops rendering the crosshair when you are playing in third person")
                 .getBoolean();
 
         optimizeASMDataTable = config.get(
