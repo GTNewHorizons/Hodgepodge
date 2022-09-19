@@ -60,4 +60,15 @@ public class MixinMinecraft_ToggleDebugMessage {
         GTNHLib.proxy.addDebugToChat("Pause on lost focus:"
                 + (gameSettings.pauseOnLostFocus ? EnumChatFormatting.GREEN + " On" : EnumChatFormatting.RED + " Off"));
     }
+
+    @Inject(
+            method = "runTick",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target = "Lnet/minecraft/client/renderer/RenderGlobal;loadRenderers()V",
+                            shift = At.Shift.AFTER))
+    public void hodgepodge$printDebugChatMsgChunkReload(CallbackInfo ci) {
+        GTNHLib.proxy.addDebugToChat("Reloading all chunks");
+    }
 }
