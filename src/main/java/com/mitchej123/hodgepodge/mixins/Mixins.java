@@ -103,9 +103,10 @@ public enum Mixins {
     FIX_OPTIFINE_CHUNKLOADING_CRASH(
             () -> Common.config.fixOptifineChunkLoadingCrash,
             Side.CLIENT,
-            TargetedMod.OPTIFINE,
-            "minecraft.MixinGameSettings",
-            "minecraft.MixinGuiVideoSettings"),
+            TargetedMod.VANILLA, // TargetedMod.OPTIFINE,
+            "minecraft.MixinGameSettings" /*,
+                                          TODO this mixins crashes with mixins 7.0, enable it once we update to 8.0
+                                          "minecraft.MixinGuiVideoSettings"*/),
     ADD_TOGGLE_DEBUG_MESSAGE(
             "minecraft.MixinMinecraft_ToggleDebugMessage",
             Side.CLIENT,

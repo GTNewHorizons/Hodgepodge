@@ -10,6 +10,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(GuiVideoSettings.class)
 public class MixinGuiVideoSettings {
 
+    /*
+     * This mixins is disabled for now as it will crash with Mixins v7.0
+     * https://github.com/SpongePowered/Mixin/issues/358
+     * TODO enable it once we change to 8.0
+     */
+
     @Dynamic("Method is added by optifine's ASM")
     @Inject(method = "getTooltipLines", at = @At("HEAD"), remap = false, cancellable = true)
     public void hodgepodge$ChangeChunkLoadingTooltip(String btnName, CallbackInfoReturnable<String[]> cir) {
