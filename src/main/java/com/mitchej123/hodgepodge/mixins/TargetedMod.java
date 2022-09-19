@@ -20,6 +20,7 @@ public enum TargetedMod {
     // Temporary solution to force load it early
     GTNHLIB("GTNHLib", "gtnhlib"),
     JOURNEYMAP("journeymap", "journeymap");
+    //OPTIFINE("OptiFine", "OptiFine");
 
     public final String modName;
     public final String jarName;
