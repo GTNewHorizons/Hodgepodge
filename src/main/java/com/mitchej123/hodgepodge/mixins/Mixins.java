@@ -143,7 +143,7 @@ public enum Mixins {
             TargetedMod.VANILLA),
     CROSSHAIR_THIRDPERSON(
             "forge.MixinGuiIngameForge",
-            Side.BOTH,
+            Side.CLIENT,
             () -> Common.config.hideCrosshairInThirdPerson,
             TargetedMod.VANILLA),
 
