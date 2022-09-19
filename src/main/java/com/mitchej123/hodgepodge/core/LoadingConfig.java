@@ -78,6 +78,7 @@ public class LoadingConfig {
     public boolean squashBedErrorMessage;
     public boolean throttleItemPickupEvent;
     public boolean hideCrosshairInThirdPerson;
+    public boolean fixOptifineGuiScaleCrash;
 
     public boolean enableDefaultLanPort;
 
@@ -340,8 +341,14 @@ public class LoadingConfig {
                 .getBoolean();
         itemStacksPickedUpPerTick = Math.max(
                 1,
-                config.get(Category.TWEAKS.toString(), "itemStacksPickedUpPerTick", 36, "Stacks picked up per tick")
+                config.get(Category.FIXES.toString(), "itemStacksPickedUpPerTick", 36, "Stacks picked up per tick")
                         .getInt());
+        fixOptifineGuiScaleCrash = config.get(
+                        Category.FIXES.toString(),
+                        "fixOptifineGuiScaleCrash",
+                        true,
+                        "Prevents the chunk loading option from changing while changing the gui scale in the video options, since it can cause crashes")
+                .getBoolean();
 
         increaseParticleLimit = config.get(
                         Category.TWEAKS.toString(), "increaseParticleLimit", true, "Increase particle limit")
