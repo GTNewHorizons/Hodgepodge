@@ -235,7 +235,10 @@ public enum Mixins {
     FIX_FURNACE_ITERATION("projecte.MixinObjHandler", () -> Common.config.speedupVanillaFurnace, TargetedMod.PROJECTE),
 
     FIX_JOURNEYMAP_KEYBINDS(
-            "journeymap.MixinConstants", () -> Common.config.fixJourneymapKeybinds, TargetedMod.JOURNEYMAP),
+            "journeymap.MixinConstants",
+            Side.CLIENT,
+            () -> Common.config.fixJourneymapKeybinds,
+            TargetedMod.JOURNEYMAP),
 
     // Pam's Harvest the Nether
     FIX_IGNIS_FRUIT_AABB(
