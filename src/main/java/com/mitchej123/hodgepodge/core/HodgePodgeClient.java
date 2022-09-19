@@ -68,7 +68,7 @@ public class HodgePodgeClient {
 
     public static int renderBlockLiquid_colorMultiplier(int oColor, Block block, int x, int z) {
         ColorOverrideType type = LoadingConfig.liquidBlocks.matchesID(block);
-        if (type == null || block.blockMaterial != Material.water) {
+        if (type == null || block.getMaterial() != Material.water) {
             return oColor;
         }
         return type.getColor(oColor, x, z);
@@ -95,12 +95,12 @@ public class HodgePodgeClient {
     public enum AnimationMode {
         NONE,
         VISIBLE_ONLY,
-        ALL;
+        ALL
     }
 
     public enum RenderDebugMode {
         OFF,
         REDUCED,
-        FULL;
+        FULL
     }
 }

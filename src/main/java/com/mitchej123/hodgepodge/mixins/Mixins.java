@@ -148,6 +148,11 @@ public enum Mixins {
             Side.CLIENT,
             () -> Common.config.enableDefaultLanPort,
             TargetedMod.VANILLA),
+    CROSSHAIR_THIRDPERSON(
+            "forge.MixinGuiIngameForge",
+            Side.CLIENT,
+            () -> Common.config.hideCrosshairInThirdPerson,
+            TargetedMod.VANILLA),
 
     // Potentially obsolete vanilla fixes
     GRASS_GET_BLOCK_FIX(
@@ -242,7 +247,10 @@ public enum Mixins {
     FIX_FURNACE_ITERATION("projecte.MixinObjHandler", () -> Common.config.speedupVanillaFurnace, TargetedMod.PROJECTE),
 
     FIX_JOURNEYMAP_KEYBINDS(
-            "journeymap.MixinConstants", () -> Common.config.fixJourneymapKeybinds, TargetedMod.JOURNEYMAP),
+            "journeymap.MixinConstants",
+            Side.CLIENT,
+            () -> Common.config.fixJourneymapKeybinds,
+            TargetedMod.JOURNEYMAP),
 
     // Pam's Harvest the Nether
     FIX_IGNIS_FRUIT_AABB(
