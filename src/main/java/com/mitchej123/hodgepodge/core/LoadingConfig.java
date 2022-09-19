@@ -77,7 +77,7 @@ public class LoadingConfig {
     public boolean optimizeASMDataTable;
     public boolean squashBedErrorMessage;
     public boolean throttleItemPickupEvent;
-    public boolean fixOptifineGuiScaleCrash;
+    public boolean fixOptifineChunkLoadingCrash;
 
     public boolean enableDefaultLanPort;
 
@@ -342,11 +342,11 @@ public class LoadingConfig {
                 1,
                 config.get(Category.FIXES.toString(), "itemStacksPickedUpPerTick", 36, "Stacks picked up per tick")
                         .getInt());
-        fixOptifineGuiScaleCrash = config.get(
+        fixOptifineChunkLoadingCrash = config.get(
                         Category.FIXES.toString(),
-                        "fixOptifineGuiScaleCrash",
+                        "fixOptifineChunkLoadingCrash",
                         true,
-                        "Prevents the chunk loading option from changing while changing the gui scale in the video options, since it can cause crashes")
+                        "Forces the chunk loading option from optifine to default since other values can crash the game")
                 .getBoolean();
 
         increaseParticleLimit = config.get(
