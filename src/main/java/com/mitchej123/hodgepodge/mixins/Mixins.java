@@ -141,6 +141,11 @@ public enum Mixins {
             Side.CLIENT,
             () -> Common.config.enableDefaultLanPort,
             TargetedMod.VANILLA),
+    CROSSHAIR_THIRDPERSON(
+            "forge.MixinGuiIngameForge",
+            Side.BOTH,
+            () -> Common.config.hideCrosshairInThirdPerson,
+            TargetedMod.VANILLA),
 
     // Potentially obsolete vanilla fixes
     GRASS_GET_BLOCK_FIX(
