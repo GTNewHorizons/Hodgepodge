@@ -100,6 +100,11 @@ public enum Mixins {
             Side.CLIENT,
             () -> Common.config.fixUnfocusedFullscreen,
             TargetedMod.VANILLA),
+    FIX_OPTIFINE_GUISCALE_CRASH(
+            "minecraft.MixinGameSettings",
+            Side.CLIENT,
+            () -> Common.config.fixOptifineGuiScaleCrash,
+            TargetedMod.VANILLA),
     ADD_TOGGLE_DEBUG_MESSAGE(
             "minecraft.MixinMinecraft_ToggleDebugMessage",
             Side.CLIENT,
