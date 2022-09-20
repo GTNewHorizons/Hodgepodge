@@ -100,11 +100,13 @@ public enum Mixins {
             Side.CLIENT,
             () -> Common.config.fixUnfocusedFullscreen,
             TargetedMod.VANILLA),
-    FIX_OPTIFINE_GUISCALE_CRASH(
-            "minecraft.MixinGameSettings",
+    FIX_OPTIFINE_CHUNKLOADING_CRASH(
+            () -> Common.config.fixOptifineChunkLoadingCrash,
             Side.CLIENT,
-            () -> Common.config.fixOptifineGuiScaleCrash,
-            TargetedMod.VANILLA),
+            TargetedMod.VANILLA, // TargetedMod.OPTIFINE,
+            "minecraft.MixinGameSettings" /*,
+                                          TODO this mixins crashes with mixins 7.0, enable it once we update to 8.0
+                                          "minecraft.MixinGuiVideoSettings"*/),
     ADD_TOGGLE_DEBUG_MESSAGE(
             "minecraft.MixinMinecraft_ToggleDebugMessage",
             Side.CLIENT,
