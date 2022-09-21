@@ -1,7 +1,6 @@
 package com.mitchej123.hodgepodge.mixins;
 
 import com.mitchej123.hodgepodge.Common;
-import com.mitchej123.hodgepodge.Hodgepodge;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,10 +30,7 @@ public enum Mixins {
             () -> Common.config.fixPotionEffectRender,
             TargetedMod.VANILLA),
     LONGER_CHAT(
-            "minecraft.MixinGuiNewChat_LongerChat",
-            Side.CLIENT,
-            () -> Hodgepodge.config.longerChat,
-            TargetedMod.VANILLA),
+            "minecraft.MixinGuiNewChat_LongerChat", Side.CLIENT, () -> Common.config.longerChat, TargetedMod.VANILLA),
     CHUNK_COORDINATES_HASHCODE(
             "minecraft.MixinChunkCoordinates",
             () -> Common.config.speedupChunkCoordinatesHashCode,

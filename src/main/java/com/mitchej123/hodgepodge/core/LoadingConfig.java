@@ -15,6 +15,7 @@ public class LoadingConfig {
     public int ic2SeedMaxStackSize;
     public int particleLimit;
     public int itemStacksPickedUpPerTick;
+    public int chatLength;
     public boolean addSystemInfo;
 
     // Mixins
@@ -155,8 +156,6 @@ public class LoadingConfig {
                         "Fix IC2's direct inventory access")
                 .getBoolean();
         fixIc2ReactorDupe = config.get(Category.FIXES.toString(), "fixIc2ReactorDupe", true, "Fix IC2's reactor dupe")
-                .getBoolean();
-        longerChat = config.get("tweaks", "longerChat", true, "Makes the chat history longer instead of 100 lines")
                 .getBoolean();
         optimizeIc2ReactorInventoryAccess = config.get(
                         Category.FIXES.toString(),
@@ -470,6 +469,22 @@ public class LoadingConfig {
                         true,
                         "Stops rendering the crosshair when you are playing in third person")
                 .getBoolean();
+        longerChat = config.get(
+                        Category.TWEAKS.toString(),
+                        "longerChat",
+                        true,
+                        "Makes the chat history longer instead of 100 lines")
+                .getBoolean();
+        chatLength = Math.max(
+                100,
+                Math.min(
+                        32767,
+                        config.get(
+                                        Category.TWEAKS.toString(),
+                                        "chatLength",
+                                        8191,
+                                        "Amount of chat lines kept [100(Vanilla) - 32767]")
+                                .getInt()));
 
         optimizeASMDataTable = config.get(
                         Category.SPEEDUPS.toString(),
