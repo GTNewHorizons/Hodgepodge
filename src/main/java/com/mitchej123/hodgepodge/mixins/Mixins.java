@@ -31,6 +31,11 @@ public enum Mixins {
             TargetedMod.VANILLA),
     LONGER_CHAT(
             "minecraft.MixinGuiNewChat_LongerChat", Side.CLIENT, () -> Common.config.longerChat, TargetedMod.VANILLA),
+    TRANSPARENT_CHAT(
+            "minecraft.MixinGuiNewChat_TransparentChat",
+            Side.CLIENT,
+            () -> Common.config.transparentChat,
+            TargetedMod.VANILLA),
     CHUNK_COORDINATES_HASHCODE(
             "minecraft.MixinChunkCoordinates",
             () -> Common.config.speedupChunkCoordinatesHashCode,

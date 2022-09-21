@@ -32,6 +32,7 @@ public class LoadingConfig {
     public boolean fixIc2Nightvision;
     public boolean fixIc2ReactorDupe;
     public boolean longerChat;
+    public boolean transparentChat;
     public boolean optimizeIc2ReactorInventoryAccess;
     public boolean fixIc2UnprotectedGetBlock;
     public boolean fixNorthWestBias;
@@ -485,6 +486,12 @@ public class LoadingConfig {
                                         8191,
                                         "Amount of chat lines kept [100(Vanilla) - 32767]")
                                 .getInt()));
+        transparentChat = config.get(
+                        Category.TWEAKS.toString(),
+                        "transparentChat",
+                        true,
+                        "Doesn't render the black box behind messages when the chat is closed")
+                .getBoolean();
 
         optimizeASMDataTable = config.get(
                         Category.SPEEDUPS.toString(),
