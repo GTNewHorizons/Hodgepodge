@@ -79,6 +79,7 @@ public class LoadingConfig {
     public boolean throttleItemPickupEvent;
     public boolean fixOptifineChunkLoadingCrash;
     public boolean hideCrosshairInThirdPerson;
+    public boolean hidePotionParticlesFromSelf;
 
     public boolean enableDefaultLanPort;
 
@@ -466,6 +467,12 @@ public class LoadingConfig {
                         "hideCrosshairInThirdPerson",
                         true,
                         "Stops rendering the crosshair when you are playing in third person")
+                .getBoolean();
+        hidePotionParticlesFromSelf = config.get(
+                        Category.TWEAKS.toString(),
+                        "hidePotionParticlesFromSelf",
+                        true,
+                        "Stops rendering potion particles from yourself")
                 .getBoolean();
 
         optimizeASMDataTable = config.get(
