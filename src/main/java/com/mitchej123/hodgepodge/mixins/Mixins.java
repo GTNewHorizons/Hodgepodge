@@ -29,6 +29,8 @@ public enum Mixins {
             Side.CLIENT,
             () -> Common.config.fixPotionEffectRender,
             TargetedMod.VANILLA),
+    FIX_IMMOBILE_FIREBALLS(
+            "minecraft.MixinEntityFireball", () -> Common.config.fixImmobileFireballs, TargetedMod.VANILLA),
     LONGER_CHAT(
             "minecraft.MixinGuiNewChat_LongerChat", Side.CLIENT, () -> Common.config.longerChat, TargetedMod.VANILLA),
     TRANSPARENT_CHAT(
