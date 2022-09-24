@@ -131,7 +131,7 @@ public enum Mixins {
             () -> Common.config.speedupAnimations,
             TargetedMod.FASTCRAFT),
     FIX_POTION_ITERATING(
-            "minecraft.MixinEntityLivingPotions",
+            "minecraft.MixinEntityLivingBase_FixPotionException",
             Side.BOTH,
             () -> Common.config.fixPotionIterating,
             TargetedMod.VANILLA),
@@ -152,6 +152,11 @@ public enum Mixins {
             "forge.MixinGuiIngameForge",
             Side.CLIENT,
             () -> Common.config.hideCrosshairInThirdPerson,
+            TargetedMod.VANILLA),
+    HIDE_POTION_PARTICLES(
+            "minecraft.MixinEntityLivinBase_HidePotionParticles",
+            Side.CLIENT,
+            () -> Common.config.hidePotionParticlesFromSelf,
             TargetedMod.VANILLA),
 
     // Potentially obsolete vanilla fixes

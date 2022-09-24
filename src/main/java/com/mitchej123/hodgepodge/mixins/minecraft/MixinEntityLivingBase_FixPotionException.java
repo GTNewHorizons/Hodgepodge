@@ -14,9 +14,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "rawtypes"})
 @Mixin(EntityLivingBase.class)
-public abstract class MixinEntityLivingPotions extends Entity {
+public abstract class MixinEntityLivingBase_FixPotionException extends Entity {
 
     @Shadow
     @Final
@@ -25,7 +25,7 @@ public abstract class MixinEntityLivingPotions extends Entity {
     @Shadow
     private boolean potionsNeedUpdate;
 
-    public MixinEntityLivingPotions(World p_i1594_1_) {
+    public MixinEntityLivingBase_FixPotionException(World p_i1594_1_) {
         super(p_i1594_1_);
     }
 
@@ -62,14 +62,14 @@ public abstract class MixinEntityLivingPotions extends Entity {
         if (this.potionsNeedUpdate) {
             if (!this.worldObj.isRemote) {
                 if (this.activePotionsMap.isEmpty()) {
-                    this.dataWatcher.updateObject(8, Byte.valueOf((byte) 0));
-                    this.dataWatcher.updateObject(7, Integer.valueOf(0));
+                    this.dataWatcher.updateObject(8, (byte) 0);
+                    this.dataWatcher.updateObject(7, 0);
                     this.setInvisible(false);
                 } else {
                     i = PotionHelper.calcPotionLiquidColor(this.activePotionsMap.values());
-                    this.dataWatcher.updateObject(8, Byte.valueOf((byte)
-                            (PotionHelper.func_82817_b(this.activePotionsMap.values()) ? 1 : 0)));
-                    this.dataWatcher.updateObject(7, Integer.valueOf(i));
+                    this.dataWatcher.updateObject(
+                            8, (byte) (PotionHelper.func_82817_b(this.activePotionsMap.values()) ? 1 : 0));
+                    this.dataWatcher.updateObject(7, i);
                     this.setInvisible(this.isPotionActive(Potion.invisibility.id));
                 }
             }
@@ -81,7 +81,7 @@ public abstract class MixinEntityLivingPotions extends Entity {
         boolean flag1 = this.dataWatcher.getWatchableObjectByte(8) > 0;
 
         if (i > 0) {
-            boolean flag = false;
+            boolean flag;
 
             if (!this.isInvisible()) {
                 flag = this.rand.nextBoolean();
@@ -93,7 +93,7 @@ public abstract class MixinEntityLivingPotions extends Entity {
                 flag &= this.rand.nextInt(5) == 0;
             }
 
-            if (flag && i > 0) {
+            if (flag) {
                 double d0 = (double) (i >> 16 & 255) / 255.0D;
                 double d1 = (double) (i >> 8 & 255) / 255.0D;
                 double d2 = (double) (i >> 0 & 255) / 255.0D;
@@ -110,10 +110,10 @@ public abstract class MixinEntityLivingPotions extends Entity {
     }
 
     @Shadow
-    private void onFinishedPotionEffect(PotionEffect p_70688_1_) {}
+    protected void onFinishedPotionEffect(PotionEffect p_70688_1_) {}
 
     @Shadow
-    private void onChangedPotionEffect(PotionEffect p_70695_1_, boolean p_70695_2_) {}
+    protected void onChangedPotionEffect(PotionEffect p_70695_1_, boolean p_70695_2_) {}
 
     @Shadow
     public abstract boolean isPotionActive(int p_82165_1_);
