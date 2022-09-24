@@ -492,12 +492,12 @@ public class LoadingConfig {
                         "transparentChat",
                         true,
                         "Doesn't render the black box behind messages when the chat is closed")
+                .getBoolean();
         hidePotionParticlesFromSelf = config.get(
                         Category.TWEAKS.toString(),
                         "hidePotionParticlesFromSelf",
                         true,
                         "Stops rendering potion particles from yourself")
-
                 .getBoolean();
         optimizeASMDataTable = config.get(
                         Category.SPEEDUPS.toString(),
