@@ -15,6 +15,7 @@ public class LoadingConfig {
     public int ic2SeedMaxStackSize;
     public int particleLimit;
     public int itemStacksPickedUpPerTick;
+    public int chatLength;
     public boolean addSystemInfo;
 
     // Mixins
@@ -30,6 +31,8 @@ public class LoadingConfig {
     public boolean fixIc2Hazmat;
     public boolean fixIc2Nightvision;
     public boolean fixIc2ReactorDupe;
+    public boolean longerChat;
+    public boolean transparentChat;
     public boolean optimizeIc2ReactorInventoryAccess;
     public boolean fixIc2UnprotectedGetBlock;
     public boolean fixNorthWestBias;
@@ -468,13 +471,34 @@ public class LoadingConfig {
                         true,
                         "Stops rendering the crosshair when you are playing in third person")
                 .getBoolean();
+        longerChat = config.get(
+                        Category.TWEAKS.toString(),
+                        "longerChat",
+                        true,
+                        "Makes the chat history longer instead of 100 lines")
+                .getBoolean();
+        chatLength = Math.max(
+                100,
+                Math.min(
+                        32767,
+                        config.get(
+                                        Category.TWEAKS.toString(),
+                                        "chatLength",
+                                        8191,
+                                        "Amount of chat lines kept [100(Vanilla) - 32767]")
+                                .getInt()));
+        transparentChat = config.get(
+                        Category.TWEAKS.toString(),
+                        "transparentChat",
+                        true,
+                        "Doesn't render the black box behind messages when the chat is closed")
         hidePotionParticlesFromSelf = config.get(
                         Category.TWEAKS.toString(),
                         "hidePotionParticlesFromSelf",
                         true,
                         "Stops rendering potion particles from yourself")
-                .getBoolean();
 
+                .getBoolean();
         optimizeASMDataTable = config.get(
                         Category.SPEEDUPS.toString(),
                         "optimizeASMDataTable",
