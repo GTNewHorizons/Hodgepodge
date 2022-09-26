@@ -245,6 +245,11 @@ public enum Mixins {
             TargetedMod.BOP),
     SPEEDUP_BOP_BIOME_FOG(
             "biomesoplenty.MixinFogHandler", Side.CLIENT, () -> Common.config.speedupBOPFogHandling, TargetedMod.BOP),
+    SPEEDUP_BOP_BIOME_FOG_ACCESSOR(
+            "biomesoplenty.AccessorFogHandler",
+            Side.CLIENT,
+            () -> Common.config.speedupBOPFogHandling,
+            TargetedMod.BOP),
     BIG_FIR_TREES("biomesoplenty.MixinBlockBOPSapling", () -> Common.config.makeBigFirsPlantable, TargetedMod.BOP),
 
     // MrTJPCore (Project Red)
