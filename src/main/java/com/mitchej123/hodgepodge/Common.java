@@ -1,6 +1,5 @@
 package com.mitchej123.hodgepodge;
 
-import com.mitchej123.hodgepodge.core.LoadingConfig;
 import java.io.File;
 import net.minecraft.launchwrapper.Launch;
 import org.apache.logging.log4j.LogManager;
