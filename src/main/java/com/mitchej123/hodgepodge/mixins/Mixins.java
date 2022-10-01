@@ -4,7 +4,6 @@ import com.mitchej123.hodgepodge.Common;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -51,15 +50,13 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinEntityFireball")
             .addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> Common.config.fixImmobileFireballs)),
-    LONGER_CHAT(
-        new Builder("Longer Chat")
+    LONGER_CHAT(new Builder("Longer Chat")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinGuiNewChat_LongerChat")
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.longerChat)
             .addTargetedMod(TargetedMod.VANILLA)),
-    TRANSPARENT_CHAT(
-        new Builder("Transparent Chat")
+    TRANSPARENT_CHAT(new Builder("Transparent Chat")
             .addMixinClasses("minecraft.MixinGuiNewChat_TransparentChat")
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.transparentChat)
@@ -182,8 +179,7 @@ public enum Mixins {
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixUnfocusedFullscreen)
             .addTargetedMod(TargetedMod.VANILLA)),
-    FIX_OPTIFINE_CHUNKLOADING_CRASH(
-        new Builder("Fix Optifine Chunkloading Crash")
+    FIX_OPTIFINE_CHUNKLOADING_CRASH(new Builder("Fix Optifine Chunkloading Crash")
             .setPhase(Phase.EARLY)
             .setApplyIf(() -> Common.config.fixOptifineChunkLoadingCrash)
             .setSide(Side.CLIENT)
@@ -240,15 +236,13 @@ public enum Mixins {
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.enableDefaultLanPort)
             .addTargetedMod(TargetedMod.VANILLA)),
-    CROSSHAIR_THIRDPERSON(
-        new Builder("Crosshairs Thirdperson")
+    CROSSHAIR_THIRDPERSON(new Builder("Crosshairs Thirdperson")
             .setPhase(Phase.EARLY)
             .addMixinClasses("forge.MixinGuiIngameForge")
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.hideCrosshairInThirdPerson)
             .addTargetedMod(TargetedMod.VANILLA)),
-    HIDE_POTION_PARTICLES(
-        new Builder("Hide Potion Particles")
+    HIDE_POTION_PARTICLES(new Builder("Hide Potion Particles")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityLivinBase_HidePotionParticles")
             .setSide(Side.CLIENT)
@@ -289,12 +283,13 @@ public enum Mixins {
             .addMixinClasses("ic2.MixinTileEntityNuclearReactorElectric")
             .setApplyIf(() -> Common.config.hideIc2ReactorSlots)
             .addTargetedMod(TargetedMod.IC2)),
-    IC2_HAZMAT(new Builder("Hazmat")
-            .setPhase(Phase.EARLY)
-            .addMixinClasses("ic2.MixinIc2Hazmat")
-            .setApplyIf(() -> Common.config.fixIc2Hazmat)
-            .addTargetedMod(TargetedMod.IC2)
-            .addTargetedMod(TargetedMod.GT5U) // TODO: Needs to add GT5u to classpath
+    IC2_HAZMAT(
+            new Builder("Hazmat")
+                    .setPhase(Phase.EARLY)
+                    .addMixinClasses("ic2.MixinIc2Hazmat")
+                    .setApplyIf(() -> Common.config.fixIc2Hazmat)
+                    .addTargetedMod(TargetedMod.IC2)
+                    .addTargetedMod(TargetedMod.GT5U) // TODO: Needs to add GT5u to classpath
             ),
     IC2_FLUID_CONTAINER_TOOLTIP(new Builder("IC2 Fluid Container Tooltip Fix")
             .setPhase(Phase.EARLY)
@@ -356,8 +351,7 @@ public enum Mixins {
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.speedupBOPFogHandling)
             .addTargetedMod(TargetedMod.BOP)),
-    SPEEDUP_BOP_BIOME_FOG_ACCESSOR(
-        new Builder("BOP Biome Fog Accessor")
+    SPEEDUP_BOP_BIOME_FOG_ACCESSOR(new Builder("BOP Biome Fog Accessor")
             .addMixinClasses("biomesoplenty.AccessorFogHandler")
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.speedupBOPFogHandling)
@@ -388,14 +382,13 @@ public enum Mixins {
             .addMixinClasses("projecte.MixinObjHandler")
             .setApplyIf(() -> Common.config.speedupVanillaFurnace)
             .addTargetedMod(TargetedMod.PROJECTE)),
-    
+
     // Journeymap
     FIX_JOURNEYMAP_KEYBINDS(new Builder("Fix Journeymap Keybinds")
             .setSide(Side.CLIENT)
             .addMixinClasses("journeymap.MixinConstants")
-            .setApplyIf(() -> Common.config.fixJourneymapKeybinds)
-                            
-    ),
+            .setApplyIf(() -> Common.config.fixJourneymapKeybinds)),
+
     // Pam's Harvest the Nether
     FIX_IGNIS_FRUIT_AABB(new Builder("")
             .addMixinClasses("harvestthenether.MixinBlockPamFruit")
