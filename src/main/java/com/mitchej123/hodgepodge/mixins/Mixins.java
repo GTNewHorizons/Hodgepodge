@@ -165,6 +165,11 @@ public enum Mixins {
             Side.CLIENT,
             () -> Common.config.hidePotionParticlesFromSelf,
             TargetedMod.VANILLA),
+    DIMENSION_MANAGER_DEBUG(
+            "minecraft.MixinDimensionManager",
+            Side.BOTH,
+            () -> Common.config.dimensionManagerDebug,
+            TargetedMod.VANILLA),
 
     // Potentially obsolete vanilla fixes
     GRASS_GET_BLOCK_FIX(
