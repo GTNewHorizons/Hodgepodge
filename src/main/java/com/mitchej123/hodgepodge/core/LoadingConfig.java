@@ -83,8 +83,8 @@ public class LoadingConfig {
     public boolean fixOptifineChunkLoadingCrash;
     public boolean hideCrosshairInThirdPerson;
     public boolean hidePotionParticlesFromSelf;
+    public boolean fixExtraUtilitiesUnEnchanting;
     public boolean dimensionManagerDebug;
-
     public boolean enableDefaultLanPort;
 
     public int defaultLanPort;
@@ -499,6 +499,12 @@ public class LoadingConfig {
                         "hidePotionParticlesFromSelf",
                         true,
                         "Stops rendering potion particles from yourself")
+                .getBoolean();
+        fixExtraUtilitiesUnEnchanting = config.get(
+                        Category.FIXES.toString(),
+                        "fixExtraUtilitiesUnEnchanting",
+                        true,
+                        "Fix dupe bug with division sigil removing enchantment")
                 .getBoolean();
         optimizeASMDataTable = config.get(
                         Category.SPEEDUPS.toString(),

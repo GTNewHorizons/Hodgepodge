@@ -19,7 +19,8 @@ public enum TargetedMod {
     TRAVELLERSGEAR("TravellersGear", "TravellersGear"),
     // Temporary solution to force load it early
     GTNHLIB("GTNHLib", "gtnhlib"),
-    JOURNEYMAP("journeymap", "journeymap", true);
+    JOURNEYMAP("journeymap", "journeymap", true),
+    EXTRA_UTILITIES("ExtraUtilities", "extrautilities", true);
     // OPTIFINE("OptiFine", "OptiFine");
 
     public final String modName;
