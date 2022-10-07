@@ -84,7 +84,7 @@ public class LoadingConfig {
     public boolean hideCrosshairInThirdPerson;
     public boolean hidePotionParticlesFromSelf;
     public boolean fixExtraUtilitiesUnEnchanting;
-
+    public boolean dimensionManagerDebug;
     public boolean enableDefaultLanPort;
 
     public int defaultLanPort;
@@ -571,6 +571,12 @@ public class LoadingConfig {
                 .setMinValue(0)
                 .setMaxValue(2)
                 .getInt();
+        dimensionManagerDebug = config.get(
+                        Category.DEBUG.toString(),
+                        "dimensionManagerDebug",
+                        true,
+                        "Prints debug log if DimensionManager got crashed")
+                .getBoolean();
         if (config.hasChanged()) config.save();
     }
 
