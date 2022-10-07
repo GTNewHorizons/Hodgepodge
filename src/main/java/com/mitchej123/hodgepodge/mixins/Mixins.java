@@ -288,7 +288,12 @@ public enum Mixins {
             "travellersgear.MixinClientProxy",
             Side.CLIENT,
             () -> Common.config.fixPotionRenderOffset,
-            TargetedMod.TRAVELLERSGEAR);
+            TargetedMod.TRAVELLERSGEAR),
+    FIX_EXTRA_UTILITIES_UNENCHANTING(
+            "extrautilities.MixinRecipeUnEnchanting",
+            Side.BOTH,
+            () -> Common.config.fixExtraUtilitiesUnEnchanting,
+            TargetedMod.EXTRA_UTILITIES);
 
     public final List<String> mixinClass;
     private final Supplier<Boolean> applyIf;
