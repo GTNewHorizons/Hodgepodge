@@ -338,7 +338,7 @@ dependencies {
         annotationProcessor('org.ow2.asm:asm-debug-all:5.0.3')
         annotationProcessor('com.google.guava:guava:24.1.1-jre')
         annotationProcessor('com.google.code.gson:gson:2.8.6')
-        annotationProcessor('org.spongepowered:mixin:0.8.3-GTNH:processor')
+        annotationProcessor('org.spongepowered:mixin:0.8.5-GTNH:processor')
     }
     if (usesMixins.toBoolean() || forceEnableMixins.toBoolean()) {
         compile('com.gtnewhorizon:gtnhmixins:2.0.0')
@@ -358,7 +358,7 @@ task generateAssets {
         if (!mixinConfigFile.exists()) {
             mixinConfigFile.text = """{
   "required": true,
-  "minVersion": "0.8.3-GTNH",
+  "minVersion": "0.8.5-GTNH",
   "package": "${modGroup}.${mixinsPackage}",
   "plugin": "${modGroup}.${mixinPlugin}",
   "refmap": "${mixingConfigRefMap}",
