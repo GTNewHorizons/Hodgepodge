@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.extrautilities;
+package com.mitchej123.hodgepodge.mixins.late.extrautilities;
 
 import com.rwtema.extrautils.crafting.RecipeUnEnchanting;
 import java.util.Map;
