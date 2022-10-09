@@ -15,12 +15,14 @@ public enum TargetedMod {
     AUTOMAGY("Automagy", null, "Automagy"),
     PROJECTE("ProjectE", null, "projecte"),
     HARVESTTHENETHER("harvestthenether", null, "harvestthenether"),
-    GALACTICRAFT_CORE("GalacticraftCore", null, "GalacticraftCore"),
+    GALACTICRAFT_CORE("GalacticraftCore", "micdoodle8.mods.galacticraft.core.asm.GCLoadingPlugin", "GalacticraftCore"),
     BAUBLES("Baubles", null, "Baubles"),
     TRAVELLERSGEAR("TravellersGear", null, "TravellersGear"),
     JOURNEYMAP("JourneyMap", null, "journeymap"),
     OPTIFINE("Optifine", "optifine.OptiFineForgeTweaker", "Optifine"),
     EXTRA_UTILITIES("ExtraUtilities", null, "ExtraUtilities"),
+    BIBLIOCRAFT("Bibliocraft", null, "BiblioCraft"),
+    ZTONES("ZTones", null, "Ztones"),
     BUKKIT("Bukkit/Thermos", "Bukkit", null);
 
     public final String modName;
