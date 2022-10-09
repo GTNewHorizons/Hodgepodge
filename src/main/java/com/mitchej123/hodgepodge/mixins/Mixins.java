@@ -232,7 +232,8 @@ public enum Mixins {
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinWorldUpdateEntities")
             .setApplyIf(() -> Common.config.optimizeTileentityRemoval)
-            .addTargetedMod(TargetedMod.VANILLA)),
+            .addTargetedMod(TargetedMod.VANILLA)
+            .addExcludedMod(TargetedMod.FASTCRAFT)),
     FIX_POTION_ITERATING(new Builder("Fix Potion Iterating")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityLivingBase_FixPotionException")
