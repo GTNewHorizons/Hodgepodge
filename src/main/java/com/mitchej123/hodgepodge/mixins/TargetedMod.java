@@ -20,7 +20,8 @@ public enum TargetedMod {
     TRAVELLERSGEAR("TravellersGear", null, "TravellersGear"),
     JOURNEYMAP("JourneyMap", null, "journeymap"),
     OPTIFINE("Optifine", "optifine.OptiFineForgeTweaker", "Optifine"),
-    EXTRA_UTILITIES("ExtraUtilities", null, "ExtraUtilities");
+    EXTRA_UTILITIES("ExtraUtilities", null, "ExtraUtilities"),
+    BUKKIT("Bukkit/Thermos", "Bukkit", null);
 
     public final String modName;
     public final String coreModClass;
