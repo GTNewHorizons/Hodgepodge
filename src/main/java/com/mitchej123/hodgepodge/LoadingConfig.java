@@ -72,6 +72,7 @@ public class LoadingConfig {
     public boolean fixUnfocusedFullscreen;
     public boolean addToggleDebugMessage;
     public boolean speedupAnimations;
+    public boolean optimizeTileentityRemoval;
     public boolean fixPotionIterating;
     public boolean fixIgnisFruitAABB;
     public boolean fixNetherLeavesFaceRendering;
@@ -293,6 +294,12 @@ public class LoadingConfig {
                         "speedupAnimations",
                         true,
                         "Drastically speedup animated textures (Basically the same as with optifine animations off but animations are working)")
+                .getBoolean();
+        optimizeTileentityRemoval = config.get(
+                        Category.SPEEDUPS.toString(),
+                        "optimizeTileentityRemoval",
+                        true,
+                        "Optimize tileEntity removal in World.class")
                 .getBoolean();
         fixPotionIterating = config.get(
                         Category.FIXES.toString(),

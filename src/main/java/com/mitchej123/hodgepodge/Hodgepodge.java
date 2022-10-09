@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.Side;
         version = Hodgepodge.VERSION,
         name = Hodgepodge.NAME,
         acceptableRemoteVersions = "*",
-        dependencies = "required-after:gtnhmixins@[2.0.0,);")
+        dependencies = "required-after:gtnhmixins@[2.0.1,);")
 public class Hodgepodge {
     public static final AnchorAlarm ANCHOR_ALARM = new AnchorAlarm();
     public static final String MODID = "hodgepodge";
