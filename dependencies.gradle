@@ -15,7 +15,7 @@ dependencies {
         // RC Depends on BuildCraft & Baubles and a few others, use transitive to pull those in for `runClient`
         transitive = true
     }
-    compile("com.github.GTNewHorizons:HungerOverhaul:1.0.4-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:HungerOverhaul:1.0.4-GTNH:dev")
     
     compileOnly("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev")
     compile("curse.maven:cofh-core-69162:2388751")
