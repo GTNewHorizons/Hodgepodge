@@ -228,6 +228,13 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinDimensionManager")
             .setApplyIf(() -> Common.config.dimensionManagerDebug)
             .addTargetedMod(TargetedMod.VANILLA)),
+    OPTIMIZE_TILEENTITY_REMOVAL(new Builder("Optimize TileEntity Removal")
+            .setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinWorldUpdateEntities")
+            .setApplyIf(() -> Common.config.optimizeTileentityRemoval)
+            .addTargetedMod(TargetedMod.VANILLA)
+            .addExcludedMod(TargetedMod.FASTCRAFT)
+            .addExcludedMod(TargetedMod.BUKKIT)),
     FIX_POTION_ITERATING(new Builder("Fix Potion Iterating")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityLivingBase_FixPotionException")
