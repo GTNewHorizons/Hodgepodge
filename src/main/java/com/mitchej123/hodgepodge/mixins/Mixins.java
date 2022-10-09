@@ -441,6 +441,7 @@ public enum Mixins {
     // Various Exploits/Fixes
     GC_TIME_COMMAND_FIX(new Builder("GC Time Fix")
             .addMixinClasses("minecraft.MixinTimeCommandGalacticraftFix")
+            .setPhase(Phase.EARLY)
             .setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.fixTimeCommandWithGC)
             .addTargetedMod(TargetedMod.VANILLA)
@@ -476,7 +477,7 @@ public enum Mixins {
 
     POLLUTION_RAILCRAFT(new Builder("Make Railcraft Pollute")
             .addMixinClasses(
-                    "railCraft.MixinRailcraftBoilerPollution",
+                    "railcraft.MixinRailcraftBoilerPollution",
                     "railcraft.MixinRailcraftCokeOvenPollution",
                     "railcraft.MixinRailcraftTunnelBorePollution")
             .setSide(Side.BOTH)

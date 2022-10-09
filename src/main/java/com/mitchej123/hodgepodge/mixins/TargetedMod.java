@@ -15,7 +15,7 @@ public enum TargetedMod {
     AUTOMAGY("Automagy", null, "Automagy"),
     PROJECTE("ProjectE", null, "projecte"),
     HARVESTTHENETHER("harvestthenether", null, "harvestthenether"),
-    GALACTICRAFT_CORE("GalacticraftCore", null, "GalacticraftCore"),
+    GALACTICRAFT_CORE("GalacticraftCore", "micdoodle8.mods.galacticraft.core.asm.GCLoadingPlugin", "GalacticraftCore"),
     BAUBLES("Baubles", null, "Baubles"),
     TRAVELLERSGEAR("TravellersGear", null, "TravellersGear"),
     JOURNEYMAP("JourneyMap", null, "journeymap"),

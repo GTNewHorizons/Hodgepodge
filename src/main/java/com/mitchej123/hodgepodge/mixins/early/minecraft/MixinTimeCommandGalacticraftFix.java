@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.late.minecraft;
+package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import micdoodle8.mods.galacticraft.api.prefab.world.gen.WorldProviderSpace;
 import net.minecraft.command.CommandTime;
