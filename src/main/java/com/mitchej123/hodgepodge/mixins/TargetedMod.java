@@ -21,6 +21,8 @@ public enum TargetedMod {
     JOURNEYMAP("JourneyMap", null, "journeymap"),
     OPTIFINE("Optifine", "optifine.OptiFineForgeTweaker", "Optifine"),
     EXTRA_UTILITIES("ExtraUtilities", null, "ExtraUtilities"),
+    BIBLIOCRAFT("Bibliocraft", null, "BiblioCraft"),
+    ZTONES("ZTones", null, "Ztones"),
     BUKKIT("Bukkit/Thermos", "Bukkit", null);
 
     public final String modName;

@@ -414,32 +414,75 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.fixIgnisFruitAABB)
             .addTargetedMod(TargetedMod.HARVESTTHENETHER)),
 
-    // Baubles
+    // Potion Render Offset Fixes - Various Mods
     FIX_BAUBLES_INVENTORY_OFFSET_WITH_POTIONS(new Builder("Baubles Inventory with Potions")
             .addMixinClasses("baubles.MixinGuiEvents")
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixPotionRenderOffset)
             .addTargetedMod(TargetedMod.BAUBLES)),
-
-    // Galacticraft Extended Inventory w/ Potions
     FIX_GALACTICRAFT_INVENTORY_OFFSET_WITH_POTIONS(new Builder("Galacticraft Inventory with Potions")
             .addMixinClasses("galacticraftcore.MixinGuiExtendedInventory")
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixPotionRenderOffset)
             .addTargetedMod(TargetedMod.GALACTICRAFT_CORE)),
-    // Traveller's Gear w/ Potions
     FIX_TRAVELLERSGEAR_INVENTORY_OFFSET_WITH_POTIONS(new Builder("Travelers Gear with Potions")
             .addMixinClasses("travellersgear.MixinClientProxy")
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixPotionRenderOffset)
             .addTargetedMod(TargetedMod.TRAVELLERSGEAR)),
 
+    // Exu Unenchanting fix
     FIX_EXTRA_UTILITIES_UNENCHANTING(new Builder("Fix Exu Unenchanting")
             .addMixinClasses("extrautilities.MixinRecipeUnEnchanting")
             .setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.fixExtraUtilitiesUnEnchanting)
-            .addTargetedMod(TargetedMod.EXTRA_UTILITIES));
-    ;
+            .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+
+    // Various Exploits/Fixes
+    GC_TIME_COMMAND_FIX(new Builder("GC Time Fix")
+            .addMixinClasses("minecraft.MixinTimeCommandGalacticraftFix")
+            .setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.VANILLA)
+            .addTargetedMod(TargetedMod.GALACTICRAFT_CORE)),
+    BIBLIOCRAFT_PACKET_FIX(new Builder("Packet Fix")
+            .addMixinClasses("bibliocraft.MixinBibliocraftPatchPacketExploits")
+            .setSide((Side.BOTH))
+            .addTargetedMod(TargetedMod.BIBLIOCRAFT)),
+    ZTONES_PACKET_FIX(new Builder("Packet Fix")
+            .addMixinClasses("ztones.MixinZtonesPatchPacketExploits")
+            .setSide((Side.BOTH))
+            .addTargetedMod(TargetedMod.ZTONES)),
+
+    // Pollution
+    POLLUTION_MINECRAFT_FURNACE(new Builder("Minecraft Furnace Pollutes")
+            .addMixinClasses("minecraft.MixinTileEntityFurnacePollution")
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.furnacesPollute)
+            .addTargetedMod(TargetedMod.VANILLA)),
+    POLLUTION_IC2_IRON_FURNACE(new Builder("Ic2 Iron Furnace Pollutes")
+            .addMixinClasses("ic2.MixinIC2IronFurnacePollution")
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.furnacesPollute)
+            .addTargetedMod(TargetedMod.IC2)),
+    POLLUTION_THAUMCRAFT_ALCHEMICAL_FURNACE(new Builder("Thaumcraft Alchemical Construct Pollutes")
+            .addMixinClasses("thaumcraft.MixinThaumcraftAlchemyFurnacePollution")
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.furnacesPollute)
+            .addTargetedMod(TargetedMod.THAUMCRAFT)),
+
+    POLLUTION_RAILCRAFT(new Builder("Make Railcraft Pollute")
+            .addMixinClasses(
+                    "railCraft.MixinRailcraftBoilerPollution",
+                    "railcraft.MixinRailcraftCokeOvenPollution",
+                    "railcraft.MixinRailcraftTunnelBorePollution")
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.railcraftPollutes)
+            .addTargetedMod(TargetedMod.RAILCRAFT)),
+    POLLUTION_ROCKET(new Builder("Make Rockets Pollute")
+            .addMixinClasses("galacticraftcore.MixinGalacticraftRocketPollution")
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.rocketsPollute)
+            .addTargetedMod(TargetedMod.GALACTICRAFT_CORE));
 
     public final String name;
     public final List<String> mixinClasses;
