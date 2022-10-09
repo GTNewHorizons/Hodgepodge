@@ -231,7 +231,7 @@ public enum Mixins {
     OPTIMIZE_TILEENTITY_REMOVAL(new Builder("Optimize TileEntity Removal")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinWorldUpdateEntities")
-            .setApplyIf(() -> Common.config.optimizeTileentityRemoval)
+            .setApplyIf(() -> Common.config.optimizeTileentityRemoval && !Common.thermosTainted)
             .addTargetedMod(TargetedMod.VANILLA)
             .addExcludedMod(TargetedMod.FASTCRAFT)),
     FIX_POTION_ITERATING(new Builder("Fix Potion Iterating")
