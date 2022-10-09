@@ -414,32 +414,80 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.fixIgnisFruitAABB)
             .addTargetedMod(TargetedMod.HARVESTTHENETHER)),
 
-    // Baubles
+    // Potion Render Offset Fixes - Various Mods
     FIX_BAUBLES_INVENTORY_OFFSET_WITH_POTIONS(new Builder("Baubles Inventory with Potions")
             .addMixinClasses("baubles.MixinGuiEvents")
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixPotionRenderOffset)
             .addTargetedMod(TargetedMod.BAUBLES)),
-
-    // Galacticraft Extended Inventory w/ Potions
     FIX_GALACTICRAFT_INVENTORY_OFFSET_WITH_POTIONS(new Builder("Galacticraft Inventory with Potions")
             .addMixinClasses("galacticraftcore.MixinGuiExtendedInventory")
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixPotionRenderOffset)
             .addTargetedMod(TargetedMod.GALACTICRAFT_CORE)),
-    // Traveller's Gear w/ Potions
     FIX_TRAVELLERSGEAR_INVENTORY_OFFSET_WITH_POTIONS(new Builder("Travelers Gear with Potions")
             .addMixinClasses("travellersgear.MixinClientProxy")
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixPotionRenderOffset)
             .addTargetedMod(TargetedMod.TRAVELLERSGEAR)),
 
+    // Exu Unenchanting fix
     FIX_EXTRA_UTILITIES_UNENCHANTING(new Builder("Fix Exu Unenchanting")
             .addMixinClasses("extrautilities.MixinRecipeUnEnchanting")
             .setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.fixExtraUtilitiesUnEnchanting)
-            .addTargetedMod(TargetedMod.EXTRA_UTILITIES));
-    ;
+            .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+
+    // Various Exploits/Fixes
+    GC_TIME_COMMAND_FIX(new Builder("GC Time Fix")
+            .addMixinClasses("minecraft.MixinTimeCommandGalacticraftFix")
+            .setPhase(Phase.EARLY)
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.fixTimeCommandWithGC)
+            .addTargetedMod(TargetedMod.VANILLA)
+            .addTargetedMod(TargetedMod.GALACTICRAFT_CORE)),
+    BIBLIOCRAFT_PACKET_FIX(new Builder("Packet Fix")
+            .addMixinClasses("bibliocraft.MixinBibliocraftPatchPacketExploits")
+            .setSide((Side.BOTH))
+            .setApplyIf(() -> Common.config.fixBibliocraftPackets)
+            .addTargetedMod(TargetedMod.BIBLIOCRAFT)),
+    ZTONES_PACKET_FIX(new Builder("Packet Fix")
+            .addMixinClasses("ztones.MixinZtonesPatchPacketExploits")
+            .setSide((Side.BOTH))
+            .setApplyIf(() -> Common.config.fixZTonesPackets)
+            .addTargetedMod(TargetedMod.ZTONES)),
+
+    // Pollution
+    POLLUTION_MINECRAFT_FURNACE(new Builder("Minecraft Furnace Pollutes")
+            .setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinTileEntityFurnacePollution")
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.furnacesPollute)
+            .addTargetedMod(TargetedMod.VANILLA)),
+    POLLUTION_IC2_IRON_FURNACE(new Builder("Ic2 Iron Furnace Pollutes")
+            .addMixinClasses("ic2.MixinIC2IronFurnacePollution")
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.furnacesPollute)
+            .addTargetedMod(TargetedMod.IC2)),
+    POLLUTION_THAUMCRAFT_ALCHEMICAL_FURNACE(new Builder("Thaumcraft Alchemical Construct Pollutes")
+            .addMixinClasses("thaumcraft.MixinThaumcraftAlchemyFurnacePollution")
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.furnacesPollute)
+            .addTargetedMod(TargetedMod.THAUMCRAFT)),
+
+    POLLUTION_RAILCRAFT(new Builder("Make Railcraft Pollute")
+            .addMixinClasses(
+                    "railcraft.MixinRailcraftBoilerPollution",
+                    "railcraft.MixinRailcraftCokeOvenPollution",
+                    "railcraft.MixinRailcraftTunnelBorePollution")
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.railcraftPollutes)
+            .addTargetedMod(TargetedMod.RAILCRAFT)),
+    POLLUTION_ROCKET(new Builder("Make Rockets Pollute")
+            .addMixinClasses("galacticraftcore.MixinGalacticraftRocketPollution")
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.rocketsPollute)
+            .addTargetedMod(TargetedMod.GALACTICRAFT_CORE));
 
     public final String name;
     public final List<String> mixinClasses;
@@ -504,6 +552,9 @@ public enum Mixins {
         if (this.targetedMods.isEmpty()) {
             throw new RuntimeException("No targeted mods specified for " + this.name);
         }
+        if (this.applyIf == null) {
+            throw new RuntimeException("No ApplyIf function specified for " + this.name);
+        }
     }
 
     private boolean shouldLoadSide() {
@@ -512,7 +563,7 @@ public enum Mixins {
                 || (side == Side.CLIENT && FMLLaunchHandler.side().isClient()));
     }
 
-    private boolean modsLoaded(List<TargetedMod> targetedMods, Set<String> loadedCoreMods, Set<String> loadedMods) {
+    private boolean allModsLoaded(List<TargetedMod> targetedMods, Set<String> loadedCoreMods, Set<String> loadedMods) {
         if (targetedMods.isEmpty()) return false;
 
         for (TargetedMod target : targetedMods) {
@@ -528,11 +579,27 @@ public enum Mixins {
         return true;
     }
 
+    private boolean noModsLoaded(List<TargetedMod> targetedMods, Set<String> loadedCoreMods, Set<String> loadedMods) {
+        if (targetedMods.isEmpty()) return true;
+
+        for (TargetedMod target : targetedMods) {
+            if (target == TargetedMod.VANILLA) continue;
+
+            // Check coremod first
+            if (!loadedCoreMods.isEmpty()
+                    && target.coreModClass != null
+                    && loadedCoreMods.contains(target.coreModClass)) return false;
+            else if (!loadedMods.isEmpty() && target.modId != null && loadedMods.contains(target.modId)) return false;
+        }
+
+        return true;
+    }
+
     public boolean shouldLoad(Set<String> loadedCoreMods, Set<String> loadedMods) {
         return (shouldLoadSide()
                 && applyIf.get()
-                && modsLoaded(targetedMods, loadedCoreMods, loadedMods)
-                && !modsLoaded(excludedMods, loadedCoreMods, loadedMods));
+                && allModsLoaded(targetedMods, loadedCoreMods, loadedMods)
+                && noModsLoaded(excludedMods, loadedCoreMods, loadedMods));
     }
 
     enum Side {
