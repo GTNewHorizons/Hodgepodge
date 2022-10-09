@@ -442,19 +442,23 @@ public enum Mixins {
     GC_TIME_COMMAND_FIX(new Builder("GC Time Fix")
             .addMixinClasses("minecraft.MixinTimeCommandGalacticraftFix")
             .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.fixTimeCommandWithGC)
             .addTargetedMod(TargetedMod.VANILLA)
             .addTargetedMod(TargetedMod.GALACTICRAFT_CORE)),
     BIBLIOCRAFT_PACKET_FIX(new Builder("Packet Fix")
             .addMixinClasses("bibliocraft.MixinBibliocraftPatchPacketExploits")
             .setSide((Side.BOTH))
+            .setApplyIf(() -> Common.config.fixBibliocraftPackets)
             .addTargetedMod(TargetedMod.BIBLIOCRAFT)),
     ZTONES_PACKET_FIX(new Builder("Packet Fix")
             .addMixinClasses("ztones.MixinZtonesPatchPacketExploits")
             .setSide((Side.BOTH))
+            .setApplyIf(() -> Common.config.fixZTonesPackets)
             .addTargetedMod(TargetedMod.ZTONES)),
 
     // Pollution
     POLLUTION_MINECRAFT_FURNACE(new Builder("Minecraft Furnace Pollutes")
+            .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinTileEntityFurnacePollution")
             .setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.furnacesPollute)
@@ -547,6 +551,9 @@ public enum Mixins {
         if (this.targetedMods.isEmpty()) {
             throw new RuntimeException("No targeted mods specified for " + this.name);
         }
+        if (this.applyIf == null) {
+            throw new RuntimeException("No ApplyIf function specified for " + this.name);
+        }
     }
 
     private boolean shouldLoadSide() {
@@ -555,7 +562,7 @@ public enum Mixins {
                 || (side == Side.CLIENT && FMLLaunchHandler.side().isClient()));
     }
 
-    private boolean modsLoaded(List<TargetedMod> targetedMods, Set<String> loadedCoreMods, Set<String> loadedMods) {
+    private boolean allModsLoaded(List<TargetedMod> targetedMods, Set<String> loadedCoreMods, Set<String> loadedMods) {
         if (targetedMods.isEmpty()) return false;
 
         for (TargetedMod target : targetedMods) {
@@ -571,11 +578,27 @@ public enum Mixins {
         return true;
     }
 
+    private boolean noModsLoaded(List<TargetedMod> targetedMods, Set<String> loadedCoreMods, Set<String> loadedMods) {
+        if (targetedMods.isEmpty()) return true;
+
+        for (TargetedMod target : targetedMods) {
+            if (target == TargetedMod.VANILLA) continue;
+
+            // Check coremod first
+            if (!loadedCoreMods.isEmpty()
+                    && target.coreModClass != null
+                    && loadedCoreMods.contains(target.coreModClass)) return false;
+            else if (!loadedMods.isEmpty() && target.modId != null && loadedMods.contains(target.modId)) return false;
+        }
+
+        return true;
+    }
+
     public boolean shouldLoad(Set<String> loadedCoreMods, Set<String> loadedMods) {
         return (shouldLoadSide()
                 && applyIf.get()
-                && modsLoaded(targetedMods, loadedCoreMods, loadedMods)
-                && !modsLoaded(excludedMods, loadedCoreMods, loadedMods));
+                && allModsLoaded(targetedMods, loadedCoreMods, loadedMods)
+                && noModsLoaded(excludedMods, loadedCoreMods, loadedMods));
     }
 
     enum Side {

@@ -1,7 +1,7 @@
-package com.mitchej123.hodgepodge.mixins.late.minecraft;
+package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import com.mitchej123.hodgepodge.Common;
-import gregtech.common.GT_Pollution;
+import com.mitchej123.hodgepodge.util.PollutionHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,7 +25,7 @@ public abstract class MixinTileEntityFurnacePollution extends TileEntity {
                             opcode = Opcodes.PUTFIELD))
     void addPollution(CallbackInfo ci) {
         if (!this.worldObj.isRemote && (this.worldObj.getTotalWorldTime() % 20) == 0)
-            GT_Pollution.addPollution(
+            PollutionHelper.addPollution(
                     this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord),
                     Common.config.furnacePollutionAmount);
     }

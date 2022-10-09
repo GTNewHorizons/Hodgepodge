@@ -1,7 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.late.railcraft;
 
 import com.mitchej123.hodgepodge.Common;
-import gregtech.common.GT_Pollution;
+import com.mitchej123.hodgepodge.util.PollutionHelper;
 import mods.railcraft.common.blocks.RailcraftTileEntity;
 import mods.railcraft.common.blocks.machine.TileMultiBlock;
 import mods.railcraft.common.blocks.machine.beta.TileEngineSteamHobby;
@@ -38,7 +38,7 @@ public class MixinRailcraftBoilerPollution {
                 pollutionAmount = Common.config.hobbyistEnginePollutionAmount;
             else pollutionAmount = 40;
 
-            GT_Pollution.addPollution(
+            PollutionHelper.addPollution(
                     world.getChunkFromBlockCoords(this.tile.getX(), this.tile.getZ()), pollutionAmount);
         }
     }

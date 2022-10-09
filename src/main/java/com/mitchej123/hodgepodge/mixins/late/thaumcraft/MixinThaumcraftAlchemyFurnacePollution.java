@@ -1,7 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.late.thaumcraft;
 
 import com.mitchej123.hodgepodge.Common;
-import gregtech.common.GT_Pollution;
+import com.mitchej123.hodgepodge.util.PollutionHelper;
 import net.minecraft.tileentity.TileEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,7 +26,7 @@ public abstract class MixinThaumcraftAlchemyFurnacePollution extends TileEntity 
                             remap = false))
     public void addPollution(CallbackInfo ci) {
         if (!this.worldObj.isRemote && (this.worldObj.getTotalWorldTime() % 20) == 0)
-            GT_Pollution.addPollution(
+            PollutionHelper.addPollution(
                     this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord),
                     Common.config.furnacePollutionAmount);
     }

@@ -1,8 +1,9 @@
 package com.mitchej123.hodgepodge.mixins.late.ic2;
 
 import com.mitchej123.hodgepodge.Common;
-import gregtech.common.GT_Pollution;
+import com.mitchej123.hodgepodge.util.PollutionHelper;
 import ic2.core.block.machine.tileentity.TileEntityIronFurnace;
+import net.minecraft.tileentity.TileEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  *    Copyright bartimaeusnek & GTNewHorizons
  */
 @Mixin(value = TileEntityIronFurnace.class, remap = false)
-public abstract class MixinIC2IronFurnacePollution extends TileEntityIronFurnace {
+public abstract class MixinIC2IronFurnacePollution extends TileEntity {
     @Shadow
     public abstract boolean isBurning();
 
@@ -22,7 +23,7 @@ public abstract class MixinIC2IronFurnacePollution extends TileEntityIronFurnace
     private void updateEntityServer(CallbackInfo ci) {
         if (worldObj.isRemote || !isBurning()) return;
         if ((worldObj.getTotalWorldTime() % 20) == 0) {
-            GT_Pollution.addPollution(
+            PollutionHelper.addPollution(
                     worldObj.getChunkFromBlockCoords(xCoord, zCoord), Common.config.furnacePollutionAmount);
         }
     }

@@ -1,7 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.late.railcraft;
 
 import com.mitchej123.hodgepodge.Common;
-import gregtech.common.GT_Pollution;
+import com.mitchej123.hodgepodge.util.PollutionHelper;
 import java.util.List;
 import mods.railcraft.common.blocks.machine.MultiBlockPattern;
 import mods.railcraft.common.blocks.machine.TileMultiBlock;
@@ -33,7 +33,7 @@ public abstract class MixinRailcraftCokeOvenPollution extends TileMultiBlock {
             final int pollution = (((TileMultiBlock) this) instanceof TileBlastFurnace)
                     ? Common.config.advancedCokeOvenPollutionAmount
                     : Common.config.cokeOvenPollutionAmount;
-            GT_Pollution.addPollution(this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord), pollution);
+            PollutionHelper.addPollution(this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord), pollution);
         }
     }
 }

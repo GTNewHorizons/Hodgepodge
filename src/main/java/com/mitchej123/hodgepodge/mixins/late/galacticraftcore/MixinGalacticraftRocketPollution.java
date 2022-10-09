@@ -1,7 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.late.galacticraftcore;
 
 import com.mitchej123.hodgepodge.Common;
-import gregtech.common.GT_Pollution;
+import com.mitchej123.hodgepodge.util.PollutionHelper;
 import micdoodle8.mods.galacticraft.api.entity.IRocketType;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntityAutoRocket;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntityTieredRocket;
@@ -36,6 +36,6 @@ public abstract class MixinGalacticraftRocketPollution extends EntityAutoRocket 
             pollutionAmount = (pollutionAmount * (this.getRocketTier())) / 100;
         else pollutionAmount = 0;
 
-        GT_Pollution.addPollution(worldObj.getChunkFromBlockCoords((int) posX, (int) posZ), pollutionAmount);
+        PollutionHelper.addPollution(worldObj.getChunkFromBlockCoords((int) posX, (int) posZ), pollutionAmount);
     }
 }

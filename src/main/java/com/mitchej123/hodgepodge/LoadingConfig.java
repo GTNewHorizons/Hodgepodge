@@ -24,6 +24,7 @@ public class LoadingConfig {
     public boolean displayIc2FluidLocalizedName;
     public boolean dropPickedLootOnDespawn;
     public boolean enableDefaultLanPort;
+    public boolean fixBibliocraftPackets;
     public boolean fixComponentsPoppingOff;
     public boolean fixDebugBoundingBox;
     public boolean fixDimensionChangeHearts;
@@ -55,11 +56,13 @@ public class LoadingConfig {
     public boolean fixPotionLimit;
     public boolean fixPotionRenderOffset;
     public boolean fixResizableFullscreen;
+    public boolean fixTimeCommandWithGC;
     public boolean fixUnfocusedFullscreen;
     public boolean fixUrlDetection;
     public boolean fixVanillaUnprotectedGetBlock;
     public boolean fixWorldGetBlock;
     public boolean fixWorldServerLeakingUnloadedEntities;
+    public boolean fixZTonesPackets;
     public boolean hideCrosshairInThirdPerson;
     public boolean hideIc2ReactorSlots;
     public boolean hidePotionParticlesFromSelf;
@@ -162,6 +165,9 @@ public class LoadingConfig {
         fixGetBlockLightValue = config.get(Category.FIXES.toString(), "fixGetBlockLightValue", true, "Fix vanilla light calculation sometimes cause NPE on thermos").getBoolean();
         fixGlStateBugs = config.get(Category.FIXES.toString(), "fixGlStateBugs", true, "Fix vanilla GL state bugs causing lighting glitches in various perspectives (MC-10135).").getBoolean();
         fixGuiGameOver = config.get(Category.FIXES.toString(), "fixGuiGameOver", true, "Fix Game Over GUI buttons disabled if switching fullscreen").getBoolean();
+        fixTimeCommandWithGC = config.get(Category.FIXES.toString(), "fixTimeCommandWithGC", true, "Fix time commands with GC").getBoolean();
+        fixBibliocraftPackets = config.get(Category.FIXES.toString(), "fixBibliocraftPackets", true, "Fix Biblocraft packet exploits").getBoolean();
+        fixZTonesPackets = config.get(Category.FIXES.toString(), "fixZTonesPackets", true, "Fix ZTones packet exploits").getBoolean();
         fixHopperHitBox = config.get(Category.FIXES.toString(), "fixHopperHitBox", true, "Fix vanilla hopper hit box").getBoolean();
         fixHopperVoidingItems = config.get(Category.FIXES.toString(), "fixHopperVoidingItems", true, "Fix Drawer + Hopper voiding items").getBoolean();
         fixHudLightingGlitch = config.get(Category.TWEAKS.toString(), "fixHudLightingGlitch", true, "Fix hotbars being dark when Project Red is installed").getBoolean();
