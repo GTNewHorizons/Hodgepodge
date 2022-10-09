@@ -7,8 +7,9 @@
         "mcversion": "${minecraftVersion}",
         "url": "",
         "updateUrl": "",
-        "authorList": ["mitchej123"],
-        "credits": "",
+        "authorList": ["mitchej123", "GTNewHorizons Team"],
+        "license": "LGPL v3",
+        "credits": "bartimaeusnek for ModMixins",
         "logoFile": "",
         "screenshots": [],
         "dependencies": []
