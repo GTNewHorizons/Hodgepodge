@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.mixins.late.railcraft;
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.util.PollutionHelper;
 import mods.railcraft.common.carts.EntityTunnelBore;
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  *    Copyright bartimaeusnek & GTNewHorizons
  */
 @Mixin(EntityTunnelBore.class)
-public abstract class MixinRailcraftTunnelBorePollution extends EntityTunnelBore {
+public abstract class MixinRailcraftTunnelBorePollution extends EntityMinecart {
     @Shadow(remap = false)
     boolean active;
 
