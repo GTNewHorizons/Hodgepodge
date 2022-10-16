@@ -1,4 +1,4 @@
-//version: 1662920829
+//version: 1665425597
 /*
  DO NOT CHANGE THIS FILE!
  Also, you may replace this file at any time if there is an update available.
@@ -187,7 +187,7 @@ if (usesMixins.toBoolean()) {
     if (!(getFile(targetPackageJava).exists() || getFile(targetPackageScala).exists() || getFile(targetPackageKotlin).exists())) {
         throw new GradleException("Could not resolve \"mixinsPackage\"! Could not find " + targetPackageJava + " or " + targetPackageScala + " or " + targetPackageKotlin)
     }
-    
+
     if (!mixinPlugin.isEmpty()) {
         String targetFileJava = javaSourceDir + modGroupPath + "/" + mixinPluginPath + ".java"
         String targetFileScala = scalaSourceDir + modGroupPath + "/" + mixinPluginPath + ".scala"
@@ -352,15 +352,19 @@ def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + mixingConfig
 def mixinSrg = "${tasks.reobf.temporaryDir}" + File.separator + "mixins.srg"
 
 task generateAssets {
-    // TODO: Still need to generate this, even without the mixin plugin... but it's fine for now
-    if (usesMixins.toBoolean() && !mixinPlugin.isEmpty()) {
-        def mixinConfigFile = getFile("/src/main/resources/mixins." + modId + ".json");
+    if (usesMixins.toBoolean()) {
+        def mixinConfigFile = getFile("/src/main/resources/mixins." + modId + ".json")
         if (!mixinConfigFile.exists()) {
+            def mixinPluginLine = ""
+            if(!mixinPlugin.isEmpty()) {
+                // We might not have a mixin plugin if we're using early/late mixins
+                mixinPluginLine +=   """\n  "plugin": "${modGroup}.${mixinPlugin}", """
+            }
+
             mixinConfigFile.text = """{
   "required": true,
   "minVersion": "0.8.5-GTNH",
-  "package": "${modGroup}.${mixinsPackage}",
-  "plugin": "${modGroup}.${mixinPlugin}",
+  "package": "${modGroup}.${mixinsPackage}",${mixinPluginLine}
   "refmap": "${mixingConfigRefMap}",
   "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_8",
@@ -660,10 +664,10 @@ publishing {
     }
 }
 
-if (modrinthProjectId.size() != 0) {
+if (modrinthProjectId.size() != 0 && System.getenv("MODRINTH_TOKEN") != null) {
     apply plugin: 'com.modrinth.minotaur'
 
-    File changelogFile = new File("CHANGELOG.md")
+    File changelogFile = new File(System.getenv("CHANGELOG_FILE") ?: "CHANGELOG.md")
 
     modrinth {
         token = System.getenv("MODRINTH_TOKEN")
@@ -693,10 +697,10 @@ if (modrinthProjectId.size() != 0) {
     tasks.publish.dependsOn(tasks.modrinth)
 }
 
-if (curseForgeProjectId.size() != 0) {
+if (curseForgeProjectId.size() != 0 && System.getenv("CURSEFORGE_TOKEN") != null) {
     apply plugin: 'com.matthewprenger.cursegradle'
 
-    File changelogFile = new File("CHANGELOG.md")
+    File changelogFile = new File(System.getenv("CHANGELOG_FILE") ?: "CHANGELOG.md")
 
     curseforge {
         apiKey = System.getenv("CURSEFORGE_TOKEN")
