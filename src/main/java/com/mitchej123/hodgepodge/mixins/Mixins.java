@@ -45,7 +45,7 @@ public enum Mixins {
             .setSide(Side.CLIENT)
             .addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> Common.config.fixPotionEffectRender)),
-    FIX_IMMOBILE_FIREBALLS(new Builder("Fix Immobile Firemalls")
+    FIX_IMMOBILE_FIREBALLS(new Builder("Fix Immobile Fireballs")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityFireball")
             .addTargetedMod(TargetedMod.VANILLA)
