@@ -28,6 +28,7 @@ public class LoadingConfig {
     public boolean fixComponentsPoppingOff;
     public boolean fixDebugBoundingBox;
     public boolean fixDimensionChangeHearts;
+    public boolean fixDimensionChangeMemoryLeak;
     public boolean fixExtraUtilitiesUnEnchanting;
     public boolean fixFenceConnections;
     public boolean fixFireSpread;
@@ -159,6 +160,7 @@ public class LoadingConfig {
         fixComponentsPoppingOff = config.get(Category.TWEAKS.toString(), "fixComponentsPoppingOff", true, "Fix Project Red components popping off on unloaded chunks").getBoolean();
         fixDebugBoundingBox = config.get(Category.FIXES.toString(), "fixDebugBoundingBox", true, "Fixes the debug hitbox of the player beeing offset").getBoolean();
         fixDimensionChangeHearts = config.get(Category.FIXES.toString(), "fixDimensionChangeHearts", true, "Fix losing bonus hearts on dimension change").getBoolean();
+        fixDimensionChangeMemoryLeak = config.get(Category.FIXES.toString(), "fixDimensionChangeMemoryLeak", true, "Fix memory leak on dimension change").getBoolean();
         fixExtraUtilitiesUnEnchanting = config.get(Category.FIXES.toString(), "fixExtraUtilitiesUnEnchanting", true, "Fix dupe bug with division sigil removing enchantment").getBoolean();
         fixFenceConnections = config.get(Category.FIXES.toString(), "fixFenceConnections", true, "Fix fence connections with other types of fence").getBoolean();
         fixFireSpread = config.get(Category.FIXES.toString(), "fixFireSpread", true, "Fix vanilla fire spread sometimes cause NPE on thermos").getBoolean();

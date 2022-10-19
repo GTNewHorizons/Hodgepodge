@@ -136,6 +136,14 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinServerConfigurationManager", "minecraft.MixinEntityPlayerMP")
             .setApplyIf(() -> Common.config.fixDimensionChangeHearts)
             .addTargetedMod(TargetedMod.VANILLA)),
+    DIMENSION_MEMORY_LEAK_FIX(new Builder("Dimension Change Memory Leak Fix")
+            .setPhase(Phase.EARLY)
+            .addMixinClasses(
+                    "minecraft.MixinNetHandlerPlayClient",
+                    "minecraft.MixinWorldClient",
+                    "minecraft.MixinChunkProviderClient")
+            .setApplyIf(() -> Common.config.fixDimensionChangeMemoryLeak)
+            .addTargetedMod(TargetedMod.VANILLA)),
     INCREASE_PARTICLE_LIMIT(new Builder("Increase Particle Limit")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEffectRenderer")

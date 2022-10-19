@@ -6,6 +6,7 @@ import com.mitchej123.hodgepodge.mixins.late.biomesoplenty.AccessorFogHandler;
 import java.util.concurrent.atomic.AtomicInteger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -66,9 +67,9 @@ public class BOPFogHandler {
                                 int playerX = MathHelper.floor_double(player.posX);
                                 int playerY = MathHelper.floor_double(player.posY);
                                 int playerZ = MathHelper.floor_double(player.posZ);
-                                BiomeGenBase biome = Minecraft.getMinecraft()
-                                        .theWorld
-                                        .getBiomeGenForCoords(playerX + x, playerZ + z);
+                                final WorldClient worldClient = Minecraft.getMinecraft().theWorld;
+                                if (worldClient == null) continue;
+                                final BiomeGenBase biome = worldClient.getBiomeGenForCoords(playerX + x, playerZ + z);
 
                                 if (biome instanceof IBiomeFog) {
                                     float distancePart =
