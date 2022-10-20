@@ -136,6 +136,11 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinServerConfigurationManager", "minecraft.MixinEntityPlayerMP")
             .setApplyIf(() -> Common.config.fixDimensionChangeHearts)
             .addTargetedMod(TargetedMod.VANILLA)),
+    FIX_EATING_STACKED_STEW(new Builder("Stacked Mushroom Stew Eating Fix")
+            .setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinItemSoup")
+            .setApplyIf(() -> Common.config.fixEatingStackedStew)
+            .addTargetedMod(TargetedMod.VANILLA)),
     INCREASE_PARTICLE_LIMIT(new Builder("Increase Particle Limit")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEffectRenderer")
