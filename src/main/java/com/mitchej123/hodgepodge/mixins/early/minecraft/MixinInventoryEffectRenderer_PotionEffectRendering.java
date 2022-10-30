@@ -22,14 +22,14 @@ public abstract class MixinInventoryEffectRenderer_PotionEffectRendering extends
      */
     @Overwrite
     public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_) {
-        boolean bookmarkPanelHidden = Compat.isNeiHidden();
-        if (bookmarkPanelHidden) {
+        boolean leftPanelHidden = !Compat.isNeiLeftPanelVisible();
+        if (leftPanelHidden) {
             super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
         }
         if (!this.mc.thePlayer.getActivePotionEffects().isEmpty()) {
             this.func_147044_g();
         }
-        if (bookmarkPanelHidden) {
+        if (leftPanelHidden) {
             return;
         }
         super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
