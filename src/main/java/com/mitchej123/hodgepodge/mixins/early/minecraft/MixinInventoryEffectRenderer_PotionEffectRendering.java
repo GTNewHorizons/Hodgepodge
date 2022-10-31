@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import codechicken.nei.NEIClientConfig;
+import com.mitchej123.hodgepodge.Compat;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.inventory.Container;
@@ -22,14 +22,14 @@ public abstract class MixinInventoryEffectRenderer_PotionEffectRendering extends
      */
     @Overwrite
     public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_) {
-        boolean bookmarkPanelHidden = NEIClientConfig.isHidden();
-        if (bookmarkPanelHidden) {
+        boolean leftPanelHidden = !Compat.isNeiLeftPanelVisible();
+        if (leftPanelHidden) {
             super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
         }
         if (!this.mc.thePlayer.getActivePotionEffects().isEmpty()) {
             this.func_147044_g();
         }
-        if (bookmarkPanelHidden) {
+        if (leftPanelHidden) {
             return;
         }
         super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);

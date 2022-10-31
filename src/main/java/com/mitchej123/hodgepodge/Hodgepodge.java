@@ -8,6 +8,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.relauncher.Side;
 
@@ -22,6 +23,11 @@ public class Hodgepodge {
     public static final String MODID = "hodgepodge";
     public static final String VERSION = "GRADLETOKEN_VERSION";
     public static final String NAME = "A Hodgepodge of Patches";
+
+    @EventHandler
+    public void preinit(FMLPreInitializationEvent event) {
+        Compat.init();
+    }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
