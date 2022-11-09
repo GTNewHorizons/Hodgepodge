@@ -10,6 +10,12 @@ import java.util.function.Supplier;
 
 public enum Mixins {
     // Vanilla Fixes
+    FIX_FRIENDLY_CREATURE_SOUNDS(new Builder("Fix Friendly Creature Sounds")
+            .setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinSoundHandler")
+            .setSide(Side.CLIENT)
+            .addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> Common.config.fixFriendlyCreatureSounds)),
     THROTTLE_ITEMPICKUPEVENT(new Builder("Throttle Item Pickup Event")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityPlayer")
