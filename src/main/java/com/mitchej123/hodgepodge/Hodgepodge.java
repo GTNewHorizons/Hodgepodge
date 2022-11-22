@@ -26,7 +26,7 @@ public class Hodgepodge {
 
     @EventHandler
     public void preinit(FMLPreInitializationEvent event) {
-        Compat.init();
+        Compat.init(event.getSide());
     }
 
     @EventHandler
