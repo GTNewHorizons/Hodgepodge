@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge.mixins;
 
 import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.Compat;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -310,9 +311,9 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.hideIc2ReactorSlots)
             .addTargetedMod(TargetedMod.IC2)),
     IC2_HAZMAT(new Builder("Hazmat")
-            .setPhase(Phase.EARLY)
+            .setPhase(Phase.LATE)
             .addMixinClasses("ic2.MixinIc2Hazmat")
-            .setApplyIf(() -> Common.config.fixIc2Hazmat)
+            .setApplyIf(() -> Common.config.fixIc2Hazmat && Compat.isGT5Present())
             .addTargetedMod(TargetedMod.IC2)
             .addTargetedMod(TargetedMod.GT5U)),
     IC2_FLUID_CONTAINER_TOOLTIP(new Builder("IC2 Fluid Container Tooltip Fix")
