@@ -2,7 +2,6 @@ package com.mitchej123.hodgepodge;
 
 import codechicken.nei.NEIClientConfig;
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.relauncher.Side;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -39,13 +38,5 @@ public class Compat {
                 && NEIClientConfig.isEnabled()
                 && !NEIClientConfig.isHidden()
                 && (!doesNeiHaveBookmarkAPI || !NEIClientConfig.isBookmarkPanelHidden());
-    }
-
-    /**
-     * Cannot be used before mod construction phase.
-     */
-    public static boolean isGT5Present() {
-        ModContainer gtModContainer = Loader.instance().getIndexedModList().get("gregtech");
-        return gtModContainer != null && gtModContainer.getVersion().equals("MC1710");
     }
 }
