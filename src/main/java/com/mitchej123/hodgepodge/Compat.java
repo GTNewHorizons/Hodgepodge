@@ -6,7 +6,6 @@ import cpw.mods.fml.relauncher.Side;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-/** This class cannot be used earlier than pre-init phase. */
 public class Compat {
     private static boolean isClient;
 
@@ -34,6 +33,9 @@ public class Compat {
         isGT5Present = Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi");
     }
 
+    /**
+     * Cannot be used before pre-init phase.
+     */
     public static boolean isNeiLeftPanelVisible() {
         return isNeiPresent
                 && isClient

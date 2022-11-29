@@ -310,11 +310,12 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.hideIc2ReactorSlots)
             .addTargetedMod(TargetedMod.IC2)),
     IC2_HAZMAT(new Builder("Hazmat")
-            .setPhase(Phase.EARLY)
+            .setPhase(Phase.LATE)
             .addMixinClasses("ic2.MixinIc2Hazmat")
             .setApplyIf(() -> Common.config.fixIc2Hazmat)
             .addTargetedMod(TargetedMod.IC2)
-            .addTargetedMod(TargetedMod.GT5U)),
+            .addTargetedMod(TargetedMod.GT5U)
+            .addExcludedMod(TargetedMod.GT6)),
     IC2_FLUID_CONTAINER_TOOLTIP(new Builder("IC2 Fluid Container Tooltip Fix")
             .setPhase(Phase.EARLY)
             .addMixinClasses("ic2.MixinItemIC2FluidContainer")

@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.ic2;
+package com.mitchej123.hodgepodge.mixins.late.ic2;
 
 import gregtech.api.util.GT_Utility;
 import ic2.core.item.armor.ItemArmorHazmat;
