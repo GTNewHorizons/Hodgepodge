@@ -13,6 +13,8 @@ public class Compat {
     private static boolean isNeiPresent;
     private static boolean doesNeiHaveBookmarkAPI;
 
+    private static boolean isGT5Present;
+
     static void init(Side side) {
         isClient = side == Side.CLIENT;
 
@@ -28,6 +30,8 @@ public class Compat {
             } catch (Exception e) {
             }
         }
+
+        isGT5Present = Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi");
     }
 
     public static boolean isNeiLeftPanelVisible() {
@@ -36,5 +40,12 @@ public class Compat {
                 && NEIClientConfig.isEnabled()
                 && !NEIClientConfig.isHidden()
                 && (!doesNeiHaveBookmarkAPI || !NEIClientConfig.isBookmarkPanelHidden());
+    }
+
+    /**
+     * Cannot be used before pre-init phase.
+     */
+    public static boolean isGT5Present() {
+        return isGT5Present;
     }
 }
