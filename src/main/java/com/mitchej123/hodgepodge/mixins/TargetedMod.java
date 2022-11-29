@@ -8,7 +8,7 @@ public enum TargetedMod {
     COFH_CORE("CoFHCore", "cofh.asm.LoadingPlugin", "CoFHCore"),
     THAUMCRAFT("Thaumcraft", null, "Thaumcraft"), // "thaumcraft.codechicken.core.launch.DepLoader"
     GT5U("GregTech5u", null, "gregtech"), // Also matches GT6.
-    GT6API("GregTech6-API", null, "gregapi"), // Can be used to exclude GT6 from the GT5U target.
+    GT6("GregTech6", "gregtech.asm.GT_ASM", "gregapi"), // Can be used to exclude GT6 from the GT5U target.
     HUNGER_OVERHAUL("HungerOverhaul", null, "HungerOverhaul"),
     RAILCRAFT("Railcraft", null, "Railcraft"),
     BOP("BiomesOPlenty", null, "BiomesOPlenty"),
