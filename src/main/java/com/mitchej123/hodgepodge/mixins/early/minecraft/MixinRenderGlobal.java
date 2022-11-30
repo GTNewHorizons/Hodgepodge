@@ -23,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderGlobal.class)
 public class MixinRenderGlobal {
+
     private final Set<TileEntity> knownIssues = Collections.newSetFromMap(new WeakHashMap<>());
 
     @Inject(

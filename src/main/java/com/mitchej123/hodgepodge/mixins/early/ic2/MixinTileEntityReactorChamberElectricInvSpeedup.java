@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(TileEntityReactorChamberElectric.class)
 public class MixinTileEntityReactorChamberElectricInvSpeedup {
+
     private WeakReference<TileEntityNuclearReactorElectric> master;
 
     @Inject(method = "getReactor", remap = false, cancellable = true, at = @At(value = "HEAD"))

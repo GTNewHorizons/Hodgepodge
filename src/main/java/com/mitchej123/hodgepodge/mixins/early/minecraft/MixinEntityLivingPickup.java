@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(EntityLiving.class)
 public class MixinEntityLivingPickup {
+
     @Shadow
     private boolean canPickUpLoot;
 

@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(World.class)
 public class MixinWorldLightValue {
+
     @Redirect(
             method = "getBlockLightValue_do",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/Chunk;getBlockLightValue(IIII)I"))

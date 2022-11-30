@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(value = ServerConfigurationManager.class, remap = false)
 public class MixinServerConfigurationManager {
+
     /*
      * Make sure extra hearts aren't lost on dimension change
      *   Backported fix from https://github.com/MinecraftForge/MinecraftForge/pull/4830

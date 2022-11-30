@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(value = ItemArmorNightvisionGoggles.class)
 public class MixinIc2NightVisionGoggles {
+
     @Redirect(
             method =
                     "onArmorTick(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/item/ItemStack;)V",

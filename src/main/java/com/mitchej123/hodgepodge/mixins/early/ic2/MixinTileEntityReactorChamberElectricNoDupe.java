@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(TileEntityReactorChamberElectric.class)
 public class MixinTileEntityReactorChamberElectricNoDupe {
+
     @Redirect(
             method = "getReactor",
             at =

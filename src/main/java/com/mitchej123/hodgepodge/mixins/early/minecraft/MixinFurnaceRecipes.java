@@ -11,14 +11,17 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(FurnaceRecipes.class)
 public abstract class MixinFurnaceRecipes {
+
     /*
      * Speed up FurnaceRecipes.getSmeltingResult by:
      *  1) Hijacking the constructor here to recreate the lists with a replacement hash map and an ItemStack hashing strategy
      *  2) No longer looping over every. single. recipe. in the list and using the .get()
      */
+    @SuppressWarnings("rawtypes")
     @Shadow
     private Map smeltingList = new ItemStackMap<ItemStack>(false);
 
+    @SuppressWarnings("rawtypes")
     @Shadow
     private Map experienceList = new ItemStackMap<Float>(false);
 

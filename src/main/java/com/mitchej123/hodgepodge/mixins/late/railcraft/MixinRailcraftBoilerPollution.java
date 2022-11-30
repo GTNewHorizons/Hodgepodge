@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(SteamBoiler.class)
 public class MixinRailcraftBoilerPollution {
+
     @Shadow(remap = false)
     RailcraftTileEntity tile;
 

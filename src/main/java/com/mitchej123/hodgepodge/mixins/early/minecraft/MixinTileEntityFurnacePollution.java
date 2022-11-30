@@ -16,6 +16,7 @@ import org.spongepowered.libraries.org.objectweb.asm.Opcodes;
  */
 @Mixin(TileEntityFurnace.class)
 public abstract class MixinTileEntityFurnacePollution extends TileEntity {
+
     @Inject(
             method = "updateEntity",
             at =

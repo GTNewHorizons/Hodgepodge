@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(TileEntityHopper.class)
 public class MixinTileEntityHopper {
+
     /**
      * @author MuXiu1997
      * @reason Full hopper voiding items from drawer

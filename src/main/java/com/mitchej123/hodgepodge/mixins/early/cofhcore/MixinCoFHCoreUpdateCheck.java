@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 
 @Mixin(UpdateCheckThread.class)
 public class MixinCoFHCoreUpdateCheck {
+
     /**
      * @author mitchej123
      * @reason Update URL is long since gone

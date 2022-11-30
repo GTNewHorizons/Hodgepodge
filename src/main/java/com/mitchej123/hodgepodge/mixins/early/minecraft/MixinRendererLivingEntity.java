@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
  */
 @Mixin(RendererLivingEntity.class)
 public class MixinRendererLivingEntity {
+
     @Redirect(
             method = "renderArrowsStuckInEntity",
             at =

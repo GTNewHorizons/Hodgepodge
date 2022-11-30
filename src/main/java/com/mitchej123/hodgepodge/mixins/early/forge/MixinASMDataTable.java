@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ASMDataTable.class)
 public class MixinASMDataTable {
+
     @Shadow(remap = false)
     private SetMultimap<String, ASMData> globalAnnotationData;
 
@@ -26,6 +27,7 @@ public class MixinASMDataTable {
 
     @Shadow(remap = false)
     private List<ModContainer> containers;
+
     /**
      * We will forget the guava immutable collections now, since everyone thought they are immutable and won't attempt
      * to mutate it.

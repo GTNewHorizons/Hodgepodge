@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(value = TileEntityIronFurnace.class, remap = false)
 public abstract class MixinIC2IronFurnacePollution extends TileEntity {
+
     @Shadow
     public abstract boolean isBurning();
 

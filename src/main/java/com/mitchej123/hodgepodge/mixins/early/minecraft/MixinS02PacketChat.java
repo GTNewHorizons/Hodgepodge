@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(S02PacketChat.class)
 public abstract class MixinS02PacketChat {
+
     private static final Logger LOGGER = LogManager.getLogger("ChatOverflowFix");
 
     @Accessor("field_148919_a")

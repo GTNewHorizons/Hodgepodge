@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(EntityTunnelBore.class)
 public abstract class MixinRailcraftTunnelBorePollution extends EntityMinecart {
+
     @Shadow(remap = false)
     boolean active;
 
