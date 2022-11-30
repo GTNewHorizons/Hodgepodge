@@ -1,7 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.early.ic2;
 
 import com.mitchej123.hodgepodge.Common;
-import ic2.core.init.InternalName;
 import ic2.core.item.ItemCropSeed;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -9,12 +8,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = ItemCropSeed.class)
 public class MixinItemCropSeed extends Item {
+
     @Inject(
             method = "onItemUse",
             at =
@@ -41,12 +42,10 @@ public class MixinItemCropSeed extends Item {
         ci.cancel();
     }
 
-    @Inject(at = @At("RETURN"), method = "<init>(Lic2/core/init/InternalName;)V", remap = false)
-    public void AdjustMaxStackSize(InternalName internalName, CallbackInfo ci) {
+    @ModifyConstant(constant = @Constant(intValue = 1), method = "<init>(Lic2/core/init/InternalName;)V", remap = false)
+    private int getMaxStackSizeFromConfig(int original) {
         final int maxStackSize = Common.config.ic2SeedMaxStackSize;
-        if (maxStackSize != 1) {
-            Common.log.info("Setting IC2 seed max stack size to " + maxStackSize);
-            setMaxStackSize(maxStackSize);
-        }
+        Common.log.info("Setting IC2 seed max stack size to " + maxStackSize);
+        return maxStackSize;
     }
 }
