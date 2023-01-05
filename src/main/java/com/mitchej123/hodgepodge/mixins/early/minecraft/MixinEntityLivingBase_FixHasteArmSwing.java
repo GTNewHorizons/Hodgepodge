@@ -10,9 +10,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinEntityLivingBase_FixHasteArmSwing {
 
     @Inject(method = "getArmSwingAnimationEnd", at = @At("RETURN"), cancellable = true)
-    public void hodgepodge$fixHasteArmSwing(CallbackInfoReturnable<Integer> returnValue) {
-        if (returnValue.getReturnValueI() < 2) {
-            returnValue.setReturnValue(2);
+    public void hodgepodge$fixHasteArmSwing(CallbackInfoReturnable<Integer> cir) {
+        if (cir.getReturnValueI() < 2) {
+            cir.setReturnValue(2);
         }
     }
 }
