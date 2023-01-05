@@ -76,6 +76,7 @@ public class LoadingConfig {
     public boolean optimizeASMDataTable;
     public boolean optimizeIc2ReactorInventoryAccess;
     public boolean optimizeTileentityRemoval;
+    public boolean optimizeWorldUpdateLight;
     public boolean preventPickupLoot;
     public boolean removeUpdateChecks;
     public boolean speedupAnimations;
@@ -213,6 +214,7 @@ public class LoadingConfig {
         optimizeASMDataTable = config.get(Category.SPEEDUPS.toString(), "optimizeASMDataTable", true, "Optimize ASMDataTable getAnnotationsFor for faster startup").getBoolean();
         optimizeIc2ReactorInventoryAccess = config.get(Category.FIXES.toString(), "optimizeIc2ReactorInventoryAccess", true, "Optimize inventory access to IC2 nuclear reactor").getBoolean();
         optimizeTileentityRemoval = config.get(Category.SPEEDUPS.toString(), "optimizeTileentityRemoval", true, "Optimize tileEntity removal in World.class").getBoolean();
+        optimizeWorldUpdateLight = config.get(Category.FIXES.toString(), "optimizeWorldUpdateLight", true, "Fix too early light initialization").getBoolean();
         particleLimit = Math.max(Math.min(config.get(Category.TWEAKS.toString(), "particleLimit", 8000, "Particle limit [4000-16000]").getInt(), 16000), 4000);
         preventPickupLoot = config.get(Category.TWEAKS.toString(), "preventPickupLoot", true, "Prevent monsters from picking up loot.").getBoolean();
         removeUpdateChecks = config.get(Category.FIXES.toString(), "removeUpdateChecks", true, "Remove old/stale/outdated update checks.").getBoolean();
