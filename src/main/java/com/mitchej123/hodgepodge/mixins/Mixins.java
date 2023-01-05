@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.mixins;
 
 import com.mitchej123.hodgepodge.Common;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -499,7 +500,15 @@ public enum Mixins {
             .addMixinClasses("galacticraftcore.MixinGalacticraftRocketPollution")
             .setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.rocketsPollute)
-            .addTargetedMod(TargetedMod.GALACTICRAFT_CORE));
+            .addTargetedMod(TargetedMod.GALACTICRAFT_CORE)),
+    DISABLE_AID_SPAWN_XU_SPIKES(new Builder("Fixes the vanilla zombie aid spawn triggering when killed by Extra Utilities Spikes")
+            .addMixinClasses("extrautilities.MixinBlockSpike",
+                    "extrautilities.MixinBlockSpikeWood",
+                    "extrautilities.MixinBlockSpikeGold",
+                    "extrautilities.MixinBlockSpikeDiamond")
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.disableAidSpawnByXUSpikes)
+            .addTargetedMod(TargetedMod.EXTRA_UTILITIES));
 
     public final String name;
     public final List<String> mixinClasses;

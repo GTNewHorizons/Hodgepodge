@@ -2,10 +2,11 @@ package com.mitchej123.hodgepodge;
 
 import com.mitchej123.hodgepodge.mixins.TargetedMod;
 import com.mitchej123.hodgepodge.util.BlockMatcher;
-import java.io.File;
-import java.util.Arrays;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.config.Configuration;
+
+import java.io.File;
+import java.util.Arrays;
 
 public class LoadingConfig {
     // Adjustments
@@ -112,6 +113,8 @@ public class LoadingConfig {
     public boolean cofhWorldTransformer;
     public boolean enableTileRendererProfiler;
     public boolean pollutionAsm;
+
+    public boolean disableAidSpawnByXUSpikes;
 
     public String thermosCraftServerClass;
 
@@ -237,7 +240,8 @@ public class LoadingConfig {
         furnacesPollute = config.get(Category.POLLUTION.toString(), "furnacesPollute", true, "Make furnaces Pollute").getBoolean();
         rocketsPollute = config.get(Category.POLLUTION.toString(), "rocketsPollute", true, "Make rockets Pollute").getBoolean();
         railcraftPollutes = config.get(Category.POLLUTION.toString(), "railcraftPollutes", true, "Make Railcraft Pollute").getBoolean();
-        
+
+        disableAidSpawnByXUSpikes = config.get(Category.TWEAKS.toString(), "disableAidSpawnByXUSpikes", true, "Disables the spawn of zombie aid when zombie is killed by Extra Utilities Spikes, since it can spawn them too far.").getBoolean();
         
         furnacePollutionAmount = config.get(Category.POLLUTION.toString(), "furnacePollution", 20, "Furnace pollution per second, min 1!", 1, Integer.MAX_VALUE).getInt();
         fireboxPollutionAmount = config.get(Category.POLLUTION.toString(), "fireboxPollution", 15, "Pollution Amount for RC Firebox", 1, Integer.MAX_VALUE).getInt();
