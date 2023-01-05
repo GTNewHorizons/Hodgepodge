@@ -9,7 +9,7 @@ public class HodgepodgeEventHandler {
 
     @SubscribeEvent
     public void onZombieAidSummon(ZombieEvent.SummonAidEvent event) {
-        if(!event.world.isRemote && xuDisableAidTrigger) {
+        if (!event.world.isRemote && xuDisableAidTrigger) {
             event.setResult(Event.Result.DENY);
         }
     }
