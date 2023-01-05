@@ -35,7 +35,7 @@ public abstract class MixinWorld_FixLightUpdateLag {
                             shift = At.Shift.BEFORE,
                             ordinal = 0))
     public void hodgepodge$modifyUpdateRange(
-            EnumSkyBlock p_147463_1_, int x, int y, int z, CallbackInfoReturnable<Boolean> callback) {
+            EnumSkyBlock p_147463_1_, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
         this.hodgepodge$updateRange = this.doChunksNearChunkExist(x, y, z, 18) ? 17 : 15;
     }
 
