@@ -16,9 +16,12 @@ public enum Mixins {
             .setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.fixEnchantmentNumerals || Common.config.arabicNumbersForEnchantsPotions)
             .addTargetedMod(TargetedMod.VANILLA)),
-    FIX_INVENTORY_POTION_EFFECT_NUMERALS(new Builder("Fix potion effects level not displaying in the inventory")
+    FIX_INVENTORY_POTION_EFFECT_NUMERALS(new Builder(
+                    "Fix potion effects level not displaying properly above a certain value")
             .setPhase(Phase.EARLY)
-            .addMixinClasses("minecraft.MixinInventoryEffectRenderer_FixPotionEffectNumerals")
+            .addMixinClasses(
+                    "minecraft.MixinInventoryEffectRenderer_FixPotionEffectNumerals",
+                    "minecraft.MixinItemPotion_FixRomanNumerals")
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixPotionEffectNumerals || Common.config.arabicNumbersForEnchantsPotions)
             .addTargetedMod(TargetedMod.VANILLA)),
