@@ -14,13 +14,13 @@ public enum Mixins {
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEnchantment_FixRomanNumerals")
             .setSide(Side.BOTH)
-            .setApplyIf(() -> Common.config.fixEnchantmentNumerals)
+            .setApplyIf(() -> Common.config.fixEnchantmentNumerals || Common.config.arabicNumbersForEnchantsPotions)
             .addTargetedMod(TargetedMod.VANILLA)),
     FIX_INVENTORY_POTION_EFFECT_NUMERALS(new Builder("Fix potion effects level not displaying in the inventory")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinInventoryEffectRenderer_FixPotionEffectNumerals")
             .setSide(Side.CLIENT)
-            .setApplyIf(() -> Common.config.fixPotionEffectNumerals)
+            .setApplyIf(() -> Common.config.fixPotionEffectNumerals || Common.config.arabicNumbersForEnchantsPotions)
             .addTargetedMod(TargetedMod.VANILLA)),
     FIX_FRIENDLY_CREATURE_SOUNDS(new Builder("Fix Friendly Creature Sounds")
             .setPhase(Phase.EARLY)
