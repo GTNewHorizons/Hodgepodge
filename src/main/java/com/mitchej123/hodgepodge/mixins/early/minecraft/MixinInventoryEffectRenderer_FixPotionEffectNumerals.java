@@ -1,5 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.util.RomanNumerals;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.potion.PotionEffect;
@@ -29,8 +30,13 @@ public class MixinInventoryEffectRenderer_FixPotionEffectNumerals {
                                     "Lnet/minecraft/client/resources/I18n;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
                             ordinal = 1))
     public String hodgepodge$addRomanNumeral(String string, Object... objects) {
-        return this.hodgepodge$potionAmplifierLevel > 0
-                ? RomanNumerals.toRoman(this.hodgepodge$potionAmplifierLevel + 1)
-                : "";
+        if (this.hodgepodge$potionAmplifierLevel > 0) {
+            if (Common.config.arabicNumbersForEnchantsPotions) {
+                return String.valueOf(this.hodgepodge$potionAmplifierLevel + 1);
+            } else {
+                return RomanNumerals.toRoman(this.hodgepodge$potionAmplifierLevel + 1);
+            }
+        }
+        return "";
     }
 }

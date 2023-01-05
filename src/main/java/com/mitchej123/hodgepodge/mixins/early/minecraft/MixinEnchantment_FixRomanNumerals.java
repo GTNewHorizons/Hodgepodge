@@ -1,5 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.util.RomanNumerals;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.util.StatCollector;
@@ -21,6 +22,10 @@ public abstract class MixinEnchantment_FixRomanNumerals {
     @Inject(method = "getTranslatedName", at = @At("HEAD"), cancellable = true)
     private void hodgepodge$modifyRomanNumerals(int level, CallbackInfoReturnable<String> cir) {
         String translation = StatCollector.translateToLocal(this.getName()) + " ";
-        cir.setReturnValue(translation + RomanNumerals.toRoman(level));
+        if (Common.config.arabicNumbersForEnchantsPotions) {
+            cir.setReturnValue(translation + level);
+        } else {
+            cir.setReturnValue(translation + RomanNumerals.toRoman(level));
+        }
     }
 }

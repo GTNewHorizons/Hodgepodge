@@ -10,6 +10,7 @@ import net.minecraftforge.common.config.Configuration;
 public class LoadingConfig {
     // Adjustments
     public boolean addSystemInfo;
+    public boolean arabicNumbersForEnchantsPotions;
     public int chatLength;
     public int ic2SeedMaxStackSize;
     public int itemStacksPickedUpPerTick;
@@ -149,6 +150,7 @@ public class LoadingConfig {
         addCVSupportToWandPedestal = config.get(Category.TWEAKS.toString(), "addCVSupportToWandPedestal", true, "Add CV support to Thaumcraft wand recharge pedestal").getBoolean();
         addSystemInfo = config.get(Category.TWEAKS.toString(), "addSystemInfo", true, "Adds system info to the F3 overlay (Java version and vendor; GPU name; OpenGL version; CPU cores; OS name, version and architecture)").getBoolean();
         addToggleDebugMessage = config.get(Category.TWEAKS.toString(), "addToggleDebugMessage", true, "Add a debug message in the chat when toggling vanilla debug options").getBoolean();
+        arabicNumbersForEnchantsPotions = config.get(Category.TWEAKS.toString(), "arabicNumbersForEnchantsPotions", false, "Uses arabic numbers for enchantment levels and potion amplifier levels").getBoolean();
         biblocraftRecipes = config.get(Category.ASM.toString(), "biblocraftRecipes", true, "Remove recipe generation from BiblioCraft").getBoolean();
         chatLength = Math.max(100, Math.min(32767, config.get(Category.TWEAKS.toString(), "chatLength", 8191, "Amount of chat lines kept [100(Vanilla) - 32767]").getInt()));
         cofhWorldTransformer = config.get(Category.ASM.toString(), "cofhWorldTransformer", true, "Enable Glease's ASM patch to disable unused CoFH tileentity cache").getBoolean();
