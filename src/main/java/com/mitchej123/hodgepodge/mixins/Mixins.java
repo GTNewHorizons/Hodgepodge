@@ -10,6 +10,12 @@ import java.util.function.Supplier;
 
 public enum Mixins {
     // Vanilla Fixes
+    FIX_INVENTORY_POTION_EFFECT_NUMERALS(new Builder("Fix potion effects level not displaying in the inventory")
+            .setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinInventoryEffectRenderer_FixPotionEffectNumerals")
+            .setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.fixPotionEffectNumerals)
+            .addTargetedMod(TargetedMod.VANILLA)),
     FIX_FRIENDLY_CREATURE_SOUNDS(new Builder("Fix Friendly Creature Sounds")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinSoundHandler")
