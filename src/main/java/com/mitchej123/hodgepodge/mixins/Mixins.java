@@ -10,13 +10,12 @@ import java.util.function.Supplier;
 
 public enum Mixins {
     // Vanilla Fixes
-    FIX_ENCHANTMENT_LEVEL_NUMERALS(
-            new Builder("Fix enchantment levels not displaying properly above a certain value")
-                    .setPhase(Phase.EARLY)
-                    .addMixinClasses("minecraft.MixinEnchantment_FixRomanNumerals")
-                    .setSide(Side.BOTH)
-                    .setApplyIf(() -> Common.config.fixEnchantmentNumerals)
-                    .addTargetedMod(TargetedMod.VANILLA)),
+    FIX_ENCHANTMENT_LEVEL_NUMERALS(new Builder("Fix enchantment levels not displaying properly above a certain value")
+            .setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinEnchantment_FixRomanNumerals")
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.fixEnchantmentNumerals)
+            .addTargetedMod(TargetedMod.VANILLA)),
     FIX_INVENTORY_POTION_EFFECT_NUMERALS(new Builder("Fix potion effects level not displaying in the inventory")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinInventoryEffectRenderer_FixPotionEffectNumerals")
