@@ -2,11 +2,10 @@ package com.mitchej123.hodgepodge;
 
 import com.mitchej123.hodgepodge.mixins.TargetedMod;
 import com.mitchej123.hodgepodge.util.BlockMatcher;
-import net.minecraft.launchwrapper.Launch;
-import net.minecraftforge.common.config.Configuration;
-
 import java.io.File;
 import java.util.Arrays;
+import net.minecraft.launchwrapper.Launch;
+import net.minecraftforge.common.config.Configuration;
 
 public class LoadingConfig {
     // Adjustments

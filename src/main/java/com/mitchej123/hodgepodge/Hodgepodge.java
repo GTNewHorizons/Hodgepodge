@@ -48,7 +48,8 @@ public class Hodgepodge {
     public void onServerStarting(FMLServerStartingEvent aEvent) {
         aEvent.registerServerCommand(new DebugCommand());
 
-        //needed in case ExtraUtilities' Spike was crashed (and game was switched to a main menu), so it didn't update the variable
+        // needed in case ExtraUtilities' Spike was crashed (and game was switched to a main menu), so it didn't update
+        // the variable
         EVENT_HANDLER.setAidTriggerDisabled(false);
     }
 }
