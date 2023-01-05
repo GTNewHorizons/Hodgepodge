@@ -12,7 +12,6 @@ public class MixinEntityLivingBase_FixHasteArmSwing {
     @Inject(method = "getArmSwingAnimationEnd", at = @At("RETURN"), cancellable = true)
     public void hodgepodge$fixHasteArmSwing(CallbackInfoReturnable<Integer> returnValue) {
         if (returnValue.getReturnValueI() < 2) {
-            returnValue.cancel();
             returnValue.setReturnValue(2);
         }
     }
