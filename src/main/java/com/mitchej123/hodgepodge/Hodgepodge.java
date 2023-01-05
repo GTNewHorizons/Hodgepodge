@@ -11,6 +11,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.common.MinecraftForge;
 
 @Mod(
         modid = Hodgepodge.MODID,
@@ -20,6 +21,7 @@ import cpw.mods.fml.relauncher.Side;
         dependencies = "required-after:gtnhmixins@[2.0.1,);")
 public class Hodgepodge {
     public static final AnchorAlarm ANCHOR_ALARM = new AnchorAlarm();
+    public static final HodgepodgeEventHandler EVENT_HANDLER = new HodgepodgeEventHandler();
     public static final String MODID = "hodgepodge";
     public static final String VERSION = "GRADLETOKEN_VERSION";
     public static final String NAME = "A Hodgepodge of Patches";
@@ -27,6 +29,7 @@ public class Hodgepodge {
     @EventHandler
     public void preinit(FMLPreInitializationEvent event) {
         Compat.init(event.getSide());
+        MinecraftForge.EVENT_BUS.register(EVENT_HANDLER);
     }
 
     @EventHandler
@@ -44,5 +47,8 @@ public class Hodgepodge {
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent aEvent) {
         aEvent.registerServerCommand(new DebugCommand());
+
+        //needed in case ExtraUtilities' Spike was crashed (and game was switched to a main menu), so it didn't update the variable
+        EVENT_HANDLER.setAidTriggerDisabled(false);
     }
 }
