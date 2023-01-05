@@ -29,6 +29,7 @@ public class LoadingConfig {
     public boolean fixDebugBoundingBox;
     public boolean fixDimensionChangeHearts;
     public boolean fixEatingStackedStew;
+    public boolean fixEnchantmentNumerals;
     public boolean fixExtraUtilitiesUnEnchanting;
     public boolean fixFenceConnections;
     public boolean fixFireSpread;
@@ -163,6 +164,7 @@ public class LoadingConfig {
         fixDebugBoundingBox = config.get(Category.FIXES.toString(), "fixDebugBoundingBox", true, "Fixes the debug hitbox of the player beeing offset").getBoolean();
         fixDimensionChangeHearts = config.get(Category.FIXES.toString(), "fixDimensionChangeHearts", true, "Fix losing bonus hearts on dimension change").getBoolean();
         fixEatingStackedStew = config.get(Category.FIXES.toString(), "fixEatingStackedStew", true, "Fix deleting stack when eating mushroom stew").getBoolean();
+        fixEnchantmentNumerals = config.get(Category.FIXES.toString(), "fixEnchantmentNumerals", true, "Fix enchantment levels not displaying properly above a certain value").getBoolean();
         fixExtraUtilitiesUnEnchanting = config.get(Category.FIXES.toString(), "fixExtraUtilitiesUnEnchanting", true, "Fix dupe bug with division sigil removing enchantment").getBoolean();
         fixFenceConnections = config.get(Category.FIXES.toString(), "fixFenceConnections", true, "Fix fence connections with other types of fence").getBoolean();
         fixFireSpread = config.get(Category.FIXES.toString(), "fixFireSpread", true, "Fix vanilla fire spread sometimes cause NPE on thermos").getBoolean();
