@@ -10,6 +10,12 @@ import java.util.function.Supplier;
 
 public enum Mixins {
     // Vanilla Fixes
+    FIX_HASTE_ARM_SWING_ANIMATION(new Builder("Fix arm not swinging when having too much haste")
+            .setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinEntityLivingBase_FixHasteArmSwing")
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.fixHasteArmSwing)
+            .addTargetedMod(TargetedMod.VANILLA)),
     FIX_FRIENDLY_CREATURE_SOUNDS(new Builder("Fix Friendly Creature Sounds")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinSoundHandler")
