@@ -25,7 +25,7 @@ public enum Mixins {
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixPotionEffectNumerals || Common.config.arabicNumbersForEnchantsPotions)
             .addTargetedMod(TargetedMod.VANILLA)),
-  FIX_HASTE_ARM_SWING_ANIMATION(new Builder("Fix arm not swinging when having too much haste")
+    FIX_HASTE_ARM_SWING_ANIMATION(new Builder("Fix arm not swinging when having too much haste")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityLivingBase_FixHasteArmSwing")
             .setSide(Side.BOTH)
