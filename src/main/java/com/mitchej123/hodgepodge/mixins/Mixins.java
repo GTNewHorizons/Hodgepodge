@@ -10,6 +10,18 @@ import java.util.function.Supplier;
 
 public enum Mixins {
     // Vanilla Fixes
+    FIX_HASTE_ARM_SWING_ANIMATION(new Builder("Fix arm not swinging when having too much haste")
+            .setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinEntityLivingBase_FixHasteArmSwing")
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.fixHasteArmSwing)
+            .addTargetedMod(TargetedMod.VANILLA)),
+    OPTIMIZE_WORLD_UPDATE_LIGHT(new Builder("Optimize world updateLightByType method")
+            .setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinWorld_FixLightUpdateLag")
+            .setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> Common.config.optimizeWorldUpdateLight)),
     FIX_FRIENDLY_CREATURE_SOUNDS(new Builder("Fix Friendly Creature Sounds")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinSoundHandler")
@@ -499,7 +511,13 @@ public enum Mixins {
             .addMixinClasses("galacticraftcore.MixinGalacticraftRocketPollution")
             .setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.rocketsPollute)
-            .addTargetedMod(TargetedMod.GALACTICRAFT_CORE));
+            .addTargetedMod(TargetedMod.GALACTICRAFT_CORE)),
+    DISABLE_AID_SPAWN_XU_SPIKES(
+            new Builder("Fixes the vanilla zombie aid spawn triggering when killed by Extra Utilities Spikes")
+                    .addMixinClasses("extrautilities.MixinBlockSpike")
+                    .setSide(Side.BOTH)
+                    .setApplyIf(() -> Common.config.disableAidSpawnByXUSpikes)
+                    .addTargetedMod(TargetedMod.EXTRA_UTILITIES));
 
     public final String name;
     public final List<String> mixinClasses;
