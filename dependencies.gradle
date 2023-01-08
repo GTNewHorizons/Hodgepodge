@@ -1,17 +1,17 @@
 dependencies {
-    compile("com.github.GTNewHorizons:NotEnoughItems:2.3.1-GTNH:dev")
-    compile("com.github.GTNewHorizons:GT5-Unofficial:5.09.41.29:dev")
-    compile("com.github.GTNewHorizons:ForestryMC:4.4.14:dev")
-    compileOnly("com.github.GTNewHorizons:EnderIO:2.3.1.43:dev")
-    compile("com.github.GTNewHorizons:StructureLib:1.1.9:dev")
-    compile("com.github.GTNewHorizons:GTNHLib:0.0.5:dev")
-    compile('com.gtnewhorizon:gtnhmixins:2.0.1')
+    compile("com.github.GTNewHorizons:NotEnoughItems:2.3.19-GTNH:dev")
+    compile("com.github.GTNewHorizons:GT5-Unofficial:5.09.41.200:dev")
+    compile("com.github.GTNewHorizons:ForestryMC:4.5.6:dev")
+    compileOnly("com.github.GTNewHorizons:EnderIO:2.3.1.49:dev")
+    compile("com.github.GTNewHorizons:StructureLib:1.2.0-beta.2:dev")
+    compile("com.github.GTNewHorizons:GTNHLib:0.0.8.1:dev")
+    compile('com.gtnewhorizon:gtnhmixins:2.1.4')
     compile("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
-    compile("com.github.GTNewHorizons:AppleCore:3.2.2:dev")
-    compileOnly("mrtjp:MrTJPCore:1.7.10-1.1.0.33:dev")
+    compile("com.github.GTNewHorizons:AppleCore:3.2.5:dev")
+    compileOnly("com.github.GTNewHorizons:MrTJPCore:1.1.1:dev")
     compileOnly("curse.maven:automagy-222153:2285272")
     
-    compileOnly("com.github.GTNewHorizons:Railcraft:9.13.10:dev") {
+    compileOnly("com.github.GTNewHorizons:Railcraft:9.13.14:dev") {
         // RC Depends on BuildCraft & Baubles and a few others, use transitive to pull those in for `runClient`
         transitive = true
     }
@@ -22,7 +22,7 @@ dependencies {
     compile("curse.maven:biomes-o-plenty-220318:2499612")
     compileOnly("curse.maven:projecte-226410:2340786")
     compileOnly(deobf("https://mediafiles.forgecdn.net/files/2241/397/Pam%27s+Harvest+the+Nether+1.7.10a.jar"))
-    compileOnly("com.github.GTNewHorizons:Galacticraft:3.0.44-GTNH:dev") {
+    compileOnly("com.github.GTNewHorizons:Galacticraft:3.0.62-GTNH:dev") {
         transitive = false
     }
     compileOnly("com.github.GTNewHorizons:Baubles:1.0.1.14:dev")
