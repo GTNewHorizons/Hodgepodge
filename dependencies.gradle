@@ -6,7 +6,7 @@ dependencies {
     compile("com.github.GTNewHorizons:HungerOverhaul:1.0.4-GTNH:dev")
     compile("com.github.GTNewHorizons:MrTJPCore:1.1.1:dev") // Do not update, fixed afterwards
     compile("com.github.GTNewHorizons:Railcraft:9.13.9:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
-    compile("com.github.GTNewHorizons:TinkersConstruct:1.9.9-GTNH:dev")
+    compile("com.github.GTNewHorizons:TinkersConstruct:1.9.9-GTN:dev")
     compile("curse.maven:biomes-o-plenty-220318:2499612")
     compile("curse.maven:cofh-core-69162:2388751")
     compile("curse.maven:extra-utilities-225561:2264384")

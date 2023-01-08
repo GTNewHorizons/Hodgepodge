@@ -1,6 +1,5 @@
 package com.mitchej123.hodgepodge.mixins.late.thaumcraft;
 
-import com.gtnewhorizon.mixinextras.injector.ModifyExpressionValue;
 import java.util.ArrayList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -8,6 +7,10 @@ import net.minecraft.util.ChunkCoordinates;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import thaumcraft.api.TileThaumcraft;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
@@ -22,7 +25,7 @@ public class MixinTileWandPedestal extends TileThaumcraft {
     @Shadow(remap = false)
     ArrayList<ChunkCoordinates> nodes = null;
 
-    @ModifyExpressionValue(
+    @Redirect(
             at =
                     @At(
                             remap = false,
@@ -31,28 +34,39 @@ public class MixinTileWandPedestal extends TileThaumcraft {
                             value = "INVOKE"),
             method = "Lthaumcraft/common/tiles/TileWandPedestal;updateEntity()V",
             require = 1)
-    private AspectList addVis(AspectList original, ItemWandCasting wand, ItemStack wandstack) {
-        for (Aspect aspect : original.getAspects()) {
-            int drained = VisNetHandler.drainVis(
-                    worldObj, xCoord, yCoord, zCoord, aspect, 25); // Pedestal operates every 5 tick
-            if (drained > 0) wand.addRealVis(wandstack, aspect, drained, true);
+    private AspectList getAspectsWithRoomReplacement(ItemWandCasting wand, ItemStack wandstack) {
+        AspectList as = wand.getAspectsWithRoom(wandstack);
+        if (as != null && as.size() > 0) {
+            for (Aspect aspect : as.getAspects()) {
+                int drained = VisNetHandler.drainVis(
+                        this.worldObj,
+                        this.xCoord,
+                        this.yCoord,
+                        this.zCoord,
+                        aspect,
+                        25); // Pedestal operates every 5 tick
+                if (drained > 0) {
+                    wand.addRealVis(wandstack, aspect, drained, true);
+                }
+            }
         }
-        return original;
+        return as;
     }
 
-    @ModifyExpressionValue(
+    @Inject(
             at =
                     @At(
+                            args = "classValue=thaumcraft/api/nodes/INode",
                             target =
                                     "Lnet/minecraft/world/World;getTileEntity(III)Lnet/minecraft/tileentity/TileEntity;",
-                            value = "INVOKE"),
+                            value = "CONSTANT"),
+            locals = LocalCapture.CAPTURE_FAILEXCEPTION,
             method = "Lthaumcraft/common/tiles/TileWandPedestal;findNodes()V",
             remap = false,
             require = 1)
-    private TileEntity addCVNodes(TileEntity original) {
-        if (original instanceof TileVisNode) {
-            this.nodes.add(new ChunkCoordinates(original.xCoord, original.yCoord, original.zCoord));
+    private void addCVNodes(CallbackInfo ci, int xx, int yy, int zz, TileEntity te) {
+        if (te instanceof TileVisNode) {
+            this.nodes.add(new ChunkCoordinates(te.xCoord, te.yCoord, te.zCoord));
         }
-        return original;
     }
 }
