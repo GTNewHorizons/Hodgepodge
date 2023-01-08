@@ -511,7 +511,13 @@ public enum Mixins {
             .addMixinClasses("galacticraftcore.MixinGalacticraftRocketPollution")
             .setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.rocketsPollute)
-            .addTargetedMod(TargetedMod.GALACTICRAFT_CORE));
+            .addTargetedMod(TargetedMod.GALACTICRAFT_CORE)),
+    DISABLE_AID_SPAWN_XU_SPIKES(
+            new Builder("Fixes the vanilla zombie aid spawn triggering when killed by Extra Utilities Spikes")
+                    .addMixinClasses("extrautilities.MixinBlockSpike")
+                    .setSide(Side.BOTH)
+                    .setApplyIf(() -> Common.config.disableAidSpawnByXUSpikes)
+                    .addTargetedMod(TargetedMod.EXTRA_UTILITIES));
 
     public final String name;
     public final List<String> mixinClasses;
