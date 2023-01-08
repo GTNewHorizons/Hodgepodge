@@ -36,6 +36,7 @@ public class LoadingConfig {
     public boolean fixGetBlockLightValue;
     public boolean fixGlStateBugs;
     public boolean fixGuiGameOver;
+    public boolean fixHasteArmSwing;
     public boolean fixHopperHitBox;
     public boolean fixHopperVoidingItems;
     public boolean fixHudLightingGlitch;
@@ -172,6 +173,7 @@ public class LoadingConfig {
         fixGetBlockLightValue = config.get(Category.FIXES.toString(), "fixGetBlockLightValue", true, "Fix vanilla light calculation sometimes cause NPE on thermos").getBoolean();
         fixGlStateBugs = config.get(Category.FIXES.toString(), "fixGlStateBugs", true, "Fix vanilla GL state bugs causing lighting glitches in various perspectives (MC-10135).").getBoolean();
         fixGuiGameOver = config.get(Category.FIXES.toString(), "fixGuiGameOver", true, "Fix Game Over GUI buttons disabled if switching fullscreen").getBoolean();
+        fixHasteArmSwing = config.get(Category.FIXES.toString(), "fixHasteArmSwing", true, "Fix arm not swinging when having too much haste").getBoolean();
         fixTimeCommandWithGC = config.get(Category.FIXES.toString(), "fixTimeCommandWithGC", true, "Fix time commands with GC").getBoolean();
         fixBibliocraftPackets = config.get(Category.FIXES.toString(), "fixBibliocraftPackets", true, "Fix Biblocraft packet exploits").getBoolean();
         fixZTonesPackets = config.get(Category.FIXES.toString(), "fixZTonesPackets", true, "Fix ZTones packet exploits").getBoolean();
