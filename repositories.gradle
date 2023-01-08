@@ -24,12 +24,4 @@ repositories {
     maven {
         url "https://cursemaven.com"
     }
-    maven {
-        name "mvnmrtjp"
-        url "http://files.projectredwiki.com/maven"
-        metadataSources {
-            mavenPom()
-            artifact()
-        }
-    }
 }
