@@ -34,6 +34,7 @@ public class LoadingConfig {
     public boolean fixGetBlockLightValue;
     public boolean fixGlStateBugs;
     public boolean fixGuiGameOver;
+    public boolean fixHasteArmSwing;
     public boolean fixHopperHitBox;
     public boolean fixHopperVoidingItems;
     public boolean fixHudLightingGlitch;
@@ -74,6 +75,7 @@ public class LoadingConfig {
     public boolean optimizeASMDataTable;
     public boolean optimizeIc2ReactorInventoryAccess;
     public boolean optimizeTileentityRemoval;
+    public boolean optimizeWorldUpdateLight;
     public boolean preventPickupLoot;
     public boolean removeUpdateChecks;
     public boolean speedupAnimations;
@@ -110,6 +112,8 @@ public class LoadingConfig {
     public boolean cofhWorldTransformer;
     public boolean enableTileRendererProfiler;
     public boolean pollutionAsm;
+
+    public boolean disableAidSpawnByXUSpikes;
 
     public String thermosCraftServerClass;
 
@@ -167,6 +171,7 @@ public class LoadingConfig {
         fixGetBlockLightValue = config.get(Category.FIXES.toString(), "fixGetBlockLightValue", true, "Fix vanilla light calculation sometimes cause NPE on thermos").getBoolean();
         fixGlStateBugs = config.get(Category.FIXES.toString(), "fixGlStateBugs", true, "Fix vanilla GL state bugs causing lighting glitches in various perspectives (MC-10135).").getBoolean();
         fixGuiGameOver = config.get(Category.FIXES.toString(), "fixGuiGameOver", true, "Fix Game Over GUI buttons disabled if switching fullscreen").getBoolean();
+        fixHasteArmSwing = config.get(Category.FIXES.toString(), "fixHasteArmSwing", true, "Fix arm not swinging when having too much haste").getBoolean();
         fixTimeCommandWithGC = config.get(Category.FIXES.toString(), "fixTimeCommandWithGC", true, "Fix time commands with GC").getBoolean();
         fixBibliocraftPackets = config.get(Category.FIXES.toString(), "fixBibliocraftPackets", true, "Fix Biblocraft packet exploits").getBoolean();
         fixZTonesPackets = config.get(Category.FIXES.toString(), "fixZTonesPackets", true, "Fix ZTones packet exploits").getBoolean();
@@ -211,6 +216,7 @@ public class LoadingConfig {
         optimizeASMDataTable = config.get(Category.SPEEDUPS.toString(), "optimizeASMDataTable", true, "Optimize ASMDataTable getAnnotationsFor for faster startup").getBoolean();
         optimizeIc2ReactorInventoryAccess = config.get(Category.FIXES.toString(), "optimizeIc2ReactorInventoryAccess", true, "Optimize inventory access to IC2 nuclear reactor").getBoolean();
         optimizeTileentityRemoval = config.get(Category.SPEEDUPS.toString(), "optimizeTileentityRemoval", true, "Optimize tileEntity removal in World.class").getBoolean();
+        optimizeWorldUpdateLight = config.get(Category.FIXES.toString(), "optimizeWorldUpdateLight", true, "Fix too early light initialization").getBoolean();
         particleLimit = Math.max(Math.min(config.get(Category.TWEAKS.toString(), "particleLimit", 8000, "Particle limit [4000-16000]").getInt(), 16000), 4000);
         preventPickupLoot = config.get(Category.TWEAKS.toString(), "preventPickupLoot", true, "Prevent monsters from picking up loot.").getBoolean();
         removeUpdateChecks = config.get(Category.FIXES.toString(), "removeUpdateChecks", true, "Remove old/stale/outdated update checks.").getBoolean();
@@ -235,7 +241,8 @@ public class LoadingConfig {
         furnacesPollute = config.get(Category.POLLUTION.toString(), "furnacesPollute", true, "Make furnaces Pollute").getBoolean();
         rocketsPollute = config.get(Category.POLLUTION.toString(), "rocketsPollute", true, "Make rockets Pollute").getBoolean();
         railcraftPollutes = config.get(Category.POLLUTION.toString(), "railcraftPollutes", true, "Make Railcraft Pollute").getBoolean();
-        
+
+        disableAidSpawnByXUSpikes = config.get(Category.TWEAKS.toString(), "disableAidSpawnByXUSpikes", true, "Disables the spawn of zombie aid when zombie is killed by Extra Utilities Spikes, since it can spawn them too far.").getBoolean();
         
         furnacePollutionAmount = config.get(Category.POLLUTION.toString(), "furnacePollution", 20, "Furnace pollution per second, min 1!", 1, Integer.MAX_VALUE).getInt();
         fireboxPollutionAmount = config.get(Category.POLLUTION.toString(), "fireboxPollution", 15, "Pollution Amount for RC Firebox", 1, Integer.MAX_VALUE).getInt();
