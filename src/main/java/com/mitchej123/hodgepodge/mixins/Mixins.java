@@ -508,11 +508,7 @@ public enum Mixins {
             .addTargetedMod(TargetedMod.GALACTICRAFT_CORE)),
     DISABLE_AID_SPAWN_XU_SPIKES(
             new Builder("Fixes the vanilla zombie aid spawn triggering when killed by Extra Utilities Spikes")
-                    .addMixinClasses(
-                            "extrautilities.MixinBlockSpike",
-                            "extrautilities.MixinBlockSpikeWood",
-                            "extrautilities.MixinBlockSpikeGold",
-                            "extrautilities.MixinBlockSpikeDiamond")
+                    .addMixinClasses("extrautilities.MixinBlockSpike")
                     .setSide(Side.BOTH)
                     .setApplyIf(() -> Common.config.disableAidSpawnByXUSpikes)
                     .addTargetedMod(TargetedMod.EXTRA_UTILITIES));
