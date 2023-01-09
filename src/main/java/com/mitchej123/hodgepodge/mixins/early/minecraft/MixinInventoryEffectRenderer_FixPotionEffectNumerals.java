@@ -4,6 +4,7 @@ import com.gtnewhorizon.mixinextras.injector.ModifyExpressionValue;
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.util.RomanNumerals;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
+import net.minecraft.client.resources.I18n;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -34,7 +35,13 @@ public class MixinInventoryEffectRenderer_FixPotionEffectNumerals {
             if (Common.config.arabicNumbersForEnchantsPotions) {
                 return String.valueOf(this.hodgepodge$potionAmplifierLevel + 1);
             } else {
-                return RomanNumerals.toRoman(this.hodgepodge$potionAmplifierLevel + 1);
+                final String translation =
+                        I18n.format("enchantment.level." + (this.hodgepodge$potionAmplifierLevel + 1), objects);
+                if (translation != null && translation.startsWith("enchantment.level.")) {
+                    return RomanNumerals.toRoman(this.hodgepodge$potionAmplifierLevel + 1);
+                } else {
+                    return translation;
+                }
             }
         }
         return "";

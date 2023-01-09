@@ -6,7 +6,6 @@ import com.mitchej123.hodgepodge.util.RomanNumerals;
 import net.minecraft.item.ItemPotion;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ItemPotion.class)
 public class MixinItemPotion_FixRomanNumerals {
@@ -21,7 +20,7 @@ public class MixinItemPotion_FixRomanNumerals {
         return amplifier;
     }
 
-    @Redirect(
+    @ModifyExpressionValue(
             method = "addInformation",
             at =
                     @At(
@@ -29,11 +28,13 @@ public class MixinItemPotion_FixRomanNumerals {
                             target =
                                     "Lnet/minecraft/util/StatCollector;translateToLocal(Ljava/lang/String;)Ljava/lang/String;",
                             ordinal = 1))
-    private String hodgepodge$addRomanNumeral(String string) {
+    private String hodgepodge$addRomanNumeral(String translation) {
         if (Common.config.arabicNumbersForEnchantsPotions) {
             return String.valueOf(this.hodgepodge$potionAmplifierLevel + 1);
-        } else {
+        } else if (translation != null && translation.startsWith("potion.potency.")) {
             return RomanNumerals.toRoman(this.hodgepodge$potionAmplifierLevel + 1);
+        } else {
+            return translation;
         }
     }
 }
