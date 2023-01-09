@@ -16,7 +16,7 @@ public class MixinHungerOverhaulHealthRegen {
      * @author mitchej123
      * @reason Fix bad interaction with SoL Carrot Edition
      */
-    @Overwrite()
+    @Overwrite
     @SubscribeEvent
     public void onHealthRegenTick(HealthRegenEvent.GetRegenTickPeriod event) {
         float wellfedModifier = 1.0F;

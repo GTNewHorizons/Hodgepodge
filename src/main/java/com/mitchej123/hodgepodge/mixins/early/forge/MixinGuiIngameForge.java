@@ -18,7 +18,7 @@ public class MixinGuiIngameForge extends GuiIngame {
         }
     }
 
-    public MixinGuiIngameForge(Minecraft mc) {
+    private MixinGuiIngameForge(Minecraft mc) {
         super(mc);
     }
 }

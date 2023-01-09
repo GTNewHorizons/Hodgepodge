@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 
 @Mixin(RandomPositionGenerator.class)
 public class MixinRandomPositionGenerator {
+
     /**
      * @author mitchej123
      * @reason Backported fix north/west bias

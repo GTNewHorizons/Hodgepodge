@@ -12,6 +12,7 @@ import tuhljin.automagy.tiles.TileEntityThirstyTank;
 
 @Mixin(ItemBlockThirstyTank.class)
 public class MixinItemBlockThirstyTank implements IFluidContainerItem {
+
     @Override
     public FluidStack getFluid(ItemStack container) {
         return container.hasTagCompound() ? FluidStack.loadFluidStackFromNBT(container.stackTagCompound) : null;

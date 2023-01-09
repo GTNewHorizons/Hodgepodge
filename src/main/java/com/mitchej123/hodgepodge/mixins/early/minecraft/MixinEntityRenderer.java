@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(EntityRenderer.class)
 public class MixinEntityRenderer {
+
     /**
      * From Sk1erLLC/Patcher
      */

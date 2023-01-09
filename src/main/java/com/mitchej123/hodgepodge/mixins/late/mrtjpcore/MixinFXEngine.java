@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(FXEngine$.class)
 public class MixinFXEngine {
+
     /**
      * @reason Lighting should be kept disabled at the end of RenderWorldLastEvent in 1.7.
      */

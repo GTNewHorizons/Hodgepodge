@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ItemIC2FluidContainer.class)
 public class MixinItemIC2FluidContainer {
+
     @Redirect(
             method =
                     "addInformation(Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/player/EntityPlayer;Ljava/util/List;Z)V",

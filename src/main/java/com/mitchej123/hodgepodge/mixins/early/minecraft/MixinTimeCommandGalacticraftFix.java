@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(CommandTime.class)
 public class MixinTimeCommandGalacticraftFix {
+
     @Inject(method = "setTime", at = @At("HEAD"), cancellable = true)
     protected final void setTime(ICommandSender p_71552_1_, int p_71552_2_, CallbackInfo x) {
         for (WorldServer server : MinecraftServer.getServer().worldServers) {

@@ -1,9 +1,7 @@
 package com.mitchej123.hodgepodge;
 
-import com.mitchej123.hodgepodge.mixins.TargetedMod;
 import com.mitchej123.hodgepodge.util.BlockMatcher;
 import java.io.File;
-import java.util.Arrays;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.config.Configuration;
 
@@ -214,7 +212,7 @@ public class LoadingConfig {
         hideCrosshairInThirdPerson = config.get(Category.TWEAKS.toString(), "hideCrosshairInThirdPerson", true, "Stops rendering the crosshair when you are playing in third person").getBoolean();
         hideIc2ReactorSlots = config.get(Category.TWEAKS.toString(), "hideIc2ReactorSlots", true, "Prevent IC2's reactor's coolant slots from being accessed by automations if not a fluid reactor").getBoolean();
         hidePotionParticlesFromSelf = config.get(Category.TWEAKS.toString(), "hidePotionParticlesFromSelf", true, "Stops rendering potion particles from yourself").getBoolean();
-        ic2SeedMaxStackSize = config.get(Category.TWEAKS.toString(), "ic2SeedMaxStackSize", 64, "IC2 seed max stack size").getInt();
+        ic2SeedMaxStackSize = config.get(Category.TWEAKS.toString(), "ic2SeedMaxStackSize", 64, "IC2 seed max stack size", 1, 64).getInt();
         increaseParticleLimit = config.get(Category.TWEAKS.toString(), "increaseParticleLimit", true, "Increase particle limit").getBoolean();
         installAnchorAlarm = config.get(Category.TWEAKS.toString(), "installAnchorAlarm", true, "Wake up passive & personal anchors on player login").getBoolean();
         itemStacksPickedUpPerTick = Math.max(1, config.get(Category.FIXES.toString(), "itemStacksPickedUpPerTick", 36, "Stacks picked up per tick").getInt());
@@ -288,10 +286,6 @@ public class LoadingConfig {
     /*
      * Defaults
      */
-
-    // Default to all non-optional mods being required
-    private static final String[] defaultRequiredMods =
-            Arrays.stream(TargetedMod.values()).map(f -> f.modName).toArray(String[]::new);
 
     public static final String[] defaultPollutionRenderStandardBlock = new String[] {
         "net.minecraft.block.BlockGrass:GRASS",

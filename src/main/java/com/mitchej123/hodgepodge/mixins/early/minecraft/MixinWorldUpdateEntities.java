@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(World.class)
 public class MixinWorldUpdateEntities {
+
     @Redirect(
             method = "updateEntities",
             at = @At(value = "INVOKE", target = "Ljava/util/List;removeAll(Ljava/util/Collection;)Z"))

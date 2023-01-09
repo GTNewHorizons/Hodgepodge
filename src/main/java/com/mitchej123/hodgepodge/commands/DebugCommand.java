@@ -27,6 +27,7 @@ public class DebugCommand extends CommandBase {
                 "\"anchor list [player]\" - list RC anchors placed by the player (empty for current player)"));
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] ss) {
         List<String> l = new ArrayList<>();

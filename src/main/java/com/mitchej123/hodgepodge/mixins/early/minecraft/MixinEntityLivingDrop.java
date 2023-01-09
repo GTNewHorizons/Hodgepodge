@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityLiving.class)
 public class MixinEntityLivingDrop {
+
     @Shadow
     private boolean persistenceRequired;
 

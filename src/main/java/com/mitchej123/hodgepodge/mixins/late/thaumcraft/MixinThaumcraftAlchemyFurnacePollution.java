@@ -16,6 +16,7 @@ import thaumcraft.common.tiles.TileAlchemyFurnace;
  */
 @Mixin(TileAlchemyFurnace.class)
 public abstract class MixinThaumcraftAlchemyFurnacePollution extends TileEntity {
+
     @Inject(
             method = "updateEntity",
             at =

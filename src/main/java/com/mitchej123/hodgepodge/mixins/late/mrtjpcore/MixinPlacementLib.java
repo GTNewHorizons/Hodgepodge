@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(PlacementLib$.class)
 public class MixinPlacementLib {
+
     /**
      * @reason Allow blocks to stay on unloaded chunks.
      */

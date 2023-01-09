@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(BlockHopper.class)
 public class MixinBlockHopper extends Block {
+
     // Inspired by DietHoppers by rwtema - https://github.com/rwtema/DietHopper/
     @Unique
     private static final EnumMap<EnumFacing, List<AxisAlignedBB>> bounds;

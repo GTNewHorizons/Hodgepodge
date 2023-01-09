@@ -38,6 +38,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
         },
         remap = false)
 public abstract class MixinTcpNoDelay extends ChannelInitializer {
+
     @ModifyArg(
             method = "initChannel",
             at = @At(value = "INVOKE", target = "Ljava/lang/Boolean;valueOf(Z)Ljava/lang/Boolean;"))

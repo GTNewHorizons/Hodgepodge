@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ObjHandler.class)
 public class MixinObjHandler {
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Redirect(
             method = "registerPhiloStoneSmelting",

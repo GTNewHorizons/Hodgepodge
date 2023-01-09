@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = TileEntityCrop.class)
 public class MixinTileEntityCrop {
+
     @Inject(
             method = "rightClick",
             at =

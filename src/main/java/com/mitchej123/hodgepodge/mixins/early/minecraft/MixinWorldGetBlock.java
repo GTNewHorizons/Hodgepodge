@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(World.class)
 public class MixinWorldGetBlock {
+
     @Redirect(
             method = "getBlock(III)Lnet/minecraft/block/Block;",
             at =
