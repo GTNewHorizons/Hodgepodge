@@ -2,64 +2,96 @@ package com.mitchej123.hodgepodge.mixins.late.gregtech.textures;
 
 import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
 import gregtech.api.interfaces.IIconContainer;
+import gregtech.api.items.GT_MetaGenerated_Item;
 import gregtech.common.render.items.GT_GeneratedMaterial_Renderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.fluids.FluidStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.At.Shift;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(GT_GeneratedMaterial_Renderer.class)
 public class MixinGT_GeneratedMaterial_Renderer {
-    @Redirect(
-            method = "renderItem",
-            remap = false,
-            at =
-                    @At(
-                            value = "INVOKE",
-                            remap = false,
-                            target = "Lgregtech/api/interfaces/IIconContainer;getIcon()Lnet/minecraft/util/IIcon;"))
-    public IIcon getIconIconContainer(IIconContainer container) {
-        IIcon icon = container.getIcon();
-        if (icon instanceof TextureAtlasSprite) {
-            ((IPatchedTextureAtlasSprite) icon).markNeedsAnimationUpdate();
-        }
-        return icon;
-    }
 
-    @Redirect(
-            method = "renderItem",
-            remap = false,
+    @Inject(
             at =
                     @At(
-                            value = "INVOKE",
                             remap = false,
                             target =
-                                    "Lgregtech/api/interfaces/IIconContainer;getOverlayIcon()Lnet/minecraft/util/IIcon;"))
-    public IIcon getIconOverlayIconContainer(IIconContainer container) {
-        IIcon icon = container.getOverlayIcon();
-        if (icon instanceof TextureAtlasSprite) {
-            ((IPatchedTextureAtlasSprite) icon).markNeedsAnimationUpdate();
+                                    "Lgregtech/common/render/items/GT_GeneratedMaterial_Renderer;renderRegularItem(Lnet/minecraftforge/client/IItemRenderer$ItemRenderType;Lnet/minecraft/item/ItemStack;Lnet/minecraft/util/IIcon;Z)V",
+                            value = "INVOKE"),
+            locals = LocalCapture.CAPTURE_FAILSOFT,
+            method = "renderItem",
+            remap = false)
+    private void hodgepodge$markNeedsAnimationUpdate(
+            ItemRenderType type,
+            ItemStack aStack,
+            Object data[],
+            CallbackInfo ci,
+            short aMetaData,
+            GT_MetaGenerated_Item aItem,
+            IIconContainer aIconContainer,
+            IIcon tIcon) {
+        if (tIcon instanceof TextureAtlasSprite) {
+            ((IPatchedTextureAtlasSprite) tIcon).markNeedsAnimationUpdate();
         }
-        return icon;
     }
 
-    @Redirect(
-            method = "renderItem",
-            remap = false,
+    @Inject(
             at =
                     @At(
-                            value = "INVOKE",
+                            remap = false,
+                            shift = Shift.AFTER,
+                            target = "Lcodechicken/lib/render/TextureUtils;bindAtlas(I)V",
+                            value = "INVOKE"),
+            locals = LocalCapture.CAPTURE_FAILSOFT,
+            method = "renderItem",
+            remap = false)
+    private void hodgepodge$markNeedsAnimationUpdate(
+            ItemRenderType type,
+            ItemStack aStack,
+            Object data[],
+            CallbackInfo ci,
+            short aMetaData,
+            GT_MetaGenerated_Item aItem,
+            IIconContainer aIconContainer,
+            IIcon tIcon,
+            IIcon tOverlay) {
+        if (tOverlay instanceof TextureAtlasSprite) {
+            ((IPatchedTextureAtlasSprite) tOverlay).markNeedsAnimationUpdate();
+        }
+    }
+
+    @Inject(
+            at =
+                    @At(
                             remap = false,
                             target =
-                                    "Lnet/minecraftforge/fluids/Fluid;getIcon(Lnet/minecraftforge/fluids/FluidStack;)Lnet/minecraft/util/IIcon;"))
-    public IIcon getIconFluid(Fluid instance, FluidStack stack) {
-        IIcon icon = instance.getIcon(stack);
-        if (icon instanceof TextureAtlasSprite) {
-            ((IPatchedTextureAtlasSprite) icon).markNeedsAnimationUpdate();
+                                    "Lgregtech/common/render/items/GT_GeneratedMaterial_Renderer;renderContainedFluid(Lnet/minecraftforge/client/IItemRenderer$ItemRenderType;Lnet/minecraftforge/fluids/FluidStack;Lnet/minecraft/util/IIcon;)V",
+                            value = "INVOKE"),
+            locals = LocalCapture.CAPTURE_FAILSOFT,
+            method = "renderItem",
+            remap = false)
+    private void hodgepodge$markNeedsAnimationUpdate(
+            ItemRenderType type,
+            ItemStack aStack,
+            Object data[],
+            CallbackInfo ci,
+            short aMetaData,
+            GT_MetaGenerated_Item aItem,
+            IIconContainer aIconContainer,
+            IIcon tIcon,
+            IIcon tOverlay,
+            FluidStack aFluid,
+            IIcon fluidIcon) {
+        if (fluidIcon instanceof TextureAtlasSprite) {
+            ((IPatchedTextureAtlasSprite) fluidIcon).markNeedsAnimationUpdate();
         }
-        return icon;
     }
 }

@@ -11,6 +11,7 @@ import java.io.File;
 import org.apache.logging.log4j.Level;
 
 public class EarlyASMCallHooks {
+
     public static ModContainer build(ASMModParser modParser, File modSource, ModCandidate container) {
         String className = modParser.getASMType().getClassName();
 

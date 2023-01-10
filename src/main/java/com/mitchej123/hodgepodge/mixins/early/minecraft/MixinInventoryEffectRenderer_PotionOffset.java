@@ -23,7 +23,7 @@ public abstract class MixinInventoryEffectRenderer_PotionOffset extends GuiConta
     }
 
     /*Forced to have constructor matching super*/
-    public MixinInventoryEffectRenderer_PotionOffset(Container p_i1072_1_) {
+    private MixinInventoryEffectRenderer_PotionOffset(Container p_i1072_1_) {
         super(p_i1072_1_);
     }
 }

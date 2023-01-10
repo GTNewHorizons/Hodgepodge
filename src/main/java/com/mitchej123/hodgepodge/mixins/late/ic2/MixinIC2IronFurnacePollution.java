@@ -16,11 +16,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(value = TileEntityIronFurnace.class, remap = false)
 public abstract class MixinIC2IronFurnacePollution extends TileEntity {
+
     @Shadow
     public abstract boolean isBurning();
 
     @Inject(method = "updateEntityServer", at = @At("TAIL"))
-    private void updateEntityServer(CallbackInfo ci) {
+    private void hodgepodge$updateEntityServer(CallbackInfo ci) {
         if (worldObj.isRemote || !isBurning()) return;
         if ((worldObj.getTotalWorldTime() % 20) == 0) {
             PollutionHelper.addPollution(

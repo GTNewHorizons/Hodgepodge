@@ -29,7 +29,7 @@ public class MixinForestryIntegration {
 
     /**
      * @author glowredman
-     * @reason BOP flowers are already registered in Forestry
+     * @reason BOP flowers are already registered by Forestry
      * @see <a href=https://github.com/GTNewHorizons/GT-New-Horizons-Modpack/issues/2886>GTNewHorizons/GT-New-Horizons-Modpack#2886</a>
      */
     @Overwrite(remap = false)

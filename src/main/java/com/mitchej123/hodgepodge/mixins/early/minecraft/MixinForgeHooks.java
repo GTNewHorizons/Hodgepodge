@@ -10,9 +10,12 @@ import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.ForgeHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(value = ForgeHooks.class, remap = false)
 public class MixinForgeHooks {
+
+    @Unique
     private static final Pattern URL_PATTERN = Pattern.compile(
             //         schema                          ipv4            OR        namespace                 port     path
             //         ends
@@ -23,7 +26,7 @@ public class MixinForgeHooks {
 
     /**
      * @author LexManos
-     * @reason Crash fix backported from <a href="https://github.com/MinecraftForge/MinecraftForge/commit/5b28eb53e8623448b1c2bdb46b8924662e690995">...</a>
+     * @reason Crash fix backported from <a href="https://github.com/MinecraftForge/MinecraftForge/commit/5b28eb53e8623448b1c2bdb46b8924662e690995">MinecraftForge/MinecraftForge@5b28eb5</a>
      */
     @Overwrite
     public static IChatComponent newChatWithLinks(String string) {

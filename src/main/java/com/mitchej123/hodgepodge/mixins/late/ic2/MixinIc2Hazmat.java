@@ -8,11 +8,12 @@ import org.spongepowered.asm.mixin.Overwrite;
 
 @Mixin(value = ItemArmorHazmat.class, remap = false)
 public class MixinIc2Hazmat {
+
     /**
      * @author Sphyix
      * @reason Hazmat - IC2 logic superseded by GT check
      */
-    @Overwrite()
+    @Overwrite
     public static boolean hasCompleteHazmat(EntityLivingBase entity) {
         return GT_Utility.isWearingFullRadioHazmat(entity);
     }
