@@ -441,6 +441,11 @@ public enum Mixins {
             .addMixinClasses("journeymap.MixinConstants")
             .setApplyIf(() -> Common.config.fixJourneymapKeybinds)
             .addTargetedMod(TargetedMod.JOURNEYMAP)),
+    FIX_JOURNEYMAP_ILLEGAL_FILE_PATH_CHARACTER(new Builder("Fix Journeymap Illegal File Path Character")
+            .setSide(Side.CLIENT)
+            .addMixinClasses("journeymap.MixinWorldData")
+            .setApplyIf(() -> Common.config.fixJourneymapFilePath)
+            .addTargetedMod(TargetedMod.JOURNEYMAP)),
 
     // Pam's Harvest the Nether
     FIX_IGNIS_FRUIT_AABB(new Builder("Ignis Fruit")
