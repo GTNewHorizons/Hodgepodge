@@ -10,11 +10,12 @@ import org.spongepowered.asm.mixin.Overwrite;
 
 @Mixin(RandomPositionGenerator.class)
 public class MixinRandomPositionGenerator {
+
     /**
      * @author mitchej123
      * @reason Backported fix north/west bias
      */
-    @Overwrite()
+    @Overwrite
     private static Vec3 findRandomTargetBlock(EntityCreature entityCreature, int hor, int ver, Vec3 facing) {
         boolean found = false;
         double tx = 0, ty = 0, tz = 0;

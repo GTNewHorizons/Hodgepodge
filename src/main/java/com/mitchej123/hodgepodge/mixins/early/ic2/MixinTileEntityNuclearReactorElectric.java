@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(TileEntityNuclearReactorElectric.class)
 public abstract class MixinTileEntityNuclearReactorElectric extends TileEntityInventory {
+
     @Shadow(remap = false)
     public abstract boolean isFluidCooled();
 

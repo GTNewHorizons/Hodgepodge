@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Minecraft.class)
 public class MixinMinecraft_UnfocusedFullscreen {
+
     @Redirect(
             method = "runGameLoop",
             at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/Display;isActive()Z", remap = false))

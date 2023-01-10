@@ -10,6 +10,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fluids.RenderBlockFluid;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -17,10 +18,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = RenderBlockFluid.class, remap = false)
 public abstract class MixinRenderBlockFluid {
 
+    @Unique
     private IBlockAccess currentBlockAccess;
 
     @Inject(method = "renderWorldBlock", at = @At(value = "HEAD"))
-    private void saveCurrentBlockAccess(
+    private void hodgepodge$saveCurrentBlockAccess(
             IBlockAccess world,
             int x,
             int y,

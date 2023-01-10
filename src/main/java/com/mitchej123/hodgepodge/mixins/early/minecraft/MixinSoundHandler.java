@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public class MixinSoundHandler {
 
     @Inject(method = "loadSoundResource", at = @At("HEAD"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    private void loadSoundResource(ResourceLocation resourceLocation, SoundList soundList, CallbackInfo callbackInfo) {
+    private void hodgepodge$loadSoundResource(ResourceLocation resourceLocation, SoundList soundList, CallbackInfo callbackInfo) {
         String name = resourceLocation.toString();
 
         if (name.startsWith("minecraft:step")

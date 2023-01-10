@@ -14,7 +14,7 @@ public enum TargetedMod {
     BOP("BiomesOPlenty", null, "BiomesOPlenty"),
     MRTJPCORE("MrTJPCore", null, "MrTJPCoreMod"),
     AUTOMAGY("Automagy", null, "Automagy"),
-    PROJECTE("ProjectE", null, "projecte"),
+    PROJECTE("ProjectE", null, "ProjectE"),
     HARVESTTHENETHER("harvestthenether", null, "harvestthenether"),
     GALACTICRAFT_CORE("GalacticraftCore", "micdoodle8.mods.galacticraft.core.asm.GCLoadingPlugin", "GalacticraftCore"),
     BAUBLES("Baubles", null, "Baubles"),

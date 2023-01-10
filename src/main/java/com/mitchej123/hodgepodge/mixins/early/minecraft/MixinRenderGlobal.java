@@ -16,6 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -23,6 +24,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderGlobal.class)
 public class MixinRenderGlobal {
+
+    @Unique
     private final Set<TileEntity> knownIssues = Collections.newSetFromMap(new WeakHashMap<>());
 
     @Inject(
@@ -32,7 +35,7 @@ public class MixinRenderGlobal {
                             value = "FIELD",
                             ordinal = 0,
                             target = "Lnet/minecraft/client/renderer/RenderGlobal;tileEntities:Ljava/util/List;"))
-    public void prepareTESR(EntityLivingBase p_147589_1_, ICamera p_147589_2_, float p_147589_3_, CallbackInfo ci) {
+    public void hodgepodge$prepareTESR(EntityLivingBase p_147589_1_, ICamera p_147589_2_, float p_147589_3_, CallbackInfo ci) {
         RenderDebugHelper.recordGLStates();
     }
 
@@ -43,7 +46,7 @@ public class MixinRenderGlobal {
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/client/renderer/tileentity/TileEntityRendererDispatcher;renderTileEntity(Lnet/minecraft/tileentity/TileEntity;F)V"))
-    public void postTESR(TileEntityRendererDispatcher instance, TileEntity j, float k) {
+    public void hodgepodge$postTESR(TileEntityRendererDispatcher instance, TileEntity j, float k) {
         ManagedEnum<RenderDebugMode> renderDebugMode = HodgepodgeClient.renderDebugMode;
         if (!renderDebugMode.is(RenderDebugMode.OFF))
             // this should be enough

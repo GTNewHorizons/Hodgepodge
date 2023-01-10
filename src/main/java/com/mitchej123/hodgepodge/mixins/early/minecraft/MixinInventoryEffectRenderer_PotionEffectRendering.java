@@ -21,10 +21,10 @@ public abstract class MixinInventoryEffectRenderer_PotionEffectRendering extends
      * is opened
      */
     @Overwrite
-    public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_) {
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         boolean leftPanelHidden = !Compat.isNeiLeftPanelVisible();
         if (leftPanelHidden) {
-            super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
+            super.drawScreen(mouseX, mouseY, partialTicks);
         }
         if (!this.mc.thePlayer.getActivePotionEffects().isEmpty()) {
             this.func_147044_g();
@@ -32,11 +32,11 @@ public abstract class MixinInventoryEffectRenderer_PotionEffectRendering extends
         if (leftPanelHidden) {
             return;
         }
-        super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
+        super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     /*Forced to have constructor matching super*/
-    public MixinInventoryEffectRenderer_PotionEffectRendering(Container p_i1089_1_) {
+    private MixinInventoryEffectRenderer_PotionEffectRendering(Container p_i1089_1_) {
         super(p_i1089_1_);
     }
 }

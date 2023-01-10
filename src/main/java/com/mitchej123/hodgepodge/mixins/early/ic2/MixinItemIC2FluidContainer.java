@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ItemIC2FluidContainer.class)
 public class MixinItemIC2FluidContainer {
+
     @Redirect(
             method =
                     "addInformation(Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/player/EntityPlayer;Ljava/util/List;Z)V",
@@ -17,7 +18,7 @@ public class MixinItemIC2FluidContainer {
                             target =
                                     "Lnet/minecraftforge/fluids/FluidRegistry;getFluidName(Lnet/minecraftforge/fluids/FluidStack;)Ljava/lang/String;",
                             remap = false))
-    private String getFluidName(FluidStack fs) {
+    private String hodgepodge$getFluidName(FluidStack fs) {
         return fs.getLocalizedName();
     }
 }

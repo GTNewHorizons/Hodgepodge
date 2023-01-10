@@ -8,6 +8,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.IBlockAccess;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(BlockNetherLeaves.class)
 public class MixinBlockNetherLeaves extends BlockLeavesBase {
@@ -35,6 +36,7 @@ public class MixinBlockNetherLeaves extends BlockLeavesBase {
                                                                 : isTranslucent(worldIn, x, y, z)))))));
     }
 
+    @Unique
     private static boolean isTranslucent(IBlockAccess world, int x, int y, int z) {
         Block block = world.getBlock(x, y, z);
         return block == BlockRegistry.netherLeaves ? Minecraft.isFancyGraphicsEnabled() : !block.isOpaqueCube();

@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(BlockHopper.class)
 public class MixinBlockHopper extends Block {
+
     // Inspired by DietHoppers by rwtema - https://github.com/rwtema/DietHopper/
     @Unique
     private static final EnumMap<EnumFacing, List<AxisAlignedBB>> bounds;
@@ -46,14 +47,16 @@ public class MixinBlockHopper extends Block {
         bounds.get(EnumFacing.EAST).add(makeAABB(12, 4, 6, 16, 8, 10));
     }
 
-    protected MixinBlockHopper(Material materialIn) {
+    private MixinBlockHopper(Material materialIn) {
         super(materialIn);
     }
 
+    @Unique
     private static AxisAlignedBB makeAABB(int fromX, int fromY, int fromZ, int toX, int toY, int toZ) {
         return AxisAlignedBB.getBoundingBox(fromX / 16F, fromY / 16F, fromZ / 16F, toX / 16F, toY / 16F, toZ / 16F);
     }
 
+    @Unique
     private static MovingObjectPosition rayTrace(Vec3 pos, Vec3 start, Vec3 end, AxisAlignedBB boundingBox) {
         final Vec3 vec3d = start.addVector(-pos.xCoord, -pos.yCoord, -pos.zCoord);
         final Vec3 vec3d1 = end.addVector(-pos.xCoord, -pos.yCoord, -pos.zCoord);

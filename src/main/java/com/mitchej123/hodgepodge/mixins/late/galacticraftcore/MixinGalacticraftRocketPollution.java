@@ -18,12 +18,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(EntityTieredRocket.class)
 public abstract class MixinGalacticraftRocketPollution extends EntityAutoRocket implements IRocketType {
 
-    public MixinGalacticraftRocketPollution(World world) {
+    private MixinGalacticraftRocketPollution(World world) {
         super(world);
     }
 
     @Inject(method = "onUpdate", at = @At("HEAD"))
-    private void addRocketPollution(CallbackInfo ci) {
+    private void hodgepodge$addRocketPollution(CallbackInfo ci) {
         if (this.worldObj.isRemote
                 || !(launchPhase == EnumLaunchPhase.LAUNCHED.ordinal()
                         || launchPhase == EnumLaunchPhase.IGNITED.ordinal())) return;

@@ -1,8 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.server;
 
 import com.mitchej123.hodgepodge.Common;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.io.IOException;
 import java.net.ServerSocket;
 import net.minecraft.util.HttpUtil;
@@ -16,7 +14,6 @@ public class MixinHttpUtil {
      * @author laetansky
      * @reason Allow LAN servers to have static port number
      */
-    @SideOnly(Side.CLIENT)
     @Overwrite
     public static int func_76181_a() throws IOException {
         ServerSocket serversocket = null;

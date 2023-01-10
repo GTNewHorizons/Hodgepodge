@@ -33,7 +33,7 @@ public class MixinRenderBlocks {
      * that we will only mark those textures for update that are visible (on the viewport) at the moment)
      */
     @Inject(method = "*(Lnet/minecraft/block/Block;DDDLnet/minecraft/util/IIcon;)V", at = @At("HEAD"))
-    public void beforeRenderFace(
+    public void hodgepodge$beforeRenderFace(
             Block p_147761_1_,
             double p_147761_2_,
             double p_147761_4_,
@@ -48,7 +48,7 @@ public class MixinRenderBlocks {
     }
 
     @Inject(method = "renderBlockFire", at = @At("HEAD"))
-    public void markFireBlockAnimationForUpdate(
+    public void hodgepodge$markFireBlockAnimationForUpdate(
             BlockFire p_147801_1_,
             int p_147801_2_,
             int p_147801_3_,
@@ -65,7 +65,7 @@ public class MixinRenderBlocks {
                             value = "INVOKE_ASSIGN",
                             target =
                                     "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIconFromSideAndMetadata(Lnet/minecraft/block/Block;II)Lnet/minecraft/util/IIcon;"))
-    public IIcon markFluidAnimationForUpdate(IIcon icon) {
+    public IIcon hodgepodge$markFluidAnimationForUpdate(IIcon icon) {
         AnimationsRenderUtils.markBlockTextureForUpdate(icon, blockAccess);
 
         return icon;
