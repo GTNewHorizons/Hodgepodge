@@ -10,6 +10,7 @@ import net.minecraftforge.common.config.Configuration;
 public class LoadingConfig {
     // Adjustments
     public boolean addSystemInfo;
+    public boolean arabicNumbersForEnchantsPotions;
     public int chatLength;
     public int ic2SeedMaxStackSize;
     public int itemStacksPickedUpPerTick;
@@ -29,6 +30,7 @@ public class LoadingConfig {
     public boolean fixDebugBoundingBox;
     public boolean fixDimensionChangeHearts;
     public boolean fixEatingStackedStew;
+    public boolean fixEnchantmentNumerals;
     public boolean fixExtraUtilitiesUnEnchanting;
     public boolean fixFenceConnections;
     public boolean fixFireSpread;
@@ -55,6 +57,7 @@ public class LoadingConfig {
     public boolean fixNorthWestBias;
     public boolean fixOptifineChunkLoadingCrash;
     public boolean fixPerspectiveCamera;
+    public boolean fixPotionEffectNumerals;
     public boolean fixPotionEffectRender;
     public boolean fixPotionIterating;
     public boolean fixPotionLimit;
@@ -152,6 +155,7 @@ public class LoadingConfig {
         addCVSupportToWandPedestal = config.get(Category.TWEAKS.toString(), "addCVSupportToWandPedestal", true, "Add CV support to Thaumcraft wand recharge pedestal").getBoolean();
         addSystemInfo = config.get(Category.TWEAKS.toString(), "addSystemInfo", true, "Adds system info to the F3 overlay (Java version and vendor; GPU name; OpenGL version; CPU cores; OS name, version and architecture)").getBoolean();
         addToggleDebugMessage = config.get(Category.TWEAKS.toString(), "addToggleDebugMessage", true, "Add a debug message in the chat when toggling vanilla debug options").getBoolean();
+        arabicNumbersForEnchantsPotions = config.get(Category.TWEAKS.toString(), "arabicNumbersForEnchantsPotions", false, "Uses arabic numbers for enchantment levels and potion amplifier levels instead of roman numbers").getBoolean();
         biblocraftRecipes = config.get(Category.ASM.toString(), "biblocraftRecipes", true, "Remove recipe generation from BiblioCraft").getBoolean();
         chatLength = Math.max(100, Math.min(32767, config.get(Category.TWEAKS.toString(), "chatLength", 8191, "Amount of chat lines kept [100(Vanilla) - 32767]").getInt()));
         cofhWorldTransformer = config.get(Category.ASM.toString(), "cofhWorldTransformer", true, "Enable Glease's ASM patch to disable unused CoFH tileentity cache").getBoolean();
@@ -167,6 +171,7 @@ public class LoadingConfig {
         fixDebugBoundingBox = config.get(Category.FIXES.toString(), "fixDebugBoundingBox", true, "Fixes the debug hitbox of the player beeing offset").getBoolean();
         fixDimensionChangeHearts = config.get(Category.FIXES.toString(), "fixDimensionChangeHearts", true, "Fix losing bonus hearts on dimension change").getBoolean();
         fixEatingStackedStew = config.get(Category.FIXES.toString(), "fixEatingStackedStew", true, "Fix deleting stack when eating mushroom stew").getBoolean();
+        fixEnchantmentNumerals = config.get(Category.FIXES.toString(), "fixEnchantmentNumerals", true, "Fix enchantment levels not displaying properly above a certain value").getBoolean();
         fixExtraUtilitiesUnEnchanting = config.get(Category.FIXES.toString(), "fixExtraUtilitiesUnEnchanting", true, "Fix dupe bug with division sigil removing enchantment").getBoolean();
         fixFenceConnections = config.get(Category.FIXES.toString(), "fixFenceConnections", true, "Fix fence connections with other types of fence").getBoolean();
         fixFireSpread = config.get(Category.FIXES.toString(), "fixFireSpread", true, "Fix vanilla fire spread sometimes cause NPE on thermos").getBoolean();
@@ -196,6 +201,7 @@ public class LoadingConfig {
         fixNorthWestBias = config.get(Category.FIXES.toString(), "fixNorthWestBias", true, "Fix northwest bias on RandomPositionGenerator").getBoolean();
         fixOptifineChunkLoadingCrash = config.get(Category.FIXES.toString(), "fixOptifineChunkLoadingCrash", true, "Forces the chunk loading option from optifine to default since other values can crash the game").getBoolean();
         fixPerspectiveCamera = config.get(Category.FIXES.toString(), "fixPerspectiveCamera", true, "Prevent tall grass and such to affect the perspective camera").getBoolean();
+        fixPotionEffectNumerals = config.get(Category.FIXES.toString(), "fixPotionEffectNumerals", true, "Properly display level of potion effects in the inventory and on tooltips").getBoolean();
         fixPotionEffectRender = config.get(Category.TWEAKS.toString(), "fixPotionEffectRender", true, "Fix vanilla potion effects rendering above the NEI tooltips in the inventory").getBoolean();
         fixPotionIterating = config.get(Category.FIXES.toString(), "fixPotionIterating", true, "Fix crashes with ConcurrentModificationException because of incorrectly iterating over active potions").getBoolean();
         fixPotionLimit = config.get(Category.FIXES.toString(), "fixPotionLimit", true, "Fix potions >= 128").getBoolean();

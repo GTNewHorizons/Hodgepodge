@@ -10,6 +10,21 @@ import java.util.function.Supplier;
 
 public enum Mixins {
     // Vanilla Fixes
+    FIX_ENCHANTMENT_LEVEL_NUMERALS(new Builder("Fix enchantment levels not displaying properly above a certain value")
+            .setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinEnchantment_FixRomanNumerals")
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.fixEnchantmentNumerals || Common.config.arabicNumbersForEnchantsPotions)
+            .addTargetedMod(TargetedMod.VANILLA)),
+    FIX_INVENTORY_POTION_EFFECT_NUMERALS(new Builder(
+                    "Fix potion effects level not displaying properly above a certain value")
+            .setPhase(Phase.EARLY)
+            .addMixinClasses(
+                    "minecraft.MixinInventoryEffectRenderer_FixPotionEffectNumerals",
+                    "minecraft.MixinItemPotion_FixRomanNumerals")
+            .setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.fixPotionEffectNumerals || Common.config.arabicNumbersForEnchantsPotions)
+            .addTargetedMod(TargetedMod.VANILLA)),
     FIX_HASTE_ARM_SWING_ANIMATION(new Builder("Fix arm not swinging when having too much haste")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityLivingBase_FixHasteArmSwing")
