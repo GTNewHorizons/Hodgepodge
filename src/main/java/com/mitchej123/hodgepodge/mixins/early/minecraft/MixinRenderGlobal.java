@@ -35,7 +35,8 @@ public class MixinRenderGlobal {
                             value = "FIELD",
                             ordinal = 0,
                             target = "Lnet/minecraft/client/renderer/RenderGlobal;tileEntities:Ljava/util/List;"))
-    public void hodgepodge$prepareTESR(EntityLivingBase p_147589_1_, ICamera p_147589_2_, float p_147589_3_, CallbackInfo ci) {
+    public void hodgepodge$prepareTESR(
+            EntityLivingBase p_147589_1_, ICamera p_147589_2_, float p_147589_3_, CallbackInfo ci) {
         RenderDebugHelper.recordGLStates();
     }
 
