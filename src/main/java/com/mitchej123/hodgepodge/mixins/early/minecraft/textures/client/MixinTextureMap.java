@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(TextureMap.class)
 public abstract class MixinTextureMap extends AbstractTexture {
@@ -21,6 +22,7 @@ public abstract class MixinTextureMap extends AbstractTexture {
     @Final
     private List<TextureAtlasSprite> listAnimatedSprites;
 
+    @Unique
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     /**

@@ -31,7 +31,7 @@ public abstract class MixinFurnaceRecipes {
      * Inspired by later versions of forge
      */
     @SuppressWarnings("unchecked")
-    @Overwrite(remap = false)
+    @Overwrite
     public void func_151394_a /* addSmeltingRecipe */(ItemStack input, ItemStack stack, float experience) {
         if (getSmeltingResult(input) != null) {
             Common.log.info(
@@ -57,12 +57,13 @@ public abstract class MixinFurnaceRecipes {
      * @author mitchej123
      * @reason Significantly faster
      */
-    @Overwrite(remap = false)
+    @SuppressWarnings("unchecked")
+    @Overwrite
     public float func_151398_b /* getSmeltingExperience */(ItemStack stack) {
         if (stack == null || stack.getItem() == null) return 0f;
         float exp = stack.getItem().getSmeltingExperience(stack);
         if (exp == -1) {
-            exp = (Float) (this.experienceList.getOrDefault(stack, 0f));
+            exp = (float) (this.experienceList.getOrDefault(stack, 0f));
         }
         return exp;
     }

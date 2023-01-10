@@ -18,7 +18,7 @@ public class MixinTileEntityCrop {
                             target =
                                     "Lnet/minecraft/entity/player/EntityPlayer;inventory:Lnet/minecraft/entity/player/InventoryPlayer;"),
             cancellable = true)
-    public void rightClick(EntityPlayer player, CallbackInfoReturnable<Boolean> ci) {
+    public void hodgepodge$rightClick(EntityPlayer player, CallbackInfoReturnable<Boolean> ci) {
         player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
     }
 }

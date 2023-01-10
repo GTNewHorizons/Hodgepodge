@@ -21,7 +21,7 @@ public class MixinChunkCoordinates {
      * @author mitchej123
      * @reason Swap out the default (terrible) hashCode function with a better one
      */
-    @Overwrite()
+    @Overwrite
     public int hashCode() {
         return this.posX * 8976890 + this.posY * 981131 + this.posZ;
     }

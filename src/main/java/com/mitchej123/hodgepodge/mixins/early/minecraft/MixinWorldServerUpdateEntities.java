@@ -37,7 +37,7 @@ public abstract class MixinWorldServerUpdateEntities extends World {
         super.updateEntities();
     }
 
-    public MixinWorldServerUpdateEntities(
+    private MixinWorldServerUpdateEntities(
             ISaveHandler p_i45368_1_,
             String p_i45368_2_,
             WorldProvider p_i45368_3_,

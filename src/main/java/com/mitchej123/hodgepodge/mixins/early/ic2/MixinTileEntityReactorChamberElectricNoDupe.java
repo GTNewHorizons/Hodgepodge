@@ -17,7 +17,7 @@ public class MixinTileEntityReactorChamberElectricNoDupe {
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/block/Block;onNeighborBlockChange(Lnet/minecraft/world/World;IIILnet/minecraft/block/Block;)V"))
-    public void fixGetReactor(Block blk, World w, int x, int y, int z, Block blk2) {
+    public void hodgepodge$fixGetReactor(Block blk, World w, int x, int y, int z, Block blk2) {
         w.notifyBlockChange(x, y, z, blk);
     }
 }

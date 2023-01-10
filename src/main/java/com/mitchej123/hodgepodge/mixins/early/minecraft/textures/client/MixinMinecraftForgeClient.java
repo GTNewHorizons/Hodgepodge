@@ -20,7 +20,7 @@ public class MixinMinecraftForgeClient {
      * We can just mark any item texture that gets rendered for an update
      */
     @Inject(method = "getItemRenderer", at = @At("HEAD"), remap = false)
-    private static void beforeRenderItem(
+    private static void hodgepodge$beforeRenderItem(
             ItemStack itemStack, IItemRenderer.ItemRenderType type, CallbackInfoReturnable<IItemRenderer> cir) {
         Item item = itemStack.getItem();
         if (item.requiresMultipleRenderPasses()) {

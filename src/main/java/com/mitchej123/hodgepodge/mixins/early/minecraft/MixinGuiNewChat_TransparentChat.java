@@ -15,7 +15,7 @@ public abstract class MixinGuiNewChat_TransparentChat {
     @WrapWithCondition(
             at = @At(ordinal = 0, target = "Lnet/minecraft/client/gui/GuiNewChat;drawRect(IIIII)V", value = "INVOKE"),
             method = "drawChat(I)V")
-    private boolean getChatOpen(int left, int top, int right, int bottom, int color) {
+    private boolean hodgepodge$getChatOpen(int left, int top, int right, int bottom, int color) {
         return this.getChatOpen();
     }
 }

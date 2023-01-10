@@ -30,6 +30,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
+@SuppressWarnings("rawtypes")
 @Mixin(
         targets = {
             "net.minecraft.network.NetworkSystem$1",
@@ -42,7 +43,7 @@ public abstract class MixinTcpNoDelay extends ChannelInitializer {
     @ModifyArg(
             method = "initChannel",
             at = @At(value = "INVOKE", target = "Ljava/lang/Boolean;valueOf(Z)Ljava/lang/Boolean;"))
-    private boolean setTCPNoDelay(boolean original) {
+    private boolean hodgepodge$setTCPNoDelay(boolean original) {
         return true;
     }
 }

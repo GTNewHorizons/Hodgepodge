@@ -17,7 +17,7 @@ public class MixinEntityLivingBase_HidePotionParticles {
     @WrapWithCondition(
             at = @At(target = "Lnet/minecraft/world/World;spawnParticle(Ljava/lang/String;DDDDDD)V", value = "INVOKE"),
             method = "updatePotionEffects()V")
-    private boolean showParticles(
+    private boolean hodgepodge$showParticles(
             World instance,
             String particleName,
             double x,

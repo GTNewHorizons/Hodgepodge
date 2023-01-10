@@ -8,6 +8,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -19,6 +20,7 @@ public class MixinWorldRenderer implements ITexturesCache {
     @Shadow
     public boolean isInFrustum;
 
+    @Unique
     private Set<IIcon> renderedIcons;
 
     @ModifyArg(
@@ -28,13 +30,13 @@ public class MixinWorldRenderer implements ITexturesCache {
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/client/renderer/RenderBlocks;<init>(Lnet/minecraft/world/IBlockAccess;)V"))
-    private IBlockAccess onUpdateRenderer(IBlockAccess chunkCache) {
+    private IBlockAccess hodgepodge$onUpdateRenderer(IBlockAccess chunkCache) {
         renderedIcons = ((ITexturesCache) chunkCache).getRenderedTextures();
         return chunkCache;
     }
 
     @Inject(method = "getGLCallListForPass", at = @At("HEAD"))
-    private void getGLCallListForPass(int pass, CallbackInfoReturnable<Integer> cir) {
+    private void hodgepodge$getGLCallListForPass(int pass, CallbackInfoReturnable<Integer> cir) {
         if (isInFrustum && pass == 0 && renderedIcons != null) {
             for (IIcon icon : renderedIcons) {
                 ((IPatchedTextureAtlasSprite) icon).markNeedsAnimationUpdate();

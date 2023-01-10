@@ -30,7 +30,7 @@ public abstract class MixinS02PacketChat {
                     @At(
                             value = "INVOKE",
                             target = "Lnet/minecraft/network/PacketBuffer;writeStringToBuffer(Ljava/lang/String;)V"))
-    public void redirectSerialize(PacketBuffer instance, String s) {
+    public void hodgepodge$redirectSerialize(PacketBuffer instance, String s) {
         byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
         if (bytes.length > 32767) {
             if (Common.config.logHugeChat) {

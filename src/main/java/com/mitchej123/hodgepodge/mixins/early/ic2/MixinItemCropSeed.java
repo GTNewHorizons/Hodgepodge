@@ -23,7 +23,7 @@ public class MixinItemCropSeed {
                             target =
                                     "Lnet/minecraft/entity/player/EntityPlayer;inventory:Lnet/minecraft/entity/player/InventoryPlayer;"),
             cancellable = true)
-    public void onItemUse(
+    public void hodgepodge$onItemUse(
             ItemStack itemstack,
             EntityPlayer entityplayer,
             World world,
@@ -42,7 +42,7 @@ public class MixinItemCropSeed {
     }
 
     @ModifyConstant(constant = @Constant(intValue = 1), method = "<init>(Lic2/core/init/InternalName;)V", remap = false)
-    private int getMaxStackSizeFromConfig(int original) {
+    private int hodgepodge$getMaxStackSizeFromConfig(int original) {
         final int maxStackSize = Common.config.ic2SeedMaxStackSize;
         Common.log.info("Setting IC2 seed max stack size to " + maxStackSize);
         return maxStackSize;

@@ -18,7 +18,7 @@ public class MixinItemIC2FluidContainer {
                             target =
                                     "Lnet/minecraftforge/fluids/FluidRegistry;getFluidName(Lnet/minecraftforge/fluids/FluidStack;)Ljava/lang/String;",
                             remap = false))
-    private String getFluidName(FluidStack fs) {
+    private String hodgepodge$getFluidName(FluidStack fs) {
         return fs.getLocalizedName();
     }
 }

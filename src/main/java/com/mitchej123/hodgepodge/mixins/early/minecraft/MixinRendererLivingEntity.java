@@ -18,7 +18,7 @@ public class MixinRendererLivingEntity {
                     @At(
                             value = "INVOKE",
                             target = "Lnet/minecraft/client/renderer/RenderHelper;disableStandardItemLighting()V"))
-    private void disableCorrectLighting() {
+    private void hodgepodge$disableCorrectLighting() {
         GL11.glDisable(GL11.GL_LIGHTING);
     }
 
@@ -28,7 +28,7 @@ public class MixinRendererLivingEntity {
                     @At(
                             value = "INVOKE",
                             target = "Lnet/minecraft/client/renderer/RenderHelper;enableStandardItemLighting()V"))
-    private void enableCorrectLighting() {
+    private void hodgepodge$enableCorrectLighting() {
         GL11.glEnable(GL11.GL_LIGHTING);
     }
 }

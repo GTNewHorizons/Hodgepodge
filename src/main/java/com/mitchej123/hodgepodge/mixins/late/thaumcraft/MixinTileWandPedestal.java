@@ -34,7 +34,7 @@ public class MixinTileWandPedestal extends TileThaumcraft {
                             value = "INVOKE"),
             method = "Lthaumcraft/common/tiles/TileWandPedestal;updateEntity()V",
             require = 1)
-    private AspectList getAspectsWithRoomReplacement(ItemWandCasting wand, ItemStack wandstack) {
+    private AspectList hodgepodge$getAspectsWithRoomReplacement(ItemWandCasting wand, ItemStack wandstack) {
         AspectList as = wand.getAspectsWithRoom(wandstack);
         if (as != null && as.size() > 0) {
             for (Aspect aspect : as.getAspects()) {
@@ -64,7 +64,7 @@ public class MixinTileWandPedestal extends TileThaumcraft {
             method = "Lthaumcraft/common/tiles/TileWandPedestal;findNodes()V",
             remap = false,
             require = 1)
-    private void addCVNodes(CallbackInfo ci, int xx, int yy, int zz, TileEntity te) {
+    private void hodgepodge$addCVNodes(CallbackInfo ci, int xx, int yy, int zz, TileEntity te) {
         if (te instanceof TileVisNode) {
             this.nodes.add(new ChunkCoordinates(te.xCoord, te.yCoord, te.zCoord));
         }

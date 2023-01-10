@@ -15,7 +15,7 @@ public class MixinEntityLivingPickup {
      * @author mitchej123
      * @reason Stop monsters from picking up loot and not despawning
      */
-    @Overwrite()
+    @Overwrite
     public void setCanPickUpLoot(boolean canPickUpLoot) {
         this.canPickUpLoot = false;
     }

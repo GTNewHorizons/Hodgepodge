@@ -14,7 +14,7 @@ public class MixinFXEngine {
      * @reason Lighting should be kept disabled at the end of RenderWorldLastEvent in 1.7.
      */
     @Inject(method = "renderParticles", at = @At("TAIL"), remap = false)
-    private void keepLightingDisabled(int dim, float frame, CallbackInfo ci) {
+    private void hodgepodge$keepLightingDisabled(int dim, float frame, CallbackInfo ci) {
         GL11.glDisable(GL11.GL_LIGHTING);
     }
 }

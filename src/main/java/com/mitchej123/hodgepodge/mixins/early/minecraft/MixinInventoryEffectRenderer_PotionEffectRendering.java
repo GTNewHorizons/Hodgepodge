@@ -36,7 +36,7 @@ public abstract class MixinInventoryEffectRenderer_PotionEffectRendering extends
     }
 
     /*Forced to have constructor matching super*/
-    public MixinInventoryEffectRenderer_PotionEffectRendering(Container p_i1089_1_) {
+    private MixinInventoryEffectRenderer_PotionEffectRendering(Container p_i1089_1_) {
         super(p_i1089_1_);
     }
 }

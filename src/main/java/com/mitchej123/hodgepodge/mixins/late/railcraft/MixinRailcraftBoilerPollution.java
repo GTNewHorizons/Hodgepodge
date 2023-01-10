@@ -27,7 +27,7 @@ public class MixinRailcraftBoilerPollution {
     boolean isBurning;
 
     @Inject(method = "tick", at = @At(value = "HEAD"), remap = false)
-    private void tick(int x, CallbackInfo ci) {
+    private void hodgepodge$tick(int x, CallbackInfo ci) {
         if (!this.isBurning || this.tile == null || this.tile.getWorld() == null) return;
         final World world = this.tile.getWorldObj();
         if ((world.getTotalWorldTime() % 20) == 0) {

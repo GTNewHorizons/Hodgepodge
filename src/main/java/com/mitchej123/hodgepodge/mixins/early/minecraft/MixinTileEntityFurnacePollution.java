@@ -24,7 +24,7 @@ public abstract class MixinTileEntityFurnacePollution extends TileEntity {
                             value = "FIELD",
                             target = "net/minecraft/tileentity/TileEntityFurnace.furnaceBurnTime:I",
                             opcode = Opcodes.PUTFIELD))
-    void addPollution(CallbackInfo ci) {
+    void hodgepodge$addPollution(CallbackInfo ci) {
         if (!this.worldObj.isRemote && (this.worldObj.getTotalWorldTime() % 20) == 0)
             PollutionHelper.addPollution(
                     this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord),

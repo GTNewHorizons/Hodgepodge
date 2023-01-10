@@ -25,7 +25,7 @@ public class MinecraftMixin {
                                     @At(
                                             value = "CONSTANT",
                                             args = {"stringValue=[?] "})))
-    public int drawLongString(FontRenderer fontRenderer, String text, int x, int y, int color) {
+    public int hodgepodge$drawLongString(FontRenderer fontRenderer, String text, int x, int y, int color) {
         int offset = ClientTicker.INSTANCE.getDebugPieTextOffset();
 
         int length = text.length();

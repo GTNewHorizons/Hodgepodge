@@ -25,7 +25,7 @@ public abstract class MixinEntityLivingBase_FixPotionException extends Entity {
     @Shadow
     private boolean potionsNeedUpdate;
 
-    public MixinEntityLivingBase_FixPotionException(World p_i1594_1_) {
+    private MixinEntityLivingBase_FixPotionException(World p_i1594_1_) {
         super(p_i1594_1_);
     }
 

@@ -29,7 +29,7 @@ public class MixinGT_GeneratedMaterial_Renderer {
             locals = LocalCapture.CAPTURE_FAILSOFT,
             method = "renderItem",
             remap = false)
-    private void tIcon$markNeedsAnimationUpdate(
+    private void hodgepodge$markNeedsAnimationUpdate(
             ItemRenderType type,
             ItemStack aStack,
             Object data[],
@@ -53,7 +53,7 @@ public class MixinGT_GeneratedMaterial_Renderer {
             locals = LocalCapture.CAPTURE_FAILSOFT,
             method = "renderItem",
             remap = false)
-    private void tOverlay$markNeedsAnimationUpdate(
+    private void hodgepodge$markNeedsAnimationUpdate(
             ItemRenderType type,
             ItemStack aStack,
             Object data[],
@@ -78,7 +78,7 @@ public class MixinGT_GeneratedMaterial_Renderer {
             locals = LocalCapture.CAPTURE_FAILSOFT,
             method = "renderItem",
             remap = false)
-    private void fluidIcon$markNeedsAnimationUpdate(
+    private void hodgepodge$markNeedsAnimationUpdate(
             ItemRenderType type,
             ItemStack aStack,
             Object data[],

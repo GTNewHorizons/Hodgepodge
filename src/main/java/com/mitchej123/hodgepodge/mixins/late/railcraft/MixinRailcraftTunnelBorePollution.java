@@ -21,12 +21,12 @@ public abstract class MixinRailcraftTunnelBorePollution extends EntityMinecart {
     @Shadow(remap = false)
     boolean active;
 
-    public MixinRailcraftTunnelBorePollution(World world) {
+    private MixinRailcraftTunnelBorePollution(World world) {
         super(world);
     }
 
     @Inject(method = "onUpdate", at = @At("HEAD"))
-    private void addPollution(CallbackInfo ci) {
+    private void hodgepodge$addPollution(CallbackInfo ci) {
         if (!worldObj.isRemote || !active) return;
         PollutionHelper.addPollution(
                 worldObj.getChunkFromBlockCoords((int) posX, (int) posZ), Common.config.tunnelBorePollutionAmount);

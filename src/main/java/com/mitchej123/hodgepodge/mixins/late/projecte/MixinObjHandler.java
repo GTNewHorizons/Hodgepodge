@@ -19,7 +19,7 @@ public class MixinObjHandler {
                             value = "INVOKE",
                             target = "Lnet/minecraft/item/crafting/FurnaceRecipes;func_77599_b()Ljava/util/Map;"),
             remap = false)
-    private static Map getFakeRecipeMap(FurnaceRecipes instance) {
+    private static Map hodgepodge$getFakeRecipeMap(FurnaceRecipes instance) {
         return new HashMap(instance.getSmeltingList());
     }
 }

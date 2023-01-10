@@ -15,7 +15,7 @@ public class MixinGameSettings {
 
     @Inject(method = "loadOptions", at = @At("TAIL"))
     public void hodgepodge$forceChunkLoadingToDefault(CallbackInfo ci) {
-        ofChunkLoading = 0;
+        this.ofChunkLoading = 0;
     }
 
     @Inject(method = "setOptionValue", at = @At("HEAD"), cancellable = true)

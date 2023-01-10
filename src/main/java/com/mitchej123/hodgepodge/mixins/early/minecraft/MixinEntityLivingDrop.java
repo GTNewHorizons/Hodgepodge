@@ -32,7 +32,7 @@ public class MixinEntityLivingDrop {
                             value = "FIELD",
                             target = "Lnet/minecraft/entity/EntityLiving;persistenceRequired:Z",
                             opcode = PUTFIELD))
-    public void dontSetPersistenceRequired(EntityLiving o, boolean newVal) {}
+    public void hodgepodge$dontSetPersistenceRequired(EntityLiving o, boolean newVal) {}
 
     /**
      * @author ElNounch
@@ -41,7 +41,7 @@ public class MixinEntityLivingDrop {
     @Inject(
             method = "despawnEntity()V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/EntityLiving;setDead()V"))
-    public void despawnEntity_dropPickedLoot(CallbackInfo ci) {
+    public void hodgepodge$despawnEntity_dropPickedLoot(CallbackInfo ci) {
         this.dropEquipment(false, 0);
     }
 }

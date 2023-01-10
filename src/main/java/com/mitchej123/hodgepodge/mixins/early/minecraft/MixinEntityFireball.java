@@ -42,7 +42,7 @@ public abstract class MixinEntityFireball extends Entity {
     }
 
     /*Forced to have constructor*/
-    public MixinEntityFireball(World worldIn) {
+    private MixinEntityFireball(World worldIn) {
         super(worldIn);
     }
 }

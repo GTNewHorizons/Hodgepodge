@@ -30,7 +30,7 @@ public class MixinExplosionPollution {
     double explosionZ;
 
     @Inject(method = "doExplosionA", at = @At(value = "TAIL"))
-    public void addExplosionPollution(CallbackInfo ci) {
+    public void hodgepodge$addExplosionPollution(CallbackInfo ci) {
         if (!this.worldObj.isRemote)
             PollutionHelper.addPollution(
                     this.worldObj.getChunkFromBlockCoords((int) this.explosionX, (int) this.explosionZ),

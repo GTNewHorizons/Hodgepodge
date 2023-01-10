@@ -29,7 +29,7 @@ public class MixinRenderLiquidCell {
             locals = LocalCapture.CAPTURE_FAILSOFT,
             method = "renderItem",
             remap = false)
-    private void markNeedsAnimationUpdate(
+    private void hodgepodge$markNeedsAnimationUpdate(
             ItemRenderType type,
             ItemStack item,
             Object[] data,

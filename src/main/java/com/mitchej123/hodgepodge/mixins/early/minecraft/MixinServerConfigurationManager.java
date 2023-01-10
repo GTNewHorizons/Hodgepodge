@@ -27,10 +27,11 @@ public class MixinServerConfigurationManager {
                             value = "INVOKE",
                             target =
                                     "Lcpw/mods/fml/common/FMLCommonHandler;firePlayerChangedDimensionEvent(Lnet/minecraft/entity/player/EntityPlayer;II)V"))
-    private void firePlayerChangedDimensionEvent(
+    private void hodgepodge$firePlayerChangedDimensionEvent(
             FMLCommonHandler instance, EntityPlayer player, int fromDim, int toDim) {
         if (player instanceof EntityPlayerMP) {
             ServersideAttributeMap attributeMap = (ServersideAttributeMap) player.getAttributeMap();
+            @SuppressWarnings("unchecked")
             Collection<IAttributeInstance> watchedAttribs = attributeMap.getWatchedAttributes();
             if (!watchedAttribs.isEmpty()) {
                 ((EntityPlayerMP) player)

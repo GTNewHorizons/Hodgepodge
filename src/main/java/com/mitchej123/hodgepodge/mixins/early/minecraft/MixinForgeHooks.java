@@ -10,10 +10,12 @@ import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.ForgeHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(value = ForgeHooks.class, remap = false)
 public class MixinForgeHooks {
 
+    @Unique
     private static final Pattern URL_PATTERN = Pattern.compile(
             //         schema                          ipv4            OR        namespace                 port     path
             //         ends
