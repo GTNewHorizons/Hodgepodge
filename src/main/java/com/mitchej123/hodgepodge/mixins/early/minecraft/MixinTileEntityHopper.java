@@ -24,7 +24,8 @@ public class MixinTileEntityHopper {
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/tileentity/TileEntityHopper;func_145892_a(Lnet/minecraft/tileentity/IHopper;Lnet/minecraft/inventory/IInventory;II)Z"))
-    private static boolean hodgepodge$moveFromHopperToInventory(IHopper hopper, IInventory inventory, int slot, int side) {
+    private static boolean hodgepodge$moveFromHopperToInventory(
+            IHopper hopper, IInventory inventory, int slot, int side) {
         ItemStack is = inventory.getStackInSlot(slot);
         if (is == null || is.stackSize == 0) return false;
         if (inventory instanceof ISidedInventory) {

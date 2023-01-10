@@ -19,7 +19,7 @@ public class MixinDimensionManager {
 
     @Unique
     private static Map<Integer, Set<String>> registerLogs;
-    
+
     @Unique
     private static Map<Integer, Set<String>> unregisterLogs;
 
