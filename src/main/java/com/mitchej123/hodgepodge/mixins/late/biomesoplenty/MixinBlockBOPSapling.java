@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -25,7 +26,7 @@ public class MixinBlockBOPSapling {
             cancellable = true,
             locals = LocalCapture.CAPTURE_FAILSOFT,
             method = "func_149878_d")
-    public void growTree(
+    public void hodgepodge$growTree(
             World world, int x, int y, int z, Random random, CallbackInfo ci, int meta, Object obj, int rnd) {
 
         // We only care about fir saplings
@@ -53,10 +54,12 @@ public class MixinBlockBOPSapling {
         ci.cancel();
     }
 
+    @Unique
     private static boolean isFirSapling(Block block, int meta) {
         return BOPCBlocks.saplings == block && meta == 6;
     }
 
+    @Unique
     private static boolean isBigFirPattern(World world, int x, int y, int z) {
         if (world == null || !isFirSapling(world.getBlock(x, y, z), world.getBlockMetadata(x, y, z))) return false;
 
@@ -67,6 +70,7 @@ public class MixinBlockBOPSapling {
         return true;
     }
 
+    @Unique
     private static boolean isBigFirNeighbor(World world, int x, int y, int z) {
         if (world == null) return false;
         return isBigFirPattern(world, x - 1, y, z)
@@ -75,6 +79,7 @@ public class MixinBlockBOPSapling {
                 || isBigFirPattern(world, x, y, z + 1);
     }
 
+    @Unique
     private static List<Pair<Block, Integer>> getNeighbors(World world, int x, int y, int z) {
         List<Pair<Block, Integer>> result = new ArrayList<>();
 

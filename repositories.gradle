@@ -22,22 +22,6 @@ repositories {
         }
     }
     maven {
-        name = "hungeroverhaul"
-        url = "https://dvs1.progwml6.com/files/maven/"
-    }
-    maven {
         url "https://cursemaven.com"
-    }
-    maven {
-        name = "jitpack"
-        url("https://jitpack.io")
-    }
-    maven {
-        name "mvnmrtjp"
-        url "http://files.projectredwiki.com/maven"
-        metadataSources {
-            mavenPom()
-            artifact()
-        }
     }
 }

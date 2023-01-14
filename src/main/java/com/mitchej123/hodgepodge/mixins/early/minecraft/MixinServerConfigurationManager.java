@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(value = ServerConfigurationManager.class, remap = false)
 public class MixinServerConfigurationManager {
+
     /*
      * Make sure extra hearts aren't lost on dimension change
      *   Backported fix from https://github.com/MinecraftForge/MinecraftForge/pull/4830
@@ -26,10 +27,11 @@ public class MixinServerConfigurationManager {
                             value = "INVOKE",
                             target =
                                     "Lcpw/mods/fml/common/FMLCommonHandler;firePlayerChangedDimensionEvent(Lnet/minecraft/entity/player/EntityPlayer;II)V"))
-    private void firePlayerChangedDimensionEvent(
+    private void hodgepodge$firePlayerChangedDimensionEvent(
             FMLCommonHandler instance, EntityPlayer player, int fromDim, int toDim) {
         if (player instanceof EntityPlayerMP) {
             ServersideAttributeMap attributeMap = (ServersideAttributeMap) player.getAttributeMap();
+            @SuppressWarnings("unchecked")
             Collection<IAttributeInstance> watchedAttribs = attributeMap.getWatchedAttributes();
             if (!watchedAttribs.isEmpty()) {
                 ((EntityPlayerMP) player)

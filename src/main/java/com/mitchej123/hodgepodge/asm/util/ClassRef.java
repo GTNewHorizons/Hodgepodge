@@ -56,7 +56,10 @@ public class ClassRef extends AbstractResolvable<Class<?>> {
     }
 
     public void addMethod(String mcpName, String srgName, String obfName, ClassRef returnType, ClassRef... argTypes) {
-        if (methods == null) methods = new HashMap<String, MethodRef>() {};
+        if (methods == null)
+            methods = new HashMap<String, MethodRef>() {
+                private static final long serialVersionUID = 1L;
+            };
         MethodRef method = new MethodRef(this, mcpName, srgName, obfName, returnType, argTypes);
         methods.put(this.mcpName + "_" + mcpName, method);
     }

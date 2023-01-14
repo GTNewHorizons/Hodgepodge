@@ -6,12 +6,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import tuhljin.automagy.blocks.ItemBlockThirstyTank;
 import tuhljin.automagy.tiles.ModTileEntity;
 import tuhljin.automagy.tiles.TileEntityThirstyTank;
 
 @Mixin(ItemBlockThirstyTank.class)
 public class MixinItemBlockThirstyTank implements IFluidContainerItem {
+
     @Override
     public FluidStack getFluid(ItemStack container) {
         return container.hasTagCompound() ? FluidStack.loadFluidStackFromNBT(container.stackTagCompound) : null;
@@ -60,7 +62,8 @@ public class MixinItemBlockThirstyTank implements IFluidContainerItem {
         return new FluidStack(fluidStack, drain);
     }
 
-    public void setFluid(ItemStack container, FluidStack resource) {
+    @Unique
+    private void setFluid(ItemStack container, FluidStack resource) {
         if (container == null) return;
         if (resource != null && 0 < resource.amount) {
             NBTTagCompound nbt = container.getTagCompound() != null ? container.getTagCompound() : new NBTTagCompound();

@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(World.class)
 public class MixinWorldGetBlock {
+
     @Redirect(
             method = "getBlock(III)Lnet/minecraft/block/Block;",
             at =
@@ -21,7 +22,7 @@ public class MixinWorldGetBlock {
     /*
      *  Reimplementation of a fix inspired by FalsePattern & SirFell
      */
-    public Block getBlock(Chunk chunk, int x, int y, int z) {
+    public Block hodgepodge$getBlock(Chunk chunk, int x, int y, int z) {
         if (chunk == null) {
             Common.log.info("NULL chunk found at {}, {}, {}, returning Blocks.air", x, y, z);
             return Blocks.air;

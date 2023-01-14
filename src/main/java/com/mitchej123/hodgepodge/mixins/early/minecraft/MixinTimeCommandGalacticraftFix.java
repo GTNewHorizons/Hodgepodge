@@ -16,8 +16,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(CommandTime.class)
 public class MixinTimeCommandGalacticraftFix {
+
     @Inject(method = "setTime", at = @At("HEAD"), cancellable = true)
-    protected final void setTime(ICommandSender p_71552_1_, int p_71552_2_, CallbackInfo x) {
+    protected final void hodgepodge$setTime(ICommandSender p_71552_1_, int p_71552_2_, CallbackInfo x) {
         for (WorldServer server : MinecraftServer.getServer().worldServers) {
             if (server.provider instanceof WorldProviderSpace) {
                 ((WorldProviderSpace) server.provider).setWorldTimeCommand(p_71552_2_);
@@ -30,7 +31,7 @@ public class MixinTimeCommandGalacticraftFix {
     }
 
     @Inject(method = "addTime", at = @At("HEAD"), cancellable = true)
-    protected final void addTime(ICommandSender p_71553_1_, int p_71553_2_, CallbackInfo x) {
+    protected final void hodgepodge$addTime(ICommandSender p_71553_1_, int p_71553_2_, CallbackInfo x) {
         for (WorldServer server : MinecraftServer.getServer().worldServers) {
             if (server.provider instanceof WorldProviderSpace) {
                 final WorldProviderSpace provider = (WorldProviderSpace) server.provider;

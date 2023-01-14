@@ -16,6 +16,7 @@ import thaumcraft.common.tiles.TileAlchemyFurnace;
  */
 @Mixin(TileAlchemyFurnace.class)
 public abstract class MixinThaumcraftAlchemyFurnacePollution extends TileEntity {
+
     @Inject(
             method = "updateEntity",
             at =
@@ -24,7 +25,7 @@ public abstract class MixinThaumcraftAlchemyFurnacePollution extends TileEntity 
                             target = "thaumcraft/common/tiles/TileAlchemyFurnace.furnaceBurnTime:I",
                             opcode = Opcodes.PUTFIELD,
                             remap = false))
-    public void addPollution(CallbackInfo ci) {
+    public void hodgepodge$addPollution(CallbackInfo ci) {
         if (!this.worldObj.isRemote && (this.worldObj.getTotalWorldTime() % 20) == 0)
             PollutionHelper.addPollution(
                     this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord),

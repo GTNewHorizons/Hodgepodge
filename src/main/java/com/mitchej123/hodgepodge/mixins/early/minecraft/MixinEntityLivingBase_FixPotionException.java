@@ -25,13 +25,13 @@ public abstract class MixinEntityLivingBase_FixPotionException extends Entity {
     @Shadow
     private boolean potionsNeedUpdate;
 
-    public MixinEntityLivingBase_FixPotionException(World p_i1594_1_) {
+    private MixinEntityLivingBase_FixPotionException(World p_i1594_1_) {
         super(p_i1594_1_);
     }
 
     /**
      * @author laetansky
-     * @reason Fix @see java.util.ConcurrentModificationException being thrown
+     * @reason Fix  {@link ConcurrentModificationException} being thrown
      * when modifying active potions inside those forge event handlers which could be fired
      * while iterating over active potion effect.
      * Fix is back ported from newer versions.

@@ -8,11 +8,12 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(EffectRenderer.class)
 public class MixinEffectRenderer {
+
     @ModifyConstant(
             method = "addEffect(Lnet/minecraft/client/particle/EntityFX;)V",
             constant = @Constant(intValue = 4000, ordinal = 0),
             require = 1)
-    private int getParticleLimit(int constant) {
+    private int hodgepodge$getParticleLimit(int constant) {
         return Common.config.particleLimit;
     }
 }

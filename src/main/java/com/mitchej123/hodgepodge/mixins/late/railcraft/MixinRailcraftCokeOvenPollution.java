@@ -19,15 +19,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(TileMultiBlockOven.class)
 public abstract class MixinRailcraftCokeOvenPollution extends TileMultiBlock {
+
     @Shadow(remap = false)
     boolean cooking;
 
-    public MixinRailcraftCokeOvenPollution(List<? extends MultiBlockPattern> patterns) {
+    private MixinRailcraftCokeOvenPollution(List<? extends MultiBlockPattern> patterns) {
         super(patterns);
     }
 
     @Inject(method = "updateEntity", at = @At("HEAD"))
-    private void addPollution(CallbackInfo ci) {
+    private void hodgepodge$addPollution(CallbackInfo ci) {
         if (this.worldObj.isRemote || !this.cooking || !this.isMaster) return;
         if ((this.worldObj.getTotalWorldTime() % 20) == 0) {
             final int pollution = (((TileMultiBlock) this) instanceof TileBlastFurnace)

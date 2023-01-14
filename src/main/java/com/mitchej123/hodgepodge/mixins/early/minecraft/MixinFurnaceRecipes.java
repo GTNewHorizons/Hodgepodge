@@ -11,14 +11,17 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(FurnaceRecipes.class)
 public abstract class MixinFurnaceRecipes {
+
     /*
      * Speed up FurnaceRecipes.getSmeltingResult by:
      *  1) Hijacking the constructor here to recreate the lists with a replacement hash map and an ItemStack hashing strategy
      *  2) No longer looping over every. single. recipe. in the list and using the .get()
      */
+    @SuppressWarnings("rawtypes")
     @Shadow
     private Map smeltingList = new ItemStackMap<ItemStack>(false);
 
+    @SuppressWarnings("rawtypes")
     @Shadow
     private Map experienceList = new ItemStackMap<Float>(false);
 
@@ -28,7 +31,7 @@ public abstract class MixinFurnaceRecipes {
      * Inspired by later versions of forge
      */
     @SuppressWarnings("unchecked")
-    @Overwrite(remap = false)
+    @Overwrite
     public void func_151394_a /* addSmeltingRecipe */(ItemStack input, ItemStack stack, float experience) {
         if (getSmeltingResult(input) != null) {
             Common.log.info(
@@ -54,12 +57,13 @@ public abstract class MixinFurnaceRecipes {
      * @author mitchej123
      * @reason Significantly faster
      */
-    @Overwrite(remap = false)
+    @SuppressWarnings("unchecked")
+    @Overwrite
     public float func_151398_b /* getSmeltingExperience */(ItemStack stack) {
         if (stack == null || stack.getItem() == null) return 0f;
         float exp = stack.getItem().getSmeltingExperience(stack);
         if (exp == -1) {
-            exp = (Float) (this.experienceList.getOrDefault(stack, 0f));
+            exp = (float) (this.experienceList.getOrDefault(stack, 0f));
         }
         return exp;
     }
