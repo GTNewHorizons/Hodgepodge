@@ -475,12 +475,18 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.fixPotionRenderOffset)
             .addTargetedMod(TargetedMod.TRAVELLERSGEAR)),
 
-    // Exu Unenchanting fix
+    // Extra Utilities
     FIX_EXTRA_UTILITIES_UNENCHANTING(new Builder("Fix Exu Unenchanting")
             .addMixinClasses("extrautilities.MixinRecipeUnEnchanting")
             .setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.fixExtraUtilitiesUnEnchanting)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    DISABLE_AID_SPAWN_XU_SPIKES(
+            new Builder("Fixes the vanilla zombie aid spawn triggering when killed by Extra Utilities Spikes")
+                    .addMixinClasses("extrautilities.MixinBlockSpike")
+                    .setSide(Side.BOTH)
+                    .setApplyIf(() -> Common.config.disableAidSpawnByXUSpikes)
+                    .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
     // Various Exploits/Fixes
     GC_TIME_COMMAND_FIX(new Builder("GC Time Fix")
@@ -531,13 +537,7 @@ public enum Mixins {
             .addMixinClasses("galacticraftcore.MixinGalacticraftRocketPollution")
             .setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.rocketsPollute)
-            .addTargetedMod(TargetedMod.GALACTICRAFT_CORE)),
-    DISABLE_AID_SPAWN_XU_SPIKES(
-            new Builder("Fixes the vanilla zombie aid spawn triggering when killed by Extra Utilities Spikes")
-                    .addMixinClasses("extrautilities.MixinBlockSpike")
-                    .setSide(Side.BOTH)
-                    .setApplyIf(() -> Common.config.disableAidSpawnByXUSpikes)
-                    .addTargetedMod(TargetedMod.EXTRA_UTILITIES));
+            .addTargetedMod(TargetedMod.GALACTICRAFT_CORE));
 
     public final String name;
     public final List<String> mixinClasses;
