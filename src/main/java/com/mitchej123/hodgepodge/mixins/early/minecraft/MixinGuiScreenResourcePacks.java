@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import java.awt.*;
+import java.awt.Desktop;
 import java.io.IOException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreenResourcePacks;
