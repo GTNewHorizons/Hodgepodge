@@ -61,6 +61,7 @@ public class LoadingConfig {
     public boolean fixPotionLimit;
     public boolean fixPotionRenderOffset;
     public boolean fixResizableFullscreen;
+    public boolean fixResourcePackOpening;
     public boolean fixTimeCommandWithGC;
     public boolean fixUnfocusedFullscreen;
     public boolean fixUrlDetection;
@@ -205,6 +206,7 @@ public class LoadingConfig {
         fixPotionLimit = config.get(Category.FIXES.toString(), "fixPotionLimit", true, "Fix potions >= 128").getBoolean();
         fixPotionRenderOffset = config.get(Category.TWEAKS.toString(), "fixPotionRenderOffset", true, "Prevents the inventory from shifting when the player has active potion effects").getBoolean();
         fixResizableFullscreen = config.get(Category.FIXES.toString(), "fixResizableFullscreen", true, "Fix game window becoming not resizable after toggling fullscrean in any way").getBoolean();
+        fixResourcePackOpening = config.get(Category.FIXES.toString(), "fixResourcePackOpening", true, "Fix resource pack folder not opening on Windows if file path has a space").getBoolean();
         fixUnfocusedFullscreen = config.get(Category.FIXES.toString(), "fixUnfocusedFullscreen", true, "Fix exiting fullscreen when you tab out of the game").getBoolean();
         fixUrlDetection = config.get(Category.FIXES.toString(), "fixUrlDetection", true, "Fix URISyntaxException in forge.").getBoolean();
         fixVanillaUnprotectedGetBlock = config.get(Category.FIXES.toString(), "fixVanillaUnprotectedGetBlock", true, "Fixes various unchecked vanilla getBlock() methods").getBoolean();
