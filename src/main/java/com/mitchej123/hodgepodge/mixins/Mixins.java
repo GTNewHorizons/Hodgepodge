@@ -10,6 +10,12 @@ import java.util.function.Supplier;
 
 public enum Mixins {
     // Vanilla Fixes
+    FIX_RESOURCEPACK_FOLDER_OPENING(new Builder("Fix resource pack folder sometimes not opening on windows")
+            .setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinGuiScreenResourcePacks")
+            .setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.fixResourcePackOpening)
+            .addTargetedMod(TargetedMod.VANILLA)),
     FIX_ENCHANTMENT_LEVEL_NUMERALS(new Builder("Fix enchantment levels not displaying properly above a certain value")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEnchantment_FixRomanNumerals")
