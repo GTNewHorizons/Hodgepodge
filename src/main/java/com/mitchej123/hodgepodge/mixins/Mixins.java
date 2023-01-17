@@ -493,6 +493,11 @@ public enum Mixins {
                     .setSide(Side.BOTH)
                     .setApplyIf(() -> Common.config.disableAidSpawnByXUSpikes)
                     .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_EXTRA_UTILITIES_TRANSPARENT_ITEM_RENDER(new Builder("Fix extra utilities item rendering for transparent items")
+            .addMixinClasses("extrautilities.MixinTransparentItemRender")
+            .setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.fixExtraUtilitiesItemRendering)
+            .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
     // Various Exploits/Fixes
     GC_TIME_COMMAND_FIX(new Builder("GC Time Fix")
