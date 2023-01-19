@@ -366,12 +366,18 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.speedupAnimations)
             .addTargetedMod(TargetedMod.GT5U)),
 
-    // COFH
+    // Disable update checkers
     COFH_CORE_UPDATE_CHECK(new Builder("Yeet COFH Core Update Check")
             .setPhase(Phase.EARLY)
             .addMixinClasses("cofhcore.MixinCoFHCoreUpdateCheck")
             .setApplyIf(() -> Common.config.removeUpdateChecks)
             .addTargetedMod(TargetedMod.COFH_CORE)),
+    BIBLIOCRAFT_UPDATE_CHECK(new Builder("Yeet bibliocraft Update Check")
+            .setPhase(Phase.LATE)
+            .setSide(Side.CLIENT)
+            .addMixinClasses("bibliocraft.MixinVersionCheck")
+            .setApplyIf(() -> Common.config.removeUpdateChecks)
+            .addTargetedMod(TargetedMod.BIBLIOCRAFT)),
 
     // Railcraft Anchors
     WAKE_ANCHORS_ON_LOGIN_PASSIVE(new Builder("Wake passive anchors on login")
