@@ -367,17 +367,23 @@ public enum Mixins {
             .addTargetedMod(TargetedMod.GT5U)),
 
     // Disable update checkers
-    COFH_CORE_UPDATE_CHECK(new Builder("Yeet COFH Core Update Check")
-            .setPhase(Phase.EARLY)
-            .addMixinClasses("cofhcore.MixinCoFHCoreUpdateCheck")
-            .setApplyIf(() -> Common.config.removeUpdateChecks)
-            .addTargetedMod(TargetedMod.COFH_CORE)),
-    BIBLIOCRAFT_UPDATE_CHECK(new Builder("Yeet bibliocraft Update Check")
+    BIBLIOCRAFT_UPDATE_CHECK(new Builder("Yeet Bibliocraft Update Check")
             .setPhase(Phase.LATE)
             .setSide(Side.CLIENT)
             .addMixinClasses("bibliocraft.MixinVersionCheck")
             .setApplyIf(() -> Common.config.removeUpdateChecks)
             .addTargetedMod(TargetedMod.BIBLIOCRAFT)),
+    COFH_CORE_UPDATE_CHECK(new Builder("Yeet COFH Core Update Check")
+            .setPhase(Phase.EARLY)
+            .addMixinClasses("cofhcore.MixinCoFHCoreUpdateCheck")
+            .setApplyIf(() -> Common.config.removeUpdateChecks)
+            .addTargetedMod(TargetedMod.COFH_CORE)),
+    JOURNEYMAP_UPDATE_CHECK(new Builder("Yeet Journeymap Update Check")
+            .setPhase(Phase.LATE)
+            .setSide(Side.CLIENT)
+            .addMixinClasses("journeymap.MixinVersionCheck")
+            .setApplyIf(() -> Common.config.removeUpdateChecks)
+            .addTargetedMod(TargetedMod.JOURNEYMAP)),
 
     // Railcraft Anchors
     WAKE_ANCHORS_ON_LOGIN_PASSIVE(new Builder("Wake passive anchors on login")

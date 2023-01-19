@@ -8,14 +8,14 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-@Mixin(VersionCheck.class)
+@Mixin(value = VersionCheck.class, remap = false)
 public class MixinVersionCheck {
 
     /**
      * @author Alexdoru
      * @reason yeet
      */
-    @Overwrite(remap = false)
+    @Overwrite
     @SubscribeEvent
     public void onWorldLoad(EntityJoinWorldEvent event) {
         FMLCommonHandler.instance().bus().unregister(this);
@@ -25,13 +25,13 @@ public class MixinVersionCheck {
      * @author Alexdoru
      * @reason yeet
      */
-    @Overwrite(remap = false)
+    @Overwrite
     public static void getNetVersion(EntityPlayer player) {}
 
     /**
      * @author Alexdoru
      * @reason yeet
      */
-    @Overwrite(remap = false)
+    @Overwrite
     public static void setUpdateMessage(EntityPlayer player) {}
 }
