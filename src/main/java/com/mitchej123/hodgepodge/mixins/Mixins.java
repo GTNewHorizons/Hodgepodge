@@ -430,6 +430,11 @@ public enum Mixins {
             .addMixinClasses("biomesoplenty.MixinBlockBOPSapling")
             .setApplyIf(() -> Common.config.makeBigFirsPlantable)
             .addTargetedMod(TargetedMod.BOP)),
+    JAVA12_BOP(new Builder("BOP Java12-safe reflection")
+            .addMixinClasses("biomesoplenty.MixinBOPBiomes")
+            .addMixinClasses("biomesoplenty.MixinBOPReflectionHelper")
+            .setApplyIf(() -> Common.config.java12BopCompat)
+            .addTargetedMod(TargetedMod.BOP)),
 
     // MrTJPCore (Project Red)
     FIX_HUD_LIGHTING_GLITCH(new Builder("HUD Lighting glitch")
