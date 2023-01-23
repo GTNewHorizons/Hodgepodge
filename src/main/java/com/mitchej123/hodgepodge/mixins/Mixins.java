@@ -186,6 +186,11 @@ public enum Mixins {
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.increaseParticleLimit)
             .addTargetedMod(TargetedMod.VANILLA)),
+    ENLARGE_POTION_ARRAY(new Builder("Make the Potion array larger")
+            .setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinPotion")
+            .setApplyIf(() -> Common.config.enlargePotionArray)
+            .addTargetedMod(TargetedMod.VANILLA)),
     FIX_POTION_LIMIT(new Builder("Fix Potion Limit")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinPotionEffect")

@@ -23,6 +23,8 @@ public class LoadingConfig {
     public boolean displayIc2FluidLocalizedName;
     public boolean dropPickedLootOnDespawn;
     public boolean enableDefaultLanPort;
+
+    public boolean enlargePotionArray;
     public boolean fixBibliocraftPackets;
     public boolean fixComponentsPoppingOff;
     public boolean fixDebugBoundingBox;
@@ -206,6 +208,7 @@ public class LoadingConfig {
         fixPotionEffectNumerals = config.get(Category.FIXES.toString(), "fixPotionEffectNumerals", true, "Properly display level of potion effects in the inventory and on tooltips").getBoolean();
         fixPotionEffectRender = config.get(Category.TWEAKS.toString(), "fixPotionEffectRender", true, "Fix vanilla potion effects rendering above the NEI tooltips in the inventory").getBoolean();
         fixPotionIterating = config.get(Category.FIXES.toString(), "fixPotionIterating", true, "Fix crashes with ConcurrentModificationException because of incorrectly iterating over active potions").getBoolean();
+        enlargePotionArray = config.get(Category.FIXES.toString(), "enlargePotionArray", true, "Safely enlarge the potion array before other mods").getBoolean();
         fixPotionLimit = config.get(Category.FIXES.toString(), "fixPotionLimit", true, "Fix potions >= 128").getBoolean();
         fixPotionRenderOffset = config.get(Category.TWEAKS.toString(), "fixPotionRenderOffset", true, "Prevents the inventory from shifting when the player has active potion effects").getBoolean();
         fixResizableFullscreen = config.get(Category.FIXES.toString(), "fixResizableFullscreen", true, "Fix game window becoming not resizable after toggling fullscrean in any way").getBoolean();
