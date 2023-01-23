@@ -20,6 +20,7 @@ public class LoadingConfig {
     public boolean addToggleDebugMessage;
     public boolean deduplicateForestryCompatInBOP;
     public boolean dimensionManagerDebug;
+    public boolean disableWitcheryPotionExtender;
     public boolean displayIc2FluidLocalizedName;
     public boolean dropPickedLootOnDespawn;
     public boolean enableDefaultLanPort;
@@ -165,6 +166,7 @@ public class LoadingConfig {
         deduplicateForestryCompatInBOP = config.get(Category.FIXES.toString(), "deduplicateForestryCompatInBOP", true, "Removes duplicate Fermenter and Squeezer recipes and flower registration").getBoolean();
         defaultLanPort = config.get(Category.TWEAKS.toString(), "defaultLanPort", 25565, "Specify default LAN port to open an integrated server on. Set to 0 to always open the server on an automatically allocated port.").getInt();
         dimensionManagerDebug = config.get(Category.DEBUG.toString(), "dimensionManagerDebug", true, "Prints debug log if DimensionManager got crashed").getBoolean();
+        disableWitcheryPotionExtender = config.get(Category.FIXES.toString(), "disableWitcheryPotionExtender", true, "Disable Witchery potion extender for Java 12 compat").getBoolean();
         displayIc2FluidLocalizedName = config.get(Category.TWEAKS.toString(), "displayIc2FluidLocalizedName", true, "Display fluid localized name in IC2 fluid cell tooltip").getBoolean();
         dropPickedLootOnDespawn = config.get(Category.TWEAKS.toString(), "dropPickedLootOnDespawn", true, "Drop picked loot on entity despawn").getBoolean();
         enableDefaultLanPort = config.get(Category.TWEAKS.toString(), "enableDefaultLanPort", true, "Open an integrated server on a static port.").getBoolean();

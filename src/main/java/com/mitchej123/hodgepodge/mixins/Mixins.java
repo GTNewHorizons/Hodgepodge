@@ -521,6 +521,13 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.fixExtraUtilitiesItemRendering)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
+    // Witchery
+    DISABLE_POTION_ARRAY_EXTENDER(new Builder("Disable Witchery potion array extender")
+            .addMixinClasses("witchery.MixinPotionArrayExtender")
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.fixExtraUtilitiesItemRendering)
+            .addTargetedMod(TargetedMod.WITCHERY)),
+
     // Various Exploits/Fixes
     GC_TIME_COMMAND_FIX(new Builder("GC Time Fix")
             .addMixinClasses("minecraft.MixinTimeCommandGalacticraftFix")
