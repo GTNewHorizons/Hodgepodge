@@ -24,6 +24,7 @@ public enum TargetedMod {
     EXTRA_UTILITIES("ExtraUtilities", null, "ExtraUtilities"),
     BIBLIOCRAFT("Bibliocraft", null, "BiblioCraft"),
     ZTONES("ZTones", null, "Ztones"),
+    WITCHERY("Witchery", null, "witchery"),
     BUKKIT("Bukkit/Thermos", "Bukkit", null);
 
     public final String modName;

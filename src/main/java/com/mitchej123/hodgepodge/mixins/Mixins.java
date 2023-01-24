@@ -186,6 +186,11 @@ public enum Mixins {
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.increaseParticleLimit)
             .addTargetedMod(TargetedMod.VANILLA)),
+    ENLARGE_POTION_ARRAY(new Builder("Make the Potion array larger")
+            .setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinPotion")
+            .setApplyIf(() -> Common.config.enlargePotionArray)
+            .addTargetedMod(TargetedMod.VANILLA)),
     FIX_POTION_LIMIT(new Builder("Fix Potion Limit")
             .setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinPotionEffect")
@@ -430,6 +435,11 @@ public enum Mixins {
             .addMixinClasses("biomesoplenty.MixinBlockBOPSapling")
             .setApplyIf(() -> Common.config.makeBigFirsPlantable)
             .addTargetedMod(TargetedMod.BOP)),
+    JAVA12_BOP(new Builder("BOP Java12-safe reflection")
+            .addMixinClasses("biomesoplenty.MixinBOPBiomes")
+            .addMixinClasses("biomesoplenty.MixinBOPReflectionHelper")
+            .setApplyIf(() -> Common.config.java12BopCompat)
+            .addTargetedMod(TargetedMod.BOP)),
 
     // MrTJPCore (Project Red)
     FIX_HUD_LIGHTING_GLITCH(new Builder("HUD Lighting glitch")
@@ -510,6 +520,13 @@ public enum Mixins {
             .setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixExtraUtilitiesItemRendering)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+
+    // Witchery
+    DISABLE_POTION_ARRAY_EXTENDER(new Builder("Disable Witchery potion array extender")
+            .addMixinClasses("witchery.MixinPotionArrayExtender")
+            .setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.fixExtraUtilitiesItemRendering)
+            .addTargetedMod(TargetedMod.WITCHERY)),
 
     // Various Exploits/Fixes
     GC_TIME_COMMAND_FIX(new Builder("GC Time Fix")
