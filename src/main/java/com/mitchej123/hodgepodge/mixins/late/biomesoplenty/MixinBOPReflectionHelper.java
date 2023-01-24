@@ -17,14 +17,13 @@ public class MixinBOPReflectionHelper {
     @Overwrite(remap = false)
     public static <T, E> void setPrivateFinalValue(
             Class<? super T> classToAccess, T instance, E value, String... fieldNames) {
-        Field field = ReflectionHelper.findField(
+        final Field field = ReflectionHelper.findField(
                 classToAccess, ObfuscationReflectionHelper.remapFieldNames(classToAccess.getName(), fieldNames));
 
         try {
-            Fields.ClassFields.Field accessor = Fields.ofClass(classToAccess)
+            final Fields.ClassFields.Field accessor = Fields.ofClass(classToAccess)
                     .getUntypedField(Fields.LookupType.DECLARED_IN_HIERARCHY, field.getName());
             accessor.setValue(instance, value);
-            Field modifiersField = Field.class.getDeclaredField("modifiers");
         } catch (Exception e) {
             e.printStackTrace();
         }
