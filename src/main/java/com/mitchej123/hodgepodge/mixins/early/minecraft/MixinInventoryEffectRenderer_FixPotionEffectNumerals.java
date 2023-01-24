@@ -38,7 +38,7 @@ public class MixinInventoryEffectRenderer_FixPotionEffectNumerals {
                 final String translation =
                         I18n.format("enchantment.level." + (this.hodgepodge$potionAmplifierLevel + 1), objects);
                 if (translation != null && translation.startsWith("enchantment.level.")) {
-                    return RomanNumerals.toRoman(this.hodgepodge$potionAmplifierLevel + 1);
+                    return RomanNumerals.toRomanLimited(this.hodgepodge$potionAmplifierLevel + 1, 20);
                 } else {
                     return translation;
                 }

@@ -32,7 +32,7 @@ public class MixinItemPotion_FixRomanNumerals {
         if (Common.config.arabicNumbersForEnchantsPotions) {
             return String.valueOf(this.hodgepodge$potionAmplifierLevel + 1);
         } else if (translation != null && translation.startsWith("potion.potency.")) {
-            return RomanNumerals.toRoman(this.hodgepodge$potionAmplifierLevel + 1);
+            return RomanNumerals.toRomanLimited(this.hodgepodge$potionAmplifierLevel + 1, 20);
         } else {
             return translation;
         }
