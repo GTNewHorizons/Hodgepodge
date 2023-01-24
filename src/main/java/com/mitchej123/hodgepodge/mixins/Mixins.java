@@ -525,7 +525,7 @@ public enum Mixins {
     DISABLE_POTION_ARRAY_EXTENDER(new Builder("Disable Witchery potion array extender")
             .addMixinClasses("witchery.MixinPotionArrayExtender")
             .setSide(Side.BOTH)
-            .setApplyIf(() -> Common.config.fixExtraUtilitiesItemRendering)
+            .setApplyIf(() -> Common.config.disableWitcheryPotionExtender)
             .addTargetedMod(TargetedMod.WITCHERY)),
 
     // Various Exploits/Fixes
