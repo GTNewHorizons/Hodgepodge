@@ -30,7 +30,7 @@ public abstract class MixinEnchantment_FixRomanNumerals {
             return String.valueOf(level);
         }
         if (translation != null && translation.startsWith("enchantment.level.")) {
-            return RomanNumerals.toRoman(level);
+            return RomanNumerals.toRomanLimited(level, 20);
         } else {
             return translation;
         }

@@ -26,8 +26,22 @@ public class RomanNumerals {
         map.put(1, "I");
     }
 
+    /**
+     * Returns the roman number representation of this number as a String
+     */
     public static String toRoman(int number) {
         return cache.computeIfAbsent(number, RomanNumerals::toRomanUncached);
+    }
+
+    /**
+     * Returns the roman number representation of this number as a String
+     * If the number is greater than the limit, it returns a readable number
+     */
+    public static String toRomanLimited(int number, int limit) {
+        if (number > limit) {
+            return String.valueOf(number);
+        }
+        return toRoman(number);
     }
 
     private static String toRomanUncached(int number) {
