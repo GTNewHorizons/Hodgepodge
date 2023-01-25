@@ -1,25 +1,26 @@
 dependencies {
-    compile("com.github.GTNewHorizons:Baubles:1.0.1.14:dev")
-    compile("com.github.GTNewHorizons:Galacticraft:3.0.62-GTNH:dev")
-    compile("com.github.GTNewHorizons:GT5-Unofficial:5.09.41.208:dev")
-    compile("com.github.GTNewHorizons:GTNHLib:0.0.8.1:dev")
-    compile("com.github.GTNewHorizons:HungerOverhaul:1.0.4-GTNH:dev")
-    compile("com.github.GTNewHorizons:MrTJPCore:1.1.1:dev") // Do not update, fixed afterwards
-    compile("com.github.GTNewHorizons:Railcraft:9.13.9:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
-    compile("com.github.GTNewHorizons:TinkersConstruct:1.9.11-GTNH:dev")
-    compile("curse.maven:biomes-o-plenty-220318:2499612")
-    compile("curse.maven:cofh-core-69162:2388751")
-    compile("curse.maven:extra-utilities-225561:2264384")
-    compile("curse.maven:travellers-gear-224440:2262113")
-    compile("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
-    compile(deobf("https://mediafiles.forgecdn.net/files/2423/369/BiblioCraft%5bv1.11.7%5d%5bMC1.7.10%5d.jar"))
-    compile(deobf("https://mediafiles.forgecdn.net/files/2367/915/journeymap-1.7.10-5.1.4p2-unlimited.jar"))
-    compile(deobf("https://mediafiles.forgecdn.net/files/2241/397/Pam%27s+Harvest+the+Nether+1.7.10a.jar"))
-    compile(deobf("https://mediafiles.forgecdn.net/files/2340/786/ProjectE-1.7.10-PE1.10.1.jar"))
-    compile(deobf("https://mediafiles.forgecdn.net/files/2223/720/Ztones-1.7.10-2.2.1.jar"))
+    api("com.github.GTNewHorizons:GTNHLib:0.0.10:dev")
+    implementation("com.github.GTNewHorizons:Baubles:1.0.1.14:dev")
+    implementation("com.github.GTNewHorizons:Galacticraft:3.0.63-GTNH:dev")
+    implementation("com.github.GTNewHorizons:GT5-Unofficial:5.09.41.232:dev")
+    implementation("com.github.GTNewHorizons:HungerOverhaul:1.0.4-GTNH:dev")
+    implementation("com.github.GTNewHorizons:MrTJPCore:1.1.1:dev") // Do not update, fixed afterwards
+    implementation("com.github.GTNewHorizons:Railcraft:9.13.15:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
+    implementation("com.github.GTNewHorizons:TinkersConstruct:1.9.12-GTNH:dev")
+    implementation("curse.maven:biomes-o-plenty-220318:2499612")
+    implementation("curse.maven:cofh-core-69162:2388751")
+    implementation("curse.maven:extra-utilities-225561:2264384")
+    implementation("curse.maven:travellers-gear-224440:2262113")
+    implementation("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
+    implementation(deobf("https://edge.forgecdn.net/files/2234/410/witchery-1.7.10-0.24.1.jar"))
+    implementation(deobf("https://mediafiles.forgecdn.net/files/2423/369/BiblioCraft%5bv1.11.7%5d%5bMC1.7.10%5d.jar"))
+    implementation(deobf("https://mediafiles.forgecdn.net/files/2367/915/journeymap-1.7.10-5.1.4p2-unlimited.jar"))
+    implementation(deobf("https://mediafiles.forgecdn.net/files/2241/397/Pam%27s+Harvest+the+Nether+1.7.10a.jar"))
+    implementation(deobf("https://mediafiles.forgecdn.net/files/2340/786/ProjectE-1.7.10-PE1.10.1.jar"))
+    implementation(deobf("https://mediafiles.forgecdn.net/files/2223/720/Ztones-1.7.10-2.2.1.jar"))
     
     compileOnly("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev")
     compileOnly(deobf("https://mediafiles.forgecdn.net/files/2285/272/Automagy-1.7.10-0.28.2.jar"))
     
-    runtime("com.github.GTNewHorizons:harvestcraft:1.0.18-GTNH:dev") // Needed for Pam's Harvest the Nether
+    runtimeOnly("com.github.GTNewHorizons:harvestcraft:1.0.19-GTNH:dev") // Needed for Pam's Harvest the Nether
 }

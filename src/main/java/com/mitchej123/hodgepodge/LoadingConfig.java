@@ -20,9 +20,12 @@ public class LoadingConfig {
     public boolean addToggleDebugMessage;
     public boolean deduplicateForestryCompatInBOP;
     public boolean dimensionManagerDebug;
+    public boolean disableWitcheryPotionExtender;
     public boolean displayIc2FluidLocalizedName;
     public boolean dropPickedLootOnDespawn;
     public boolean enableDefaultLanPort;
+
+    public boolean enlargePotionArray;
     public boolean fixBibliocraftPackets;
     public boolean fixComponentsPoppingOff;
     public boolean fixDebugBoundingBox;
@@ -75,6 +78,7 @@ public class LoadingConfig {
     public boolean hidePotionParticlesFromSelf;
     public boolean increaseParticleLimit;
     public boolean installAnchorAlarm;
+    public boolean java12BopCompat;
     public boolean logHugeChat;
     public boolean longerChat;
     public boolean makeBigFirsPlantable;
@@ -162,6 +166,7 @@ public class LoadingConfig {
         deduplicateForestryCompatInBOP = config.get(Category.FIXES.toString(), "deduplicateForestryCompatInBOP", true, "Removes duplicate Fermenter and Squeezer recipes and flower registration").getBoolean();
         defaultLanPort = config.get(Category.TWEAKS.toString(), "defaultLanPort", 25565, "Specify default LAN port to open an integrated server on. Set to 0 to always open the server on an automatically allocated port.").getInt();
         dimensionManagerDebug = config.get(Category.DEBUG.toString(), "dimensionManagerDebug", true, "Prints debug log if DimensionManager got crashed").getBoolean();
+        disableWitcheryPotionExtender = config.get(Category.FIXES.toString(), "disableWitcheryPotionExtender", true, "Disable Witchery potion extender for Java 12 compat").getBoolean();
         displayIc2FluidLocalizedName = config.get(Category.TWEAKS.toString(), "displayIc2FluidLocalizedName", true, "Display fluid localized name in IC2 fluid cell tooltip").getBoolean();
         dropPickedLootOnDespawn = config.get(Category.TWEAKS.toString(), "dropPickedLootOnDespawn", true, "Drop picked loot on entity despawn").getBoolean();
         enableDefaultLanPort = config.get(Category.TWEAKS.toString(), "enableDefaultLanPort", true, "Open an integrated server on a static port.").getBoolean();
@@ -205,6 +210,7 @@ public class LoadingConfig {
         fixPotionEffectNumerals = config.get(Category.FIXES.toString(), "fixPotionEffectNumerals", true, "Properly display level of potion effects in the inventory and on tooltips").getBoolean();
         fixPotionEffectRender = config.get(Category.TWEAKS.toString(), "fixPotionEffectRender", true, "Fix vanilla potion effects rendering above the NEI tooltips in the inventory").getBoolean();
         fixPotionIterating = config.get(Category.FIXES.toString(), "fixPotionIterating", true, "Fix crashes with ConcurrentModificationException because of incorrectly iterating over active potions").getBoolean();
+        enlargePotionArray = config.get(Category.FIXES.toString(), "enlargePotionArray", true, "Safely enlarge the potion array before other mods").getBoolean();
         fixPotionLimit = config.get(Category.FIXES.toString(), "fixPotionLimit", true, "Fix potions >= 128").getBoolean();
         fixPotionRenderOffset = config.get(Category.TWEAKS.toString(), "fixPotionRenderOffset", true, "Prevents the inventory from shifting when the player has active potion effects").getBoolean();
         fixResizableFullscreen = config.get(Category.FIXES.toString(), "fixResizableFullscreen", true, "Fix game window becoming not resizable after toggling fullscrean in any way").getBoolean();
@@ -222,6 +228,7 @@ public class LoadingConfig {
         increaseParticleLimit = config.get(Category.TWEAKS.toString(), "increaseParticleLimit", true, "Increase particle limit").getBoolean();
         installAnchorAlarm = config.get(Category.TWEAKS.toString(), "installAnchorAlarm", true, "Wake up passive & personal anchors on player login").getBoolean();
         itemStacksPickedUpPerTick = Math.max(1, config.get(Category.FIXES.toString(), "itemStacksPickedUpPerTick", 36, "Stacks picked up per tick").getInt());
+        java12BopCompat = config.get(Category.FIXES.toString(), "java12BopCompat", true, "BiomesOPlenty Java 12 compatibility patches.").getBoolean();
         logHugeChat = config.get(Category.FIXES.toString(), "logHugeChat", true, "Log oversized chat message to console. WARNING: might create huge log files if this happens very often.").getBoolean();
         longerChat = config.get(Category.TWEAKS.toString(), "longerChat", true, "Makes the chat history longer instead of 100 lines").getBoolean();
         makeBigFirsPlantable = config.get(Category.TWEAKS.toString(), "makeBigFirsPlantable", true, "Allow 5 Fir Sapling planted together ('+' shape) to grow to a big fir tree").getBoolean();
