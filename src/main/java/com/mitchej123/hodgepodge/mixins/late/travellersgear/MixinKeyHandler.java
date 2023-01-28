@@ -10,7 +10,10 @@ import travellersgear.client.KeyHandler;
 @Mixin(KeyHandler.class)
 public class MixinKeyHandler {
     @Shadow(remap = false)
-    public static KeyBinding openInventory = new KeyBinding("TG.keybind.openInv", Keyboard.KEY_NONE, TravellersGear.MODNAME);
+    public static KeyBinding openInventory =
+            new KeyBinding("TG.keybind.openInv", Keyboard.KEY_NONE, TravellersGear.MODNAME);
+
     @Shadow(remap = false)
-    public static KeyBinding activeAbilitiesWheel = new KeyBinding("TG.keybind.activeaAbilities", Keyboard.KEY_NONE, TravellersGear.MODNAME);
+    public static KeyBinding activeAbilitiesWheel =
+            new KeyBinding("TG.keybind.activeaAbilities", Keyboard.KEY_NONE, TravellersGear.MODNAME);
 }
