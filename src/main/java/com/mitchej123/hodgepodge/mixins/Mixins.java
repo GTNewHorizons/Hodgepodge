@@ -547,6 +547,18 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.fixZTonesPackets)
             .addTargetedMod(TargetedMod.ZTONES)),
 
+    // Unbind Keybinds by default
+    UNBIND_KEYS_TRAVELLERSGEAR(new Builder("Unbind Traveller's Gear keybinds")
+            .addMixinClasses("travellersgear.MixinKeyHandler")
+            .setSide((Side.CLIENT))
+            .setApplyIf(() -> Common.config.unbindKeybindsByDefault)
+            .addTargetedMod(TargetedMod.TRAVELLERSGEAR)),
+    UNBIND_KEYS_INDUSTRIALCRAFT(new Builder("Unbind Industrial craft keybinds")
+            .addMixinClasses("ic2.MixinKeyboardClient")
+            .setSide((Side.CLIENT))
+            .setApplyIf(() -> Common.config.unbindKeybindsByDefault)
+            .addTargetedMod(TargetedMod.IC2)),
+
     // Pollution
     POLLUTION_MINECRAFT_FURNACE(new Builder("Minecraft Furnace Pollutes")
             .setPhase(Phase.EARLY)
