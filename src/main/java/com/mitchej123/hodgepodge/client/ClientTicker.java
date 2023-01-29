@@ -4,6 +4,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 
 public class ClientTicker {
+
     public static final ClientTicker INSTANCE = new ClientTicker();
 
     private int ticks = 0;

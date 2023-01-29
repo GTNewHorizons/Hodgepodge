@@ -1,9 +1,11 @@
 package com.mitchej123.hodgepodge.mixins.late.travellersgear;
 
 import java.util.Collection;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
+
 import travellersgear.client.ClientProxy;
 
 @Mixin(ClientProxy.class)

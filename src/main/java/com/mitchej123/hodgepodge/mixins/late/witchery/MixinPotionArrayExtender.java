@@ -5,6 +5,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(targets = "com.emoniph.witchery.brewing.potions.WitcheryPotions$PotionArrayExtender", remap = false)
 public class MixinPotionArrayExtender {
+
     @Shadow(remap = false)
     private static boolean potionArrayExtended;
 

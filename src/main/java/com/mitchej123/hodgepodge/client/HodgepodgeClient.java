@@ -1,5 +1,11 @@
 package com.mitchej123.hodgepodge.client;
 
+import java.lang.reflect.Method;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraftforge.common.MinecraftForge;
+
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.LoadingConfig;
 import com.mitchej123.hodgepodge.asm.References;
@@ -7,12 +13,9 @@ import com.mitchej123.hodgepodge.client.handlers.ClientKeyListener;
 import com.mitchej123.hodgepodge.util.ColorOverrideType;
 import com.mitchej123.hodgepodge.util.ManagedEnum;
 import cpw.mods.fml.common.FMLCommonHandler;
-import java.lang.reflect.Method;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraftforge.common.MinecraftForge;
 
 public class HodgepodgeClient {
+
     public static Method colorGrass, colorLiquid, colorLeaves, colorFoliage;
     public static final ManagedEnum<AnimationMode> animationsMode = new ManagedEnum<>(AnimationMode.VISIBLE_ONLY);
     public static final ManagedEnum<RenderDebugMode> renderDebugMode = new ManagedEnum<>(RenderDebugMode.REDUCED);
@@ -31,9 +34,10 @@ public class HodgepodgeClient {
 
         if (Common.config.enableDefaultLanPort) {
             if (Common.config.defaultLanPort < 0 || Common.config.defaultLanPort > 65535) {
-                Common.log.error(String.format(
-                        "Default LAN port number must be in range of 0-65535, but %s was given. Defaulting to 0.",
-                        Common.config.defaultLanPort));
+                Common.log.error(
+                        String.format(
+                                "Default LAN port number must be in range of 0-65535, but %s was given. Defaulting to 0.",
+                                Common.config.defaultLanPort));
                 Common.config.defaultLanPort = 0;
             }
         }

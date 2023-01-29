@@ -3,18 +3,20 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionHelper;
 import net.minecraft.world.World;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-@SuppressWarnings({"unused", "rawtypes"})
+@SuppressWarnings({ "unused", "rawtypes" })
 @Mixin(EntityLivingBase.class)
 public abstract class MixinEntityLivingBase_FixPotionException extends Entity {
 
@@ -31,10 +33,9 @@ public abstract class MixinEntityLivingBase_FixPotionException extends Entity {
 
     /**
      * @author laetansky
-     * @reason Fix  {@link ConcurrentModificationException} being thrown
-     * when modifying active potions inside those forge event handlers which could be fired
-     * while iterating over active potion effect.
-     * Fix is back ported from newer versions.
+     * @reason Fix {@link ConcurrentModificationException} being thrown when modifying active potions inside those forge
+     *         event handlers which could be fired while iterating over active potion effect. Fix is back ported from
+     *         newer versions.
      */
     @Overwrite
     protected void updatePotionEffects() {
@@ -54,8 +55,7 @@ public abstract class MixinEntityLivingBase_FixPotionException extends Entity {
                     this.onChangedPotionEffect(potioneffect, false);
                 }
             }
-        } catch (ConcurrentModificationException ignored) {
-        }
+        } catch (ConcurrentModificationException ignored) {}
 
         int i;
 
@@ -68,7 +68,8 @@ public abstract class MixinEntityLivingBase_FixPotionException extends Entity {
                 } else {
                     i = PotionHelper.calcPotionLiquidColor(this.activePotionsMap.values());
                     this.dataWatcher.updateObject(
-                            8, (byte) (PotionHelper.func_82817_b(this.activePotionsMap.values()) ? 1 : 0));
+                            8,
+                            (byte) (PotionHelper.func_82817_b(this.activePotionsMap.values()) ? 1 : 0));
                     this.dataWatcher.updateObject(7, i);
                     this.setInvisible(this.isPotionActive(Potion.invisibility.id));
                 }

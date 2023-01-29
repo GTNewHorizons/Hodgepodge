@@ -2,8 +2,8 @@ package com.mitchej123.hodgepodge.asm.transformers.thermos;
 
 import static org.objectweb.asm.Opcodes.ASM5;
 
-import com.mitchej123.hodgepodge.Common;
 import net.minecraft.launchwrapper.IClassTransformer;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
@@ -14,8 +14,11 @@ import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import com.mitchej123.hodgepodge.Common;
+
 @SuppressWarnings("unused")
 public class ThermosFurnaceSledgeHammer implements IClassTransformer {
+
     private static final Logger LOGGER = LogManager.getLogger("ThermosFurnaceSledgeHammer");
 
     @Override

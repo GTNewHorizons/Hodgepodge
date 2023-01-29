@@ -1,8 +1,11 @@
 package com.mitchej123.hodgepodge;
 
+import net.minecraftforge.common.MinecraftForge;
+
 import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
 import com.mitchej123.hodgepodge.util.AnchorAlarm;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -11,7 +14,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.relauncher.Side;
-import net.minecraftforge.common.MinecraftForge;
 
 @Mod(
         modid = Hodgepodge.MODID,
@@ -20,6 +22,7 @@ import net.minecraftforge.common.MinecraftForge;
         acceptableRemoteVersions = "*",
         dependencies = "required-after:gtnhmixins@[2.0.1,);")
 public class Hodgepodge {
+
     public static final AnchorAlarm ANCHOR_ALARM = new AnchorAlarm();
     public static final HodgepodgeEventHandler EVENT_HANDLER = new HodgepodgeEventHandler();
     public static final String MODID = "hodgepodge";

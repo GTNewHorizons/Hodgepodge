@@ -1,9 +1,5 @@
 package com.mitchej123.hodgepodge.core;
 
-import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
-import com.mitchej123.hodgepodge.Common;
-import com.mitchej123.hodgepodge.mixins.Mixins;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,14 +8,21 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
+import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.mixins.Mixins;
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
+
 @IFMLLoadingPlugin.MCVersion("1.7.10")
-@IFMLLoadingPlugin.TransformerExclusions({"com.mitchej123.hodgepodge.asm", "optifine"})
+@IFMLLoadingPlugin.TransformerExclusions({ "com.mitchej123.hodgepodge.asm", "optifine" })
 @IFMLLoadingPlugin.SortingIndex(1002)
 @IFMLLoadingPlugin.DependsOn("cofh.asm.LoadingPlugin")
 public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
+
     private static final Logger log = LogManager.getLogger("Hodgepodge");
     public static final SortingIndex index = HodgepodgeCore.class.getAnnotation(IFMLLoadingPlugin.SortingIndex.class);
 
@@ -50,34 +53,29 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     }
 
     public enum AsmTransformers {
-        POLLUTION_TRANSFORMER(
-                "Pollution Transformer",
-                () -> Common.config.pollutionAsm,
+
+        POLLUTION_TRANSFORMER("Pollution Transformer", () -> Common.config.pollutionAsm,
                 Collections.singletonList(
                         "com.mitchej123.hodgepodge.asm.transformers.pollution.PollutionClassTransformer")),
-        CoFHWorldTransformer(
-                "World Transformer - Remove CoFH tile entity cache",
+        CoFHWorldTransformer("World Transformer - Remove CoFH tile entity cache",
                 () -> Common.config.cofhWorldTransformer,
                 Collections.singletonList("com.mitchej123.hodgepodge.asm.transformers.cofh.WorldTransformer")),
-        SpeedupProgressBar(
-                "Speed up Progress Bar by speeding up stripSpecialCharacters",
+        SpeedupProgressBar("Speed up Progress Bar by speeding up stripSpecialCharacters",
                 () -> Common.config.speedupProgressBar,
-                Collections.singletonList(
-                        "com.mitchej123.hodgepodge.asm.transformers.fml.SpeedupProgressBarTransformer")),
+                Collections
+                        .singletonList("com.mitchej123.hodgepodge.asm.transformers.fml.SpeedupProgressBarTransformer")),
         FIX_TINKER_POTION_EFFECT_OFFSET(
                 "Prevents the inventory from shifting when the player has active potion effects",
                 () -> Common.config.fixPotionRenderOffset,
-                Collections.singletonList(
-                        "com.mitchej123.hodgepodge.asm.transformers.tconstruct.TabRegistryTransformer")),
+                Collections
+                        .singletonList("com.mitchej123.hodgepodge.asm.transformers.tconstruct.TabRegistryTransformer")),
         THERMOS_SLEDGEHAMMER_FURNACE_FIX(
                 "Take a sledgehammer to CraftServer.resetRecipes() to prevent it from breaking our Furnace Fix",
                 () -> Common.thermosTainted && Common.config.speedupVanillaFurnace,
                 Collections.singletonList(
                         "com.mitchej123.hodgepodge.asm.transformers.thermos.ThermosFurnaceSledgeHammer")),
-        BIBLIOCRAFT_RECIPE_SLEDGEHAMMER(
-                "Remove recipes from Bibliocraft BlockLoader and Itemloader : addRecipies()",
-                () -> Common.config.biblocraftRecipes,
-                Collections.singletonList(
+        BIBLIOCRAFT_RECIPE_SLEDGEHAMMER("Remove recipes from Bibliocraft BlockLoader and Itemloader : addRecipies()",
+                () -> Common.config.biblocraftRecipes, Collections.singletonList(
                         "com.mitchej123.hodgepodge.asm.transformers.bibliocraft.BibliocraftTransformer"));
 
         private final String name;
@@ -98,18 +96,14 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     @Override
     public String[] getASMTransformerClass() {
 
-        return Arrays.stream(AsmTransformers.values())
-                .map(asmTransformer -> {
-                    if (asmTransformer.shouldBeLoaded()) {
-                        log.info("Loading hodgepodge transformers {}", asmTransformer.name);
-                        return asmTransformer.asmTransformers;
-                    } else {
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .flatMap(List::stream)
-                .toArray(String[]::new);
+        return Arrays.stream(AsmTransformers.values()).map(asmTransformer -> {
+            if (asmTransformer.shouldBeLoaded()) {
+                log.info("Loading hodgepodge transformers {}", asmTransformer.name);
+                return asmTransformer.asmTransformers;
+            } else {
+                return null;
+            }
+        }).filter(Objects::nonNull).flatMap(List::stream).toArray(String[]::new);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 import static org.objectweb.asm.Opcodes.PUTFIELD;
 
 import net.minecraft.entity.EntityLiving;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,11 +28,10 @@ public class MixinEntityLivingDrop {
      */
     @Redirect(
             method = "onLivingUpdate()V",
-            at =
-                    @At(
-                            value = "FIELD",
-                            target = "Lnet/minecraft/entity/EntityLiving;persistenceRequired:Z",
-                            opcode = PUTFIELD))
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/entity/EntityLiving;persistenceRequired:Z",
+                    opcode = PUTFIELD))
     public void hodgepodge$dontSetPersistenceRequired(EntityLiving o, boolean newVal) {}
 
     /**

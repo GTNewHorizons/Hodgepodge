@@ -1,11 +1,14 @@
 package com.mitchej123.hodgepodge;
 
-import com.mitchej123.hodgepodge.util.BlockMatcher;
 import java.io.File;
+
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.config.Configuration;
 
+import com.mitchej123.hodgepodge.util.BlockMatcher;
+
 public class LoadingConfig {
+
     // Adjustments
     public boolean addSystemInfo;
     public boolean arabicNumbersForEnchantsPotions;
@@ -137,6 +140,7 @@ public class LoadingConfig {
     public static BlockMatcher blockVine = new BlockMatcher();
 
     enum Category {
+
         ASM,
         DEBUG,
         FIXES,
@@ -303,37 +307,27 @@ public class LoadingConfig {
      */
 
     public static final String[] defaultPollutionRenderStandardBlock = new String[] {
-        "net.minecraft.block.BlockGrass:GRASS",
-        "net.minecraft.block.BlockLeavesBase:LEAVES",
-        "biomesoplenty.common.blocks.BlockOriginGrass:GRASS",
-        "biomesoplenty.common.blocks.BlockLongGrass:GRASS",
-        "biomesoplenty.common.blocks.BlockNewGrass:GRASS",
-        "tconstruct.blocks.slime.SlimeGrass:GRASS",
-        "thaumcraft.common.blocks.BlockMagicalLeaves:LEAVES",
-    };
+            "net.minecraft.block.BlockGrass:GRASS", "net.minecraft.block.BlockLeavesBase:LEAVES",
+            "biomesoplenty.common.blocks.BlockOriginGrass:GRASS", "biomesoplenty.common.blocks.BlockLongGrass:GRASS",
+            "biomesoplenty.common.blocks.BlockNewGrass:GRASS", "tconstruct.blocks.slime.SlimeGrass:GRASS",
+            "thaumcraft.common.blocks.BlockMagicalLeaves:LEAVES", };
 
     public static final String[] defaultPollutionRenderLiquidBlocks = new String[] {
-        "net.minecraft.block.BlockLiquid:LIQUID",
-    };
+            "net.minecraft.block.BlockLiquid:LIQUID", };
 
     public static final String[] defaultPollutionRenderDoublePlant = new String[] {
-        "net.minecraft.block.BlockDoublePlant:FLOWER",
-    };
+            "net.minecraft.block.BlockDoublePlant:FLOWER", };
 
     public static final String[] defaultPollutionRenderCrossedSquares = new String[] {
-        "net.minecraft.block.BlockTallGrass:FLOWER",
-        "net.minecraft.block.BlockFlower:FLOWER",
-        "biomesoplenty.common.blocks.BlockBOPFlower:FLOWER",
-        "biomesoplenty.common.blocks.BlockBOPFlower2:FLOWER",
-        "biomesoplenty.common.blocks.BlockBOPFoliage:FLOWER",
-    };
+            "net.minecraft.block.BlockTallGrass:FLOWER", "net.minecraft.block.BlockFlower:FLOWER",
+            "biomesoplenty.common.blocks.BlockBOPFlower:FLOWER", "biomesoplenty.common.blocks.BlockBOPFlower2:FLOWER",
+            "biomesoplenty.common.blocks.BlockBOPFoliage:FLOWER", };
     public static final String[] defaultPollutionRenderblockVine = new String[] {
-        "net.minecraft.block.BlockVine:FLOWER",
-    };
+            "net.minecraft.block.BlockVine:FLOWER", };
 
-    public static final String pollutionRecolorComment =
-            "Blocks that should be colored by pollution. \n" + "\tGrouped by the render type. \n"
-                    + "\tFormat: [BlockClass]:[colortype] \n"
-                    + "\tValid types: GRASS, LEAVES, FLOWER, LIQUID \n"
-                    + "\tAdd [-] first to blacklist.";
+    public static final String pollutionRecolorComment = "Blocks that should be colored by pollution. \n"
+            + "\tGrouped by the render type. \n"
+            + "\tFormat: [BlockClass]:[colortype] \n"
+            + "\tValid types: GRASS, LEAVES, FLOWER, LIQUID \n"
+            + "\tAdd [-] first to blacklist.";
 }

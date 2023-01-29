@@ -4,10 +4,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import net.minecraft.event.ClickEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.ForgeHooks;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,16 +19,17 @@ public class MixinForgeHooks {
 
     @Unique
     private static final Pattern URL_PATTERN = Pattern.compile(
-            //         schema                          ipv4            OR        namespace                 port     path
-            //         ends
-            //   |-----------------|        |-------------------------|  |-------------------------|    |---------| |--|
-            //   |---------------|
+            // schema ipv4 OR namespace port path
+            // ends
+            // |-----------------| |-------------------------| |-------------------------| |---------| |--|
+            // |---------------|
             "((?:[a-z0-9]{2,}:\\/\\/)?(?:(?:[0-9]{1,3}\\.){3}[0-9]{1,3}|(?:[-\\w_]{1,}\\.[a-z]{2,}?))(?::[0-9]{1,5})?.*?(?=[!\"\u00A7 \n]|$))",
             Pattern.CASE_INSENSITIVE);
 
     /**
      * @author LexManos
-     * @reason Crash fix backported from <a href="https://github.com/MinecraftForge/MinecraftForge/commit/5b28eb53e8623448b1c2bdb46b8924662e690995">MinecraftForge/MinecraftForge@5b28eb5</a>
+     * @reason Crash fix backported from <a href=
+     *         "https://github.com/MinecraftForge/MinecraftForge/commit/5b28eb53e8623448b1c2bdb46b8924662e690995">MinecraftForge/MinecraftForge@5b28eb5</a>
      */
     @Overwrite
     public static IChatComponent newChatWithLinks(String string) {

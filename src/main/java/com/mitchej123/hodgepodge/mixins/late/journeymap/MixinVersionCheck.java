@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.late.journeymap;
 
 import journeymap.common.version.VersionCheck;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;

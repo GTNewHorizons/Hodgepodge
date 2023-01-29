@@ -16,8 +16,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Properties;
+
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.launchwrapper.Launch;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
@@ -27,14 +29,15 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 
 /**
- * This class transformer will be loaded by CodeChickenCore, if it is present.
- * It runs much earlier than the rest of class transformers and mixins do and can modify more of forge's and fml's classes.
+ * This class transformer will be loaded by CodeChickenCore, if it is present. It runs much earlier than the rest of
+ * class transformers and mixins do and can modify more of forge's and fml's classes.
  * <p>
- * Due to peculiarity with CCC, and to prevent loading too many classes from messing up the delicate class loading order,
- * we will try to minimize the class dependencies on this class, meaning we will not use the usual Configuration class to
- * handle configurations
+ * Due to peculiarity with CCC, and to prevent loading too many classes from messing up the delicate class loading
+ * order, we will try to minimize the class dependencies on this class, meaning we will not use the usual Configuration
+ * class to handle configurations
  */
 public class EarlyClassTransformer implements IClassTransformer {
+
     private static final boolean noNukeBaseMod;
     private static final Logger LOGGER = LogManager.getLogger("HodgePodgeEarly");
 
@@ -73,6 +76,7 @@ public class EarlyClassTransformer implements IClassTransformer {
         ClassReader cr = new ClassReader(basicClass);
         ClassWriter cw = new ClassWriter(0);
         ClassVisitor cv = new ClassVisitor(ASM5, cw) {
+
             @Override
             public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
                 // we no longer need to check for basemod, so this regex is also useless now. remove it.
@@ -81,8 +85,8 @@ public class EarlyClassTransformer implements IClassTransformer {
             }
 
             @Override
-            public MethodVisitor visitMethod(
-                    int access, String name, String desc, String signature, String[] exceptions) {
+            public MethodVisitor visitMethod(int access, String name, String desc, String signature,
+                    String[] exceptions) {
                 MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
                 switch (name) {
                     case "build":
@@ -102,6 +106,7 @@ public class EarlyClassTransformer implements IClassTransformer {
                         return null;
                     case "<clinit>":
                         mv = new MethodVisitor(ASM5, mv) {
+
                             @Override
                             public void visitFieldInsn(int opcode, String owner, String name, String desc) {
                                 if (name.equals("modClass")) {

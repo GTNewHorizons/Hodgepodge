@@ -1,21 +1,24 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import com.gtnewhorizon.gtnhlib.util.map.ItemStackMap;
-import com.mitchej123.hodgepodge.Common;
 import java.util.Map;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+
+import com.gtnewhorizon.gtnhlib.util.map.ItemStackMap;
+import com.mitchej123.hodgepodge.Common;
 
 @Mixin(FurnaceRecipes.class)
 public abstract class MixinFurnaceRecipes {
 
     /*
-     * Speed up FurnaceRecipes.getSmeltingResult by:
-     *  1) Hijacking the constructor here to recreate the lists with a replacement hash map and an ItemStack hashing strategy
-     *  2) No longer looping over every. single. recipe. in the list and using the .get()
+     * Speed up FurnaceRecipes.getSmeltingResult by: 1) Hijacking the constructor here to recreate the lists with a
+     * replacement hash map and an ItemStack hashing strategy 2) No longer looping over every. single. recipe. in the
+     * list and using the .get()
      */
     @SuppressWarnings("rawtypes")
     @Shadow
@@ -27,8 +30,7 @@ public abstract class MixinFurnaceRecipes {
 
     /**
      * @author mitchej123
-     * @reason Significantly faster
-     * Inspired by later versions of forge
+     * @reason Significantly faster Inspired by later versions of forge
      */
     @SuppressWarnings("unchecked")
     @Overwrite

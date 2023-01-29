@@ -6,6 +6,7 @@ import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,9 +32,7 @@ public class MixinNetHandlePlayClient {
             if (event.message.equals(new ChatComponentTranslation("tile.bed.noSleep", new Object[0]))
                     || event.message.equals(new ChatComponentTranslation("tile.bed.notSafe", new Object[0]))
                     || event.message.equals(new ChatComponentTranslation("tile.bed.occupied", new Object[0]))) {
-                this.gameController
-                        .ingameGUI
-                        .getChatGUI()
+                this.gameController.ingameGUI.getChatGUI()
                         .printChatMessageWithOptionalDeletion(event.message, randomChannel);
             } else {
                 this.gameController.ingameGUI.getChatGUI().printChatMessage(event.message);

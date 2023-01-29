@@ -5,6 +5,7 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.IHopper;
 import net.minecraft.tileentity.TileEntityHopper;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,13 +20,11 @@ public class MixinTileEntityHopper {
      */
     @Redirect(
             method = "func_145891_a(Lnet/minecraft/tileentity/IHopper;)Z",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/tileentity/TileEntityHopper;func_145892_a(Lnet/minecraft/tileentity/IHopper;Lnet/minecraft/inventory/IInventory;II)Z"))
-    private static boolean hodgepodge$moveFromHopperToInventory(
-            IHopper hopper, IInventory inventory, int slot, int side) {
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/tileentity/TileEntityHopper;func_145892_a(Lnet/minecraft/tileentity/IHopper;Lnet/minecraft/inventory/IInventory;II)Z"))
+    private static boolean hodgepodge$moveFromHopperToInventory(IHopper hopper, IInventory inventory, int slot,
+            int side) {
         ItemStack is = inventory.getStackInSlot(slot);
         if (is == null || is.stackSize == 0) return false;
         if (inventory instanceof ISidedInventory) {

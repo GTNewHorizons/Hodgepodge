@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import net.minecraft.client.settings.GameSettings;
+
 import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

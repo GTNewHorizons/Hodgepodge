@@ -1,11 +1,13 @@
 package com.mitchej123.hodgepodge.mixins.late.harvestthenether;
 
-import com.pam.harvestthenether.BlockPamFruit;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+
 import org.spongepowered.asm.mixin.Mixin;
+
+import com.pam.harvestthenether.BlockPamFruit;
 
 @Mixin(BlockPamFruit.class)
 public class MixinBlockPamFruit extends Block {

@@ -1,10 +1,5 @@
 package com.mitchej123.hodgepodge.mixins.late.hungeroverhaul;
 
-import com.mitchej123.hodgepodge.Common;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import iguanaman.hungeroverhaul.config.IguanaConfig;
-import iguanaman.hungeroverhaul.util.IguanaEventHook;
-import iguanaman.hungeroverhaul.util.RandomHelper;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityChicken;
@@ -14,8 +9,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.event.entity.living.LivingEvent;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+
+import com.mitchej123.hodgepodge.Common;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import iguanaman.hungeroverhaul.config.IguanaConfig;
+import iguanaman.hungeroverhaul.util.IguanaEventHook;
+import iguanaman.hungeroverhaul.util.RandomHelper;
 
 @Mixin(value = IguanaEventHook.class, remap = false)
 public class MixinHungerOverhaulLowStatEffect {
@@ -44,8 +47,7 @@ public class MixinHungerOverhaulLowStatEffect {
             }
 
             // Reduced milked value every second
-            if (IguanaConfig.milkedTimeout > 0
-                    && event.entityLiving instanceof EntityCow
+            if (IguanaConfig.milkedTimeout > 0 && event.entityLiving instanceof EntityCow
                     && event.entityLiving.worldObj.getTotalWorldTime() % 20 == 0) {
                 NBTTagCompound tags = event.entityLiving.getEntityData();
                 if (tags.hasKey("Milked")) {
@@ -114,16 +116,28 @@ public class MixinHungerOverhaulLowStatEffect {
                         }
 
                         if (moveSlowDown != 0 && difficultyModifierEffects >= (-moveSlowDown + 4)) {
-                            event.entityLiving.addPotionEffect(new PotionEffect(
-                                    Potion.moveSlowdown.id, 19, -4 + moveSlowDown + difficultyModifierEffects, true));
+                            event.entityLiving.addPotionEffect(
+                                    new PotionEffect(
+                                            Potion.moveSlowdown.id,
+                                            19,
+                                            -4 + moveSlowDown + difficultyModifierEffects,
+                                            true));
                         }
                         if (digSlowDown != 0 && difficultyModifierEffects >= (-digSlowDown + 4)) {
-                            event.entityLiving.addPotionEffect(new PotionEffect(
-                                    Potion.digSlowdown.id, 19, -4 + digSlowDown + difficultyModifierEffects, true));
+                            event.entityLiving.addPotionEffect(
+                                    new PotionEffect(
+                                            Potion.digSlowdown.id,
+                                            19,
+                                            -4 + digSlowDown + difficultyModifierEffects,
+                                            true));
                         }
                         if (weakness != 0 && difficultyModifierEffects >= (-weakness + 4)) {
-                            event.entityLiving.addPotionEffect(new PotionEffect(
-                                    Potion.weakness.id, 19, -4 + weakness + difficultyModifierEffects, true));
+                            event.entityLiving.addPotionEffect(
+                                    new PotionEffect(
+                                            Potion.weakness.id,
+                                            19,
+                                            -4 + weakness + difficultyModifierEffects,
+                                            true));
                         }
 
                         if ((IguanaConfig.addLowHungerNausea && foodLevel <= 1)

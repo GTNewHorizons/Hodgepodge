@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.asm.util;
 
 /**
  * Namespace for Minecraft code elements.
+ * 
  * @author octarine-noise
  */
 

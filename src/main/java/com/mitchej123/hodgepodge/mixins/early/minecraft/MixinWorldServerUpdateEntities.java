@@ -6,6 +6,7 @@ import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.storage.ISaveHandler;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,12 +38,8 @@ public abstract class MixinWorldServerUpdateEntities extends World {
         super.updateEntities();
     }
 
-    private MixinWorldServerUpdateEntities(
-            ISaveHandler p_i45368_1_,
-            String p_i45368_2_,
-            WorldProvider p_i45368_3_,
-            WorldSettings p_i45368_4_,
-            Profiler p_i45368_5_) {
+    private MixinWorldServerUpdateEntities(ISaveHandler p_i45368_1_, String p_i45368_2_, WorldProvider p_i45368_3_,
+            WorldSettings p_i45368_4_, Profiler p_i45368_5_) {
         // Needed because we're extending from World
         super(p_i45368_1_, p_i45368_2_, p_i45368_3_, p_i45368_4_, p_i45368_5_);
     }

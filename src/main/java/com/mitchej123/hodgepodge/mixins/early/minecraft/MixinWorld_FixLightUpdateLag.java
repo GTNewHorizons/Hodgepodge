@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -30,20 +31,19 @@ public abstract class MixinWorld_FixLightUpdateLag {
 
     @Inject(
             method = "updateLightByType",
-            at =
-                    @At(
-                            value = "FIELD",
-                            target = "Lnet/minecraft/world/World;theProfiler:Lnet/minecraft/profiler/Profiler;",
-                            shift = At.Shift.BEFORE,
-                            ordinal = 0))
-    public void hodgepodge$modifyUpdateRange(
-            EnumSkyBlock p_147463_1_, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/world/World;theProfiler:Lnet/minecraft/profiler/Profiler;",
+                    shift = At.Shift.BEFORE,
+                    ordinal = 0))
+    public void hodgepodge$modifyUpdateRange(EnumSkyBlock p_147463_1_, int x, int y, int z,
+            CallbackInfoReturnable<Boolean> cir) {
         this.updateRange = this.doChunksNearChunkExist(x, y, z, 18) ? 17 : 15;
     }
 
     @ModifyConstant(
             method = "updateLightByType",
-            constant = {@Constant(intValue = 17, ordinal = 1), @Constant(intValue = 17, ordinal = 2)})
+            constant = { @Constant(intValue = 17, ordinal = 1), @Constant(intValue = 17, ordinal = 2) })
     public int hodgepodge$modifyRangeCheck2(int cst) {
         return this.updateRange;
     }

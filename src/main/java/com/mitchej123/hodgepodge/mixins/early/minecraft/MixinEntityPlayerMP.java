@@ -1,8 +1,8 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import com.google.common.collect.Sets;
 import java.util.Collection;
 import java.util.Set;
+
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -11,19 +11,22 @@ import net.minecraft.entity.ai.attributes.ServersideAttributeMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.google.common.collect.Sets;
+
 @Mixin(EntityPlayerMP.class)
 public abstract class MixinEntityPlayerMP extends EntityLivingBase {
 
     /*
-     * Fix extra health modifiers disappearing on return from the end.
-     *  Inspired from the comment on https://github.com/MinecraftForge/MinecraftForge/pull/4830
-     *  Use clonePlayer on 1.7.10 instead of PlayerList.recreatePlayerEntity on 1.12
+     * Fix extra health modifiers disappearing on return from the end. Inspired from the comment on
+     * https://github.com/MinecraftForge/MinecraftForge/pull/4830 Use clonePlayer on 1.7.10 instead of
+     * PlayerList.recreatePlayerEntity on 1.12
      */
     @Inject(method = "clonePlayer(Lnet/minecraft/entity/player/EntityPlayer;Z)V", at = @At(value = "RETURN"))
     private void hodgepodge$injectClonePlayer(EntityPlayer oldPlayer, boolean copyEverything, CallbackInfo ci) {
@@ -45,13 +48,12 @@ public abstract class MixinEntityPlayerMP extends EntityLivingBase {
                     ModifiableAttributeInstance newInst = newAttributeMap.getAttributeInstance(oldAttr.getAttribute());
 
                     // Get the modifiers for the old attribute
-                    for (AttributeModifier modifier : getModifiers((ModifiableAttributeInstance) oldAttr))
-                        try {
-                            // And apply them to the new attribute instance
-                            newInst.applyModifier(modifier);
-                        } catch (IllegalArgumentException ignored) {
-                            // Be safe
-                        }
+                    for (AttributeModifier modifier : getModifiers((ModifiableAttributeInstance) oldAttr)) try {
+                        // And apply them to the new attribute instance
+                        newInst.applyModifier(modifier);
+                    } catch (IllegalArgumentException ignored) {
+                        // Be safe
+                    }
                 }
                 // We've possibly changed the health, so set the health again, similar to what was already done earlier
                 // in ClonePlayer

@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,8 +22,8 @@ public class MixinPotionEffect {
      * @reason Fix any incoming potion IDs that have negative values (and were probably incorrectly parsed earlier).
      */
     @Inject(method = "<init>(IIIZ)V", at = @At("RETURN"))
-    public void hodgepodge$primaryConstructor(
-            int p_i1576_1_, int p_i1576_2_, int p_i1576_3_, boolean p_i1576_4_, CallbackInfo ci) {
+    public void hodgepodge$primaryConstructor(int p_i1576_1_, int p_i1576_2_, int p_i1576_3_, boolean p_i1576_4_,
+            CallbackInfo ci) {
         this.potionID = p_i1576_1_ & 0xff;
     }
 

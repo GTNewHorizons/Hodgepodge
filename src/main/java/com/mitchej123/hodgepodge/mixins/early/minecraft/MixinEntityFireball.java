@@ -5,6 +5,7 @@ import net.minecraft.entity.projectile.EntityFireball;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,7 +27,8 @@ public abstract class MixinEntityFireball extends Entity {
     @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
     public void hodgepodge$writeFireballAcceleration(NBTTagCompound tagCompound, CallbackInfo ci) {
         tagCompound.setTag(
-                "acceleration", this.newDoubleNBTList(this.accelerationX, this.accelerationY, this.accelerationZ));
+                "acceleration",
+                this.newDoubleNBTList(this.accelerationX, this.accelerationY, this.accelerationZ));
     }
 
     @Inject(method = "readEntityFromNBT", at = @At(value = "TAIL"))
@@ -41,7 +43,7 @@ public abstract class MixinEntityFireball extends Entity {
         }
     }
 
-    /*Forced to have constructor*/
+    /* Forced to have constructor */
     private MixinEntityFireball(World worldIn) {
         super(worldIn);
     }

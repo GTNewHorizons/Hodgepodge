@@ -1,9 +1,11 @@
 package com.mitchej123.hodgepodge.util;
 
-import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 import java.util.HashMap;
 
+import com.mitchej123.hodgepodge.client.HodgepodgeClient;
+
 public enum ColorOverrideType {
+
     GRASS("GRASS"),
     LEAVES("LEAVES"),
     FLOWER("FLOWER"),
@@ -39,8 +41,7 @@ public enum ColorOverrideType {
                 case LIQUID:
                     return (int) HodgepodgeClient.colorLiquid.invoke(null, oColor, x, z);
             }
-        } catch (Exception ignore) {
-        }
+        } catch (Exception ignore) {}
         return oColor;
     }
 }

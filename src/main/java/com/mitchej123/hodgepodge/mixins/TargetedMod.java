@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge.mixins;
 
 public enum TargetedMod {
+
     VANILLA("Minecraft", null),
     GTNHLIB("GTNHLib", "com.gtnewhorizon.gtnhlib.core.GTNHLibCore", "gtnhlib"),
     IC2("IC2", "ic2.core.coremod.IC2core", "IC2"),

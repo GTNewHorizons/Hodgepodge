@@ -34,8 +34,8 @@ public class RomanNumerals {
     }
 
     /**
-     * Returns the roman number representation of this number as a String
-     * If the number is greater than the limit, it returns a readable number
+     * Returns the roman number representation of this number as a String If the number is greater than the limit, it
+     * returns a readable number
      */
     public static String toRomanLimited(int number, int limit) {
         if (number > limit) {

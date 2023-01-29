@@ -1,14 +1,11 @@
 package com.mitchej123.hodgepodge.util;
 
-import com.mitchej123.hodgepodge.Common;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import java.util.HashSet;
 import java.util.Set;
+
 import mods.railcraft.common.blocks.machine.alpha.TileAnchorWorld;
 import mods.railcraft.common.plugins.forge.PlayerPlugin;
+
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -18,7 +15,15 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 
+import com.mitchej123.hodgepodge.Common;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+
 public class AnchorAlarm {
+
     private static final String NBT_KEY = "GT_RC_AnchorAlarmList";
     public static boolean AnchorDebug = false;
 
@@ -50,8 +55,16 @@ public class AnchorAlarm {
                         int x = buf.readInt();
                         int y = buf.readInt();
                         int z = buf.readInt();
-                        Common.log.debug("[AnchorDebug] Anchor (" + x + ", " + y + ", " + z + ") at dim " + dim
-                                + " for player " + playerName);
+                        Common.log.debug(
+                                "[AnchorDebug] Anchor (" + x
+                                        + ", "
+                                        + y
+                                        + ", "
+                                        + z
+                                        + ") at dim "
+                                        + dim
+                                        + " for player "
+                                        + playerName);
                     }
                 }
                 return true;
@@ -100,12 +113,12 @@ public class AnchorAlarm {
                             TileEntity t = w.getTileEntity(x, y, z);
                             if (loadedTiles.contains(t)) continue;
                             loadedTiles.add(t);
-                            if (AnchorDebug)
-                                System.out.println("[AnchorDebug] Loading anchor at (" + x + ", " + y + ", " + z
-                                        + ") at dim " + dim);
+                            if (AnchorDebug) System.out.println(
+                                    "[AnchorDebug] Loading anchor at (" + x + ", " + y + ", " + z + ") at dim " + dim);
                             if (t instanceof TileAnchorWorld) {
                                 if (PlayerPlugin.isSamePlayer(
-                                        ((TileAnchorWorld) t).getOwner(), event.player.getGameProfile())) {
+                                        ((TileAnchorWorld) t).getOwner(),
+                                        event.player.getGameProfile())) {
                                     // Thermos skips remotely loaded entities
                                     t.updateEntity();
                                     // if there is still our tile there, save it for later
@@ -115,12 +128,24 @@ public class AnchorAlarm {
                                     newbuf.writeInt(y);
                                     newbuf.writeInt(z);
                                 } else if (AnchorDebug) {
-                                    System.out.println("[AnchorDebug] Someone else\'s anchor at (" + x + ", " + y + ", "
-                                            + z + ") at dim " + dim);
+                                    System.out.println(
+                                            "[AnchorDebug] Someone else\'s anchor at (" + x
+                                                    + ", "
+                                                    + y
+                                                    + ", "
+                                                    + z
+                                                    + ") at dim "
+                                                    + dim);
                                 }
                             } else if (AnchorDebug) {
-                                System.out.println("[AnchorDebug] Failed loading anchor at (" + x + ", " + y + ", " + z
-                                        + ") at dim " + dim);
+                                System.out.println(
+                                        "[AnchorDebug] Failed loading anchor at (" + x
+                                                + ", "
+                                                + y
+                                                + ", "
+                                                + z
+                                                + ") at dim "
+                                                + dim);
                             }
                         } else if (AnchorDebug) System.out.println("[AnchorDebug] Failed loading dimension " + dim);
                     }

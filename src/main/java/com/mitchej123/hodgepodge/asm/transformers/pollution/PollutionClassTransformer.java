@@ -1,11 +1,12 @@
 package com.mitchej123.hodgepodge.asm.transformers.pollution;
 
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.VarInsnNode;
+
 import com.mitchej123.hodgepodge.asm.References;
 import com.mitchej123.hodgepodge.asm.util.AbstractClassTransformer;
 import com.mitchej123.hodgepodge.asm.util.AbstractMethodTransformer;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.VarInsnNode;
 
 public class PollutionClassTransformer extends AbstractClassTransformer {
 
@@ -18,7 +19,10 @@ public class PollutionClassTransformer extends AbstractClassTransformer {
              * Grabs various methods in RenderBlocks when they query for colorMultiplier and overrides the value.
              */
             addMethodTransformer(
-                    References.cRenderBlocks.getMethod("renderStandardBlock"), 0, new AbstractMethodTransformer() {
+                    References.cRenderBlocks.getMethod("renderStandardBlock"),
+                    0,
+                    new AbstractMethodTransformer() {
+
                         @Override
                         public void transform() {
                             log.info("Injecting RenderBlocks.renderStandardBlock");
@@ -32,7 +36,10 @@ public class PollutionClassTransformer extends AbstractClassTransformer {
                         }
                     });
             addMethodTransformer(
-                    References.cRenderBlocks.getMethod("renderBlockLiquid"), 0, new AbstractMethodTransformer() {
+                    References.cRenderBlocks.getMethod("renderBlockLiquid"),
+                    0,
+                    new AbstractMethodTransformer() {
+
                         @Override
                         public void transform() {
                             log.info("Injecting RenderBlocks.renderBlockLiquid");
@@ -46,7 +53,10 @@ public class PollutionClassTransformer extends AbstractClassTransformer {
                         }
                     });
             addMethodTransformer(
-                    References.cRenderBlocks.getMethod("renderBlockDoublePlant"), 0, new AbstractMethodTransformer() {
+                    References.cRenderBlocks.getMethod("renderBlockDoublePlant"),
+                    0,
+                    new AbstractMethodTransformer() {
+
                         @Override
                         public void transform() {
                             log.info("Injecting RenderBlocks.renderBlockDoublePlant");
@@ -61,7 +71,10 @@ public class PollutionClassTransformer extends AbstractClassTransformer {
                         }
                     });
             addMethodTransformer(
-                    References.cRenderBlocks.getMethod("renderCrossedSquares"), 0, new AbstractMethodTransformer() {
+                    References.cRenderBlocks.getMethod("renderCrossedSquares"),
+                    0,
+                    new AbstractMethodTransformer() {
+
                         @Override
                         public void transform() {
                             log.info("Injecting RenderBlocks.renderCrossedSquares");
@@ -75,7 +88,10 @@ public class PollutionClassTransformer extends AbstractClassTransformer {
                         }
                     });
             addMethodTransformer(
-                    References.cRenderBlocks.getMethod("renderBlockVine"), 0, new AbstractMethodTransformer() {
+                    References.cRenderBlocks.getMethod("renderBlockVine"),
+                    0,
+                    new AbstractMethodTransformer() {
+
                         @Override
                         public void transform() {
                             log.info("Injecting RenderBlocks.renderBlockVine");
@@ -105,12 +121,14 @@ public class PollutionClassTransformer extends AbstractClassTransformer {
                     });
 
             /*
-             * Grabs various methods in biomesoplenty.client.render.blocks.FoliageRenderer when they query for colorMultiplier and overrides the value.
+             * Grabs various methods in biomesoplenty.client.render.blocks.FoliageRenderer when they query for
+             * colorMultiplier and overrides the value.
              */
             addMethodTransformer(
                     References.bopFoliageRenderer.getMethod("renderCrossedSquares"),
                     0,
                     new AbstractMethodTransformer() {
+
                         @Override
                         public void transform() {
                             log.info("Injecting biomesoplenty.client.render.blocks.FoliageRenderer.");

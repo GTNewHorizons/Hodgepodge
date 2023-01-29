@@ -79,15 +79,17 @@ import static org.lwjgl.opengl.GL20.GL_POINT_SPRITE;
 import static org.lwjgl.opengl.GL20.GL_VERTEX_PROGRAM_POINT_SIZE;
 import static org.lwjgl.opengl.GL20.GL_VERTEX_PROGRAM_TWO_SIDE;
 
-import com.google.common.collect.ImmutableMap;
-import com.mitchej123.hodgepodge.client.HodgepodgeClient;
-import com.mitchej123.hodgepodge.client.HodgepodgeClient.RenderDebugMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
+
+import com.google.common.collect.ImmutableMap;
+import com.mitchej123.hodgepodge.client.HodgepodgeClient;
+import com.mitchej123.hodgepodge.client.HodgepodgeClient.RenderDebugMode;
 // spotless:off
 // @formatter:off
 // this file is formatted in such a way that makes block/sed/other line based editing easy.

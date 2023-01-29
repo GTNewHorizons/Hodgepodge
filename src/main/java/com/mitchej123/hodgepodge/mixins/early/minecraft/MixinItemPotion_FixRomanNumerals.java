@@ -1,11 +1,13 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
+import net.minecraft.item.ItemPotion;
+
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+
 import com.gtnewhorizon.mixinextras.injector.ModifyExpressionValue;
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.util.RomanNumerals;
-import net.minecraft.item.ItemPotion;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ItemPotion.class)
 public class MixinItemPotion_FixRomanNumerals {
@@ -22,12 +24,10 @@ public class MixinItemPotion_FixRomanNumerals {
 
     @ModifyExpressionValue(
             method = "addInformation",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/util/StatCollector;translateToLocal(Ljava/lang/String;)Ljava/lang/String;",
-                            ordinal = 1))
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/StatCollector;translateToLocal(Ljava/lang/String;)Ljava/lang/String;",
+                    ordinal = 1))
     private String hodgepodge$addRomanNumeral(String translation) {
         if (Common.config.arabicNumbersForEnchantsPotions) {
             return String.valueOf(this.hodgepodge$potionAmplifierLevel + 1);

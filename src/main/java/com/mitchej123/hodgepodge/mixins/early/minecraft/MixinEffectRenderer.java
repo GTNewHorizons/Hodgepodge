@@ -1,10 +1,12 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import com.mitchej123.hodgepodge.Common;
 import net.minecraft.client.particle.EffectRenderer;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
+
+import com.mitchej123.hodgepodge.Common;
 
 @Mixin(EffectRenderer.class)
 public class MixinEffectRenderer {

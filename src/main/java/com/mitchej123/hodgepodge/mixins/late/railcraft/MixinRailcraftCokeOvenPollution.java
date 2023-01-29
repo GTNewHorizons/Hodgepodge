@@ -1,21 +1,23 @@
 package com.mitchej123.hodgepodge.mixins.late.railcraft;
 
-import com.mitchej123.hodgepodge.Common;
-import com.mitchej123.hodgepodge.util.PollutionHelper;
 import java.util.List;
+
 import mods.railcraft.common.blocks.machine.MultiBlockPattern;
 import mods.railcraft.common.blocks.machine.TileMultiBlock;
 import mods.railcraft.common.blocks.machine.TileMultiBlockOven;
 import mods.railcraft.common.blocks.machine.alpha.TileBlastFurnace;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.util.PollutionHelper;
+
 /*
- * Merged from ModMixins under the MIT License
- *    Copyright bartimaeusnek & GTNewHorizons
+ * Merged from ModMixins under the MIT License Copyright bartimaeusnek & GTNewHorizons
  */
 @Mixin(TileMultiBlockOven.class)
 public abstract class MixinRailcraftCokeOvenPollution extends TileMultiBlock {

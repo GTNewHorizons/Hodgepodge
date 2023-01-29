@@ -32,7 +32,12 @@ public class References {
                 ClassRef.INT,
                 ClassRef.INT);
         cHogClient.addMethod(
-                "renderStandardBlock_colorMultiplier", ClassRef.INT, ClassRef.INT, cBlock, ClassRef.INT, ClassRef.INT);
+                "renderStandardBlock_colorMultiplier",
+                ClassRef.INT,
+                ClassRef.INT,
+                cBlock,
+                ClassRef.INT,
+                ClassRef.INT);
 
         cRenderBlocks.addMethod(
                 "renderBlockLiquid",
@@ -44,7 +49,12 @@ public class References {
                 ClassRef.INT,
                 ClassRef.INT);
         cHogClient.addMethod(
-                "renderBlockLiquid_colorMultiplier", ClassRef.INT, ClassRef.INT, cBlock, ClassRef.INT, ClassRef.INT);
+                "renderBlockLiquid_colorMultiplier",
+                ClassRef.INT,
+                ClassRef.INT,
+                cBlock,
+                ClassRef.INT,
+                ClassRef.INT);
 
         cBlockDoublePlant = new ClassRef("net.minecraft.block.BlockDoublePlant", "ako");
         cRenderBlocks.addMethod(
@@ -74,7 +84,12 @@ public class References {
                 ClassRef.INT,
                 ClassRef.INT);
         cHogClient.addMethod(
-                "renderCrossedSquares_colorMultiplier", ClassRef.INT, ClassRef.INT, cBlock, ClassRef.INT, ClassRef.INT);
+                "renderCrossedSquares_colorMultiplier",
+                ClassRef.INT,
+                ClassRef.INT,
+                cBlock,
+                ClassRef.INT,
+                ClassRef.INT);
 
         cRenderBlocks.addMethod(
                 "renderBlockVine",
@@ -86,7 +101,12 @@ public class References {
                 ClassRef.INT,
                 ClassRef.INT);
         cHogClient.addMethod(
-                "renderBlockVine_colorMultiplier", ClassRef.INT, ClassRef.INT, cBlock, ClassRef.INT, ClassRef.INT);
+                "renderBlockVine_colorMultiplier",
+                ClassRef.INT,
+                ClassRef.INT,
+                cBlock,
+                ClassRef.INT,
+                ClassRef.INT);
 
         bopFoliageRenderer = new ClassRef("biomesoplenty.client.render.blocks.FoliageRenderer");
         bopFoliageRenderer.addMethod(
@@ -100,6 +120,12 @@ public class References {
 
         cEffectRenderer = new ClassRef("net.minecraft.client.renderer.InventoryEffectRenderer", "bfo");
         cEffectRenderer.addMethod(
-                "drawScreen", "func_73863_a", "a", ClassRef.VOID, ClassRef.INT, ClassRef.INT, ClassRef.FLOAT);
+                "drawScreen",
+                "func_73863_a",
+                "a",
+                ClassRef.VOID,
+                ClassRef.INT,
+                ClassRef.INT,
+                ClassRef.FLOAT);
     }
 }

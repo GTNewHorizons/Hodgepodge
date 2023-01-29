@@ -1,19 +1,22 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.textures.client;
 
-import com.mitchej123.hodgepodge.client.HodgepodgeClient;
-import com.mitchej123.hodgepodge.client.HodgepodgeClient.AnimationMode;
-import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
 import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
+
+import com.mitchej123.hodgepodge.client.HodgepodgeClient;
+import com.mitchej123.hodgepodge.client.HodgepodgeClient.AnimationMode;
+import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
 
 @Mixin(TextureMap.class)
 public abstract class MixinTextureMap extends AbstractTexture {
@@ -27,9 +30,9 @@ public abstract class MixinTextureMap extends AbstractTexture {
 
     /**
      * @author laetansky
-     * @reason only update animations for textures that are being currently drawn
-     * By default minecraft handles any animations that present in listAnimatedSprites
-     * no matter if you see it or not which can lead to a huge performance decrease
+     * @reason only update animations for textures that are being currently drawn By default minecraft handles any
+     *         animations that present in listAnimatedSprites no matter if you see it or not which can lead to a huge
+     *         performance decrease
      */
     @Overwrite
     public void updateAnimations() {

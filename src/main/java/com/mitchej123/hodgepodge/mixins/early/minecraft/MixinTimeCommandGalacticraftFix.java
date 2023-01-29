@@ -1,18 +1,19 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import micdoodle8.mods.galacticraft.api.prefab.world.gen.WorldProviderSpace;
+
 import net.minecraft.command.CommandTime;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /*
- * Merged from ModMixins under the MIT License
- *    Copyright bartimaeusnek & GTNewHorizons
+ * Merged from ModMixins under the MIT License Copyright bartimaeusnek & GTNewHorizons
  */
 @Mixin(CommandTime.class)
 public class MixinTimeCommandGalacticraftFix {

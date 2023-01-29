@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Util;
+
 import org.lwjgl.opengl.Display;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,7 +17,9 @@ public class MixinMinecraft_ResizableFullscreen {
     private boolean fullscreen;
 
     /*
-     *  LWJGL bug https://bugs.mojang.com/browse/MC-68754?page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel&showAll=true
+     * LWJGL bug
+     * https://bugs.mojang.com/browse/MC-68754?page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel&
+     * showAll=true
      */
     @Inject(
             method = "toggleFullscreen",

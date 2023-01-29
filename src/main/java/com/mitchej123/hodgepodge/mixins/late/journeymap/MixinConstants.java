@@ -1,7 +1,9 @@
 package com.mitchej123.hodgepodge.mixins.late.journeymap;
 
 import journeymap.client.Constants;
+
 import net.minecraft.client.settings.KeyBinding;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

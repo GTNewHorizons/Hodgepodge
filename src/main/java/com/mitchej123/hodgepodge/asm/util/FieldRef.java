@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 /**
  *
  * Reference to a field. Contains information to locate the field regardless of environment.
+ * 
  * @author octarine-noise
  */
 
@@ -39,7 +40,9 @@ public class FieldRef extends AbstractResolvable<Field> {
         this(parent, mcpName, mcpName, mcpName, returnType);
     }
 
-    /** Get field name in the given namespace
+    /**
+     * Get field name in the given namespace
+     * 
      * @param ns
      * @return
      */
@@ -49,7 +52,9 @@ public class FieldRef extends AbstractResolvable<Field> {
         return mcpName;
     }
 
-    /** Get ASM field descriptor in the given namespace
+    /**
+     * Get ASM field descriptor in the given namespace
+     * 
      * @param ns
      * @return
      */
@@ -66,18 +71,18 @@ public class FieldRef extends AbstractResolvable<Field> {
             fieldObj = parentClass.getDeclaredField(srgName);
             fieldObj.setAccessible(true);
             return fieldObj;
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
         try {
             fieldObj = parentClass.getDeclaredField(mcpName);
             fieldObj.setAccessible(true);
             return fieldObj;
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
         return fieldObj;
     }
 
-    /** Get field value for a given instance
+    /**
+     * Get field value for a given instance
+     * 
      * @param instance
      * @return field value
      */
@@ -93,7 +98,9 @@ public class FieldRef extends AbstractResolvable<Field> {
         }
     }
 
-    /** Get static field value
+    /**
+     * Get static field value
+     * 
      * @param instance
      * @return field value
      */

@@ -1,13 +1,15 @@
 package com.mitchej123.hodgepodge.mixins.early.ic2;
 
-import com.gtnewhorizon.mixinextras.injector.wrapoperation.Operation;
-import com.gtnewhorizon.mixinextras.injector.wrapoperation.WrapOperation;
-import ic2.core.block.kineticgenerator.tileentity.TileEntityWaterKineticGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+
+import com.gtnewhorizon.mixinextras.injector.wrapoperation.Operation;
+import com.gtnewhorizon.mixinextras.injector.wrapoperation.WrapOperation;
+import ic2.core.block.kineticgenerator.tileentity.TileEntityWaterKineticGenerator;
 
 @Mixin(TileEntityWaterKineticGenerator.class)
 public class MixinIc2WaterKinetic {

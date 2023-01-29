@@ -1,10 +1,12 @@
 package com.mitchej123.hodgepodge.client;
 
-import com.mitchej123.hodgepodge.Common;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+
 import org.lwjgl.opengl.GL11;
+
+import com.mitchej123.hodgepodge.Common;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class DebugScreenHandler {
 
@@ -35,7 +37,8 @@ public class DebugScreenHandler {
         if (Minecraft.getMinecraft().gameSettings.showDebugInfo) {
             event.right.add(2, null); // Empty Line
             event.right.add(
-                    3, "Java: " + this.javaVersion + (this.is64bit ? " 64bit (" : " 32bit (") + this.javaVendor + ")");
+                    3,
+                    "Java: " + this.javaVersion + (this.is64bit ? " 64bit (" : " 32bit (") + this.javaVendor + ")");
             event.right.add(4, "GPU: " + this.gpuName);
             event.right.add(5, "OpenGL: " + this.glVersion);
             event.right.add(6, "CPU Cores: " + Runtime.getRuntime().availableProcessors());
@@ -52,7 +55,7 @@ public class DebugScreenHandler {
     }
 
     private static boolean check64bit() {
-        String[] keys = {"sun.arch.data.model", "com.ibm.vm.bitmode", "os.arch"};
+        String[] keys = { "sun.arch.data.model", "com.ibm.vm.bitmode", "os.arch" };
         for (String key : keys) {
             String value = System.getProperty(key);
             if (value != null && value.contains("64")) {

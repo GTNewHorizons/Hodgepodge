@@ -1,11 +1,11 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.textures.client;
 
-import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
-import com.mitchej123.hodgepodge.textures.ITexturesCache;
 import java.util.Set;
+
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -13,6 +13,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
+import com.mitchej123.hodgepodge.textures.ITexturesCache;
 
 @Mixin(WorldRenderer.class)
 public class MixinWorldRenderer implements ITexturesCache {
@@ -25,11 +28,9 @@ public class MixinWorldRenderer implements ITexturesCache {
 
     @ModifyArg(
             method = "updateRenderer",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/renderer/RenderBlocks;<init>(Lnet/minecraft/world/IBlockAccess;)V"))
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/renderer/RenderBlocks;<init>(Lnet/minecraft/world/IBlockAccess;)V"))
     private IBlockAccess hodgepodge$onUpdateRenderer(IBlockAccess chunkCache) {
         renderedIcons = ((ITexturesCache) chunkCache).getRenderedTextures();
         return chunkCache;

@@ -1,8 +1,9 @@
 package com.mitchej123.hodgepodge.mixins.early.cofhcore;
 
-import cofh.mod.updater.UpdateCheckThread;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+
+import cofh.mod.updater.UpdateCheckThread;
 
 @Mixin(UpdateCheckThread.class)
 public class MixinCoFHCoreUpdateCheck {

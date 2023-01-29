@@ -1,18 +1,21 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import com.mitchej123.hodgepodge.Common;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import net.minecraftforge.common.DimensionManager;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import com.mitchej123.hodgepodge.Common;
 
 @Mixin(DimensionManager.class)
 public class MixinDimensionManager {
@@ -29,8 +32,7 @@ public class MixinDimensionManager {
             // DimensionManager#init is called before #registerLogs static instantiation
             registerLogs = new HashMap<>();
         }
-        registerLogs
-                .computeIfAbsent(id, key -> new HashSet<>())
+        registerLogs.computeIfAbsent(id, key -> new HashSet<>())
                 .add(Arrays.toString(Thread.currentThread().getStackTrace()));
     }
 
@@ -39,19 +41,16 @@ public class MixinDimensionManager {
         if (unregisterLogs == null) {
             unregisterLogs = new HashMap<>();
         }
-        unregisterLogs
-                .computeIfAbsent(id, key -> new HashSet<>())
+        unregisterLogs.computeIfAbsent(id, key -> new HashSet<>())
                 .add(Arrays.toString(Thread.currentThread().getStackTrace()));
     }
 
     @Inject(
             method = "registerDimension",
-            at =
-                    @At(
-                            shift = At.Shift.BEFORE,
-                            value = "INVOKE",
-                            target =
-                                    "Ljava/lang/String;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"),
+            at = @At(
+                    shift = At.Shift.BEFORE,
+                    value = "INVOKE",
+                    target = "Ljava/lang/String;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"),
             remap = false)
     private static void hodgepodge$beforeThrowOnRegisterDimension(int id, int providerType, CallbackInfo ci) {
         log(id);
@@ -59,12 +58,10 @@ public class MixinDimensionManager {
 
     @Inject(
             method = "unregisterDimension",
-            at =
-                    @At(
-                            shift = At.Shift.BEFORE,
-                            value = "INVOKE",
-                            target =
-                                    "Ljava/lang/String;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"),
+            at = @At(
+                    shift = At.Shift.BEFORE,
+                    value = "INVOKE",
+                    target = "Ljava/lang/String;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"),
             remap = false)
     private static void hodgepodge$beforeThrowOnUnRegisterDimension(int id, CallbackInfo ci) {
         log(id);
@@ -72,12 +69,10 @@ public class MixinDimensionManager {
 
     @Inject(
             method = "getProviderType",
-            at =
-                    @At(
-                            shift = At.Shift.BEFORE,
-                            value = "INVOKE",
-                            target =
-                                    "Ljava/lang/String;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"),
+            at = @At(
+                    shift = At.Shift.BEFORE,
+                    value = "INVOKE",
+                    target = "Ljava/lang/String;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"),
             remap = false)
     private static void hodgepodge$beforeThrowOnGetProviderType(int dim, CallbackInfoReturnable<Integer> cir) {
         log(dim);

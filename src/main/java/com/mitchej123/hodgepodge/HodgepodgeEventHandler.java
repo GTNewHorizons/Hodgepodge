@@ -1,10 +1,12 @@
 package com.mitchej123.hodgepodge;
 
-import cpw.mods.fml.common.eventhandler.Event;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.event.entity.living.ZombieEvent;
 
+import cpw.mods.fml.common.eventhandler.Event;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+
 public class HodgepodgeEventHandler {
+
     private boolean xuDisableAidTrigger;
 
     @SubscribeEvent

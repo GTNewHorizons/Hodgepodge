@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.asm.util;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 import org.objectweb.asm.util.Printer;
@@ -18,6 +19,7 @@ public abstract class AbstractMethodTransformer {
      * @author octarine-noise
      */
     public static interface IInstructionMatch {
+
         public boolean matches(AbstractInsnNode node);
     }
 
@@ -61,6 +63,7 @@ public abstract class AbstractMethodTransformer {
 
     protected IInstructionMatch matchOpcode(final int opcode) {
         return new IInstructionMatch() {
+
             public boolean matches(AbstractInsnNode node) {
                 return node.getOpcode() == opcode;
             }
@@ -69,11 +72,11 @@ public abstract class AbstractMethodTransformer {
 
     protected IInstructionMatch matchMethodInsn(final int opcode, final String owner, String name, String desc) {
         return new IInstructionMatch() {
+
             public boolean matches(AbstractInsnNode node) {
                 if (node instanceof MethodInsnNode) {
                     MethodInsnNode n = (MethodInsnNode) node;
-                    return n.getOpcode() == opcode
-                            && n.owner.equals(owner)
+                    return n.getOpcode() == opcode && n.owner.equals(owner)
                             && n.name.equals(name)
                             && n.desc.equals(desc);
                 }
@@ -84,6 +87,7 @@ public abstract class AbstractMethodTransformer {
 
     protected IInstructionMatch matchVarInsn(final int opcode, final int var) {
         return new IInstructionMatch() {
+
             public boolean matches(AbstractInsnNode node) {
                 if (node instanceof VarInsnNode) {
                     return (node.getOpcode() == opcode) && (((VarInsnNode) node).var == var);

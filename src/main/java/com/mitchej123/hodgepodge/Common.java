@@ -1,11 +1,14 @@
 package com.mitchej123.hodgepodge;
 
 import java.io.File;
+
 import net.minecraft.launchwrapper.Launch;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Common {
+
     public static final Logger log = LogManager.getLogger("Hodgepodge");
     public static LoadingConfig config;
     public static boolean thermosTainted;
