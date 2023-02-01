@@ -18,10 +18,10 @@ import cpw.mods.fml.common.Loader;
 @Mixin(WaypointManager.class)
 public abstract class MixinWaypointManager extends JmUI {
 
-    @Shadow
+    @Shadow(remap = false)
     protected ScrollListPane itemScrollPane;
 
-    @Shadow
+    @Shadow(remap = false)
     protected int rowHeight;
 
     @Unique
