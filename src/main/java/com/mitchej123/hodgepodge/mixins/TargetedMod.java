@@ -4,6 +4,7 @@ public enum TargetedMod {
 
     VANILLA("Minecraft", null),
     GTNHLIB("GTNHLib", "com.gtnewhorizon.gtnhlib.core.GTNHLibCore", "gtnhlib"),
+    LWJGL3IFY("lwjgl3ify", "me.eigenraven.lwjgl3ify.core.Lwjgl3ifyCoremod", "lwjgl3ify"),
     IC2("IC2", "ic2.core.coremod.IC2core", "IC2"),
     FASTCRAFT("FastCraft", "fastcraft.Tweaker"),
     COFH_CORE("CoFHCore", "cofh.asm.LoadingPlugin", "CoFHCore"),
