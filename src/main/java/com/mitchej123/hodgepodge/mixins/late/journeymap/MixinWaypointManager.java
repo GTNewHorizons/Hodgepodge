@@ -40,7 +40,7 @@ public abstract class MixinWaypointManager extends JmUI {
                 // LWJGL 2's reported scroll amounts are not uniformly scaled across operating systems
                 delta = MathHelper.clamp_int(delta, -1, 1);
             }
-            this.itemScrollPane.scrollBy(delta * this.rowHeight);
+            this.itemScrollPane.scrollBy(-delta * this.rowHeight);
         }
     }
 
