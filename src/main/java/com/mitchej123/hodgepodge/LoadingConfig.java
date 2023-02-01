@@ -57,6 +57,7 @@ public class LoadingConfig {
     public boolean fixIgnisFruitAABB;
     public boolean fixImmobileFireballs;
     public boolean fixJourneymapKeybinds;
+    public boolean fixJourneymapJumpyScrolling;
     public boolean fixJourneymapFilePath;
     public boolean fixNetherLeavesFaceRendering;
     public boolean fixNorthWestBias;
@@ -207,6 +208,7 @@ public class LoadingConfig {
         fixIgnisFruitAABB = config.get(Category.FIXES.toString(), "fixIgnisFruitAABB", true, "Fix Axis aligned Bounding Box of Ignis Fruit").getBoolean();
         fixImmobileFireballs = config.get(Category.FIXES.toString(), "fixImmobileFireballs", true, "Fix the bug that makes fireballs stop moving when chunk unloads").getBoolean();
         fixJourneymapKeybinds = config.get(Category.FIXES.toString(), "fixJourneymapKeybinds", true, "Prevent unbinded keybinds from triggering when pressing certain keys").getBoolean();
+        fixJourneymapJumpyScrolling = config.get(Category.FIXES.toString(), "fixJourneymapJumpyScrolling", true, "Fix jumpy scrolling in the waypoint manager screen").getBoolean();
         fixJourneymapFilePath = config.get(Category.FIXES.toString(), "fixJourneymapFilePath", true, "Prevents journeymap from using illegal character in file paths").getBoolean();
         fixNetherLeavesFaceRendering = config.get(Category.FIXES.toString(), "fixNetherLeavesFaceRendering", true, "If fancy graphics are enabled, Nether Leaves render sides with other Nether Leaves adjacent too").getBoolean();
         fixNorthWestBias = config.get(Category.FIXES.toString(), "fixNorthWestBias", true, "Fix northwest bias on RandomPositionGenerator").getBoolean();

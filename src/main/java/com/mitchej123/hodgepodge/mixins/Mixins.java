@@ -290,6 +290,10 @@ public enum Mixins {
             .setSide(Side.CLIENT).addMixinClasses("journeymap.MixinWorldData")
             .setApplyIf(() -> Common.config.fixJourneymapFilePath).addTargetedMod(TargetedMod.JOURNEYMAP)),
 
+    FIX_JOURNEYMAP_JUMPY_SCROLLING(new Builder("Fix Journeymap jumpy scrolling in the waypoint manager")
+            .setSide(Side.CLIENT).addMixinClasses("journeymap.MixinWaypointManager")
+            .setApplyIf(() -> Common.config.fixJourneymapJumpyScrolling).addTargetedMod(TargetedMod.JOURNEYMAP)),
+
     // Pam's Harvest the Nether
     FIX_IGNIS_FRUIT_AABB(new Builder("Ignis Fruit").addMixinClasses("harvestthenether.MixinBlockPamFruit")
             .setApplyIf(() -> Common.config.fixIgnisFruitAABB).addTargetedMod(TargetedMod.HARVESTTHENETHER)),
