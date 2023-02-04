@@ -351,6 +351,12 @@ public enum Mixins {
     UNBIND_KEYS_INDUSTRIALCRAFT(new Builder("Unbind Industrial craft keybinds")
             .addMixinClasses("ic2.MixinKeyboardClient").setSide((Side.CLIENT))
             .setApplyIf(() -> Common.config.unbindKeybindsByDefault).addTargetedMod(TargetedMod.IC2)),
+    UNBIND_KEYS_THAUMCRAFT(new Builder("Unbind Thaumcraft keybinds")
+            .addMixinClasses("thaumcraft.MixinKeyHandlerThaumcraft").setSide((Side.CLIENT))
+            .setApplyIf(() -> Common.config.unbindKeybindsByDefault).addTargetedMod(TargetedMod.THAUMCRAFT)),
+    CHANGE_KEYBIND_CATEGORY_AUTOMAGY(new Builder("Change keybind category of Automagy")
+            .addMixinClasses("automagy.MixinAutomagyKeyHandler").setSide((Side.CLIENT))
+            .setApplyIf(() -> Common.config.unbindKeybindsByDefault).addTargetedMod(TargetedMod.AUTOMAGY)),
 
     // Pollution
     POLLUTION_MINECRAFT_FURNACE(new Builder("Minecraft Furnace Pollutes").setPhase(Phase.EARLY)
