@@ -12,6 +12,9 @@ import cpw.mods.fml.relauncher.FMLLaunchHandler;
 public enum Mixins {
 
     // Vanilla Fixes
+    CHANGE_CATEGORY_SPRINT_KEY(new Builder("Moves the sprint keybind to the movement category")
+            .addTargetedMod(TargetedMod.VANILLA).setSide(Side.CLIENT).setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinGameSetttings").setApplyIf(() -> Common.config.changeSprintCategory)),
     FIX_RESOURCEPACK_FOLDER_OPENING(new Builder("Fix resource pack folder sometimes not opening on windows")
             .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinGuiScreenResourcePacks").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixResourcePackOpening).addTargetedMod(TargetedMod.VANILLA)),
