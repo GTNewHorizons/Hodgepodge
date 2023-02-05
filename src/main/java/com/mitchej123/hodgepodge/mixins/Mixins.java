@@ -354,6 +354,9 @@ public enum Mixins {
     UNBIND_KEYS_THAUMCRAFT(new Builder("Unbind Thaumcraft keybinds")
             .addMixinClasses("thaumcraft.MixinKeyHandlerThaumcraft").setSide((Side.CLIENT))
             .setApplyIf(() -> Common.config.unbindKeybindsByDefault).addTargetedMod(TargetedMod.THAUMCRAFT)),
+    UNBIND_KEYS_COFH(new Builder("Unbind COFH Core keybinds").addMixinClasses("cofhcore.MixinProxyClient")
+            .setSide((Side.CLIENT)).setPhase(Phase.EARLY).setApplyIf(() -> Common.config.unbindKeybindsByDefault)
+            .addTargetedMod(TargetedMod.COFH_CORE)),
     CHANGE_KEYBIND_CATEGORY_AUTOMAGY(new Builder("Change keybind category of Automagy")
             .addMixinClasses("automagy.MixinAutomagyKeyHandler").setSide((Side.CLIENT))
             .setApplyIf(() -> Common.config.unbindKeybindsByDefault).addTargetedMod(TargetedMod.AUTOMAGY)),
