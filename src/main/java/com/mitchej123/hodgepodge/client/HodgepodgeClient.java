@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge.client;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -13,7 +14,10 @@ import com.mitchej123.hodgepodge.asm.References;
 import com.mitchej123.hodgepodge.client.handlers.ClientKeyListener;
 import com.mitchej123.hodgepodge.util.ColorOverrideType;
 import com.mitchej123.hodgepodge.util.ManagedEnum;
+
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModMetadata;
 
 public class HodgepodgeClient {
 
