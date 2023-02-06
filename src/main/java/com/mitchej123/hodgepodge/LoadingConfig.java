@@ -98,6 +98,7 @@ public class LoadingConfig {
     public boolean speedupChunkCoordinatesHashCode;
     public boolean speedupProgressBar;
     public boolean speedupVanillaFurnace;
+    public boolean optimizeTextureLoading;
     public boolean squashBedErrorMessage;
     public boolean tcpNoDelay;
     public boolean thirstyTankContainer;
@@ -256,6 +257,7 @@ public class LoadingConfig {
         speedupChunkCoordinatesHashCode = config.get(Category.SPEEDUPS.toString(), "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
         speedupProgressBar = config.get(Category.ASM.toString(), "speedupProgressBar", true, "Speedup progressbar").getBoolean();
         speedupVanillaFurnace = config.get(Category.SPEEDUPS.toString(), "speedupVanillaFurnace", true, "Speedup Vanilla Furnace recipe lookup").getBoolean();
+        optimizeTextureLoading = config.get(Category.SPEEDUPS.toString(), "optimizeTextureLoading", true, "Optimize texture loading").getBoolean();
         squashBedErrorMessage = config.get(Category.FIXES.toString(), "squashBedErrorMessage", true, "Stop \"You can only sleep at night\" message filling the chat").getBoolean();
         tcpNoDelay = config.get(Category.SPEEDUPS.toString(), "tcpNoDelay", true, "Sets TCP_NODELAY to true, reducing network latency in multiplayer. Works on server as well as client. From makamys/CoreTweaks").getBoolean();
         thermosCraftServerClass = config.get(Category.ASM.toString(), "thermosCraftServerClass", "org.bukkit.craftbukkit.v1_7_R4.CraftServer", "If using Bukkit/Thermos, the CraftServer package.").getString();

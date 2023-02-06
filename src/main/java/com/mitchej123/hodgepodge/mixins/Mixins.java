@@ -161,6 +161,9 @@ public enum Mixins {
             .addMixinClasses("minecraft.textures.client.fastcraft.MixinTextureMap").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.speedupAnimations).addTargetedMod(TargetedMod.VANILLA)
             .addTargetedMod(TargetedMod.FASTCRAFT).addExcludedMod(TargetedMod.OPTIFINE)),
+    OPTIMIZE_TEXTURE_LOADING(new Builder("Optimize Texture Loading").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.textures.client.MixinTextureUtil").addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> Common.config.optimizeTextureLoading).setSide(Side.CLIENT)),
     HIDE_POTION_PARTICLES(new Builder("Hide Potion Particles").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityLivingBase_HidePotionParticles").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.hidePotionParticlesFromSelf).addTargetedMod(TargetedMod.VANILLA)),
