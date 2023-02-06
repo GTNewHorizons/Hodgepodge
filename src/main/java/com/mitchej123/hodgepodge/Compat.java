@@ -16,6 +16,8 @@ public class Compat {
 
     private static boolean isGT5Present;
 
+    private static boolean isIC2CropPluginPresent;
+
     static void init(Side side) {
         isClient = side == Side.CLIENT;
 
@@ -32,6 +34,8 @@ public class Compat {
         }
 
         isGT5Present = Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi");
+
+        isIC2CropPluginPresent = Loader.isModLoaded("Ic2Nei");
     }
 
     /**
@@ -49,5 +53,12 @@ public class Compat {
      */
     public static boolean isGT5Present() {
         return isGT5Present;
+    }
+
+    /**
+     * Cannot be used before pre-init phase.
+     */
+    public static boolean isIC2CropPluginPresent() {
+        return isIC2CropPluginPresent;
     }
 }
