@@ -1,10 +1,8 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import java.util.List;
-import java.util.Set;
 
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.IntHashMap;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,18 +23,11 @@ public class MixinKeyBinding {
     @Final
     private static List keybindArray;
     @Shadow
-    @Final
-    private static IntHashMap hash;
-    @Shadow
-    @Final
-    private static Set keybindSet;
-    @Shadow
     private int pressTime;
     @Shadow
     private boolean pressed;
-
     @Unique
-    private static Multimap<Integer, KeyBinding> keybindMatcher = ArrayListMultimap.create();
+    private static final Multimap<Integer, KeyBinding> keybindMatcher = ArrayListMultimap.create();
 
     /**
      * @author eigenraven
@@ -72,7 +63,7 @@ public class MixinKeyBinding {
             method = "Lnet/minecraft/client/settings/KeyBinding;resetKeyBindingArrayAndHash()V",
             at = @At("RETURN"),
             require = 1)
-    private static void populateKeybindMatcherArray(CallbackInfo ci) {
+    private static void hodgepodge$populateKeybindMatcherArray(CallbackInfo ci) {
         keybindMatcher.clear();
         for (KeyBinding binding : (List<KeyBinding>) keybindArray) {
             if (binding != null && binding.getKeyCode() != 0) {
@@ -85,7 +76,7 @@ public class MixinKeyBinding {
             method = "Lnet/minecraft/client/settings/KeyBinding;<init>(Ljava/lang/String;ILjava/lang/String;)V",
             at = @At("RETURN"),
             require = 1)
-    private void addMyselfInConstructor(String description, int keyCode, String category, CallbackInfo ci) {
+    private void hodgepodge$addMyselfInConstructor(String description, int keyCode, String category, CallbackInfo ci) {
         keybindMatcher.put(keyCode, (KeyBinding) (Object) this);
     }
 }
