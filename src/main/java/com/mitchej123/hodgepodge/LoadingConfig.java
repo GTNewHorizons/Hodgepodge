@@ -103,6 +103,7 @@ public class LoadingConfig {
     public boolean thirstyTankContainer;
     public boolean throttleItemPickupEvent;
     public boolean transparentChat;
+    public boolean triggerAllConflictingKeybindings;
     public boolean unbindKeybindsByDefault;
     public int defaultLanPort;
 
@@ -261,6 +262,7 @@ public class LoadingConfig {
         thirstyTankContainer = config.get(Category.TWEAKS.toString(), "thirstyTankContainer", true, "Implement container for thirsty tank").getBoolean();
         throttleItemPickupEvent = config.get(Category.FIXES.toString(), "throttleItemPickupEvent", true, "Limits the amount of times the ItemPickupEvent triggers per tick since it can lead to a lot of lag").getBoolean();
         transparentChat = config.get(Category.TWEAKS.toString(), "transparentChat", true, "Doesn't render the black box behind messages when the chat is closed").getBoolean();
+        triggerAllConflictingKeybindings = config.get(Category.FIXES.toString(), "triggerAllConflictingKeybindings", true, "Triggers all conflicting key bindings on key press instead of a random one").getBoolean();
         unbindKeybindsByDefault = config.get(Category.TWEAKS.toString(), "unbindKeybindsByDefault", true, "Unbinds keybinds of certain ARR mods to avoid keybinds conflicts").getBoolean();
 
         // Disable for now as it is not compatible with anything modifying RenderBlocks
