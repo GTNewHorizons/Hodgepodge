@@ -6,6 +6,7 @@ import java.util.Set;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.IntHashMap;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,10 +22,13 @@ import com.google.common.collect.Multimap;
 public class MixinKeyBinding {
 
     @Shadow
+    @Final
     private static List keybindArray;
     @Shadow
+    @Final
     private static IntHashMap hash;
     @Shadow
+    @Final
     private static Set keybindSet;
     @Shadow
     private int pressTime;
