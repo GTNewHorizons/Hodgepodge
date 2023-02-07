@@ -50,6 +50,7 @@ public class LoadingConfig {
     public boolean fixHudLightingGlitch;
     public boolean fixHugeChatKick;
     public boolean fixHungerOverhaul;
+    public boolean fixHungerOverhaulRestore0Hunger;
     public boolean fixIc2DirectInventoryAccess;
     public boolean fixIc2Hazmat;
     public boolean fixIc2Nightvision;
@@ -203,6 +204,7 @@ public class LoadingConfig {
         fixHudLightingGlitch = config.get(Category.TWEAKS.toString(), "fixHudLightingGlitch", true, "Fix hotbars being dark when Project Red is installed").getBoolean();
         fixHugeChatKick = config.get(Category.FIXES.toString(), "fixHugeChatKick", true, "Fix oversized chat message kicking player.").getBoolean();
         fixHungerOverhaul = config.get(Category.FIXES.toString(), "fixHungerOverhaul", true, "Fix hunger overhaul low stat effects").getBoolean();
+        fixHungerOverhaulRestore0Hunger = config.get(Category.FIXES.toString(), "fixHungerOverhaulRestore0Hunger", true, "Fix some items restore 0 hunger").getBoolean();
         fixIc2DirectInventoryAccess = config.get(Category.FIXES.toString(), "fixIc2DirectInventoryAccess", true, "Fix IC2's direct inventory access").getBoolean();
         fixIc2Hazmat = config.get(Category.FIXES.toString(), "fixIc2Hazmat", true, "Fix IC2 armors to avoid giving poison").getBoolean();
         fixIc2Nightvision = config.get(Category.FIXES.toString(), "fixIc2Nightvision", true, "Prevent IC2's nightvision from blinding you").getBoolean();
