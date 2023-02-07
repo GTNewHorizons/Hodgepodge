@@ -17,6 +17,7 @@ public enum TargetedMod {
     MRTJPCORE("MrTJPCore", null, "MrTJPCoreMod"),
     AUTOMAGY("Automagy", null, "Automagy"),
     PROJECTE("ProjectE", null, "ProjectE"),
+    HARVESTCRAFT("harvestcraft", null, "harvestcraft"),
     HARVESTTHENETHER("harvestthenether", null, "harvestthenether"),
     GALACTICRAFT_CORE("GalacticraftCore", "micdoodle8.mods.galacticraft.core.asm.GCLoadingPlugin", "GalacticraftCore"),
     BAUBLES("Baubles", null, "Baubles"),
