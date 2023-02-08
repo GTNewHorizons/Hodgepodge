@@ -254,6 +254,10 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.fixHungerOverhaul).addTargetedMod(TargetedMod.HUNGER_OVERHAUL)),
     HUNGER_OVERHAUL_REGEN(new Builder("Patch Regen").addMixinClasses("hungeroverhaul.MixinHungerOverhaulHealthRegen")
             .setApplyIf(() -> Common.config.fixHungerOverhaul).addTargetedMod(TargetedMod.HUNGER_OVERHAUL)),
+    HUNGER_OVERHAUL_0_HUNGER(new Builder("Fix some items restore 0 hunger")
+            .addMixinClasses("hungeroverhaul.MixinHungerOverhaulModuleHarvestCraft")
+            .setApplyIf(() -> Common.config.fixHungerOverhaulRestore0Hunger).addTargetedMod(TargetedMod.HUNGER_OVERHAUL)
+            .addTargetedMod(TargetedMod.HARVESTCRAFT)),
 
     // Thaumcraft
     ADD_CV_SUPPORT_TO_WAND_PEDESTAL(

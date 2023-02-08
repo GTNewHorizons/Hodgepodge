@@ -1,26 +1,42 @@
+
+configurations {
+    transformedMod // Mods that can be transformed - used for compiling hodgepodge, but not necessary at runtime
+    transformedMod.canBeConsumed = false
+    transformedModCompileOnly
+    transformedModCompileOnly.canBeConsumed = false
+
+    // Add the transformed mod dependencies to the compilation and runtime classpaths, but don't publish them in the Maven metadata
+    compileClasspath.extendsFrom(transformedMod, transformedModCompileOnly)
+    runtimeClasspath.extendsFrom(transformedMod)
+    testCompileClasspath.extendsFrom(transformedMod, transformedModCompileOnly)
+    testRuntimeClasspath.extendsFrom(transformedMod)
+}
+
 dependencies {
-    api("com.github.GTNewHorizons:GTNHLib:0.0.10:dev")
-    implementation("com.github.GTNewHorizons:Baubles:1.0.1.14:dev")
-    implementation("com.github.GTNewHorizons:Galacticraft:3.0.63-GTNH:dev")
-    implementation("com.github.GTNewHorizons:GT5-Unofficial:5.09.41.232:dev")
-    implementation("com.github.GTNewHorizons:HungerOverhaul:1.0.4-GTNH:dev")
-    implementation("com.github.GTNewHorizons:MrTJPCore:1.1.1:dev") // Do not update, fixed afterwards
-    implementation("com.github.GTNewHorizons:Railcraft:9.13.15:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
-    implementation("com.github.GTNewHorizons:TinkersConstruct:1.9.12-GTNH:dev")
-    implementation("curse.maven:biomes-o-plenty-220318:2499612")
-    implementation("curse.maven:cofh-core-69162:2388751")
-    implementation("curse.maven:extra-utilities-225561:2264384")
-    implementation("curse.maven:travellers-gear-224440:2262113")
-    implementation("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
-    implementation(deobf("https://edge.forgecdn.net/files/2234/410/witchery-1.7.10-0.24.1.jar"))
-    implementation(deobf("https://mediafiles.forgecdn.net/files/2423/369/BiblioCraft%5bv1.11.7%5d%5bMC1.7.10%5d.jar"))
-    implementation(deobf("https://mediafiles.forgecdn.net/files/2367/915/journeymap-1.7.10-5.1.4p2-unlimited.jar"))
-    implementation(deobf("https://mediafiles.forgecdn.net/files/2241/397/Pam%27s+Harvest+the+Nether+1.7.10a.jar"))
-    implementation(deobf("https://mediafiles.forgecdn.net/files/2340/786/ProjectE-1.7.10-PE1.10.1.jar"))
-    implementation(deobf("https://mediafiles.forgecdn.net/files/2223/720/Ztones-1.7.10-2.2.1.jar"))
-    
-    compileOnly("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev")
-    compileOnly(deobf("https://mediafiles.forgecdn.net/files/2285/272/Automagy-1.7.10-0.28.2.jar"))
-    
-    runtimeOnly("com.github.GTNewHorizons:harvestcraft:1.0.19-GTNH:dev") // Needed for Pam's Harvest the Nether
+    api("com.github.GTNewHorizons:GTNHLib:0.0.12:dev")
+
+    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.3.27-GTNH:dev") // force a more up-to-date NEI version
+    transformedMod("com.github.GTNewHorizons:Baubles:1.0.1.14:dev")
+    transformedMod("com.github.GTNewHorizons:Galacticraft:3.0.63-GTNH:dev")
+    transformedMod("com.github.GTNewHorizons:GT5-Unofficial:5.09.41.232:dev")
+    transformedMod("com.github.GTNewHorizons:HungerOverhaul:1.0.4-GTNH:dev")
+    transformedMod("com.github.GTNewHorizons:MrTJPCore:1.1.1:dev") // Do not update, fixed afterwards
+    transformedMod("com.github.GTNewHorizons:Railcraft:9.13.15:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
+    transformedMod("com.github.GTNewHorizons:TinkersConstruct:1.9.12-GTNH:dev")
+    transformedMod("curse.maven:biomes-o-plenty-220318:2499612")
+    transformedMod("curse.maven:cofh-core-69162:2388751")
+    transformedMod("curse.maven:extra-utilities-225561:2264384")
+    transformedMod("curse.maven:travellers-gear-224440:2262113")
+    transformedMod("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
+    transformedMod(deobf("https://edge.forgecdn.net/files/2234/410/witchery-1.7.10-0.24.1.jar"))
+    transformedMod(deobf("https://mediafiles.forgecdn.net/files/2423/369/BiblioCraft%5bv1.11.7%5d%5bMC1.7.10%5d.jar"))
+    transformedMod(deobf("https://mediafiles.forgecdn.net/files/2367/915/journeymap-1.7.10-5.1.4p2-unlimited.jar"))
+    transformedMod("com.github.GTNewHorizons:harvestcraft:1.0.19-GTNH:dev")
+    // Contains an outdated copy of thaumcraft api that breaks class loading at runtime
+    transformedModCompileOnly(deobf("https://mediafiles.forgecdn.net/files/2241/397/Pam%27s+Harvest+the+Nether+1.7.10a.jar"))
+    transformedMod(deobf("https://mediafiles.forgecdn.net/files/2340/786/ProjectE-1.7.10-PE1.10.1.jar"))
+    transformedMod(deobf("https://mediafiles.forgecdn.net/files/2223/720/Ztones-1.7.10-2.2.1.jar"))
+
+    transformedMod("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev")
+    transformedMod(deobf("https://mediafiles.forgecdn.net/files/2285/272/Automagy-1.7.10-0.28.2.jar"))
 }

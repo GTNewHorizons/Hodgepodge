@@ -20,14 +20,14 @@ import cpw.mods.fml.relauncher.Side;
         version = Hodgepodge.VERSION,
         name = Hodgepodge.NAME,
         acceptableRemoteVersions = "*",
-        dependencies = "required-after:gtnhmixins@[2.0.1,);")
+        dependencies = "required-after:gtnhmixins@[2.0.1,)")
 public class Hodgepodge {
 
     public static final AnchorAlarm ANCHOR_ALARM = new AnchorAlarm();
     public static final HodgepodgeEventHandler EVENT_HANDLER = new HodgepodgeEventHandler();
     public static final String MODID = "hodgepodge";
     public static final String VERSION = "GRADLETOKEN_VERSION";
-    public static final String NAME = "A Hodgepodge of Patches";
+    public static final String NAME = "Hodgepodge";
 
     @EventHandler
     public void preinit(FMLPreInitializationEvent event) {
