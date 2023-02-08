@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.textures.client;
 
 import net.minecraft.client.renderer.texture.TextureUtil;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
