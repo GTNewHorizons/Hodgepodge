@@ -76,6 +76,7 @@ public class LoadingConfig {
     public boolean fixUnfocusedFullscreen;
     public boolean fixUrlDetection;
     public boolean fixVanillaUnprotectedGetBlock;
+    public boolean fixVillageUncheckedGetBlock;
     public boolean fixWorldGetBlock;
     public boolean fixWorldServerLeakingUnloadedEntities;
     public boolean fixZTonesPackets;
@@ -231,6 +232,7 @@ public class LoadingConfig {
         fixUnfocusedFullscreen = config.get(Category.FIXES.toString(), "fixUnfocusedFullscreen", true, "Fix exiting fullscreen when you tab out of the game").getBoolean();
         fixUrlDetection = config.get(Category.FIXES.toString(), "fixUrlDetection", true, "Fix URISyntaxException in forge.").getBoolean();
         fixVanillaUnprotectedGetBlock = config.get(Category.FIXES.toString(), "fixVanillaUnprotectedGetBlock", true, "Fixes various unchecked vanilla getBlock() methods").getBoolean();
+        fixVillageUncheckedGetBlock = config.get(Category.FIXES.toString(), "fixVillageUncheckedGetBlock", true, "Fixes village unchecked getBlock() calls").getBoolean();
         fixWorldGetBlock = config.get(Category.FIXES.toString(), "fixWorldGetBlock", true, "Fix unprotected getBlock() in World").getBoolean();
         fixWorldServerLeakingUnloadedEntities = config.get(Category.FIXES.toString(), "fixWorldServerLeakingUnloadedEntities", true, "Fix WorldServer leaking entities when no players are present in a dimension").getBoolean();
 

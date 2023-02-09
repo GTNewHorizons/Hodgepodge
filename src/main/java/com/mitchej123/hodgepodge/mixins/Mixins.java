@@ -78,6 +78,9 @@ public enum Mixins {
     WORLD_UNPROTECTED_LIGHT_VALUE(new Builder("Fix world unprotected light value").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinWorldLightValue").setApplyIf(() -> Common.config.fixGetBlockLightValue)
             .addTargetedMod(TargetedMod.VANILLA)),
+    VILLAGE_UNCHECKED_GET_BLOCK(new Builder("Fix Village unchecked getBlock").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinVillage", "minecraft.MixinVillageCollection")
+            .setApplyIf(() -> Common.config.fixVillageUncheckedGetBlock).addTargetedMod(TargetedMod.VANILLA)),
     FORGE_HOOKS_URL_FIX(
             new Builder("Fix forge URL hooks").setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinForgeHooks")
                     .setApplyIf(() -> Common.config.fixUrlDetection).addTargetedMod(TargetedMod.VANILLA)),
