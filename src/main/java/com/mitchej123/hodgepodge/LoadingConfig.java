@@ -94,6 +94,7 @@ public class LoadingConfig {
     public boolean optimizeTileentityRemoval;
     public boolean optimizeWorldUpdateLight;
     public boolean preventPickupLoot;
+    public boolean removeSpawningMinecartSound;
     public boolean removeUpdateChecks;
     public boolean speedupAnimations;
     public boolean speedupBOPFogHandling;
@@ -253,6 +254,7 @@ public class LoadingConfig {
         optimizeWorldUpdateLight = config.get(Category.FIXES.toString(), "optimizeWorldUpdateLight", true, "Fix too early light initialization").getBoolean();
         particleLimit = Math.max(Math.min(config.get(Category.TWEAKS.toString(), "particleLimit", 8000, "Particle limit [4000-16000]").getInt(), 16000), 4000);
         preventPickupLoot = config.get(Category.TWEAKS.toString(), "preventPickupLoot", true, "Prevent monsters from picking up loot.").getBoolean();
+        removeSpawningMinecartSound = config.get(Category.TWEAKS.toString(), "removeSpawningMinecartSound", true, "Stop playing a sound when spawning a minecart in the world").getBoolean();
         removeUpdateChecks = config.get(Category.FIXES.toString(), "removeUpdateChecks", true, "Remove old/stale/outdated update checks.").getBoolean();
         renderDebug = config.get(Category.DEBUG.toString(), "renderDebug", true, "Enable GL state debug hooks. Will not do anything useful unless mode is changed to nonzero.").getBoolean();
         renderDebugMode = config.get(Category.DEBUG.toString(), "renderDebugMode", 0, "Default GL state debug mode. 0 - off, 1 - reduced, 2 - full").setMinValue(0).setMaxValue(2).getInt();

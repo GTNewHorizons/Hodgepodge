@@ -194,6 +194,9 @@ public enum Mixins {
     FIX_KEYBIND_CONFLICTS(new Builder("Trigger all conflicting keybinds").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinKeyBinding").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.triggerAllConflictingKeybindings).addTargetedMod(TargetedMod.VANILLA)),
+    REMOVE_SPAWN_MINECART_SOUND(new Builder("Remove sound when spawning a minecart")
+            .addMixinClasses("minecraft.MixinWorldClient").addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> Common.config.removeSpawningMinecartSound).setPhase(Phase.EARLY).setSide(Side.CLIENT)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(
