@@ -26,12 +26,16 @@ public enum TargetedMod {
     RAILCRAFT("Railcraft", null, "Railcraft"),
     THAUMCRAFT("Thaumcraft", null, "Thaumcraft"), // "thaumcraft.codechicken.core.launch.DepLoader"
     TRAVELLERSGEAR("TravellersGear", null, "TravellersGear"),
+    TINKERSCONSTRUCT("TConstruct", null, "TConstruct"),
     VANILLA("Minecraft", null),
     WITCHERY("Witchery", null, "witchery"),
     ZTONES("ZTones", null, "Ztones");
 
+    /** The "name" in the @Mod annotation */
     public final String modName;
+    /** Class that implements the IFMLLoadingPlugin interface */
     public final String coreModClass;
+    /** The "modid" in the @Mod annotation */
     public final String modId;
 
     TargetedMod(String modName, String coreModClass) {

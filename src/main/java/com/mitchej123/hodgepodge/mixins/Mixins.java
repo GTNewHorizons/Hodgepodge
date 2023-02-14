@@ -330,6 +330,11 @@ public enum Mixins {
     FIX_TRAVELLERSGEAR_INVENTORY_OFFSET_WITH_POTIONS(new Builder("Travelers Gear with Potions")
             .addMixinClasses("travellersgear.MixinClientProxy").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixPotionRenderOffset).addTargetedMod(TargetedMod.TRAVELLERSGEAR)),
+    FIX_TINKER_POTION_EFFECT_OFFSET(
+            new Builder("Prevents the inventory from shifting when the player has active potion effects")
+                    .setSide(Side.CLIENT).setPhase(Phase.LATE).addTargetedMod(TargetedMod.TINKERSCONSTRUCT)
+                    .setApplyIf(() -> Common.config.fixPotionRenderOffset)
+                    .addMixinClasses("tconstruct.MixinTabRegistry")),
 
     // Extra Utilities
     FIX_EXTRA_UTILITIES_UNENCHANTING(new Builder("Fix Exu Unenchanting")
