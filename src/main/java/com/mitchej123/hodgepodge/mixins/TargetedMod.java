@@ -25,8 +25,8 @@ public enum TargetedMod {
     PROJECTE("ProjectE", null, "ProjectE"),
     RAILCRAFT("Railcraft", null, "Railcraft"),
     THAUMCRAFT("Thaumcraft", null, "Thaumcraft"), // "thaumcraft.codechicken.core.launch.DepLoader"
-    TRAVELLERSGEAR("TravellersGear", null, "TravellersGear"),
     TINKERSCONSTRUCT("TConstruct", null, "TConstruct"),
+    TRAVELLERSGEAR("TravellersGear", null, "TravellersGear"),
     VANILLA("Minecraft", null),
     WITCHERY("Witchery", null, "witchery"),
     ZTONES("ZTones", null, "Ztones");
