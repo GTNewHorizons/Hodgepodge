@@ -66,12 +66,8 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
                         .singletonList("com.mitchej123.hodgepodge.asm.transformers.fml.SpeedupProgressBarTransformer")),
         THERMOS_SLEDGEHAMMER_FURNACE_FIX(
                 "Take a sledgehammer to CraftServer.resetRecipes() to prevent it from breaking our Furnace Fix",
-                () -> Common.thermosTainted && Common.config.speedupVanillaFurnace,
-                Collections.singletonList(
-                        "com.mitchej123.hodgepodge.asm.transformers.thermos.ThermosFurnaceSledgeHammer")),
-        BIBLIOCRAFT_RECIPE_SLEDGEHAMMER("Remove recipes from Bibliocraft BlockLoader and Itemloader : addRecipies()",
-                () -> Common.config.biblocraftRecipes, Collections.singletonList(
-                        "com.mitchej123.hodgepodge.asm.transformers.bibliocraft.BibliocraftTransformer"));
+                () -> Common.thermosTainted && Common.config.speedupVanillaFurnace, Collections.singletonList(
+                        "com.mitchej123.hodgepodge.asm.transformers.thermos.ThermosFurnaceSledgeHammer"));
 
         private final String name;
         private final Supplier<Boolean> applyIf;
