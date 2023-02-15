@@ -64,11 +64,6 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
                 () -> Common.config.speedupProgressBar,
                 Collections
                         .singletonList("com.mitchej123.hodgepodge.asm.transformers.fml.SpeedupProgressBarTransformer")),
-        FIX_TINKER_POTION_EFFECT_OFFSET(
-                "Prevents the inventory from shifting when the player has active potion effects",
-                () -> Common.config.fixPotionRenderOffset,
-                Collections
-                        .singletonList("com.mitchej123.hodgepodge.asm.transformers.tconstruct.TabRegistryTransformer")),
         THERMOS_SLEDGEHAMMER_FURNACE_FIX(
                 "Take a sledgehammer to CraftServer.resetRecipes() to prevent it from breaking our Furnace Fix",
                 () -> Common.thermosTainted && Common.config.speedupVanillaFurnace, Collections.singletonList(
