@@ -230,11 +230,6 @@ public enum Mixins {
             .addMixinClasses("ic2.textures.MixinRenderLiquidCell").setApplyIf(() -> Common.config.speedupAnimations)
             .addTargetedMod(TargetedMod.IC2)),
 
-    // gregtech
-    GREGTECH_FLUID_RENDER_FIX(
-            new Builder("Fluid Render Fix").addMixinClasses("gregtech.textures.MixinGT_GeneratedMaterial_Renderer")
-                    .setApplyIf(() -> Common.config.speedupAnimations).addTargetedMod(TargetedMod.GT5U)),
-
     // Disable update checkers
     BIBLIOCRAFT_UPDATE_CHECK(new Builder("Yeet Bibliocraft Update Check").setPhase(Phase.LATE).setSide(Side.CLIENT)
             .addMixinClasses("bibliocraft.MixinVersionCheck").setApplyIf(() -> Common.config.removeUpdateChecks)
