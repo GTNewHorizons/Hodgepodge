@@ -79,6 +79,7 @@ public class LoadingConfig {
     public boolean fixVillageUncheckedGetBlock;
     public boolean fixWorldGetBlock;
     public boolean fixWorldServerLeakingUnloadedEntities;
+    public boolean fixXaerosWorldMapScroll;
     public boolean fixZTonesPackets;
     public boolean hideCrosshairInThirdPerson;
     public boolean hideIc2ReactorSlots;
@@ -234,6 +235,7 @@ public class LoadingConfig {
         fixVillageUncheckedGetBlock = config.get(Category.FIXES.toString(), "fixVillageUncheckedGetBlock", true, "Fixes village unchecked getBlock() calls").getBoolean();
         fixWorldGetBlock = config.get(Category.FIXES.toString(), "fixWorldGetBlock", true, "Fix unprotected getBlock() in World").getBoolean();
         fixWorldServerLeakingUnloadedEntities = config.get(Category.FIXES.toString(), "fixWorldServerLeakingUnloadedEntities", true, "Fix WorldServer leaking entities when no players are present in a dimension").getBoolean();
+        fixXaerosWorldMapScroll = config.get(Category.FIXES.toString(), "fixXaerosWorldMapScrolling", true, "Fix scrolling in the world map screen").getBoolean();
 
         hideCrosshairInThirdPerson = config.get(Category.TWEAKS.toString(), "hideCrosshairInThirdPerson", true, "Stops rendering the crosshair when you are playing in third person").getBoolean();
         hideIc2ReactorSlots = config.get(Category.TWEAKS.toString(), "hideIc2ReactorSlots", true, "Prevent IC2's reactor's coolant slots from being accessed by automations if not a fluid reactor").getBoolean();
