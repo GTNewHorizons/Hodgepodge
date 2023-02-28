@@ -197,7 +197,9 @@ public enum Mixins {
     REMOVE_SPAWN_MINECART_SOUND(new Builder("Remove sound when spawning a minecart")
             .addMixinClasses("minecraft.MixinWorldClient").addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> Common.config.removeSpawningMinecartSound).setPhase(Phase.EARLY).setSide(Side.CLIENT)),
-
+    MACOS_KEYS_TEXTFIELD_SHORTCUTS(new Builder("Macos use CMD to copy/select/delete text")
+            .addMixinClasses("minecraft.MixinGuiTextField").addTargetedMod(TargetedMod.VANILLA)
+                    .setApplyIf(() -> Common.config.enableMacosCmdShortcuts).setPhase(Phase.EARLY).setSide(Side.CLIENT)),
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(
             new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).addMixinClasses("ic2.MixinIc2WaterKinetic")
