@@ -309,9 +309,10 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.fixJourneymapJumpyScrolling).addTargetedMod(TargetedMod.JOURNEYMAP)),
 
     // Xaero's Map
-    FIX_XAEROS_WORLDMAP_SCROLL(new Builder("Fix Xaero's World Map map screen scrolling")
-            .addMixinClasses("xaeroworldmap.MixinGuiMap").setSide(Side.CLIENT)
-            .setApplyIf(() -> Common.config.fixXaerosWorldMapScroll).addTargetedMod(TargetedMod.XAEROWORLDMAP)),
+    FIX_XAEROS_WORLDMAP_SCROLL(
+            new Builder("Fix Xaero's World Map map screen scrolling").addMixinClasses("xaeroworldmap.MixinGuiMap")
+                    .setSide(Side.CLIENT).setApplyIf(() -> Common.config.fixXaerosWorldMapScroll)
+                    .addTargetedMod(TargetedMod.XAEROWORLDMAP).addTargetedMod(TargetedMod.LWJGL3IFY)),
 
     // Pam's Harvest the Nether
     FIX_IGNIS_FRUIT_AABB(new Builder("Ignis Fruit").addMixinClasses("harvestthenether.MixinBlockPamFruit")
