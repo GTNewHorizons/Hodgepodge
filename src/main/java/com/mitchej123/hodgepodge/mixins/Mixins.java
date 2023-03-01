@@ -203,6 +203,11 @@ public enum Mixins {
                     () -> System.getProperty("os.name").toLowerCase().contains("mac")
                             && Common.config.enableMacosCmdShortcuts)
             .setPhase(Phase.EARLY).setSide(Side.CLIENT)),
+    FIX_FONT_RENDERER_LINEWRAP_RECURSION(
+            new Builder("Replace recursion with iteration in FontRenderer line wrapping code")
+                    .addMixinClasses("minecraft.MixinFontRenderer").addTargetedMod(TargetedMod.VANILLA)
+                    .setApplyIf(() -> Common.config.fixFontRendererLinewrapRecursion).setPhase(Phase.EARLY)
+                    .setSide(Side.CLIENT)),
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(
             new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).addMixinClasses("ic2.MixinIc2WaterKinetic")
