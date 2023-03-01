@@ -48,8 +48,7 @@ public abstract class MixinGuiTextField {
                 cir.setReturnValue(true);
             } else if (eventKey == Keyboard.KEY_X) {
                 GuiScreen.setClipboardString(this.getSelectedText());
-                if (this.isEnabled)
-                {
+                if (this.isEnabled) {
                     this.writeText("");
                 }
                 cir.setReturnValue(true);
