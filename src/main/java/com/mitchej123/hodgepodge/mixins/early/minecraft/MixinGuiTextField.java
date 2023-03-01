@@ -33,10 +33,12 @@ public abstract class MixinGuiTextField {
 
     @Inject(method = "textboxKeyTyped", at = @At(value = "HEAD"), cancellable = true)
     public void provideMacOsKeys(char typedChar, int eventKey, CallbackInfoReturnable<Boolean> cir) {
-        if (this.isFocused && this.isEnabled && GuiScreen.isCtrlKeyDown()) {
+        if (this.isFocused && GuiScreen.isCtrlKeyDown()) {
             if (eventKey == Keyboard.KEY_V) {
-                this.writeText(GuiScreen.getClipboardString());
-                cir.setReturnValue(true);
+                if (this.isEnabled) {
+                    this.writeText(GuiScreen.getClipboardString());
+                    cir.setReturnValue(true);
+                }
             } else if (eventKey == Keyboard.KEY_C) {
                 GuiScreen.setClipboardString(this.getSelectedText());
                 cir.setReturnValue(true);
