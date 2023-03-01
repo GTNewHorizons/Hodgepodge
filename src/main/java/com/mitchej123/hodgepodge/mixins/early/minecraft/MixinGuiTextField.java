@@ -46,6 +46,13 @@ public abstract class MixinGuiTextField {
                 this.setCursorPositionEnd();
                 this.setSelectionPos(0);
                 cir.setReturnValue(true);
+            } else if (eventKey == Keyboard.KEY_X) {
+                GuiScreen.setClipboardString(this.getSelectedText());
+                if (this.isEnabled)
+                {
+                    this.writeText("");
+                }
+                cir.setReturnValue(true);
             }
         }
     }
