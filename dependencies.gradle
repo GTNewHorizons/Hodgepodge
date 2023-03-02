@@ -15,7 +15,7 @@ configurations {
 dependencies {
     api("com.github.GTNewHorizons:GTNHLib:0.0.12:dev")
 
-    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.3.27-GTNH:dev") // force a more up-to-date NEI version
+    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.3.35-GTNH:dev") // force a more up-to-date NEI version
     transformedMod("com.github.GTNewHorizons:Baubles:1.0.1.14:dev")
     transformedMod("com.github.GTNewHorizons:Galacticraft:3.0.63-GTNH:dev")
     transformedMod("com.github.GTNewHorizons:GT5-Unofficial:5.09.41.232:dev")
@@ -40,4 +40,7 @@ dependencies {
 
     transformedMod("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev")
     transformedMod(deobf("https://mediafiles.forgecdn.net/files/2285/272/Automagy-1.7.10-0.28.2.jar"))
+
+    // Transitive updates to make runClient17 work
+    transformedMod("com.github.GTNewHorizons:ForgeMultipart:1.3.2:dev")
 }
