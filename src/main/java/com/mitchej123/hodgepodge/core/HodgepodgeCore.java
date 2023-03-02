@@ -26,6 +26,8 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     private static final Logger log = LogManager.getLogger("Hodgepodge");
     public static final SortingIndex index = HodgepodgeCore.class.getAnnotation(IFMLLoadingPlugin.SortingIndex.class);
 
+    private String[] transformerClasses;
+
     public static int getSortingIndex() {
         return index != null ? index.value() : 0;
     }
@@ -86,15 +88,17 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     @Override
     public String[] getASMTransformerClass() {
-
-        return Arrays.stream(AsmTransformers.values()).map(asmTransformer -> {
-            if (asmTransformer.shouldBeLoaded()) {
-                log.info("Loading hodgepodge transformers {}", asmTransformer.name);
-                return asmTransformer.asmTransformers;
-            } else {
-                return null;
-            }
-        }).filter(Objects::nonNull).flatMap(List::stream).toArray(String[]::new);
+        if (transformerClasses == null) {
+            transformerClasses = Arrays.stream(AsmTransformers.values()).map(asmTransformer -> {
+                if (asmTransformer.shouldBeLoaded()) {
+                    log.info("Loading hodgepodge transformers {}", asmTransformer.name);
+                    return asmTransformer.asmTransformers;
+                } else {
+                    return null;
+                }
+            }).filter(Objects::nonNull).flatMap(List::stream).toArray(String[]::new);
+        }
+        return transformerClasses;
     }
 
     @Override
