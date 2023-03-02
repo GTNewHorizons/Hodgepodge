@@ -97,6 +97,7 @@ public class LoadingConfig {
     public boolean removeSpawningMinecartSound;
 
     public boolean enableMacosCmdShortcuts;
+    public boolean fixFontRendererLinewrapRecursion;
     public boolean removeUpdateChecks;
     public boolean speedupAnimations;
     public boolean speedupBOPFogHandling;
@@ -194,6 +195,7 @@ public class LoadingConfig {
         fixExtraUtilitiesUnEnchanting = config.get(Category.FIXES.toString(), "fixExtraUtilitiesUnEnchanting", true, "Fix dupe bug with division sigil removing enchantment").getBoolean();
         fixFenceConnections = config.get(Category.FIXES.toString(), "fixFenceConnections", true, "Fix fence connections with other types of fence").getBoolean();
         fixFireSpread = config.get(Category.FIXES.toString(), "fixFireSpread", true, "Fix vanilla fire spread sometimes cause NPE on thermos").getBoolean();
+        fixFontRendererLinewrapRecursion = config.get(Category.FIXES.toString(), "fixFontRendererLinewrapRecursion", true, "Replace recursion with iteration in FontRenderer line wrapping code").getBoolean();
         fixFriendlyCreatureSounds = config.get(Category.FIXES.toString(), "fixFriendlyCreatureSounds", true, "Fix vanilla issue where player sounds register as animal sounds").getBoolean();
         fixGetBlockLightValue = config.get(Category.FIXES.toString(), "fixGetBlockLightValue", true, "Fix vanilla light calculation sometimes cause NPE on thermos").getBoolean();
         fixGlStateBugs = config.get(Category.FIXES.toString(), "fixGlStateBugs", true, "Fix vanilla GL state bugs causing lighting glitches in various perspectives (MC-10135).").getBoolean();
