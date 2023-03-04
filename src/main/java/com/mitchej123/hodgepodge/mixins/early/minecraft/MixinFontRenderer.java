@@ -1,22 +1,13 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.util.ResourceLocation;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(FontRenderer.class)
-public abstract class MixinFontRenderer extends FontRenderer {
-
-    // dummy to satisfy javac
-    private MixinFontRenderer(GameSettings p_i1035_1_, ResourceLocation p_i1035_2_, TextureManager p_i1035_3_,
-            boolean p_i1035_4_) {
-        super(p_i1035_1_, p_i1035_2_, p_i1035_3_, p_i1035_4_);
-    }
+public abstract class MixinFontRenderer {
 
     @Shadow
     protected abstract int sizeStringToWidth(String str, int wrapWidth);
