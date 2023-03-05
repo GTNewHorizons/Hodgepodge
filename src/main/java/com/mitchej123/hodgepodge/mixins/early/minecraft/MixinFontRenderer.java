@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import net.minecraft.client.gui.FontRenderer;
 
+import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,7 +34,7 @@ public abstract class MixinFontRenderer {
         StringBuilder output = new StringBuilder(str.length() + str.length() / firstLineWidth);
         for (;;) {
             final int lineWidth = Math.max(1, this.sizeStringToWidth(str, wrapWidth));
-            final String line = str.substring(0, lineWidth);
+            final String line = StringUtils.substring(str, 0, lineWidth);
             output.append(line);
             if (lineWidth >= str.length()) {
                 break;
@@ -42,7 +43,7 @@ public abstract class MixinFontRenderer {
             output.append(getFormatFromString(line));
             final char nextChar = str.charAt(lineWidth);
             final boolean nextIsBlank = nextChar == ' ' || nextChar == '\n';
-            str = str.substring(lineWidth + (nextIsBlank ? 1 : 0));
+            str = StringUtils.substring(str, lineWidth + (nextIsBlank ? 1 : 0));
         }
         return output.toString();
     }
