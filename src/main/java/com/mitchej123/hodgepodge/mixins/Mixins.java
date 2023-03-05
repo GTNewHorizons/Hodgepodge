@@ -290,6 +290,10 @@ public enum Mixins {
     JAVA12_BOP(new Builder("BOP Java12-safe reflection").addMixinClasses("biomesoplenty.MixinBOPBiomes")
             .addMixinClasses("biomesoplenty.MixinBOPReflectionHelper").setApplyIf(() -> Common.config.java12BopCompat)
             .addTargetedMod(TargetedMod.BOP)),
+    JAVA12_IMMERSIVE_ENGINERRING(new Builder("Immersive Engineering Java-12 safe potion array resizing")
+            .addMixinClasses("immersiveengineering.MixinIEPotions")
+            .setApplyIf(() -> Common.config.java12ImmersiveEngineeringCompat)
+            .addTargetedMod(TargetedMod.IMMERSIVE_ENGINENEERING)),
 
     // MrTJPCore (Project Red)
     FIX_HUD_LIGHTING_GLITCH(new Builder("HUD Lighting glitch").addMixinClasses("mrtjpcore.MixinFXEngine")

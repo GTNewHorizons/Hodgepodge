@@ -32,6 +32,7 @@ dependencies {
     transformedMod(deobf("https://mediafiles.forgecdn.net/files/2423/369/BiblioCraft%5bv1.11.7%5d%5bMC1.7.10%5d.jar"))
     transformedMod(deobf("https://mediafiles.forgecdn.net/files/2367/915/journeymap-1.7.10-5.1.4p2-unlimited.jar"))
     transformedModCompileOnly(deobf('https://media.forgecdn.net/files/4127/328/XaerosWorldMap_1.14.1.22_Forge_1.7.10.jar'))
+    transformedModCompileOnly("curse.maven:immersive-engineering-231951:2299019")
     transformedMod("com.github.GTNewHorizons:harvestcraft:1.0.19-GTNH:dev")
     // Contains an outdated copy of thaumcraft api that breaks class loading at runtime
     transformedModCompileOnly(deobf("https://mediafiles.forgecdn.net/files/2241/397/Pam%27s+Harvest+the+Nether+1.7.10a.jar"))
