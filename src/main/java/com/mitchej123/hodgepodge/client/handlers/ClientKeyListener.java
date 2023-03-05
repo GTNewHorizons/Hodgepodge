@@ -20,7 +20,9 @@ public class ClientKeyListener {
     public void keyUp(InputEvent.KeyInputEvent event) {
         int key = Keyboard.getEventKey();
         boolean released = !Keyboard.getEventKeyState();
-        if (Minecraft.getMinecraft().gameSettings.showDebugInfo && GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown() && released) {
+        if (Minecraft.getMinecraft().gameSettings.showDebugInfo && GuiScreen.isShiftKeyDown()
+                && GuiScreen.isCtrlKeyDown()
+                && released) {
             if (key == Keyboard.KEY_N) {
                 HodgepodgeClient.animationsMode.next();
             } else if (key == Keyboard.KEY_D && Common.config.renderDebug) {
