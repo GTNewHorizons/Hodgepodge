@@ -30,6 +30,7 @@ public enum TargetedMod {
     VANILLA("Minecraft", null),
     WITCHERY("Witchery", null, "witchery"),
     XAEROWORLDMAP("Xaero's World Map", null, "XaeroWorldMap"),
+    IMMERSIVE_ENGINENEERING("Immersive Engineering", null, "ImmersiveEngineering"),
     ZTONES("ZTones", null, "Ztones");
 
     /** The "name" in the @Mod annotation */
