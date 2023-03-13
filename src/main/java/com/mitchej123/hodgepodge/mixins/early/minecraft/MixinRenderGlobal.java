@@ -35,8 +35,10 @@ public class MixinRenderGlobal {
     @Inject(
             method = "renderEntities",
             slice = @Slice(
-                    from = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/profiler/Profiler;endStartSection(Ljava/lang/String;)V", args = "ldc=blockentities")
-            ),
+                    from = @At(
+                            value = "INVOKE_STRING",
+                            target = "Lnet/minecraft/profiler/Profiler;endStartSection(Ljava/lang/String;)V",
+                            args = "ldc=blockentities")),
             at = @At(
                     value = "INVOKE",
                     ordinal = 0,
