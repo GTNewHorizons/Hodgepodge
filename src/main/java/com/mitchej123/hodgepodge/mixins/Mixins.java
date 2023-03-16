@@ -274,6 +274,14 @@ public enum Mixins {
     ADD_CV_SUPPORT_TO_WAND_PEDESTAL(
             new Builder("CV Support for Wand Pedestal").addMixinClasses("thaumcraft.MixinTileWandPedestal")
                     .setApplyIf(() -> Common.config.addCVSupportToWandPedestal).addTargetedMod(TargetedMod.THAUMCRAFT)),
+    FIX_ASPECT_SORTING(new Builder("Fix Thaumcraft Aspects not being sorted by name")
+            .addMixinClasses(
+                    "thaumcraft.MixinGuiResearchRecipe",
+                    "thaumcraft.MixinGuiResearchTable",
+                    "thaumcraft.MixinGuiThaumatorium",
+                    "thaumcraft.MixinItem_SortAspectsByName")
+            .setSide(Side.CLIENT).setApplyIf(() -> Common.config.fixThaumcraftAspectSorting)
+            .addTargetedMod(TargetedMod.THAUMCRAFT)),
 
     // BOP
     DEDUPLICATE_FORESTRY_COMPAT_IN_BOP(
