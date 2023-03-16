@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mitchej123.hodgepodge.client.HodgepodgeClient;
@@ -33,10 +34,17 @@ public class MixinRenderGlobal {
 
     @Inject(
             method = "renderEntities",
+            slice = @Slice(
+                    from = @At(
+                            value = "INVOKE_STRING",
+                            target = "Lnet/minecraft/profiler/Profiler;endStartSection(Ljava/lang/String;)V",
+                            args = "ldc=blockentities")),
             at = @At(
-                    value = "FIELD",
+                    value = "INVOKE",
                     ordinal = 0,
-                    target = "Lnet/minecraft/client/renderer/RenderGlobal;tileEntities:Ljava/util/List;"))
+                    target = "Lnet/minecraft/client/renderer/RenderHelper;enableStandardItemLighting()V",
+                    shift = At.Shift.AFTER,
+                    by = 1))
     public void hodgepodge$prepareTESR(EntityLivingBase p_147589_1_, ICamera p_147589_2_, float p_147589_3_,
             CallbackInfo ci) {
         RenderDebugHelper.recordGLStates();
