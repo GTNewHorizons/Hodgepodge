@@ -6,10 +6,10 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 import tuhljin.automagy.lib.AutomagyKeyHandler;
 
-@Mixin(AutomagyKeyHandler.class)
+@Mixin(value = AutomagyKeyHandler.class, remap = false)
 public class MixinAutomagyKeyHandler {
 
-    @ModifyConstant(method = "<init>", constant = @Constant(stringValue = "key.categories.misc"))
+    @ModifyConstant(method = "<init>", constant = @Constant(stringValue = "key.categories.misc"), remap = false)
     private String hodgepodge$ChangeKeybindCategory(String original) {
         return "Thaumcraft";
     }

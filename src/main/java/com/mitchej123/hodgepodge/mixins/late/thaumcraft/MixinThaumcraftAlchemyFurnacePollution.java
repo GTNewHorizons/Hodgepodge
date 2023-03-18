@@ -2,11 +2,11 @@ package com.mitchej123.hodgepodge.mixins.late.thaumcraft;
 
 import net.minecraft.tileentity.TileEntity;
 
+import org.spongepowered.asm.lib.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.libraries.org.objectweb.asm.Opcodes;
 
 import thaumcraft.common.tiles.TileAlchemyFurnace;
 
