@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Unique;
 import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
 
 @Mixin(TextureAtlasSprite.class)
-public class MixinTextureAtlasSprite implements IPatchedTextureAtlasSprite {
+public abstract class MixinTextureAtlasSprite implements IPatchedTextureAtlasSprite {
 
     @Unique
     private boolean needsAnimationUpdate = false;
@@ -45,6 +45,9 @@ public class MixinTextureAtlasSprite implements IPatchedTextureAtlasSprite {
 
     @Override
     public void updateAnimationsDryRun() {
+        // account for weird subclass that doesn't use the stock mechanisms for animation
+        if (animationMetadata == null || framesTextureData == null) return;
+
         tickCounter++;
         if (tickCounter >= animationMetadata.getFrameTimeSingle(frameCounter)) {
             int j = this.animationMetadata.getFrameCount() == 0 ? framesTextureData.size()
