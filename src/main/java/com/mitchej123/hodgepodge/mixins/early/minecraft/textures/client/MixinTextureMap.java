@@ -42,7 +42,8 @@ public abstract class MixinTextureMap extends AbstractTexture {
         mc.mcProfiler.startSection("updateAnimations");
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.getGlTextureId());
         // C Style loop should be faster
-        for (int i = 0; i < listAnimatedSprites.size(); i++) {
+        int size = listAnimatedSprites.size();
+        for (int i = 0; i < size; i++) {
             TextureAtlasSprite textureAtlasSprite = listAnimatedSprites.get(i);
             IPatchedTextureAtlasSprite patchedTextureAtlasSprite = ((IPatchedTextureAtlasSprite) textureAtlasSprite);
 
@@ -51,6 +52,8 @@ public abstract class MixinTextureMap extends AbstractTexture {
                 textureAtlasSprite.updateAnimation();
                 patchedTextureAtlasSprite.unmarkNeedsAnimationUpdate();
                 mc.mcProfiler.endSection();
+            } else {
+                patchedTextureAtlasSprite.updateAnimationsDryRun();
             }
         }
         mc.mcProfiler.endSection();
