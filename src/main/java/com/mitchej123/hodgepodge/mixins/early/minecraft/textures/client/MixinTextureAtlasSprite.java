@@ -28,9 +28,6 @@ public abstract class MixinTextureAtlasSprite implements IPatchedTextureAtlasSpr
     @Shadow
     protected List<?> framesTextureData;
 
-    @Shadow
-    public abstract boolean hasAnimationMetadata();
-
     @Override
     public void markNeedsAnimationUpdate() {
         needsAnimationUpdate = true;
