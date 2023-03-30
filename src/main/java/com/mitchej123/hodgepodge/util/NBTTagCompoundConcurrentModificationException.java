@@ -1,14 +1,11 @@
 package com.mitchej123.hodgepodge.util;
 
-import net.minecraft.nbt.NBTTagCompound;
-
 import java.util.*;
 
 public class NBTTagCompoundConcurrentModificationException extends ConcurrentModificationException {
 
     private final Deque<String> keyChain = new ArrayDeque<>();
     private final String source;
-
 
     public NBTTagCompoundConcurrentModificationException(ConcurrentModificationException cause, Object source) {
         super(cause);

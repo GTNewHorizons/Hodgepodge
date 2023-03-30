@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.util.NBTTagCompoundConcurrentModificationException;
 
 @Mixin(NBTTagCompound.class)
