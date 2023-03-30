@@ -116,6 +116,7 @@ public class LoadingConfig {
     public boolean triggerAllConflictingKeybindings;
     public boolean unbindKeybindsByDefault;
     public int defaultLanPort;
+    public boolean chunkSaveCMEDebug;
 
     // render debug
     public boolean renderDebug;
@@ -265,6 +266,7 @@ public class LoadingConfig {
         enableMacosCmdShortcuts = config.get(Category.TWEAKS.toString(), "enableMacosCmdShortcuts", true, "Use CMD key on MacOS to COPY / INSERT / SELECT in text fields (Chat, NEI, Server IP etc.)").getBoolean();
         removeSpawningMinecartSound = config.get(Category.TWEAKS.toString(), "removeSpawningMinecartSound", true, "Stop playing a sound when spawning a minecart in the world").getBoolean();
         removeUpdateChecks = config.get(Category.FIXES.toString(), "removeUpdateChecks", true, "Remove old/stale/outdated update checks.").getBoolean();
+        chunkSaveCMEDebug = config.get(Category.DEBUG.toString(), "chunkSaveCMEDebug", false, "Enable chunk save cme debugging code.").getBoolean();
         renderDebug = config.get(Category.DEBUG.toString(), "renderDebug", true, "Enable GL state debug hooks. Will not do anything useful unless mode is changed to nonzero.").getBoolean();
         renderDebugMode = config.get(Category.DEBUG.toString(), "renderDebugMode", 0, "Default GL state debug mode. 0 - off, 1 - reduced, 2 - full").setMinValue(0).setMaxValue(2).getInt();
         speedupAnimations = config.get(Category.FIXES.toString(), "speedupAnimations", true, "Drastically speedup animated textures (Basically the same as with optifine animations off but animations are working)").getBoolean();
