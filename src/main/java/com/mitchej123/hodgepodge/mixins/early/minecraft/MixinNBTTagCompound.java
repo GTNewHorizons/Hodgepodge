@@ -4,10 +4,11 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.Constants;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,10 +24,7 @@ public abstract class MixinNBTTagCompound {
     protected static void func_150298_a(String name, NBTBase data, DataOutput output) throws IOException {}
 
     @Shadow
-    public abstract String getString(String key);
-
-    @Shadow
-    public abstract int getInteger(String key);
+    public abstract NBTBase getTag(String key);
 
     @Redirect(method = "write", at = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;"))
     private Object hodgepodge$checkCME(Iterator<?> instance) {
@@ -53,19 +51,14 @@ public abstract class MixinNBTTagCompound {
             try {
                 func_150298_a(name, data, output);
             } catch (NBTTagCompoundConcurrentModificationException ex) {
-                NBTTagCompound thiz = (NBTTagCompound) ((Object) this);
-                StringBuilder prefix = new StringBuilder();
-                if (thiz.hasKey("id", Constants.NBT.TAG_STRING)) {
-                    prefix.append("id=").append(this.getString("id"));
-                }
-                if (thiz.hasKey("mID", Constants.NBT.TAG_INT)) {
-                    prefix.append("mID=").append(this.getInteger("mID"));
-                }
-                if (prefix.length() > 0) {
+                String prefix = Stream.of("id", "mID", "x", "y", "z").map(s -> s + "=" + this.getTag(s))
+                        .collect(Collectors.joining(",", "[", "]"));
+                if (prefix.length() > 2) { // len(prefix + suffix) == 2
                     ex.addKeyPath(String.format("[%s]%s", prefix, name));
                 } else {
                     ex.addKeyPath(name);
                 }
+                ex.setFullTag(this);
                 throw ex;
             }
         } else {
