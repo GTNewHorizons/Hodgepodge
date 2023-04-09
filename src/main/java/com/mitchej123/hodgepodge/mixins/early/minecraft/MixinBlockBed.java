@@ -21,7 +21,7 @@ public class MixinBlockBed {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/entity/player/EntityPlayer;addChatComponentMessage(Lnet/minecraft/util/IChatComponent;)V"))
-    public void sendMessageAboveHotbar(EntityPlayer player, IChatComponent chatComponent) {
+    public void hodgepodge$sendMessageAboveHotbar(EntityPlayer player, IChatComponent chatComponent) {
         GTNHLib.proxy.sendMessageAboveHotbar(
                 (EntityPlayerMP) player,
                 chatComponent.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.WHITE)),
