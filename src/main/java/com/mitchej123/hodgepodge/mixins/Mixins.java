@@ -208,6 +208,9 @@ public enum Mixins {
                     .addMixinClasses("minecraft.MixinFontRenderer").addTargetedMod(TargetedMod.VANILLA)
                     .setApplyIf(() -> Common.config.fixFontRendererLinewrapRecursion).setPhase(Phase.EARLY)
                     .setSide(Side.CLIENT)),
+    BED_MESSAGE_ABOVE_HOTBAR(new Builder("Bed Message Above Hotbar").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinBlockBed").setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.bedMessageAboveHotbar).addTargetedMod(TargetedMod.VANILLA)),
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(
             new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).addMixinClasses("ic2.MixinIc2WaterKinetic")

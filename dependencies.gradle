@@ -18,7 +18,7 @@ dependencies {
     transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.3.35-GTNH:dev") // force a more up-to-date NEI version
     transformedMod("com.github.GTNewHorizons:Baubles:1.0.1.14:dev")
     transformedMod("com.github.GTNewHorizons:Galacticraft:3.0.63-GTNH:dev")
-    transformedMod("com.github.GTNewHorizons:GT5-Unofficial:5.09.41.232:dev")
+    transformedMod("com.github.GTNewHorizons:GT5-Unofficial:5.09.42.36:dev")
     transformedMod("com.github.GTNewHorizons:HungerOverhaul:1.0.4-GTNH:dev")
     transformedMod("com.github.GTNewHorizons:MrTJPCore:1.1.1:dev") // Do not update, fixed afterwards
     transformedMod("com.github.GTNewHorizons:Railcraft:9.13.15:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
