@@ -89,6 +89,7 @@ public class LoadingConfig {
     public boolean installAnchorAlarm;
     public boolean java12BopCompat;
     public boolean java12ImmersiveEngineeringCompat;
+    public boolean java12MineChemCompat;
     public boolean logHugeChat;
     public boolean longerChat;
     public boolean makeBigFirsPlantable;
@@ -255,6 +256,7 @@ public class LoadingConfig {
         itemStacksPickedUpPerTick = Math.max(1, config.get(Category.FIXES.toString(), "itemStacksPickedUpPerTick", 36, "Stacks picked up per tick").getInt());
         java12BopCompat = config.get(Category.FIXES.toString(), "java12BopCompat", true, "BiomesOPlenty Java 12 compatibility patches.").getBoolean();
         java12ImmersiveEngineeringCompat = config.get(Category.FIXES.toString(), "java12ImmersiveEngineeringCompat", true, "Immersive Engineering Java 12 compatibility patch").getBoolean();
+        java12MineChemCompat = config.get(Category.FIXES.toString(), "java12MineChemCompat", true, "Minechem Java 12 compatibility patch").getBoolean();
         logHugeChat = config.get(Category.FIXES.toString(), "logHugeChat", true, "Log oversized chat message to console. WARNING: might create huge log files if this happens very often.").getBoolean();
         longerChat = config.get(Category.TWEAKS.toString(), "longerChat", true, "Makes the chat history longer instead of 100 lines").getBoolean();
         makeBigFirsPlantable = config.get(Category.TWEAKS.toString(), "makeBigFirsPlantable", true, "Allow 5 Fir Sapling planted together ('+' shape) to grow to a big fir tree").getBoolean();
