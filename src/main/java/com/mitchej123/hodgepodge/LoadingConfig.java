@@ -14,6 +14,7 @@ public class LoadingConfig {
     public boolean arabicNumbersForEnchantsPotions;
     public int chatLength;
     public int ic2SeedMaxStackSize;
+    public int atropineHighID;
     public int itemStacksPickedUpPerTick;
     public int particleLimit;
 
@@ -251,6 +252,7 @@ public class LoadingConfig {
         hideIc2ReactorSlots = config.get(Category.TWEAKS.toString(), "hideIc2ReactorSlots", true, "Prevent IC2's reactor's coolant slots from being accessed by automations if not a fluid reactor").getBoolean();
         hidePotionParticlesFromSelf = config.get(Category.TWEAKS.toString(), "hidePotionParticlesFromSelf", true, "Stops rendering potion particles from yourself").getBoolean();
         ic2SeedMaxStackSize = config.get(Category.TWEAKS.toString(), "ic2SeedMaxStackSize", 64, "IC2 seed max stack size", 1, 64).getInt();
+        atropineHighID = config.get(Category.TWEAKS.toString(), "atropineHighID", 255, "Minechem Atropine High (Delirium) effect ID", 1, 255).getInt();
         increaseParticleLimit = config.get(Category.TWEAKS.toString(), "increaseParticleLimit", true, "Increase particle limit").getBoolean();
         installAnchorAlarm = config.get(Category.TWEAKS.toString(), "installAnchorAlarm", true, "Wake up passive & personal anchors on player login").getBoolean();
         itemStacksPickedUpPerTick = Math.max(1, config.get(Category.FIXES.toString(), "itemStacksPickedUpPerTick", 36, "Stacks picked up per tick").getInt());
