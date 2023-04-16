@@ -305,6 +305,9 @@ public enum Mixins {
             .addMixinClasses("immersiveengineering.MixinIEPotions")
             .setApplyIf(() -> Common.config.java12ImmersiveEngineeringCompat)
             .addTargetedMod(TargetedMod.IMMERSIVE_ENGINENEERING)),
+    JAVA12_MINE_CHEM(
+            new Builder("Minechem Java-12 safe potion array resizing").addMixinClasses("minechem.MixinPotionInjector")
+                    .setApplyIf(() -> Common.config.java12MineChemCompat).addTargetedMod(TargetedMod.MINECHEM)),
 
     // MrTJPCore (Project Red)
     FIX_HUD_LIGHTING_GLITCH(new Builder("HUD Lighting glitch").addMixinClasses("mrtjpcore.MixinFXEngine")

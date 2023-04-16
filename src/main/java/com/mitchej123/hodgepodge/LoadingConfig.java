@@ -14,6 +14,7 @@ public class LoadingConfig {
     public boolean arabicNumbersForEnchantsPotions;
     public int chatLength;
     public int ic2SeedMaxStackSize;
+    public int atropineHighID;
     public int itemStacksPickedUpPerTick;
     public int particleLimit;
 
@@ -89,6 +90,7 @@ public class LoadingConfig {
     public boolean installAnchorAlarm;
     public boolean java12BopCompat;
     public boolean java12ImmersiveEngineeringCompat;
+    public boolean java12MineChemCompat;
     public boolean logHugeChat;
     public boolean longerChat;
     public boolean makeBigFirsPlantable;
@@ -250,11 +252,13 @@ public class LoadingConfig {
         hideIc2ReactorSlots = config.get(Category.TWEAKS.toString(), "hideIc2ReactorSlots", true, "Prevent IC2's reactor's coolant slots from being accessed by automations if not a fluid reactor").getBoolean();
         hidePotionParticlesFromSelf = config.get(Category.TWEAKS.toString(), "hidePotionParticlesFromSelf", true, "Stops rendering potion particles from yourself").getBoolean();
         ic2SeedMaxStackSize = config.get(Category.TWEAKS.toString(), "ic2SeedMaxStackSize", 64, "IC2 seed max stack size", 1, 64).getInt();
+        atropineHighID = config.get(Category.TWEAKS.toString(), "atropineHighID", 255, "Minechem Atropine High (Delirium) effect ID", 1, 255).getInt();
         increaseParticleLimit = config.get(Category.TWEAKS.toString(), "increaseParticleLimit", true, "Increase particle limit").getBoolean();
         installAnchorAlarm = config.get(Category.TWEAKS.toString(), "installAnchorAlarm", true, "Wake up passive & personal anchors on player login").getBoolean();
         itemStacksPickedUpPerTick = Math.max(1, config.get(Category.FIXES.toString(), "itemStacksPickedUpPerTick", 36, "Stacks picked up per tick").getInt());
         java12BopCompat = config.get(Category.FIXES.toString(), "java12BopCompat", true, "BiomesOPlenty Java 12 compatibility patches.").getBoolean();
         java12ImmersiveEngineeringCompat = config.get(Category.FIXES.toString(), "java12ImmersiveEngineeringCompat", true, "Immersive Engineering Java 12 compatibility patch").getBoolean();
+        java12MineChemCompat = config.get(Category.FIXES.toString(), "java12MineChemCompat", true, "Minechem Java 12 compatibility patch").getBoolean();
         logHugeChat = config.get(Category.FIXES.toString(), "logHugeChat", true, "Log oversized chat message to console. WARNING: might create huge log files if this happens very often.").getBoolean();
         longerChat = config.get(Category.TWEAKS.toString(), "longerChat", true, "Makes the chat history longer instead of 100 lines").getBoolean();
         makeBigFirsPlantable = config.get(Category.TWEAKS.toString(), "makeBigFirsPlantable", true, "Allow 5 Fir Sapling planted together ('+' shape) to grow to a big fir tree").getBoolean();
