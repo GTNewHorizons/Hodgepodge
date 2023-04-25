@@ -18,7 +18,7 @@ import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 import com.mitchej123.hodgepodge.client.HodgepodgeClient.AnimationMode;
 import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
 
-@Mixin(TextureMap.class)
+@Mixin(value = TextureMap.class, priority = 999)
 public abstract class MixinTextureMap extends AbstractTexture {
 
     @Shadow
