@@ -3,9 +3,6 @@ package com.mitchej123.hodgepodge.util;
 import java.util.HashSet;
 import java.util.Set;
 
-import mods.railcraft.common.blocks.machine.alpha.TileAnchorWorld;
-import mods.railcraft.common.plugins.forge.PlayerPlugin;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -21,6 +18,8 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import mods.railcraft.common.blocks.machine.alpha.TileAnchorWorld;
+import mods.railcraft.common.plugins.forge.PlayerPlugin;
 
 public class AnchorAlarm {
 

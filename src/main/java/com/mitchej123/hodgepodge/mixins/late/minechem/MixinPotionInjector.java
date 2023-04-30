@@ -1,8 +1,5 @@
 package com.mitchej123.hodgepodge.mixins.late.minechem;
 
-import minechem.potion.PotionInjector;
-import minechem.potion.PotionProvider;
-
 import net.minecraft.potion.Potion;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,6 +9,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mitchej123.hodgepodge.Common;
+
+import minechem.potion.PotionInjector;
+import minechem.potion.PotionProvider;
 
 @Mixin(value = PotionInjector.class, remap = false)
 public class MixinPotionInjector {

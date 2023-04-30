@@ -1,12 +1,12 @@
 package com.mitchej123.hodgepodge.mixins.late.mrtjpcore;
 
-import mrtjp.core.fx.FXEngine$;
-
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import mrtjp.core.fx.FXEngine$;
 
 @Mixin(FXEngine$.class)
 public class MixinFXEngine {

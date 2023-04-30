@@ -9,10 +9,10 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 
+import com.mitchej123.hodgepodge.mixins.late.biomesoplenty.AccessorFogHandler;
+
 import biomesoplenty.client.fog.FogHandler;
 import biomesoplenty.client.fog.IBiomeFog;
-
-import com.mitchej123.hodgepodge.mixins.late.biomesoplenty.AccessorFogHandler;
 
 public class BOPFogHandler {
 

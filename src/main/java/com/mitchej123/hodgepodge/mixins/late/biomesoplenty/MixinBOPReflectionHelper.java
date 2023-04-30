@@ -5,10 +5,9 @@ import java.lang.reflect.Field;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-import biomesoplenty.common.helpers.BOPReflectionHelper;
-
 import com.gtnewhorizon.gtnhlib.reflect.Fields;
 
+import biomesoplenty.common.helpers.BOPReflectionHelper;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 

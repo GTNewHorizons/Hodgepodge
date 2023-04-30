@@ -1,11 +1,11 @@
 package com.mitchej123.hodgepodge.mixins.late.journeymap;
 
-import journeymap.client.data.WorldData;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 import com.gtnewhorizon.mixinextras.injector.ModifyReturnValue;
+
+import journeymap.client.data.WorldData;
 
 @Mixin(WorldData.class)
 public class MixinWorldData {

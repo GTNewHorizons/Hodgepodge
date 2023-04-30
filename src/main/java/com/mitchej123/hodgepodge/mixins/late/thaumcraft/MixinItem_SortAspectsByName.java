@@ -4,6 +4,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+import com.mitchej123.hodgepodge.util.AspectNameSorter;
+
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.wands.ItemFocusBasic;
@@ -15,8 +17,6 @@ import thaumcraft.common.items.ItemManaBean;
 import thaumcraft.common.items.ItemResource;
 import thaumcraft.common.items.ItemWispEssence;
 import thaumcraft.common.items.armor.ItemHoverHarness;
-
-import com.mitchej123.hodgepodge.util.AspectNameSorter;
 
 @Mixin({ ItemFocusBasic.class, ItemJarFilled.class, ItemJarNode.class, ItemCrystalEssence.class, ItemEssence.class,
         ItemManaBean.class, ItemResource.class, ItemWispEssence.class, ItemHoverHarness.class })

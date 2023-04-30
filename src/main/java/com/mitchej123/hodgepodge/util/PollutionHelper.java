@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.util;
 import net.minecraft.world.chunk.Chunk;
 
 import com.mitchej123.hodgepodge.Compat;
+
 import gregtech.common.GT_Pollution;
 
 public class PollutionHelper {
