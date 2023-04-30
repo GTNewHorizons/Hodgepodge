@@ -5,11 +5,11 @@ import net.minecraft.world.EnumDifficulty;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-import squeek.applecore.api.hunger.HealthRegenEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import iguanaman.hungeroverhaul.HungerOverhaul;
 import iguanaman.hungeroverhaul.config.IguanaConfig;
 import iguanaman.hungeroverhaul.food.FoodEventHandler;
+import squeek.applecore.api.hunger.HealthRegenEvent;
 
 @Mixin(value = FoodEventHandler.class, remap = false)
 public class MixinHungerOverhaulHealthRegen {

@@ -1,10 +1,10 @@
 package com.mitchej123.hodgepodge.mixins.late.mrtjpcore;
 
-import mrtjp.core.world.PlacementLib$;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
+
+import mrtjp.core.world.PlacementLib$;
 
 @Mixin(PlacementLib$.class)
 public class MixinPlacementLib {

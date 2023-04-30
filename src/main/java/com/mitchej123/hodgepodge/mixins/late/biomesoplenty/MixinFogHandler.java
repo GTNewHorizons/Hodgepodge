@@ -5,9 +5,9 @@ import net.minecraftforge.client.event.EntityViewRenderEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-import biomesoplenty.client.fog.FogHandler;
-
 import com.mitchej123.hodgepodge.client.biomesoplenty.BOPFogHandler;
+
+import biomesoplenty.client.fog.FogHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 @Mixin(FogHandler.class)

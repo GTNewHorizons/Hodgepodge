@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import com.mitchej123.hodgepodge.Common;
+
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 
 public enum Mixins {

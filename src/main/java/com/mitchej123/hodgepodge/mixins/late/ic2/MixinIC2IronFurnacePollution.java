@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.util.PollutionHelper;
+
 import ic2.core.block.machine.tileentity.TileEntityIronFurnace;
 
 /*

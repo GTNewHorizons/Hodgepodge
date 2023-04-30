@@ -1,7 +1,5 @@
 package com.mitchej123.hodgepodge.mixins.late.bibliocraft;
 
-import jds.bibliocraft.VersionCheck;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 
@@ -10,6 +8,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import jds.bibliocraft.VersionCheck;
 
 @Mixin(value = VersionCheck.class, remap = false)
 public class MixinVersionCheck {

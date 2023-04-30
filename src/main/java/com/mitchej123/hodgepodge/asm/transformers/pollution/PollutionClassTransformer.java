@@ -6,6 +6,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 import com.mitchej123.hodgepodge.asm.References;
 import com.mitchej123.hodgepodge.asm.util.AbstractClassTransformer;
 import com.mitchej123.hodgepodge.asm.util.AbstractMethodTransformer;
+
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 
 public class PollutionClassTransformer extends AbstractClassTransformer {

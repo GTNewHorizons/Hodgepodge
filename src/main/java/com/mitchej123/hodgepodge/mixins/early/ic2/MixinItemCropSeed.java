@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.mitchej123.hodgepodge.Common;
+
 import ic2.core.item.ItemCropSeed;
 
 @Mixin(value = ItemCropSeed.class)

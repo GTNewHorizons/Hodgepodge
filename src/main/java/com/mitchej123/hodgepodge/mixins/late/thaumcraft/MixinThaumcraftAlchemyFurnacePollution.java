@@ -8,10 +8,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import thaumcraft.common.tiles.TileAlchemyFurnace;
-
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.util.PollutionHelper;
+
+import thaumcraft.common.tiles.TileAlchemyFurnace;
 
 /*
  * Merged from ModMixins under the MIT License Copyright bartimaeusnek & GTNewHorizons
