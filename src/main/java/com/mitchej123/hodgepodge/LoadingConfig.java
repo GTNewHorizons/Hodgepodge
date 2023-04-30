@@ -119,6 +119,8 @@ public class LoadingConfig {
     public boolean unbindKeybindsByDefault;
     public int defaultLanPort;
     public boolean bedMessageAboveHotbar;
+    public boolean validatePacketEncodingBeforeSending;
+    public boolean validatePacketEncodingBeforeSendingShouldCrash;
 
     // render debug
     public boolean renderDebug;
@@ -247,6 +249,8 @@ public class LoadingConfig {
         fixWorldGetBlock = config.get(Category.FIXES.toString(), "fixWorldGetBlock", true, "Fix unprotected getBlock() in World").getBoolean();
         fixWorldServerLeakingUnloadedEntities = config.get(Category.FIXES.toString(), "fixWorldServerLeakingUnloadedEntities", true, "Fix WorldServer leaking entities when no players are present in a dimension").getBoolean();
         fixXaerosWorldMapScroll = config.get(Category.FIXES.toString(), "fixXaerosWorldMapScrolling", true, "Fix scrolling in the world map screen").getBoolean();
+        validatePacketEncodingBeforeSending = config.get(Category.FIXES.toString(), "validatePacketEncodingBeforeSending", true, "Validate vanilla packet encodings before sending in addition to on reception").getBoolean();
+        validatePacketEncodingBeforeSendingShouldCrash = config.get(Category.FIXES.toString(), "validatePacketEncodingBeforeSendingShouldCrash", true, "Should the extended packet validation error cause a crash (true) or just print out an error to the log (false)").getBoolean();
 
         hideCrosshairInThirdPerson = config.get(Category.TWEAKS.toString(), "hideCrosshairInThirdPerson", true, "Stops rendering the crosshair when you are playing in third person").getBoolean();
         hideIc2ReactorSlots = config.get(Category.TWEAKS.toString(), "hideIc2ReactorSlots", true, "Prevent IC2's reactor's coolant slots from being accessed by automations if not a fluid reactor").getBoolean();

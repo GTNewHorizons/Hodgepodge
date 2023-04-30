@@ -212,6 +212,11 @@ public enum Mixins {
     BED_MESSAGE_ABOVE_HOTBAR(new Builder("Bed Message Above Hotbar").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinBlockBed").setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.bedMessageAboveHotbar).addTargetedMod(TargetedMod.VANILLA)),
+
+    VALIDATE_PACKET_ENCODING_BEFORE_SENDING(new Builder("Validate packet encoding before sending").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.packets.MixinDataWatcher", "minecraft.packets.MixinS3FPacketCustomPayload")
+            .setSide(Side.BOTH).setApplyIf(() -> Common.config.validatePacketEncodingBeforeSending)
+            .addTargetedMod(TargetedMod.VANILLA)),
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(
             new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).addMixinClasses("ic2.MixinIc2WaterKinetic")
