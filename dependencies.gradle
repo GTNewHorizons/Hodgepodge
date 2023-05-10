@@ -13,7 +13,7 @@ configurations {
 }
 
 dependencies {
-    api("com.github.GTNewHorizons:GTNHLib:0.0.12:dev")
+    api("com.github.GTNewHorizons:GTNHLib:0.0.13:dev")
 
     transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.3.35-GTNH:dev") // force a more up-to-date NEI version
     transformedMod("com.github.GTNewHorizons:Baubles:1.0.1.14:dev")
