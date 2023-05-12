@@ -54,6 +54,7 @@ public class LoadingConfig {
     public boolean fixHungerOverhaulRestore0Hunger;
     public boolean fixIc2DirectInventoryAccess;
     public boolean fixIc2Hazmat;
+    public boolean fixIc2HoverMode;
     public boolean fixIc2Nightvision;
     public boolean fixIc2ReactorDupe;
     public boolean fixIc2UnprotectedGetBlock;
@@ -222,6 +223,7 @@ public class LoadingConfig {
         fixHungerOverhaulRestore0Hunger = config.get(Category.FIXES.toString(), "fixHungerOverhaulRestore0Hunger", true, "Fix some items restore 0 hunger").getBoolean();
         fixIc2DirectInventoryAccess = config.get(Category.FIXES.toString(), "fixIc2DirectInventoryAccess", true, "Fix IC2's direct inventory access").getBoolean();
         fixIc2Hazmat = config.get(Category.FIXES.toString(), "fixIc2Hazmat", true, "Fix IC2 armors to avoid giving poison").getBoolean();
+        fixIc2HoverMode = config.get(Category.FIXES.toString(), "fixIc2HoverMode", true, "Fix IC2's armor hover mode").getBoolean();
         fixIc2Nightvision = config.get(Category.FIXES.toString(), "fixIc2Nightvision", true, "Prevent IC2's nightvision from blinding you").getBoolean();
         fixIc2ReactorDupe = config.get(Category.FIXES.toString(), "fixIc2ReactorDupe", true, "Fix IC2's reactor dupe").getBoolean();
         fixIc2UnprotectedGetBlock = config.get(Category.FIXES.toString(), "fixIc2UnprotectedGetBlock", true, "Fixes various unchecked IC2 getBlock() methods").getBoolean();
