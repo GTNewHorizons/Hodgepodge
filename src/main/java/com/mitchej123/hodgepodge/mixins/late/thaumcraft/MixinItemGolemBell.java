@@ -7,7 +7,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import thaumcraft.common.entities.golems.ItemGolemBell;
 import thaumcraft.common.entities.golems.Marker;
@@ -15,23 +17,19 @@ import thaumcraft.common.entities.golems.Marker;
 @Mixin(ItemGolemBell.class)
 public class MixinItemGolemBell {
 
-    @Overwrite
-    public static ArrayList<Marker> getMarkers(ItemStack stack) {
-        ArrayList<Marker> markers = new ArrayList<>();
-        if (stack.hasTagCompound() && stack.stackTagCompound.hasKey("markers")) {
-            NBTTagList tl = stack.stackTagCompound.getTagList("markers", 10);
-            for (int i = 0; i < tl.tagCount(); i++) {
-                NBTTagCompound nbttagcompound1 = tl.getCompoundTagAt(i);
-                int x = nbttagcompound1.getInteger("x");
-                int y = nbttagcompound1.getInteger("y");
-                int z = nbttagcompound1.getInteger("z");
-                int dim = nbttagcompound1.getInteger("dim");
-                byte s = nbttagcompound1.getByte("side");
-                byte c = nbttagcompound1.getByte("color");
-                markers.add(new Marker(x, y, z, dim, s, c));
+    @Inject(method = "getMarkers", at = @At(value = "TAIL"), remap = false, cancellable = true)
+    private static void hodgepodge$getMarkers(ItemStack stack, CallbackInfoReturnable<ArrayList<Marker>> cir) {
+        ArrayList<Marker> markers = cir.getReturnValue();
+        NBTTagList nbttaglist = stack.stackTagCompound.getTagList("markers", 10);
+        for (int i = 0; i < nbttaglist.tagCount(); i++) {
+            NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
+            Marker marker = markers.get(i);
+            int dim = nbttagcompound1.getInteger("dim");
+            if (marker.dim != dim) {
+                marker.dim = dim;
             }
         }
-        return markers;
+        cir.setReturnValue(markers);
     }
 
 }
