@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.mitchej123.hodgepodge.common.ThaumcraftMixinMethods;
+
 import thaumcraft.common.entities.golems.EntityGolemBase;
 import thaumcraft.common.entities.golems.Marker;
 
@@ -28,15 +30,8 @@ public class MixinEntityGolemBase extends EntityGolem {
 
     @Inject(method = "readEntityFromNBT", at = @At(value = "TAIL"))
     public void hodgepodge$readEntityFromNBT(NBTTagCompound nbt, CallbackInfo ci) {
-        NBTTagList nbttaglist = nbt.getTagList("Markers", 10);
-        for (int i = 0; i < nbttaglist.tagCount(); i++) {
-            NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
-            Marker marker = this.markers.get(i);
-            int dim = nbttagcompound1.getInteger("dim");
-            if (marker.dim != dim) {
-                marker.dim = dim;
-            }
-        }
+        NBTTagList nbtTagList = nbt.getTagList("markers", 10);
+        ThaumcraftMixinMethods.overwriteMarkersDimID(nbtTagList, this.markers);
     }
 
 }
