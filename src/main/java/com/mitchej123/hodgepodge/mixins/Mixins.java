@@ -248,6 +248,9 @@ public enum Mixins {
     IC2_FLUID_RENDER_FIX(new Builder("IC2 Fluid Render Fix").setPhase(Phase.EARLY)
             .addMixinClasses("ic2.textures.MixinRenderLiquidCell").setApplyIf(() -> Common.config.speedupAnimations)
             .addTargetedMod(TargetedMod.IC2)),
+    IC2_HOVER_MODE_FIX(
+            new Builder("IC2 Hover Mode Fix").setPhase(Phase.LATE).addMixinClasses("ic2.MixinIc2QuantumSuitHoverMode")
+                    .setApplyIf(() -> Common.config.fixIc2HoverMode).addTargetedMod(TargetedMod.IC2)),
 
     // Disable update checkers
     BIBLIOCRAFT_UPDATE_CHECK(new Builder("Yeet Bibliocraft Update Check").setPhase(Phase.LATE).setSide(Side.CLIENT)
