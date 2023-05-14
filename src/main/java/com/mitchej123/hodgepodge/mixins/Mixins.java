@@ -294,6 +294,9 @@ public enum Mixins {
                     "thaumcraft.MixinItem_SortAspectsByName")
             .setSide(Side.CLIENT).setApplyIf(() -> Common.config.fixThaumcraftAspectSorting)
             .addTargetedMod(TargetedMod.THAUMCRAFT)),
+    FIX_GOLEM_MARKER_LOADING(new Builder("Fix golem marker loading failure when dimensionId larger than MAX_BYTE")
+            .addMixinClasses("thaumcraft.MixinEntityGolemBase", "thaumcraft.MixinItemGolemBell")
+            .setApplyIf(() -> Common.config.fixThaumcraftGolemMarkerLoading).addTargetedMod(TargetedMod.THAUMCRAFT)),
 
     // BOP
     DEDUPLICATE_FORESTRY_COMPAT_IN_BOP(
