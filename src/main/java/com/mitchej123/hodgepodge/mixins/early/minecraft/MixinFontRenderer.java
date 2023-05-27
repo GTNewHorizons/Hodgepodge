@@ -25,7 +25,7 @@ public abstract class MixinFontRenderer {
      * @author eigenraven
      */
     @Overwrite
-    String wrapFormattedStringToWidth(String str, int wrapWidth) {
+    public String wrapFormattedStringToWidth(String str, int wrapWidth) {
         // Always have at least one character per line
         final int firstLineWidth = Math.max(1, this.sizeStringToWidth(str, wrapWidth));
         if (str.length() <= firstLineWidth) {
