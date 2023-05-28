@@ -23,6 +23,9 @@ public abstract class MixinOpenGuiHandler extends SimpleChannelInboundHandler<FM
 
     boolean openGuiSuccess = false;
 
+    /*
+     * Copy the logic from player.openGui to explicitly check if the getLocalGuiContainer failed
+     */
     @Redirect(
             method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lcpw/mods/fml/common/network/internal/FMLMessage$OpenGui;)V",
             at = @At(
@@ -39,6 +42,9 @@ public abstract class MixinOpenGuiHandler extends SimpleChannelInboundHandler<FM
         }
     }
 
+    /*
+     * if openGui failed, we return from channelRead0 early to avoid setting windowId on the wrong openContainer
+     */
     @Inject(
             method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lcpw/mods/fml/common/network/internal/FMLMessage$OpenGui;)V",
             at = @At(value = "FIELD", target = "Lnet/minecraft/inventory/Container;windowId:I", opcode = PUTFIELD),
