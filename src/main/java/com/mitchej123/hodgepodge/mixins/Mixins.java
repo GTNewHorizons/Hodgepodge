@@ -192,6 +192,9 @@ public enum Mixins {
     CROSSHAIR_THIRDPERSON(new Builder("Crosshairs Thirdperson").setPhase(Phase.EARLY)
             .addMixinClasses("forge.MixinGuiIngameForge").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.hideCrosshairInThirdPerson).addTargetedMod(TargetedMod.VANILLA)),
+    FIX_OPENGUIHANDLER_WINDOWID(new Builder("Fix OpenGuiHandler").setPhase(Phase.EARLY)
+            .addMixinClasses("forge.MixinOpenGuiHandler").setApplyIf(() -> Common.config.fixForgeOpenGuiHandlerWindowId)
+            .addTargetedMod(TargetedMod.VANILLA)),
     FIX_KEYBIND_CONFLICTS(new Builder("Trigger all conflicting keybinds").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinKeyBinding").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.triggerAllConflictingKeybindings).addTargetedMod(TargetedMod.VANILLA)),

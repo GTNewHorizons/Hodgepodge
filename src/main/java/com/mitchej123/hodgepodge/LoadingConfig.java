@@ -41,6 +41,7 @@ public class LoadingConfig {
     public boolean fixExtraUtilitiesUnEnchanting;
     public boolean fixFenceConnections;
     public boolean fixFireSpread;
+    public boolean fixForgeOpenGuiHandlerWindowId;
     public boolean fixFriendlyCreatureSounds;
     public boolean fixGetBlockLightValue;
     public boolean fixGlStateBugs;
@@ -207,6 +208,7 @@ public class LoadingConfig {
         fixFenceConnections = config.get(Category.FIXES.toString(), "fixFenceConnections", true, "Fix fence connections with other types of fence").getBoolean();
         fixFireSpread = config.get(Category.FIXES.toString(), "fixFireSpread", true, "Fix vanilla fire spread sometimes cause NPE on thermos").getBoolean();
         fixFontRendererLinewrapRecursion = config.get(Category.FIXES.toString(), "fixFontRendererLinewrapRecursion", true, "Replace recursion with iteration in FontRenderer line wrapping code").getBoolean();
+        fixForgeOpenGuiHandlerWindowId = config.get(Category.FIXES.toString(), "fixForgeOpenGuiHandlerWindowId", true, "Fix windowId being set on openContainer even if openGui failed").getBoolean();
         fixFriendlyCreatureSounds = config.get(Category.FIXES.toString(), "fixFriendlyCreatureSounds", true, "Fix vanilla issue where player sounds register as animal sounds").getBoolean();
         fixGetBlockLightValue = config.get(Category.FIXES.toString(), "fixGetBlockLightValue", true, "Fix vanilla light calculation sometimes cause NPE on thermos").getBoolean();
         fixGlStateBugs = config.get(Category.FIXES.toString(), "fixGlStateBugs", true, "Fix vanilla GL state bugs causing lighting glitches in various perspectives (MC-10135).").getBoolean();
