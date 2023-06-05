@@ -21,7 +21,7 @@ import thaumcraft.common.entities.golems.Marker;
 @Mixin(EntityGolemBase.class)
 public class MixinEntityGolemBase extends EntityGolem {
 
-    @Shadow
+    @Shadow(remap = false)
     protected ArrayList<Marker> markers;
 
     public MixinEntityGolemBase(World p_i1686_1_) {
