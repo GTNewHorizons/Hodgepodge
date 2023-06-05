@@ -22,7 +22,6 @@ public class MixinFluidRegistry {
 
     private static Class<?> classContainerKey;
     private static Field fieldContainerKeyStack;
-    private static Field fieldContainerFluidMap;
     private static Field fieldFilledContainerMap;
 
     @Inject(
@@ -44,10 +43,6 @@ public class MixinFluidRegistry {
                 fieldContainerKeyStack = classContainerKey.getDeclaredField("stack");
                 fieldContainerKeyStack.setAccessible(true);
             }
-            if (fieldContainerFluidMap == null) {
-                fieldContainerFluidMap = FluidContainerRegistry.class.getDeclaredField("containerFluidMap");
-                fieldContainerFluidMap.setAccessible(true);
-            }
             if (fieldFilledContainerMap == null) {
                 fieldFilledContainerMap = FluidContainerRegistry.class.getDeclaredField("filledContainerMap");
                 fieldFilledContainerMap.setAccessible(true);
@@ -64,24 +59,16 @@ public class MixinFluidRegistry {
      */
     @SuppressWarnings("unchecked")
     private static void hodgepodge$reloadFluidContainerRegistry() {
-        Map<Object, FluidContainerData> containerFluidMap;
         Map<Object, FluidContainerData> filledContainerMap;
         try {
-            containerFluidMap = (Map<Object, FluidContainerData>) fieldContainerFluidMap.get(null);
             filledContainerMap = (Map<Object, FluidContainerData>) fieldFilledContainerMap.get(null);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        Map<Object, FluidContainerData> copiedContainerFluidMap = new HashMap<>(containerFluidMap);
         Map<Object, FluidContainerData> copiedFilledContainerMap = new HashMap<>(filledContainerMap);
-        containerFluidMap.clear();
         filledContainerMap.clear();
 
         try {
-            for (Map.Entry<Object, FluidContainerData> entry : copiedContainerFluidMap.entrySet()) {
-                Object containerKey = entry.getKey();
-                containerFluidMap.put(containerKey, entry.getValue());
-            }
             for (Map.Entry<Object, FluidContainerData> entry : copiedFilledContainerMap.entrySet()) {
                 Object containerKey = entry.getKey();
                 filledContainerMap.put(containerKey, entry.getValue());
