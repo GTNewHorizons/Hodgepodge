@@ -18,21 +18,17 @@ import com.google.common.collect.BiMap;
 @Mixin(FluidRegistry.class)
 public class MixinFluidRegistry {
 
+    /**
+     * When putting `ContainerKey` to map, hash is calculated using the fluid set as default at the time. However,
+     * default fluid might change after world load. In that case, certain data will never be accessible. Simply putting
+     * all elements back after `FluidDelegate`s are rebound will generate correct hash.
+     */
     @Inject(
             method = "loadFluidDefaults(Lcom/google/common/collect/BiMap;Ljava/util/Set;)V",
             at = @At(value = "TAIL"),
             remap = false)
     private static void hodgepodge$afterLoadFluidDefaults(BiMap<Fluid, Integer> localFluidIDs, Set<String> defaultNames,
             CallbackInfo ci) {
-        hodgepodge$reloadFluidContainerRegistry();
-    }
-
-    /**
-     * When putting `ContainerKey` to map, hash is calculated using the fluid set as default at the time. However,
-     * default fluid might change after world load. In that case, certain data will never be accessible. Simply putting
-     * all elements back after `FluidDelegate`s are rebound will generate correct hash.
-     */
-    private static void hodgepodge$reloadFluidContainerRegistry() {
         Map<Object, FluidContainerData> filledContainerMap = FluidContainerRegistryAccessor.getFilledContainerMap();
         Map<Object, FluidContainerData> copiedFilledContainerMap = new HashMap<>(filledContainerMap);
         filledContainerMap.clear();
