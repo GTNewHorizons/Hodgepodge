@@ -221,7 +221,7 @@ public enum Mixins {
             .setSide(Side.BOTH).setApplyIf(() -> Common.config.validatePacketEncodingBeforeSending)
             .addTargetedMod(TargetedMod.VANILLA)),
     FIX_FLUID_CONTAINER_REGISTRY_KEY(new Builder("Fix Forge fluid container registry key").setPhase(Phase.EARLY)
-            .addMixinClasses("forge.MixinFluidRegistry").setSide(Side.BOTH)
+            .addMixinClasses("forge.FluidContainerRegistryAccessor", "forge.MixinFluidRegistry").setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.fixFluidContainerRegistryKey).addTargetedMod(TargetedMod.VANILLA)),
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(
