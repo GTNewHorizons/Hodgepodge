@@ -220,6 +220,9 @@ public enum Mixins {
             .addMixinClasses("minecraft.packets.MixinDataWatcher", "minecraft.packets.MixinS3FPacketCustomPayload")
             .setSide(Side.BOTH).setApplyIf(() -> Common.config.validatePacketEncodingBeforeSending)
             .addTargetedMod(TargetedMod.VANILLA)),
+    FIX_FLUID_CONTAINER_REGISTRY_KEY(new Builder("Fix Forge fluid container registry key").setPhase(Phase.EARLY)
+            .addMixinClasses("forge.FluidContainerRegistryAccessor", "forge.MixinFluidRegistry").setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.fixFluidContainerRegistryKey).addTargetedMod(TargetedMod.VANILLA)),
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(
             new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).addMixinClasses("ic2.MixinIc2WaterKinetic")

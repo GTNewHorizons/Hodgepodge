@@ -41,6 +41,7 @@ public class LoadingConfig {
     public boolean fixExtraUtilitiesUnEnchanting;
     public boolean fixFenceConnections;
     public boolean fixFireSpread;
+    public boolean fixFluidContainerRegistryKey;
     public boolean fixForgeOpenGuiHandlerWindowId;
     public boolean fixFriendlyCreatureSounds;
     public boolean fixGetBlockLightValue;
@@ -207,6 +208,7 @@ public class LoadingConfig {
         fixExtraUtilitiesUnEnchanting = config.get(Category.FIXES.toString(), "fixExtraUtilitiesUnEnchanting", true, "Fix dupe bug with division sigil removing enchantment").getBoolean();
         fixFenceConnections = config.get(Category.FIXES.toString(), "fixFenceConnections", true, "Fix fence connections with other types of fence").getBoolean();
         fixFireSpread = config.get(Category.FIXES.toString(), "fixFireSpread", true, "Fix vanilla fire spread sometimes cause NPE on thermos").getBoolean();
+        fixFluidContainerRegistryKey = config.get(Category.FIXES.toString(), "fixFluidContainerRegistryKey", true, "Fix Forge fluid container registry key").getBoolean();
         fixFontRendererLinewrapRecursion = config.get(Category.FIXES.toString(), "fixFontRendererLinewrapRecursion", true, "Replace recursion with iteration in FontRenderer line wrapping code").getBoolean();
         fixForgeOpenGuiHandlerWindowId = config.get(Category.FIXES.toString(), "fixForgeOpenGuiHandlerWindowId", true, "Fix windowId being set on openContainer even if openGui failed").getBoolean();
         fixFriendlyCreatureSounds = config.get(Category.FIXES.toString(), "fixFriendlyCreatureSounds", true, "Fix vanilla issue where player sounds register as animal sounds").getBoolean();
