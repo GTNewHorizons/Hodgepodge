@@ -6,6 +6,7 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.Compat;
+import com.mitchej123.hodgepodge.util.PollutionHelper;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -99,11 +100,11 @@ public class PollutionTooltip {
                         event.toolTip.add(
                                 String.format(
                                         "Produces %d Pollution/Second when ignited",
-                                        Common.config.rocketPollutionAmount * tier / 100));
+                                        PollutionHelper.rocketIgnitionPollutionAmount(tier)));
                         event.toolTip.add(
                                 String.format(
                                         "Produces %d Pollution/Second when flying",
-                                        Common.config.rocketPollutionAmount * tier));
+                                        PollutionHelper.flyingRocketPollutionAmount(tier)));
                         break;
                     }
                 }
