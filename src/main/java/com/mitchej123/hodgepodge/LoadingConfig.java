@@ -33,6 +33,7 @@ public class LoadingConfig {
     public boolean enlargePotionArray;
     public boolean fixBibliocraftPackets;
     public boolean fixComponentsPoppingOff;
+    public boolean fixContainerPutStacksInSlots;
     public boolean fixDebugBoundingBox;
     public boolean fixDimensionChangeHearts;
     public boolean fixEatingStackedStew;
@@ -199,6 +200,7 @@ public class LoadingConfig {
         enableTileRendererProfiler = config.get(Category.TWEAKS.toString(), "enableTileRendererProfiler", true, "Shows renderer's impact on FPS in vanilla lagometer").getBoolean();
 
         changeSprintCategory = config.get(Category.TWEAKS.toString(), "changeSprintCategory", true, "Moves the sprint keybind to the movement category").getBoolean();
+        fixContainerPutStacksInSlots = config.get(Category.FIXES.toString(), "fixContainerPutStacksInSlots", true, "Prevents crash if server sends container with wrong itemStack size").getBoolean();
         fixComponentsPoppingOff = config.get(Category.TWEAKS.toString(), "fixComponentsPoppingOff", true, "Fix Project Red components popping off on unloaded chunks").getBoolean();
         fixDebugBoundingBox = config.get(Category.FIXES.toString(), "fixDebugBoundingBox", true, "Fixes the debug hitbox of the player beeing offset").getBoolean();
         fixDimensionChangeHearts = config.get(Category.FIXES.toString(), "fixDimensionChangeHearts", true, "Fix losing bonus hearts on dimension change").getBoolean();

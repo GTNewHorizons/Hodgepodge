@@ -23,6 +23,9 @@ public enum Mixins {
             .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinEnchantment_FixRomanNumerals").setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.fixEnchantmentNumerals || Common.config.arabicNumbersForEnchantsPotions)
             .addTargetedMod(TargetedMod.VANILLA)),
+    FIX_CONTAINER_PUT_STACKS_IN_SLOTS(new Builder("Prevents crash if server sends container with wrong itemStack size")
+            .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinContainer").setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.fixContainerPutStacksInSlots).addTargetedMod(TargetedMod.VANILLA)),
     FIX_INVENTORY_POTION_EFFECT_NUMERALS(
             new Builder("Fix potion effects level not displaying properly above a certain value").setPhase(Phase.EARLY)
                     .addMixinClasses(
