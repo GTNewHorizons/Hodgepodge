@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.util.PollutionHelper;
 
 import micdoodle8.mods.galacticraft.api.entity.IRocketType;
@@ -29,14 +28,12 @@ public abstract class MixinGalacticraftRocketPollution extends EntityAutoRocket 
         if (this.worldObj.isRemote || !(launchPhase == EnumLaunchPhase.LAUNCHED.ordinal()
                 || launchPhase == EnumLaunchPhase.IGNITED.ordinal()))
             return;
-        int pollutionAmount = Common.config.rocketPollutionAmount;
 
-        // Note: Linear instead of growing by powers of 2
+        int pollutionAmount = 0;
         if (launchPhase == EnumLaunchPhase.LAUNCHED.ordinal())
-            pollutionAmount = (pollutionAmount * this.getRocketTier());
+            pollutionAmount = PollutionHelper.flyingRocketPollutionAmount(this.getRocketTier());
         else if (launchPhase == EnumLaunchPhase.IGNITED.ordinal())
-            pollutionAmount = (pollutionAmount * (this.getRocketTier())) / 100;
-        else pollutionAmount = 0;
+            pollutionAmount = PollutionHelper.rocketIgnitionPollutionAmount(this.getRocketTier());
 
         PollutionHelper.addPollution(worldObj.getChunkFromBlockCoords((int) posX, (int) posZ), pollutionAmount);
     }
