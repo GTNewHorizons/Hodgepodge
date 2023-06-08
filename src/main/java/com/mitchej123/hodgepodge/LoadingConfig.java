@@ -33,6 +33,7 @@ public class LoadingConfig {
     public boolean enlargePotionArray;
     public boolean fixBibliocraftPackets;
     public boolean fixComponentsPoppingOff;
+    public boolean fixContainerPutStacksInSlots;
     public boolean fixDebugBoundingBox;
     public boolean fixDimensionChangeHearts;
     public boolean fixEatingStackedStew;
@@ -65,6 +66,7 @@ public class LoadingConfig {
     public boolean fixJourneymapKeybinds;
     public boolean fixJourneymapJumpyScrolling;
     public boolean fixJourneymapFilePath;
+    public boolean fixNetHandlerPlayClientHandleSetSlot;
     public boolean fixNetherLeavesFaceRendering;
     public boolean fixNorthWestBias;
     public boolean fixOptifineChunkLoadingCrash;
@@ -199,6 +201,7 @@ public class LoadingConfig {
         enableTileRendererProfiler = config.get(Category.TWEAKS.toString(), "enableTileRendererProfiler", true, "Shows renderer's impact on FPS in vanilla lagometer").getBoolean();
 
         changeSprintCategory = config.get(Category.TWEAKS.toString(), "changeSprintCategory", true, "Moves the sprint keybind to the movement category").getBoolean();
+        fixContainerPutStacksInSlots = config.get(Category.FIXES.toString(), "fixContainerPutStacksInSlots", true, "Prevents crash if server sends container with wrong itemStack size").getBoolean();
         fixComponentsPoppingOff = config.get(Category.TWEAKS.toString(), "fixComponentsPoppingOff", true, "Fix Project Red components popping off on unloaded chunks").getBoolean();
         fixDebugBoundingBox = config.get(Category.FIXES.toString(), "fixDebugBoundingBox", true, "Fixes the debug hitbox of the player beeing offset").getBoolean();
         fixDimensionChangeHearts = config.get(Category.FIXES.toString(), "fixDimensionChangeHearts", true, "Fix losing bonus hearts on dimension change").getBoolean();
@@ -236,6 +239,7 @@ public class LoadingConfig {
         fixJourneymapKeybinds = config.get(Category.FIXES.toString(), "fixJourneymapKeybinds", true, "Prevent unbinded keybinds from triggering when pressing certain keys").getBoolean();
         fixJourneymapJumpyScrolling = config.get(Category.FIXES.toString(), "fixJourneymapJumpyScrolling", true, "Fix jumpy scrolling in the waypoint manager screen").getBoolean();
         fixJourneymapFilePath = config.get(Category.FIXES.toString(), "fixJourneymapFilePath", true, "Prevents journeymap from using illegal character in file paths").getBoolean();
+        fixNetHandlerPlayClientHandleSetSlot = config.get(Category.FIXES.toString(), "fixNetHandlerPlayClientHandleSetSlot", true, "Prevents crash if server sends itemStack with index larger than client's container").getBoolean();
         fixNetherLeavesFaceRendering = config.get(Category.FIXES.toString(), "fixNetherLeavesFaceRendering", true, "If fancy graphics are enabled, Nether Leaves render sides with other Nether Leaves adjacent too").getBoolean();
         fixNorthWestBias = config.get(Category.FIXES.toString(), "fixNorthWestBias", true, "Fix northwest bias on RandomPositionGenerator").getBoolean();
         fixOptifineChunkLoadingCrash = config.get(Category.FIXES.toString(), "fixOptifineChunkLoadingCrash", true, "Forces the chunk loading option from optifine to default since other values can crash the game").getBoolean();
