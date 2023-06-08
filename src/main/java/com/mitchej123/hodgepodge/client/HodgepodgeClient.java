@@ -25,6 +25,12 @@ public class HodgepodgeClient {
     public static final ManagedEnum<AnimationMode> animationsMode = new ManagedEnum<>(AnimationMode.VISIBLE_ONLY);
     public static final ManagedEnum<RenderDebugMode> renderDebugMode = new ManagedEnum<>(RenderDebugMode.REDUCED);
 
+    public static void preInit() {
+        if (Compat.isGT5Present()) {
+            MinecraftForge.EVENT_BUS.register(PollutionTooltip.INSTANCE);
+        }
+    }
+
     public static void postInit() {
         colorGrass = References.gt_PollutionRenderer.getMethod("colorGrass").resolve();
         colorLiquid = References.gt_PollutionRenderer.getMethod("colorLiquid").resolve();

@@ -33,6 +33,10 @@ public class Hodgepodge {
     public void preinit(FMLPreInitializationEvent event) {
         Compat.init(event.getSide());
         MinecraftForge.EVENT_BUS.register(EVENT_HANDLER);
+
+        if (event.getSide() == Side.CLIENT) {
+            HodgepodgeClient.preInit();
+        }
     }
 
     @EventHandler
