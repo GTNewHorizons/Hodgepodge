@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.mixins;
 
 public enum TargetedMod {
 
+    ARCHAICFIX("ArchaicFix", "org.embeddedt.archaicfix.ArchaicCore", "archaicfix"),
     AUTOMAGY("Automagy", null, "Automagy"),
     BAUBLES("Baubles", null, "Baubles"),
     BIBLIOCRAFT("Bibliocraft", null, "BiblioCraft"),

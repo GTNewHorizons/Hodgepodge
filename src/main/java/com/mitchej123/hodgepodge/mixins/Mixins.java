@@ -51,7 +51,8 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.fixHasteArmSwing).addTargetedMod(TargetedMod.VANILLA)),
     OPTIMIZE_WORLD_UPDATE_LIGHT(new Builder("Optimize world updateLightByType method").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinWorld_FixLightUpdateLag").setSide(Side.BOTH)
-            .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> Common.config.optimizeWorldUpdateLight)),
+            .addExcludedMod(TargetedMod.ARCHAICFIX).addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> Common.config.optimizeWorldUpdateLight)),
     FIX_FRIENDLY_CREATURE_SOUNDS(new Builder("Fix Friendly Creature Sounds").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinSoundHandler").setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> Common.config.fixFriendlyCreatureSounds)),
