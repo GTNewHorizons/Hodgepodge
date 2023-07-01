@@ -36,7 +36,7 @@ public abstract class MixinFurnaceRecipes {
     @Overwrite
     public void func_151394_a /* addSmeltingRecipe */(ItemStack input, ItemStack stack, float experience) {
         if (getSmeltingResult(input) != null) {
-            Common.log.info(
+            Common.log.debug(
                     "Overwriting smelting recipe for input: {} and output {} with {}",
                     input,
                     getSmeltingResult(input),
