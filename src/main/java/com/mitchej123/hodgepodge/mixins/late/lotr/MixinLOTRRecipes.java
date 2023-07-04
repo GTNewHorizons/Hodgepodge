@@ -23,7 +23,7 @@ public class MixinLOTRRecipes {
     @Overwrite(remap = false)
     private static void addSmeltingXPForItem(Item item, float xp) {
         try {
-            //Get experienceList
+            // Get experienceList
             Map<ItemStack, Float> map = ObfuscationReflectionHelper
                     .getPrivateValue(FurnaceRecipes.class, FurnaceRecipes.smelting(), 2);
             map.put(new ItemStack(item, 1, 32767), xp);
