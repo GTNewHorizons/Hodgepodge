@@ -20,6 +20,7 @@ public enum TargetedMod {
     HUNGER_OVERHAUL("HungerOverhaul", null, "HungerOverhaul"),
     IC2("IC2", "ic2.core.coremod.IC2core", "IC2"),
     JOURNEYMAP("JourneyMap", null, "journeymap"),
+    LOTR("The Lord of the rings mod", "lotr.common.coremod.LOTRLoadingPlugin", "lotr"),
     LWJGL3IFY("lwjgl3ify", "me.eigenraven.lwjgl3ify.core.Lwjgl3ifyCoremod", "lwjgl3ify"),
     MINECHEM("Minechem", null, "minechem"),
     MRTJPCORE("MrTJPCore", null, "MrTJPCoreMod"),

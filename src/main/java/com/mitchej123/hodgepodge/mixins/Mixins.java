@@ -356,6 +356,11 @@ public enum Mixins {
     FIX_FURNACE_ITERATION(new Builder("Speedup Furnaces").addMixinClasses("projecte.MixinObjHandler")
             .setApplyIf(() -> Common.config.speedupVanillaFurnace).addTargetedMod(TargetedMod.PROJECTE)),
 
+    // LOTR
+    FIX_LOTR_FURNACE_ERROR(new Builder("Patches lotr to work with the vanilla furnace speedup")
+            .addMixinClasses("lotr.MixinLOTRRecipes").setApplyIf(() -> Common.config.speedupVanillaFurnace)
+            .addTargetedMod(TargetedMod.VANILLA).addTargetedMod(TargetedMod.GTNHLIB).addTargetedMod(TargetedMod.LOTR)),
+
     // Journeymap
     FIX_JOURNEYMAP_KEYBINDS(
             new Builder("Fix Journeymap Keybinds").setSide(Side.CLIENT).addMixinClasses("journeymap.MixinConstants")
