@@ -361,6 +361,13 @@ public enum Mixins {
             .addMixinClasses("lotr.MixinLOTRRecipes").setApplyIf(() -> Common.config.speedupVanillaFurnace)
             .addTargetedMod(TargetedMod.VANILLA).addTargetedMod(TargetedMod.GTNHLIB).addTargetedMod(TargetedMod.LOTR)),
 
+    FIX_LOTR_JAVA12(new Builder("Fix lotr java 12+ compat")
+            .addMixinClasses(
+                    "lotr.MixinLOTRLogReflection",
+                    "lotr.MixinRedirectHuornAI",
+                    "lotr.MixinRemoveUnlockFinalField")
+            .setApplyIf(() -> Common.config.java12LotrCompat).addTargetedMod(TargetedMod.LOTR)),
+
     // Journeymap
     FIX_JOURNEYMAP_KEYBINDS(
             new Builder("Fix Journeymap Keybinds").setSide(Side.CLIENT).addMixinClasses("journeymap.MixinConstants")
