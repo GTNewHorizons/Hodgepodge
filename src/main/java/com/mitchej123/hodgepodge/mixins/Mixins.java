@@ -100,7 +100,7 @@ public enum Mixins {
             new Builder("Fix forge URL hooks").setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinForgeHooks")
                     .setApplyIf(() -> Common.config.fixUrlDetection).addTargetedMod(TargetedMod.VANILLA)),
     FORGE_UPDATE_CHECK_FIX(new Builder("Fix the forge update checker").setPhase(Phase.EARLY)
-            .addMixinClasses("minecraft.MixinForgeVersion_FixUpdateCheck")
+            .addMixinClasses("forge.MixinForgeVersion_FixUpdateCheck")
             .setApplyIf(() -> Common.config.fixForgeUpdateChecker).addTargetedMod(TargetedMod.VANILLA)),
     NORTHWEST_BIAS_FIX(new Builder("Fix Northwest Bias").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinRandomPositionGenerator").setApplyIf(() -> Common.config.fixNorthWestBias)
