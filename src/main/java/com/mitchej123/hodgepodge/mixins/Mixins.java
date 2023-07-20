@@ -274,6 +274,16 @@ public enum Mixins {
     IC2_HOVER_MODE_FIX(
             new Builder("IC2 Hover Mode Fix").setPhase(Phase.LATE).addMixinClasses("ic2.MixinIc2QuantumSuitHoverMode")
                     .setApplyIf(() -> Common.config.fixIc2HoverMode).addTargetedMod(TargetedMod.IC2)),
+    IC2_ARMOR_LAG_FIX(new Builder("IC2 Armor Lag Fix").setPhase(Phase.LATE)
+            .addMixinClasses(
+                    "ic2.MixinIC2ArmorHazmat",
+                    "ic2.MixinIC2ArmorJetpack",
+                    "ic2.MixinIC2ArmorNanoSuit",
+                    "ic2.MixinIC2ArmorNightvisionGoggles",
+                    "ic2.MixinIC2ArmorQuantumSuit",
+                    "ic2.MixinIC2ArmorSolarHelmet",
+                    "ic2.MixinIC2ArmorStaticBoots")
+            .setApplyIf(() -> Common.config.fixIc2ArmorLag).addTargetedMod(TargetedMod.IC2)),
 
     // Disable update checkers
     BIBLIOCRAFT_UPDATE_CHECK(new Builder("Yeet Bibliocraft Update Check").setPhase(Phase.LATE).setSide(Side.CLIENT)

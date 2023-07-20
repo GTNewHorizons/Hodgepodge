@@ -55,6 +55,7 @@ public class LoadingConfig {
     public boolean fixHugeChatKick;
     public boolean fixHungerOverhaul;
     public boolean fixHungerOverhaulRestore0Hunger;
+    public boolean fixIc2ArmorLag;
     public boolean fixIc2DirectInventoryAccess;
     public boolean fixIc2Hazmat;
     public boolean fixIc2HoverMode;
@@ -231,6 +232,7 @@ public class LoadingConfig {
         fixHugeChatKick = config.get(Category.FIXES.toString(), "fixHugeChatKick", true, "Fix oversized chat message kicking player.").getBoolean();
         fixHungerOverhaul = config.get(Category.FIXES.toString(), "fixHungerOverhaul", true, "Fix hunger overhaul low stat effects").getBoolean();
         fixHungerOverhaulRestore0Hunger = config.get(Category.FIXES.toString(), "fixHungerOverhaulRestore0Hunger", true, "Fix some items restore 0 hunger").getBoolean();
+        fixIc2ArmorLag = config.get(Category.FIXES.toString(), "fixIc2ArmorLag", true, "Fix lag caused by IC2 armor tick").getBoolean();
         fixIc2DirectInventoryAccess = config.get(Category.FIXES.toString(), "fixIc2DirectInventoryAccess", true, "Fix IC2's direct inventory access").getBoolean();
         fixIc2Hazmat = config.get(Category.FIXES.toString(), "fixIc2Hazmat", true, "Fix IC2 armors to avoid giving poison").getBoolean();
         fixIc2HoverMode = config.get(Category.FIXES.toString(), "fixIc2HoverMode", true, "Fix IC2's armor hover mode").getBoolean();
