@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
+@SuppressWarnings("unused")
 @Mixin(FontRenderer.class)
 public abstract class MixinFontRenderer {
 
@@ -40,10 +41,9 @@ public abstract class MixinFontRenderer {
                 break;
             }
             output.append('\n');
-            output.append(getFormatFromString(line));
             final char nextChar = str.charAt(lineWidth);
             final boolean nextIsBlank = nextChar == ' ' || nextChar == '\n';
-            str = StringUtils.substring(str, lineWidth + (nextIsBlank ? 1 : 0));
+            str = getFormatFromString(line) + StringUtils.substring(str, lineWidth + (nextIsBlank ? 1 : 0));
         }
         return output.toString();
     }
