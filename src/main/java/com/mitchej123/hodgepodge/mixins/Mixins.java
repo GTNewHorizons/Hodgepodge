@@ -448,6 +448,9 @@ public enum Mixins {
     BIBLIOCRAFT_PACKET_FIX(new Builder("Packet Fix").addMixinClasses("bibliocraft.MixinBibliocraftPatchPacketExploits")
             .setSide((Side.BOTH)).setApplyIf(() -> Common.config.fixBibliocraftPackets)
             .addTargetedMod(TargetedMod.BIBLIOCRAFT)),
+    BIBLIOCRAFT_PATH_SANITIZATION_FIX(new Builder("Path sanitization fix")
+            .addMixinClasses("bibliocraft.MixinPathSanitization").setSide((Side.BOTH))
+            .setApplyIf(() -> Common.config.fixBibliocraftPackets).addTargetedMod(TargetedMod.BIBLIOCRAFT)),
     ZTONES_PACKET_FIX(new Builder("Packet Fix").addMixinClasses("ztones.MixinZtonesPatchPacketExploits")
             .setSide((Side.BOTH)).setApplyIf(() -> Common.config.fixZTonesPackets).addTargetedMod(TargetedMod.ZTONES)),
 
