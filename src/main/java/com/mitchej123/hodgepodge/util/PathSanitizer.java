@@ -12,7 +12,7 @@ public final class PathSanitizer {
 
     // On Linux it's just /, macOS forbids / and :
     // On Windows it's <>:"/\|?*
-    private static final Pattern ILLEGAL_FILE_NAME_CHARS = Pattern.compile("[/\\\\<>:\\\"|?*]");
+    private static final Pattern ILLEGAL_FILE_NAME_CHARS = Pattern.compile("[/\\\\<>:\"|?*]");
 
     /**
      * Replaces all illegal characters (including directory separators) for a file name from input with dashes.
