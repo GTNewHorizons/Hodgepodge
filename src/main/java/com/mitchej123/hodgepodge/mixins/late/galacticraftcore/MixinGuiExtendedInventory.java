@@ -1,10 +1,10 @@
 package com.mitchej123.hodgepodge.mixins.late.galacticraftcore;
 
-import micdoodle8.mods.galacticraft.core.client.gui.container.GuiExtendedInventory;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
+
+import micdoodle8.mods.galacticraft.core.client.gui.container.GuiExtendedInventory;
 
 @Mixin(value = GuiExtendedInventory.class)
 public class MixinGuiExtendedInventory {

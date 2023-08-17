@@ -9,12 +9,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import squeek.applecore.api.food.FoodValues;
-
 import com.pam.harvestcraft.ItemRegistry;
 
 import iguanaman.hungeroverhaul.food.FoodModifier;
 import iguanaman.hungeroverhaul.module.ModuleHarvestCraft;
+import squeek.applecore.api.food.FoodValues;
 
 @Mixin(ModuleHarvestCraft.class)
 public class MixinHungerOverhaulModuleHarvestCraft {

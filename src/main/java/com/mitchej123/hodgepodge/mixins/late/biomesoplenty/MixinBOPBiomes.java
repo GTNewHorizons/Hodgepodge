@@ -7,13 +7,12 @@ import net.minecraft.world.biome.BiomeGenBase;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
+import com.gtnewhorizon.gtnhlib.reflect.Fields;
+
 import biomesoplenty.api.biome.BOPOverriddenBiome;
 import biomesoplenty.common.configuration.BOPConfigurationBiomeGen;
 import biomesoplenty.common.core.BOPBiomes;
 import biomesoplenty.common.world.BOPBiomeManager;
-
-import com.gtnewhorizon.gtnhlib.reflect.Fields;
-
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 

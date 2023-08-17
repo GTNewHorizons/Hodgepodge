@@ -4,11 +4,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+import com.mitchej123.hodgepodge.util.AspectNameSorter;
+
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.client.gui.GuiFocalManipulator;
-
-import com.mitchej123.hodgepodge.util.AspectNameSorter;
 
 @Mixin(GuiFocalManipulator.class)
 public class MixinGuiFocalManipulator {

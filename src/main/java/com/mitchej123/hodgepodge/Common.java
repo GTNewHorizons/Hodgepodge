@@ -6,10 +6,13 @@ import net.minecraft.launchwrapper.Launch;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 
 public class Common {
 
     public static final Logger log = LogManager.getLogger("Hodgepodge");
+    public static final Marker securityMarker = MarkerManager.getMarker("SuspiciousPackets");
     public static LoadingConfig config;
     public static boolean thermosTainted;
     public static XSTR RNG = new XSTR();

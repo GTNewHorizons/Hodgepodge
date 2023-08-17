@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import com.mitchej123.hodgepodge.Common;
+
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 
 public enum Mixins {
@@ -22,6 +23,19 @@ public enum Mixins {
             .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinEnchantment_FixRomanNumerals").setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.fixEnchantmentNumerals || Common.config.arabicNumbersForEnchantsPotions)
             .addTargetedMod(TargetedMod.VANILLA)),
+    FIX_CONTAINER_PUT_STACKS_IN_SLOTS(new Builder("Prevents crash if server sends container with wrong itemStack size")
+            .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinContainer").setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.fixContainerPutStacksInSlots).addTargetedMod(TargetedMod.VANILLA)),
+    FIX_NETHANDLERPLAYCLIENT_HANDLE_SET_SLOT(
+            new Builder("Prevents crash if server sends itemStack with index larger than client's container")
+                    .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinNetHandlerPlayClient_FixHandleSetSlot")
+                    .setSide(Side.CLIENT).setApplyIf(() -> Common.config.fixNetHandlerPlayClientHandleSetSlot)
+                    .addTargetedMod(TargetedMod.VANILLA)),
+    FIX_NETHANDLERLOGINSERVER_OFFLINEMODE(
+            new Builder("Allows the server to assign the logged in UUID to the same username when online_mode is false")
+                    .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinNetHandlerLoginServer_OfflineMode")
+                    .setSide(Side.SERVER).setApplyIf(() -> true) /* no config option for this */
+                    .addTargetedMod(TargetedMod.VANILLA)),
     FIX_INVENTORY_POTION_EFFECT_NUMERALS(
             new Builder("Fix potion effects level not displaying properly above a certain value").setPhase(Phase.EARLY)
                     .addMixinClasses(
@@ -37,7 +51,8 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.fixHasteArmSwing).addTargetedMod(TargetedMod.VANILLA)),
     OPTIMIZE_WORLD_UPDATE_LIGHT(new Builder("Optimize world updateLightByType method").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinWorld_FixLightUpdateLag").setSide(Side.BOTH)
-            .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> Common.config.optimizeWorldUpdateLight)),
+            .addExcludedMod(TargetedMod.ARCHAICFIX).addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> Common.config.optimizeWorldUpdateLight)),
     FIX_FRIENDLY_CREATURE_SOUNDS(new Builder("Fix Friendly Creature Sounds").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinSoundHandler").setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> Common.config.fixFriendlyCreatureSounds)),
@@ -84,6 +99,9 @@ public enum Mixins {
     FORGE_HOOKS_URL_FIX(
             new Builder("Fix forge URL hooks").setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinForgeHooks")
                     .setApplyIf(() -> Common.config.fixUrlDetection).addTargetedMod(TargetedMod.VANILLA)),
+    FORGE_UPDATE_CHECK_FIX(new Builder("Fix the forge update checker").setPhase(Phase.EARLY)
+            .addMixinClasses("forge.MixinForgeVersion_FixUpdateCheck")
+            .setApplyIf(() -> Common.config.fixForgeUpdateChecker).addTargetedMod(TargetedMod.VANILLA)),
     NORTHWEST_BIAS_FIX(new Builder("Fix Northwest Bias").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinRandomPositionGenerator").setApplyIf(() -> Common.config.fixNorthWestBias)
             .addTargetedMod(TargetedMod.VANILLA)),
@@ -194,6 +212,9 @@ public enum Mixins {
     CROSSHAIR_THIRDPERSON(new Builder("Crosshairs Thirdperson").setPhase(Phase.EARLY)
             .addMixinClasses("forge.MixinGuiIngameForge").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.hideCrosshairInThirdPerson).addTargetedMod(TargetedMod.VANILLA)),
+    FIX_OPENGUIHANDLER_WINDOWID(new Builder("Fix OpenGuiHandler").setPhase(Phase.EARLY)
+            .addMixinClasses("forge.MixinOpenGuiHandler").setApplyIf(() -> Common.config.fixForgeOpenGuiHandlerWindowId)
+            .addTargetedMod(TargetedMod.VANILLA)),
     FIX_KEYBIND_CONFLICTS(new Builder("Trigger all conflicting keybinds").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinKeyBinding").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.triggerAllConflictingKeybindings).addTargetedMod(TargetedMod.VANILLA)),
@@ -211,6 +232,17 @@ public enum Mixins {
                     .addMixinClasses("minecraft.MixinFontRenderer").addTargetedMod(TargetedMod.VANILLA)
                     .setApplyIf(() -> Common.config.fixFontRendererLinewrapRecursion).setPhase(Phase.EARLY)
                     .setSide(Side.CLIENT)),
+    BED_MESSAGE_ABOVE_HOTBAR(new Builder("Bed Message Above Hotbar").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinBlockBed").setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.bedMessageAboveHotbar).addTargetedMod(TargetedMod.VANILLA)),
+
+    VALIDATE_PACKET_ENCODING_BEFORE_SENDING(new Builder("Validate packet encoding before sending").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.packets.MixinDataWatcher", "minecraft.packets.MixinS3FPacketCustomPayload")
+            .setSide(Side.BOTH).setApplyIf(() -> Common.config.validatePacketEncodingBeforeSending)
+            .addTargetedMod(TargetedMod.VANILLA)),
+    FIX_FLUID_CONTAINER_REGISTRY_KEY(new Builder("Fix Forge fluid container registry key").setPhase(Phase.EARLY)
+            .addMixinClasses("forge.FluidContainerRegistryAccessor", "forge.MixinFluidRegistry").setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.fixFluidContainerRegistryKey).addTargetedMod(TargetedMod.VANILLA)),
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(
             new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).addMixinClasses("ic2.MixinIc2WaterKinetic")
@@ -242,6 +274,19 @@ public enum Mixins {
     IC2_FLUID_RENDER_FIX(new Builder("IC2 Fluid Render Fix").setPhase(Phase.EARLY)
             .addMixinClasses("ic2.textures.MixinRenderLiquidCell").setApplyIf(() -> Common.config.speedupAnimations)
             .addTargetedMod(TargetedMod.IC2)),
+    IC2_HOVER_MODE_FIX(
+            new Builder("IC2 Hover Mode Fix").setPhase(Phase.LATE).addMixinClasses("ic2.MixinIc2QuantumSuitHoverMode")
+                    .setApplyIf(() -> Common.config.fixIc2HoverMode).addTargetedMod(TargetedMod.IC2)),
+    IC2_ARMOR_LAG_FIX(new Builder("IC2 Armor Lag Fix").setPhase(Phase.LATE)
+            .addMixinClasses(
+                    "ic2.MixinIC2ArmorHazmat",
+                    "ic2.MixinIC2ArmorJetpack",
+                    "ic2.MixinIC2ArmorNanoSuit",
+                    "ic2.MixinIC2ArmorNightvisionGoggles",
+                    "ic2.MixinIC2ArmorQuantumSuit",
+                    "ic2.MixinIC2ArmorSolarHelmet",
+                    "ic2.MixinIC2ArmorStaticBoots")
+            .setApplyIf(() -> Common.config.fixIc2ArmorLag).addTargetedMod(TargetedMod.IC2)),
 
     // Disable update checkers
     BIBLIOCRAFT_UPDATE_CHECK(new Builder("Yeet Bibliocraft Update Check").setPhase(Phase.LATE).setSide(Side.CLIENT)
@@ -285,6 +330,9 @@ public enum Mixins {
                     "thaumcraft.MixinItem_SortAspectsByName")
             .setSide(Side.CLIENT).setApplyIf(() -> Common.config.fixThaumcraftAspectSorting)
             .addTargetedMod(TargetedMod.THAUMCRAFT)),
+    FIX_GOLEM_MARKER_LOADING(new Builder("Fix golem marker loading failure when dimensionId larger than MAX_BYTE")
+            .addMixinClasses("thaumcraft.MixinEntityGolemBase", "thaumcraft.MixinItemGolemBell")
+            .setApplyIf(() -> Common.config.fixThaumcraftGolemMarkerLoading).addTargetedMod(TargetedMod.THAUMCRAFT)),
 
     // BOP
     DEDUPLICATE_FORESTRY_COMPAT_IN_BOP(
@@ -305,6 +353,9 @@ public enum Mixins {
             .addMixinClasses("immersiveengineering.MixinIEPotions")
             .setApplyIf(() -> Common.config.java12ImmersiveEngineeringCompat)
             .addTargetedMod(TargetedMod.IMMERSIVE_ENGINENEERING)),
+    JAVA12_MINE_CHEM(
+            new Builder("Minechem Java-12 safe potion array resizing").addMixinClasses("minechem.MixinPotionInjector")
+                    .setApplyIf(() -> Common.config.java12MineChemCompat).addTargetedMod(TargetedMod.MINECHEM)),
 
     // MrTJPCore (Project Red)
     FIX_HUD_LIGHTING_GLITCH(new Builder("HUD Lighting glitch").addMixinClasses("mrtjpcore.MixinFXEngine")
@@ -320,6 +371,18 @@ public enum Mixins {
     // ProjectE
     FIX_FURNACE_ITERATION(new Builder("Speedup Furnaces").addMixinClasses("projecte.MixinObjHandler")
             .setApplyIf(() -> Common.config.speedupVanillaFurnace).addTargetedMod(TargetedMod.PROJECTE)),
+
+    // LOTR
+    FIX_LOTR_FURNACE_ERROR(new Builder("Patches lotr to work with the vanilla furnace speedup")
+            .addMixinClasses("lotr.MixinLOTRRecipes").setApplyIf(() -> Common.config.speedupVanillaFurnace)
+            .addTargetedMod(TargetedMod.VANILLA).addTargetedMod(TargetedMod.GTNHLIB).addTargetedMod(TargetedMod.LOTR)),
+
+    FIX_LOTR_JAVA12(new Builder("Fix lotr java 12+ compat")
+            .addMixinClasses(
+                    "lotr.MixinLOTRLogReflection",
+                    "lotr.MixinRedirectHuornAI",
+                    "lotr.MixinRemoveUnlockFinalField")
+            .setApplyIf(() -> Common.config.java12LotrCompat).addTargetedMod(TargetedMod.LOTR)),
 
     // Journeymap
     FIX_JOURNEYMAP_KEYBINDS(
@@ -388,6 +451,9 @@ public enum Mixins {
     BIBLIOCRAFT_PACKET_FIX(new Builder("Packet Fix").addMixinClasses("bibliocraft.MixinBibliocraftPatchPacketExploits")
             .setSide((Side.BOTH)).setApplyIf(() -> Common.config.fixBibliocraftPackets)
             .addTargetedMod(TargetedMod.BIBLIOCRAFT)),
+    BIBLIOCRAFT_PATH_SANITIZATION_FIX(new Builder("Path sanitization fix")
+            .addMixinClasses("bibliocraft.MixinPathSanitization").setSide((Side.BOTH))
+            .setApplyIf(() -> Common.config.fixBibliocraftPackets).addTargetedMod(TargetedMod.BIBLIOCRAFT)),
     ZTONES_PACKET_FIX(new Builder("Packet Fix").addMixinClasses("ztones.MixinZtonesPatchPacketExploits")
             .setSide((Side.BOTH)).setApplyIf(() -> Common.config.fixZTonesPackets).addTargetedMod(TargetedMod.ZTONES)),
 

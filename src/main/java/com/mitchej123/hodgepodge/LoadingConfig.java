@@ -14,6 +14,7 @@ public class LoadingConfig {
     public boolean arabicNumbersForEnchantsPotions;
     public int chatLength;
     public int ic2SeedMaxStackSize;
+    public int atropineHighID;
     public int itemStacksPickedUpPerTick;
     public int particleLimit;
 
@@ -31,7 +32,9 @@ public class LoadingConfig {
     public boolean changeSprintCategory;
     public boolean enlargePotionArray;
     public boolean fixBibliocraftPackets;
+    public boolean fixBibliocraftPathSanitization;
     public boolean fixComponentsPoppingOff;
+    public boolean fixContainerPutStacksInSlots;
     public boolean fixDebugBoundingBox;
     public boolean fixDimensionChangeHearts;
     public boolean fixEatingStackedStew;
@@ -40,6 +43,8 @@ public class LoadingConfig {
     public boolean fixExtraUtilitiesUnEnchanting;
     public boolean fixFenceConnections;
     public boolean fixFireSpread;
+    public boolean fixFluidContainerRegistryKey;
+    public boolean fixForgeOpenGuiHandlerWindowId;
     public boolean fixFriendlyCreatureSounds;
     public boolean fixGetBlockLightValue;
     public boolean fixGlStateBugs;
@@ -51,8 +56,10 @@ public class LoadingConfig {
     public boolean fixHugeChatKick;
     public boolean fixHungerOverhaul;
     public boolean fixHungerOverhaulRestore0Hunger;
+    public boolean fixIc2ArmorLag;
     public boolean fixIc2DirectInventoryAccess;
     public boolean fixIc2Hazmat;
+    public boolean fixIc2HoverMode;
     public boolean fixIc2Nightvision;
     public boolean fixIc2ReactorDupe;
     public boolean fixIc2UnprotectedGetBlock;
@@ -61,6 +68,7 @@ public class LoadingConfig {
     public boolean fixJourneymapKeybinds;
     public boolean fixJourneymapJumpyScrolling;
     public boolean fixJourneymapFilePath;
+    public boolean fixNetHandlerPlayClientHandleSetSlot;
     public boolean fixNetherLeavesFaceRendering;
     public boolean fixNorthWestBias;
     public boolean fixOptifineChunkLoadingCrash;
@@ -73,8 +81,10 @@ public class LoadingConfig {
     public boolean fixResizableFullscreen;
     public boolean fixResourcePackOpening;
     public boolean fixThaumcraftAspectSorting;
+    public boolean fixThaumcraftGolemMarkerLoading;
     public boolean fixTimeCommandWithGC;
     public boolean fixUnfocusedFullscreen;
+    public boolean fixForgeUpdateChecker;
     public boolean fixUrlDetection;
     public boolean fixVanillaUnprotectedGetBlock;
     public boolean fixVillageUncheckedGetBlock;
@@ -89,6 +99,8 @@ public class LoadingConfig {
     public boolean installAnchorAlarm;
     public boolean java12BopCompat;
     public boolean java12ImmersiveEngineeringCompat;
+    public boolean java12LotrCompat;
+    public boolean java12MineChemCompat;
     public boolean logHugeChat;
     public boolean longerChat;
     public boolean makeBigFirsPlantable;
@@ -116,6 +128,9 @@ public class LoadingConfig {
     public boolean triggerAllConflictingKeybindings;
     public boolean unbindKeybindsByDefault;
     public int defaultLanPort;
+    public boolean bedMessageAboveHotbar;
+    public boolean validatePacketEncodingBeforeSending;
+    public boolean validatePacketEncodingBeforeSendingShouldCrash;
     public boolean chunkSaveCMEDebug;
 
     // render debug
@@ -178,6 +193,7 @@ public class LoadingConfig {
         addSystemInfo = config.get(Category.TWEAKS.toString(), "addSystemInfo", true, "Adds system info to the F3 overlay (Java version and vendor; GPU name; OpenGL version; CPU cores; OS name, version and architecture)").getBoolean();
         addToggleDebugMessage = config.get(Category.TWEAKS.toString(), "addToggleDebugMessage", true, "Add a debug message in the chat when toggling vanilla debug options").getBoolean();
         arabicNumbersForEnchantsPotions = config.get(Category.TWEAKS.toString(), "arabicNumbersForEnchantsPotions", false, "Uses arabic numbers for enchantment levels and potion amplifier levels instead of roman numbers").getBoolean();
+        bedMessageAboveHotbar = config.get(Category.TWEAKS.toString(), "bedMessageAboveHotbar", true, "Show \"cannot sleep\" messages above hotbar").getBoolean();
         chatLength = Math.max(100, Math.min(32767, config.get(Category.TWEAKS.toString(), "chatLength", 8191, "Amount of chat lines kept [100(Vanilla) - 32767]").getInt()));
         cofhWorldTransformer = config.get(Category.ASM.toString(), "cofhWorldTransformer", true, "Enable Glease's ASM patch to disable unused CoFH tileentity cache").getBoolean();
         deduplicateForestryCompatInBOP = config.get(Category.FIXES.toString(), "deduplicateForestryCompatInBOP", true, "Removes duplicate Fermenter and Squeezer recipes and flower registration").getBoolean();
@@ -190,6 +206,7 @@ public class LoadingConfig {
         enableTileRendererProfiler = config.get(Category.TWEAKS.toString(), "enableTileRendererProfiler", true, "Shows renderer's impact on FPS in vanilla lagometer").getBoolean();
 
         changeSprintCategory = config.get(Category.TWEAKS.toString(), "changeSprintCategory", true, "Moves the sprint keybind to the movement category").getBoolean();
+        fixContainerPutStacksInSlots = config.get(Category.FIXES.toString(), "fixContainerPutStacksInSlots", true, "Prevents crash if server sends container with wrong itemStack size").getBoolean();
         fixComponentsPoppingOff = config.get(Category.TWEAKS.toString(), "fixComponentsPoppingOff", true, "Fix Project Red components popping off on unloaded chunks").getBoolean();
         fixDebugBoundingBox = config.get(Category.FIXES.toString(), "fixDebugBoundingBox", true, "Fixes the debug hitbox of the player beeing offset").getBoolean();
         fixDimensionChangeHearts = config.get(Category.FIXES.toString(), "fixDimensionChangeHearts", true, "Fix losing bonus hearts on dimension change").getBoolean();
@@ -199,14 +216,18 @@ public class LoadingConfig {
         fixExtraUtilitiesUnEnchanting = config.get(Category.FIXES.toString(), "fixExtraUtilitiesUnEnchanting", true, "Fix dupe bug with division sigil removing enchantment").getBoolean();
         fixFenceConnections = config.get(Category.FIXES.toString(), "fixFenceConnections", true, "Fix fence connections with other types of fence").getBoolean();
         fixFireSpread = config.get(Category.FIXES.toString(), "fixFireSpread", true, "Fix vanilla fire spread sometimes cause NPE on thermos").getBoolean();
+        fixFluidContainerRegistryKey = config.get(Category.FIXES.toString(), "fixFluidContainerRegistryKey", true, "Fix Forge fluid container registry key").getBoolean();
         fixFontRendererLinewrapRecursion = config.get(Category.FIXES.toString(), "fixFontRendererLinewrapRecursion", true, "Replace recursion with iteration in FontRenderer line wrapping code").getBoolean();
+        fixForgeOpenGuiHandlerWindowId = config.get(Category.FIXES.toString(), "fixForgeOpenGuiHandlerWindowId", true, "Fix windowId being set on openContainer even if openGui failed").getBoolean();
+        fixForgeUpdateChecker = config.get(Category.FIXES.toString(), "fixForgeUpdateChecker", true, "Fix the forge update checker").getBoolean();
         fixFriendlyCreatureSounds = config.get(Category.FIXES.toString(), "fixFriendlyCreatureSounds", true, "Fix vanilla issue where player sounds register as animal sounds").getBoolean();
         fixGetBlockLightValue = config.get(Category.FIXES.toString(), "fixGetBlockLightValue", true, "Fix vanilla light calculation sometimes cause NPE on thermos").getBoolean();
         fixGlStateBugs = config.get(Category.FIXES.toString(), "fixGlStateBugs", true, "Fix vanilla GL state bugs causing lighting glitches in various perspectives (MC-10135).").getBoolean();
         fixGuiGameOver = config.get(Category.FIXES.toString(), "fixGuiGameOver", true, "Fix Game Over GUI buttons disabled if switching fullscreen").getBoolean();
         fixHasteArmSwing = config.get(Category.FIXES.toString(), "fixHasteArmSwing", true, "Fix arm not swinging when having too much haste").getBoolean();
         fixTimeCommandWithGC = config.get(Category.FIXES.toString(), "fixTimeCommandWithGC", true, "Fix time commands with GC").getBoolean();
-        fixBibliocraftPackets = config.get(Category.FIXES.toString(), "fixBibliocraftPackets", true, "Fix Biblocraft packet exploits").getBoolean();
+        fixBibliocraftPackets = config.get(Category.FIXES.toString(), "fixBibliocraftPackets", true, "Fix Bibliocraft packet exploits").getBoolean();
+        fixBibliocraftPathSanitization = config.get(Category.FIXES.toString(), "fixBibliocraftPathSanitization", true, "Fix Bibliocraft path sanitization").getBoolean();
         fixZTonesPackets = config.get(Category.FIXES.toString(), "fixZTonesPackets", true, "Fix ZTones packet exploits").getBoolean();
         fixHopperHitBox = config.get(Category.FIXES.toString(), "fixHopperHitBox", true, "Fix vanilla hopper hit box").getBoolean();
         fixHopperVoidingItems = config.get(Category.FIXES.toString(), "fixHopperVoidingItems", true, "Fix Drawer + Hopper voiding items").getBoolean();
@@ -214,8 +235,10 @@ public class LoadingConfig {
         fixHugeChatKick = config.get(Category.FIXES.toString(), "fixHugeChatKick", true, "Fix oversized chat message kicking player.").getBoolean();
         fixHungerOverhaul = config.get(Category.FIXES.toString(), "fixHungerOverhaul", true, "Fix hunger overhaul low stat effects").getBoolean();
         fixHungerOverhaulRestore0Hunger = config.get(Category.FIXES.toString(), "fixHungerOverhaulRestore0Hunger", true, "Fix some items restore 0 hunger").getBoolean();
+        fixIc2ArmorLag = config.get(Category.FIXES.toString(), "fixIc2ArmorLag", true, "Fix lag caused by IC2 armor tick").getBoolean();
         fixIc2DirectInventoryAccess = config.get(Category.FIXES.toString(), "fixIc2DirectInventoryAccess", true, "Fix IC2's direct inventory access").getBoolean();
         fixIc2Hazmat = config.get(Category.FIXES.toString(), "fixIc2Hazmat", true, "Fix IC2 armors to avoid giving poison").getBoolean();
+        fixIc2HoverMode = config.get(Category.FIXES.toString(), "fixIc2HoverMode", true, "Fix IC2's armor hover mode").getBoolean();
         fixIc2Nightvision = config.get(Category.FIXES.toString(), "fixIc2Nightvision", true, "Prevent IC2's nightvision from blinding you").getBoolean();
         fixIc2ReactorDupe = config.get(Category.FIXES.toString(), "fixIc2ReactorDupe", true, "Fix IC2's reactor dupe").getBoolean();
         fixIc2UnprotectedGetBlock = config.get(Category.FIXES.toString(), "fixIc2UnprotectedGetBlock", true, "Fixes various unchecked IC2 getBlock() methods").getBoolean();
@@ -224,6 +247,7 @@ public class LoadingConfig {
         fixJourneymapKeybinds = config.get(Category.FIXES.toString(), "fixJourneymapKeybinds", true, "Prevent unbinded keybinds from triggering when pressing certain keys").getBoolean();
         fixJourneymapJumpyScrolling = config.get(Category.FIXES.toString(), "fixJourneymapJumpyScrolling", true, "Fix jumpy scrolling in the waypoint manager screen").getBoolean();
         fixJourneymapFilePath = config.get(Category.FIXES.toString(), "fixJourneymapFilePath", true, "Prevents journeymap from using illegal character in file paths").getBoolean();
+        fixNetHandlerPlayClientHandleSetSlot = config.get(Category.FIXES.toString(), "fixNetHandlerPlayClientHandleSetSlot", true, "Prevents crash if server sends itemStack with index larger than client's container").getBoolean();
         fixNetherLeavesFaceRendering = config.get(Category.FIXES.toString(), "fixNetherLeavesFaceRendering", true, "If fancy graphics are enabled, Nether Leaves render sides with other Nether Leaves adjacent too").getBoolean();
         fixNorthWestBias = config.get(Category.FIXES.toString(), "fixNorthWestBias", true, "Fix northwest bias on RandomPositionGenerator").getBoolean();
         fixOptifineChunkLoadingCrash = config.get(Category.FIXES.toString(), "fixOptifineChunkLoadingCrash", true, "Forces the chunk loading option from optifine to default since other values can crash the game").getBoolean();
@@ -237,6 +261,7 @@ public class LoadingConfig {
         fixResizableFullscreen = config.get(Category.FIXES.toString(), "fixResizableFullscreen", true, "Fix game window becoming not resizable after toggling fullscrean in any way").getBoolean();
         fixResourcePackOpening = config.get(Category.FIXES.toString(), "fixResourcePackOpening", true, "Fix resource pack folder not opening on Windows if file path has a space").getBoolean();
         fixThaumcraftAspectSorting = config.get(Category.FIXES.toString(), "fixThaumcraftAspectSorting", true, "Fix Thaumcraft Aspects being sorted by tag instead of by name").getBoolean();
+        fixThaumcraftGolemMarkerLoading = config.get(Category.FIXES.toString(), "fixThaumcraftGolemMarkerLoading", true, "Fix golem's marker loading failure when dimensionId larger than MAX_BYTE").getBoolean();
         fixUnfocusedFullscreen = config.get(Category.FIXES.toString(), "fixUnfocusedFullscreen", true, "Fix exiting fullscreen when you tab out of the game").getBoolean();
         fixUrlDetection = config.get(Category.FIXES.toString(), "fixUrlDetection", true, "Fix URISyntaxException in forge.").getBoolean();
         fixVanillaUnprotectedGetBlock = config.get(Category.FIXES.toString(), "fixVanillaUnprotectedGetBlock", true, "Fixes various unchecked vanilla getBlock() methods").getBoolean();
@@ -244,16 +269,21 @@ public class LoadingConfig {
         fixWorldGetBlock = config.get(Category.FIXES.toString(), "fixWorldGetBlock", true, "Fix unprotected getBlock() in World").getBoolean();
         fixWorldServerLeakingUnloadedEntities = config.get(Category.FIXES.toString(), "fixWorldServerLeakingUnloadedEntities", true, "Fix WorldServer leaking entities when no players are present in a dimension").getBoolean();
         fixXaerosWorldMapScroll = config.get(Category.FIXES.toString(), "fixXaerosWorldMapScrolling", true, "Fix scrolling in the world map screen").getBoolean();
+        validatePacketEncodingBeforeSending = config.get(Category.FIXES.toString(), "validatePacketEncodingBeforeSending", true, "Validate vanilla packet encodings before sending in addition to on reception").getBoolean();
+        validatePacketEncodingBeforeSendingShouldCrash = config.get(Category.FIXES.toString(), "validatePacketEncodingBeforeSendingShouldCrash", false, "Should the extended packet validation error cause a crash (true) or just print out an error to the log (false)").getBoolean();
 
         hideCrosshairInThirdPerson = config.get(Category.TWEAKS.toString(), "hideCrosshairInThirdPerson", true, "Stops rendering the crosshair when you are playing in third person").getBoolean();
         hideIc2ReactorSlots = config.get(Category.TWEAKS.toString(), "hideIc2ReactorSlots", true, "Prevent IC2's reactor's coolant slots from being accessed by automations if not a fluid reactor").getBoolean();
         hidePotionParticlesFromSelf = config.get(Category.TWEAKS.toString(), "hidePotionParticlesFromSelf", true, "Stops rendering potion particles from yourself").getBoolean();
         ic2SeedMaxStackSize = config.get(Category.TWEAKS.toString(), "ic2SeedMaxStackSize", 64, "IC2 seed max stack size", 1, 64).getInt();
+        atropineHighID = config.get(Category.TWEAKS.toString(), "atropineHighID", 255, "Minechem Atropine High (Delirium) effect ID", 1, 255).getInt();
         increaseParticleLimit = config.get(Category.TWEAKS.toString(), "increaseParticleLimit", true, "Increase particle limit").getBoolean();
         installAnchorAlarm = config.get(Category.TWEAKS.toString(), "installAnchorAlarm", true, "Wake up passive & personal anchors on player login").getBoolean();
         itemStacksPickedUpPerTick = Math.max(1, config.get(Category.FIXES.toString(), "itemStacksPickedUpPerTick", 36, "Stacks picked up per tick").getInt());
         java12BopCompat = config.get(Category.FIXES.toString(), "java12BopCompat", true, "BiomesOPlenty Java 12 compatibility patches.").getBoolean();
         java12ImmersiveEngineeringCompat = config.get(Category.FIXES.toString(), "java12ImmersiveEngineeringCompat", true, "Immersive Engineering Java 12 compatibility patch").getBoolean();
+        java12LotrCompat = config.get(Category.FIXES.toString(), "java12LotrCompat", true, "Lotr Java 12 compatibility patch").getBoolean();
+        java12MineChemCompat = config.get(Category.FIXES.toString(), "java12MineChemCompat", true, "Minechem Java 12 compatibility patch").getBoolean();
         logHugeChat = config.get(Category.FIXES.toString(), "logHugeChat", true, "Log oversized chat message to console. WARNING: might create huge log files if this happens very often.").getBoolean();
         longerChat = config.get(Category.TWEAKS.toString(), "longerChat", true, "Makes the chat history longer instead of 100 lines").getBoolean();
         makeBigFirsPlantable = config.get(Category.TWEAKS.toString(), "makeBigFirsPlantable", true, "Allow 5 Fir Sapling planted together ('+' shape) to grow to a big fir tree").getBoolean();

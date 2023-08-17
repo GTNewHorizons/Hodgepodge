@@ -1,7 +1,5 @@
 package com.mitchej123.hodgepodge.mixins.late.railcraft;
 
-import mods.railcraft.common.carts.EntityTunnelBore;
-
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.world.World;
 
@@ -13,6 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.util.PollutionHelper;
+
+import mods.railcraft.common.carts.EntityTunnelBore;
 
 /*
  * Merged from ModMixins under the MIT License Copyright bartimaeusnek & GTNewHorizons

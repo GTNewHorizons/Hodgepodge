@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
+@SuppressWarnings("unused")
 @Mixin(FontRenderer.class)
 public abstract class MixinFontRenderer {
 
@@ -25,13 +26,14 @@ public abstract class MixinFontRenderer {
      * @author eigenraven
      */
     @Overwrite
-    String wrapFormattedStringToWidth(String str, int wrapWidth) {
+    public String wrapFormattedStringToWidth(String str, int wrapWidth) {
         // Always have at least one character per line
         final int firstLineWidth = Math.max(1, this.sizeStringToWidth(str, wrapWidth));
         if (str.length() <= firstLineWidth) {
             return str;
         }
         StringBuilder output = new StringBuilder(str.length() + str.length() / firstLineWidth);
+        StringBuilder formatting = new StringBuilder();
         for (;;) {
             final int lineWidth = Math.max(1, this.sizeStringToWidth(str, wrapWidth));
             final String line = StringUtils.substring(str, 0, lineWidth);
@@ -40,7 +42,11 @@ public abstract class MixinFontRenderer {
                 break;
             }
             output.append('\n');
-            output.append(getFormatFromString(line));
+            formatting.append(line);
+            String newFormat = getFormatFromString(formatting.toString());
+            formatting.setLength(0);
+            formatting.append(newFormat);
+            output.append(formatting);
             final char nextChar = str.charAt(lineWidth);
             final boolean nextIsBlank = nextChar == ' ' || nextChar == '\n';
             str = StringUtils.substring(str, lineWidth + (nextIsBlank ? 1 : 0));

@@ -4,11 +4,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+import com.mitchej123.hodgepodge.util.AspectNameSorter;
+
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.client.gui.GuiThaumatorium;
-
-import com.mitchej123.hodgepodge.util.AspectNameSorter;
 
 @Mixin(GuiThaumatorium.class)
 public class MixinGuiThaumatorium {
