@@ -201,6 +201,9 @@ public enum Mixins {
     OPTIMIZE_ASMDATATABLE_INDEX(
             new Builder("Optimize ASM DataTable Index").setPhase(Phase.EARLY).addMixinClasses("forge.MixinASMDataTable")
                     .setApplyIf(() -> Common.config.optimizeASMDataTable).addTargetedMod(TargetedMod.VANILLA)),
+    CHUNK_SAVE_CME_DEBUG(new Builder("Add debugging code to Chunk Save CME").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinNBTTagCompound").setApplyIf(() -> Common.config.chunkSaveCMEDebug)
+            .addTargetedMod(TargetedMod.VANILLA)),
     RENDER_DEBUG(new Builder("Render Debug").setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinRenderGlobal")
             .setSide(Side.CLIENT).setApplyIf(() -> Common.config.renderDebug).addTargetedMod(TargetedMod.VANILLA)),
     STATIC_LAN_PORT(new Builder("Static Lan Port").setPhase(Phase.EARLY)
