@@ -45,7 +45,7 @@ public class MixinRenderGlobal {
                     shift = At.Shift.AFTER,
                     by = 1))
     public void hodgepodge$prepareTESR(EntityLivingBase p_147589_1_, ICamera p_147589_2_, float p_147589_3_,
-                                       CallbackInfo ci) {
+            CallbackInfo ci) {
         ManagedEnum<RenderDebugMode> renderDebugMode = HodgepodgeClient.renderDebugMode;
         if (renderDebugMode.is(RenderDebugMode.OFF)) return;
 
