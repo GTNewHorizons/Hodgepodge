@@ -47,6 +47,8 @@ public class MixinRenderGlobal {
                     by = 1))
     public void hodgepodge$prepareTESR(EntityLivingBase p_147589_1_, ICamera p_147589_2_, float p_147589_3_,
             CallbackInfo ci) {
+        ManagedEnum<RenderDebugMode> renderDebugMode = HodgepodgeClient.renderDebugMode;
+        if (renderDebugMode.is(RenderDebugMode.OFF)) return;
         RenderDebugHelper.recordGLStates();
     }
 
@@ -64,32 +66,30 @@ public class MixinRenderGlobal {
 
         instance.renderTileEntity(j, k);
 
-        if (renderDebugMode.is(RenderDebugMode.OFF)) {
-            knownIssues.clear();
-            return;
-        }
+        if (!renderDebugMode.is(RenderDebugMode.OFF)) {
 
-        if (!knownIssues.contains(j) && !RenderDebugHelper.checkGLStates()) {
-            knownIssues.add(j);
-            Minecraft.getMinecraft().thePlayer.addChatMessage(
-                    new ChatComponentText(
-                            "TileEntity (" + j.getClass().getName()
-                                    + " at "
-                                    + j.xCoord
-                                    + ", "
-                                    + j.yCoord
-                                    + ", "
-                                    + j.zCoord
-                                    + ") is messing up render states!"));
-            RenderDebugHelper.log.error(
-                    "TileEntity {} at ({}, {}, {}) alter render state after TESR call: {}",
-                    j.getClass(),
-                    j.xCoord,
-                    j.yCoord,
-                    j.zCoord,
-                    RenderDebugHelper.compose());
-        }
+            if (!knownIssues.contains(j) && !RenderDebugHelper.checkGLStates()) {
+                knownIssues.add(j);
+                Minecraft.getMinecraft().thePlayer.addChatMessage(
+                        new ChatComponentText(
+                                "TileEntity (" + j.getClass().getName()
+                                        + " at "
+                                        + j.xCoord
+                                        + ", "
+                                        + j.yCoord
+                                        + ", "
+                                        + j.zCoord
+                                        + ") is messing up render states!"));
+                RenderDebugHelper.log.error(
+                        "TileEntity {} at ({}, {}, {}) alter render state after TESR call: {}",
+                        j.getClass(),
+                        j.xCoord,
+                        j.yCoord,
+                        j.zCoord,
+                        RenderDebugHelper.compose());
+            }
 
-        GL11.glPopAttrib();
+            GL11.glPopAttrib();
+        }
     }
 }
