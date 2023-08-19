@@ -1,9 +1,9 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.WeakHashMap;
-
+import com.mitchej123.hodgepodge.client.HodgepodgeClient;
+import com.mitchej123.hodgepodge.client.HodgepodgeClient.RenderDebugMode;
+import com.mitchej123.hodgepodge.util.ManagedEnum;
+import com.mitchej123.hodgepodge.util.RenderDebugHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.culling.ICamera;
@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
-
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -21,10 +20,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mitchej123.hodgepodge.client.HodgepodgeClient;
-import com.mitchej123.hodgepodge.client.HodgepodgeClient.RenderDebugMode;
-import com.mitchej123.hodgepodge.util.ManagedEnum;
-import com.mitchej123.hodgepodge.util.RenderDebugHelper;
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 @Mixin(RenderGlobal.class)
 public class MixinRenderGlobal {
@@ -47,6 +45,8 @@ public class MixinRenderGlobal {
                     by = 1))
     public void hodgepodge$prepareTESR(EntityLivingBase p_147589_1_, ICamera p_147589_2_, float p_147589_3_,
             CallbackInfo ci) {
+        ManagedEnum<RenderDebugMode> renderDebugMode = HodgepodgeClient.renderDebugMode;
+        if (renderDebugMode.is(RenderDebugMode.OFF)) return;
         RenderDebugHelper.recordGLStates();
     }
 
@@ -64,32 +64,30 @@ public class MixinRenderGlobal {
 
         instance.renderTileEntity(j, k);
 
-        if (renderDebugMode.is(RenderDebugMode.OFF)) {
-            knownIssues.clear();
-            return;
-        }
+        if (!renderDebugMode.is(RenderDebugMode.OFF)) {
 
-        if (!knownIssues.contains(j) && !RenderDebugHelper.checkGLStates()) {
-            knownIssues.add(j);
-            Minecraft.getMinecraft().thePlayer.addChatMessage(
-                    new ChatComponentText(
-                            "TileEntity (" + j.getClass().getName()
-                                    + " at "
-                                    + j.xCoord
-                                    + ", "
-                                    + j.yCoord
-                                    + ", "
-                                    + j.zCoord
-                                    + ") is messing up render states!"));
-            RenderDebugHelper.log.error(
-                    "TileEntity {} at ({}, {}, {}) alter render state after TESR call: {}",
-                    j.getClass(),
-                    j.xCoord,
-                    j.yCoord,
-                    j.zCoord,
-                    RenderDebugHelper.compose());
-        }
+            if (!knownIssues.contains(j) && !RenderDebugHelper.checkGLStates()) {
+                knownIssues.add(j);
+                Minecraft.getMinecraft().thePlayer.addChatMessage(
+                        new ChatComponentText(
+                                "TileEntity (" + j.getClass().getName()
+                                        + " at "
+                                        + j.xCoord
+                                        + ", "
+                                        + j.yCoord
+                                        + ", "
+                                        + j.zCoord
+                                        + ") is messing up render states!"));
+                RenderDebugHelper.log.error(
+                        "TileEntity {} at ({}, {}, {}) alter render state after TESR call: {}",
+                        j.getClass(),
+                        j.xCoord,
+                        j.yCoord,
+                        j.zCoord,
+                        RenderDebugHelper.compose());
+            }
 
-        GL11.glPopAttrib();
+            GL11.glPopAttrib();
+        }
     }
 }
