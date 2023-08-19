@@ -1,9 +1,9 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import com.mitchej123.hodgepodge.client.HodgepodgeClient;
-import com.mitchej123.hodgepodge.client.HodgepodgeClient.RenderDebugMode;
-import com.mitchej123.hodgepodge.util.ManagedEnum;
-import com.mitchej123.hodgepodge.util.RenderDebugHelper;
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.culling.ICamera;
@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
+
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -20,9 +21,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.WeakHashMap;
+import com.mitchej123.hodgepodge.client.HodgepodgeClient;
+import com.mitchej123.hodgepodge.client.HodgepodgeClient.RenderDebugMode;
+import com.mitchej123.hodgepodge.util.ManagedEnum;
+import com.mitchej123.hodgepodge.util.RenderDebugHelper;
 
 @Mixin(RenderGlobal.class)
 public class MixinRenderGlobal {
