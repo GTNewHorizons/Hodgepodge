@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mitchej123.hodgepodge.util.PacketPrevalidation;
 
 @Mixin(S3FPacketCustomPayload.class)
-public abstract class MixinS3FPacketCustomPayload extends Packet {
+public abstract class MixinS3FPacketCustomPayload_Validation extends Packet {
 
     /**
      * @author eigenraven

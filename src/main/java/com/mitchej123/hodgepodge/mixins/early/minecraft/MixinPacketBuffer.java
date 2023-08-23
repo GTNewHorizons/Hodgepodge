@@ -10,6 +10,7 @@ import com.mitchej123.hodgepodge.Common;
 
 @Mixin(PacketBuffer.class)
 public class MixinPacketBuffer {
+
     @ModifyArg(
             method = "Lnet/minecraft/network/PacketBuffer;readNBTTagCompoundFromBuffer()Lnet/minecraft/nbt/NBTTagCompound;",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NBTSizeTracker;<init>(J)V"))
