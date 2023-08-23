@@ -308,9 +308,9 @@ public class LoadingConfig {
         validatePacketEncodingBeforeSending = config.get(Category.FIXES.toString(), "validatePacketEncodingBeforeSending", true, "Validate vanilla packet encodings before sending in addition to on reception").getBoolean();
         validatePacketEncodingBeforeSendingShouldCrash = config.get(Category.FIXES.toString(), "validatePacketEncodingBeforeSendingShouldCrash", false, "Should the extended packet validation error cause a crash (true) or just print out an error to the log (false)").getBoolean();
         increasePacketSizeLimit = config.get(Category.FIXES.toString(), "increasePacketSizeLimit", true, "Increase the maximum network packet size from the default of 2MiB").getBoolean();
-        packetSizeLimit = config.getInt(Category.FIXES.toString(), "packetSizeLimit", 256 * 1024 * 1024, 1024, 1024 * 1024 * 1024, "The maximum size limit in bytes of a network packet to accept, the vanilla value is 2097152 (2 MiB).");
+        packetSizeLimit = config.getInt("packetSizeLimit", Category.FIXES.toString(), 256 * 1024 * 1024, 1024, 1024 * 1024 * 1024, "The maximum size limit in bytes of a network packet to accept, the vanilla value is 2097152 (2 MiB).");
         changeMaxNetworkNbtSizeLimit = config.get(Category.FIXES.toString(), "changeMaxNetworkNbtSizeLimit", true, "Modify the maximum NBT size limit when received as a network packet, to avoid large NBT-related crashes").getBoolean();
-        maxNetworkNbtSizeLimit = config.getInt(Category.FIXES.toString(), "maxNetworkNbtSizeLimit", 256 * 1024 * 1024, 1024, 1024 * 1024 * 1024, "The maximum NBT size limit in bytes when received as a network packet, the vanilla value is 2097152 (2 MiB).");
+        maxNetworkNbtSizeLimit = config.getInt("maxNetworkNbtSizeLimit", Category.FIXES.toString(), 256 * 1024 * 1024, 1024, 1024 * 1024 * 1024, "The maximum NBT size limit in bytes when received as a network packet, the vanilla value is 2097152 (2 MiB).");
 
         disableRealmsButton = config.get(Category.TWEAKS.toString(), "disableRealmsButton", true, "Disable Minecraft Realms button on main menu").getBoolean();
         compactChat = config.get(Category.TWEAKS.toString(), "Compact chat", true, "Compacts identical consecutive chat messages together").getBoolean();
