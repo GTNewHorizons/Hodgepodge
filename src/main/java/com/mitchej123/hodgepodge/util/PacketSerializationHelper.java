@@ -33,7 +33,7 @@ public class PacketSerializationHelper {
     public static void writeExtendedVarShortOrInt(ByteBuf buf, int toWrite) {
         if (toWrite != (toWrite & 0x7F_FFFF) || toWrite == 0x7F_FFFF) {
             // too large to fit in the original representation
-            buf.writeShort(0xFFFFF);
+            buf.writeShort(0xFF_FFFF);
             buf.writeByte(0xFF);
             ByteBufUtils.writeVarInt(buf, toWrite, 5);
             return;
