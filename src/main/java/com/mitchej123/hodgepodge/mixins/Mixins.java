@@ -235,6 +235,9 @@ public enum Mixins {
     BED_MESSAGE_ABOVE_HOTBAR(new Builder("Bed Message Above Hotbar").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinBlockBed").setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.bedMessageAboveHotbar).addTargetedMod(TargetedMod.VANILLA)),
+    FIX_PLAYER_SKIN_FETCHING(new Builder("Fix player skin fetching").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinAbstractClientPlayer").setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.fixPlayerSkinFetching).addTargetedMod(TargetedMod.VANILLA)),
 
     VALIDATE_PACKET_ENCODING_BEFORE_SENDING(new Builder("Validate packet encoding before sending").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.packets.MixinDataWatcher", "minecraft.packets.MixinS3FPacketCustomPayload")

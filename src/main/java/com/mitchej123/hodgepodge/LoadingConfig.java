@@ -73,6 +73,7 @@ public class LoadingConfig {
     public boolean fixNorthWestBias;
     public boolean fixOptifineChunkLoadingCrash;
     public boolean fixPerspectiveCamera;
+    public boolean fixPlayerSkinFetching;
     public boolean fixPotionEffectNumerals;
     public boolean fixPotionEffectRender;
     public boolean fixPotionIterating;
@@ -252,6 +253,7 @@ public class LoadingConfig {
         fixNorthWestBias = config.get(Category.FIXES.toString(), "fixNorthWestBias", true, "Fix northwest bias on RandomPositionGenerator").getBoolean();
         fixOptifineChunkLoadingCrash = config.get(Category.FIXES.toString(), "fixOptifineChunkLoadingCrash", true, "Forces the chunk loading option from optifine to default since other values can crash the game").getBoolean();
         fixPerspectiveCamera = config.get(Category.FIXES.toString(), "fixPerspectiveCamera", true, "Prevent tall grass and such to affect the perspective camera").getBoolean();
+        fixPlayerSkinFetching = config.get(Category.FIXES.toString(), "fixPlayerSkinFetching", true, "Allow some mods to properly fetch the player skin").getBoolean();
         fixPotionEffectNumerals = config.get(Category.FIXES.toString(), "fixPotionEffectNumerals", true, "Properly display level of potion effects in the inventory and on tooltips").getBoolean();
         fixPotionEffectRender = config.get(Category.TWEAKS.toString(), "fixPotionEffectRender", true, "Fix vanilla potion effects rendering above the NEI tooltips in the inventory").getBoolean();
         fixPotionIterating = config.get(Category.FIXES.toString(), "fixPotionIterating", true, "Fix crashes with ConcurrentModificationException because of incorrectly iterating over active potions").getBoolean();
