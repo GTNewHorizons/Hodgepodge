@@ -50,7 +50,8 @@ public abstract class MixinNetHandlerLoginServer_OfflineMode {
     private void hodgepodge$func_147326_c(CallbackInfo ci) {
         if (this.field_147337_i == null) {
             // Disconnect null profiles from func_152506_a
-            this.func_147322_a("You were not found in the cache!");
+            this.func_147322_a(
+                    "Login while the server is in online mode to be able to login while it is in offline mode.");
             ci.cancel();
         }
     }
