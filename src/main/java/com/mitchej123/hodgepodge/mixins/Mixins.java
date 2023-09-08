@@ -282,6 +282,7 @@ public enum Mixins {
                     .setApplyIf(() -> Common.config.fixIc2HoverMode).addTargetedMod(TargetedMod.IC2)),
     IC2_ARMOR_LAG_FIX(new Builder("IC2 Armor Lag Fix").setPhase(Phase.LATE)
             .addMixinClasses(
+                    "ic2.MixinElectricItemManager",
                     "ic2.MixinIC2ArmorHazmat",
                     "ic2.MixinIC2ArmorJetpack",
                     "ic2.MixinIC2ArmorNanoSuit",
