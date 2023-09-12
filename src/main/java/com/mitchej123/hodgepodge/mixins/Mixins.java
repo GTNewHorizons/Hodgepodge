@@ -339,6 +339,18 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.fixThaumcraftGolemMarkerLoading).addTargetedMod(TargetedMod.THAUMCRAFT)),
 
     // BOP
+    FIX_QUICKSAND_XRAY(new Builder("Fix Xray through block without collision boundingBox")
+            .addMixinClasses("biomesoplenty.MixinBlockMud")
+            .setApplyIf(
+                    () -> Common.config.fixPerspectiveCamera
+                            && Common.config.fixXrayThroughBlockWithoutCollisionBoundingBox)
+            .addTargetedMod(TargetedMod.BOP)),
+    FIX_QUICKSAND_XRAY2(new Builder("Fix Xray through block without collision boundingBox")
+            .addMixinClasses("minecraft.MixinBlock_FixXray", "minecraft.MixinWorld_FixXray")
+            .setApplyIf(
+                    () -> Common.config.fixPerspectiveCamera
+                            && Common.config.fixXrayThroughBlockWithoutCollisionBoundingBox)
+            .addTargetedMod(TargetedMod.VANILLA).setPhase(Phase.EARLY)),
     DEDUPLICATE_FORESTRY_COMPAT_IN_BOP(
             new Builder("BOP Forestry Compat").addMixinClasses("biomesoplenty.MixinForestryIntegration")
                     .setApplyIf(() -> Common.config.deduplicateForestryCompatInBOP).addTargetedMod(TargetedMod.BOP)),
@@ -353,6 +365,8 @@ public enum Mixins {
     JAVA12_BOP(new Builder("BOP Java12-safe reflection").addMixinClasses("biomesoplenty.MixinBOPBiomes")
             .addMixinClasses("biomesoplenty.MixinBOPReflectionHelper").setApplyIf(() -> Common.config.java12BopCompat)
             .addTargetedMod(TargetedMod.BOP)),
+
+    // Immersive engineering
     JAVA12_IMMERSIVE_ENGINERRING(new Builder("Immersive Engineering Java-12 safe potion array resizing")
             .addMixinClasses("immersiveengineering.MixinIEPotions")
             .setApplyIf(() -> Common.config.java12ImmersiveEngineeringCompat)

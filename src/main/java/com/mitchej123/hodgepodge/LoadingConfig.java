@@ -92,6 +92,7 @@ public class LoadingConfig {
     public boolean fixWorldGetBlock;
     public boolean fixWorldServerLeakingUnloadedEntities;
     public boolean fixXaerosWorldMapScroll;
+    public boolean fixXrayThroughBlockWithoutCollisionBoundingBox;
     public boolean fixZTonesPackets;
     public boolean hideCrosshairInThirdPerson;
     public boolean hideIc2ReactorSlots;
@@ -271,6 +272,7 @@ public class LoadingConfig {
         fixWorldGetBlock = config.get(Category.FIXES.toString(), "fixWorldGetBlock", true, "Fix unprotected getBlock() in World").getBoolean();
         fixWorldServerLeakingUnloadedEntities = config.get(Category.FIXES.toString(), "fixWorldServerLeakingUnloadedEntities", true, "Fix WorldServer leaking entities when no players are present in a dimension").getBoolean();
         fixXaerosWorldMapScroll = config.get(Category.FIXES.toString(), "fixXaerosWorldMapScrolling", true, "Fix scrolling in the world map screen").getBoolean();
+        fixXrayThroughBlockWithoutCollisionBoundingBox = config.get(Category.FIXES.toString(), "fixXrayThroughBlockWithoutCollisionBoundingBox", true, "Fix the perspective camera not stopping on certain blocks without a collision bouding bow allowing you to have xray vision").getBoolean();
         validatePacketEncodingBeforeSending = config.get(Category.FIXES.toString(), "validatePacketEncodingBeforeSending", true, "Validate vanilla packet encodings before sending in addition to on reception").getBoolean();
         validatePacketEncodingBeforeSendingShouldCrash = config.get(Category.FIXES.toString(), "validatePacketEncodingBeforeSendingShouldCrash", false, "Should the extended packet validation error cause a crash (true) or just print out an error to the log (false)").getBoolean();
 
