@@ -9,13 +9,13 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.mitchej123.hodgepodge.common.BlockInvoker;
+import com.mitchej123.hodgepodge.common.BlockInvoker_FixXray;
 
 @Mixin(World.class)
 public class MixinWorld_FixXray {
 
     @Unique
-    private static final AxisAlignedBB hodgepodge$dummyAABB = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+    private static final AxisAlignedBB hodgepodge$DUMMY_AABB = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
     @Redirect(
             method = "func_147447_a",
@@ -23,8 +23,8 @@ public class MixinWorld_FixXray {
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/Block;getCollisionBoundingBoxFromPool(Lnet/minecraft/world/World;III)Lnet/minecraft/util/AxisAlignedBB;"))
     private AxisAlignedBB hodgepodge$fixXray(Block block, World world, int x, int y, int z) {
-        if (((BlockInvoker) block).hodgepodge$shouldRayTraceStopOnBlock(world, x, y, z)) {
-            return hodgepodge$dummyAABB;
+        if (((BlockInvoker_FixXray) block).hodgepodge$shouldRayTraceStopOnBlock(world, x, y, z)) {
+            return hodgepodge$DUMMY_AABB;
         }
         return null;
     }

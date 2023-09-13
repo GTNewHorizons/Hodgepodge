@@ -238,7 +238,6 @@ public enum Mixins {
     FIX_PLAYER_SKIN_FETCHING(new Builder("Fix player skin fetching").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinAbstractClientPlayer").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixPlayerSkinFetching).addTargetedMod(TargetedMod.VANILLA)),
-
     VALIDATE_PACKET_ENCODING_BEFORE_SENDING(new Builder("Validate packet encoding before sending").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.packets.MixinDataWatcher", "minecraft.packets.MixinS3FPacketCustomPayload")
             .setSide(Side.BOTH).setApplyIf(() -> Common.config.validatePacketEncodingBeforeSending)
@@ -246,6 +245,11 @@ public enum Mixins {
     FIX_FLUID_CONTAINER_REGISTRY_KEY(new Builder("Fix Forge fluid container registry key").setPhase(Phase.EARLY)
             .addMixinClasses("forge.FluidContainerRegistryAccessor", "forge.MixinFluidRegistry").setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.fixFluidContainerRegistryKey).addTargetedMod(TargetedMod.VANILLA)),
+    FIX_XRAY_BLOCK_WITHOUT_COLLISION_AABB(new Builder("Fix Xray through block without collision boundingBox")
+            .addMixinClasses("minecraft.MixinBlock_FixXray", "minecraft.MixinWorld_FixXray")
+            .setApplyIf(() -> Common.config.fixPerspectiveCamera).addTargetedMod(TargetedMod.VANILLA)
+            .setPhase(Phase.EARLY)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(
             new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).addMixinClasses("ic2.MixinIc2WaterKinetic")
@@ -340,17 +344,8 @@ public enum Mixins {
 
     // BOP
     FIX_QUICKSAND_XRAY(new Builder("Fix Xray through block without collision boundingBox")
-            .addMixinClasses("biomesoplenty.MixinBlockMud")
-            .setApplyIf(
-                    () -> Common.config.fixPerspectiveCamera
-                            && Common.config.fixXrayThroughBlockWithoutCollisionBoundingBox)
+            .addMixinClasses("biomesoplenty.MixinBlockMud_FixXray").setApplyIf(() -> Common.config.fixPerspectiveCamera)
             .addTargetedMod(TargetedMod.BOP)),
-    FIX_QUICKSAND_XRAY2(new Builder("Fix Xray through block without collision boundingBox")
-            .addMixinClasses("minecraft.MixinBlock_FixXray", "minecraft.MixinWorld_FixXray")
-            .setApplyIf(
-                    () -> Common.config.fixPerspectiveCamera
-                            && Common.config.fixXrayThroughBlockWithoutCollisionBoundingBox)
-            .addTargetedMod(TargetedMod.VANILLA).setPhase(Phase.EARLY)),
     DEDUPLICATE_FORESTRY_COMPAT_IN_BOP(
             new Builder("BOP Forestry Compat").addMixinClasses("biomesoplenty.MixinForestryIntegration")
                     .setApplyIf(() -> Common.config.deduplicateForestryCompatInBOP).addTargetedMod(TargetedMod.BOP)),
