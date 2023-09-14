@@ -19,6 +19,7 @@ public enum TargetedMod {
     HARVESTTHENETHER("harvestthenether", null, "harvestthenether"),
     HUNGER_OVERHAUL("HungerOverhaul", null, "HungerOverhaul"),
     IC2("IC2", "ic2.core.coremod.IC2core", "IC2"),
+    IMMERSIVE_ENGINENEERING("Immersive Engineering", null, "ImmersiveEngineering"),
     JOURNEYMAP("JourneyMap", null, "journeymap"),
     LOTR("The Lord of the rings mod", "lotr.common.coremod.LOTRLoadingPlugin", "lotr"),
     LWJGL3IFY("lwjgl3ify", "me.eigenraven.lwjgl3ify.core.Lwjgl3ifyCoremod", "lwjgl3ify"),
@@ -33,7 +34,6 @@ public enum TargetedMod {
     VANILLA("Minecraft", null),
     WITCHERY("Witchery", null, "witchery"),
     XAEROWORLDMAP("Xaero's World Map", null, "XaeroWorldMap"),
-    IMMERSIVE_ENGINENEERING("Immersive Engineering", null, "ImmersiveEngineering"),
     ZTONES("ZTones", null, "Ztones");
 
     /** The "name" in the @Mod annotation */
