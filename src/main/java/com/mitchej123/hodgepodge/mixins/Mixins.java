@@ -249,6 +249,9 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinBlock_FixXray", "minecraft.MixinWorld_FixXray")
             .setApplyIf(() -> Common.config.fixPerspectiveCamera).addTargetedMod(TargetedMod.VANILLA)
             .setPhase(Phase.EARLY)),
+    DISABLE_CREATIVE_TAB_ALL_SEARCH(new Builder("Disable the creative tab with search bar").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinGuiContainerCreative").setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.removeCreativeSearchTab).addTargetedMod(TargetedMod.VANILLA)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(
