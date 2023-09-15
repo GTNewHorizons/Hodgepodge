@@ -216,7 +216,7 @@ public enum Mixins {
             .addMixinClasses("forge.MixinOpenGuiHandler").setApplyIf(() -> Common.config.fixForgeOpenGuiHandlerWindowId)
             .addTargetedMod(TargetedMod.VANILLA)),
     FIX_KEYBIND_CONFLICTS(new Builder("Trigger all conflicting keybinds").setPhase(Phase.EARLY)
-            .addMixinClasses("minecraft.MixinKeyBinding").setSide(Side.CLIENT)
+            .addMixinClasses("minecraft.MixinKeyBinding", "minecraft.MixinMinecraft_UpdateKeys").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.triggerAllConflictingKeybindings).addTargetedMod(TargetedMod.VANILLA)),
     REMOVE_SPAWN_MINECART_SOUND(new Builder("Remove sound when spawning a minecart")
             .addMixinClasses("minecraft.MixinWorldClient").addTargetedMod(TargetedMod.VANILLA)
