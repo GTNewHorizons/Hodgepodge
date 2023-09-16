@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
@@ -23,11 +24,11 @@ public class MixinGuiNewChat_CompactChat {
 
     @Shadow
     @Final
-    private List chatLines;
+    private List<ChatLine> chatLines;
 
     @Shadow
     @Final
-    private List field_146253_i; // drawnChatLines
+    private List<ChatLine> field_146253_i; // drawnChatLines
 
     @Unique
     private boolean hodgepodge$deleteMessage;
@@ -44,7 +45,7 @@ public class MixinGuiNewChat_CompactChat {
             locals = LocalCapture.CAPTURE_FAILSOFT)
     private void hodgepodge$deletePrevious(IChatComponent imsg, int p_146237_2_, int p_146237_3_, boolean refresh,
             CallbackInfo ci, int k, int l, ChatComponentText chatcomponenttext,
-            @SuppressWarnings("rawtypes") ArrayList arraylist) {
+            ArrayList<ChatComponentText> arraylist) {
         if (this.hodgepodge$deleteMessage) {
             this.chatLines.remove(0);
             for (int i = 0; i < arraylist.size(); i++) {

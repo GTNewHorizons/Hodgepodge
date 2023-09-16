@@ -12,9 +12,9 @@ public class ChatHandler {
     /**
      * Returns true if it compacts the message
      */
-    public static boolean tryCompactMessage(IChatComponent imsg, @SuppressWarnings("rawtypes") List chatLines) {
+    public static boolean tryCompactMessage(IChatComponent imsg, List<ChatLine> chatLines) {
         if (chatLines.isEmpty()) return false;
-        final ChatLine chatLine = (ChatLine) chatLines.get(0);
+        final ChatLine chatLine = chatLines.get(0);
         final IChatComponent prevMsg = chatLine.func_151461_a();
         if (areMessagesIdentical(imsg, prevMsg)) {
             imsg.appendSibling(new ChatComponentCount(previousCount + 1));
