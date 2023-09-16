@@ -252,6 +252,9 @@ public enum Mixins {
     DISABLE_CREATIVE_TAB_ALL_SEARCH(new Builder("Disable the creative tab with search bar").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinGuiContainerCreative").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.removeCreativeSearchTab).addTargetedMod(TargetedMod.VANILLA)),
+    FIX_CHAT_COLOR_WRAPPING(new Builder("Fix wrapped chat lines missing colors").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinGuiNewChat_FixColorWrapping").setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.fixChatWrappedColors).addTargetedMod(TargetedMod.VANILLA)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(
