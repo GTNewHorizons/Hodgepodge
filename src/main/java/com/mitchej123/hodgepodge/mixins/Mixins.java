@@ -198,6 +198,10 @@ public enum Mixins {
     FIX_POTION_ITERATING(new Builder("Fix Potion Iterating").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityLivingBase_FixPotionException")
             .setApplyIf(() -> Common.config.fixPotionIterating).addTargetedMod(TargetedMod.VANILLA)),
+    ENHANCE_NIGHT_VISION(new Builder("Remove the blueish sky tint from night vision").setSide(Side.CLIENT)
+            .addTargetedMod(TargetedMod.VANILLA).setPhase(Phase.EARLY)
+            .setApplyIf(() -> Common.config.enhanceNightVision)
+            .addMixinClasses("minecraft.MixinEntityRenderer_EnhanceNightVision")),
     OPTIMIZE_ASMDATATABLE_INDEX(
             new Builder("Optimize ASM DataTable Index").setPhase(Phase.EARLY).addMixinClasses("forge.MixinASMDataTable")
                     .setApplyIf(() -> Common.config.optimizeASMDataTable).addTargetedMod(TargetedMod.VANILLA)),

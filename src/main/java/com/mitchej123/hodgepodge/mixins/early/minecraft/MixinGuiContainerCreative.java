@@ -29,7 +29,11 @@ public abstract class MixinGuiContainerCreative extends GuiContainer {
 
     @Inject(
             method = "drawScreen",
-            at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V", shift = At.Shift.BEFORE))
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V",
+                    shift = At.Shift.BEFORE,
+                    remap = false))
     private void hodgepodge$drawMessageInfoInTab(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         if (selectedTabIndex == CreativeTabs.tabAllSearch.getTabIndex()) {
             final String text = EnumChatFormatting.RED + "Use NEI to browse items!";
