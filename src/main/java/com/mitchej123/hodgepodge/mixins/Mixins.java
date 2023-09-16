@@ -257,8 +257,9 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinGuiContainerCreative").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.removeCreativeSearchTab).addTargetedMod(TargetedMod.VANILLA)),
     FIX_CHAT_COLOR_WRAPPING(new Builder("Fix wrapped chat lines missing colors").setPhase(Phase.EARLY)
-            .addMixinClasses("minecraft.MixinGuiNewChat_FixColorWrapping").setSide(Side.CLIENT)
-            .setApplyIf(() -> Common.config.fixChatWrappedColors).addTargetedMod(TargetedMod.VANILLA)),
+            .addMixinClasses("minecraft.MixinGuiNewChat_FixColorWrapping", "minecraft.FontRendererAccessor")
+            .setSide(Side.CLIENT).setApplyIf(() -> Common.config.fixChatWrappedColors)
+            .addTargetedMod(TargetedMod.VANILLA)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(

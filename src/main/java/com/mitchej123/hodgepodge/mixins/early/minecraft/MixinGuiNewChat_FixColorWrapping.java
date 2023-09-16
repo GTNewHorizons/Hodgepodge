@@ -7,8 +7,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-import com.mitchej123.hodgepodge.util.StringUtil;
-
 @Mixin(GuiNewChat.class)
 public class MixinGuiNewChat_FixColorWrapping {
 
@@ -37,7 +35,7 @@ public class MixinGuiNewChat_FixColorWrapping {
                     shift = At.Shift.BEFORE),
             name = "s2")
     private String hodgepodge$fixColorWrapping(String s2) {
-        return StringUtil.getFormatFromString(this.hodgepodge$s1) + s2;
+        return FontRendererAccessor.callGetFormatFromString(this.hodgepodge$s1) + s2;
     }
 
 }
