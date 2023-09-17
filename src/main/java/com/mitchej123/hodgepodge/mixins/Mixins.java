@@ -260,6 +260,9 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinGuiNewChat_FixColorWrapping", "minecraft.FontRendererAccessor")
             .setSide(Side.CLIENT).setApplyIf(() -> Common.config.fixChatWrappedColors)
             .addTargetedMod(TargetedMod.VANILLA)),
+    COMPACT_CHAT(new Builder("Compact chat").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinGuiNewChat_CompactChat").setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.compactChat).addTargetedMod(TargetedMod.VANILLA)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(

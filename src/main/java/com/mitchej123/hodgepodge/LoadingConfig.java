@@ -114,6 +114,7 @@ public class LoadingConfig {
     public boolean removeSpawningMinecartSound;
     public boolean removeCreativeSearchTab;
 
+    public boolean compactChat;
     public boolean enhanceNightVision;
     public boolean enableMacosCmdShortcuts;
     public boolean fixFontRendererLinewrapRecursion;
@@ -278,6 +279,7 @@ public class LoadingConfig {
         validatePacketEncodingBeforeSending = config.get(Category.FIXES.toString(), "validatePacketEncodingBeforeSending", true, "Validate vanilla packet encodings before sending in addition to on reception").getBoolean();
         validatePacketEncodingBeforeSendingShouldCrash = config.get(Category.FIXES.toString(), "validatePacketEncodingBeforeSendingShouldCrash", false, "Should the extended packet validation error cause a crash (true) or just print out an error to the log (false)").getBoolean();
 
+        compactChat = config.get(Category.TWEAKS.toString(), "Compact chat", true, "Compacts identical consecutive chat messages together").getBoolean();
         enhanceNightVision = config.get(Category.TWEAKS.toString(), "enhanceNightVision", false, "Remove the blueish sky tint from night vision").getBoolean();
         hideCrosshairInThirdPerson = config.get(Category.TWEAKS.toString(), "hideCrosshairInThirdPerson", true, "Stops rendering the crosshair when you are playing in third person").getBoolean();
         hideIc2ReactorSlots = config.get(Category.TWEAKS.toString(), "hideIc2ReactorSlots", true, "Prevent IC2's reactor's coolant slots from being accessed by automations if not a fluid reactor").getBoolean();
