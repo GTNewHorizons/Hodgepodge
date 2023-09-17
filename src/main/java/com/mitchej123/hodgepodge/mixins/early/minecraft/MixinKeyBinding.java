@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.client.settings.KeyBinding;
 
+import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -15,9 +16,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.mitchej123.hodgepodge.common.KeyBindingDuck;
 
 @Mixin(KeyBinding.class)
-public class MixinKeyBinding {
+public class MixinKeyBinding implements KeyBindingDuck {
 
     @Shadow
     @Final
@@ -27,7 +29,7 @@ public class MixinKeyBinding {
     @Shadow
     private boolean pressed;
     @Unique
-    private static final Multimap<Integer, KeyBinding> keybindMatcher = ArrayListMultimap.create();
+    private static final Multimap<Integer, KeyBinding> hodgepodge$keybindMultiMap = ArrayListMultimap.create();
 
     /**
      * @author eigenraven
@@ -36,7 +38,7 @@ public class MixinKeyBinding {
     @Overwrite
     public static void onTick(int keyCode) {
         if (keyCode != 0) {
-            for (KeyBinding bind : keybindMatcher.get(keyCode)) {
+            for (KeyBinding bind : hodgepodge$keybindMultiMap.get(keyCode)) {
                 if (bind != null) {
                     ++((MixinKeyBinding) (Object) bind).pressTime;
                 }
@@ -51,7 +53,7 @@ public class MixinKeyBinding {
     @Overwrite
     public static void setKeyBindState(int keyCode, boolean pressed) {
         if (keyCode != 0) {
-            for (KeyBinding bind : keybindMatcher.get(keyCode)) {
+            for (KeyBinding bind : hodgepodge$keybindMultiMap.get(keyCode)) {
                 if (bind != null) {
                     ((MixinKeyBinding) (Object) bind).pressed = pressed;
                 }
@@ -64,10 +66,10 @@ public class MixinKeyBinding {
             at = @At("RETURN"),
             require = 1)
     private static void hodgepodge$populateKeybindMatcherArray(CallbackInfo ci) {
-        keybindMatcher.clear();
+        hodgepodge$keybindMultiMap.clear();
         for (KeyBinding binding : (List<KeyBinding>) keybindArray) {
             if (binding != null && binding.getKeyCode() != 0) {
-                keybindMatcher.put(binding.getKeyCode(), binding);
+                hodgepodge$keybindMultiMap.put(binding.getKeyCode(), binding);
             }
         }
     }
@@ -77,6 +79,16 @@ public class MixinKeyBinding {
             at = @At("RETURN"),
             require = 1)
     private void hodgepodge$addMyselfInConstructor(String description, int keyCode, String category, CallbackInfo ci) {
-        keybindMatcher.put(keyCode, (KeyBinding) (Object) this);
+        hodgepodge$keybindMultiMap.put(keyCode, (KeyBinding) (Object) this);
+    }
+
+    @Override
+    public void hodgepodge$updateKeyStates() {
+        for (KeyBinding keyBinding : hodgepodge$keybindMultiMap.values()) {
+            try {
+                final int keyCode = keyBinding.getKeyCode();
+                KeyBinding.setKeyBindState(keyCode, keyCode < 256 && Keyboard.isKeyDown(keyCode));
+            } catch (IndexOutOfBoundsException ignored) {}
+        }
     }
 }
