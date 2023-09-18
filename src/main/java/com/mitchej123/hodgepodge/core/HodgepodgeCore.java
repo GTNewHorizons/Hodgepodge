@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
 import com.mitchej123.hodgepodge.Common;
-import com.mitchej123.hodgepodge.mixins.Mixins;
+import com.mitchej123.hodgepodge.mixin.Mixins;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 

@@ -7,7 +7,7 @@ import java.util.Set;
 
 import com.gtnewhorizon.gtnhmixins.ILateMixinLoader;
 import com.gtnewhorizon.gtnhmixins.LateMixin;
-import com.mitchej123.hodgepodge.mixins.Mixins;
+import com.mitchej123.hodgepodge.mixin.Mixins;
 
 @LateMixin
 public class HodgepodgeLateMixins implements ILateMixinLoader {
