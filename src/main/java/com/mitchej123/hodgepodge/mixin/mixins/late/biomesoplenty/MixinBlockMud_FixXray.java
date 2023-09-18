@@ -1,9 +1,10 @@
 package com.mitchej123.hodgepodge.mixin.mixins.late.biomesoplenty;
 
-import com.mitchej123.hodgepodge.mixin.mixins.early.minecraft.MixinBlock_FixXray;
 import net.minecraft.world.World;
 
 import org.spongepowered.asm.mixin.Mixin;
+
+import com.mitchej123.hodgepodge.mixin.mixins.early.minecraft.MixinBlock_FixXray;
 
 import biomesoplenty.common.blocks.BlockMud;
 
