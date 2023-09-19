@@ -153,6 +153,9 @@ public enum Mixins {
     FIX_ARROW_WRONG_LIGHTING(new Builder("Fix arrow wrong lighting").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinRendererLivingEntity").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixGlStateBugs).addTargetedMod(TargetedMod.VANILLA)),
+    FIX_DAMAGE_TILT(new Builder("Fix damage tilt").setPhase(Phase.EARLY).setSide(Side.CLIENT)
+            .addMixinClasses("minecraft.MixinNetHandlerPlayClient_DamageTilt").addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> Common.config.fixDamageTilt)),
     FIX_RESIZABLE_FULLSCREEN(new Builder("Fix Resizable Fullscreen").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinMinecraft_ResizableFullscreen").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixResizableFullscreen).addTargetedMod(TargetedMod.VANILLA)),

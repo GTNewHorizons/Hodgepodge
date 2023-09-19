@@ -36,6 +36,7 @@ public class LoadingConfig {
     public boolean fixChatWrappedColors;
     public boolean fixComponentsPoppingOff;
     public boolean fixContainerPutStacksInSlots;
+    public boolean fixDamageTilt;
     public boolean fixDebugBoundingBox;
     public boolean fixDimensionChangeHearts;
     public boolean fixEatingStackedStew;
@@ -214,6 +215,7 @@ public class LoadingConfig {
         fixContainerPutStacksInSlots = config.get(Category.FIXES.toString(), "fixContainerPutStacksInSlots", true, "Prevents crash if server sends container with wrong itemStack size").getBoolean();
         fixChatWrappedColors = config.get(Category.FIXES.toString(), "fixChatWrappedColors", true, "Fix wrapped chat lines missing colors").getBoolean();
         fixComponentsPoppingOff = config.get(Category.TWEAKS.toString(), "fixComponentsPoppingOff", true, "Fix Project Red components popping off on unloaded chunks").getBoolean();
+        fixDamageTilt = config.get(Category.FIXES.toString(), "fixDamageTilt", true, "Fix the angle of the hurt camera not moving in the direction you got attacked from").getBoolean();
         fixDebugBoundingBox = config.get(Category.FIXES.toString(), "fixDebugBoundingBox", true, "Fixes the debug hitbox of the player beeing offset").getBoolean();
         fixDimensionChangeHearts = config.get(Category.FIXES.toString(), "fixDimensionChangeHearts", true, "Fix losing bonus hearts on dimension change").getBoolean();
         fixEatingStackedStew = config.get(Category.FIXES.toString(), "fixEatingStackedStew", true, "Fix deleting stack when eating mushroom stew").getBoolean();
