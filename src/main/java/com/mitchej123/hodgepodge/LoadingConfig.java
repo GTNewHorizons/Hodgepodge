@@ -13,6 +13,7 @@ public class LoadingConfig {
     public boolean addSystemInfo;
     public boolean arabicNumbersForEnchantsPotions;
     public int chatLength;
+    public int messageLength;
     public int ic2SeedMaxStackSize;
     public int atropineHighID;
     public int itemStacksPickedUpPerTick;
@@ -200,6 +201,7 @@ public class LoadingConfig {
         arabicNumbersForEnchantsPotions = config.get(Category.TWEAKS.toString(), "arabicNumbersForEnchantsPotions", false, "Uses arabic numbers for enchantment levels and potion amplifier levels instead of roman numbers").getBoolean();
         bedMessageAboveHotbar = config.get(Category.TWEAKS.toString(), "bedMessageAboveHotbar", true, "Show \"cannot sleep\" messages above hotbar").getBoolean();
         chatLength = Math.max(100, Math.min(32767, config.get(Category.TWEAKS.toString(), "chatLength", 8191, "Amount of chat lines kept [100(Vanilla) - 32767]").getInt()));
+        messageLength = Math.max(100, Math.min(512, config.get(Category.TWEAKS.toString(), "messageLength", 256, "Length of messages sent in chat [100(Vanilla) - 512").getInt()));
         cofhWorldTransformer = config.get(Category.ASM.toString(), "cofhWorldTransformer", true, "Enable Glease's ASM patch to disable unused CoFH tileentity cache").getBoolean();
         deduplicateForestryCompatInBOP = config.get(Category.FIXES.toString(), "deduplicateForestryCompatInBOP", true, "Removes duplicate Fermenter and Squeezer recipes and flower registration").getBoolean();
         defaultLanPort = config.get(Category.TWEAKS.toString(), "defaultLanPort", 25565, "Specify default LAN port to open an integrated server on. Set to 0 to always open the server on an automatically allocated port.").getInt();
