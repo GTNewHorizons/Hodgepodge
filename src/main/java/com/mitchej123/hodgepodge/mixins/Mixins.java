@@ -219,9 +219,12 @@ public enum Mixins {
     STATIC_LAN_PORT(new Builder("Static Lan Port").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.server.MixinHttpUtil").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.enableDefaultLanPort).addTargetedMod(TargetedMod.VANILLA)),
-    CROSSHAIR_THIRDPERSON(new Builder("Crosshairs Thirdperson").setPhase(Phase.EARLY)
-            .addMixinClasses("forge.MixinGuiIngameForge").setSide(Side.CLIENT)
+    CROSSHAIR_THIRDPERSON(new Builder("Crosshairs thirdperson").setPhase(Phase.EARLY)
+            .addMixinClasses("forge.MixinGuiIngameForge_CrosshairThirdPerson").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.hideCrosshairInThirdPerson).addTargetedMod(TargetedMod.VANILLA)),
+    DONT_INVERT_CROSSHAIR_COLORS(new Builder("Don't invert crosshair colors").setPhase(Phase.EARLY)
+            .addMixinClasses("forge.MixinGuiIngameForge_CrosshairInvertColors").setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.dontInvertCrosshairColor).addTargetedMod(TargetedMod.VANILLA)),
     FIX_OPENGUIHANDLER_WINDOWID(new Builder("Fix OpenGuiHandler").setPhase(Phase.EARLY)
             .addMixinClasses("forge.MixinOpenGuiHandler").setApplyIf(() -> Common.config.fixForgeOpenGuiHandlerWindowId)
             .addTargetedMod(TargetedMod.VANILLA)),
