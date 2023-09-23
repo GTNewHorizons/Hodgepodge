@@ -83,11 +83,11 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinGuiNewChat_TransparentChat").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.transparentChat).addTargetedMod(TargetedMod.VANILLA)),
     LONGER_MESSAGES_CLIENT(new Builder("Longer Messages").setPhase(Phase.EARLY)
-            .addMixinClasses("minecraft.MixinGuiChat_LongerMessages").setApplyIf(() -> Common.config.longerChat)
+            .addMixinClasses("minecraft.MixinGuiChat_LongerMessages").setApplyIf(() -> Common.config.longerSentMessages)
             .addTargetedMod(TargetedMod.VANILLA).setSide(Side.CLIENT)),
     LONGER_MESSAGES_SERVER(new Builder("Longer Messages").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinC01PacketChatMessage_LongerMessages")
-            .setApplyIf(() -> Common.config.longerChat).addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)),
+            .setApplyIf(() -> Common.config.longerSentMessages).addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)),
     CHUNK_COORDINATES_HASHCODE(new Builder("Optimize Chunk Coordinates Hashcode").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinChunkCoordinates").addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> Common.config.speedupChunkCoordinatesHashCode)),
