@@ -34,24 +34,25 @@ public class MixinGuiNewChat_CompactChat {
     private boolean hodgepodge$deleteMessage;
 
     @Inject(method = "func_146237_a", at = @At("HEAD"))
-    private void hodgepodge$compactChat(IChatComponent imsg, int p_146237_2_, int p_146237_3_, boolean refresh,
+    private void hodgepodge$compactChat(IChatComponent imsg, int chatLineId, int updateCounter, boolean refresh,
             CallbackInfo ci) {
-        this.hodgepodge$deleteMessage = !refresh && ChatHandler.tryCompactMessage(imsg, this.chatLines);
+        this.hodgepodge$deleteMessage = !refresh && ChatHandler.tryCompactMessage(imsg, this.chatLines)
+                && chatLineId == 0;
     }
 
     @Inject(
             method = "func_146237_a",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiNewChat;getChatOpen()Z"),
             locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void hodgepodge$deletePrevious(IChatComponent imsg, int p_146237_2_, int p_146237_3_, boolean refresh,
+    private void hodgepodge$deletePrevious(IChatComponent imsg, int chatLineId, int updateCounter, boolean refresh,
             CallbackInfo ci, int k, int l, ChatComponentText chatcomponenttext,
             ArrayList<ChatComponentText> arraylist) {
-        if (this.hodgepodge$deleteMessage) {
-            this.chatLines.remove(0);
-            for (int i = 0; i < arraylist.size(); i++) {
-                if (!this.field_146253_i.isEmpty()) {
-                    this.field_146253_i.remove(0);
-                }
+        if (!this.hodgepodge$deleteMessage) return;
+        if (this.chatLines.isEmpty()) return;
+        this.chatLines.remove(0);
+        for (int i = 0; i < arraylist.size(); i++) {
+            if (!this.field_146253_i.isEmpty()) {
+                this.field_146253_i.remove(0);
             }
         }
     }
