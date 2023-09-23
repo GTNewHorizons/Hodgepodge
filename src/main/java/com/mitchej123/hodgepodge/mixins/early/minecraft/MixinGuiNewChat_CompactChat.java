@@ -47,14 +47,12 @@ public class MixinGuiNewChat_CompactChat {
     private void hodgepodge$deletePrevious(IChatComponent imsg, int chatLineId, int updateCounter, boolean refresh,
             CallbackInfo ci, int k, int l, ChatComponentText chatcomponenttext,
             ArrayList<ChatComponentText> arraylist) {
-        if (this.hodgepodge$deleteMessage) {
-            if (!this.chatLines.isEmpty()) {
-                this.chatLines.remove(0);
-                for (int i = 0; i < arraylist.size(); i++) {
-                    if (!this.field_146253_i.isEmpty()) {
-                        this.field_146253_i.remove(0);
-                    }
-                }
+        if (!this.hodgepodge$deleteMessage) return;
+        if (this.chatLines.isEmpty()) return;
+        this.chatLines.remove(0);
+        for (int i = 0; i < arraylist.size(); i++) {
+            if (!this.field_146253_i.isEmpty()) {
+                this.field_146253_i.remove(0);
             }
         }
     }
