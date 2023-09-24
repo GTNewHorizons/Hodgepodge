@@ -1,6 +1,8 @@
 package com.mitchej123.hodgepodge.util;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ConcurrentModificationException;
+import java.util.Deque;
 
 import net.minecraft.nbt.NBTTagCompound;
 
