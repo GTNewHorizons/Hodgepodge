@@ -1,8 +1,8 @@
-package com.mitchej123.hodgepodge.common;
+package com.mitchej123.hodgepodge.mixins.interfaces;
 
 import net.minecraft.world.World;
 
-public interface BlockInvoker_FixXray {
+public interface BlockExt_FixXray {
 
     boolean hodgepodge$shouldRayTraceStopOnBlock(World worldIn, int x, int y, int z);
 }
