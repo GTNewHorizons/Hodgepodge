@@ -398,6 +398,11 @@ public enum Mixins {
             new Builder("Thirsty Tank Container").addMixinClasses("automagy.MixinItemBlockThirstyTank")
                     .setApplyIf(() -> Common.config.thirstyTankContainer).addTargetedMod(TargetedMod.AUTOMAGY)),
 
+    // Better HUD
+    FIX_BETTERHUD_ARMOR_BAR(new Builder("Fix better hud armor display breaking with skulls")
+            .addMixinClasses("betterhud.MixinSkullDurabilityDisplay")
+            .setApplyIf(() -> Common.config.fixBetterHUDArmorDisplay).addTargetedMod(TargetedMod.BETTERHUD)),
+
     // ProjectE
     FIX_FURNACE_ITERATION(new Builder("Speedup Furnaces").addMixinClasses("projecte.MixinObjHandler")
             .setApplyIf(() -> Common.config.speedupVanillaFurnace).addTargetedMod(TargetedMod.PROJECTE)),

@@ -31,6 +31,7 @@ public class LoadingConfig {
 
     public boolean changeSprintCategory;
     public boolean enlargePotionArray;
+    public boolean fixBetterHUDArmorDisplay;
     public boolean fixBibliocraftPackets;
     public boolean fixBibliocraftPathSanitization;
     public boolean fixChatWrappedColors;
@@ -233,6 +234,7 @@ public class LoadingConfig {
         fixGuiGameOver = config.get(Category.FIXES.toString(), "fixGuiGameOver", true, "Fix Game Over GUI buttons disabled if switching fullscreen").getBoolean();
         fixHasteArmSwing = config.get(Category.FIXES.toString(), "fixHasteArmSwing", true, "Fix arm not swinging when having too much haste").getBoolean();
         fixTimeCommandWithGC = config.get(Category.FIXES.toString(), "fixTimeCommandWithGC", true, "Fix time commands with GC").getBoolean();
+        fixBetterHUDArmorDisplay = config.get(Category.FIXES.toString(), "fixBetterHUDArmorDisplay",true, "Fix BetterHUD armor bar rendering breaking with skulls").getBoolean();
         fixBibliocraftPackets = config.get(Category.FIXES.toString(), "fixBibliocraftPackets", true, "Fix Bibliocraft packet exploits").getBoolean();
         fixBibliocraftPathSanitization = config.get(Category.FIXES.toString(), "fixBibliocraftPathSanitization", true, "Fix Bibliocraft path sanitization").getBoolean();
         fixZTonesPackets = config.get(Category.FIXES.toString(), "fixZTonesPackets", true, "Fix ZTones packet exploits").getBoolean();
