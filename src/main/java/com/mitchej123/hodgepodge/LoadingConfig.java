@@ -138,6 +138,7 @@ public class LoadingConfig {
     public boolean validatePacketEncodingBeforeSending;
     public boolean validatePacketEncodingBeforeSendingShouldCrash;
     public boolean chunkSaveCMEDebug;
+    public boolean noIc2CellConsumption;
 
     // render debug
     public boolean renderDebug;
@@ -325,6 +326,7 @@ public class LoadingConfig {
         transparentChat = config.get(Category.TWEAKS.toString(), "transparentChat", true, "Doesn't render the black box behind messages when the chat is closed").getBoolean();
         triggerAllConflictingKeybindings = config.get(Category.FIXES.toString(), "triggerAllConflictingKeybindings", true, "Triggers all conflicting key bindings on key press instead of a random one").getBoolean();
         unbindKeybindsByDefault = config.get(Category.TWEAKS.toString(), "unbindKeybindsByDefault", true, "Unbinds keybinds of certain ARR mods to avoid keybinds conflicts").getBoolean();
+        noIc2CellConsumption = config.get(Category.TWEAKS.toString(), "noIc2CellConsumption ", true, "No cell consumption when using ic2 cells, in sync with gt cells").getBoolean();
 
         // Disable for now as it is not compatible with anything modifying RenderBlocks
         pollutionAsm = config.get(Category.ASM.toString(), "pollutionAsm", false, "Enable pollution rendering ASM").getBoolean();
