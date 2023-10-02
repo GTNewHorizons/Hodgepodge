@@ -69,6 +69,7 @@ public class LoadingConfig {
     public boolean fixJourneymapKeybinds;
     public boolean fixJourneymapJumpyScrolling;
     public boolean fixJourneymapFilePath;
+    public boolean fixNetHandlerLoginServerOfflineMode;
     public boolean fixNetHandlerPlayClientHandleSetSlot;
     public boolean fixNetherLeavesFaceRendering;
     public boolean fixNorthWestBias;
@@ -254,6 +255,7 @@ public class LoadingConfig {
         fixJourneymapKeybinds = config.get(Category.FIXES.toString(), "fixJourneymapKeybinds", true, "Prevent unbinded keybinds from triggering when pressing certain keys").getBoolean();
         fixJourneymapJumpyScrolling = config.get(Category.FIXES.toString(), "fixJourneymapJumpyScrolling", true, "Fix jumpy scrolling in the waypoint manager screen").getBoolean();
         fixJourneymapFilePath = config.get(Category.FIXES.toString(), "fixJourneymapFilePath", true, "Prevents journeymap from using illegal character in file paths").getBoolean();
+        fixNetHandlerLoginServerOfflineMode = config.get(Category.FIXES.toString(), "fixNetHandlerLoginServerOfflineMode", true, "Allows the server to assign the logged in UUID to the same username when online_mode is false").getBoolean();
         fixNetHandlerPlayClientHandleSetSlot = config.get(Category.FIXES.toString(), "fixNetHandlerPlayClientHandleSetSlot", true, "Prevents crash if server sends itemStack with index larger than client's container").getBoolean();
         fixNetherLeavesFaceRendering = config.get(Category.FIXES.toString(), "fixNetherLeavesFaceRendering", true, "If fancy graphics are enabled, Nether Leaves render sides with other Nether Leaves adjacent too").getBoolean();
         fixNorthWestBias = config.get(Category.FIXES.toString(), "fixNorthWestBias", true, "Fix northwest bias on RandomPositionGenerator").getBoolean();
