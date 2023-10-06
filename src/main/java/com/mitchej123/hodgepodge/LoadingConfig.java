@@ -123,6 +123,7 @@ public class LoadingConfig {
     public boolean removeUpdateChecks;
     public boolean speedupAnimations;
     public boolean speedupBOPFogHandling;
+    public boolean speedupGrassBlockRandomTicking;
     public boolean speedupChunkCoordinatesHashCode;
     public boolean speedupProgressBar;
     public boolean speedupVanillaFurnace;
@@ -315,6 +316,7 @@ public class LoadingConfig {
         renderDebugMode = config.get(Category.DEBUG.toString(), "renderDebugMode", 0, "Default GL state debug mode. 0 - off, 1 - reduced, 2 - full").setMinValue(0).setMaxValue(2).getInt();
         speedupAnimations = config.get(Category.FIXES.toString(), "speedupAnimations", true, "Drastically speedup animated textures (Basically the same as with optifine animations off but animations are working)").getBoolean();
         speedupBOPFogHandling = config.get(Category.SPEEDUPS.toString(), "speedupBOPFogHandling", true, "Speedup biome fog rendering in BiomesOPlenty").getBoolean();
+        speedupGrassBlockRandomTicking = config.get(Category.SPEEDUPS.toString(), "speedupGrassBlockRandomTicking", true, "Speed up grass block random ticking").getBoolean();
         speedupChunkCoordinatesHashCode = config.get(Category.SPEEDUPS.toString(), "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
         speedupProgressBar = config.get(Category.ASM.toString(), "speedupProgressBar", true, "Speedup progressbar").getBoolean();
         speedupVanillaFurnace = config.get(Category.SPEEDUPS.toString(), "speedupVanillaFurnace", true, "Speedup Vanilla Furnace recipe lookup").getBoolean();
@@ -330,14 +332,14 @@ public class LoadingConfig {
 
         // Disable for now as it is not compatible with anything modifying RenderBlocks
         pollutionAsm = config.get(Category.ASM.toString(), "pollutionAsm", false, "Enable pollution rendering ASM").getBoolean();
-        
+
         // Pollution :nauseous:
         furnacesPollute = config.get(Category.POLLUTION.toString(), "furnacesPollute", true, "Make furnaces Pollute").getBoolean();
         rocketsPollute = config.get(Category.POLLUTION.toString(), "rocketsPollute", true, "Make rockets Pollute").getBoolean();
         railcraftPollutes = config.get(Category.POLLUTION.toString(), "railcraftPollutes", true, "Make Railcraft Pollute").getBoolean();
 
         disableAidSpawnByXUSpikes = config.get(Category.TWEAKS.toString(), "disableAidSpawnByXUSpikes", true, "Disables the spawn of zombie aid when zombie is killed by Extra Utilities Spikes, since it can spawn them too far.").getBoolean();
-        
+
         furnacePollutionAmount = config.get(Category.POLLUTION.toString(), "furnacePollution", 20, "Furnace pollution per second, min 1!", 1, Integer.MAX_VALUE).getInt();
         fireboxPollutionAmount = config.get(Category.POLLUTION.toString(), "fireboxPollution", 15, "Pollution Amount for RC Firebox", 1, Integer.MAX_VALUE).getInt();
         rocketPollutionAmount = config.get(Category.POLLUTION.toString(), "rocketPollution", 1000, "Pollution Amount for Rockets", 1, Integer.MAX_VALUE).getInt();
@@ -346,8 +348,8 @@ public class LoadingConfig {
         hobbyistEnginePollutionAmount = config.get(Category.POLLUTION.toString(), "hobbyistEnginePollution", 20, "Pollution Amount for hobbyist steam engine", 1, Integer.MAX_VALUE).getInt();
         tunnelBorePollutionAmount = config.get(Category.POLLUTION.toString(), "tunnelBorePollution", 2, "Pollution Amount for tunnel bore", 1, Integer.MAX_VALUE).getInt();
         explosionPollutionAmount = config.get(Category.POLLUTION.toString(), "explosionPollution", 33.34, "Explosion pollution").getDouble();
-        
-        
+
+
         // spotless:on
         if (config.hasChanged()) config.save();
     }
