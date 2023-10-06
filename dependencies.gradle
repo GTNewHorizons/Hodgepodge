@@ -37,6 +37,7 @@ dependencies {
     transformedModCompileOnly("curse.maven:immersive-engineering-231951:2299019")
     transformedMod("com.github.GTNewHorizons:harvestcraft:1.1.1-GTNH:dev")
     transformedModCompileOnly deobf('https://media.forgecdn.net/files/4091/561/LOTRMod+v36.15.jar')
+    transformedModCompileOnly deobf("https://mediafiles.forgecdn.net/files/2523/840/Better+HUD+by+NukeDuck+%5b1.7.10%5d%5b1.3.5%5d.jar")
     // Contains an outdated copy of thaumcraft api that breaks class loading at runtime
     transformedModCompileOnly(deobf("https://mediafiles.forgecdn.net/files/2241/397/Pam%27s+Harvest+the+Nether+1.7.10a.jar"))
     transformedMod(deobf("https://mediafiles.forgecdn.net/files/2340/786/ProjectE-1.7.10-PE1.10.1.jar"))
