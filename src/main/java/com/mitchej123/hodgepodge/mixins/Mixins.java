@@ -82,6 +82,9 @@ public enum Mixins {
     TRANSPARENT_CHAT(new Builder("Transparent Chat").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinGuiNewChat_TransparentChat").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.transparentChat).addTargetedMod(TargetedMod.VANILLA)),
+    SPEEDUP_GRASS_BLOCK_RANDOM_TICKING(new Builder("Speed up grass block random ticking").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinBlockGrass").addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> Common.config.speedupGrassBlockRandomTicking)),
     CHUNK_COORDINATES_HASHCODE(new Builder("Optimize Chunk Coordinates Hashcode").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinChunkCoordinates").addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> Common.config.speedupChunkCoordinatesHashCode)),
