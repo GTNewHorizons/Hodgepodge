@@ -72,6 +72,7 @@ public class LoadingConfig {
     public boolean fixJourneymapKeybinds;
     public boolean fixJourneymapJumpyScrolling;
     public boolean fixJourneymapFilePath;
+    public boolean fixNetHandlerLoginServerOfflineMode;
     public boolean fixNetHandlerPlayClientHandleSetSlot;
     public boolean fixNetherLeavesFaceRendering;
     public boolean fixNorthWestBias;
@@ -125,6 +126,7 @@ public class LoadingConfig {
     public boolean removeUpdateChecks;
     public boolean speedupAnimations;
     public boolean speedupBOPFogHandling;
+    public boolean speedupGrassBlockRandomTicking;
     public boolean speedupChunkCoordinatesHashCode;
     public boolean speedupProgressBar;
     public boolean speedupVanillaFurnace;
@@ -260,6 +262,7 @@ public class LoadingConfig {
         fixJourneymapKeybinds = config.get(Category.FIXES.toString(), "fixJourneymapKeybinds", true, "Prevent unbinded keybinds from triggering when pressing certain keys").getBoolean();
         fixJourneymapJumpyScrolling = config.get(Category.FIXES.toString(), "fixJourneymapJumpyScrolling", true, "Fix jumpy scrolling in the waypoint manager screen").getBoolean();
         fixJourneymapFilePath = config.get(Category.FIXES.toString(), "fixJourneymapFilePath", true, "Prevents journeymap from using illegal character in file paths").getBoolean();
+        fixNetHandlerLoginServerOfflineMode = config.get(Category.FIXES.toString(), "fixNetHandlerLoginServerOfflineMode", true, "Allows the server to assign the logged in UUID to the same username when online_mode is false").getBoolean();
         fixNetHandlerPlayClientHandleSetSlot = config.get(Category.FIXES.toString(), "fixNetHandlerPlayClientHandleSetSlot", true, "Prevents crash if server sends itemStack with index larger than client's container").getBoolean();
         fixNetherLeavesFaceRendering = config.get(Category.FIXES.toString(), "fixNetherLeavesFaceRendering", true, "If fancy graphics are enabled, Nether Leaves render sides with other Nether Leaves adjacent too").getBoolean();
         fixNorthWestBias = config.get(Category.FIXES.toString(), "fixNorthWestBias", true, "Fix northwest bias on RandomPositionGenerator").getBoolean();
@@ -319,6 +322,7 @@ public class LoadingConfig {
         renderDebugMode = config.get(Category.DEBUG.toString(), "renderDebugMode", 0, "Default GL state debug mode. 0 - off, 1 - reduced, 2 - full").setMinValue(0).setMaxValue(2).getInt();
         speedupAnimations = config.get(Category.FIXES.toString(), "speedupAnimations", true, "Drastically speedup animated textures (Basically the same as with optifine animations off but animations are working)").getBoolean();
         speedupBOPFogHandling = config.get(Category.SPEEDUPS.toString(), "speedupBOPFogHandling", true, "Speedup biome fog rendering in BiomesOPlenty").getBoolean();
+        speedupGrassBlockRandomTicking = config.get(Category.SPEEDUPS.toString(), "speedupGrassBlockRandomTicking", true, "Speed up grass block random ticking").getBoolean();
         speedupChunkCoordinatesHashCode = config.get(Category.SPEEDUPS.toString(), "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
         speedupProgressBar = config.get(Category.ASM.toString(), "speedupProgressBar", true, "Speedup progressbar").getBoolean();
         speedupVanillaFurnace = config.get(Category.SPEEDUPS.toString(), "speedupVanillaFurnace", true, "Speedup Vanilla Furnace recipe lookup").getBoolean();
@@ -334,14 +338,14 @@ public class LoadingConfig {
 
         // Disable for now as it is not compatible with anything modifying RenderBlocks
         pollutionAsm = config.get(Category.ASM.toString(), "pollutionAsm", false, "Enable pollution rendering ASM").getBoolean();
-        
+
         // Pollution :nauseous:
         furnacesPollute = config.get(Category.POLLUTION.toString(), "furnacesPollute", true, "Make furnaces Pollute").getBoolean();
         rocketsPollute = config.get(Category.POLLUTION.toString(), "rocketsPollute", true, "Make rockets Pollute").getBoolean();
         railcraftPollutes = config.get(Category.POLLUTION.toString(), "railcraftPollutes", true, "Make Railcraft Pollute").getBoolean();
 
         disableAidSpawnByXUSpikes = config.get(Category.TWEAKS.toString(), "disableAidSpawnByXUSpikes", true, "Disables the spawn of zombie aid when zombie is killed by Extra Utilities Spikes, since it can spawn them too far.").getBoolean();
-        
+
         furnacePollutionAmount = config.get(Category.POLLUTION.toString(), "furnacePollution", 20, "Furnace pollution per second, min 1!", 1, Integer.MAX_VALUE).getInt();
         fireboxPollutionAmount = config.get(Category.POLLUTION.toString(), "fireboxPollution", 15, "Pollution Amount for RC Firebox", 1, Integer.MAX_VALUE).getInt();
         rocketPollutionAmount = config.get(Category.POLLUTION.toString(), "rocketPollution", 1000, "Pollution Amount for Rockets", 1, Integer.MAX_VALUE).getInt();
@@ -350,8 +354,8 @@ public class LoadingConfig {
         hobbyistEnginePollutionAmount = config.get(Category.POLLUTION.toString(), "hobbyistEnginePollution", 20, "Pollution Amount for hobbyist steam engine", 1, Integer.MAX_VALUE).getInt();
         tunnelBorePollutionAmount = config.get(Category.POLLUTION.toString(), "tunnelBorePollution", 2, "Pollution Amount for tunnel bore", 1, Integer.MAX_VALUE).getInt();
         explosionPollutionAmount = config.get(Category.POLLUTION.toString(), "explosionPollution", 33.34, "Explosion pollution").getDouble();
-        
-        
+
+
         // spotless:on
         if (config.hasChanged()) config.save();
     }
