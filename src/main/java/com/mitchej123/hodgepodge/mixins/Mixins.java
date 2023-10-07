@@ -82,6 +82,9 @@ public enum Mixins {
     TRANSPARENT_CHAT(new Builder("Transparent Chat").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinGuiNewChat_TransparentChat").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.transparentChat).addTargetedMod(TargetedMod.VANILLA)),
+    SPEEDUP_GRASS_BLOCK_RANDOM_TICKING(new Builder("Speed up grass block random ticking").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinBlockGrass").addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> Common.config.speedupGrassBlockRandomTicking)),
     CHUNK_COORDINATES_HASHCODE(new Builder("Optimize Chunk Coordinates Hashcode").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinChunkCoordinates").addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> Common.config.speedupChunkCoordinatesHashCode)),
@@ -397,6 +400,15 @@ public enum Mixins {
     IMPLEMENTS_CONTAINER_FOR_THIRSTY_TANK(
             new Builder("Thirsty Tank Container").addMixinClasses("automagy.MixinItemBlockThirstyTank")
                     .setApplyIf(() -> Common.config.thirstyTankContainer).addTargetedMod(TargetedMod.AUTOMAGY)),
+
+    // Better HUD
+    FIX_BETTERHUD_ARMOR_BAR(new Builder("Fix better HUD armor display breaking with skulls")
+            .addMixinClasses("betterhud.MixinSkullDurabilityDisplay")
+            .setApplyIf(() -> Common.config.fixBetterHUDArmorDisplay).addTargetedMod(TargetedMod.BETTERHUD)),
+
+    FIX_BETTERHUD_HEARTS_FREEZE(new Builder("Fix better HUD freezing the game when trying to render high amounts of hp")
+            .addMixinClasses("betterhud.MixinHealthRender").setApplyIf(() -> Common.config.fixBetterHUDHPDisplay)
+            .addTargetedMod(TargetedMod.BETTERHUD)),
 
     // ProjectE
     FIX_FURNACE_ITERATION(new Builder("Speedup Furnaces").addMixinClasses("projecte.MixinObjHandler")

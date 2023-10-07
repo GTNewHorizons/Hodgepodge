@@ -31,6 +31,9 @@ public class LoadingConfig {
 
     public boolean changeSprintCategory;
     public boolean enlargePotionArray;
+    public boolean fixBetterHUDArmorDisplay;
+    public boolean fixBetterHUDHPDisplay;
+    public int betterHUDHPRenderLimit;
     public boolean fixBibliocraftPackets;
     public boolean fixBibliocraftPathSanitization;
     public boolean fixChatWrappedColors;
@@ -123,6 +126,7 @@ public class LoadingConfig {
     public boolean removeUpdateChecks;
     public boolean speedupAnimations;
     public boolean speedupBOPFogHandling;
+    public boolean speedupGrassBlockRandomTicking;
     public boolean speedupChunkCoordinatesHashCode;
     public boolean speedupProgressBar;
     public boolean speedupVanillaFurnace;
@@ -235,6 +239,9 @@ public class LoadingConfig {
         fixGuiGameOver = config.get(Category.FIXES.toString(), "fixGuiGameOver", true, "Fix Game Over GUI buttons disabled if switching fullscreen").getBoolean();
         fixHasteArmSwing = config.get(Category.FIXES.toString(), "fixHasteArmSwing", true, "Fix arm not swinging when having too much haste").getBoolean();
         fixTimeCommandWithGC = config.get(Category.FIXES.toString(), "fixTimeCommandWithGC", true, "Fix time commands with GC").getBoolean();
+        fixBetterHUDArmorDisplay = config.get(Category.FIXES.toString(), "fixBetterHUDArmorDisplay",true, "Fix BetterHUD armor bar rendering breaking with skulls").getBoolean();
+        fixBetterHUDHPDisplay = config.get(Category.FIXES.toString(), "fixBetterHUDHPDisplay",true, "Fix BetterHUD freezing the game when trying to render high amounts of hp").getBoolean();
+        betterHUDHPRenderLimit = config.get(Category.FIXES.toString(),"betterHUDHPRenderLimit", 5000, "Maximum hp for BetterHUD to render as hearts").getInt();
         fixBibliocraftPackets = config.get(Category.FIXES.toString(), "fixBibliocraftPackets", true, "Fix Bibliocraft packet exploits").getBoolean();
         fixBibliocraftPathSanitization = config.get(Category.FIXES.toString(), "fixBibliocraftPathSanitization", true, "Fix Bibliocraft path sanitization").getBoolean();
         fixZTonesPackets = config.get(Category.FIXES.toString(), "fixZTonesPackets", true, "Fix ZTones packet exploits").getBoolean();
@@ -316,6 +323,7 @@ public class LoadingConfig {
         renderDebugMode = config.get(Category.DEBUG.toString(), "renderDebugMode", 0, "Default GL state debug mode. 0 - off, 1 - reduced, 2 - full").setMinValue(0).setMaxValue(2).getInt();
         speedupAnimations = config.get(Category.FIXES.toString(), "speedupAnimations", true, "Drastically speedup animated textures (Basically the same as with optifine animations off but animations are working)").getBoolean();
         speedupBOPFogHandling = config.get(Category.SPEEDUPS.toString(), "speedupBOPFogHandling", true, "Speedup biome fog rendering in BiomesOPlenty").getBoolean();
+        speedupGrassBlockRandomTicking = config.get(Category.SPEEDUPS.toString(), "speedupGrassBlockRandomTicking", true, "Speed up grass block random ticking").getBoolean();
         speedupChunkCoordinatesHashCode = config.get(Category.SPEEDUPS.toString(), "speedupChunkCoordinatesHashCode", true, "Speedup ChunkCoordinates hashCode").getBoolean();
         speedupProgressBar = config.get(Category.ASM.toString(), "speedupProgressBar", true, "Speedup progressbar").getBoolean();
         speedupVanillaFurnace = config.get(Category.SPEEDUPS.toString(), "speedupVanillaFurnace", true, "Speedup Vanilla Furnace recipe lookup").getBoolean();
@@ -332,14 +340,14 @@ public class LoadingConfig {
 
         // Disable for now as it is not compatible with anything modifying RenderBlocks
         pollutionAsm = config.get(Category.ASM.toString(), "pollutionAsm", false, "Enable pollution rendering ASM").getBoolean();
-        
+
         // Pollution :nauseous:
         furnacesPollute = config.get(Category.POLLUTION.toString(), "furnacesPollute", true, "Make furnaces Pollute").getBoolean();
         rocketsPollute = config.get(Category.POLLUTION.toString(), "rocketsPollute", true, "Make rockets Pollute").getBoolean();
         railcraftPollutes = config.get(Category.POLLUTION.toString(), "railcraftPollutes", true, "Make Railcraft Pollute").getBoolean();
 
         disableAidSpawnByXUSpikes = config.get(Category.TWEAKS.toString(), "disableAidSpawnByXUSpikes", true, "Disables the spawn of zombie aid when zombie is killed by Extra Utilities Spikes, since it can spawn them too far.").getBoolean();
-        
+
         furnacePollutionAmount = config.get(Category.POLLUTION.toString(), "furnacePollution", 20, "Furnace pollution per second, min 1!", 1, Integer.MAX_VALUE).getInt();
         fireboxPollutionAmount = config.get(Category.POLLUTION.toString(), "fireboxPollution", 15, "Pollution Amount for RC Firebox", 1, Integer.MAX_VALUE).getInt();
         rocketPollutionAmount = config.get(Category.POLLUTION.toString(), "rocketPollution", 1000, "Pollution Amount for Rockets", 1, Integer.MAX_VALUE).getInt();
@@ -348,8 +356,8 @@ public class LoadingConfig {
         hobbyistEnginePollutionAmount = config.get(Category.POLLUTION.toString(), "hobbyistEnginePollution", 20, "Pollution Amount for hobbyist steam engine", 1, Integer.MAX_VALUE).getInt();
         tunnelBorePollutionAmount = config.get(Category.POLLUTION.toString(), "tunnelBorePollution", 2, "Pollution Amount for tunnel bore", 1, Integer.MAX_VALUE).getInt();
         explosionPollutionAmount = config.get(Category.POLLUTION.toString(), "explosionPollution", 33.34, "Explosion pollution").getDouble();
-        
-        
+
+
         // spotless:on
         if (config.hasChanged()) config.save();
     }

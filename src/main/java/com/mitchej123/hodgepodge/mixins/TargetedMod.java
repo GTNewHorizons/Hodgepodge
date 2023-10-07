@@ -5,6 +5,7 @@ public enum TargetedMod {
     ARCHAICFIX("ArchaicFix", "org.embeddedt.archaicfix.ArchaicCore", "archaicfix"),
     AUTOMAGY("Automagy", null, "Automagy"),
     BAUBLES("Baubles", null, "Baubles"),
+    BETTERHUD("Better HUD", null, "hud"),
     BIBLIOCRAFT("Bibliocraft", null, "BiblioCraft"),
     BOP("BiomesOPlenty", null, "BiomesOPlenty"),
     BUKKIT("Bukkit/Thermos", "Bukkit", null),
