@@ -63,13 +63,11 @@ public class EarlyClassTransformer implements IClassTransformer {
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null || name == null) return basicClass;
-        switch (name) {
-            case "cpw.mods.fml.common.ModContainerFactory":
-                if (noNukeBaseMod) return basicClass;
-                return transformModContainerFactory(basicClass);
-            default:
-                return basicClass;
+        if (name.equals("cpw.mods.fml.common.ModContainerFactory")) {
+            if (noNukeBaseMod) return basicClass;
+            return transformModContainerFactory(basicClass);
         }
+        return basicClass;
     }
 
     private static byte[] transformModContainerFactory(byte[] basicClass) {
