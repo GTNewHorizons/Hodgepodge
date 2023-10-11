@@ -36,6 +36,7 @@ import org.objectweb.asm.MethodVisitor;
  * order, we will try to minimize the class dependencies on this class, meaning we will not use the usual Configuration
  * class to handle configurations
  */
+@SuppressWarnings("unused")
 public class EarlyClassTransformer implements IClassTransformer {
 
     private static final boolean noNukeBaseMod;
@@ -119,7 +120,7 @@ public class EarlyClassTransformer implements IClassTransformer {
                 return mv;
             }
         };
-        cr.accept(cv, 0);
+        cr.accept(cv, ClassReader.SKIP_DEBUG);
         return cw.toByteArray();
     }
 }

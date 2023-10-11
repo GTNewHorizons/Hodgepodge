@@ -26,10 +26,8 @@ public class ThermosFurnaceSledgeHammer implements IClassTransformer {
         if (Common.config.thermosCraftServerClass.equals(transformedName)) {
             LOGGER.info("Patching Thermos or derivative to not break our furnace fix");
             final ClassReader cr = new ClassReader(basicClass);
-            final ClassWriter cw = new ClassWriter(0);
-
             final ClassNode cn = new ClassNode(ASM5);
-            cr.accept(cn, 0);
+            cr.accept(cn, ClassReader.SKIP_DEBUG);
             for (MethodNode m : cn.methods) {
                 if ("resetRecipes".equals(m.name)) {
                     LOGGER.info("Taking a sledgehammer to CraftServer.resetRecipes()");
@@ -40,10 +38,10 @@ public class ThermosFurnaceSledgeHammer implements IClassTransformer {
                     m.maxStack = 0;
                 }
             }
+            final ClassWriter cw = new ClassWriter(0);
             cn.accept(cw);
             return cw.toByteArray();
-        } else {
-            return basicClass;
         }
+        return basicClass;
     }
 }
