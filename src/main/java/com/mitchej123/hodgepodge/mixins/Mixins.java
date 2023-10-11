@@ -381,6 +381,12 @@ public enum Mixins {
             .addMixinClasses("biomesoplenty.MixinBOPReflectionHelper").setApplyIf(() -> Common.config.java12BopCompat)
             .addTargetedMod(TargetedMod.BOP)),
 
+    // COFH
+    COFH_REMOVE_TE_CACHE(
+            new Builder("Remove CoFH tile entity cache").addMixinClasses("minecraft.MixinWorld_CoFH_TE_Cache")
+                    .setSide(Side.BOTH).setApplyIf(() -> Common.config.cofhWorldTransformer)
+                    .addTargetedMod(TargetedMod.COFH_CORE).setPhase(Phase.EARLY)),
+
     // Immersive engineering
     JAVA12_IMMERSIVE_ENGINERRING(new Builder("Immersive Engineering Java-12 safe potion array resizing")
             .addMixinClasses("immersiveengineering.MixinIEPotions")

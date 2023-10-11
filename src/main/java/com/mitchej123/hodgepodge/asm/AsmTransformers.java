@@ -14,10 +14,6 @@ public enum AsmTransformers {
             "Pollution Transformer",
             () -> Common.config.pollutionAsm,
             "com.mitchej123.hodgepodge.asm.transformers.pollution.PollutionClassTransformer"),
-    COFH_WORLD_TRANSFORMER(
-            "World Transformer - Remove CoFH tile entity cache",
-            () -> Common.config.cofhWorldTransformer,
-            "com.mitchej123.hodgepodge.asm.transformers.cofh.WorldTransformer"),
     SPEEDUP_PROGRESS_BAR(
             "Speed up Progress Bar by speeding up stripSpecialCharacters",
             () -> Common.config.speedupProgressBar,
