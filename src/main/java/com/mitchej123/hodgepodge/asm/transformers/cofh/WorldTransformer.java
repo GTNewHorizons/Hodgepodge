@@ -31,7 +31,7 @@ public class WorldTransformer implements IClassTransformer {
      * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for
      * the specific language governing permissions and limitations under the License.
      * <p>
-     * Taken from from https://github.com/Glease/CoFHCoreFix * Removes cofh_recentTiles that is never used/cleaned up
+     * Taken from https://github.com/Glease/CoFHCoreFix * Removes cofh_recentTiles that is never used/cleaned up
      */
     private static final Logger LOGGER = LogManager.getLogger("CoFHCoreFix");
 
@@ -65,8 +65,7 @@ public class WorldTransformer implements IClassTransformer {
             ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
             cn.accept(cw);
             return cw.toByteArray();
-        } else {
-            return basicClass;
         }
+        return basicClass;
     }
 }
