@@ -14,12 +14,25 @@ public class MixinWorld_CoFH_TE_Cache {
 
     @Dynamic("Remove CoFH tile entity cache")
     @Redirect(
-            method = "*",
+            method = { "func_147448_a", "setTileEntity" },
             at = @At(
                     value = "INVOKE",
                     target = "Lcofh/lib/util/LinkedHashList;push(Ljava/lang/Object;)Z",
                     remap = false))
     private boolean hodgepodge$removeTEcache(LinkedHashList<?> list, Object o) {
+        // do nothing
+        return true;
+    }
+
+    @Dynamic("Remove CoFH tile entity cache")
+    @Redirect(
+            method = "addTileEntity",
+            remap = false,
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lcofh/lib/util/LinkedHashList;push(Ljava/lang/Object;)Z",
+                    remap = false))
+    private boolean hodgepodge$removeTEcachee(LinkedHashList<?> list, Object o) {
         // do nothing
         return true;
     }
