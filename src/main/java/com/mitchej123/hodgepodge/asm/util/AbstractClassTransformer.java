@@ -19,10 +19,8 @@ import com.mitchej123.hodgepodge.core.HodgepodgeCore;
 public abstract class AbstractClassTransformer implements IClassTransformer {
 
     protected final Logger log = LogManager.getLogger(getClass().getSimpleName());
-
     /** The kind of environment we are in. Assume MCP until proven otherwise */
-    protected Namespace environment = Namespace.MCP;
-
+    protected Namespace environment = HodgepodgeCore.isObf() ? Namespace.OBF : Namespace.MCP;
     private final Map<String, Map<MethodRef, AbstractMethodTransformer>> methodTransformers = Maps.newHashMap();
     private final Map<String, Integer> classWriterFlags = Maps.newHashMap();
 
@@ -37,12 +35,6 @@ public abstract class AbstractClassTransformer implements IClassTransformer {
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         // ???
         if (basicClass == null) return null;
-
-        // test the environment - a name mismatch indicates the presence of obfuscated code
-        if (!transformedName.equals(name)) {
-            if (HodgepodgeCore.getSortingIndex() >= 1001) environment = Namespace.SRG;
-            else environment = Namespace.OBF;
-        }
 
         Map<MethodRef, AbstractMethodTransformer> transformers = methodTransformers.get(transformedName);
         if (transformers == null) return basicClass; // nothing to transform

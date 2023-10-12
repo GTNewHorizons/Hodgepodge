@@ -12,17 +12,11 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.MCVersion("1.7.10")
 @IFMLLoadingPlugin.TransformerExclusions({ "com.mitchej123.hodgepodge.asm", "optifine" })
-@IFMLLoadingPlugin.SortingIndex(1002)
 @IFMLLoadingPlugin.DependsOn("cofh.asm.LoadingPlugin")
 public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
-    public static final SortingIndex index = HodgepodgeCore.class.getAnnotation(IFMLLoadingPlugin.SortingIndex.class);
-
+    private static boolean isObf;
     private String[] transformerClasses;
-
-    public static int getSortingIndex() {
-        return index != null ? index.value() : 0;
-    }
 
     @Override
     public String getMixinConfig() {
@@ -53,10 +47,16 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     }
 
     @Override
-    public void injectData(Map<String, Object> data) {}
+    public void injectData(Map<String, Object> data) {
+        isObf = (boolean) data.get("runtimeDeobfuscationEnabled");
+    }
 
     @Override
     public String getAccessTransformerClass() {
         return null;
+    }
+
+    public static boolean isObf() {
+        return isObf;
     }
 }
