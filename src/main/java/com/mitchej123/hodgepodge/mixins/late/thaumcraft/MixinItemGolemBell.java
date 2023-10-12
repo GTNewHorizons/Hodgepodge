@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.mitchej123.hodgepodge.common.ThaumcraftMixinMethods;
+import com.mitchej123.hodgepodge.mixins.hooks.ThaumcraftMixinMethods;
 
 import thaumcraft.common.entities.golems.ItemGolemBell;
 import thaumcraft.common.entities.golems.Marker;

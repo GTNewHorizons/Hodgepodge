@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.common;
+package com.mitchej123.hodgepodge.mixins.hooks;
 
 import java.util.ArrayList;
 

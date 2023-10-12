@@ -7,10 +7,10 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-import com.mitchej123.hodgepodge.common.BlockInvoker_FixXray;
+import com.mitchej123.hodgepodge.mixins.interfaces.BlockExt_FixXray;
 
 @Mixin(Block.class)
-public abstract class MixinBlock_FixXray implements BlockInvoker_FixXray {
+public abstract class MixinBlock_FixXray implements BlockExt_FixXray {
 
     @Shadow
     public abstract AxisAlignedBB getCollisionBoundingBoxFromPool(World worldIn, int x, int y, int z);

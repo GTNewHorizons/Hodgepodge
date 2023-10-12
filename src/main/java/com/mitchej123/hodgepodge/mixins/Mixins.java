@@ -34,7 +34,7 @@ public enum Mixins {
     FIX_NETHANDLERLOGINSERVER_OFFLINEMODE(
             new Builder("Allows the server to assign the logged in UUID to the same username when online_mode is false")
                     .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinNetHandlerLoginServer_OfflineMode")
-                    .setSide(Side.SERVER).setApplyIf(() -> true) /* no config option for this */
+                    .setSide(Side.SERVER).setApplyIf(() -> Common.config.fixNetHandlerLoginServerOfflineMode)
                     .addTargetedMod(TargetedMod.VANILLA)),
     FIX_INVENTORY_POTION_EFFECT_NUMERALS(
             new Builder("Fix potion effects level not displaying properly above a certain value").setPhase(Phase.EARLY)
@@ -88,6 +88,9 @@ public enum Mixins {
     LONGER_MESSAGES_SERVER(new Builder("Longer Messages").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinC01PacketChatMessage_LongerMessages")
             .setApplyIf(() -> Common.config.longerSentMessages).addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)),
+    SPEEDUP_GRASS_BLOCK_RANDOM_TICKING(new Builder("Speed up grass block random ticking").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinBlockGrass").addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> Common.config.speedupGrassBlockRandomTicking)),
     CHUNK_COORDINATES_HASHCODE(new Builder("Optimize Chunk Coordinates Hashcode").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinChunkCoordinates").addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> Common.config.speedupChunkCoordinatesHashCode)),
@@ -403,6 +406,15 @@ public enum Mixins {
     IMPLEMENTS_CONTAINER_FOR_THIRSTY_TANK(
             new Builder("Thirsty Tank Container").addMixinClasses("automagy.MixinItemBlockThirstyTank")
                     .setApplyIf(() -> Common.config.thirstyTankContainer).addTargetedMod(TargetedMod.AUTOMAGY)),
+
+    // Better HUD
+    FIX_BETTERHUD_ARMOR_BAR(new Builder("Fix better HUD armor display breaking with skulls")
+            .addMixinClasses("betterhud.MixinSkullDurabilityDisplay")
+            .setApplyIf(() -> Common.config.fixBetterHUDArmorDisplay).addTargetedMod(TargetedMod.BETTERHUD)),
+
+    FIX_BETTERHUD_HEARTS_FREEZE(new Builder("Fix better HUD freezing the game when trying to render high amounts of hp")
+            .addMixinClasses("betterhud.MixinHealthRender").setApplyIf(() -> Common.config.fixBetterHUDHPDisplay)
+            .addTargetedMod(TargetedMod.BETTERHUD)),
 
     // ProjectE
     FIX_FURNACE_ITERATION(new Builder("Speedup Furnaces").addMixinClasses("projecte.MixinObjHandler")

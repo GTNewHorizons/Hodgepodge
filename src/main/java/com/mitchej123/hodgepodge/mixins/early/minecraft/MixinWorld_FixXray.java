@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.mitchej123.hodgepodge.common.BlockInvoker_FixXray;
+import com.mitchej123.hodgepodge.mixins.interfaces.BlockExt_FixXray;
 
 @Mixin(World.class)
 public class MixinWorld_FixXray {
@@ -23,7 +23,7 @@ public class MixinWorld_FixXray {
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/Block;getCollisionBoundingBoxFromPool(Lnet/minecraft/world/World;III)Lnet/minecraft/util/AxisAlignedBB;"))
     private AxisAlignedBB hodgepodge$fixXray(Block block, World world, int x, int y, int z) {
-        if (((BlockInvoker_FixXray) block).hodgepodge$shouldRayTraceStopOnBlock(world, x, y, z)) {
+        if (((BlockExt_FixXray) block).hodgepodge$shouldRayTraceStopOnBlock(world, x, y, z)) {
             return hodgepodge$DUMMY_AABB;
         }
         return null;

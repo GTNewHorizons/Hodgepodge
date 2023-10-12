@@ -16,10 +16,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.mitchej123.hodgepodge.common.KeyBindingDuck;
+import com.mitchej123.hodgepodge.mixins.interfaces.KeyBindingExt;
 
 @Mixin(KeyBinding.class)
-public class MixinKeyBinding implements KeyBindingDuck {
+public class MixinKeyBinding implements KeyBindingExt {
 
     @Shadow
     @Final
