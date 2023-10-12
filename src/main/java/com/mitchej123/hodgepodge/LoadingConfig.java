@@ -360,7 +360,6 @@ public class LoadingConfig {
         tunnelBorePollutionAmount = config.get(Category.POLLUTION.toString(), "tunnelBorePollution", 2, "Pollution Amount for tunnel bore", 1, Integer.MAX_VALUE).getInt();
         explosionPollutionAmount = config.get(Category.POLLUTION.toString(), "explosionPollution", 33.34, "Explosion pollution").getDouble();
 
-
         // spotless:on
         if (config.hasChanged()) config.save();
     }
