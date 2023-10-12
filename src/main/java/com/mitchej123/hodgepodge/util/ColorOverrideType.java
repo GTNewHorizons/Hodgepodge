@@ -6,27 +6,21 @@ import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 
 public enum ColorOverrideType {
 
-    GRASS("GRASS"),
-    LEAVES("LEAVES"),
-    FLOWER("FLOWER"),
-    LIQUID("LIQUID");
+    GRASS,
+    LEAVES,
+    FLOWER,
+    LIQUID;
 
-    private static final HashMap<String, ColorOverrideType> byString = new HashMap<>();
+    private static final HashMap<String, ColorOverrideType> fromStringMap = new HashMap<>();
 
     static {
         for (ColorOverrideType type : ColorOverrideType.values()) {
-            byString.put(type.name, type);
+            fromStringMap.put(type.name(), type);
         }
     }
 
-    public String name;
-
-    ColorOverrideType(String name) {
-        this.name = name;
-    }
-
-    public static ColorOverrideType get(String name) {
-        return byString.get(name);
+    public static ColorOverrideType fromName(String name) {
+        return fromStringMap.get(name);
     }
 
     public int getColor(int oColor, int x, int z) {
