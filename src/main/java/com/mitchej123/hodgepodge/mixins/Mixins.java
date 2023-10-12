@@ -541,6 +541,18 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.unbindKeybindsByDefault).addTargetedMod(TargetedMod.AUTOMAGY)),
 
     // Pollution
+    POLLUTION_RENDER_BLOCKS(new Builder("Changes colors of certain blocks based on pollution levels")
+            .addMixinClasses("minecraft.MixinRenderBlocks_PollutionWithoutOptifine").addTargetedMod(TargetedMod.GT5U)
+            .addTargetedMod(TargetedMod.VANILLA).addExcludedMod(TargetedMod.OPTIFINE).setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.pollutionBlockRecolor).setPhase(Phase.EARLY)),
+    POLLUTION_RENDER_BLOCKS_OPTIFINE(new Builder("Changes colors of certain blocks based on pollution levels")
+            .addMixinClasses("minecraft.MixinRenderBlocks_PollutionWithOptifine").addTargetedMod(TargetedMod.GT5U)
+            .addTargetedMod(TargetedMod.VANILLA).addTargetedMod(TargetedMod.OPTIFINE).setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.pollutionBlockRecolor).setPhase(Phase.EARLY)),
+    POLLUTION_RENDER_BLOCKS_BOP(new Builder("Changes colors of certain blocks based on pollution levels")
+            .addMixinClasses("biomesoplenty.MixinFoliageRenderer_Pollution").addTargetedMod(TargetedMod.GT5U)
+            .addTargetedMod(TargetedMod.BOP).setSide(Side.CLIENT).setApplyIf(() -> Common.config.pollutionBlockRecolor)
+            .setPhase(Phase.LATE)),
     POLLUTION_MINECRAFT_FURNACE(new Builder("Minecraft Furnace Pollutes").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinTileEntityFurnacePollution").setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.furnacesPollute).addTargetedMod(TargetedMod.VANILLA)),
@@ -550,7 +562,6 @@ public enum Mixins {
     POLLUTION_THAUMCRAFT_ALCHEMICAL_FURNACE(new Builder("Thaumcraft Alchemical Construct Pollutes")
             .addMixinClasses("thaumcraft.MixinThaumcraftAlchemyFurnacePollution").setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.furnacesPollute).addTargetedMod(TargetedMod.THAUMCRAFT)),
-
     POLLUTION_RAILCRAFT(new Builder("Make Railcraft Pollute")
             .addMixinClasses(
                     "railcraft.MixinRailcraftBoilerPollution",
