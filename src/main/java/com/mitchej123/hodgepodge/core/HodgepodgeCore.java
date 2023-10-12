@@ -1,13 +1,10 @@
 package com.mitchej123.hodgepodge.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
-import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.asm.AsmTransformers;
 import com.mitchej123.hodgepodge.mixins.Mixins;
 
@@ -34,19 +31,7 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     @Override
     public List<String> getMixins(Set<String> loadedCoreMods) {
-        final List<String> mixins = new ArrayList<>();
-        final List<String> notLoading = new ArrayList<>();
-        for (Mixins mixin : Mixins.values()) {
-            if (mixin.phase == Mixins.Phase.EARLY) {
-                if (mixin.shouldLoad(loadedCoreMods, Collections.emptySet())) {
-                    mixins.addAll(mixin.mixinClasses);
-                } else {
-                    notLoading.addAll(mixin.mixinClasses);
-                }
-            }
-        }
-        Common.log.info("Not loading the following EARLY mixins: {}", notLoading.toString());
-        return mixins;
+        return Mixins.getEarlyMixins(loadedCoreMods);
     }
 
     @Override
