@@ -149,6 +149,7 @@ public class LoadingConfig {
     public int renderDebugMode;
 
     // Pollution :nauseous:
+    public boolean pollutionRenderBlocks;
     public boolean furnacesPollute;
     public boolean rocketsPollute;
     public boolean railcraftPollutes;
@@ -161,10 +162,8 @@ public class LoadingConfig {
     public int tunnelBorePollutionAmount;
     public double explosionPollutionAmount;
 
-    // ASM
     public boolean cofhWorldTransformer;
     public boolean enableTileRendererProfiler;
-    public boolean pollutionAsm;
 
     public boolean disableAidSpawnByXUSpikes;
 
@@ -336,10 +335,8 @@ public class LoadingConfig {
         triggerAllConflictingKeybindings = config.get(Category.FIXES.toString(), "triggerAllConflictingKeybindings", true, "Triggers all conflicting key bindings on key press instead of a random one").getBoolean();
         unbindKeybindsByDefault = config.get(Category.TWEAKS.toString(), "unbindKeybindsByDefault", true, "Unbinds keybinds of certain ARR mods to avoid keybinds conflicts").getBoolean();
 
-        // Disable for now as it is not compatible with anything modifying RenderBlocks
-        pollutionAsm = config.get(Category.ASM.toString(), "pollutionAsm", false, "Enable pollution rendering ASM").getBoolean();
-
         // Pollution :nauseous:
+        pollutionRenderBlocks = config.get(Category.ASM.toString(), "pollutionRenderBlocks", true, "Changes colors of certain blocks based on pollution levels").getBoolean();
         furnacesPollute = config.get(Category.POLLUTION.toString(), "furnacesPollute", true, "Make furnaces Pollute").getBoolean();
         rocketsPollute = config.get(Category.POLLUTION.toString(), "rocketsPollute", true, "Make rockets Pollute").getBoolean();
         railcraftPollutes = config.get(Category.POLLUTION.toString(), "railcraftPollutes", true, "Make Railcraft Pollute").getBoolean();

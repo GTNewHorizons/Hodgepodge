@@ -12,11 +12,6 @@ import cpw.mods.fml.relauncher.FMLLaunchHandler;
 public enum AsmTransformers {
 
     // spotless:off
-    POLLUTION_TRANSFORMER(
-            "Pollution Transformer",
-            () -> Common.config.pollutionAsm,
-            Side.CLIENT,
-            "com.mitchej123.hodgepodge.asm.transformers.pollution.PollutionClassTransformer"),
     SPEEDUP_PROGRESS_BAR(
             "Speed up Progress Bar by speeding up stripSpecialCharacters",
             () -> Common.config.speedupProgressBar,
@@ -29,16 +24,15 @@ public enum AsmTransformers {
             "com.mitchej123.hodgepodge.asm.transformers.thermos.ThermosFurnaceSledgeHammer");
     // spotless:on
 
-    private final String name;
     private final Supplier<Boolean> applyIf;
     private final Side side;
-    private final String[] asmTransformers;
+    private final String[] transformerClasses;
 
-    AsmTransformers(String name, Supplier<Boolean> applyIf, Side side, String... transformers) {
-        this.name = name;
+    AsmTransformers(@SuppressWarnings("unused") String description, Supplier<Boolean> applyIf, Side side,
+            String... transformers) {
         this.applyIf = applyIf;
         this.side = side;
-        this.asmTransformers = transformers;
+        this.transformerClasses = transformers;
     }
 
     private boolean shouldBeLoaded() {
@@ -54,10 +48,10 @@ public enum AsmTransformers {
         final List<String> list = new ArrayList<>();
         for (AsmTransformers transformer : values()) {
             if (transformer.shouldBeLoaded()) {
-                Common.log.info("Loading transformer {}", transformer.name);
-                list.addAll(Arrays.asList(transformer.asmTransformers));
+                Common.log.info("Loading transformer {}", (Object[]) transformer.transformerClasses);
+                list.addAll(Arrays.asList(transformer.transformerClasses));
             } else {
-                Common.log.info("Not loading transformer {}", transformer.name);
+                Common.log.info("Not loading transformer {}", (Object[]) transformer.transformerClasses);
             }
         }
         return list.toArray(new String[0]);
