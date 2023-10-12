@@ -15,7 +15,6 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 @IFMLLoadingPlugin.DependsOn("cofh.asm.LoadingPlugin")
 public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
-    private static boolean isObf;
     private String[] transformerClasses;
 
     @Override
@@ -47,16 +46,10 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     }
 
     @Override
-    public void injectData(Map<String, Object> data) {
-        isObf = (boolean) data.get("runtimeDeobfuscationEnabled");
-    }
+    public void injectData(Map<String, Object> data) {}
 
     @Override
     public String getAccessTransformerClass() {
         return null;
-    }
-
-    public static boolean isObf() {
-        return isObf;
     }
 }
