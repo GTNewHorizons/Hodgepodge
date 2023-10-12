@@ -536,10 +536,10 @@ public enum Mixins {
     // Pollution
     POLLUTION_RENDER_BLOCKS(new Builder("Changes colors of certain blocks based on pollution levels")
             .addMixinClasses("minecraft.MixinRenderBlocks_Pollution").addTargetedMod(TargetedMod.GT5U)
-            .setSide(Side.CLIENT).setApplyIf(() -> Common.config.pollutionRenderBlocks).setPhase(Phase.EARLY)),
+            .setSide(Side.CLIENT).setApplyIf(() -> Common.config.pollutionBlockRecolor).setPhase(Phase.EARLY)),
     POLLUTION_RENDER_BLOCKS_BOP(new Builder("Changes colors of certain blocks based on pollution levels")
             .addMixinClasses("biomesoplenty.MixinFoliageRenderer_Pollution").addTargetedMod(TargetedMod.GT5U)
-            .addTargetedMod(TargetedMod.BOP).setSide(Side.CLIENT).setApplyIf(() -> Common.config.pollutionRenderBlocks)
+            .addTargetedMod(TargetedMod.BOP).setSide(Side.CLIENT).setApplyIf(() -> Common.config.pollutionBlockRecolor)
             .setPhase(Phase.LATE)),
     POLLUTION_MINECRAFT_FURNACE(new Builder("Minecraft Furnace Pollutes").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinTileEntityFurnacePollution").setSide(Side.BOTH)
