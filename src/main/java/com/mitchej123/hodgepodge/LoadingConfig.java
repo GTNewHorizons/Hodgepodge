@@ -45,6 +45,7 @@ public class LoadingConfig {
     public boolean fixEnchantmentNumerals;
     public boolean fixExtraUtilitiesItemRendering;
     public boolean fixExtraUtilitiesUnEnchanting;
+    public boolean fixExtraUtilitiesDrumEatingCells;
     public boolean fixFenceConnections;
     public boolean fixFireSpread;
     public boolean fixFluidContainerRegistryKey;
@@ -227,6 +228,7 @@ public class LoadingConfig {
         fixEnchantmentNumerals = config.get(Category.FIXES.toString(), "fixEnchantmentNumerals", true, "Fix enchantment levels not displaying properly above a certain value").getBoolean();
         fixExtraUtilitiesItemRendering = config.get(Category.FIXES.toString(), "fixExtraUtilitiesItemRendering", true, "Fixes rendering issues with transparent items from extra utilities").getBoolean();
         fixExtraUtilitiesUnEnchanting = config.get(Category.FIXES.toString(), "fixExtraUtilitiesUnEnchanting", true, "Fix dupe bug with division sigil removing enchantment").getBoolean();
+        fixExtraUtilitiesDrumEatingCells = config.get(Category.FIXES.toString(), "fixExtraUtilitiesDrumEatingCells", true, "Fix Extra Utilities drums eating ic2 cells and forestry capsules").getBoolean();
         fixFenceConnections = config.get(Category.FIXES.toString(), "fixFenceConnections", true, "Fix fence connections with other types of fence").getBoolean();
         fixFireSpread = config.get(Category.FIXES.toString(), "fixFireSpread", true, "Fix vanilla fire spread sometimes cause NPE on thermos").getBoolean();
         fixFluidContainerRegistryKey = config.get(Category.FIXES.toString(), "fixFluidContainerRegistryKey", true, "Fix Forge fluid container registry key").getBoolean();
