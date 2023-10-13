@@ -503,7 +503,7 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.fixExtraUtilitiesItemRendering)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
     FIX_DRUM_EATING_CELLS(new Builder("Fix extra utilities drums eating ic2 cells and forestry capsules")
-            .addMixinClasses("extrautilities.MixinBlockDrum").setSide(Side.BOTH)
+            .addMixinClasses("extrautilities.MixinBlockDrum").setSide(Side.BOTH).setPhase(Phase.LATE)
             .setApplyIf(() -> Common.config.fixExtraUtilitiesDrumEatingCells)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
