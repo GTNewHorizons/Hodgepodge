@@ -13,7 +13,7 @@ import com.mitchej123.hodgepodge.LoadingConfig;
 import com.mitchej123.hodgepodge.util.ColorOverrideType;
 
 @Mixin(RenderBlocks.class)
-public class MixinRenderBlocks_Pollution {
+public class MixinRenderBlocks_PollutionWithoutOptifine {
 
     @ModifyExpressionValue(
             method = "renderStandardBlock",
