@@ -545,8 +545,13 @@ public enum Mixins {
 
     // Pollution
     POLLUTION_RENDER_BLOCKS(new Builder("Changes colors of certain blocks based on pollution levels")
-            .addMixinClasses("minecraft.MixinRenderBlocks_Pollution").addTargetedMod(TargetedMod.GT5U)
-            .setSide(Side.CLIENT).setApplyIf(() -> Common.config.pollutionBlockRecolor).setPhase(Phase.EARLY)),
+            .addMixinClasses("minecraft.MixinRenderBlocks_PollutionWithoutOptifine").addTargetedMod(TargetedMod.GT5U)
+            .addTargetedMod(TargetedMod.VANILLA).addExcludedMod(TargetedMod.OPTIFINE).setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.pollutionBlockRecolor).setPhase(Phase.EARLY)),
+    POLLUTION_RENDER_BLOCKS_OPTIFINE(new Builder("Changes colors of certain blocks based on pollution levels")
+            .addMixinClasses("minecraft.MixinRenderBlocks_PollutionWithOptifine").addTargetedMod(TargetedMod.GT5U)
+            .addTargetedMod(TargetedMod.VANILLA).addTargetedMod(TargetedMod.OPTIFINE).setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.pollutionBlockRecolor).setPhase(Phase.EARLY)),
     POLLUTION_RENDER_BLOCKS_BOP(new Builder("Changes colors of certain blocks based on pollution levels")
             .addMixinClasses("biomesoplenty.MixinFoliageRenderer_Pollution").addTargetedMod(TargetedMod.GT5U)
             .addTargetedMod(TargetedMod.BOP).setSide(Side.CLIENT).setApplyIf(() -> Common.config.pollutionBlockRecolor)
