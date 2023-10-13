@@ -496,6 +496,10 @@ public enum Mixins {
             .addMixinClasses("extrautilities.MixinTransparentItemRender").setPhase(Phase.LATE).setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixExtraUtilitiesItemRendering)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_DRUM_EATING_CELLS(new Builder("Fix extra utilities drums eating ic2 cells and forestry capsules")
+            .addMixinClasses("extrautilities.MixinBlockDrum").setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.fixExtraUtilitiesDrumEatingCells)
+            .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
     // Witchery
     DISABLE_POTION_ARRAY_EXTENDER(new Builder("Disable Witchery potion array extender")
