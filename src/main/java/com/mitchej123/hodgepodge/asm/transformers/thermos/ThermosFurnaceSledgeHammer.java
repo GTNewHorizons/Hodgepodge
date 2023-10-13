@@ -27,7 +27,7 @@ public class ThermosFurnaceSledgeHammer implements IClassTransformer {
             LOGGER.info("Patching Thermos or derivative to not break our furnace fix");
             final ClassReader cr = new ClassReader(basicClass);
             final ClassNode cn = new ClassNode(ASM5);
-            cr.accept(cn, ClassReader.SKIP_DEBUG);
+            cr.accept(cn, 0);
             for (MethodNode m : cn.methods) {
                 if ("resetRecipes".equals(m.name)) {
                     LOGGER.info("Taking a sledgehammer to CraftServer.resetRecipes()");

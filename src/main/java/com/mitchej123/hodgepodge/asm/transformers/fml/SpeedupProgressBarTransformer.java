@@ -27,7 +27,7 @@ public class SpeedupProgressBarTransformer implements IClassTransformer {
             LOGGER.info("TRANSFORMING cpw.mods.fml.client.FMLClientHandler");
             final ClassReader cr = new ClassReader(basicClass);
             final ClassNode cn = new ClassNode(ASM5);
-            cr.accept(cn, ClassReader.SKIP_DEBUG);
+            cr.accept(cn, 0);
             for (MethodNode m : cn.methods) {
                 if ("stripSpecialChars".equals(m.name) && "(Ljava/lang/String;)Ljava/lang/String;".equals(m.desc)) {
                     LOGGER.info("Speeding up stripSpecialChars");

@@ -120,7 +120,7 @@ public class EarlyClassTransformer implements IClassTransformer {
                 return mv;
             }
         };
-        cr.accept(cv, ClassReader.SKIP_DEBUG);
+        cr.accept(cv, 0);
         return cw.toByteArray();
     }
 }
