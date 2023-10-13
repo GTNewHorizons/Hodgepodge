@@ -36,6 +36,7 @@ import org.objectweb.asm.MethodVisitor;
  * order, we will try to minimize the class dependencies on this class, meaning we will not use the usual Configuration
  * class to handle configurations
  */
+@SuppressWarnings("unused")
 public class EarlyClassTransformer implements IClassTransformer {
 
     private static final boolean noNukeBaseMod;
@@ -63,13 +64,11 @@ public class EarlyClassTransformer implements IClassTransformer {
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null || name == null) return basicClass;
-        switch (name) {
-            case "cpw.mods.fml.common.ModContainerFactory":
-                if (noNukeBaseMod) return basicClass;
-                return transformModContainerFactory(basicClass);
-            default:
-                return basicClass;
+        if (name.equals("cpw.mods.fml.common.ModContainerFactory")) {
+            if (noNukeBaseMod) return basicClass;
+            return transformModContainerFactory(basicClass);
         }
+        return basicClass;
     }
 
     private static byte[] transformModContainerFactory(byte[] basicClass) {
@@ -121,7 +120,7 @@ public class EarlyClassTransformer implements IClassTransformer {
                 return mv;
             }
         };
-        cr.accept(cv, 0);
+        cr.accept(cv, ClassReader.SKIP_DEBUG);
         return cw.toByteArray();
     }
 }

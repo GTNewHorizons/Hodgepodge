@@ -151,6 +151,7 @@ public class LoadingConfig {
     public int renderDebugMode;
 
     // Pollution :nauseous:
+    public boolean pollutionBlockRecolor;
     public boolean furnacesPollute;
     public boolean rocketsPollute;
     public boolean railcraftPollutes;
@@ -163,10 +164,8 @@ public class LoadingConfig {
     public int tunnelBorePollutionAmount;
     public double explosionPollutionAmount;
 
-    // ASM
     public boolean cofhWorldTransformer;
     public boolean enableTileRendererProfiler;
-    public boolean pollutionAsm;
 
     public boolean disableAidSpawnByXUSpikes;
 
@@ -339,17 +338,14 @@ public class LoadingConfig {
         transparentChat = config.get(Category.TWEAKS.toString(), "transparentChat", true, "Doesn't render the black box behind messages when the chat is closed").getBoolean();
         triggerAllConflictingKeybindings = config.get(Category.FIXES.toString(), "triggerAllConflictingKeybindings", true, "Triggers all conflicting key bindings on key press instead of a random one").getBoolean();
         unbindKeybindsByDefault = config.get(Category.TWEAKS.toString(), "unbindKeybindsByDefault", true, "Unbinds keybinds of certain ARR mods to avoid keybinds conflicts").getBoolean();
+        disableAidSpawnByXUSpikes = config.get(Category.TWEAKS.toString(), "disableAidSpawnByXUSpikes", true, "Disables the spawn of zombie aid when zombie is killed by Extra Utilities Spikes, since it can spawn them too far.").getBoolean();
 
-        // Disable for now as it is not compatible with anything modifying RenderBlocks
-        pollutionAsm = config.get(Category.ASM.toString(), "pollutionAsm", false, "Enable pollution rendering ASM").getBoolean();
 
         // Pollution :nauseous:
+        pollutionBlockRecolor = config.get(Category.POLLUTION_RECOLOR.toString(), "pollutionRecolor", true, "Changes colors of certain blocks based on pollution levels").getBoolean();
         furnacesPollute = config.get(Category.POLLUTION.toString(), "furnacesPollute", true, "Make furnaces Pollute").getBoolean();
         rocketsPollute = config.get(Category.POLLUTION.toString(), "rocketsPollute", true, "Make rockets Pollute").getBoolean();
         railcraftPollutes = config.get(Category.POLLUTION.toString(), "railcraftPollutes", true, "Make Railcraft Pollute").getBoolean();
-
-        disableAidSpawnByXUSpikes = config.get(Category.TWEAKS.toString(), "disableAidSpawnByXUSpikes", true, "Disables the spawn of zombie aid when zombie is killed by Extra Utilities Spikes, since it can spawn them too far.").getBoolean();
-
         furnacePollutionAmount = config.get(Category.POLLUTION.toString(), "furnacePollution", 20, "Furnace pollution per second, min 1!", 1, Integer.MAX_VALUE).getInt();
         fireboxPollutionAmount = config.get(Category.POLLUTION.toString(), "fireboxPollution", 15, "Pollution Amount for RC Firebox", 1, Integer.MAX_VALUE).getInt();
         rocketPollutionAmount = config.get(Category.POLLUTION.toString(), "rocketPollution", 1000, "Pollution Amount for Rockets", 1, Integer.MAX_VALUE).getInt();
