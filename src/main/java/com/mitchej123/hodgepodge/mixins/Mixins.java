@@ -574,6 +574,14 @@ public enum Mixins {
     private final List<String> mixinClasses;
     private final List<TargetedMod> targetedMods;
     private final List<TargetedMod> excludedMods;
+    POLLUTION_ROCKET(new Builder("Make Rockets Pollute")
+            .addMixinClasses("galacticraftcore.MixinGalacticraftRocketPollution").setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.rocketsPollute).addTargetedMod(TargetedMod.GALACTICRAFT_CORE)),
+    IC2_CELL(new Builder("No IC2 Cell Consumption in tanks").addMixinClasses("ic2.MixinIC2ItemCell").setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.ic2CellWithContainer).addTargetedMod(TargetedMod.IC2));
+
+    public final String name;
+    public final List<String> mixinClasses;
     private final Supplier<Boolean> applyIf;
     private final Phase phase;
     private final Side side;

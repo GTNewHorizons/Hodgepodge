@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.gtnewhorizon.mixinextras.injector.ModifyExpressionValue;
-import com.gtnewhorizon.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 
 @Mixin(GuiContainerCreative.class)
 public abstract class MixinGuiContainerCreative extends GuiContainer {
