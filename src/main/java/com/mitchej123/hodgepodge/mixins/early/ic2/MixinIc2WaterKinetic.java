@@ -7,8 +7,8 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-import com.gtnewhorizon.mixinextras.injector.wrapoperation.Operation;
-import com.gtnewhorizon.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
 import ic2.core.block.kineticgenerator.tileentity.TileEntityWaterKineticGenerator;
 

@@ -3,7 +3,7 @@ package com.mitchej123.hodgepodge.mixins.late.journeymap;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-import com.gtnewhorizon.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 
 import journeymap.client.data.WorldData;
 
