@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.mitchej123.hodgepodge.LoadingConfig;
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.util.ColorOverrideType;
 
 import biomesoplenty.client.render.blocks.FoliageRenderer;
@@ -24,7 +24,7 @@ public class MixinFoliageRenderer_Pollution {
                     remap = false))
     private int hodgepodge$pollutionCrossedSquares(int color, Block block, int blockX, int blockY, int blockZ,
             RenderBlocks renderer) {
-        ColorOverrideType type = LoadingConfig.blockVine.matchesID(block);
+        ColorOverrideType type = Common.config.blockVine.matchesID(block);
         if (type == null) return color;
         return type.getColor(color, blockX, blockZ);
     }
