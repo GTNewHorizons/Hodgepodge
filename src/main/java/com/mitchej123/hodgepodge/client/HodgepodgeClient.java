@@ -6,7 +6,6 @@ import net.minecraftforge.common.MinecraftForge;
 
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.Compat;
-import com.mitchej123.hodgepodge.LoadingConfig;
 import com.mitchej123.hodgepodge.client.handlers.ClientKeyListener;
 import com.mitchej123.hodgepodge.util.ManagedEnum;
 
@@ -44,12 +43,12 @@ public class HodgepodgeClient {
         }
 
         if (Compat.isGT5Present()) {
-            LoadingConfig.postInitClient();
-            MinecraftForge.EVENT_BUS.register(LoadingConfig.standardBlocks);
-            MinecraftForge.EVENT_BUS.register(LoadingConfig.liquidBlocks);
-            MinecraftForge.EVENT_BUS.register(LoadingConfig.doublePlants);
-            MinecraftForge.EVENT_BUS.register(LoadingConfig.crossedSquares);
-            MinecraftForge.EVENT_BUS.register(LoadingConfig.blockVine);
+            Common.config.postInitClient();
+            MinecraftForge.EVENT_BUS.register(Common.config.standardBlocks);
+            MinecraftForge.EVENT_BUS.register(Common.config.liquidBlocks);
+            MinecraftForge.EVENT_BUS.register(Common.config.doublePlants);
+            MinecraftForge.EVENT_BUS.register(Common.config.crossedSquares);
+            MinecraftForge.EVENT_BUS.register(Common.config.blockVine);
         }
 
         FMLCommonHandler.instance().bus().register(ClientTicker.INSTANCE);

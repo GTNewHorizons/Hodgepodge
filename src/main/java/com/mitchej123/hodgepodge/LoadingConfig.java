@@ -9,6 +9,8 @@ import com.mitchej123.hodgepodge.util.BlockMatcher;
 
 public class LoadingConfig {
 
+    private Configuration config;
+
     // Adjustments
     public boolean addSystemInfo;
     public boolean arabicNumbersForEnchantsPotions;
@@ -19,7 +21,6 @@ public class LoadingConfig {
     public int particleLimit;
 
     // Mixins
-
     public boolean addCVSupportToWandPedestal;
     public boolean addToggleDebugMessage;
     public boolean deduplicateForestryCompatInBOP;
@@ -145,6 +146,9 @@ public class LoadingConfig {
     public boolean validatePacketEncodingBeforeSendingShouldCrash;
     public boolean chunkSaveCMEDebug;
     public boolean ic2CellWithContainer;
+    public boolean cofhWorldTransformer;
+    public boolean enableTileRendererProfiler;
+    public boolean disableAidSpawnByXUSpikes;
 
     // render debug
     public boolean renderDebug;
@@ -164,20 +168,13 @@ public class LoadingConfig {
     public int tunnelBorePollutionAmount;
     public double explosionPollutionAmount;
 
-    public boolean cofhWorldTransformer;
-    public boolean enableTileRendererProfiler;
-
-    public boolean disableAidSpawnByXUSpikes;
-
     public String thermosCraftServerClass;
 
-    public static Configuration config;
-
-    public static BlockMatcher standardBlocks = new BlockMatcher();
-    public static BlockMatcher liquidBlocks = new BlockMatcher();
-    public static BlockMatcher doublePlants = new BlockMatcher();
-    public static BlockMatcher crossedSquares = new BlockMatcher();
-    public static BlockMatcher blockVine = new BlockMatcher();
+    public BlockMatcher standardBlocks = new BlockMatcher();
+    public BlockMatcher liquidBlocks = new BlockMatcher();
+    public BlockMatcher doublePlants = new BlockMatcher();
+    public BlockMatcher crossedSquares = new BlockMatcher();
+    public BlockMatcher blockVine = new BlockMatcher();
 
     enum Category {
 
@@ -358,7 +355,7 @@ public class LoadingConfig {
         if (config.hasChanged()) config.save();
     }
 
-    public static void postInitClient() {
+    public void postInitClient() {
         // need to be done later cause it initializes classes
         if (config == null) {
             System.err.println("Didn't load HODGEPODGE");
@@ -381,26 +378,26 @@ public class LoadingConfig {
      * Defaults
      */
 
-    public static final String[] defaultPollutionRenderStandardBlock = new String[] {
+    private static final String[] defaultPollutionRenderStandardBlock = new String[] {
             "net.minecraft.block.BlockGrass:GRASS", "net.minecraft.block.BlockLeavesBase:LEAVES",
             "biomesoplenty.common.blocks.BlockOriginGrass:GRASS", "biomesoplenty.common.blocks.BlockLongGrass:GRASS",
             "biomesoplenty.common.blocks.BlockNewGrass:GRASS", "tconstruct.blocks.slime.SlimeGrass:GRASS",
             "thaumcraft.common.blocks.BlockMagicalLeaves:LEAVES", };
 
-    public static final String[] defaultPollutionRenderLiquidBlocks = new String[] {
+    private static final String[] defaultPollutionRenderLiquidBlocks = new String[] {
             "net.minecraft.block.BlockLiquid:LIQUID", };
 
-    public static final String[] defaultPollutionRenderDoublePlant = new String[] {
+    private static final String[] defaultPollutionRenderDoublePlant = new String[] {
             "net.minecraft.block.BlockDoublePlant:FLOWER", };
 
-    public static final String[] defaultPollutionRenderCrossedSquares = new String[] {
+    private static final String[] defaultPollutionRenderCrossedSquares = new String[] {
             "net.minecraft.block.BlockTallGrass:FLOWER", "net.minecraft.block.BlockFlower:FLOWER",
             "biomesoplenty.common.blocks.BlockBOPFlower:FLOWER", "biomesoplenty.common.blocks.BlockBOPFlower2:FLOWER",
             "biomesoplenty.common.blocks.BlockBOPFoliage:FLOWER", };
-    public static final String[] defaultPollutionRenderblockVine = new String[] {
+    private static final String[] defaultPollutionRenderblockVine = new String[] {
             "net.minecraft.block.BlockVine:FLOWER", };
 
-    public static final String pollutionRecolorComment = "Blocks that should be colored by pollution. \n"
+    private static final String pollutionRecolorComment = "Blocks that should be colored by pollution. \n"
             + "\tGrouped by the render type. \n"
             + "\tFormat: [BlockClass]:[colortype] \n"
             + "\tValid types: GRASS, LEAVES, FLOWER, LIQUID \n"
