@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.mitchej123.hodgepodge.LoadingConfig;
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.util.ColorOverrideType;
 
 @Mixin(RenderBlocks.class)
@@ -21,7 +21,7 @@ public class MixinRenderBlocks_PollutionWithoutOptifine {
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/Block;colorMultiplier(Lnet/minecraft/world/IBlockAccess;III)I"))
     private int hodgepodge$pollutionStandardBlock(int color, Block block, int blockX, int blockY, int blockZ) {
-        ColorOverrideType type = LoadingConfig.standardBlocks.matchesID(block);
+        ColorOverrideType type = Common.config.standardBlocks.matchesID(block);
         if (type == null) return color;
         return type.getColor(color, blockX, blockZ);
     }
@@ -32,7 +32,7 @@ public class MixinRenderBlocks_PollutionWithoutOptifine {
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/Block;colorMultiplier(Lnet/minecraft/world/IBlockAccess;III)I"))
     private int hodgepodge$pollutionBlockLiquid(int color, Block block, int blockX, int blockY, int blockZ) {
-        ColorOverrideType type = LoadingConfig.liquidBlocks.matchesID(block);
+        ColorOverrideType type = Common.config.liquidBlocks.matchesID(block);
         if (type == null || block.getMaterial() != Material.water) {
             return color;
         }
@@ -46,7 +46,7 @@ public class MixinRenderBlocks_PollutionWithoutOptifine {
                     target = "Lnet/minecraft/block/BlockDoublePlant;colorMultiplier(Lnet/minecraft/world/IBlockAccess;III)I"))
     private int hodgepodge$pollutionBlockDoublePlant(int color, BlockDoublePlant block, int blockX, int blockY,
             int blockZ) {
-        ColorOverrideType type = LoadingConfig.doublePlants.matchesID(block);
+        ColorOverrideType type = Common.config.doublePlants.matchesID(block);
         if (type == null) return color;
         return type.getColor(color, blockX, blockZ);
     }
@@ -57,7 +57,7 @@ public class MixinRenderBlocks_PollutionWithoutOptifine {
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/Block;colorMultiplier(Lnet/minecraft/world/IBlockAccess;III)I"))
     private int hodgepodge$pollutionCrossedSquares(int color, Block block, int blockX, int blockY, int blockZ) {
-        ColorOverrideType type = LoadingConfig.crossedSquares.matchesID(block);
+        ColorOverrideType type = Common.config.crossedSquares.matchesID(block);
         if (type == null) return color;
         return type.getColor(color, blockX, blockZ);
     }
@@ -68,7 +68,7 @@ public class MixinRenderBlocks_PollutionWithoutOptifine {
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/Block;colorMultiplier(Lnet/minecraft/world/IBlockAccess;III)I"))
     private int hodgepodge$pollutionBlockVine(int color, Block block, int blockX, int blockY, int blockZ) {
-        ColorOverrideType type = LoadingConfig.blockVine.matchesID(block);
+        ColorOverrideType type = Common.config.blockVine.matchesID(block);
         if (type == null) return color;
         return type.getColor(color, blockX, blockZ);
     }
