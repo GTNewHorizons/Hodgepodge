@@ -335,7 +335,7 @@ public class LoadingConfig {
         triggerAllConflictingKeybindings = config.get(Category.FIXES.toString(), "triggerAllConflictingKeybindings", true, "Triggers all conflicting key bindings on key press instead of a random one").getBoolean();
         unbindKeybindsByDefault = config.get(Category.TWEAKS.toString(), "unbindKeybindsByDefault", true, "Unbinds keybinds of certain ARR mods to avoid keybinds conflicts").getBoolean();
         disableAidSpawnByXUSpikes = config.get(Category.TWEAKS.toString(), "disableAidSpawnByXUSpikes", true, "Disables the spawn of zombie aid when zombie is killed by Extra Utilities Spikes, since it can spawn them too far.").getBoolean();
-        ic2CellWithContainer = config.get(Category.TWEAKS.toString(), "ic2CellWithContainer ", false, "give ic2 cells containers like gregtech cells do").getBoolean();
+        ic2CellWithContainer = config.get(Category.TWEAKS.toString(), "ic2CellWithContainer", false, "give ic2 cells containers like gregtech cells do").getBoolean();
 
         // Pollution :nauseous:
         pollutionBlockRecolor = config.get(Category.POLLUTION_RECOLOR.toString(), "pollutionRecolor", true, "Changes colors of certain blocks based on pollution levels").getBoolean();
