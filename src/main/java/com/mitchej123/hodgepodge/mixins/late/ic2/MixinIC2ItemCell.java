@@ -1,24 +1,24 @@
 package com.mitchej123.hodgepodge.mixins.late.ic2;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import ic2.core.Ic2Items;
-import ic2.core.init.InternalName;
-import ic2.core.item.ItemIC2;
 import ic2.core.item.resources.ItemCell;
 
-@Mixin(value = ItemCell.class, remap = false)
-abstract public class MixinIC2ItemCell extends ItemIC2 {
+@Mixin(value = ItemCell.class)
+abstract public class MixinIC2ItemCell extends Item {
 
-    public MixinIC2ItemCell(InternalName internalName) {
-        super(internalName);
+    @Override
+    public boolean hasContainerItem(ItemStack itemStack) {
+        return (itemStack.getItemDamage() != 0);
     }
 
-    @Inject(method = "<init>", at = @At("RETURN"))
-    public void hodgepodge$init(CallbackInfo ci) {
-        setContainerItem(Ic2Items.cell.getItem());
+    @Override
+    public ItemStack getContainerItem(ItemStack itemStack) {
+        if (hasContainerItem(itemStack)) return Ic2Items.cell.copy();
+        return null;
     }
 }
