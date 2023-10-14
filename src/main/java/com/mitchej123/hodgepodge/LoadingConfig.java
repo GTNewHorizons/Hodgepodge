@@ -340,7 +340,6 @@ public class LoadingConfig {
         disableAidSpawnByXUSpikes = config.get(Category.TWEAKS.toString(), "disableAidSpawnByXUSpikes", true, "Disables the spawn of zombie aid when zombie is killed by Extra Utilities Spikes, since it can spawn them too far.").getBoolean();
         ic2CellWithContainer = config.get(Category.TWEAKS.toString(), "ic2CellWithContainer ", false, "give ic2 cells containers like gregtech cells do").getBoolean();
 
-
         // Pollution :nauseous:
         pollutionBlockRecolor = config.get(Category.POLLUTION_RECOLOR.toString(), "pollutionRecolor", true, "Changes colors of certain blocks based on pollution levels").getBoolean();
         furnacesPollute = config.get(Category.POLLUTION.toString(), "furnacesPollute", true, "Make furnaces Pollute").getBoolean();
@@ -354,7 +353,6 @@ public class LoadingConfig {
         hobbyistEnginePollutionAmount = config.get(Category.POLLUTION.toString(), "hobbyistEnginePollution", 20, "Pollution Amount for hobbyist steam engine", 1, Integer.MAX_VALUE).getInt();
         tunnelBorePollutionAmount = config.get(Category.POLLUTION.toString(), "tunnelBorePollution", 2, "Pollution Amount for tunnel bore", 1, Integer.MAX_VALUE).getInt();
         explosionPollutionAmount = config.get(Category.POLLUTION.toString(), "explosionPollution", 33.34, "Explosion pollution").getDouble();
-
 
         // spotless:on
         if (config.hasChanged()) config.save();

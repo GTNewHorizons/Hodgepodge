@@ -319,7 +319,7 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.fixIc2ArmorLag).addTargetedMod(TargetedMod.IC2)),
 
     IC2_CELL(new Builder("No IC2 Cell Consumption in tanks").addMixinClasses("ic2.MixinIC2ItemCell").setSide(Side.BOTH)
-            .setApplyIf(() -> Common.config.ic2CellWithContainer).addTargetedMod(TargetedMod.IC2)),
+            .setPhase(Phase.LATE).setApplyIf(() -> Common.config.ic2CellWithContainer).addTargetedMod(TargetedMod.IC2)),
 
     // Disable update checkers
     BIBLIOCRAFT_UPDATE_CHECK(new Builder("Yeet Bibliocraft Update Check").setPhase(Phase.LATE).setSide(Side.CLIENT)
