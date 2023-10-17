@@ -486,6 +486,10 @@ public enum Mixins {
             .addMixinClasses("extrautilities.MixinTransparentItemRender").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixExtraUtilitiesItemRendering)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_DRUM_EATING_CELLS(new Builder("Fix extra utilities drums eating ic2 cells and forestry capsules")
+            .addMixinClasses("extrautilities.MixinBlockDrum").setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.fixExtraUtilitiesDrumEatingCells)
+            .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
     // Witchery
     DISABLE_POTION_ARRAY_EXTENDER(new Builder("Disable Witchery potion array extender")
@@ -542,7 +546,9 @@ public enum Mixins {
             .addTargetedMod(TargetedMod.RAILCRAFT)),
     POLLUTION_ROCKET(new Builder("Make Rockets Pollute")
             .addMixinClasses("galacticraftcore.MixinGalacticraftRocketPollution").setSide(Side.BOTH)
-            .setApplyIf(() -> Common.config.rocketsPollute).addTargetedMod(TargetedMod.GALACTICRAFT_CORE));
+            .setApplyIf(() -> Common.config.rocketsPollute).addTargetedMod(TargetedMod.GALACTICRAFT_CORE)),
+    IC2_CELL(new Builder("No IC2 Cell Consumption in tanks").addMixinClasses("ic2.MixinIC2ItemCell").setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.ic2CellWithContainer).addTargetedMod(TargetedMod.IC2));
 
     public final String name;
     public final List<String> mixinClasses;
