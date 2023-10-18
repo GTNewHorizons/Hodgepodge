@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
-import com.gtnewhorizon.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 
 @Mixin(GuiNewChat.class)
 public abstract class MixinGuiNewChat_TransparentChat {

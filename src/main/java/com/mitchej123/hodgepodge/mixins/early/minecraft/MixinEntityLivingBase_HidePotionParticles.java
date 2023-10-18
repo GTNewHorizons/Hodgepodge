@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-import com.gtnewhorizon.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.mitchej123.hodgepodge.Common;
 
 /**
