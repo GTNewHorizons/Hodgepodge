@@ -110,6 +110,7 @@ public class LoadingConfig {
     public boolean java12MineChemCompat;
     public boolean logHugeChat;
     public boolean longerChat;
+    public boolean longerSentMessages;
     public boolean makeBigFirsPlantable;
     public boolean optimizeASMDataTable;
     public boolean optimizeIc2ReactorInventoryAccess;
@@ -309,6 +310,7 @@ public class LoadingConfig {
         java12MineChemCompat = config.get(Category.FIXES.toString(), "java12MineChemCompat", true, "Minechem Java 12 compatibility patch").getBoolean();
         logHugeChat = config.get(Category.FIXES.toString(), "logHugeChat", true, "Log oversized chat message to console. WARNING: might create huge log files if this happens very often.").getBoolean();
         longerChat = config.get(Category.TWEAKS.toString(), "longerChat", true, "Makes the chat history longer instead of 100 lines").getBoolean();
+        longerSentMessages = config.get(Category.TWEAKS.toString(), "longerSentMessages", true, "Allows you to send longer chat messages, up to 256 characters, instead of 100 in vanilla.").getBoolean();
         makeBigFirsPlantable = config.get(Category.TWEAKS.toString(), "makeBigFirsPlantable", true, "Allow 5 Fir Sapling planted together ('+' shape) to grow to a big fir tree").getBoolean();
         optimizeASMDataTable = config.get(Category.SPEEDUPS.toString(), "optimizeASMDataTable", true, "Optimize ASMDataTable getAnnotationsFor for faster startup").getBoolean();
         optimizeIc2ReactorInventoryAccess = config.get(Category.FIXES.toString(), "optimizeIc2ReactorInventoryAccess", true, "Optimize inventory access to IC2 nuclear reactor").getBoolean();
