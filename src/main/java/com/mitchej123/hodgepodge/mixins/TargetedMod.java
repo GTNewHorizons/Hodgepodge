@@ -26,6 +26,7 @@ public enum TargetedMod {
     LWJGL3IFY("lwjgl3ify", "me.eigenraven.lwjgl3ify.core.Lwjgl3ifyCoremod", "lwjgl3ify"),
     MINECHEM("Minechem", null, "minechem"),
     MRTJPCORE("MrTJPCore", null, "MrTJPCoreMod"),
+    NOTENOUGHITEMS("NotEnoughItems", "codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
     OPTIFINE("Optifine", "optifine.OptiFineForgeTweaker", "Optifine"),
     PROJECTE("ProjectE", null, "ProjectE"),
     RAILCRAFT("Railcraft", null, "Railcraft"),
