@@ -36,6 +36,7 @@ public class LoadingConfig {
     public int betterHUDHPRenderLimit;
     public boolean fixBibliocraftPackets;
     public boolean fixBibliocraftPathSanitization;
+    public boolean fixBOPHarvestTools;
     public boolean fixChatWrappedColors;
     public boolean fixComponentsPoppingOff;
     public boolean fixContainerPutStacksInSlots;
@@ -246,6 +247,7 @@ public class LoadingConfig {
         betterHUDHPRenderLimit = config.get(Category.FIXES.toString(),"betterHUDHPRenderLimit", 5000, "Maximum hp for BetterHUD to render as hearts").getInt();
         fixBibliocraftPackets = config.get(Category.FIXES.toString(), "fixBibliocraftPackets", true, "Fix Bibliocraft packet exploits").getBoolean();
         fixBibliocraftPathSanitization = config.get(Category.FIXES.toString(), "fixBibliocraftPathSanitization", true, "Fix Bibliocraft path sanitization").getBoolean();
+        fixBOPHarvestTools = config.get(Category.FIXES.toString(), "fixBOPHarvestTools", true, "Add harvest tools to BOP blocks with no harvest tools").getBoolean();
         fixZTonesPackets = config.get(Category.FIXES.toString(), "fixZTonesPackets", true, "Fix ZTones packet exploits").getBoolean();
         fixHopperHitBox = config.get(Category.FIXES.toString(), "fixHopperHitBox", true, "Fix vanilla hopper hit box").getBoolean();
         fixHopperVoidingItems = config.get(Category.FIXES.toString(), "fixHopperVoidingItems", true, "Fix Drawer + Hopper voiding items").getBoolean();

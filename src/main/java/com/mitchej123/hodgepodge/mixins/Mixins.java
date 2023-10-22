@@ -380,7 +380,9 @@ public enum Mixins {
     JAVA12_BOP(new Builder("BOP Java12-safe reflection").addMixinClasses("biomesoplenty.MixinBOPBiomes")
             .addMixinClasses("biomesoplenty.MixinBOPReflectionHelper").setApplyIf(() -> Common.config.java12BopCompat)
             .addTargetedMod(TargetedMod.BOP)),
-
+    ADD_HARVEST_TOOLS(new Builder("Adds harvest tools to BOP blocks")
+            .addMixinClasses("biomesoplenty.MixinBOPBlocks_AddHarvestTool")
+            .setApplyIf(() -> Common.config.fixBOPHarvestTools).addTargetedMod(TargetedMod.BOP)),
     // Immersive engineering
     JAVA12_IMMERSIVE_ENGINERRING(new Builder("Immersive Engineering Java-12 safe potion array resizing")
             .addMixinClasses("immersiveengineering.MixinIEPotions")
