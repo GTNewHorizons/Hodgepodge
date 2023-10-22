@@ -78,6 +78,7 @@ public class LoadingConfig {
     public boolean fixNetHandlerPlayClientHandleSetSlot;
     public boolean fixNetherLeavesFaceRendering;
     public boolean fixNorthWestBias;
+    public boolean fixNettyNPE;
     public boolean fixOptifineChunkLoadingCrash;
     public boolean fixPerspectiveCamera;
     public boolean fixPlayerSkinFetching;
@@ -265,6 +266,7 @@ public class LoadingConfig {
         fixNetHandlerPlayClientHandleSetSlot = config.get(Category.FIXES.toString(), "fixNetHandlerPlayClientHandleSetSlot", true, "Prevents crash if server sends itemStack with index larger than client's container").getBoolean();
         fixNetherLeavesFaceRendering = config.get(Category.FIXES.toString(), "fixNetherLeavesFaceRendering", true, "If fancy graphics are enabled, Nether Leaves render sides with other Nether Leaves adjacent too").getBoolean();
         fixNorthWestBias = config.get(Category.FIXES.toString(), "fixNorthWestBias", true, "Fix northwest bias on RandomPositionGenerator").getBoolean();
+        fixNettyNPE = config.get(Category.FIXES.toString(), "fixNettyNPE", true, "Fix NPE in Netty's Bootstrap class").getBoolean();
         fixOptifineChunkLoadingCrash = config.get(Category.FIXES.toString(), "fixOptifineChunkLoadingCrash", true, "Forces the chunk loading option from optifine to default since other values can crash the game").getBoolean();
         fixPerspectiveCamera = config.get(Category.FIXES.toString(), "fixPerspectiveCamera", true, "Prevent tall grass and such to affect the perspective camera").getBoolean();
         fixPlayerSkinFetching = config.get(Category.FIXES.toString(), "fixPlayerSkinFetching", true, "Allow some mods to properly fetch the player skin").getBoolean();
