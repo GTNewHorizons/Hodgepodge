@@ -40,7 +40,7 @@ public class BlockMatcher {
             ColorOverrideType type = null;
             if (lines.length > 1) {
                 try {
-                    type = ColorOverrideType.get(lines[1].trim());
+                    type = ColorOverrideType.fromString(lines[1].trim());
                 } catch (NumberFormatException e) {
                     Common.log.error(String.format("Invalid type [%s]", line));
                     continue;
