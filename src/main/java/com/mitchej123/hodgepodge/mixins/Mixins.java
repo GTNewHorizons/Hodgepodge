@@ -512,6 +512,10 @@ public enum Mixins {
             .addMixinClasses("witchery.MixinPotionArrayExtender").setPhase(Phase.LATE).setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.disableWitcheryPotionExtender).addTargetedMod(TargetedMod.WITCHERY)),
 
+    Fix_WitcheryReflectionSkin(new Builder("Fixes Witchery player skins reflections")
+            .addMixinClasses("witchery.MixinExtendedPlayer", "witchery.MixinEntityReflection").setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.fixWitcheryReflections).addTargetedMod(TargetedMod.WITCHERY)),
+
     // Various Exploits/Fixes
     GC_TIME_COMMAND_FIX(new Builder("GC Time Fix").addMixinClasses("minecraft.MixinTimeCommandGalacticraftFix")
             .setPhase(Phase.EARLY).setSide(Side.BOTH).setApplyIf(() -> Common.config.fixTimeCommandWithGC)
