@@ -82,6 +82,12 @@ public enum Mixins {
     TRANSPARENT_CHAT(new Builder("Transparent Chat").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinGuiNewChat_TransparentChat").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.transparentChat).addTargetedMod(TargetedMod.VANILLA)),
+    LONGER_MESSAGES_CLIENT(new Builder("Longer Messages").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinGuiChat_LongerMessages").setApplyIf(() -> Common.config.longerSentMessages)
+            .addTargetedMod(TargetedMod.VANILLA).setSide(Side.CLIENT)),
+    LONGER_MESSAGES_SERVER(new Builder("Longer Messages").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinC01PacketChatMessage_LongerMessages")
+            .setApplyIf(() -> Common.config.longerSentMessages).addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)),
     SPEEDUP_GRASS_BLOCK_RANDOM_TICKING(new Builder("Speed up grass block random ticking").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinBlockGrass").addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> Common.config.speedupGrassBlockRandomTicking)),
