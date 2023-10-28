@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import ic2.core.Ic2Items;
 import ic2.core.item.resources.ItemCell;
 
-@Mixin(value = ItemCell.class)
-abstract public class MixinIC2ItemCell extends Item {
+@Mixin(ItemCell.class)
+public class MixinIC2ItemCell extends Item {
 
     @Override
     public boolean hasContainerItem(ItemStack itemStack) {
