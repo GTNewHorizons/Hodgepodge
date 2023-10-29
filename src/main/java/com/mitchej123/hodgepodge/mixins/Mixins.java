@@ -272,6 +272,9 @@ public enum Mixins {
     NETTY_PATCH(new Builder("Fix NPE in Netty's Bootstrap class").addMixinClasses("netty.MixinBootstrap")
             .setPhase(Phase.EARLY).setSide(Side.CLIENT).setApplyIf(() -> Common.config.fixNettyNPE)
             .addTargetedMod(TargetedMod.VANILLA)),
+    REALMS_GUI_PATCH(new Builder("Fix NPE in GuiScreen tripped by the Realms GUI")
+            .addMixinClasses("minecraft.MixinGuiScreen").setPhase(Phase.EARLY).setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.fixRealmsGuiNPE).addTargetedMod(TargetedMod.VANILLA)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(
