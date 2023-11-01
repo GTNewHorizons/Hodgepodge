@@ -25,6 +25,7 @@ public class LoadingConfig {
     public boolean deduplicateForestryCompatInBOP;
     public boolean dimensionManagerDebug;
     public boolean disableWitcheryPotionExtender;
+    public boolean fixWitcheryReflections;
     public boolean displayIc2FluidLocalizedName;
     public boolean dropPickedLootOnDespawn;
     public boolean enableDefaultLanPort;
@@ -77,6 +78,7 @@ public class LoadingConfig {
     public boolean fixNetHandlerPlayClientHandleSetSlot;
     public boolean fixNetherLeavesFaceRendering;
     public boolean fixNorthWestBias;
+    public boolean fixNettyNPE;
     public boolean fixOptifineChunkLoadingCrash;
     public boolean fixPerspectiveCamera;
     public boolean fixPlayerSkinFetching;
@@ -213,6 +215,7 @@ public class LoadingConfig {
         defaultLanPort = config.get(Category.TWEAKS.toString(), "defaultLanPort", 25565, "Specify default LAN port to open an integrated server on. Set to 0 to always open the server on an automatically allocated port.").getInt();
         dimensionManagerDebug = config.get(Category.DEBUG.toString(), "dimensionManagerDebug", true, "Prints debug log if DimensionManager got crashed").getBoolean();
         disableWitcheryPotionExtender = config.get(Category.FIXES.toString(), "disableWitcheryPotionExtender", true, "Disable Witchery potion extender for Java 12 compat").getBoolean();
+        fixWitcheryReflections = config.get(Category.FIXES.toString(), "fixWitcheryReflections", true, "Fixes Witchery player skins reflections with inhabited mirrors").getBoolean();
         displayIc2FluidLocalizedName = config.get(Category.TWEAKS.toString(), "displayIc2FluidLocalizedName", true, "Display fluid localized name in IC2 fluid cell tooltip").getBoolean();
         dropPickedLootOnDespawn = config.get(Category.TWEAKS.toString(), "dropPickedLootOnDespawn", true, "Drop picked loot on entity despawn").getBoolean();
         enableDefaultLanPort = config.get(Category.TWEAKS.toString(), "enableDefaultLanPort", true, "Open an integrated server on a static port.").getBoolean();
@@ -269,6 +272,7 @@ public class LoadingConfig {
         fixNetHandlerPlayClientHandleSetSlot = config.get(Category.FIXES.toString(), "fixNetHandlerPlayClientHandleSetSlot", true, "Prevents crash if server sends itemStack with index larger than client's container").getBoolean();
         fixNetherLeavesFaceRendering = config.get(Category.FIXES.toString(), "fixNetherLeavesFaceRendering", true, "If fancy graphics are enabled, Nether Leaves render sides with other Nether Leaves adjacent too").getBoolean();
         fixNorthWestBias = config.get(Category.FIXES.toString(), "fixNorthWestBias", true, "Fix northwest bias on RandomPositionGenerator").getBoolean();
+        fixNettyNPE = config.get(Category.FIXES.toString(), "fixNettyNPE", true, "Fix NPE in Netty's Bootstrap class").getBoolean();
         fixOptifineChunkLoadingCrash = config.get(Category.FIXES.toString(), "fixOptifineChunkLoadingCrash", true, "Forces the chunk loading option from optifine to default since other values can crash the game").getBoolean();
         fixPerspectiveCamera = config.get(Category.FIXES.toString(), "fixPerspectiveCamera", true, "Prevent tall grass and such to affect the perspective camera").getBoolean();
         fixPlayerSkinFetching = config.get(Category.FIXES.toString(), "fixPlayerSkinFetching", true, "Allow some mods to properly fetch the player skin").getBoolean();

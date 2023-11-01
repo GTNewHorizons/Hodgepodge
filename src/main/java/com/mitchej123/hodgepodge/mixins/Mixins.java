@@ -270,6 +270,9 @@ public enum Mixins {
     COMPACT_CHAT(new Builder("Compact chat").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinGuiNewChat_CompactChat").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.compactChat).addTargetedMod(TargetedMod.VANILLA)),
+    NETTY_PATCH(new Builder("Fix NPE in Netty's Bootstrap class").addMixinClasses("netty.MixinBootstrap")
+            .setPhase(Phase.EARLY).setSide(Side.CLIENT).setApplyIf(() -> Common.config.fixNettyNPE)
+            .addTargetedMod(TargetedMod.VANILLA)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(
@@ -490,6 +493,10 @@ public enum Mixins {
     DISABLE_POTION_ARRAY_EXTENDER(new Builder("Disable Witchery potion array extender")
             .addMixinClasses("witchery.MixinPotionArrayExtender").setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.disableWitcheryPotionExtender).addTargetedMod(TargetedMod.WITCHERY)),
+
+    Fix_WitcheryReflectionSkin(new Builder("Fixes Witchery player skins reflections")
+            .addMixinClasses("witchery.MixinExtendedPlayer", "witchery.MixinEntityReflection").setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.fixWitcheryReflections).addTargetedMod(TargetedMod.WITCHERY)),
 
     // Various Exploits/Fixes
     GC_TIME_COMMAND_FIX(new Builder("GC Time Fix").addMixinClasses("minecraft.MixinTimeCommandGalacticraftFix")
