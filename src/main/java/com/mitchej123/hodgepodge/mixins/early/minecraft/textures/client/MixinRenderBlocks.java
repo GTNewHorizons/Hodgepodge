@@ -44,10 +44,10 @@ public class MixinRenderBlocks {
     }
 
     @Inject(method = "renderBlockFire", at = @At("HEAD"))
-    public void hodgepodge$markFireBlockAnimationForUpdate(BlockFire p_147801_1_, int p_147801_2_, int p_147801_3_,
-            int p_147801_4_, CallbackInfoReturnable<Boolean> cir) {
-        AnimationsRenderUtils.markBlockTextureForUpdate(p_147801_1_.getFireIcon(0), blockAccess);
-        AnimationsRenderUtils.markBlockTextureForUpdate(p_147801_1_.getFireIcon(1), blockAccess);
+    public void hodgepodge$markFireBlockAnimationForUpdate(BlockFire instance, int x, int y, int z,
+            CallbackInfoReturnable<Boolean> cir) {
+        AnimationsRenderUtils.markBlockTextureForUpdate(instance.getFireIcon(0), blockAccess);
+        AnimationsRenderUtils.markBlockTextureForUpdate(instance.getFireIcon(1), blockAccess);
     }
 
     @ModifyVariable(

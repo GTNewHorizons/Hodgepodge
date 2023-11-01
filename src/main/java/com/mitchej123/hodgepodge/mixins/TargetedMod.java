@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.mixins;
 
 public enum TargetedMod {
 
+    ANGELICA("Angelica", "com.gtnewhorizons.angelica.loading.AngelicaTweaker", "angelica"),
     ARCHAICFIX("ArchaicFix", "org.embeddedt.archaicfix.ArchaicCore", "archaicfix"),
     AUTOMAGY("Automagy", null, "Automagy"),
     BAUBLES("Baubles", null, "Baubles"),

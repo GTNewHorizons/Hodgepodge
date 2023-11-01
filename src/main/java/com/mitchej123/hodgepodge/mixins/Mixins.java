@@ -51,17 +51,18 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.fixHasteArmSwing).addTargetedMod(TargetedMod.VANILLA)),
     OPTIMIZE_WORLD_UPDATE_LIGHT(new Builder("Optimize world updateLightByType method").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinWorld_FixLightUpdateLag").setSide(Side.BOTH)
-            .addExcludedMod(TargetedMod.ARCHAICFIX).addTargetedMod(TargetedMod.VANILLA)
-            .setApplyIf(() -> Common.config.optimizeWorldUpdateLight)),
+            .addExcludedMod(TargetedMod.ARCHAICFIX).addExcludedMod(TargetedMod.ANGELICA)
+            .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> Common.config.optimizeWorldUpdateLight)),
     FIX_FRIENDLY_CREATURE_SOUNDS(new Builder("Fix Friendly Creature Sounds").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinSoundHandler").setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> Common.config.fixFriendlyCreatureSounds)),
     THROTTLE_ITEMPICKUPEVENT(new Builder("Throttle Item Pickup Event").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityPlayer").setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.throttleItemPickupEvent).addTargetedMod(TargetedMod.VANILLA)),
-    FIX_PERSPECTIVE_CAMERA(new Builder("Camera Perspective Fix").setPhase(Phase.EARLY)
-            .addMixinClasses("minecraft.MixinEntityRenderer").setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
-            .setApplyIf(() -> Common.config.fixPerspectiveCamera)),
+    FIX_PERSPECTIVE_CAMERA(
+            new Builder("Camera Perspective Fix").setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinEntityRenderer")
+                    .setSide(Side.CLIENT).addExcludedMod(TargetedMod.ARCHAICFIX).addExcludedMod(TargetedMod.ANGELICA)
+                    .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> Common.config.fixPerspectiveCamera)),
     FIX_DEBUG_BOUNDING_BOX(new Builder("Fix Bounding Box").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinRenderManager").setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> Common.config.fixDebugBoundingBox)),
