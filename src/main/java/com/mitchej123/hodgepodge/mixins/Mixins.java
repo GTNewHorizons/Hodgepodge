@@ -87,8 +87,8 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinGuiChat_LongerMessages").setApplyIf(() -> Common.config.longerSentMessages)
             .addTargetedMod(TargetedMod.VANILLA).setSide(Side.CLIENT)),
     LONGER_MESSAGES_SERVER(new Builder("Longer Messages Server Side").setPhase(Phase.EARLY)
-            .addMixinClasses("minecraft.MixinC01PacketChatMessage_LongerMessages")
-            .setApplyIf(() -> true).addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)), // always have this be enabled on the server
+            .addMixinClasses("minecraft.MixinC01PacketChatMessage_LongerMessages").setApplyIf(() -> true)
+            .addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)), // always have this be enabled on the server
     SPEEDUP_GRASS_BLOCK_RANDOM_TICKING(new Builder("Speed up grass block random ticking").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinBlockGrass").addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> Common.config.speedupGrassBlockRandomTicking)),
