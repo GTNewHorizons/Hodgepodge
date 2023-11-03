@@ -15,11 +15,11 @@ configurations {
 dependencies {
     api("com.github.GTNewHorizons:GTNHLib:0.0.13:dev")
 
-    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.4.5-GTNH:dev") // force a more up-to-date NEI version
+    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.4.6-GTNH:dev") // force a more up-to-date NEI version
     transformedMod("com.github.GTNewHorizons:Baubles:1.0.1.16:dev")
-    transformedMod("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-277-GTNH")
+    transformedMod("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-279-GTNH")
     transformedMod("com.github.GTNewHorizons:Galacticraft:3.0.74-GTNH:dev")
-    transformedMod("com.github.GTNewHorizons:GT5-Unofficial:5.09.44.68:dev")
+    transformedMod("com.github.GTNewHorizons:GT5-Unofficial:5.09.44.73:dev")
     transformedMod("com.github.GTNewHorizons:HungerOverhaul:1.0.4-GTNH:dev")
     transformedMod("com.github.GTNewHorizons:MrTJPCore:1.1.4:dev") // Do not update, fixed afterwards
     transformedMod("com.github.GTNewHorizons:Railcraft:9.15.0:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
