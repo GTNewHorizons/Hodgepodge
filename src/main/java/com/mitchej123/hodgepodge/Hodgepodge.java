@@ -26,8 +26,8 @@ public class Hodgepodge {
     public static final AnchorAlarm ANCHOR_ALARM = new AnchorAlarm();
     public static final HodgepodgeEventHandler EVENT_HANDLER = new HodgepodgeEventHandler();
     public static final String MODID = "hodgepodge";
-    public static final String VERSION = "GRADLETOKEN_VERSION";
-    public static final String NAME = "Hodgepodge";
+    public static final String VERSION = Tags.VERSION;
+    public static final String NAME = Tags.MODNAME;
 
     @EventHandler
     public void preinit(FMLPreInitializationEvent event) {
