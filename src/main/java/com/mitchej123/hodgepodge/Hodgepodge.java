@@ -1,9 +1,8 @@
 package com.mitchej123.hodgepodge;
 
-import net.minecraftforge.common.MinecraftForge;
-
 import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
+import com.mitchej123.hodgepodge.net.NetworkHandler;
 import com.mitchej123.hodgepodge.util.AnchorAlarm;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -32,7 +31,7 @@ public class Hodgepodge {
     @EventHandler
     public void preinit(FMLPreInitializationEvent event) {
         Compat.init(event.getSide());
-        MinecraftForge.EVENT_BUS.register(EVENT_HANDLER);
+        EVENT_HANDLER.preinit();
 
         if (event.getSide() == Side.CLIENT) {
             HodgepodgeClient.preInit();
@@ -42,6 +41,7 @@ public class Hodgepodge {
     @EventHandler
     public void init(FMLInitializationEvent event) {
         FMLCommonHandler.instance().bus().register(ANCHOR_ALARM);
+        NetworkHandler.init();
     }
 
     @EventHandler
