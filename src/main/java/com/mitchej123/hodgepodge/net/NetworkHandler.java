@@ -10,6 +10,6 @@ public class NetworkHandler {
     public static final SimpleNetworkWrapper instance = new SimpleNetworkWrapper(Hodgepodge.MODID);
 
     public static void init() {
-        instance.registerMessage(HandlerConfigSync.class, MessageConfigSync.class, 0, Side.CLIENT);
+        instance.registerMessage(MessageConfigSync.class, MessageConfigSync.class, 0, Side.CLIENT);
     }
 }
