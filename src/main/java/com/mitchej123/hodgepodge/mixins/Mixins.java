@@ -85,7 +85,7 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinGuiNewChat_TransparentChat").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.transparentChat).addTargetedMod(TargetedMod.VANILLA)),
     // config handled in mixin due to server->client config sync
-    LONGER_MESSAGES_CLIENT(new Builder("Longer Messages").setPhase(Phase.EARLY)
+    LONGER_MESSAGES_CLIENT(new Builder("Longer Messages Client Side").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinGuiChat_LongerMessages").setApplyIf(() -> true)
             .addTargetedMod(TargetedMod.VANILLA).setSide(Side.CLIENT)),
     // config handled in mixin due to server->client config sync
