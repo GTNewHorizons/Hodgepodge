@@ -18,13 +18,13 @@ import squeek.applecore.api.food.FoodValues;
 @Mixin(ModuleHarvestCraft.class)
 public class MixinHungerOverhaulModuleHarvestCraft {
 
-    private static final Map<Item, FoodValues> foodValuesMap = new HashMap<Item, FoodValues>() {
+    private static final Map<Item, FoodValues> foodValuesMap;
 
-        {
-            put(ItemRegistry.coffeeItem, new FoodValues(2, 0.1F));
-            put(ItemRegistry.chaiteaItem, new FoodValues(2, 0.1F));
-        }
-    };
+    static {
+        foodValuesMap = new HashMap<>();
+        foodValuesMap.put(ItemRegistry.coffeeItem, new FoodValues(2, 0.1F));
+        foodValuesMap.put(ItemRegistry.chaiteaItem, new FoodValues(2, 0.1F));
+    }
 
     @Redirect(
             method = "init",
