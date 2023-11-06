@@ -6,19 +6,20 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.util.RomanNumerals;
 
 @Mixin(ItemPotion.class)
 public class MixinItemPotion_FixRomanNumerals {
 
-    private int hodgepodge$potionAmplifierLevel;
-
     @ModifyExpressionValue(
             method = "addInformation",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/potion/PotionEffect;getAmplifier()I", ordinal = 1))
-    private int hodgepodge$getAmplifierLevel(int amplifier) {
-        this.hodgepodge$potionAmplifierLevel = amplifier;
+    private int hodgepodge$getAmplifierLevel(int amplifier,
+            @Share("potionAmplifierLevel") LocalIntRef potionAmplifierLevel) {
+        potionAmplifierLevel.set(amplifier);
         return amplifier;
     }
 
@@ -28,11 +29,12 @@ public class MixinItemPotion_FixRomanNumerals {
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/StatCollector;translateToLocal(Ljava/lang/String;)Ljava/lang/String;",
                     ordinal = 1))
-    private String hodgepodge$addRomanNumeral(String translation) {
+    private String hodgepodge$addRomanNumeral(String translation,
+            @Share("potionAmplifierLevel") LocalIntRef potionAmplifierLevel) {
         if (Common.config.arabicNumbersForEnchantsPotions) {
-            return String.valueOf(this.hodgepodge$potionAmplifierLevel + 1);
+            return String.valueOf(potionAmplifierLevel.get() + 1);
         } else if (translation != null && translation.startsWith("potion.potency.")) {
-            return RomanNumerals.toRomanLimited(this.hodgepodge$potionAmplifierLevel + 1, 20);
+            return RomanNumerals.toRomanLimited(potionAmplifierLevel.get() + 1, 20);
         } else {
             return translation;
         }
