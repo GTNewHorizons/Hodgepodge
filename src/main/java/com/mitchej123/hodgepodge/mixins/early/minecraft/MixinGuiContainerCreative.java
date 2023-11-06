@@ -23,7 +23,7 @@ public abstract class MixinGuiContainerCreative extends GuiContainer {
     @Shadow
     private static int selectedTabIndex;
 
-    public MixinGuiContainerCreative(Container p_i1072_1_) {
+    private MixinGuiContainerCreative(Container p_i1072_1_) {
         super(p_i1072_1_);
     }
 
