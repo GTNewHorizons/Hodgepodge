@@ -1,5 +1,7 @@
 package com.mitchej123.hodgepodge.mixins;
 
+import cpw.mods.fml.common.Mod;
+
 public enum TargetedMod {
 
     ANGELICA("Angelica", "com.gtnewhorizons.angelica.loading.AngelicaTweaker", "angelica"),
@@ -36,15 +38,16 @@ public enum TargetedMod {
     EXTRATIC("ExtraTiC", null, "ExtraTiC"),
     TRAVELLERSGEAR("TravellersGear", null, "TravellersGear"),
     VANILLA("Minecraft", null),
+    VOXELMAP("VoxelMap", "com.thevoxelbox.voxelmap.litemod.VoxelMapTransformer"),
     WITCHERY("Witchery", null, "witchery"),
     XAEROWORLDMAP("Xaero's World Map", null, "XaeroWorldMap"),
     ZTONES("ZTones", null, "Ztones");
 
-    /** The "name" in the @Mod annotation */
+    /** The "name" in the {@link Mod @Mod} annotation */
     public final String modName;
     /** Class that implements the IFMLLoadingPlugin interface */
     public final String coreModClass;
-    /** The "modid" in the @Mod annotation */
+    /** The "modid" in the {@link Mod @Mod} annotation */
     public final String modId;
 
     TargetedMod(String modName, String coreModClass) {

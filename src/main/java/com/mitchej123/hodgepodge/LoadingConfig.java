@@ -153,6 +153,9 @@ public class LoadingConfig {
     public boolean cofhWorldTransformer;
     public boolean enableTileRendererProfiler;
     public boolean disableAidSpawnByXUSpikes;
+    public boolean replaceVoxelMapReflection;
+    public boolean fixVoxelMapYCoord;
+    public boolean fixVoxelMapChunkNPE;
 
     // render debug
     public boolean renderDebug;
@@ -344,6 +347,9 @@ public class LoadingConfig {
         unbindKeybindsByDefault = config.get(Category.TWEAKS.toString(), "unbindKeybindsByDefault", true, "Unbinds keybinds of certain ARR mods to avoid keybinds conflicts").getBoolean();
         disableAidSpawnByXUSpikes = config.get(Category.TWEAKS.toString(), "disableAidSpawnByXUSpikes", true, "Disables the spawn of zombie aid when zombie is killed by Extra Utilities Spikes, since it can spawn them too far.").getBoolean();
         ic2CellWithContainer = config.get(Category.TWEAKS.toString(), "ic2CellWithContainer", false, "give ic2 cells containers like gregtech cells do").getBoolean();
+        replaceVoxelMapReflection = config.get(Category.SPEEDUPS.toString(), "replaceVoxelMapReflection", true, "Replace reflection in VoxelMap to directly access the fields instead.").getBoolean();
+        fixVoxelMapYCoord = config.get(Category.FIXES.toString(), "fixVoxelMapYCoord", true, "Fix Y coordinate being off by one").getBoolean();
+        fixVoxelMapChunkNPE = config.get(Category.FIXES.toString(), "fixVoxelMapChunkNPE", true, "Fix some NullPointerExceptions").getBoolean();
 
         // Pollution :nauseous:
         pollutionBlockRecolor = config.get(Category.POLLUTION_RECOLOR.toString(), "pollutionRecolor", true, "Changes colors of certain blocks based on pollution levels").getBoolean();
