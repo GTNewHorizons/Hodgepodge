@@ -519,6 +519,25 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.fixExtraUtilitiesDrumEatingCells)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
+    // VoxelMap
+    REPLACE_VOXELMAP_REFLECTION(new Builder("Replace VoxelMap Reflection")
+            .addMixinClasses(
+                    "voxelmap.reflection.MixinAddonResourcePack",
+                    "voxelmap.reflection.MixinColorManager",
+                    "voxelmap.reflection.MixinMap",
+                    "voxelmap.reflection.MixinRadar",
+                    "voxelmap.reflection.MixinVoxelMap",
+                    "voxelmap.reflection.MixinWaypointManager$1")
+            .addTargetedMod(TargetedMod.VOXELMAP).setApplyIf(() -> Common.config.replaceVoxelMapReflection)
+            .setPhase(Phase.LATE).setSide(Side.CLIENT)),
+    VOXELMAP_Y_FIX(new Builder("Fix off by one Y coord").addMixinClasses("voxelmap.MixinMap")
+            .addTargetedMod(TargetedMod.VOXELMAP).setApplyIf(() -> Common.config.fixVoxelMapYCoord).setPhase(Phase.LATE)
+            .setSide(Side.CLIENT)),
+    VOXELMAP_NPE_FIX(new Builder("Fix VoxelMap NPEs with Chunks")
+            .addMixinClasses("voxelmap.chunk.MixinCachedRegion", "voxelmap.chunk.MixinComparisonCachedRegion")
+            .addTargetedMod(TargetedMod.VOXELMAP).setApplyIf(() -> Common.config.fixVoxelMapChunkNPE)
+            .setPhase(Phase.LATE).setSide(Side.CLIENT)),
+
     // Witchery
     DISABLE_POTION_ARRAY_EXTENDER(new Builder("Disable Witchery potion array extender")
             .addMixinClasses("witchery.MixinPotionArrayExtender").setPhase(Phase.LATE).setSide(Side.BOTH)
