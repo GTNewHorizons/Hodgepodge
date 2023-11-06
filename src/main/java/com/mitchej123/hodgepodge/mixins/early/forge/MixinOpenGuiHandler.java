@@ -11,6 +11,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -21,8 +24,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 @Mixin(value = { OpenGuiHandler.class })
 public abstract class MixinOpenGuiHandler extends SimpleChannelInboundHandler<FMLMessage.OpenGui> {
 
-    boolean openGuiSuccess = false;
-
     /*
      * Copy the logic from player.openGui to explicitly check if the getLocalGuiContainer failed
      */
@@ -32,14 +33,16 @@ public abstract class MixinOpenGuiHandler extends SimpleChannelInboundHandler<FM
                     value = "INVOKE",
                     target = "Lnet/minecraft/entity/player/EntityPlayer;openGui(Ljava/lang/Object;ILnet/minecraft/world/World;III)V"),
             remap = false)
-    public void hodgepodge$openGui(EntityPlayer player, Object mod, int modGuiId, World world, int x, int y, int z) {
-        this.openGuiSuccess = false;
+    public void hodgepodge$openGui(EntityPlayer player, Object mod, int modGuiId, World world, int x, int y, int z,
+            @Share("openGuiSuccess") LocalBooleanRef openGuiSuccess) {
         ModContainer mc = FMLCommonHandler.instance().findContainerFor(mod);
         Object guiContainer = NetworkRegistry.INSTANCE.getLocalGuiContainer(mc, player, modGuiId, world, x, y, z);
         if (guiContainer != null) {
             FMLCommonHandler.instance().showGuiScreen(guiContainer);
-            this.openGuiSuccess = true;
+            openGuiSuccess.set(true);
+            return;
         }
+        openGuiSuccess.set(false);
     }
 
     /*
@@ -49,7 +52,7 @@ public abstract class MixinOpenGuiHandler extends SimpleChannelInboundHandler<FM
             method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lcpw/mods/fml/common/network/internal/FMLMessage$OpenGui;)V",
             at = @At(value = "FIELD", target = "Lnet/minecraft/inventory/Container;windowId:I", opcode = PUTFIELD),
             cancellable = true)
-    public void hodgepodge$dontSetWindowId(CallbackInfo ci) {
-        if (!this.openGuiSuccess) ci.cancel();
+    public void hodgepodge$dontSetWindowId(CallbackInfo ci, @Share("openGuiSuccess") LocalBooleanRef openGuiSuccess) {
+        if (!openGuiSuccess.get()) ci.cancel();
     }
 }
