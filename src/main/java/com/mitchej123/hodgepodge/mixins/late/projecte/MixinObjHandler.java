@@ -19,8 +19,9 @@ public class MixinObjHandler {
     @Redirect(
             method = "registerPhiloStoneSmelting",
             at = @At(
+                    remap = true,
                     value = "INVOKE",
-                    target = "Lnet/minecraft/item/crafting/FurnaceRecipes;func_77599_b()Ljava/util/Map;"),
+                    target = "Lnet/minecraft/item/crafting/FurnaceRecipes;getSmeltingList()Ljava/util/Map;"),
             remap = false)
     private static Map<ItemStack, ItemStack> hodgepodge$getFakeRecipeMap(FurnaceRecipes instance) {
         return new HashMap<>(instance.getSmeltingList());
