@@ -24,7 +24,7 @@ public class MixinEntityGolemBase extends EntityGolem {
     @Shadow(remap = false)
     protected ArrayList<Marker> markers;
 
-    public MixinEntityGolemBase(World p_i1686_1_) {
+    private MixinEntityGolemBase(World p_i1686_1_) {
         super(p_i1686_1_);
     }
 
