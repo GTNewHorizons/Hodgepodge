@@ -19,7 +19,7 @@ import journeymap.client.ui.waypoint.WaypointManager;
 public abstract class MixinWaypointManager extends JmUI {
 
     @Shadow(remap = false)
-    protected ScrollListPane itemScrollPane;
+    protected ScrollListPane<?> itemScrollPane;
 
     @Shadow(remap = false)
     protected int rowHeight;

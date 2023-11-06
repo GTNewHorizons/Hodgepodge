@@ -20,19 +20,16 @@ public abstract class MixinFurnaceRecipes {
      * replacement hash map and an ItemStack hashing strategy 2) No longer looping over every. single. recipe. in the
      * list and using the .get()
      */
-    @SuppressWarnings("rawtypes")
     @Shadow
-    private Map smeltingList = new ItemStackMap<ItemStack>(false);
+    private Map<ItemStack, ItemStack> smeltingList = new ItemStackMap<ItemStack>(false);
 
-    @SuppressWarnings("rawtypes")
     @Shadow
-    private Map experienceList = new ItemStackMap<Float>(false);
+    private Map<ItemStack, Float> experienceList = new ItemStackMap<Float>(false);
 
     /**
      * @author mitchej123
      * @reason Significantly faster Inspired by later versions of forge
      */
-    @SuppressWarnings("unchecked")
     @Overwrite
     public void func_151394_a /* addSmeltingRecipe */(ItemStack input, ItemStack stack, float experience) {
         if (getSmeltingResult(input) != null) {
@@ -59,7 +56,6 @@ public abstract class MixinFurnaceRecipes {
      * @author mitchej123
      * @reason Significantly faster
      */
-    @SuppressWarnings("unchecked")
     @Overwrite
     public float func_151398_b /* getSmeltingExperience */(ItemStack stack) {
         if (stack == null || stack.getItem() == null) return 0f;

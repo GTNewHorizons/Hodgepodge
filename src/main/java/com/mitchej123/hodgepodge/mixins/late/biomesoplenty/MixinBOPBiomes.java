@@ -24,7 +24,7 @@ public class MixinBOPBiomes {
      * @reason To make it compatible with Java 12+
      */
     @Overwrite(remap = false)
-    private static void registerOverriddenBiome(Class<? extends BOPOverriddenBiome> biomeClass,
+    private static void registerOverriddenBiome(Class<? extends BOPOverriddenBiome<?>> biomeClass,
             String[]... overriddenBiomeNames) {
         final Fields.ClassFields<BiomeGenBase> biomeGenFields = Fields.ofClass(BiomeGenBase.class);
         for (String[] overriddenBiomeNameCandidates : overriddenBiomeNames) {

@@ -16,13 +16,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-@SuppressWarnings({ "unused", "rawtypes" })
 @Mixin(EntityLivingBase.class)
 public abstract class MixinEntityLivingBase_FixPotionException extends Entity {
 
     @Shadow
     @Final
-    private HashMap activePotionsMap;
+    private HashMap<Integer, PotionEffect> activePotionsMap;
 
     @Shadow
     private boolean potionsNeedUpdate;
@@ -39,12 +38,12 @@ public abstract class MixinEntityLivingBase_FixPotionException extends Entity {
      */
     @Overwrite
     protected void updatePotionEffects() {
-        Iterator iterator = this.activePotionsMap.keySet().iterator();
+        Iterator<Integer> iterator = this.activePotionsMap.keySet().iterator();
 
         try {
             while (iterator.hasNext()) {
-                Integer integer = (Integer) iterator.next();
-                PotionEffect potioneffect = (PotionEffect) this.activePotionsMap.get(integer);
+                Integer integer = iterator.next();
+                PotionEffect potioneffect = this.activePotionsMap.get(integer);
 
                 if (!potioneffect.onUpdate(((EntityLivingBase) (Object) this))) {
                     if (!this.worldObj.isRemote) {

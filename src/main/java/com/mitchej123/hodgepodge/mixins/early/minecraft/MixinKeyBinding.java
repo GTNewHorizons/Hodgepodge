@@ -23,7 +23,7 @@ public class MixinKeyBinding implements KeyBindingExt {
 
     @Shadow
     @Final
-    private static List keybindArray;
+    private static List<KeyBinding> keybindArray;
     @Shadow
     private int pressTime;
     @Shadow
