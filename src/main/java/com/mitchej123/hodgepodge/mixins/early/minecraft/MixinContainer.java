@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 import java.util.List;
 
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinContainer {
 
     @Shadow
-    public List inventorySlots;
+    public List<Slot> inventorySlots;
 
     @Inject(method = "putStacksInSlots([Lnet/minecraft/item/ItemStack;)V", at = @At(value = "HEAD"), cancellable = true)
     public void hodgepodge$checkStacksSize(ItemStack[] p_75131_1_, CallbackInfo ci) {
