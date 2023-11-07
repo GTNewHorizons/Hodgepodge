@@ -52,6 +52,8 @@ dependencies {
 
 // Replace when RFG support deobfuscation from notch mappings
 
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
@@ -113,21 +115,18 @@ def deobfNotch(String sourceURL, String rawFileName) {
     download.run {
         src "https://github.com/GTNewHorizons/BON2/releases/download/$bon2Version/BON2-$bon2Version-CUSTOM-all.jar"
         dest bon2File
-        quiet true
         overwrite false
     }
 
     download.run {
         src sourceURL
         dest obfFile
-        quiet true
         overwrite false
     }
 
     exec {
         commandLine 'java', '-jar', bon2File, '--inputJar', obfFile, '--outputJar', deobfFile, '--mcVer', minecraftVersion, '--mappingsVer', mappingsVer, '--notch'
         workingDir bon2Dir
-        standardOutput = new FileOutputStream("${deobfFile}.log")
     }
 
     return files(deobfFile)
@@ -145,12 +144,10 @@ def zipMappings(String zipPath, String url, String bon2Dir) {
     download.run {
         src "${url}fields.csv"
         dest fieldsCache
-        quiet true
     }
     download.run {
         src "${url}methods.csv"
         dest methodsCache
-        quiet true
     }
 
     zipFile.getParentFile().mkdirs()
