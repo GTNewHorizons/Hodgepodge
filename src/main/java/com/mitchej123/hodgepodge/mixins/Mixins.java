@@ -498,8 +498,9 @@ public enum Mixins {
     // Extra Tinkers
     Fix_EXTRATIC_TECONFLICT(new Builder(
             "Disable ExtraTic's Integration with Metallurgy 3 Precious Materials Module: [Brass, Silver, Electrum & Platinum]")
-                    .addMixinClasses("extratic.MixinPartsHandler").setPhase(Phase.LATE).setSide(Side.BOTH)
-                    .setApplyIf(() -> Common.config.fixExtraTiCTEConflict).addTargetedMod(TargetedMod.EXTRATIC)),
+                    .addMixinClasses("extratic.MixinPartsHandler", "extratic.MixinRecipeHandler").setPhase(Phase.LATE)
+                    .setSide(Side.BOTH).setApplyIf(() -> Common.config.fixExtraTiCTEConflict)
+                    .addTargetedMod(TargetedMod.EXTRATIC)),
     // Extra Utilities
     FIX_EXTRA_UTILITIES_UNENCHANTING(new Builder("Fix Exu Unenchanting")
             .addMixinClasses("extrautilities.MixinRecipeUnEnchanting").setPhase(Phase.LATE).setSide(Side.BOTH)
