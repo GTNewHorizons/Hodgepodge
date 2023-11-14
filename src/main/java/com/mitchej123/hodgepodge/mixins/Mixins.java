@@ -173,6 +173,9 @@ public enum Mixins {
     FIX_UNFOCUSED_FULLSCREEN(new Builder("Fix Unfocused Fullscreen").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinMinecraft_UnfocusedFullscreen").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixUnfocusedFullscreen).addTargetedMod(TargetedMod.VANILLA)),
+    FIX_RENDERERS_WORLD_LEAK(new Builder("Fix Renderers World Leak").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinMinecraft_ClearRenderersWorldLeak").setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.fixRenderersWorldLeak).addTargetedMod(TargetedMod.VANILLA)),
     FIX_OPTIFINE_CHUNKLOADING_CRASH(new Builder("Fix Optifine Chunkloading Crash").setPhase(Phase.EARLY)
             .setApplyIf(() -> Common.config.fixOptifineChunkLoadingCrash).setSide(Side.CLIENT)
             .addTargetedMod(TargetedMod.VANILLA).addTargetedMod(TargetedMod.OPTIFINE)

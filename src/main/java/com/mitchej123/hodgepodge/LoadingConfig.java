@@ -95,6 +95,7 @@ public class LoadingConfig {
     public boolean fixThaumcraftGolemMarkerLoading;
     public boolean fixTimeCommandWithGC;
     public boolean fixUnfocusedFullscreen;
+    public boolean fixRenderersWorldLeak;
     public boolean fixForgeUpdateChecker;
     public boolean fixUrlDetection;
     public boolean fixVanillaUnprotectedGetBlock;
@@ -290,6 +291,7 @@ public class LoadingConfig {
         fixThaumcraftAspectSorting = config.get(Category.FIXES.toString(), "fixThaumcraftAspectSorting", true, "Fix Thaumcraft Aspects being sorted by tag instead of by name").getBoolean();
         fixThaumcraftGolemMarkerLoading = config.get(Category.FIXES.toString(), "fixThaumcraftGolemMarkerLoading", true, "Fix golem's marker loading failure when dimensionId larger than MAX_BYTE").getBoolean();
         fixUnfocusedFullscreen = config.get(Category.FIXES.toString(), "fixUnfocusedFullscreen", true, "Fix exiting fullscreen when you tab out of the game").getBoolean();
+        fixRenderersWorldLeak = config.get(Category.FIXES.toString(), "fixRenderersWorldLeak", true, "Fix EffectRenderer and RenderGlobal leaking world instance when leaving world").getBoolean();
         fixUrlDetection = config.get(Category.FIXES.toString(), "fixUrlDetection", true, "Fix URISyntaxException in forge.").getBoolean();
         fixVanillaUnprotectedGetBlock = config.get(Category.FIXES.toString(), "fixVanillaUnprotectedGetBlock", true, "Fixes various unchecked vanilla getBlock() methods").getBoolean();
         fixVillageUncheckedGetBlock = config.get(Category.FIXES.toString(), "fixVillageUncheckedGetBlock", true, "Fixes village unchecked getBlock() calls").getBoolean();
