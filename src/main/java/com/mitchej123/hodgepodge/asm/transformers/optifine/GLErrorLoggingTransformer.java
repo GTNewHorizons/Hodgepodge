@@ -27,7 +27,7 @@ public class GLErrorLoggingTransformer implements IClassTransformer {
             final ClassNode cn = new ClassNode(ASM5);
             cr.accept(cn, 0);
             for (MethodNode m : cn.methods) {
-                if ("checkGLError".equals(m.name)) {
+                if ("checkGLError".equals(m.name) && m.desc.endsWith(")I")) {
                     LOGGER.info("Removing GL Error Logging: " + m.desc);
                     final InsnList i = m.instructions;
                     i.clear();
