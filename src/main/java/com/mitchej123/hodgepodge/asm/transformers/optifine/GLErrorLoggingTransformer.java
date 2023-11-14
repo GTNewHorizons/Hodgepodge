@@ -39,6 +39,8 @@ public class GLErrorLoggingTransformer implements IClassTransformer {
                                     "()I",
                                     false));
                     i.add(new InsnNode(Opcodes.IRETURN));
+                    m.localVariables.clear();
+                    m.visitMaxs(1, 0);
                 }
             }
             final ClassWriter cw = new ClassWriter(0);
