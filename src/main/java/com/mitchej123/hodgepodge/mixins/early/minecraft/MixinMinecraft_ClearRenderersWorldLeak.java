@@ -26,7 +26,8 @@ public abstract class MixinMinecraft_ClearRenderersWorldLeak {
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/client/Minecraft;theWorld:Lnet/minecraft/client/multiplayer/WorldClient;",
-                    opcode = Opcodes.PUTFIELD))
+                    opcode = Opcodes.PUTFIELD,
+                    shift = At.Shift.AFTER))
     private void hodgepodge$fixRenderersWorldLeak(WorldClient worldClient, String loadingMessage, CallbackInfo ci) {
         if (worldClient == null) {
             if (renderGlobal != null) {
