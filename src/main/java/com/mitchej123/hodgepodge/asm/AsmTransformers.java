@@ -21,7 +21,12 @@ public enum AsmTransformers {
             "Take a sledgehammer to CraftServer.resetRecipes() to prevent it from breaking our Furnace Fix",
             () -> Common.thermosTainted && Common.config.speedupVanillaFurnace,
             Side.BOTH,
-            "com.mitchej123.hodgepodge.asm.transformers.thermos.ThermosFurnaceSledgeHammer");
+            "com.mitchej123.hodgepodge.asm.transformers.thermos.ThermosFurnaceSledgeHammer"),
+    OPTIFINE_REMOVE_GLERROR_LOGGING(
+            "Removes the logging of GL errors from OptiFine/Shadersmod",
+            () -> Common.config.removeOptifineGLErrors,
+            Side.CLIENT,
+            "com.mitchej123.hodgepodge.asm.transformers.optifine.GLErrorLoggingTransformer");
     // spotless:on
 
     private final Supplier<Boolean> applyIf;
