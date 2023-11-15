@@ -123,6 +123,7 @@ public class LoadingConfig {
     public boolean preventPickupLoot;
     public boolean removeSpawningMinecartSound;
     public boolean removeCreativeSearchTab;
+    public boolean removeOptifineGLErrors;
 
     public boolean compactChat;
     public boolean dontInvertCrosshairColor;
@@ -326,6 +327,7 @@ public class LoadingConfig {
         enableMacosCmdShortcuts = config.get(Category.TWEAKS.toString(), "enableMacosCmdShortcuts", true, "Use CMD key on MacOS to COPY / INSERT / SELECT in text fields (Chat, NEI, Server IP etc.)").getBoolean();
         removeSpawningMinecartSound = config.get(Category.TWEAKS.toString(), "removeSpawningMinecartSound", true, "Stop playing a sound when spawning a minecart in the world").getBoolean();
         removeCreativeSearchTab = config.get(Category.FIXES.toString(), "removeCreativeSearchTab", true, "Disable the creative search tab since it can be very laggy in large modpacks").getBoolean();
+        removeOptifineGLErrors = config.get(Category.TWEAKS.toString(), "removeOptifineGLErrors", true, "Removes the 'GL error' message that appears when using a shader in Optifine/Shadersmod").getBoolean();
         removeUpdateChecks = config.get(Category.FIXES.toString(), "removeUpdateChecks", true, "Remove old/stale/outdated update checks.").getBoolean();
         chunkSaveCMEDebug = config.get(Category.DEBUG.toString(), "chunkSaveCMEDebug", false, "Enable chunk save cme debugging code.").getBoolean();
         renderDebug = config.get(Category.DEBUG.toString(), "renderDebug", true, "Enable GL state debug hooks. Will not do anything useful unless mode is changed to nonzero.").getBoolean();
