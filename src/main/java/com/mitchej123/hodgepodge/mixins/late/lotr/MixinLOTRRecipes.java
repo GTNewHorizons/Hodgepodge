@@ -21,7 +21,7 @@ public class MixinLOTRRecipes {
      *         {@link com.gtnewhorizon.gtnhlib.util.map.ItemStackMap}, lotr casts the map to a hashmap causing errors
      */
     @Overwrite(remap = false)
-    private static void addSmeltingXPForItem(Item item, float xp) {
+    public static void addSmeltingXPForItem(Item item, float xp) {
         try {
             // Get experienceList
             Map<ItemStack, Float> map = ObfuscationReflectionHelper
