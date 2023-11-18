@@ -188,7 +188,7 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.addToggleDebugMessage).addTargetedMod(TargetedMod.VANILLA)),
     SPEEDUP_VANILLA_ANIMATIONS(new Builder("Speedup Vanilla Animations").setPhase(Phase.EARLY)
             .setApplyIf(() -> Common.config.speedupAnimations).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
-            .addMixinClasses(
+            .addExcludedMod(TargetedMod.ANGELICA).addMixinClasses(
                     "minecraft.textures.client.MixinTextureAtlasSprite",
                     "minecraft.textures.client.MixinTextureMap",
                     "minecraft.textures.client.MixinBlockFire",
