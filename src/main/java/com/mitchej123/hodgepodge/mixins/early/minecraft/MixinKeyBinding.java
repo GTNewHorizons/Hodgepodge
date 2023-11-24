@@ -37,7 +37,7 @@ public class MixinKeyBinding implements KeyBindingExt {
      */
     @Overwrite
     public static void onTick(int keyCode) {
-        if (keyCode > 0) {
+        if (keyCode != 0) {
             for (KeyBinding bind : hodgepodge$keybindMultiMap.get(keyCode)) {
                 if (bind != null) {
                     ++((MixinKeyBinding) (Object) bind).pressTime;
@@ -52,7 +52,7 @@ public class MixinKeyBinding implements KeyBindingExt {
      */
     @Overwrite
     public static void setKeyBindState(int keyCode, boolean pressed) {
-        if (keyCode > 0) {
+        if (keyCode != 0) {
             for (KeyBinding bind : hodgepodge$keybindMultiMap.get(keyCode)) {
                 if (bind != null) {
                     ((MixinKeyBinding) (Object) bind).pressed = pressed;
@@ -68,7 +68,7 @@ public class MixinKeyBinding implements KeyBindingExt {
     private static void hodgepodge$populateKeybindMatcherArray(CallbackInfo ci) {
         hodgepodge$keybindMultiMap.clear();
         for (KeyBinding binding : (List<KeyBinding>) keybindArray) {
-            if (binding != null && binding.getKeyCode() > 0) {
+            if (binding != null && binding.getKeyCode() != 0) {
                 hodgepodge$keybindMultiMap.put(binding.getKeyCode(), binding);
             }
         }
@@ -87,7 +87,7 @@ public class MixinKeyBinding implements KeyBindingExt {
         for (KeyBinding keyBinding : hodgepodge$keybindMultiMap.values()) {
             try {
                 final int keyCode = keyBinding.getKeyCode();
-                KeyBinding.setKeyBindState(keyCode, keyCode > 0 && keyCode < 256 && Keyboard.isKeyDown(keyCode));
+                KeyBinding.setKeyBindState(keyCode, keyCode < 256 && Keyboard.isKeyDown(keyCode));
             } catch (IndexOutOfBoundsException ignored) {}
         }
     }
