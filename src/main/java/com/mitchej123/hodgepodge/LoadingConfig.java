@@ -158,6 +158,8 @@ public class LoadingConfig {
     public boolean replaceVoxelMapReflection;
     public boolean fixVoxelMapYCoord;
     public boolean fixVoxelMapChunkNPE;
+    public boolean fixRedstoneTorchWorldLeak;
+
 
     // render debug
     public boolean renderDebug;
@@ -354,6 +356,8 @@ public class LoadingConfig {
         replaceVoxelMapReflection = config.get(Category.SPEEDUPS.toString(), "replaceVoxelMapReflection", true, "Replace reflection in VoxelMap to directly access the fields instead.").getBoolean();
         fixVoxelMapYCoord = config.get(Category.FIXES.toString(), "fixVoxelMapYCoord", true, "Fix Y coordinate being off by one").getBoolean();
         fixVoxelMapChunkNPE = config.get(Category.FIXES.toString(), "fixVoxelMapChunkNPE", true, "Fix some NullPointerExceptions").getBoolean();
+        fixRedstoneTorchWorldLeak = config.get(Category.FIXES.toString(), "fixRedstoneTorchWorldLeak", true, "Fix redstone torch leaking world").getBoolean();
+
 
         // Pollution :nauseous:
         pollutionBlockRecolor = config.get(Category.POLLUTION_RECOLOR.toString(), "pollutionRecolor", true, "Changes colors of certain blocks based on pollution levels").getBoolean();
