@@ -164,6 +164,10 @@ public enum Mixins {
     FIX_WORLD_SERVER_LEAKING_UNLOADED_ENTITIES(new Builder("Fix world server leaking unloaded entities")
             .setPhase(Phase.EARLY).setSide(Side.BOTH).addMixinClasses("minecraft.MixinWorldServerUpdateEntities")
             .setApplyIf(() -> Common.config.fixWorldServerLeakingUnloadedEntities).addTargetedMod(TargetedMod.VANILLA)),
+
+    FIX_REDSTONE_TORCH_WORLD_LEAK(new Builder("Fix world leak in redstone torch").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses("minecraft.MixinBlockRedstoneTorch").setApplyIf(() -> Common.config.fixRedstoneTorchWorldLeak)
+            .addTargetedMod(TargetedMod.VANILLA)),
     FIX_ARROW_WRONG_LIGHTING(new Builder("Fix arrow wrong lighting").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinRendererLivingEntity").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixGlStateBugs).addTargetedMod(TargetedMod.VANILLA)),
