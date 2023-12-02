@@ -160,7 +160,6 @@ public class LoadingConfig {
     public boolean fixVoxelMapChunkNPE;
     public boolean fixRedstoneTorchWorldLeak;
 
-
     // render debug
     public boolean renderDebug;
     public int renderDebugMode;
