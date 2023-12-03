@@ -167,7 +167,8 @@ public enum Mixins {
 
     FIX_REDSTONE_TORCH_WORLD_LEAK(new Builder("Fix world leak in redstone torch").setPhase(Phase.EARLY)
             .setSide(Side.BOTH).addMixinClasses("minecraft.MixinBlockRedstoneTorch")
-            .setApplyIf(() -> Common.config.fixRedstoneTorchWorldLeak).addTargetedMod(TargetedMod.VANILLA)),
+            .setApplyIf(() -> Common.config.fixRedstoneTorchWorldLeak).addTargetedMod(TargetedMod.VANILLA)
+            .addExcludedMod(TargetedMod.BUGTORCH)),
     FIX_ARROW_WRONG_LIGHTING(new Builder("Fix arrow wrong lighting").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinRendererLivingEntity").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixGlStateBugs).addTargetedMod(TargetedMod.VANILLA)),
@@ -596,7 +597,8 @@ public enum Mixins {
             .setApplyIf(() -> Common.config.pollutionBlockRecolor).setPhase(Phase.EARLY)),
     POLLUTION_RENDER_BLOCKS_OPTIFINE(new Builder("Changes colors of certain blocks based on pollution levels")
             .addMixinClasses("minecraft.MixinRenderBlocks_PollutionWithOptifine").addTargetedMod(TargetedMod.GT5U)
-            .addTargetedMod(TargetedMod.VANILLA).addTargetedMod(TargetedMod.OPTIFINE).setSide(Side.CLIENT)
+            .addTargetedMod(TargetedMod.VANILLA).addTargetedMod(TargetedMod.OPTIFINE)
+            .addExcludedMod(TargetedMod.ANGELICA).setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.pollutionBlockRecolor).setPhase(Phase.EARLY)),
     POLLUTION_RENDER_BLOCKS_BOP(new Builder("Changes colors of certain blocks based on pollution levels")
             .addMixinClasses("biomesoplenty.MixinFoliageRenderer_Pollution").addTargetedMod(TargetedMod.GT5U)

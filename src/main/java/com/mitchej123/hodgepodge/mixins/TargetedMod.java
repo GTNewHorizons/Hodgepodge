@@ -12,6 +12,7 @@ public enum TargetedMod {
     BIBLIOCRAFT("Bibliocraft", null, "BiblioCraft"),
     BOP("BiomesOPlenty", null, "BiomesOPlenty"),
     BUKKIT("Bukkit/Thermos", "Bukkit", null),
+    BUGTORCH("BugTorch", "jss.bugtorch.mixinplugin.BugTorchEarlyMixins", "bugtorch"),
     COFH_CORE("CoFHCore", "cofh.asm.LoadingPlugin", "CoFHCore"),
     EXTRA_UTILITIES("ExtraUtilities", null, "ExtraUtilities"),
     FASTCRAFT("FastCraft", "fastcraft.Tweaker"),
