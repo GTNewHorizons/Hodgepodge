@@ -19,6 +19,7 @@ public class LoadingConfig {
     public int atropineHighID;
     public int itemStacksPickedUpPerTick;
     public int particleLimit;
+    public boolean removeBOPWarning;
 
     // Mixins
     public boolean addCVSupportToWandPedestal;
@@ -326,6 +327,7 @@ public class LoadingConfig {
         optimizeTileentityRemoval = config.get(Category.SPEEDUPS.toString(), "optimizeTileentityRemoval", true, "Optimize tileEntity removal in World.class").getBoolean();
         optimizeWorldUpdateLight = config.get(Category.FIXES.toString(), "optimizeWorldUpdateLight", true, "Fix too early light initialization").getBoolean();
         particleLimit = Math.max(Math.min(config.get(Category.TWEAKS.toString(), "particleLimit", 8000, "Particle limit [4000-16000]").getInt(), 16000), 4000);
+        removeBOPWarning = config.get(Category.FIXES.toString(), "removeBOPWarning", false, "Remove the BOP warning on first world generation").getBoolean();
         preventPickupLoot = config.get(Category.TWEAKS.toString(), "preventPickupLoot", true, "Prevent monsters from picking up loot.").getBoolean();
         enableMacosCmdShortcuts = config.get(Category.TWEAKS.toString(), "enableMacosCmdShortcuts", true, "Use CMD key on MacOS to COPY / INSERT / SELECT in text fields (Chat, NEI, Server IP etc.)").getBoolean();
         removeSpawningMinecartSound = config.get(Category.TWEAKS.toString(), "removeSpawningMinecartSound", true, "Stop playing a sound when spawning a minecart in the world").getBoolean();
