@@ -25,6 +25,7 @@ public class Compat {
     private static boolean isRailcraftPresent;
 
     private static boolean isGalacticraftPresent;
+    private static boolean isBiomesOPlentyPresent;
 
     static void init(Side side) {
         isClient = side == Side.CLIENT;
@@ -52,6 +53,8 @@ public class Compat {
         isRailcraftPresent = Loader.isModLoaded("Railcraft");
 
         isGalacticraftPresent = Loader.isModLoaded("GalacticraftCore");
+
+        isBiomesOPlentyPresent = Loader.isModLoaded("BiomesOPlenty");
     }
 
     /**
@@ -104,5 +107,12 @@ public class Compat {
      */
     public static boolean isGalacticraftPresent() {
         return isGalacticraftPresent;
+    }
+
+    /**
+     * Cannot be used before pre-init phase.
+     */
+    public static boolean isBiomesOPlentyPresent() {
+        return isBiomesOPlentyPresent;
     }
 }
