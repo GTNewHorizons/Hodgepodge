@@ -26,6 +26,7 @@ public class Compat {
 
     private static boolean isGalacticraftPresent;
     private static boolean isBiomesOPlentyPresent;
+    private static boolean isDreamcraftPresent;
 
     static void init(Side side) {
         isClient = side == Side.CLIENT;
@@ -55,6 +56,8 @@ public class Compat {
         isGalacticraftPresent = Loader.isModLoaded("GalacticraftCore");
 
         isBiomesOPlentyPresent = Loader.isModLoaded("BiomesOPlenty");
+
+        isDreamcraftPresent = Loader.isModLoaded("dreamcraft");
     }
 
     /**
@@ -114,5 +117,12 @@ public class Compat {
      */
     public static boolean isBiomesOPlentyPresent() {
         return isBiomesOPlentyPresent;
+    }
+
+    /**
+     * Cannot be used before pre-init phase.
+     */
+    public static boolean isDreamcraftPresent() {
+        return isDreamcraftPresent;
     }
 }
