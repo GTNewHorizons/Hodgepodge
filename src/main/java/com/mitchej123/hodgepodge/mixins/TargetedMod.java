@@ -39,6 +39,7 @@ public enum TargetedMod {
     EXTRATIC("ExtraTiC", null, "ExtraTiC"),
     TRAVELLERSGEAR("TravellersGear", null, "TravellersGear"),
     VANILLA("Minecraft", null),
+    // NOTE: This doesn't work - late mods need a modid, not a coremod class
     VOXELMAP("VoxelMap", "com.thevoxelbox.voxelmap.litemod.VoxelMapTransformer"),
     WITCHERY("Witchery", null, "witchery"),
     XAEROWORLDMAP("Xaero's World Map", null, "XaeroWorldMap"),

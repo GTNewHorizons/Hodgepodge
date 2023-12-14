@@ -354,7 +354,7 @@ public class LoadingConfig {
         unbindKeybindsByDefault = config.get(Category.TWEAKS.toString(), "unbindKeybindsByDefault", true, "Unbinds keybinds of certain ARR mods to avoid keybinds conflicts").getBoolean();
         disableAidSpawnByXUSpikes = config.get(Category.TWEAKS.toString(), "disableAidSpawnByXUSpikes", true, "Disables the spawn of zombie aid when zombie is killed by Extra Utilities Spikes, since it can spawn them too far.").getBoolean();
         ic2CellWithContainer = config.get(Category.TWEAKS.toString(), "ic2CellWithContainer", false, "give ic2 cells containers like gregtech cells do").getBoolean();
-        replaceVoxelMapReflection = config.get(Category.SPEEDUPS.toString(), "replaceVoxelMapReflection", true, "Replace reflection in VoxelMap to directly access the fields instead.").getBoolean();
+        replaceVoxelMapReflection = config.get(Category.SPEEDUPS.toString(), "replaceVoxelMapReflection", false, "Replace reflection in VoxelMap to directly access the fields instead.").getBoolean();
         fixVoxelMapYCoord = config.get(Category.FIXES.toString(), "fixVoxelMapYCoord", true, "Fix Y coordinate being off by one").getBoolean();
         fixVoxelMapChunkNPE = config.get(Category.FIXES.toString(), "fixVoxelMapChunkNPE", true, "Fix some NullPointerExceptions").getBoolean();
         fixRedstoneTorchWorldLeak = config.get(Category.FIXES.toString(), "fixRedstoneTorchWorldLeak", true, "Fix redstone torch leaking world").getBoolean();

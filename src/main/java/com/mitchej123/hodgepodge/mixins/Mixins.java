@@ -676,6 +676,7 @@ public enum Mixins {
     }
 
     public static List<String> getLateMixins(Set<String> loadedMods) {
+        // NOTE: Any targetmod here needs a modid, not a coremod id
         final List<String> mixins = new ArrayList<>();
         final List<String> notLoading = new ArrayList<>();
         for (Mixins mixin : Mixins.values()) {
