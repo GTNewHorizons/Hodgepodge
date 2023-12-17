@@ -13,6 +13,7 @@ import com.mitchej123.hodgepodge.Tags;
 @Mixin(targets = "net/minecraft/client/renderer/ThreadDownloadImageData$1")
 public class MixinThreadDownloadImageData {
 
+    @SuppressWarnings("UnresolvedMixinReference") // mcdev cannot find references in anonymous classes correctly
     @Inject(
             method = "run()V",
             at = @At(value = "INVOKE", target = "Ljava/net/HttpURLConnection;setDoInput(Z)V"),
