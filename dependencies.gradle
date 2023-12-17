@@ -19,11 +19,11 @@ dependencies {
     transformedMod("com.github.GTNewHorizons:Baubles:1.0.3:dev")
     // Transitive updates to make runClient17 work
     transformedMod("com.github.GTNewHorizons:ForgeMultipart:1.4.1:dev")
-    transformedMod("com.github.GTNewHorizons:GT5-Unofficial:5.09.44.96:dev")
-    transformedMod("com.github.GTNewHorizons:harvestcraft:1.1.3-GTNH:dev")
+    transformedMod("com.github.GTNewHorizons:GT5-Unofficial:5.09.44.106:dev")
+    transformedMod("com.github.GTNewHorizons:harvestcraft:1.1.4-GTNH:dev")
     transformedMod("com.github.GTNewHorizons:HungerOverhaul:1.0.4-GTNH:dev")
     transformedMod("com.github.GTNewHorizons:MrTJPCore:1.1.5:dev") // Do not update, fixed afterwards
-    transformedMod("com.github.GTNewHorizons:Railcraft:9.15.1:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
+    transformedMod("com.github.GTNewHorizons:Railcraft:9.15.3:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
     transformedMod("com.github.GTNewHorizons:TinkersConstruct:1.10.12-GTNH:dev")
     transformedMod(deobfCurse("bibliocraft-228027:2423369"))
     transformedMod("curse.maven:biomes-o-plenty-220318:2499612")
