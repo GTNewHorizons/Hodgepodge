@@ -24,7 +24,7 @@ dependencies {
     transformedMod("com.github.GTNewHorizons:HungerOverhaul:1.0.4-GTNH:dev")
     transformedMod("com.github.GTNewHorizons:MrTJPCore:1.1.5:dev") // Do not update, fixed afterwards
     transformedMod("com.github.GTNewHorizons:Railcraft:9.15.3:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
-    transformedMod("com.github.GTNewHorizons:TinkersConstruct:1.11.0:dev")
+    transformedMod("com.github.GTNewHorizons:TinkersConstruct:1.11.0-GTNH:dev")
     transformedMod(deobfCurse("bibliocraft-228027:2423369"))
     transformedMod("curse.maven:biomes-o-plenty-220318:2499612")
     transformedMod("curse.maven:cofh-core-69162:2388751")
