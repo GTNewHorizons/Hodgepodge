@@ -50,6 +50,11 @@ public enum Mixins {
     FIX_HASTE_ARM_SWING_ANIMATION(new Builder("Fix arm not swinging when having too much haste").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityLivingBase_FixHasteArmSwing").setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.fixHasteArmSwing).addTargetedMod(TargetedMod.VANILLA)),
+
+    DISABLE_REALMS_BUTTON(new Builder("Disable Realms button in main menu").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinGuiMainMenu_DisableRealmsButton").setSide(Side.CLIENT)
+            .setApplyIf(() -> Common.config.disableRealmsButton).addTargetedMod(TargetedMod.VANILLA)),
+
     OPTIMIZE_WORLD_UPDATE_LIGHT(new Builder("Optimize world updateLightByType method").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinWorld_FixLightUpdateLag").setSide(Side.BOTH)
             .addExcludedMod(TargetedMod.ARCHAICFIX).addExcludedMod(TargetedMod.ANGELICA)
