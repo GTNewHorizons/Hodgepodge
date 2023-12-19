@@ -8,6 +8,7 @@ import net.minecraftforge.common.config.Configuration;
 import com.mitchej123.hodgepodge.util.BlockMatcher;
 
 public class LoadingConfig {
+
     private Configuration config;
 
     // Adjustments
