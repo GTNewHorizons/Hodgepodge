@@ -127,6 +127,7 @@ public class LoadingConfig {
     public boolean removeCreativeSearchTab;
     public boolean removeOptifineGLErrors;
 
+    public boolean disableRealmsButton;
     public boolean compactChat;
     public boolean dontInvertCrosshairColor;
     public boolean enhanceNightVision;
@@ -303,6 +304,7 @@ public class LoadingConfig {
         validatePacketEncodingBeforeSending = config.get(Category.FIXES.toString(), "validatePacketEncodingBeforeSending", true, "Validate vanilla packet encodings before sending in addition to on reception").getBoolean();
         validatePacketEncodingBeforeSendingShouldCrash = config.get(Category.FIXES.toString(), "validatePacketEncodingBeforeSendingShouldCrash", false, "Should the extended packet validation error cause a crash (true) or just print out an error to the log (false)").getBoolean();
 
+        disableRealmsButton = config.get(Category.TWEAKS.toString(), "disableRealmsButton", true, "Disable Minecraft Realms button on main menu").getBoolean();
         compactChat = config.get(Category.TWEAKS.toString(), "Compact chat", true, "Compacts identical consecutive chat messages together").getBoolean();
         dontInvertCrosshairColor = config.get(Category.TWEAKS.toString(), "dontInvertCrosshairColor", false, "Stop inverting colors of crosshair").getBoolean();
         enhanceNightVision = config.get(Category.TWEAKS.toString(), "enhanceNightVision", false, "Remove the blueish sky tint from night vision").getBoolean();
