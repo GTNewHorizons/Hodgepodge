@@ -214,7 +214,8 @@ public enum Mixins {
             .addTargetedMod(TargetedMod.FASTCRAFT).addExcludedMod(TargetedMod.OPTIFINE)),
     OPTIMIZE_TEXTURE_LOADING(new Builder("Optimize Texture Loading").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.textures.client.MixinTextureUtil").addTargetedMod(TargetedMod.VANILLA)
-            .setApplyIf(() -> Common.config.optimizeTextureLoading).setSide(Side.CLIENT)),
+            .addExcludedMod(TargetedMod.ANGELICA).setApplyIf(() -> Common.config.optimizeTextureLoading)
+            .setSide(Side.CLIENT)),
     HIDE_POTION_PARTICLES(new Builder("Hide Potion Particles").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityLivingBase_HidePotionParticles").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.hidePotionParticlesFromSelf).addTargetedMod(TargetedMod.VANILLA)),
