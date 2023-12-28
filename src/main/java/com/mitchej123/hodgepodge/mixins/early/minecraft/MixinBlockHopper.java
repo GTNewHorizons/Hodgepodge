@@ -43,8 +43,8 @@ public class MixinBlockHopper extends Block {
         bounds.get(EnumFacing.NORTH).add(makeAABB(6, 4, 0, 10, 8, 4));
         bounds.get(EnumFacing.SOUTH).add(makeAABB(6, 4, 12, 10, 8, 16));
 
-        bounds.get(EnumFacing.WEST).add(makeAABB(0, 4, 6, 4, 8, 10));
-        bounds.get(EnumFacing.EAST).add(makeAABB(12, 4, 6, 16, 8, 10));
+        bounds.get(EnumFacing.WEST).add(makeAABB(12, 4, 6, 16, 8, 10));
+        bounds.get(EnumFacing.EAST).add(makeAABB(0, 4, 6, 4, 8, 10));
     }
 
     private MixinBlockHopper(Material materialIn) {
