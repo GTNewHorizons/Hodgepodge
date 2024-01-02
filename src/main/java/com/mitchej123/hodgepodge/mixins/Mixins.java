@@ -278,12 +278,26 @@ public enum Mixins {
             .setSide(Side.CLIENT).setApplyIf(() -> Common.config.fixPlayerSkinFetching)
             .addTargetedMod(TargetedMod.VANILLA)),
     VALIDATE_PACKET_ENCODING_BEFORE_SENDING(new Builder("Validate packet encoding before sending").setPhase(Phase.EARLY)
-            .addMixinClasses("minecraft.packets.MixinDataWatcher", "minecraft.packets.MixinS3FPacketCustomPayload")
+            .addMixinClasses(
+                    "minecraft.packets.MixinDataWatcher",
+                    "minecraft.packets.MixinS3FPacketCustomPayload_Validation")
             .setSide(Side.BOTH).setApplyIf(() -> Common.config.validatePacketEncodingBeforeSending)
             .addTargetedMod(TargetedMod.VANILLA)),
     FIX_FLUID_CONTAINER_REGISTRY_KEY(new Builder("Fix Forge fluid container registry key").setPhase(Phase.EARLY)
             .addMixinClasses("forge.FluidContainerRegistryAccessor", "forge.MixinFluidRegistry").setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.fixFluidContainerRegistryKey).addTargetedMod(TargetedMod.VANILLA)),
+    CHANGE_MAX_NETWORK_NBT_SIZE_LIMIT(new Builder("Modify the maximum NBT size limit as received from network packets")
+            .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinPacketBuffer").setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.changeMaxNetworkNbtSizeLimit).addTargetedMod(TargetedMod.VANILLA)),
+
+    INCREASE_PACKET_SIZE_LIMIT(new Builder("Increase the packet size limit from 2MiB to a theoretical maximum of 4GiB")
+            .setPhase(Phase.EARLY)
+            .addMixinClasses(
+                    "minecraft.MixinMessageSerializer2",
+                    "minecraft.MixinMessageDeserializer2",
+                    "minecraft.packets.MixinS3FPacketCustomPayload_LengthLimit")
+            .setSide(Side.BOTH).setApplyIf(() -> Common.config.increasePacketSizeLimit)
+            .addTargetedMod(TargetedMod.VANILLA)),
     FIX_XRAY_BLOCK_WITHOUT_COLLISION_AABB(new Builder("Fix Xray through block without collision boundingBox")
             .addMixinClasses("minecraft.MixinBlock_FixXray", "minecraft.MixinWorld_FixXray")
             .setApplyIf(() -> Common.config.fixPerspectiveCamera).addTargetedMod(TargetedMod.VANILLA)
