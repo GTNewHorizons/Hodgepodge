@@ -37,7 +37,7 @@ public class MixinPacketBuffer {
         } else {
             realLength = shortLength;
         }
-        byte[] buffer = new byte[shortLength];
+        byte[] buffer = new byte[realLength];
         self.readBytes(buffer);
         return CompressedStreamTools.func_152457_a(buffer, new NBTSizeTracker(Common.config.maxNetworkNbtSizeLimit));
     }
