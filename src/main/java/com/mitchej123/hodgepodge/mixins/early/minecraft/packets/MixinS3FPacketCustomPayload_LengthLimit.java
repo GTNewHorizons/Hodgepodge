@@ -40,7 +40,7 @@ public abstract class MixinS3FPacketCustomPayload_LengthLimit extends Packet {
                     value = "INVOKE",
                     target = "Lcpw/mods/fml/common/network/ByteBufUtils;readVarShort(Lio/netty/buffer/ByteBuf;)I"),
             remap = false)
-    private static int hodgepodge$readLongerPacketData(ByteBuf buf) {
+    private int hodgepodge$readLongerPacketData(ByteBuf buf) {
         return PacketSerializationHelper.readExtendedVarShortOrInt(buf);
     }
 
@@ -50,7 +50,7 @@ public abstract class MixinS3FPacketCustomPayload_LengthLimit extends Packet {
                     value = "INVOKE",
                     target = "Lcpw/mods/fml/common/network/ByteBufUtils;writeVarShort(Lio/netty/buffer/ByteBuf;I)V"),
             remap = false)
-    private static void hodgepodge$writeLongerPacketData(ByteBuf buf, int toWrite) {
+    private void hodgepodge$writeLongerPacketData(ByteBuf buf, int toWrite) {
         PacketSerializationHelper.writeExtendedVarShortOrInt(buf, toWrite);
     }
 }
