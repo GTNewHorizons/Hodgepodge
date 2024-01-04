@@ -14,6 +14,7 @@ public class LoadingConfig {
     // Adjustments
     public boolean addSystemInfo;
     public boolean arabicNumbersForEnchantsPotions;
+    public boolean enderPearlInCreativeMode;
     public int chatLength;
     public int ic2SeedMaxStackSize;
     public int atropineHighID;
@@ -254,6 +255,7 @@ public class LoadingConfig {
         fixGlStateBugs = config.get(Category.FIXES.toString(), "fixGlStateBugs", true, "Fix vanilla GL state bugs causing lighting glitches in various perspectives (MC-10135).").getBoolean();
         fixGuiGameOver = config.get(Category.FIXES.toString(), "fixGuiGameOver", true, "Fix Game Over GUI buttons disabled if switching fullscreen").getBoolean();
         fixHasteArmSwing = config.get(Category.FIXES.toString(), "fixHasteArmSwing", true, "Fix arm not swinging when having too much haste").getBoolean();
+        enderPearlInCreativeMode = config.get(Category.FIXES.toString(), "allowEnderPearlInCreative", true, "Enderpearls can usually only be used in survival, this fixes it.").getBoolean();
         fixTimeCommandWithGC = config.get(Category.FIXES.toString(), "fixTimeCommandWithGC", true, "Fix time commands with GC").getBoolean();
         fixBetterHUDArmorDisplay = config.get(Category.FIXES.toString(), "fixBetterHUDArmorDisplay",true, "Fix BetterHUD armor bar rendering breaking with skulls").getBoolean();
         fixBetterHUDHPDisplay = config.get(Category.FIXES.toString(), "fixBetterHUDHPDisplay",true, "Fix BetterHUD freezing the game when trying to render high amounts of hp").getBoolean();
