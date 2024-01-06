@@ -4,9 +4,6 @@
   "package": "com.mitchej123.hodgepodge.mixins.early",
   "refmap": "mixins.hodgepodge.refmap.json",
   "target": "@env(DEFAULT)",
-  "compatibilityLevel": "JAVA_8",
-  "mixins": [
-    "minecraft.MixinItemEnderPearl"
-  ]
+  "compatibilityLevel": "JAVA_8"
 }
 
