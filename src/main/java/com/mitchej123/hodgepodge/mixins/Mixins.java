@@ -47,9 +47,6 @@ public enum Mixins {
                             () -> Common.config.fixPotionEffectNumerals
                                     || Common.config.arabicNumbersForEnchantsPotions)
                     .addTargetedMod(TargetedMod.VANILLA)),
-    FIX_ENDERPEARL_CREATIVE_MODE(new Builder("Enderpearl usage in creative mode").setPhase(Phase.EARLY)
-            .addMixinClasses("minecraft.MixinItemEnderPearl").setSide(Side.BOTH)
-            .setApplyIf(() -> Common.config.enderPearlInCreativeMode).addTargetedMod(TargetedMod.VANILLA)),
     FIX_HASTE_ARM_SWING_ANIMATION(new Builder("Fix arm not swinging when having too much haste").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityLivingBase_FixHasteArmSwing").setSide(Side.BOTH)
             .setApplyIf(() -> Common.config.fixHasteArmSwing).addTargetedMod(TargetedMod.VANILLA)),
