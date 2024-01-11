@@ -409,6 +409,10 @@ public enum Mixins {
             .setPhase(Phase.LATE).setSide(Side.BOTH)
             .addMixinClasses("thaumcraft.MixinEntityGolemBase", "thaumcraft.MixinItemGolemBell")
             .setApplyIf(() -> Common.config.fixThaumcraftGolemMarkerLoading).addTargetedMod(TargetedMod.THAUMCRAFT)),
+    FIX_ALCHEMY_FURNACE_ADVANCED_RENDERING(new Builder("Fix Advanced Alchemical Furnace breaking tile entity lighting")
+            .setPhase(Phase.LATE).setSide(Side.CLIENT)
+            .addMixinClasses("thaumcraft.MixinTileAlchemyFurnaceAdvancedRenderer")
+            .setApplyIf(() -> Common.config.fixAdvAlchemicalFurnaceLighting).addTargetedMod(TargetedMod.THAUMCRAFT)),
 
     // BOP
     FIX_QUICKSAND_XRAY(new Builder("Fix Xray through block without collision boundingBox").setPhase(Phase.LATE)
