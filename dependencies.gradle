@@ -40,6 +40,7 @@ dependencies {
     transformedModCompileOnly(deobfCurse("automagy-222153:2285272"))
     transformedModCompileOnly("com.github.GTNewHorizons:Galacticraft:3.1.2-GTNH:dev")
     transformedModCompileOnly("curse.maven:minechem-368422:2905830")
+    transformedModCompileOnly("curse.maven:thermal-dynamics-227443:2388756")
     transformedModCompileOnly(deobfCurse("projecte-226410:2340786"))
     transformedModCompileOnly(deobfCurse("better-hud-286066:2523840"))
     transformedModCompileOnly("curse.maven:immersive-engineering-231951:2299019")

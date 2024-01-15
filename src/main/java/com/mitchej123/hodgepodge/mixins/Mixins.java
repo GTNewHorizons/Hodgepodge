@@ -647,7 +647,11 @@ public enum Mixins {
                     .addTargetedMod(TargetedMod.GALACTICRAFT_CORE)),
     IC2_CELL(new Builder("No IC2 Cell Consumption in tanks").addMixinClasses("ic2.MixinIC2ItemCell")
             .setPhase(Phase.LATE).setSide(Side.BOTH).setApplyIf(() -> Common.config.ic2CellWithContainer)
-            .addTargetedMod(TargetedMod.IC2));
+            .addTargetedMod(TargetedMod.IC2)),
+    TD_NASE_PREVENTION(new Builder("Prevent NegativeArraySizeException on itemduct transfers")
+            .addMixinClasses("thermaldynamics.MixinSimulatedInv").setSide(Side.BOTH)
+            .setApplyIf(() -> Common.config.preventThermalDynamicsNASE).addTargetedMod(TargetedMod.THERMALDYNAMICS)
+            .setPhase(Phase.LATE));
 
     private final List<String> mixinClasses;
     private final List<TargetedMod> targetedMods;
