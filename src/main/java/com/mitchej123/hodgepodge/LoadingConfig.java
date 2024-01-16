@@ -165,6 +165,7 @@ public class LoadingConfig {
     public boolean fixVoxelMapYCoord;
     public boolean fixVoxelMapChunkNPE;
     public boolean fixRedstoneTorchWorldLeak;
+    public boolean modernPickBlock;
 
     // render debug
     public boolean renderDebug;
@@ -368,6 +369,7 @@ public class LoadingConfig {
         fixVoxelMapYCoord = config.get(Category.FIXES.toString(), "fixVoxelMapYCoord", true, "Fix Y coordinate being off by one").getBoolean();
         fixVoxelMapChunkNPE = config.get(Category.FIXES.toString(), "fixVoxelMapChunkNPE", true, "Fix some NullPointerExceptions").getBoolean();
         fixRedstoneTorchWorldLeak = config.get(Category.FIXES.toString(), "fixRedstoneTorchWorldLeak", true, "Fix redstone torch leaking world").getBoolean();
+        modernPickBlock = config.get(Category.TWEAKS.toString(), "modernPickBlock", true, "Adds pick block functionality to survival mode").getBoolean();
 
 
         // Pollution :nauseous:
