@@ -315,9 +315,9 @@ public enum Mixins {
     NETTY_PATCH(new Builder("Fix NPE in Netty's Bootstrap class").addMixinClasses("netty.MixinBootstrap")
             .setPhase(Phase.EARLY).setSide(Side.CLIENT).setApplyIf(() -> Common.config.fixNettyNPE)
             .addTargetedMod(TargetedMod.VANILLA)),
-    MODERN_PICK_BLOCK(new Builder("Implements pick block functionality in survival mode")
+    MODERN_PICK_BLOCK(new Builder("Allows pick block to pull items from your inventory")
             .addTargetedMod(TargetedMod.VANILLA).setSide(Side.CLIENT).setPhase(Phase.EARLY)
-            .addMixinClasses("minecraft.MixinClientPickBlock").setApplyIf(() -> Common.config.modernPickBlock)),
+            .addMixinClasses("forge.MixinForgeHooks_ModernPickBlock").setApplyIf(() -> Common.config.modernPickBlock)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
