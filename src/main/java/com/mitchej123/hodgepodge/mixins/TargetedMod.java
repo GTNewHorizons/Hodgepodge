@@ -35,6 +35,7 @@ public enum TargetedMod {
     PROJECTE("ProjectE", null, "ProjectE"),
     RAILCRAFT("Railcraft", null, "Railcraft"),
     THAUMCRAFT("Thaumcraft", null, "Thaumcraft"), // "thaumcraft.codechicken.core.launch.DepLoader"
+    THERMALDYNAMICS("Thermal Dynamics", null, "ThermalDynamics"),
     TINKERSCONSTRUCT("TConstruct", null, "TConstruct"),
     EXTRATIC("ExtraTiC", null, "ExtraTiC"),
     TRAVELLERSGEAR("TravellersGear", null, "TravellersGear"),
