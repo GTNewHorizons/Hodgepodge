@@ -165,6 +165,7 @@ public class LoadingConfig {
     public boolean fixVoxelMapYCoord;
     public boolean fixVoxelMapChunkNPE;
     public boolean fixRedstoneTorchWorldLeak;
+    public boolean preventThermalDynamicsNASE;
 
     // render debug
     public boolean renderDebug;
@@ -368,7 +369,7 @@ public class LoadingConfig {
         fixVoxelMapYCoord = config.get(Category.FIXES.toString(), "fixVoxelMapYCoord", true, "Fix Y coordinate being off by one").getBoolean();
         fixVoxelMapChunkNPE = config.get(Category.FIXES.toString(), "fixVoxelMapChunkNPE", true, "Fix some NullPointerExceptions").getBoolean();
         fixRedstoneTorchWorldLeak = config.get(Category.FIXES.toString(), "fixRedstoneTorchWorldLeak", true, "Fix redstone torch leaking world").getBoolean();
-
+        preventThermalDynamicsNASE = config.get(Category.FIXES.toString(), "preventThermalDynamicsNASE", true, "Prevent crash with Thermal Dynamics from Negative Array Exceptions from item duct transfers").getBoolean();
 
         // Pollution :nauseous:
         pollutionBlockRecolor = config.get(Category.POLLUTION_RECOLOR.toString(), "pollutionRecolor", true, "Changes colors of certain blocks based on pollution levels").getBoolean();
