@@ -11,6 +11,63 @@ import com.mitchej123.hodgepodge.client.textures.Mipmaps;
 public class MixinTextureUtil {
 
     /**
+     * @author UltraHex
+     * @reason Check entire texture for transparency.
+     * @reason Don't divide by zero for small textures.
+     */
+    @Overwrite
+    public static int[][] generateMipmapData(int levels, int size, int[][] texture) {
+        int[][] mipmaps = new int[levels + 1][];
+        mipmaps[0] = texture[0];
+
+        if (levels > 0) {
+            boolean transparent = false;
+
+            for (int l = 0; l < texture[0].length; ++l) {
+                if (texture[0][l] >> 24 == 0) {
+                    transparent = true;
+                    break;
+                }
+            }
+
+            for (int level = 1; level <= levels; ++level) {
+                if (texture[level] != null) {
+                    mipmaps[level] = texture[level];
+                } else {
+                    int[] prevLevel = mipmaps[level - 1];
+
+                    int width = size >> level;
+                    if (width <= 0) {
+                        mipmaps[level] = prevLevel;
+                        continue;
+                    }
+
+                    int[] mipmap = new int[prevLevel.length >> 2];
+
+                    int height = mipmap.length / width;
+                    int prevWidth = width << 1;
+
+                    for (int x = 0; x < width; ++x) {
+                        for (int y = 0; y < height; ++y) {
+                            int prevPos = 2 * (x + y * prevWidth);
+                            mipmap[x + y * width] = func_147943_a(
+                                    prevLevel[prevPos],
+                                    prevLevel[prevPos + 1],
+                                    prevLevel[prevPos + prevWidth],
+                                    prevLevel[prevPos + 1 + prevWidth],
+                                    transparent);
+                        }
+                    }
+
+                    mipmaps[level] = mipmap;
+                }
+            }
+        }
+
+        return mipmaps;
+    }
+
+    /**
      * @author SuperCoder79
      * @reason Rewrite mipmap color math to use memoized value array instead of using Math.pow directly
      */
