@@ -34,6 +34,7 @@ public class LoadingConfig {
 
     public boolean changeSprintCategory;
     public boolean enlargePotionArray;
+    public boolean fixAdvAlchemicalFurnaceLighting;
     public boolean fixBetterHUDArmorDisplay;
     public boolean fixBetterHUDHPDisplay;
     public int betterHUDHPRenderLimit;
@@ -233,6 +234,7 @@ public class LoadingConfig {
         enableTileRendererProfiler = config.get(Category.TWEAKS.toString(), "enableTileRendererProfiler", true, "Shows renderer's impact on FPS in vanilla lagometer").getBoolean();
 
         changeSprintCategory = config.get(Category.TWEAKS.toString(), "changeSprintCategory", true, "Moves the sprint keybind to the movement category").getBoolean();
+        fixAdvAlchemicalFurnaceLighting = config.get(Category.FIXES.toString(), "fixAdvAlchemicalFurnaceLighting", true, "Fix Advanced Alchemical Furnace causing other tile entities to be incorrectly lit when active and visible").getBoolean();
         fixContainerPutStacksInSlots = config.get(Category.FIXES.toString(), "fixContainerPutStacksInSlots", true, "Prevents crash if server sends container with wrong itemStack size").getBoolean();
         fixChatWrappedColors = config.get(Category.FIXES.toString(), "fixChatWrappedColors", true, "Fix wrapped chat lines missing colors").getBoolean();
         fixComponentsPoppingOff = config.get(Category.TWEAKS.toString(), "fixComponentsPoppingOff", true, "Fix Project Red components popping off on unloaded chunks").getBoolean();
