@@ -26,7 +26,7 @@ public class Hodgepodge {
     public static final HodgepodgeEventHandler EVENT_HANDLER = new HodgepodgeEventHandler();
     public static final String MODID = "hodgepodge";
     public static final String VERSION = Tags.VERSION;
-    public static final String NAME = Tags.MODNAME;
+    public static final String NAME = "Hodgepodge";
 
     @EventHandler
     public void preinit(FMLPreInitializationEvent event) {
