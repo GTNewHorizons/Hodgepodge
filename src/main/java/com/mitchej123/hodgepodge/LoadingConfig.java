@@ -33,6 +33,7 @@ public class LoadingConfig {
     public boolean enableDefaultLanPort;
 
     public boolean changeSprintCategory;
+    public boolean enablePass0Blend;
     public boolean enlargePotionArray;
     public boolean fixBetterHUDArmorDisplay;
     public boolean fixBetterHUDHPDisplay;
@@ -313,6 +314,7 @@ public class LoadingConfig {
         packetSizeLimit = config.getInt("packetSizeLimit", Category.FIXES.toString(), 256 * 1024 * 1024, 1024, 1024 * 1024 * 1024, "The maximum size limit in bytes of a network packet to accept, the vanilla value is 2097152 (2 MiB).");
         changeMaxNetworkNbtSizeLimit = config.get(Category.FIXES.toString(), "changeMaxNetworkNbtSizeLimit", true, "Modify the maximum NBT size limit when received as a network packet, to avoid large NBT-related crashes").getBoolean();
         maxNetworkNbtSizeLimit = config.getInt("maxNetworkNbtSizeLimit", Category.FIXES.toString(), 256 * 1024 * 1024, 1024, 1024 * 1024 * 1024, "The maximum NBT size limit in bytes when received as a network packet, the vanilla value is 2097152 (2 MiB).");
+        enablePass0Blend = config.get(Category.TWEAKS.toString(), "enablePass0Blend", true, "Enable alpha blending during terrain render pass 0. Improves quality of layered block textures. Slight performance impact.").getBoolean();
 
         disableRealmsButton = config.get(Category.TWEAKS.toString(), "disableRealmsButton", true, "Disable Minecraft Realms button on main menu").getBoolean();
         compactChat = config.get(Category.TWEAKS.toString(), "Compact chat", true, "Compacts identical consecutive chat messages together").getBoolean();
