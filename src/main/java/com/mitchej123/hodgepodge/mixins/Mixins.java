@@ -319,6 +319,11 @@ public enum Mixins {
             .addTargetedMod(TargetedMod.VANILLA).setSide(Side.CLIENT).setPhase(Phase.EARLY)
             .addMixinClasses("forge.MixinForgeHooks_ModernPickBlock").setApplyIf(() -> Common.config.modernPickBlock)),
 
+    ENABLE_BLENDING_ON_PASS_0(
+            new Builder("Enable alpha blending during terrain pass 0").setPhase(Phase.EARLY).setSide(Side.CLIENT)
+                    .addMixinClasses("minecraft.MixinRenderGlobal_Pass0Blend").addTargetedMod(TargetedMod.VANILLA)
+                    .addExcludedMod(TargetedMod.ANGELICA).setApplyIf(() -> Common.config.enablePass0Blend)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIc2WaterKinetic").setApplyIf(() -> Common.config.fixIc2UnprotectedGetBlock)
