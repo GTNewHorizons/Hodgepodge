@@ -26,8 +26,8 @@ import it.unimi.dsi.fastutil.longs.LongSet;
 @Mixin(WorldClient.class)
 public abstract class MixinWorldClient_FixAllocations extends World {
 
-    MixinWorldClient_FixAllocations(ISaveHandler saveHandler, String str, WorldProvider provider, WorldSettings settings,
-            Profiler profiler) {
+    MixinWorldClient_FixAllocations(ISaveHandler saveHandler, String str, WorldProvider provider,
+            WorldSettings settings, Profiler profiler) {
         // Dummy cunstructor
         super(saveHandler, str, provider, settings, profiler);
     }

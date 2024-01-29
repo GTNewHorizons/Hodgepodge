@@ -4,6 +4,7 @@ import com.gtnewhorizon.gtnhlib.config.Config;
 
 @Config(modid = "hodgepodge", category = "fixes")
 public class FixesConfig {
+
     @Config.Comment("Fix too many allocations from Chunk Coordinate Int Pair")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
