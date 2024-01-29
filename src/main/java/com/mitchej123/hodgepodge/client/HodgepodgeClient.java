@@ -1,6 +1,9 @@
 package com.mitchej123.hodgepodge.client;
 
-import biomesoplenty.common.eventhandler.client.gui.WorldTypeMessageEventHandler;
+import java.util.Collections;
+
+import net.minecraftforge.common.MinecraftForge;
+
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.client.handlers.ClientKeyListener;
@@ -8,12 +11,11 @@ import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.util.ManagedEnum;
+
+import biomesoplenty.common.eventhandler.client.gui.WorldTypeMessageEventHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModMetadata;
-import net.minecraftforge.common.MinecraftForge;
-
-import java.util.Collections;
 
 public class HodgepodgeClient {
 

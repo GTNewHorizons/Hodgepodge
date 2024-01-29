@@ -1,15 +1,16 @@
 package com.mitchej123.hodgepodge.asm;
 
-import com.mitchej123.hodgepodge.Common;
-import com.mitchej123.hodgepodge.config.ASMConfig;
-import com.mitchej123.hodgepodge.config.SpeedupsConfig;
-import com.mitchej123.hodgepodge.config.TweaksConfig;
-import cpw.mods.fml.relauncher.FMLLaunchHandler;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
+
+import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.config.ASMConfig;
+import com.mitchej123.hodgepodge.config.SpeedupsConfig;
+import com.mitchej123.hodgepodge.config.TweaksConfig;
+
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
 
 public enum AsmTransformers {
 

@@ -1,12 +1,15 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import com.mitchej123.hodgepodge.config.FixesConfig;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ThreadLocalRandom;
+
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.IChatComponent.Serializer;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,8 +17,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ThreadLocalRandom;
+import com.mitchej123.hodgepodge.config.FixesConfig;
 
 @Mixin(S02PacketChat.class)
 public abstract class MixinS02PacketChat {

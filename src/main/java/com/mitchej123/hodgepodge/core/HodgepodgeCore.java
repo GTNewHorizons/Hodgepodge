@@ -1,5 +1,9 @@
 package com.mitchej123.hodgepodge.core;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.gtnewhorizon.gtnhlib.config.ConfigException;
 import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
@@ -13,11 +17,8 @@ import com.mitchej123.hodgepodge.config.PollutionRecolorConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.mixins.Mixins;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.MCVersion("1.7.10")
 @IFMLLoadingPlugin.TransformerExclusions({ "com.mitchej123.hodgepodge.asm", "optifine" })

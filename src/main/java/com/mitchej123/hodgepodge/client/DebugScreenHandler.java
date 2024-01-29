@@ -1,11 +1,14 @@
 package com.mitchej123.hodgepodge.client;
 
-import com.mitchej123.hodgepodge.config.DebugConfig;
-import com.mitchej123.hodgepodge.config.FixesConfig;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+
 import org.lwjgl.opengl.GL11;
+
+import com.mitchej123.hodgepodge.config.DebugConfig;
+import com.mitchej123.hodgepodge.config.FixesConfig;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class DebugScreenHandler {
 

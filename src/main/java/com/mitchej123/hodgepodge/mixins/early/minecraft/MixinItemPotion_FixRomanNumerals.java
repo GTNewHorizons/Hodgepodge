@@ -1,13 +1,15 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
+import net.minecraft.item.ItemPotion;
+
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.util.RomanNumerals;
-import net.minecraft.item.ItemPotion;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ItemPotion.class)
 public class MixinItemPotion_FixRomanNumerals {

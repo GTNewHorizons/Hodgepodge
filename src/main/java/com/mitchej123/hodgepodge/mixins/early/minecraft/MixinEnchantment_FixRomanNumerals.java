@@ -1,12 +1,14 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.mitchej123.hodgepodge.config.TweaksConfig;
-import com.mitchej123.hodgepodge.util.RomanNumerals;
 import net.minecraft.enchantment.Enchantment;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.mitchej123.hodgepodge.config.TweaksConfig;
+import com.mitchej123.hodgepodge.util.RomanNumerals;
 
 /**
  * Mixin from Sk1erLLC/Patcher

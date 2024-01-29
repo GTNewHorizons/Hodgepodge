@@ -1,13 +1,15 @@
 package com.mitchej123.hodgepodge;
 
-import com.mitchej123.hodgepodge.config.ASMConfig;
+import java.io.File;
+
 import net.minecraft.launchwrapper.Launch;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
-import java.io.File;
+import com.mitchej123.hodgepodge.config.ASMConfig;
 
 public class Common {
 

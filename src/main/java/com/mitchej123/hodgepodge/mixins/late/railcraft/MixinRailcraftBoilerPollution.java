@@ -1,17 +1,20 @@
 package com.mitchej123.hodgepodge.mixins.late.railcraft;
 
-import com.mitchej123.hodgepodge.config.PollutionConfig;
-import com.mitchej123.hodgepodge.util.PollutionHelper;
-import mods.railcraft.common.blocks.RailcraftTileEntity;
-import mods.railcraft.common.blocks.machine.TileMultiBlock;
-import mods.railcraft.common.blocks.machine.beta.TileEngineSteamHobby;
-import mods.railcraft.common.util.steam.SteamBoiler;
 import net.minecraft.world.World;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import com.mitchej123.hodgepodge.config.PollutionConfig;
+import com.mitchej123.hodgepodge.util.PollutionHelper;
+
+import mods.railcraft.common.blocks.RailcraftTileEntity;
+import mods.railcraft.common.blocks.machine.TileMultiBlock;
+import mods.railcraft.common.blocks.machine.beta.TileEngineSteamHobby;
+import mods.railcraft.common.util.steam.SteamBoiler;
 
 /*
  * Merged from ModMixins under the MIT License Copyright bartimaeusnek & GTNewHorizons

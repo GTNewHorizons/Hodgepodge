@@ -1,9 +1,11 @@
 package com.mitchej123.hodgepodge.util;
 
+import net.minecraft.world.chunk.Chunk;
+
 import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.config.PollutionConfig;
+
 import gregtech.common.GT_Pollution;
-import net.minecraft.world.chunk.Chunk;
 
 public class PollutionHelper {
 
