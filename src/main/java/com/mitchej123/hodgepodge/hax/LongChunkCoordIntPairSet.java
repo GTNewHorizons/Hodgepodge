@@ -17,7 +17,9 @@ import it.unimi.dsi.fastutil.longs.LongSet;
 
 public class LongChunkCoordIntPairSet implements Set<ChunkCoordIntPair> {
 
-    private MutableChunkCoordIntPair reusableChunkCoordIntPair = (MutableChunkCoordIntPair) new ChunkCoordIntPair(0, 0);
+    private final MutableChunkCoordIntPair reusableChunkCoordIntPair = (MutableChunkCoordIntPair) new ChunkCoordIntPair(
+            0,
+            0);
 
     public ChunkCoordIntPair fromLong(long pos) {
         return (ChunkCoordIntPair) reusableChunkCoordIntPair

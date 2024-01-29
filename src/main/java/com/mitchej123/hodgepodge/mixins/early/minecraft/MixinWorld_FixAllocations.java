@@ -1,62 +1,32 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import java.util.List;
 import java.util.Set;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MathHelper;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mitchej123.hodgepodge.hax.LongChunkCoordIntPairSet;
-import com.mitchej123.hodgepodge.util.ChunkPosUtil;
+import com.mitchej123.hodgepodge.mixins.interfaces.MutableChunkCoordIntPair;
 
 @Mixin(World.class)
 public abstract class MixinWorld_FixAllocations {
 
     protected Set activeChunkSet = new LongChunkCoordIntPairSet();
 
-    @Shadow
-    public List<EntityPlayer> playerEntities;
+    private final MutableChunkCoordIntPair reusableChunkCoordIntPair = (MutableChunkCoordIntPair) new ChunkCoordIntPair(
+            0,
+            0);
 
-    @Shadow
-    protected abstract int func_152379_p();
-
-    @Redirect(
-            method = "setActivePlayerChunksAndCheckLight",
-            at = @At(value = "INVOKE", target = "Ljava/util/List;size()I", ordinal = 0))
-    private int cancelExistingForLoop(List instance) {
-        // Don't add anything to the original set so cancel the original loop
-        return 0;
-    }
-
-    @Inject(
-            method = "setActivePlayerChunksAndCheckLight",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/profiler/Profiler;endSection()V",
-                    shift = At.Shift.BEFORE))
-    private void replacedForLoopLessAllocations(CallbackInfo ci) {
-        // And instead add it to our long set here
-        final int size = this.playerEntities.size();
-        for (int i = 0; i < size; ++i) {
-            final EntityPlayer entityPlayer = this.playerEntities.get(i);
-            final int j = MathHelper.floor_double(entityPlayer.posX / 16.0D);
-            final int k = MathHelper.floor_double(entityPlayer.posZ / 16.0D);
-            final int l = this.func_152379_p();
-
-            for (int i1 = -l; i1 <= l; ++i1) {
-                for (int j1 = -l; j1 <= l; ++j1) {
-                    ((LongChunkCoordIntPairSet) this.activeChunkSet).addLong(ChunkPosUtil.toLong(i1 + j, j1 + k));
-                }
-            }
-        }
+    @WrapOperation(
+            at = @At(value = "NEW", target = "Lnet/minecraft/world/ChunkCoordIntPair;"),
+            method = "setActivePlayerChunksAndCheckLight")
+    private ChunkCoordIntPair reuseMutableChunkCoordIntPair(int x, int z, Operation<ChunkCoordIntPair> original) {
+        return (ChunkCoordIntPair) reusableChunkCoordIntPair.setChunkPos(x, z);
     }
 
 }
