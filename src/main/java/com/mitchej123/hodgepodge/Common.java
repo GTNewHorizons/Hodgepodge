@@ -1,13 +1,13 @@
 package com.mitchej123.hodgepodge;
 
-import java.io.File;
-
+import com.mitchej123.hodgepodge.config.ASMConfig;
 import net.minecraft.launchwrapper.Launch;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
+
+import java.io.File;
 
 public class Common {
 
@@ -28,7 +28,7 @@ public class Common {
                     "Thermos/Bukkit detected; This is an unsupported configuration -- Things may not function properly.");
             Common.log.warn(
                     " Using `{}` for CraftServer Package.  If this is not correct, please update your config file!",
-                    Common.config.thermosCraftServerClass);
+                    ASMConfig.thermosCraftServerClass);
         } catch (ClassNotFoundException e) {
             Common.thermosTainted = false;
             Common.log.info("Thermos/Bukkit NOT detected :-D");

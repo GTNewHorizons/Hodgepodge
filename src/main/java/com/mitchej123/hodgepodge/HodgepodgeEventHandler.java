@@ -1,16 +1,14 @@
 package com.mitchej123.hodgepodge;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.ZombieEvent;
-
 import com.mitchej123.hodgepodge.net.MessageConfigSync;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.ZombieEvent;
 
 public class HodgepodgeEventHandler {
 
@@ -34,6 +32,6 @@ public class HodgepodgeEventHandler {
 
     @SubscribeEvent
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        NetworkHandler.instance.sendTo(new MessageConfigSync(Common.config), (EntityPlayerMP) event.player);
+        NetworkHandler.instance.sendTo(new MessageConfigSync(), (EntityPlayerMP) event.player);
     }
 }

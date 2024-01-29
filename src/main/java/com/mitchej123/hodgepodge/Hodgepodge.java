@@ -4,7 +4,6 @@ import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
 import com.mitchej123.hodgepodge.util.AnchorAlarm;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -19,7 +18,8 @@ import cpw.mods.fml.relauncher.Side;
         version = Hodgepodge.VERSION,
         name = Hodgepodge.NAME,
         acceptableRemoteVersions = "*",
-        dependencies = "required-after:gtnhmixins@[2.0.1,)")
+        dependencies = "required-after:gtnhmixins@[2.0.1,)",
+        guiFactory = "com.mitchej123.hodgepodge.config.gui.HodgepodgeGuiConfigFactory")
 public class Hodgepodge {
 
     public static final AnchorAlarm ANCHOR_ALARM = new AnchorAlarm();
@@ -27,6 +27,12 @@ public class Hodgepodge {
     public static final String MODID = "hodgepodge";
     public static final String VERSION = Tags.VERSION;
     public static final String NAME = "Hodgepodge";
+
+    public static final boolean isGTNH;
+
+    static {
+        isGTNH = true;
+    }
 
     @EventHandler
     public void preinit(FMLPreInitializationEvent event) {

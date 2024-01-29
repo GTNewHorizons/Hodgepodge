@@ -1,9 +1,7 @@
 package com.mitchej123.hodgepodge.asm.transformers.thermos;
 
-import static org.objectweb.asm.Opcodes.ASM5;
-
+import com.mitchej123.hodgepodge.config.ASMConfig;
 import net.minecraft.launchwrapper.IClassTransformer;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
@@ -14,7 +12,7 @@ import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import com.mitchej123.hodgepodge.Common;
+import static org.objectweb.asm.Opcodes.ASM5;
 
 @SuppressWarnings("unused")
 public class ThermosFurnaceSledgeHammer implements IClassTransformer {
@@ -23,7 +21,7 @@ public class ThermosFurnaceSledgeHammer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
-        if (Common.config.thermosCraftServerClass.equals(transformedName)) {
+        if (ASMConfig.thermosCraftServerClass.equals(transformedName)) {
             LOGGER.info("Patching Thermos or derivative to not break our furnace fix");
             final ClassReader cr = new ClassReader(basicClass);
             final ClassNode cn = new ClassNode(ASM5);

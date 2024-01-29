@@ -1,17 +1,15 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import net.minecraft.client.renderer.InventoryEffectRenderer;
-import net.minecraft.client.resources.I18n;
-
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
-
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
-import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.util.RomanNumerals;
+import net.minecraft.client.renderer.InventoryEffectRenderer;
+import net.minecraft.client.resources.I18n;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(InventoryEffectRenderer.class)
 public class MixinInventoryEffectRenderer_FixPotionEffectNumerals {
@@ -34,7 +32,7 @@ public class MixinInventoryEffectRenderer_FixPotionEffectNumerals {
     private String hodgepodge$addRomanNumeral(String string, Object[] objects,
             @Share("potionAmplifierLevel") LocalIntRef potionAmplifierLevel) {
         if (potionAmplifierLevel.get() > 0) {
-            if (Common.config.arabicNumbersForEnchantsPotions) {
+            if (TweaksConfig.arabicNumbersForEnchantsPotions) {
                 return String.valueOf(potionAmplifierLevel.get() + 1);
             } else {
                 final String translation = I18n

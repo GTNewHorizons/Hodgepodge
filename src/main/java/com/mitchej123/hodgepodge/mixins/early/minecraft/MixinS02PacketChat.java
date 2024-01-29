@@ -1,15 +1,12 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ThreadLocalRandom;
-
+import com.mitchej123.hodgepodge.config.FixesConfig;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.IChatComponent.Serializer;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,7 +14,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.mitchej123.hodgepodge.Common;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Mixin(S02PacketChat.class)
 public abstract class MixinS02PacketChat {
@@ -35,7 +33,7 @@ public abstract class MixinS02PacketChat {
     public void hodgepodge$redirectSerialize(PacketBuffer instance, String s) {
         byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
         if (bytes.length > 32767) {
-            if (Common.config.logHugeChat) {
+            if (FixesConfig.logHugeChat) {
                 String incidentId = "" + System.currentTimeMillis() + ThreadLocalRandom.current().nextInt(1000);
                 LOGGER.info("HUGE chat message caught. Incident ID {}. Serialized message {}.", incidentId, s);
                 bytes = Serializer

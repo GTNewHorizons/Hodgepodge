@@ -1,17 +1,15 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import java.io.IOException;
-
+import com.mitchej123.hodgepodge.config.FixesConfig;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 
-import com.mitchej123.hodgepodge.Common;
+import java.io.IOException;
 
 @Mixin(PacketBuffer.class)
 public class MixinPacketBuffer {
@@ -39,7 +37,7 @@ public class MixinPacketBuffer {
         }
         byte[] buffer = new byte[realLength];
         self.readBytes(buffer);
-        return CompressedStreamTools.func_152457_a(buffer, new NBTSizeTracker(Common.config.maxNetworkNbtSizeLimit));
+        return CompressedStreamTools.func_152457_a(buffer, new NBTSizeTracker(FixesConfig.maxNetworkNbtSizeLimit));
     }
 
     /**

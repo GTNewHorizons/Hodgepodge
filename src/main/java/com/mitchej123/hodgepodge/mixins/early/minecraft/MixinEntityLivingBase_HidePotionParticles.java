@@ -1,14 +1,12 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.mitchej123.hodgepodge.config.TweaksConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
-import com.mitchej123.hodgepodge.Common;
 
 /**
  * To be applied after {@link MixinEntityLivingBase_FixPotionException}
@@ -21,6 +19,6 @@ public class MixinEntityLivingBase_HidePotionParticles {
             method = "updatePotionEffects()V")
     private boolean hodgepodge$showParticles(World instance, String particleName, double x, double y, double z,
             double velocityX, double velocityY, double velocityZ) {
-        return !Common.config.hidePotionParticlesFromSelf || (Object) this != Minecraft.getMinecraft().thePlayer;
+        return !TweaksConfig.hidePotionParticlesFromSelf || (Object) this != Minecraft.getMinecraft().thePlayer;
     }
 }

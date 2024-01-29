@@ -1,10 +1,10 @@
 package com.mitchej123.hodgepodge.util;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import com.google.common.base.Utf8;
 import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.config.FixesConfig;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Utilities for checking packet data at encoding time to print out the precise cause of bad data, before it reaches the
@@ -22,7 +22,7 @@ public final class PacketPrevalidation {
                         + StringEscapeUtils.escapeJava(badData)
                         + "\"");
         Common.log.error("Packet validation error", validationEx);
-        if (Common.config.validatePacketEncodingBeforeSendingShouldCrash) {
+        if (FixesConfig.validatePacketEncodingBeforeSendingShouldCrash) {
             throw validationEx;
         }
     }

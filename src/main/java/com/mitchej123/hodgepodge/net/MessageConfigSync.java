@@ -1,8 +1,6 @@
 package com.mitchej123.hodgepodge.net;
 
-import com.mitchej123.hodgepodge.Common;
-import com.mitchej123.hodgepodge.LoadingConfig;
-
+import com.mitchej123.hodgepodge.config.TweaksConfig;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -12,10 +10,8 @@ public class MessageConfigSync implements IMessage, IMessageHandler<MessageConfi
 
     private boolean longerSentMessages;
 
-    public MessageConfigSync() {}
-
-    public MessageConfigSync(LoadingConfig config) {
-        longerSentMessages = config.longerSentMessages;
+    public MessageConfigSync() {
+        longerSentMessages = TweaksConfig.longerSentMessages;
     }
 
     @Override
@@ -34,7 +30,7 @@ public class MessageConfigSync implements IMessage, IMessageHandler<MessageConfi
 
     @Override
     public IMessage onMessage(MessageConfigSync message, MessageContext ctx) {
-        Common.config.longerSentMessages = message.isLongerSentMessages();
+        TweaksConfig.longerSentMessages = message.isLongerSentMessages();
 
         return null;
     }

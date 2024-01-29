@@ -1,9 +1,11 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
+import com.mitchej123.hodgepodge.config.FixesConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,10 +13,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import com.llamalad7.mixinextras.sugar.Share;
-import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
-import com.mitchej123.hodgepodge.Common;
 
 @Mixin(EntityPlayer.class)
 public abstract class MixinEntityPlayer {
@@ -45,7 +43,7 @@ public abstract class MixinEntityPlayer {
     public void hodgepodge$ThrottleItemPickupEvent(EntityPlayer instance, Entity entity,
             @Share("itemEntityCounter") LocalIntRef itemEntityCounter) {
         if (entity instanceof EntityItem) {
-            if (itemEntityCounter.get() < Common.config.itemStacksPickedUpPerTick) {
+            if (itemEntityCounter.get() < FixesConfig.itemStacksPickedUpPerTick) {
                 this.collideWithPlayer(entity);
             }
             itemEntityCounter.set(itemEntityCounter.get() + 1);

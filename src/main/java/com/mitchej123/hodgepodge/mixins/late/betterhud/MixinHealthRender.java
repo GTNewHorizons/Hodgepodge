@@ -1,17 +1,14 @@
 package com.mitchej123.hodgepodge.mixins.late.betterhud;
 
+import com.mitchej123.hodgepodge.config.FixesConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
-
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import com.mitchej123.hodgepodge.Common;
-
 import tk.nukeduck.hud.element.entityinfo.ExtraGuiElementMobInfo;
 
 @Mixin(value = ExtraGuiElementMobInfo.class, remap = false)
@@ -29,7 +26,7 @@ public abstract class MixinHealthRender {
                     target = "Lnet/minecraft/client/renderer/texture/TextureManager;bindTexture(Lnet/minecraft/util/ResourceLocation;)V"),
             cancellable = true)
     private void onlyRenderReasonableHP(EntityLivingBase entity, Minecraft mc, float partialTicks, CallbackInfo ci) {
-        if (entity.getMaxHealth() > Common.config.betterHUDHPRenderLimit) {
+        if (entity.getMaxHealth() > FixesConfig.betterHUDHPRenderLimit) {
             GL11.glPopMatrix();
             ci.cancel();
         }
@@ -47,6 +44,6 @@ public abstract class MixinHealthRender {
                     remap = false),
             index = 4)
     private int limitInfoBoxSize(int input) {
-        return input > Common.config.betterHUDHPRenderLimit ? 20 : input;
+        return input > FixesConfig.betterHUDHPRenderLimit ? 20 : input;
     }
 }
