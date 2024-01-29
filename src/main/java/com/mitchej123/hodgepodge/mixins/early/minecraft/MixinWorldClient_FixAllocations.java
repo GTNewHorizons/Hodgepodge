@@ -6,17 +6,19 @@ import java.util.Set;
 import net.minecraft.client.multiplayer.WorldClient;
 
 import org.spongepowered.asm.mixin.Mixin;
-
-import com.mitchej123.hodgepodge.hax.LongChunkCoordIntPairSet;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
+
+import com.mitchej123.hodgepodge.hax.LongChunkCoordIntPairSet;
 
 @Mixin(WorldClient.class)
 public abstract class MixinWorldClient_FixAllocations {
 
     private final Set previousActiveChunkSet = new LongChunkCoordIntPairSet();
 
-    @Redirect(method="func_147456_g", at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;"))
+    @Redirect(
+            method = "func_147456_g",
+            at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;"))
     private Iterator<?> fixAllocations(Set instance) {
         return ((LongChunkCoordIntPairSet) instance).unsafeIterator();
     }
