@@ -21,9 +21,13 @@ public class LongChunkCoordIntPairSet implements Set<ChunkCoordIntPair> {
             0,
             0);
 
-    public ChunkCoordIntPair fromLong(long pos) {
+    public ChunkCoordIntPair fromLongUnsafe(long pos) {
         return (ChunkCoordIntPair) reusableChunkCoordIntPair
                 .setChunkPos(ChunkPosUtil.getPackedX(pos), ChunkPosUtil.getPackedZ(pos));
+    }
+
+    public ChunkCoordIntPair fromLongSafe(long pos) {
+        return new ChunkCoordIntPair(ChunkPosUtil.getPackedX(pos), ChunkPosUtil.getPackedZ(pos));
     }
 
     private LongSet longSet = new LongOpenHashSet();
@@ -55,7 +59,13 @@ public class LongChunkCoordIntPairSet implements Set<ChunkCoordIntPair> {
     @NotNull
     @Override
     public Iterator<ChunkCoordIntPair> iterator() {
-        return longSet.stream().map(this::fromLong).iterator();
+        return longSet.stream().map(this::fromLongSafe).iterator();
+    }
+
+    public Iterator<ChunkCoordIntPair> unsafeIterator() {
+        // Reuses the same ChunkCoordIntPair object for every iteration, use this when you know the code won't
+        // be storing the result anywhere
+        return longSet.stream().map(this::fromLongUnsafe).iterator();
     }
 
     public LongIterator longIterator() {
@@ -111,7 +121,7 @@ public class LongChunkCoordIntPairSet implements Set<ChunkCoordIntPair> {
     public boolean retainAll(@NotNull Collection<?> c) {
         boolean removed = false;
         for (long l : longSet) {
-            if (!c.contains(fromLong(l))) {
+            if (!c.contains(fromLongUnsafe(l))) {
                 removed |= longSet.remove(l);
             }
         }
