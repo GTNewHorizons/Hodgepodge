@@ -17,6 +17,16 @@ public enum Mixins {
     CHANGE_CATEGORY_SPRINT_KEY(new Builder("Moves the sprint keybind to the movement category")
             .addTargetedMod(TargetedMod.VANILLA).setSide(Side.CLIENT).setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinGameSetttings").setApplyIf(() -> Common.config.changeSprintCategory)),
+
+    FIX_TOO_MANY_ALLOCATIONS_CHUNK_POSITION_INT_PAIR(
+            new Builder("Stops MC from allocating too many ChunkPositionIntPair objects")
+                    .addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH).setPhase(Phase.EARLY)
+                    .addMixinClasses(
+                            "minecraft.allocations.MixinChunkCoordIntPair",
+                            "minecraft.allocations.MixinWorld",
+                            "minecraft.allocations.MixinWorldClient",
+                            "minecraft.allocations.MixinWorldServer")
+                    .setApplyIf(() -> Common.config.fixTooManyAllocationsChunkPositionIntPair)),
     FIX_RESOURCEPACK_FOLDER_OPENING(new Builder("Fix resource pack folder sometimes not opening on windows")
             .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinGuiScreenResourcePacks").setSide(Side.CLIENT)
             .setApplyIf(() -> Common.config.fixResourcePackOpening).addTargetedMod(TargetedMod.VANILLA)),
