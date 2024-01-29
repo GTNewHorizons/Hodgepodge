@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mitchej123.hodgepodge.hax.LongChunkCoordIntPairSet;
@@ -26,6 +27,14 @@ public abstract class MixinWorld_FixAllocations {
 
     @Shadow
     protected abstract int func_152379_p();
+
+    @Redirect(
+            method = "setActivePlayerChunksAndCheckLight",
+            at = @At(value = "INVOKE", target = "Ljava/util/List;size()I", ordinal = 0))
+    private int cancelExistingForLoop(List instance) {
+        // Don't add anything to the original set so cancel the original loop
+        return 0;
+    }
 
     @Inject(
             method = "setActivePlayerChunksAndCheckLight",
