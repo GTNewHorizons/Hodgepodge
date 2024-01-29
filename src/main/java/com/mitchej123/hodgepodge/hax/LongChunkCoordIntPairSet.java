@@ -75,13 +75,13 @@ public class LongChunkCoordIntPairSet implements Set<ChunkCoordIntPair> {
     @NotNull
     @Override
     public Object[] toArray() {
-        return longSet.toArray(new Long[0]);
+        return longSet.stream().map(this::fromLongSafe).toArray();
     }
 
     @NotNull
     @Override
     public <T> T[] toArray(@NotNull T[] a) {
-        return longSet.toArray(a);
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
