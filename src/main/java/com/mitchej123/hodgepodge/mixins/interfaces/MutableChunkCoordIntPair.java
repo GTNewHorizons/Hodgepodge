@@ -5,4 +5,6 @@ public interface MutableChunkCoordIntPair {
     void setChunkXPos(int chunkXPos);
 
     void setChunkZPos(int chunkZPos);
+
+    MutableChunkCoordIntPair setChunkPos(int chunkXPos, int chunkZPos);
 }

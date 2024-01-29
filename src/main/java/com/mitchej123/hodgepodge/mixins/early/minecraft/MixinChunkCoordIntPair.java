@@ -23,4 +23,10 @@ public class MixinChunkCoordIntPair implements MutableChunkCoordIntPair {
         this.chunkZPos = chunkZPos;
     }
 
+    public MutableChunkCoordIntPair setChunkPos(int chunkXPos, int chunkZPos) {
+        this.chunkXPos = chunkXPos;
+        this.chunkZPos = chunkZPos;
+        return this;
+    }
+
 }
