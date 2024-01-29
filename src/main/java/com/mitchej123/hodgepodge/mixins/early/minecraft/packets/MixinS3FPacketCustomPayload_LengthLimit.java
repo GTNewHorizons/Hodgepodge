@@ -1,16 +1,19 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.packets;
 
-import com.mitchej123.hodgepodge.config.FixesConfig;
-import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinMessageSerializer2;
-import com.mitchej123.hodgepodge.util.PacketSerializationHelper;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S3FPacketCustomPayload;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
+
+import com.mitchej123.hodgepodge.config.FixesConfig;
+import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinMessageSerializer2;
+import com.mitchej123.hodgepodge.util.PacketSerializationHelper;
+
+import io.netty.buffer.ByteBuf;
 
 @Mixin(S3FPacketCustomPayload.class)
 public abstract class MixinS3FPacketCustomPayload_LengthLimit extends Packet {

@@ -1,15 +1,17 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import com.mitchej123.hodgepodge.config.FixesConfig;
+import java.io.IOException;
+
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 
-import java.io.IOException;
+import com.mitchej123.hodgepodge.config.FixesConfig;
 
 @Mixin(PacketBuffer.class)
 public class MixinPacketBuffer {

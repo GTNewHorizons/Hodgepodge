@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge.net;
 
 import com.mitchej123.hodgepodge.config.TweaksConfig;
+
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;

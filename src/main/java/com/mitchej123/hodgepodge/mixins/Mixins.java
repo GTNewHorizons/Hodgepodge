@@ -1,5 +1,12 @@
 package com.mitchej123.hodgepodge.mixins;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
+
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.config.DebugConfig;
@@ -8,14 +15,8 @@ import com.mitchej123.hodgepodge.config.PollutionConfig;
 import com.mitchej123.hodgepodge.config.PollutionRecolorConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
-import cpw.mods.fml.relauncher.FMLLaunchHandler;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Supplier;
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
 
 public enum Mixins {
 

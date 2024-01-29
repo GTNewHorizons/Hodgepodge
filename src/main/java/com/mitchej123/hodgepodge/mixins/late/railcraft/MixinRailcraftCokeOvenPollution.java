@@ -1,18 +1,20 @@
 package com.mitchej123.hodgepodge.mixins.late.railcraft;
 
-import com.mitchej123.hodgepodge.config.PollutionConfig;
-import com.mitchej123.hodgepodge.util.PollutionHelper;
-import mods.railcraft.common.blocks.machine.MultiBlockPattern;
-import mods.railcraft.common.blocks.machine.TileMultiBlock;
-import mods.railcraft.common.blocks.machine.TileMultiBlockOven;
-import mods.railcraft.common.blocks.machine.alpha.TileBlastFurnace;
+import java.util.List;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
+import com.mitchej123.hodgepodge.config.PollutionConfig;
+import com.mitchej123.hodgepodge.util.PollutionHelper;
+
+import mods.railcraft.common.blocks.machine.MultiBlockPattern;
+import mods.railcraft.common.blocks.machine.TileMultiBlock;
+import mods.railcraft.common.blocks.machine.TileMultiBlockOven;
+import mods.railcraft.common.blocks.machine.alpha.TileBlastFurnace;
 
 /*
  * Merged from ModMixins under the MIT License Copyright bartimaeusnek & GTNewHorizons

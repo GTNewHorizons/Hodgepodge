@@ -1,10 +1,12 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import com.mitchej123.hodgepodge.config.TweaksConfig;
 import net.minecraft.network.play.client.C01PacketChatMessage;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
+
+import com.mitchej123.hodgepodge.config.TweaksConfig;
 
 @Mixin(C01PacketChatMessage.class)
 public class MixinC01PacketChatMessage_LongerMessages {

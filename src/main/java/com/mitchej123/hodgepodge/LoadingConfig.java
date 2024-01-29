@@ -1,11 +1,12 @@
 package com.mitchej123.hodgepodge;
 
-import com.mitchej123.hodgepodge.config.PollutionRecolorConfig;
-import com.mitchej123.hodgepodge.util.BlockMatcher;
+import java.io.File;
+
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.config.Configuration;
 
-import java.io.File;
+import com.mitchej123.hodgepodge.config.PollutionRecolorConfig;
+import com.mitchej123.hodgepodge.util.BlockMatcher;
 
 public class LoadingConfig {
 

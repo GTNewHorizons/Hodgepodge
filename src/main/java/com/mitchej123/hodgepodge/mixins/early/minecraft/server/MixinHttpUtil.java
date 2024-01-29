@@ -1,13 +1,15 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.server;
 
-import com.mitchej123.hodgepodge.Common;
-import com.mitchej123.hodgepodge.config.TweaksConfig;
+import java.io.IOException;
+import java.net.ServerSocket;
+
 import net.minecraft.util.HttpUtil;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-import java.io.IOException;
-import java.net.ServerSocket;
+import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.config.TweaksConfig;
 
 @Mixin(HttpUtil.class)
 public class MixinHttpUtil {
