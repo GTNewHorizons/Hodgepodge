@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
-import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.util.RomanNumerals;
 
 @Mixin(ItemPotion.class)
@@ -31,7 +31,7 @@ public class MixinItemPotion_FixRomanNumerals {
                     ordinal = 1))
     private String hodgepodge$addRomanNumeral(String translation,
             @Share("potionAmplifierLevel") LocalIntRef potionAmplifierLevel) {
-        if (Common.config.arabicNumbersForEnchantsPotions) {
+        if (TweaksConfig.arabicNumbersForEnchantsPotions) {
             return String.valueOf(potionAmplifierLevel.get() + 1);
         } else if (translation != null && translation.startsWith("potion.potency.")) {
             return RomanNumerals.toRomanLimited(potionAmplifierLevel.get() + 1, 20);

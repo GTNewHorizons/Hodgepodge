@@ -34,6 +34,6 @@ public class HodgepodgeEventHandler {
 
     @SubscribeEvent
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        NetworkHandler.instance.sendTo(new MessageConfigSync(Common.config), (EntityPlayerMP) event.player);
+        NetworkHandler.instance.sendTo(new MessageConfigSync(), (EntityPlayerMP) event.player);
     }
 }

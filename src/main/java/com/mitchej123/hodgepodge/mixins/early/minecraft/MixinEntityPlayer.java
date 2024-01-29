@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
-import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.config.FixesConfig;
 
 @Mixin(EntityPlayer.class)
 public abstract class MixinEntityPlayer {
@@ -45,7 +45,7 @@ public abstract class MixinEntityPlayer {
     public void hodgepodge$ThrottleItemPickupEvent(EntityPlayer instance, Entity entity,
             @Share("itemEntityCounter") LocalIntRef itemEntityCounter) {
         if (entity instanceof EntityItem) {
-            if (itemEntityCounter.get() < Common.config.itemStacksPickedUpPerTick) {
+            if (itemEntityCounter.get() < FixesConfig.itemStacksPickedUpPerTick) {
                 this.collideWithPlayer(entity);
             }
             itemEntityCounter.set(itemEntityCounter.get() + 1);

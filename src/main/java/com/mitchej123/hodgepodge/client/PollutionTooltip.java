@@ -4,8 +4,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
-import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.Compat;
+import com.mitchej123.hodgepodge.config.PollutionConfig;
 import com.mitchej123.hodgepodge.util.PollutionHelper;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -23,8 +23,8 @@ public class PollutionTooltip {
 
         String producesPollutionFormat = "Produces %d Pollution/Second";
 
-        if (Common.config.furnacesPollute) {
-            String furnacePollution = String.format(producesPollutionFormat, Common.config.furnacePollutionAmount);
+        if (PollutionConfig.furnacesPollute) {
+            String furnacePollution = String.format(producesPollutionFormat, PollutionConfig.furnacePollutionAmount);
 
             // Furnace and Iron Furnace
             if (GT_Utility.areStacksEqual(event.itemStack, new ItemStack(Blocks.furnace)) || GT_Utility
@@ -51,7 +51,7 @@ public class PollutionTooltip {
             }
         }
 
-        if (Compat.isRailcraftPresent() && Common.config.railcraftPollutes) {
+        if (Compat.isRailcraftPresent() && PollutionConfig.railcraftPollutes) {
             String multiProducesPollutionFormat = "A complete Multiblock produces %d Pollution/Second";
 
             // Solid and Liquid Boiler Firebox
@@ -62,36 +62,37 @@ public class PollutionTooltip {
                 event.toolTip.add(
                         String.format(
                                 "Produces %d Pollution/Second per firebox",
-                                Common.config.fireboxPollutionAmount));
+                                PollutionConfig.fireboxPollutionAmount));
             }
 
             // Tunnel Bore
             if (GT_Utility.areStacksEqual(event.itemStack, GT_ModHandler.getModItem("Railcraft", "cart.bore", 1, 0))) {
-                event.toolTip.add(String.format(producesPollutionFormat, Common.config.tunnelBorePollutionAmount));
+                event.toolTip.add(String.format(producesPollutionFormat, PollutionConfig.tunnelBorePollutionAmount));
             }
 
             // Coke Oven Brick
             if (GT_Utility
                     .areStacksEqual(event.itemStack, GT_ModHandler.getModItem("Railcraft", "machine.alpha", 1, 7))) {
-                event.toolTip.add(String.format(multiProducesPollutionFormat, Common.config.cokeOvenPollutionAmount));
+                event.toolTip.add(String.format(multiProducesPollutionFormat, PollutionConfig.cokeOvenPollutionAmount));
             }
 
             // Advanced Coke Oven Brick
             if (GT_Utility
                     .areStacksEqual(event.itemStack, GT_ModHandler.getModItem("Railcraft", "machine.alpha", 1, 12))) {
                 event.toolTip.add(
-                        String.format(multiProducesPollutionFormat, Common.config.advancedCokeOvenPollutionAmount));
+                        String.format(multiProducesPollutionFormat, PollutionConfig.advancedCokeOvenPollutionAmount));
             }
 
             // Hobbyist's Steam Engine
             if (GT_Utility
                     .areStacksEqual(event.itemStack, GT_ModHandler.getModItem("Railcraft", "machine.beta", 1, 7))) {
-                event.toolTip.add(String.format(producesPollutionFormat, Common.config.hobbyistEnginePollutionAmount));
+                event.toolTip
+                        .add(String.format(producesPollutionFormat, PollutionConfig.hobbyistEnginePollutionAmount));
             }
         }
 
         // Galacticraft (and Galaxy Space) rockets
-        if (Compat.isGalacticraftPresent() && Common.config.rocketsPollute && event.itemStack.getItem() != null) {
+        if (Compat.isGalacticraftPresent() && PollutionConfig.rocketsPollute && event.itemStack.getItem() != null) {
             String simpleName = event.itemStack.getItem().getClass().getSimpleName();
             if (simpleName.contains("Rocket")) {
                 for (char d : simpleName.toCharArray()) {

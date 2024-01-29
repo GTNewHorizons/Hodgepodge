@@ -4,6 +4,7 @@ import cpw.mods.fml.common.Mod;
 
 public enum TargetedMod {
 
+    // NOTE: This doesn't work - late mods need a modid, not a coremod class
     ANGELICA("Angelica", "com.gtnewhorizons.angelica.loading.AngelicaTweaker", "angelica"),
     ARCHAICFIX("ArchaicFix", "org.embeddedt.archaicfix.ArchaicCore", "archaicfix"),
     AUTOMAGY("Automagy", null, "Automagy"),
@@ -11,9 +12,10 @@ public enum TargetedMod {
     BETTERHUD("Better HUD", null, "hud"),
     BIBLIOCRAFT("Bibliocraft", null, "BiblioCraft"),
     BOP("BiomesOPlenty", null, "BiomesOPlenty"),
-    BUKKIT("Bukkit/Thermos", "Bukkit", null),
     BUGTORCH("BugTorch", "jss.bugtorch.mixinplugin.BugTorchEarlyMixins", "bugtorch"),
+    BUKKIT("Bukkit/Thermos", "Bukkit", null),
     COFH_CORE("CoFHCore", "cofh.asm.LoadingPlugin", "CoFHCore"),
+    EXTRATIC("ExtraTiC", null, "ExtraTiC"),
     EXTRA_UTILITIES("ExtraUtilities", null, "ExtraUtilities"),
     FASTCRAFT("FastCraft", "fastcraft.Tweaker"),
     GALACTICRAFT_CORE("GalacticraftCore", "micdoodle8.mods.galacticraft.core.asm.GCLoadingPlugin", "GalacticraftCore"),
@@ -37,10 +39,8 @@ public enum TargetedMod {
     THAUMCRAFT("Thaumcraft", null, "Thaumcraft"), // "thaumcraft.codechicken.core.launch.DepLoader"
     THERMALDYNAMICS("Thermal Dynamics", null, "ThermalDynamics"),
     TINKERSCONSTRUCT("TConstruct", null, "TConstruct"),
-    EXTRATIC("ExtraTiC", null, "ExtraTiC"),
     TRAVELLERSGEAR("TravellersGear", null, "TravellersGear"),
     VANILLA("Minecraft", null),
-    // NOTE: This doesn't work - late mods need a modid, not a coremod class
     VOXELMAP("VoxelMap", "com.thevoxelbox.voxelmap.litemod.VoxelMapTransformer"),
     WITCHERY("Witchery", null, "witchery"),
     XAEROWORLDMAP("Xaero's World Map", null, "XaeroWorldMap"),

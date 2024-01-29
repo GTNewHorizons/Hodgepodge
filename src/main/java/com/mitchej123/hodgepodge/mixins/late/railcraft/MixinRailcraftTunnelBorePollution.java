@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.config.PollutionConfig;
 import com.mitchej123.hodgepodge.util.PollutionHelper;
 
 import mods.railcraft.common.carts.EntityTunnelBore;
@@ -32,6 +32,6 @@ public abstract class MixinRailcraftTunnelBorePollution extends EntityMinecart {
         if (!worldObj.isRemote || !active) return;
         PollutionHelper.addPollution(
                 worldObj.getChunkFromBlockCoords((int) posX, (int) posZ),
-                Common.config.tunnelBorePollutionAmount);
+                PollutionConfig.tunnelBorePollutionAmount);
     }
 }

@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.config.PollutionConfig;
 import com.mitchej123.hodgepodge.util.PollutionHelper;
 
 import ic2.core.block.machine.tileentity.TileEntityIronFurnace;
@@ -28,7 +28,7 @@ public abstract class MixinIC2IronFurnacePollution extends TileEntity {
         if ((worldObj.getTotalWorldTime() % 20) == 0) {
             PollutionHelper.addPollution(
                     worldObj.getChunkFromBlockCoords(xCoord, zCoord),
-                    Common.config.furnacePollutionAmount);
+                    PollutionConfig.furnacePollutionAmount);
         }
     }
 }
