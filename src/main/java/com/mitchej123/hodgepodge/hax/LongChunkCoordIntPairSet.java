@@ -40,6 +40,8 @@ public class LongChunkCoordIntPairSet implements Set<ChunkCoordIntPair> {
     public boolean contains(Object o) {
         if (o instanceof ChunkCoordIntPair chunkCoordIntPair) {
             return longSet.contains(ChunkPosUtil.toLong(chunkCoordIntPair.chunkXPos, chunkCoordIntPair.chunkZPos));
+        } else if (o instanceof Long l) {
+            return longSet.contains(l);
         }
         return false;
     }
@@ -83,6 +85,8 @@ public class LongChunkCoordIntPairSet implements Set<ChunkCoordIntPair> {
     public boolean remove(Object o) {
         if (o instanceof ChunkCoordIntPair chunkCoordIntPair) {
             return longSet.remove(ChunkPosUtil.toLong(chunkCoordIntPair.chunkXPos, chunkCoordIntPair.chunkZPos));
+        } else if (o instanceof Long l) {
+            return longSet.remove(l);
         }
         return false;
     }
