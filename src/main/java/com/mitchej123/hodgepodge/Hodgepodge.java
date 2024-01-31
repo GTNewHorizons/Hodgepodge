@@ -19,7 +19,8 @@ import cpw.mods.fml.relauncher.Side;
         version = Hodgepodge.VERSION,
         name = Hodgepodge.NAME,
         acceptableRemoteVersions = "*",
-        dependencies = "required-after:gtnhmixins@[2.0.1,)")
+        dependencies = "required-after:gtnhmixins@[2.0.1,); " + "required-after:unimixins@[0.0.14,); ",
+        guiFactory = "com.mitchej123.hodgepodge.config.gui.HodgepodgeGuiConfigFactory")
 public class Hodgepodge {
 
     public static final AnchorAlarm ANCHOR_ALARM = new AnchorAlarm();
@@ -27,6 +28,12 @@ public class Hodgepodge {
     public static final String MODID = "hodgepodge";
     public static final String VERSION = Tags.VERSION;
     public static final String NAME = "Hodgepodge";
+
+    public static final boolean isGTNH;
+
+    static {
+        isGTNH = true;
+    }
 
     @EventHandler
     public void preinit(FMLPreInitializationEvent event) {

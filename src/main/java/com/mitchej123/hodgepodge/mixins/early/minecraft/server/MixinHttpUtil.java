@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
 import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.config.TweaksConfig;
 
 @Mixin(HttpUtil.class)
 public class MixinHttpUtil {
@@ -23,7 +24,7 @@ public class MixinHttpUtil {
         int port = 0;
 
         try {
-            serversocket = new ServerSocket(Common.config.defaultLanPort);
+            serversocket = new ServerSocket(TweaksConfig.defaultLanPort);
         } catch (SecurityException securityException) {
             // Assign an automatically allocated port number
             Common.log.warn(

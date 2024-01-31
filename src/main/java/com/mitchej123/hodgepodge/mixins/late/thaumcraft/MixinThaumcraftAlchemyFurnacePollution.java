@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.config.PollutionConfig;
 import com.mitchej123.hodgepodge.util.PollutionHelper;
 
 import thaumcraft.common.tiles.TileAlchemyFurnace;
@@ -29,6 +29,6 @@ public abstract class MixinThaumcraftAlchemyFurnacePollution extends TileEntity 
     public void hodgepodge$addPollution(CallbackInfo ci) {
         if (!this.worldObj.isRemote && (this.worldObj.getTotalWorldTime() % 20) == 0) PollutionHelper.addPollution(
                 this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord),
-                Common.config.furnacePollutionAmount);
+                PollutionConfig.furnacePollutionAmount);
     }
 }

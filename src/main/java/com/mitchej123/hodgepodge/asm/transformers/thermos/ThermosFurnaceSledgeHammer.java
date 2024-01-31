@@ -14,7 +14,7 @@ import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.config.ASMConfig;
 
 @SuppressWarnings("unused")
 public class ThermosFurnaceSledgeHammer implements IClassTransformer {
@@ -23,7 +23,7 @@ public class ThermosFurnaceSledgeHammer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
-        if (Common.config.thermosCraftServerClass.equals(transformedName)) {
+        if (ASMConfig.thermosCraftServerClass.equals(transformedName)) {
             LOGGER.info("Patching Thermos or derivative to not break our furnace fix");
             final ClassReader cr = new ClassReader(basicClass);
             final ClassNode cn = new ClassNode(ASM5);

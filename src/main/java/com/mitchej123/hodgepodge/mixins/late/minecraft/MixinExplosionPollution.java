@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.config.PollutionConfig;
 import com.mitchej123.hodgepodge.util.PollutionHelper;
 
 /*
@@ -34,6 +34,6 @@ public class MixinExplosionPollution {
     public void hodgepodge$addExplosionPollution(CallbackInfo ci) {
         if (!this.worldObj.isRemote) PollutionHelper.addPollution(
                 this.worldObj.getChunkFromBlockCoords((int) this.explosionX, (int) this.explosionZ),
-                (int) Math.ceil(explosionSize * Common.config.explosionPollutionAmount));
+                (int) Math.ceil(explosionSize * PollutionConfig.explosionPollutionAmount));
     }
 }

@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.config.TweaksConfig;
 
 import minechem.potion.PotionInjector;
 import minechem.potion.PotionProvider;
@@ -24,6 +24,6 @@ public class MixinPotionInjector {
         if (Potion.potionTypes.length > 255) {
             ci.cancel();
         }
-        atropineHigh = new PotionProvider(Common.config.atropineHighID, true, 0x00FF6E).setPotionName("Delirium");
+        atropineHigh = new PotionProvider(TweaksConfig.atropineHighID, true, 0x00FF6E).setPotionName("Delirium");
     }
 }

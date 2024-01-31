@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.config.FixesConfig;
 
 @Mixin(S02PacketChat.class)
 public abstract class MixinS02PacketChat {
@@ -35,7 +35,7 @@ public abstract class MixinS02PacketChat {
     public void hodgepodge$redirectSerialize(PacketBuffer instance, String s) {
         byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
         if (bytes.length > 32767) {
-            if (Common.config.logHugeChat) {
+            if (FixesConfig.logHugeChat) {
                 String incidentId = "" + System.currentTimeMillis() + ThreadLocalRandom.current().nextInt(1000);
                 LOGGER.info("HUGE chat message caught. Incident ID {}. Serialized message {}.", incidentId, s);
                 bytes = Serializer

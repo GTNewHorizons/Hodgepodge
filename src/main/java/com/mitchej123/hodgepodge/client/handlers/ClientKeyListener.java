@@ -5,8 +5,8 @@ import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.input.Keyboard;
 
-import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.client.HodgepodgeClient;
+import com.mitchej123.hodgepodge.config.DebugConfig;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
@@ -25,7 +25,7 @@ public class ClientKeyListener {
                 && released) {
             if (key == Keyboard.KEY_N) {
                 HodgepodgeClient.animationsMode.next();
-            } else if (key == Keyboard.KEY_D && Common.config.renderDebug) {
+            } else if (key == Keyboard.KEY_D && DebugConfig.renderDebug) {
                 HodgepodgeClient.renderDebugMode.next();
             }
         }

@@ -9,6 +9,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
+import com.mitchej123.hodgepodge.config.ASMConfig;
+
 public class Common {
 
     public static final Logger log = LogManager.getLogger("Hodgepodge");
@@ -28,7 +30,7 @@ public class Common {
                     "Thermos/Bukkit detected; This is an unsupported configuration -- Things may not function properly.");
             Common.log.warn(
                     " Using `{}` for CraftServer Package.  If this is not correct, please update your config file!",
-                    Common.config.thermosCraftServerClass);
+                    ASMConfig.thermosCraftServerClass);
         } catch (ClassNotFoundException e) {
             Common.thermosTainted = false;
             Common.log.info("Thermos/Bukkit NOT detected :-D");

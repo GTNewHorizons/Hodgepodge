@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.config.PollutionConfig;
 import com.mitchej123.hodgepodge.util.PollutionHelper;
 
 import mods.railcraft.common.blocks.RailcraftTileEntity;
@@ -36,9 +36,9 @@ public class MixinRailcraftBoilerPollution {
             int pollutionAmount;
             if (this.tile instanceof TileMultiBlock)
                 pollutionAmount = (((TileMultiBlock) this.tile).getComponents().size() - x)
-                        * Common.config.fireboxPollutionAmount;
+                        * PollutionConfig.fireboxPollutionAmount;
             else if (this.tile instanceof TileEngineSteamHobby)
-                pollutionAmount = Common.config.hobbyistEnginePollutionAmount;
+                pollutionAmount = PollutionConfig.hobbyistEnginePollutionAmount;
             else pollutionAmount = 40;
 
             PollutionHelper
