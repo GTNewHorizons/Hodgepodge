@@ -119,13 +119,7 @@ public class LongChunkCoordIntPairSet implements Set<ChunkCoordIntPair> {
 
     @Override
     public boolean retainAll(@NotNull Collection<?> c) {
-        boolean removed = false;
-        for (long l : longSet) {
-            if (!c.contains(fromLongUnsafe(l))) {
-                removed |= longSet.remove(l);
-            }
-        }
-        return removed;
+        return longSet.removeIf(l -> !c.contains(fromLongUnsafe(l)));
     }
 
     @Override
