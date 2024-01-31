@@ -336,6 +336,9 @@ public enum Mixins {
     MODERN_PICK_BLOCK(new Builder("Allows pick block to pull items from your inventory")
             .addTargetedMod(TargetedMod.VANILLA).setSide(Side.CLIENT).setPhase(Phase.EARLY)
             .addMixinClasses("forge.MixinForgeHooks_ModernPickBlock").setApplyIf(() -> TweaksConfig.modernPickBlock)),
+    TESSELATOR_PRESERVE_QUAD_ORDER(new Builder("Preserve the rendering order of layered quads on terrain pass 1")
+            .addTargetedMod(TargetedMod.VANILLA).setSide(Side.CLIENT).setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinTessellator").setApplyIf(() -> FixesConfig.fixPreserveQuadOrder)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
