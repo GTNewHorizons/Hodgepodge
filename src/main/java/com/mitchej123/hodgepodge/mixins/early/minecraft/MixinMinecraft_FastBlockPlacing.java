@@ -34,7 +34,6 @@ public class MixinMinecraft_FastBlockPlacing {
         if (objectMouseOver == null) return;
         if (objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK) return;
 
-        // TODO check for keybind toggle active
         if (!isPosEqual(objectMouseOver, lastPosition)
                 && (lastPosition == null || !isPosEqual(objectMouseOver, getNewPosition(lastPosition, lastSide)))) {
             rightClickDelayTimer = 0;
