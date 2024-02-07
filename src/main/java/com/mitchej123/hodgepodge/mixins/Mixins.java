@@ -336,6 +336,9 @@ public enum Mixins {
     MODERN_PICK_BLOCK(new Builder("Allows pick block to pull items from your inventory")
             .addTargetedMod(TargetedMod.VANILLA).setSide(Side.CLIENT).setPhase(Phase.EARLY)
             .addMixinClasses("forge.MixinForgeHooks_ModernPickBlock").setApplyIf(() -> TweaksConfig.modernPickBlock)),
+    FAST_BLOCK_PLACING(new Builder("Allows blocks to be placed faster").addTargetedMod(TargetedMod.VANILLA)
+            .setSide(Side.CLIENT).setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinMinecraft_FastBlockPlacing")
+            .setApplyIf(() -> true)), // Always apply, config handled in mixin
 
     SPIGOT_EXTENDED_CHUNKS(new Builder("Spigot-style extended chunk format to remove the 2MB chunk size limit")
             .addTargetedMod(TargetedMod.VANILLA).addExcludedMod(TargetedMod.BUKKIT).setSide(Side.BOTH)
