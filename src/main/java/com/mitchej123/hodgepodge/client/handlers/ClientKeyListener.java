@@ -38,7 +38,7 @@ public class ClientKeyListener {
                 }
             }
         } else {
-            if (key == FastBlockPlacingKey.getKeyCode()) {
+            if (FastBlockPlacingKey.isPressed()) {
                 TweaksConfig.fastBlockPlacing = !TweaksConfig.fastBlockPlacing;
                 AboveHotbarHUD.renderTextAboveHotbar(
                         "Fast Block Placing: " + (TweaksConfig.fastBlockPlacing ? "Enabled" : "Disabled"),
