@@ -6,8 +6,14 @@ import java.util.stream.Stream;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
+
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import com.mitchej123.hodgepodge.util.AnchorAlarm;
 
@@ -20,15 +26,18 @@ public class DebugCommand extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "Usage: hp <subcommand>. Valid subcommands are: toggle, anchor.";
+        return "Usage: hp <subcommand>. Valid subcommands are: toggle, anchor, randomNbt.";
     }
 
     private void printHelp(ICommandSender sender) {
-        sender.addChatMessage(new ChatComponentText("Usage: hp <toggle|anchor>"));
+        sender.addChatMessage(new ChatComponentText("Usage: hp <toggle|anchor|randomNbt>"));
         sender.addChatMessage(new ChatComponentText("\"toggle anchordebug\" - toggles RC anchor debugging"));
         sender.addChatMessage(
                 new ChatComponentText(
                         "\"anchor list [player]\" - list RC anchors placed by the player (empty for current player)"));
+        sender.addChatMessage(
+                new ChatComponentText(
+                        "\"randomNbt [bytes]\" - adds a random byte array of the given size to the held item"));
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -37,8 +46,9 @@ public class DebugCommand extends CommandBase {
         List<String> l = new ArrayList<>();
         String test = ss.length == 0 ? "" : ss[0].trim();
         if (ss.length == 0 || ss.length == 1
-                && (test.isEmpty() || Stream.of("toggle", "anchor").anyMatch(s -> s.startsWith(test)))) {
-            Stream.of("toggle", "anchor").filter(s -> test.isEmpty() || s.startsWith(test)).forEach(l::add);
+                && (test.isEmpty() || Stream.of("toggle", "anchor", "randomNbt").anyMatch(s -> s.startsWith(test)))) {
+            Stream.of("toggle", "anchor", "randomNbt").filter(s -> test.isEmpty() || s.startsWith(test))
+                    .forEach(l::add);
         } else if (test.equals("toggle")) {
             String test1 = ss[1].trim();
             if (test1.isEmpty() || "anchordebug".startsWith(test1)) l.add("anchordebug");
@@ -77,6 +87,32 @@ public class DebugCommand extends CommandBase {
                         new ChatComponentText("No such player entity in the current world : " + playerName));
                 else sender.addChatMessage(
                         new ChatComponentText("Saved anchors dumped to the log for player: " + playerName));
+                break;
+            case "randomNbt":
+                if (strings.length < 2) {
+                    printHelp(sender);
+                    return;
+                }
+                final int byteCount = NumberUtils.toInt(strings[1], -1);
+                if (byteCount < 1) {
+                    printHelp(sender);
+                    return;
+                }
+                final EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+                if (player.inventory == null) {
+                    return;
+                }
+                final ItemStack stack = player.inventory.getCurrentItem();
+                if (stack == null || stack.getItem() == null) {
+                    return;
+                }
+                if (stack.stackTagCompound == null) {
+                    stack.stackTagCompound = new NBTTagCompound();
+                }
+                final byte[] randomData = RandomUtils.nextBytes(byteCount);
+                stack.stackTagCompound.setByteArray("DebugJunk", randomData);
+                player.inventory.inventoryChanged = true;
+                player.inventoryContainer.detectAndSendChanges();
                 break;
         }
     }
