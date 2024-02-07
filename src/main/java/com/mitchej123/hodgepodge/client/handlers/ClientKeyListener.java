@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.client.handlers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.input.Keyboard;
 
@@ -19,10 +20,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ClientKeyListener {
 
+    private static String fastBlockPlacingEnabled = StatCollector.translateToLocal("key.fastBlockPlacing.enabled");
+    private static String fastBlockPlacingDisabled = StatCollector.translateToLocal("key.fastBlockPlacing.disabled");
+
     public static KeyBinding FastBlockPlacingKey = new KeyBinding(
-            "Fast Block Placing",
+            "key.fastBlockPlacing.desc",
             Keyboard.KEY_NONE,
-            "Hodgepodge");
+            "key.hodgepodge.category");
 
     @SubscribeEvent
     public void keyPressed(InputEvent.KeyInputEvent event) {
@@ -41,7 +45,7 @@ public class ClientKeyListener {
             if (FastBlockPlacingKey.isPressed()) {
                 TweaksConfig.fastBlockPlacing = !TweaksConfig.fastBlockPlacing;
                 AboveHotbarHUD.renderTextAboveHotbar(
-                        "Fast Block Placing: " + (TweaksConfig.fastBlockPlacing ? "Enabled" : "Disabled"),
+                        (TweaksConfig.fastBlockPlacing ? fastBlockPlacingEnabled : fastBlockPlacingDisabled),
                         40,
                         false,
                         false);
