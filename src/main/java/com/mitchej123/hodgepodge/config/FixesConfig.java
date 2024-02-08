@@ -333,6 +333,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean optimizeWorldUpdateLight;
+    @Config.Comment("Spigot-style extended chunk format to remove the 2MB chunk size limit")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean remove2MBChunkLimit;
     @Config.Comment("Disable the creative search tab since it can be very laggy in large modpacks")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
