@@ -346,8 +346,8 @@ public enum Mixins {
             .setApplyIf(() -> FixesConfig.remove2MBChunkLimit)),
 
     AUTOSAVE_INTERVAL(new Builder("Sets the auto save interval in ticks").setPhase(Phase.EARLY).setSide(Side.BOTH)
-            .addTargetedMod(TargetedMod.VANILLA).addMixinClasses("minecraft.MixinMinecraftServer")
-            .setApplyIf(() -> TweaksConfig.autoSaveInterval != 900)),
+            .addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses("minecraft.server.MixinMinecraftServer_AutoSaveInterval").setApplyIf(() -> TweaksConfig.autoSaveInterval != 900)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
