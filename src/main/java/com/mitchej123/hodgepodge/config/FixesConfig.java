@@ -225,6 +225,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixPlayerSkinFetching;
+    @Config.Comment("Preserve the order of quads in terrain pass 1")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixPreserveQuadOrder;
     @Config.Comment("Properly display level of potion effects in the inventory and on tooltips")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
