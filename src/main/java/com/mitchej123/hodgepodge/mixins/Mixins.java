@@ -140,6 +140,9 @@ public enum Mixins {
     FORGE_UPDATE_CHECK_FIX(new Builder("Fix the forge update checker").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("forge.MixinForgeVersion_FixUpdateCheck")
             .setApplyIf(() -> FixesConfig.fixForgeUpdateChecker).addTargetedMod(TargetedMod.VANILLA)),
+    FORGE_FIX_CLASS_TYPO(new Builder("Fix a class name typo in MinecraftForge's initialize method")
+            .setPhase(Phase.EARLY).setSide(Side.BOTH).addMixinClasses("forge.MixinMinecraftForge")
+            .setApplyIf(() -> FixesConfig.fixEffectRendererClassTypo).addTargetedMod(TargetedMod.VANILLA)),
     NORTHWEST_BIAS_FIX(new Builder("Fix Northwest Bias").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinRandomPositionGenerator").setApplyIf(() -> FixesConfig.fixNorthWestBias)
             .addTargetedMod(TargetedMod.VANILLA)),
