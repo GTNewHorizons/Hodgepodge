@@ -37,6 +37,7 @@ public class MixinMinecraft_FastBlockPlacing {
             at = @At(
                     value = "INVOKE",
                     target = "Lcpw/mods/fml/common/FMLCommonHandler;onPreClientTick()V",
+                    remap = false,
                     shift = At.Shift.AFTER))
     private void hodgepodge$func_147121_ag(CallbackInfo ci) {
         if (!TweaksConfig.fastBlockPlacing) return;
