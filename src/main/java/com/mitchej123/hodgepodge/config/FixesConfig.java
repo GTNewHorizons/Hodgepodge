@@ -81,6 +81,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixForgeUpdateChecker;
+    @Config.Comment("Fix a class name typo in MinecraftForge's initialize method")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixEffectRendererClassTypo;
     @Config.Comment("Fix vanilla issue where player sounds register as animal sounds")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart

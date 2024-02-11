@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.world.ChunkCoordIntPair;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,12 +17,12 @@ import com.mitchej123.hodgepodge.hax.LongChunkCoordIntPairSet;
 public abstract class MixinWorldClient_FixAllocations {
 
     @Shadow
-    private final Set previousActiveChunkSet = new LongChunkCoordIntPairSet();
+    private final Set<ChunkCoordIntPair> previousActiveChunkSet = new LongChunkCoordIntPairSet();
 
     @Redirect(
             method = "func_147456_g",
             at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;"))
-    private Iterator<?> fixAllocations(Set instance) {
+    private Iterator<ChunkCoordIntPair> fixAllocations(Set<ChunkCoordIntPair> instance) {
         return ((LongChunkCoordIntPairSet) instance).unsafeIterator();
     }
 
