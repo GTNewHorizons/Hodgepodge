@@ -38,7 +38,7 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean tcpNoDelay;
     @Config.Comment("Replace reflection in VoxelMap to directly access the fields instead.")
-    @Config.DefaultBoolean(false)
+    @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean replaceVoxelMapReflection;
 

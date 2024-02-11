@@ -19,7 +19,7 @@ import com.mitchej123.hodgepodge.mixins.interfaces.MutableChunkCoordIntPair;
 public abstract class MixinWorld_FixAllocations {
 
     @Shadow
-    protected Set activeChunkSet = new LongChunkCoordIntPairSet();
+    protected Set<ChunkCoordIntPair> activeChunkSet = new LongChunkCoordIntPairSet();
 
     @Unique
     private final MutableChunkCoordIntPair reusableCCIP = (MutableChunkCoordIntPair) new ChunkCoordIntPair(0, 0);

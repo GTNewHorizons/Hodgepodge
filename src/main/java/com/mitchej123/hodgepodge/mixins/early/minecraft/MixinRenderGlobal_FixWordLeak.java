@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.tileentity.TileEntity;
 
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinRenderGlobal_FixWordLeak {
 
     @Shadow
-    public List tileEntities;
+    public List<TileEntity> tileEntities;
 
     @Shadow
     private WorldRenderer[] worldRenderers;
