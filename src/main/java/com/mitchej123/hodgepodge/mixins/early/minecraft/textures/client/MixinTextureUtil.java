@@ -80,6 +80,8 @@ public class MixinTextureUtil {
             int b = Mipmaps.getColorComponent(one, two, three, four, 0);
             return a << 24 | r << 16 | g << 8 | b;
         } else {
+            int n = 0;
+
             float a = 0.0F;
             float r = 0.0F;
             float g = 0.0F;
@@ -89,6 +91,7 @@ public class MixinTextureUtil {
                 r += Mipmaps.get(one >> 16);
                 g += Mipmaps.get(one >> 8);
                 b += Mipmaps.get(one >> 0);
+                n++;
             }
 
             if (two >> 24 != 0) {
@@ -96,6 +99,7 @@ public class MixinTextureUtil {
                 r += Mipmaps.get(two >> 16);
                 g += Mipmaps.get(two >> 8);
                 b += Mipmaps.get(two >> 0);
+                n++;
             }
 
             if (three >> 24 != 0) {
@@ -103,6 +107,7 @@ public class MixinTextureUtil {
                 r += Mipmaps.get(three >> 16);
                 g += Mipmaps.get(three >> 8);
                 b += Mipmaps.get(three >> 0);
+                n++;
             }
 
             if (four >> 24 != 0) {
@@ -110,19 +115,21 @@ public class MixinTextureUtil {
                 r += Mipmaps.get(four >> 16);
                 g += Mipmaps.get(four >> 8);
                 b += Mipmaps.get(four >> 0);
+                n++;
             }
 
             a /= 4.0F;
-            r /= 4.0F;
-            g /= 4.0F;
-            b /= 4.0F;
-            int ia = (int) (Math.pow((double) a, 0.45454545454545453) * 255.0);
-            int ir = (int) (Math.pow((double) r, 0.45454545454545453) * 255.0);
-            int ig = (int) (Math.pow((double) g, 0.45454545454545453) * 255.0);
-            int ib = (int) (Math.pow((double) b, 0.45454545454545453) * 255.0);
-            if (ia < 96) {
-                ia = 0;
+
+            if (n != 0) {
+                r /= n;
+                g /= n;
+                b /= n;
             }
+
+            int ia = (int) (Math.pow(a, 0.45454545454545453) * 255.0);
+            int ir = (int) (Math.pow(r, 0.45454545454545453) * 255.0);
+            int ig = (int) (Math.pow(g, 0.45454545454545453) * 255.0);
+            int ib = (int) (Math.pow(b, 0.45454545454545453) * 255.0);
 
             return ia << 24 | ir << 16 | ig << 8 | ib;
         }
