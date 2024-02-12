@@ -19,7 +19,8 @@ import cpw.mods.fml.relauncher.Side;
         version = Hodgepodge.VERSION,
         name = Hodgepodge.NAME,
         acceptableRemoteVersions = "*",
-        dependencies = "required-after:gtnhmixins@[2.0.1,); " + "required-after:unimixins@[0.0.14,); ",
+        dependencies = "required-after:gtnhmixins@[2.0.1,);" + "required-after:unimixins@[0.0.14,);"
+                + "required-after:gtnhlib@[0.2.2,);",
         guiFactory = "com.mitchej123.hodgepodge.config.gui.HodgepodgeGuiConfigFactory")
 public class Hodgepodge {
 
