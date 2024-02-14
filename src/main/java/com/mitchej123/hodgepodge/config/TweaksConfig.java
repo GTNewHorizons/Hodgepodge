@@ -170,6 +170,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean fastBlockPlacing;
+    @Config.Comment("Sets the interval for auto saves in ticks (20 ticks = 1 second)")
+    @Config.RangeInt(min = 1)
+    @Config.DefaultInt(900)
+    public static int autoSaveInterval;
 
     @Config.Comment("Stops rendering potion particles from yourself")
     @Config.DefaultBoolean(true)
