@@ -381,7 +381,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean preventThermalDynamicsNASE;
-
+    @Config.Comment("Fix outdated URLs used in the PortalGun mod to download the sound pack")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixPortalGunURLs;
     @Config.Comment("Should the extended packet validation error cause a crash (true) or just print out an error to the log (false)")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
