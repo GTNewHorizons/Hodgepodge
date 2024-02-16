@@ -40,6 +40,7 @@ public class MixinMinecraft_FastBlockPlacing {
                     remap = false,
                     shift = At.Shift.AFTER))
     private void hodgepodge$func_147121_ag(CallbackInfo ci) {
+        if (!TweaksConfig.fastBlockPlacingServerControl) return;
         if (!TweaksConfig.fastBlockPlacing) return;
         if (thePlayer == null || thePlayer.isUsingItem()) return;
         if (objectMouseOver == null) return;
