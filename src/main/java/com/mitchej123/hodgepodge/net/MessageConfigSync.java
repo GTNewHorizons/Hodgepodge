@@ -33,7 +33,6 @@ public class MessageConfigSync implements IMessage, IMessageHandler<MessageConfi
         return fastBlockPlacingServerControl;
     }
 
-
     public boolean isLongerSentMessages() {
         return longerSentMessages;
     }
@@ -42,7 +41,7 @@ public class MessageConfigSync implements IMessage, IMessageHandler<MessageConfi
     public IMessage onMessage(MessageConfigSync message, MessageContext ctx) {
         TweaksConfig.longerSentMessages = message.isLongerSentMessages();
 
-        if (!message.isFastBlockPlacingServerControl()){
+        if (!message.isFastBlockPlacingServerControl()) {
             TweaksConfig.fastBlockPlacing = false;
             TweaksConfig.fastBlockPlacingServerControl = false;
         }

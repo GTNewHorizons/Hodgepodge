@@ -22,7 +22,8 @@ public class ClientKeyListener {
 
     private static String fastBlockPlacingEnabled = StatCollector.translateToLocal("key.fastBlockPlacing.enabled");
     private static String fastBlockPlacingDisabled = StatCollector.translateToLocal("key.fastBlockPlacing.disabled");
-    private static String fastBlockPlacingServerDisabled = StatCollector.translateToLocal("key.fastBlockPlacing.serverDisabled");
+    private static String fastBlockPlacingServerDisabled = StatCollector
+            .translateToLocal("key.fastBlockPlacing.serverDisabled");
 
     public static KeyBinding FastBlockPlacingKey = new KeyBinding(
             "key.fastBlockPlacing.desc",
@@ -44,12 +45,8 @@ public class ClientKeyListener {
             }
         } else {
             if (FastBlockPlacingKey.isPressed()) {
-                if (!TweaksConfig.fastBlockPlacingServerControl){
-                    AboveHotbarHUD.renderTextAboveHotbar(
-                            fastBlockPlacingServerDisabled,
-                            40,
-                            false,
-                            false);
+                if (!TweaksConfig.fastBlockPlacingServerControl) {
+                    AboveHotbarHUD.renderTextAboveHotbar(fastBlockPlacingServerDisabled, 40, false, false);
                     return;
                 }
 
