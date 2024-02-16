@@ -13,7 +13,10 @@ public class MixinElectricItemManager {
 
     @Redirect(
             method = "chargeFromArmor",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/Container;detectAndSendChanges()V"),
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/inventory/Container;detectAndSendChanges()V",
+                    remap = true),
             remap = false)
     public void hodgepodge$cancelDetectAndSendChanges(Container instance) {}
 }
