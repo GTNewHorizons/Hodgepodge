@@ -168,8 +168,11 @@ public class TweaksConfig {
     public static boolean modernPickBlock;
     @Config.Comment("Allows blocks to be placed at a faster rate (toggleable via keybind)")
     @Config.DefaultBoolean(false)
-    @Config.RequiresMcRestart
     public static boolean fastBlockPlacing;
+
+    @Config.Comment("Server control for fast block placing; if false, the client-side setting will be ignored and keybind will do nothing")
+    @Config.DefaultBoolean(true)
+    public static boolean fastBlockPlacingServerControl;
 
     @Config.Comment("Stops rendering potion particles from yourself")
     @Config.DefaultBoolean(true)
