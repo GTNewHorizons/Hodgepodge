@@ -5,12 +5,14 @@ import com.gtnewhorizon.gtnhlib.config.Config;
 @Config(modid = "hodgepodge", category = "debug")
 public class DebugConfig {
 
-    @Config.Comment("Prints debug log if DimensionManager got crashed")
-    @Config.DefaultBoolean(true)
-    public static boolean dimensionManagerDebug;
     @Config.Comment("Enable chunk save cme debugging code.")
     @Config.DefaultBoolean(false)
     public static boolean chunkSaveCMEDebug;
+
+    @Config.Comment("Prints debug log if DimensionManager got crashed")
+    @Config.DefaultBoolean(true)
+    public static boolean dimensionManagerDebug;
+
     @Config.Comment("Enable GL state debug hooks. Will not do anything useful unless mode is changed to nonzero.")
     @Config.DefaultBoolean(true)
     public static boolean renderDebug;
