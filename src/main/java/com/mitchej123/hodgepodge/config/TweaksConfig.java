@@ -137,6 +137,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean transparentChat;
 
+    @Config.Comment("Sets the interval for auto saves in ticks (20 ticks = 1 second)")
+    @Config.RangeInt(min = 1)
+    @Config.DefaultInt(900)
+    public static int autoSaveInterval;
+
     // affecting multiple mods
 
     @Config.Comment("Unbinds keybinds of certain ARR mods to avoid keybinds conflicts")
