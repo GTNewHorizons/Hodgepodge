@@ -407,6 +407,9 @@ public enum Mixins {
     JOURNEYMAP_UPDATE_CHECK(new Builder("Yeet Journeymap Update Check").setPhase(Phase.LATE).setSide(Side.CLIENT)
             .addMixinClasses("journeymap.MixinVersionCheck").setApplyIf(() -> FixesConfig.removeUpdateChecks)
             .addTargetedMod(TargetedMod.JOURNEYMAP)),
+    DAMAGE_INDICATORS_UPDATE_CHECK(new Builder("Yeet Damage Indicators Update Check").setPhase(Phase.LATE)
+            .setSide(Side.CLIENT).addMixinClasses("damageindicators.DIClientProxyMixin")
+            .setApplyIf(() -> FixesConfig.removeUpdateChecks).addTargetedMod(TargetedMod.DAMAGE_INDICATORS)),
 
     // Railcraft Anchors
     WAKE_ANCHORS_ON_LOGIN_PASSIVE(new Builder("Wake passive anchors on login").setPhase(Phase.LATE).setSide(Side.BOTH)
@@ -584,6 +587,11 @@ public enum Mixins {
             .addMixinClasses("extrautilities.MixinBlockDrum").setSide(Side.BOTH).setPhase(Phase.LATE)
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesDrumEatingCells)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+
+    // PortalGun
+    PORTALGUN_FIX_URLS(new Builder("Fix URLs used to download the sound pack")
+            .addMixinClasses("portalgun.ThreadDownloadResourcesMixin").addTargetedMod(TargetedMod.PORTAL_GUN)
+            .setApplyIf(() -> FixesConfig.fixPortalGunURLs).setPhase(Phase.LATE).setSide(Side.CLIENT)),
 
     // VoxelMap
     REPLACE_VOXELMAP_REFLECTION(new Builder("Replace VoxelMap Reflection")

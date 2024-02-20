@@ -37,8 +37,8 @@ public abstract class MixinS3FPacketCustomPayload_LengthLimit extends Packet {
             method = "readPacketData(Lnet/minecraft/network/PacketBuffer;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lcpw/mods/fml/common/network/ByteBufUtils;readVarShort(Lio/netty/buffer/ByteBuf;)I"),
-            remap = false)
+                    target = "Lcpw/mods/fml/common/network/ByteBufUtils;readVarShort(Lio/netty/buffer/ByteBuf;)I",
+                    remap = false))
     private int hodgepodge$readLongerPacketData(ByteBuf buf) {
         return PacketSerializationHelper.readExtendedVarShortOrInt(buf);
     }
@@ -47,8 +47,8 @@ public abstract class MixinS3FPacketCustomPayload_LengthLimit extends Packet {
             method = "writePacketData(Lnet/minecraft/network/PacketBuffer;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lcpw/mods/fml/common/network/ByteBufUtils;writeVarShort(Lio/netty/buffer/ByteBuf;I)V"),
-            remap = false)
+                    target = "Lcpw/mods/fml/common/network/ByteBufUtils;writeVarShort(Lio/netty/buffer/ByteBuf;I)V",
+                    remap = false))
     private void hodgepodge$writeLongerPacketData(ByteBuf buf, int toWrite) {
         PacketSerializationHelper.writeExtendedVarShortOrInt(buf, toWrite);
     }
