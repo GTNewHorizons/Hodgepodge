@@ -136,7 +136,7 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean transparentChat;
-  
+
     @Config.Comment("Sets the interval for auto saves in ticks (20 ticks = 1 second)")
     @Config.RangeInt(min = 1)
     @Config.DefaultInt(900)
