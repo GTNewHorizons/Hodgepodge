@@ -181,15 +181,6 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean hideIc2ReactorSlots;
-    public static boolean modernPickBlock;
-    @Config.Comment("Allows blocks to be placed at a faster rate (toggleable via keybind)")
-    @Config.DefaultBoolean(false)
-    @Config.RequiresMcRestart
-    public static boolean fastBlockPlacing;
-    @Config.Comment("Sets the interval for auto saves in ticks (20 ticks = 1 second)")
-    @Config.RangeInt(min = 1)
-    @Config.DefaultInt(900)
-    public static int autoSaveInterval;
 
     @Config.Comment("Give IC2 cells containers like GregTech cells do")
     @Config.DefaultBoolean(true)
