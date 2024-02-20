@@ -15,6 +15,7 @@ public enum TargetedMod {
     BUGTORCH("BugTorch", "jss.bugtorch.mixinplugin.BugTorchEarlyMixins", "bugtorch"),
     BUKKIT("Bukkit/Thermos", "Bukkit", null),
     COFH_CORE("CoFHCore", "cofh.asm.LoadingPlugin", "CoFHCore"),
+    DAMAGE_INDICATORS("Damage Indicators", null, "DamageIndicatorsMod"),
     EXTRATIC("ExtraTiC", null, "ExtraTiC"),
     EXTRA_UTILITIES("ExtraUtilities", null, "ExtraUtilities"),
     FASTCRAFT("FastCraft", "fastcraft.Tweaker"),
@@ -34,6 +35,7 @@ public enum TargetedMod {
     MRTJPCORE("MrTJPCore", null, "MrTJPCoreMod"),
     NOTENOUGHITEMS("NotEnoughItems", "codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
     OPTIFINE("Optifine", "optifine.OptiFineForgeTweaker", "Optifine"),
+    PORTAL_GUN("PortalGun", null, "PortalGun"),
     PROJECTE("ProjectE", null, "ProjectE"),
     RAILCRAFT("Railcraft", null, "Railcraft"),
     THAUMCRAFT("Thaumcraft", null, "Thaumcraft"), // "thaumcraft.codechicken.core.launch.DepLoader"

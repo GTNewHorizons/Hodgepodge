@@ -12,14 +12,14 @@ configurations {
 }
 
 dependencies {
-    api("com.github.GTNewHorizons:GTNHLib:0.2.3:dev")
+    api("com.github.GTNewHorizons:GTNHLib:0.2.6:dev")
 
-    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.5.17-GTNH:dev") // force a more up-to-date NEI version
-    transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-319-GTNH")
+    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.5.18-GTNH:dev") // force a more up-to-date NEI version
+    transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-324-GTNH")
     transformedModCompileOnly("com.github.GTNewHorizons:Baubles:1.0.4:dev")
     // Transitive updates to make runClient17 work
     transformedModCompileOnly("com.github.GTNewHorizons:ForgeMultipart:1.4.8:dev")
-    transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.45.64:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.45.71:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:harvestcraft:1.1.10-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:HungerOverhaul:1.1.0-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:MrTJPCore:1.1.6:dev") // Do not update, fixed afterwards
@@ -28,9 +28,11 @@ dependencies {
     transformedModCompileOnly(deobfCurse("bibliocraft-228027:2423369"))
     transformedModCompileOnly("curse.maven:biomes-o-plenty-220318:2499612")
     transformedModCompileOnly("curse.maven:cofh-core-69162:2388751")
+    transformedModCompileOnly(deobfCurse('damage-indicators-mod-59489:2692129'))
     transformedModCompileOnly("curse.maven:extra-utilities-225561:2264384")
     transformedModCompileOnly(deobfCurse("extratic-72728:2299292"))
     transformedModCompileOnly(deobfCurse("journeymap-32274:4500658"))
+    transformedModCompileOnly(deobf('https://dist.creeper.host/ichun/filespg/PortalGun-4.0.0-beta-6.jar'))
     transformedModCompileOnly("curse.maven:travellers-gear-224440:2262113")
     transformedModCompileOnly(deobfCurse("witchery-69673:2234410"))
     transformedModCompileOnly(deobfCurse("ztones-224369:2223720"))
