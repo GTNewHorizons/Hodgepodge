@@ -12,7 +12,7 @@ import com.mitchej123.hodgepodge.config.TweaksConfig;
 public class MixinMinecraftServer_AutoSaveInterval {
 
     @ModifyConstant(method = "tick", constant = @Constant(intValue = 900))
-    private int modifyAutoSaveInterval(int constant) {
+    private int hodgepodge$modifyAutoSaveInterval(int constant) {
         return TweaksConfig.autoSaveInterval;
     }
 
