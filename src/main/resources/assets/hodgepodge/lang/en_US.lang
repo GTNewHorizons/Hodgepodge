@@ -1,4 +1,4 @@
 key.hodgepodge.category=Hodgepodge
 key.fastBlockPlacing.desc=Fast Block Placing
-key.fastBlockPlacing.enabled=Fast Block Placing Enabled
-key.fastBlockPlacing.disabled=Fast Block Placing Disabled
+key.fastBlockPlacing.enabled=§fFast Block Placing §aEnabled
+key.fastBlockPlacing.disabled=§fFast Block Placing §cDisabled
