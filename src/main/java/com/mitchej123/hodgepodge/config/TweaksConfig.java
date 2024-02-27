@@ -142,6 +142,11 @@ public class TweaksConfig {
     @Config.DefaultInt(900)
     public static int autoSaveInterval;
 
+    @Config.Comment("Reduces water opacity from 3 to 1, to match modern")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean useLighterWater;
+
     // affecting multiple mods
 
     @Config.Comment("Unbinds keybinds of certain ARR mods to avoid keybinds conflicts")
