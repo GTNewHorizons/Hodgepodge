@@ -356,9 +356,8 @@ public enum Mixins {
             .addMixinClasses("minecraft.server.MixinMinecraftServer_AutoSaveInterval")
             .setApplyIf(() -> TweaksConfig.autoSaveInterval != 900)),
 
-    LIGHTER_WATER(new Builder("Decreases water opacity from 3 to 1, like in modern").setPhase(Phase.EARLY).setSide(Side.BOTH)
-            .addTargetedMod(TargetedMod.VANILLA)
-            .addMixinClasses("minecraft.MixinBlock_LighterWater")
+    LIGHTER_WATER(new Builder("Decreases water opacity from 3 to 1, like in modern").setPhase(Phase.EARLY)
+            .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA).addMixinClasses("minecraft.MixinBlock_LighterWater")
             .setApplyIf(() -> TweaksConfig.useLighterWater)),
 
     // Ic2 adjustments
