@@ -516,6 +516,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixThaumcraftGolemMarkerLoading;
 
+    @Config.Comment("Implement a proper hashing method for WorldCoordinates")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixThaumcraftWorldCoordinatesHashingMethod;
+
     // Thermal Dynamics
 
     @Config.Comment("Prevent crash with Thermal Dynamics from Negative Array Exceptions from item duct transfers")
