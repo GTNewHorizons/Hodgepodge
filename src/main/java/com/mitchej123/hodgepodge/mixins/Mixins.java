@@ -454,7 +454,7 @@ public enum Mixins {
             .setApplyIf(() -> FixesConfig.fixThaumcraftGolemMarkerLoading).addTargetedMod(TargetedMod.THAUMCRAFT)),
 
     FIX_WORLD_COORDINATE_HASHING_METHOD(new Builder("Implement a proper hashing method for WorldCoordinates")
-            .addMixinClasses("thaumcraft.MixinWorldCoordinates").setPhase(Phase.LATE).setSide(Side.CLIENT)
+            .addMixinClasses("thaumcraft.MixinWorldCoordinates").setPhase(Phase.LATE).setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.fixThaumcraftWorldCoordinatesHashingMethod)
             .addTargetedMod(TargetedMod.THAUMCRAFT)),
 
