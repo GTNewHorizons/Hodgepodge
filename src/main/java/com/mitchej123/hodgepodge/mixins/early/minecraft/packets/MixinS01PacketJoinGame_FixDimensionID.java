@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = S01PacketJoinGame.class)
+@Mixin(S01PacketJoinGame.class)
 public class MixinS01PacketJoinGame_FixDimensionID {
 
     @Shadow
