@@ -127,6 +127,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixImmobileFireballs;
 
+    @Config.Comment("Fix an overflow of the dimension id when a player logins on a server")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixLoginDimensionIDOverflow;
+
     @Config.Comment("Allows the server to assign the logged in UUID to the same username when online_mode is false")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart

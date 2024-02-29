@@ -188,6 +188,12 @@ public enum Mixins {
     FIX_HUGE_CHAT_KICK(new Builder("Fix huge chat kick").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinS02PacketChat").setApplyIf(() -> FixesConfig.fixHugeChatKick)
             .addTargetedMod(TargetedMod.VANILLA)),
+
+    FIX_LOGIN_DIMENSION_ID_OVERFLOW(
+            new Builder("Fix dimension id overflowing when a player first logins on a server").setPhase(Phase.EARLY)
+                    .setSide(Side.BOTH).addMixinClasses("minecraft.packets.MixinS01PacketJoinGame_FixDimensionID")
+                    .setApplyIf(() -> FixesConfig.fixLoginDimensionIDOverflow).addTargetedMod(TargetedMod.VANILLA)),
+
     FIX_WORLD_SERVER_LEAKING_UNLOADED_ENTITIES(new Builder("Fix world server leaking unloaded entities")
             .setPhase(Phase.EARLY).setSide(Side.BOTH).addMixinClasses("minecraft.MixinWorldServerUpdateEntities")
             .setApplyIf(() -> FixesConfig.fixWorldServerLeakingUnloadedEntities).addTargetedMod(TargetedMod.VANILLA)),
