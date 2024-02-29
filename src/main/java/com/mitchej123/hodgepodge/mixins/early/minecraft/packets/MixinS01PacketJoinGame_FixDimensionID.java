@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(S01PacketJoinGame.class)
+@Mixin(value = S01PacketJoinGame.class)
 public class MixinS01PacketJoinGame_FixDimensionID {
 
     @Shadow
@@ -22,6 +22,8 @@ public class MixinS01PacketJoinGame_FixDimensionID {
 
     @Inject(method = "readPacketData", at = @At("TAIL"))
     private void hodgepodge$readDimensionID(PacketBuffer data, CallbackInfo ci) {
-        this.field_149202_d = data.readInt();
+        if (data.readableBytes() >= 4) {
+            this.field_149202_d = data.readInt();
+        }
     }
 }
