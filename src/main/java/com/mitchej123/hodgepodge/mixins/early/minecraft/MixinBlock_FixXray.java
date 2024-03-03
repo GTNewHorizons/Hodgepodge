@@ -15,6 +15,7 @@ public abstract class MixinBlock_FixXray implements BlockExt_FixXray {
     @Shadow
     public abstract AxisAlignedBB getCollisionBoundingBoxFromPool(World worldIn, int x, int y, int z);
 
+    @Override
     public boolean hodgepodge$shouldRayTraceStopOnBlock(World worldIn, int x, int y, int z) {
         return this.getCollisionBoundingBoxFromPool(worldIn, x, y, z) != null;
     }

@@ -16,6 +16,7 @@ public abstract class MixinTileEntityNuclearReactorElectric extends TileEntityIn
     /**
      * @author glee8e
      */
+    @Override
     public int getSizeInventory() {
         if (isFluidCooled()) {
             int sum = 0;
