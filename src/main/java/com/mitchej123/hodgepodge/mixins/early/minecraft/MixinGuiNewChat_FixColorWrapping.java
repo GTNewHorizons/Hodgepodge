@@ -1,5 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiNewChat;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +21,7 @@ public class MixinGuiNewChat_FixColorWrapping {
                     shift = At.Shift.BEFORE),
             name = "s2")
     private String hodgepodge$fixColorWrapping(String s2, @Local(name = "s1") String s1) {
-        return FontRendererAccessor.callGetFormatFromString(s1) + s2;
+        return FontRenderer.getFormatFromString(s1) + s2;
     }
 
 }
