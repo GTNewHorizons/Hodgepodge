@@ -264,6 +264,9 @@ public enum Mixins {
     OPTIMIZE_ASMDATATABLE_INDEX(new Builder("Optimize ASM DataTable Index").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("forge.MixinASMDataTable").setApplyIf(() -> SpeedupsConfig.optimizeASMDataTable)
             .addTargetedMod(TargetedMod.VANILLA)),
+    SQUASH_BED_ERROR_MESSAGE(new Builder("Stop \"You can only sleep at night\" message filling the chat")
+            .addMixinClasses("minecraft.MixinNetHandlerPlayClient").addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> FixesConfig.squashBedErrorMessage).setPhase(Phase.EARLY).setSide(Side.CLIENT)),
     CHUNK_SAVE_CME_DEBUG(new Builder("Add debugging code to Chunk Save CME").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinNBTTagCompound").setApplyIf(() -> DebugConfig.chunkSaveCMEDebug)
             .addTargetedMod(TargetedMod.VANILLA)),
