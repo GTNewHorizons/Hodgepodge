@@ -1,15 +1,12 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.textures.client;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fluids.RenderBlockFluid;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -33,13 +30,8 @@ public abstract class MixinRenderBlockFluid {
      * @author laetansky
      * @reason mark texture for update
      */
-    @Overwrite
-    private IIcon getIcon(IIcon icon) {
-        if (icon != null) {
-            AnimationsRenderUtils.markBlockTextureForUpdate(icon, currentBlockAccess);
-            return icon;
-        }
-        return ((TextureMap) Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.locationBlocksTexture))
-                .getAtlasSprite("missingno");
+    @Inject(at = @At(ordinal = 0, value = "RETURN"), method = "getIcon")
+    private void hodgepodge$markBlockTextureForUpdate(IIcon icon, CallbackInfoReturnable<IIcon> cir) {
+        AnimationsRenderUtils.markBlockTextureForUpdate(icon, currentBlockAccess);
     }
 }
