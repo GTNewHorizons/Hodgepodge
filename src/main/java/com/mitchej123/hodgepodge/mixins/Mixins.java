@@ -419,9 +419,6 @@ public enum Mixins {
     COFH_CORE_UPDATE_CHECK(new Builder("Yeet COFH Core Update Check").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("cofhcore.MixinCoFHCoreUpdateCheck").setApplyIf(() -> FixesConfig.removeUpdateChecks)
             .addTargetedMod(TargetedMod.COFH_CORE)),
-    JOURNEYMAP_UPDATE_CHECK(new Builder("Yeet Journeymap Update Check").setPhase(Phase.LATE).setSide(Side.CLIENT)
-            .addMixinClasses("journeymap.MixinVersionCheck").setApplyIf(() -> FixesConfig.removeUpdateChecks)
-            .addTargetedMod(TargetedMod.JOURNEYMAP)),
     DAMAGE_INDICATORS_UPDATE_CHECK(new Builder("Yeet Damage Indicators Update Check").setPhase(Phase.LATE)
             .setSide(Side.CLIENT).addMixinClasses("damageindicators.MixinDIClientProxy")
             .setApplyIf(() -> FixesConfig.removeUpdateChecks).addTargetedMod(TargetedMod.DAMAGE_INDICATORS)),
