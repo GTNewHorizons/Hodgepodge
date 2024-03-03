@@ -42,8 +42,7 @@ public abstract class MixinEntityLivingBase_FixPotionException extends Entity {
 
         try {
             while (iterator.hasNext()) {
-                Integer integer = iterator.next();
-                PotionEffect potioneffect = this.activePotionsMap.get(integer);
+                PotionEffect potioneffect = this.activePotionsMap.get(iterator.next());
 
                 if (!potioneffect.onUpdate(((EntityLivingBase) (Object) this))) {
                     if (!this.worldObj.isRemote) {
@@ -110,10 +109,10 @@ public abstract class MixinEntityLivingBase_FixPotionException extends Entity {
     }
 
     @Shadow
-    protected void onFinishedPotionEffect(PotionEffect p_70688_1_) {}
+    protected abstract void onFinishedPotionEffect(PotionEffect p_70688_1_);
 
     @Shadow
-    protected void onChangedPotionEffect(PotionEffect p_70695_1_, boolean p_70695_2_) {}
+    protected abstract void onChangedPotionEffect(PotionEffect p_70695_1_, boolean p_70695_2_);
 
     @Shadow
     public abstract boolean isPotionActive(int p_82165_1_);

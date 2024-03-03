@@ -19,9 +19,7 @@ public class MixinRemoveUnlockFinalField {
      * @reason This way of writing to final fields is broken in java 12+, this neutralises any call not patched
      */
     @Overwrite(remap = false)
-    public static void unlockFinalField(Field f) {
-
-    }
+    public static void unlockFinalField(Field f) {}
 
     /**
      * @author Mist475
