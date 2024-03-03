@@ -16,10 +16,10 @@ public class MixinMinecraft_ResizableFullscreen {
     @Shadow
     private boolean fullscreen;
 
-    /*
+    /**
      * LWJGL bug
-     * https://bugs.mojang.com/browse/MC-68754?page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel&
-     * showAll=true
+     * 
+     * @see <a href=https://bugs.mojang.com/browse/MC-68754>MC-68754</a>
      */
     @Inject(
             method = "toggleFullscreen",

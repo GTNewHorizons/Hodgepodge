@@ -21,16 +21,16 @@ import lotr.common.entity.npc.LOTREntityHuornBase;
 @Mixin(LOTREntityAIAvoidHuorn.class)
 public class MixinRedirectHuornAI extends EntityAIAvoidEntity {
 
-    private static final Field entityField = ReflectionHelper.findField(
+    private static final Field ENTITY_FIELD = ReflectionHelper.findField(
             EntityAIAvoidEntity.class,
             ObfuscationReflectionHelper
                     .remapFieldNames(EntityAIAvoidEntity.class.getName(), "field_75380_a", "theEntity"));
 
     @SuppressWarnings("rawtypes")
-    private static final Fields.ClassFields.Field accessor = Fields.ofClass(EntityAIAvoidEntity.class)
+    private static final Fields.ClassFields.Field ACCESSOR = Fields.ofClass(EntityAIAvoidEntity.class)
             .getUntypedField(Fields.LookupType.DECLARED_IN_HIERARCHY, "field_98218_a");
 
-    public MixinRedirectHuornAI(final EntityCreature entity, float range, double near, double far) {
+    private MixinRedirectHuornAI(final EntityCreature entity, float range, double near, double far) {
         super(entity, LOTREntityHuornBase.class, range, near, far);
     }
 
@@ -46,9 +46,9 @@ public class MixinRedirectHuornAI extends EntityAIAvoidEntity {
                     remap = false),
             remap = false)
     @SuppressWarnings("unchecked")
-    private void WriteFinalValue(Field f) {
+    private void hodgepodge$writeFinalValue(Field f) {
         try {
-            EntityCreature entity = (EntityCreature) entityField.get(this);
+            EntityCreature entity = (EntityCreature) ENTITY_FIELD.get(this);
 
             IEntitySelector replaceSelect = target -> {
                 if (target.isEntityAlive() && entity.getEntitySenses().canSee(target)) {
@@ -58,7 +58,7 @@ public class MixinRedirectHuornAI extends EntityAIAvoidEntity {
                     return false;
                 }
             };
-            accessor.setValue(this, replaceSelect);
+            ACCESSOR.setValue(this, replaceSelect);
         } catch (Exception ignored) {
             FMLLog.warning("LOTR: Error adding Avoid Huorn AI");
         }
@@ -76,8 +76,5 @@ public class MixinRedirectHuornAI extends EntityAIAvoidEntity {
                     target = "Ljava/lang/reflect/Field;set(Ljava/lang/Object;Ljava/lang/Object;)V",
                     remap = false),
             remap = false)
-    private void IgnoreCallToSet(Field instance, Object temp1, Object temp2) {
-
-    }
-
+    private void hodgepodge$ignoreCallToSet(Field instance, Object temp1, Object temp2) {}
 }

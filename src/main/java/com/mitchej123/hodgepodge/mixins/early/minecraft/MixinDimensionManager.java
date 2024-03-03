@@ -82,13 +82,13 @@ public class MixinDimensionManager {
     private static void log(int id) {
         Common.log.warn("DimensionManager crashed!");
         Common.log.warn("dimension id: " + id);
-        Common.log.warn("logs for `registerDimension`:");
+        Common.log.warn("logs for 'registerDimension':");
         if (registerLogs != null && registerLogs.containsKey(id)) {
             Common.log.warn(registerLogs.get(id));
         } else {
             Common.log.warn("not available");
         }
-        Common.log.warn("logs for `unregisterDimension`:");
+        Common.log.warn("logs for 'unregisterDimension':");
         if (unregisterLogs != null && unregisterLogs.containsKey(id)) {
             Common.log.warn(unregisterLogs.get(id));
         } else {

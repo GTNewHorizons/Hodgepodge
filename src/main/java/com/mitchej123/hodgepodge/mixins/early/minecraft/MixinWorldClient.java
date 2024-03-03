@@ -16,7 +16,7 @@ public class MixinWorldClient {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/audio/SoundHandler;playSound(Lnet/minecraft/client/audio/ISound;)V"))
-    private void hodgepodge$CancelSound(SoundHandler soundHandler, ISound isound) {
+    private void hodgepodge$cancelSound(SoundHandler soundHandler, ISound isound) {
         // do nothing
     }
 

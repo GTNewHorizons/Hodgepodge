@@ -12,7 +12,7 @@ import com.mitchej123.hodgepodge.config.TweaksConfig;
 public class MixinGuiNewChat_LongerChat {
 
     @ModifyConstant(method = "func_146237_a", constant = @Constant(intValue = 100))
-    public int hodgepodge$LongerChat(int constant) {
+    public int hodgepodge$longerChat(int constant) {
         return TweaksConfig.chatLength;
     }
 }

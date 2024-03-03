@@ -21,9 +21,10 @@ import cpw.mods.fml.relauncher.FMLLaunchHandler;
 public enum Mixins {
 
     // Vanilla Fixes
-    CHANGE_CATEGORY_SPRINT_KEY(new Builder("Moves the sprint keybind to the movement category")
-            .addTargetedMod(TargetedMod.VANILLA).setSide(Side.CLIENT).setPhase(Phase.EARLY)
-            .addMixinClasses("minecraft.MixinGameSetttings").setApplyIf(() -> TweaksConfig.changeSprintCategory)),
+    CHANGE_CATEGORY_SPRINT_KEY(
+            new Builder("Moves the sprint keybind to the movement category").addTargetedMod(TargetedMod.VANILLA)
+                    .setSide(Side.CLIENT).setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinGameSettings_SprintKey")
+                    .setApplyIf(() -> TweaksConfig.changeSprintCategory)),
     FIX_TOO_MANY_ALLOCATIONS_CHUNK_POSITION_INT_PAIR(
             new Builder("Stops MC from allocating too many ChunkPositionIntPair objects")
                     .addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH).setPhase(Phase.EARLY)
@@ -220,7 +221,7 @@ public enum Mixins {
     FIX_OPTIFINE_CHUNKLOADING_CRASH(new Builder("Fix Optifine Chunkloading Crash").setPhase(Phase.EARLY)
             .setApplyIf(() -> FixesConfig.fixOptifineChunkLoadingCrash).setSide(Side.CLIENT)
             .addTargetedMod(TargetedMod.VANILLA).addTargetedMod(TargetedMod.OPTIFINE)
-            .addMixinClasses("minecraft.MixinGameSettings")),
+            .addMixinClasses("minecraft.MixinGameSettings_FixOFChunkLoading")),
     ADD_TOGGLE_DEBUG_MESSAGE(new Builder("Toggle Debug Message").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinMinecraft_ToggleDebugMessage").setSide(Side.CLIENT)
             .setApplyIf(() -> TweaksConfig.addToggleDebugMessage).addTargetedMod(TargetedMod.VANILLA)),
@@ -333,9 +334,8 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinGuiContainerCreative").setSide(Side.CLIENT)
             .setApplyIf(() -> FixesConfig.removeCreativeSearchTab).addTargetedMod(TargetedMod.NOTENOUGHITEMS)),
     FIX_CHAT_COLOR_WRAPPING(new Builder("Fix wrapped chat lines missing colors").setPhase(Phase.EARLY)
-            .addMixinClasses("minecraft.MixinGuiNewChat_FixColorWrapping", "minecraft.FontRendererAccessor")
-            .setSide(Side.CLIENT).setApplyIf(() -> FixesConfig.fixChatWrappedColors)
-            .addTargetedMod(TargetedMod.VANILLA)),
+            .addMixinClasses("minecraft.MixinGuiNewChat_FixColorWrapping").setSide(Side.CLIENT)
+            .setApplyIf(() -> FixesConfig.fixChatWrappedColors).addTargetedMod(TargetedMod.VANILLA)),
     COMPACT_CHAT(new Builder("Compact chat").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinGuiNewChat_CompactChat").setSide(Side.CLIENT)
             .setApplyIf(() -> TweaksConfig.compactChat).addTargetedMod(TargetedMod.VANILLA)),
@@ -423,7 +423,7 @@ public enum Mixins {
             .addMixinClasses("journeymap.MixinVersionCheck").setApplyIf(() -> FixesConfig.removeUpdateChecks)
             .addTargetedMod(TargetedMod.JOURNEYMAP)),
     DAMAGE_INDICATORS_UPDATE_CHECK(new Builder("Yeet Damage Indicators Update Check").setPhase(Phase.LATE)
-            .setSide(Side.CLIENT).addMixinClasses("damageindicators.DIClientProxyMixin")
+            .setSide(Side.CLIENT).addMixinClasses("damageindicators.MixinDIClientProxy")
             .setApplyIf(() -> FixesConfig.removeUpdateChecks).addTargetedMod(TargetedMod.DAMAGE_INDICATORS)),
 
     // Railcraft Anchors
@@ -610,7 +610,7 @@ public enum Mixins {
 
     // PortalGun
     PORTALGUN_FIX_URLS(new Builder("Fix URLs used to download the sound pack")
-            .addMixinClasses("portalgun.ThreadDownloadResourcesMixin").addTargetedMod(TargetedMod.PORTAL_GUN)
+            .addMixinClasses("portalgun.MixinThreadDownloadResources").addTargetedMod(TargetedMod.PORTAL_GUN)
             .setApplyIf(() -> FixesConfig.fixPortalGunURLs).setPhase(Phase.LATE).setSide(Side.CLIENT)),
 
     // VoxelMap

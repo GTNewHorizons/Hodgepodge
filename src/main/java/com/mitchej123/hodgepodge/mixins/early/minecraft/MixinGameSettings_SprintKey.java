@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Slice;
 
 @Mixin(GameSettings.class)
-public class MixinGameSetttings {
+public class MixinGameSettings_SprintKey {
 
     @ModifyConstant(
             method = { "<init>()V", "<init>(Lnet/minecraft/client/Minecraft;Ljava/io/File;)V" },

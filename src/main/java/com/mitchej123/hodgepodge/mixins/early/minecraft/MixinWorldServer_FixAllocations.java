@@ -18,7 +18,7 @@ public abstract class MixinWorldServer_FixAllocations {
     @Redirect(
             method = "func_147456_g",
             at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;"))
-    private Iterator<ChunkCoordIntPair> fixAllocations(Set<ChunkCoordIntPair> instance) {
+    private Iterator<ChunkCoordIntPair> hodgepodge$fixAllocations(Set<ChunkCoordIntPair> instance) {
         return ((LongChunkCoordIntPairSet) instance).unsafeIterator();
     }
 

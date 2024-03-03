@@ -16,10 +16,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(value = NetHandlerPlayClient.class)
-public class MixinNetHandlePlayClient {
+public class MixinNetHandlerPlayClient {
 
     @Unique
-    private static final int randomChannel = 43284;
+    private static final int RANDOM_CHANNEL = 43284;
 
     @Shadow
     private Minecraft gameController;

@@ -11,7 +11,7 @@ import cofh.core.ProxyClient;
 public class MixinProxyClient {
 
     @ModifyConstant(method = "<clinit>", constant = { @Constant(intValue = 46), @Constant(intValue = 47) })
-    private static int hodgepodge$UnbindKeybind(int original) {
+    private static int hodgepodge$unbindKeybind(int original) {
         return Keyboard.KEY_NONE;
     }
 

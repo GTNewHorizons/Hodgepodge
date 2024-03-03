@@ -26,25 +26,25 @@ public class MixinBlockHopper extends Block {
 
     // Inspired by DietHoppers by rwtema - https://github.com/rwtema/DietHopper/
     @Unique
-    private static final EnumMap<EnumFacing, List<AxisAlignedBB>> bounds;
+    private static final EnumMap<EnumFacing, List<AxisAlignedBB>> BOUNDS;
 
     static {
         List<AxisAlignedBB> commonBounds = ImmutableList
                 .of(makeAABB(0, 10, 0, 16, 16, 16), makeAABB(4, 4, 4, 12, 10, 12));
-        bounds = Stream.of(EnumFacing.values()).filter(t -> t != EnumFacing.UP).collect(
+        BOUNDS = Stream.of(EnumFacing.values()).filter(t -> t != EnumFacing.UP).collect(
                 Collectors.toMap(
                         a -> a,
                         a -> new ArrayList<>(commonBounds),
                         (u, v) -> { throw new IllegalStateException(); },
                         () -> new EnumMap<>(EnumFacing.class)));
 
-        bounds.get(EnumFacing.DOWN).add(makeAABB(6, 0, 6, 10, 4, 10));
+        BOUNDS.get(EnumFacing.DOWN).add(makeAABB(6, 0, 6, 10, 4, 10));
 
-        bounds.get(EnumFacing.NORTH).add(makeAABB(6, 4, 0, 10, 8, 4));
-        bounds.get(EnumFacing.SOUTH).add(makeAABB(6, 4, 12, 10, 8, 16));
+        BOUNDS.get(EnumFacing.NORTH).add(makeAABB(6, 4, 0, 10, 8, 4));
+        BOUNDS.get(EnumFacing.SOUTH).add(makeAABB(6, 4, 12, 10, 8, 16));
 
-        bounds.get(EnumFacing.WEST).add(makeAABB(12, 4, 6, 16, 8, 10));
-        bounds.get(EnumFacing.EAST).add(makeAABB(0, 4, 6, 4, 8, 10));
+        BOUNDS.get(EnumFacing.WEST).add(makeAABB(12, 4, 6, 16, 8, 10));
+        BOUNDS.get(EnumFacing.EAST).add(makeAABB(0, 4, 6, 4, 8, 10));
     }
 
     private MixinBlockHopper(Material materialIn) {
@@ -78,7 +78,7 @@ public class MixinBlockHopper extends Block {
         final Vec3 pos = Vec3.createVectorHelper(x, y, z);
         final EnumFacing facing = EnumFacing
                 .values()[(BlockHopper.getDirectionFromMetadata(world.getBlockMetadata(x, y, z)))];
-        List<AxisAlignedBB> list = bounds.get(facing);
+        List<AxisAlignedBB> list = BOUNDS.get(facing);
         if (list == null) return super.collisionRayTrace(world, x, y, z, start, end);
         return list.stream().map(bb -> rayTrace(pos, start, end, bb)).anyMatch(Objects::nonNull)
                 ? super.collisionRayTrace(world, x, y, z, start, end)
