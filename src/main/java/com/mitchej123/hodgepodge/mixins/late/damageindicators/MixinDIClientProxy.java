@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import DamageIndicatorsMod.client.DIClientProxy;
 
 @Mixin(DIClientProxy.class)
-public class DIClientProxyMixin {
+public class MixinDIClientProxy {
 
     @Inject(at = @At("HEAD"), cancellable = true, method = "trysendmessage", remap = false)
     private void hodgepodge$exit(CallbackInfo ci) {

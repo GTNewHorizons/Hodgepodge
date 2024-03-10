@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import net.minecraft.client.Minecraft;
 
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,7 +18,10 @@ public class MixinMinecraft_UpdateKeys {
      */
     @Inject(
             method = "setIngameFocus",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/util/MouseHelper;grabMouseCursor()V"))
+            at = @At(
+                    opcode = Opcodes.GETFIELD,
+                    target = "Lnet/minecraft/client/Minecraft;mouseHelper:Lnet/minecraft/util/MouseHelper;",
+                    value = "FIELD"))
     private void hodgepodge$updateKeysStates(CallbackInfo ci) {
         ((KeyBindingExt) Minecraft.getMinecraft().gameSettings.keyBindAttack).hodgepodge$updateKeyStates();
     }

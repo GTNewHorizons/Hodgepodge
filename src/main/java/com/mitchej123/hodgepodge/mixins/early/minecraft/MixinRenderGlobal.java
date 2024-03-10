@@ -57,35 +57,35 @@ public class MixinRenderGlobal {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/tileentity/TileEntityRendererDispatcher;renderTileEntity(Lnet/minecraft/tileentity/TileEntity;F)V"))
-    public void hodgepodge$postTESR(TileEntityRendererDispatcher instance, TileEntity j, float k) {
+    public void hodgepodge$postTESR(TileEntityRendererDispatcher instance, TileEntity tile, float partialTickTime) {
         ManagedEnum<RenderDebugMode> renderDebugMode = HodgepodgeClient.renderDebugMode;
         if (!renderDebugMode.is(RenderDebugMode.OFF))
             // this should be enough
             GL11.glPushAttrib(
                     GL11.GL_ENABLE_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_LIGHTING_BIT);
 
-        instance.renderTileEntity(j, k);
+        instance.renderTileEntity(tile, partialTickTime);
 
         if (!renderDebugMode.is(RenderDebugMode.OFF)) {
 
-            if (!knownIssues.contains(j) && !RenderDebugHelper.checkGLStates()) {
-                knownIssues.add(j);
+            if (!knownIssues.contains(tile) && !RenderDebugHelper.checkGLStates()) {
+                knownIssues.add(tile);
                 Minecraft.getMinecraft().thePlayer.addChatMessage(
                         new ChatComponentText(
-                                "TileEntity (" + j.getClass().getName()
+                                "TileEntity (" + tile.getClass().getName()
                                         + " at "
-                                        + j.xCoord
+                                        + tile.xCoord
                                         + ", "
-                                        + j.yCoord
+                                        + tile.yCoord
                                         + ", "
-                                        + j.zCoord
+                                        + tile.zCoord
                                         + ") is messing up render states!"));
                 RenderDebugHelper.log.error(
                         "TileEntity {} at ({}, {}, {}) alter render state after TESR call: {}",
-                        j.getClass(),
-                        j.xCoord,
-                        j.yCoord,
-                        j.zCoord,
+                        tile.getClass(),
+                        tile.xCoord,
+                        tile.yCoord,
+                        tile.zCoord,
                         RenderDebugHelper.compose());
             }
 

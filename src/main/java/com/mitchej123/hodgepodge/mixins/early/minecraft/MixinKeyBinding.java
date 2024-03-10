@@ -29,7 +29,7 @@ public class MixinKeyBinding implements KeyBindingExt {
     @Shadow
     private boolean pressed;
     @Unique
-    private static final Multimap<Integer, KeyBinding> hodgepodge$keybindMultiMap = ArrayListMultimap.create();
+    private static final Multimap<Integer, KeyBinding> hodgepodge$KEYBIND_MULTIMAP = ArrayListMultimap.create();
 
     /**
      * @author eigenraven
@@ -38,7 +38,7 @@ public class MixinKeyBinding implements KeyBindingExt {
     @Overwrite
     public static void onTick(int keyCode) {
         if (keyCode != 0) {
-            for (KeyBinding bind : hodgepodge$keybindMultiMap.get(keyCode)) {
+            for (KeyBinding bind : hodgepodge$KEYBIND_MULTIMAP.get(keyCode)) {
                 if (bind != null) {
                     ++((MixinKeyBinding) (Object) bind).pressTime;
                 }
@@ -53,7 +53,7 @@ public class MixinKeyBinding implements KeyBindingExt {
     @Overwrite
     public static void setKeyBindState(int keyCode, boolean pressed) {
         if (keyCode != 0) {
-            for (KeyBinding bind : hodgepodge$keybindMultiMap.get(keyCode)) {
+            for (KeyBinding bind : hodgepodge$KEYBIND_MULTIMAP.get(keyCode)) {
                 if (bind != null) {
                     ((MixinKeyBinding) (Object) bind).pressed = pressed;
                 }
@@ -66,10 +66,10 @@ public class MixinKeyBinding implements KeyBindingExt {
             at = @At("RETURN"),
             require = 1)
     private static void hodgepodge$populateKeybindMatcherArray(CallbackInfo ci) {
-        hodgepodge$keybindMultiMap.clear();
+        hodgepodge$KEYBIND_MULTIMAP.clear();
         for (KeyBinding binding : (List<KeyBinding>) keybindArray) {
             if (binding != null && binding.getKeyCode() != 0) {
-                hodgepodge$keybindMultiMap.put(binding.getKeyCode(), binding);
+                hodgepodge$KEYBIND_MULTIMAP.put(binding.getKeyCode(), binding);
             }
         }
     }
@@ -79,12 +79,12 @@ public class MixinKeyBinding implements KeyBindingExt {
             at = @At("RETURN"),
             require = 1)
     private void hodgepodge$addMyselfInConstructor(String description, int keyCode, String category, CallbackInfo ci) {
-        hodgepodge$keybindMultiMap.put(keyCode, (KeyBinding) (Object) this);
+        hodgepodge$KEYBIND_MULTIMAP.put(keyCode, (KeyBinding) (Object) this);
     }
 
     @Override
     public void hodgepodge$updateKeyStates() {
-        for (KeyBinding keyBinding : hodgepodge$keybindMultiMap.values()) {
+        for (KeyBinding keyBinding : hodgepodge$KEYBIND_MULTIMAP.values()) {
             try {
                 final int keyCode = keyBinding.getKeyCode();
                 KeyBinding.setKeyBindState(keyCode, keyCode < 256 && Keyboard.isKeyDown(keyCode));

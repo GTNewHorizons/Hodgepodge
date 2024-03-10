@@ -5,16 +5,16 @@ import org.spongepowered.asm.mixin.Overwrite;
 
 import biomesoplenty.common.integration.ForestryIntegration;
 
-@Mixin(ForestryIntegration.class)
+@Mixin(value = ForestryIntegration.class, remap = false)
 public class MixinForestryIntegration {
 
     /**
      * @author glowredman
-     * @reason Deduplicate Fermenter recipes
+     * @reason Deduplicate Fermenter and Squeezer recipes and BOP flowers
      * @see <a
      *      href=https://github.com/GTNewHorizons/GT-New-Horizons-Modpack/issues/2886>GTNewHorizons/GT-New-Horizons-Modpack#2886</a>
      */
-    @Overwrite(remap = false)
+    @Overwrite
     private static void addFermenterRecipes() {
         /* NO-OP */
     }
@@ -25,7 +25,7 @@ public class MixinForestryIntegration {
      * @see <a
      *      href=https://github.com/GTNewHorizons/GT-New-Horizons-Modpack/issues/2886>GTNewHorizons/GT-New-Horizons-Modpack#2886</a>
      */
-    @Overwrite(remap = false)
+    @Overwrite
     private static void addSqueezerRecipes() {
         /* NO-OP */
     }
@@ -36,7 +36,7 @@ public class MixinForestryIntegration {
      * @see <a
      *      href=https://github.com/GTNewHorizons/GT-New-Horizons-Modpack/issues/2886>GTNewHorizons/GT-New-Horizons-Modpack#2886</a>
      */
-    @Overwrite(remap = false)
+    @Overwrite
     private static void addBOPFlowers() {
         /* NO-OP */
     }

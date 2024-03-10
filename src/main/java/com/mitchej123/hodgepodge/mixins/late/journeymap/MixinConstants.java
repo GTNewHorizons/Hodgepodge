@@ -14,7 +14,7 @@ public class MixinConstants {
 
     /**
      * @author Alexdoru
-     * @reason Prevent unbinded keybinds from triggering when pressing certain keys
+     * @reason Prevent unbound keybinds from triggering when pressing certain keys
      */
     @Inject(method = "isPressed", at = @At("HEAD"), remap = false, cancellable = true)
     private static void hodgepodge$isPressed(KeyBinding keyBinding, CallbackInfoReturnable<Boolean> cir) {

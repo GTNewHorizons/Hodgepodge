@@ -42,13 +42,13 @@ public abstract class MixinEntityPlayerMP extends EntityLivingBase {
                 ServersideAttributeMap newAttributeMap = (ServersideAttributeMap) (this.getAttributeMap());
 
                 for (IAttributeInstance oldAttr : watchedAttribs) {
-                    if (!(oldAttr instanceof ModifiableAttributeInstance)) continue;
+                    if (!(oldAttr instanceof ModifiableAttributeInstance oldAttrModifiable)) continue;
 
                     // Get a new instance of a modifiable attribute based on the old one
                     ModifiableAttributeInstance newInst = newAttributeMap.getAttributeInstance(oldAttr.getAttribute());
 
                     // Get the modifiers for the old attribute
-                    for (AttributeModifier modifier : getModifiers((ModifiableAttributeInstance) oldAttr)) try {
+                    for (AttributeModifier modifier : getModifiers(oldAttrModifiable)) try {
                         // And apply them to the new attribute instance
                         newInst.applyModifier(modifier);
                     } catch (IllegalArgumentException ignored) {

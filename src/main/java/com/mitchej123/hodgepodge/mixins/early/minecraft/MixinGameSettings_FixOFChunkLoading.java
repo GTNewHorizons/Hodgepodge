@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameSettings.class)
-public class MixinGameSettings {
+public class MixinGameSettings_FixOFChunkLoading {
 
     @Dynamic("Field is added by optifine's ASM")
     public int ofChunkLoading;

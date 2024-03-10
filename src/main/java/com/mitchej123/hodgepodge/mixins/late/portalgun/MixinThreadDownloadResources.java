@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import portalgun.client.thread.ThreadDownloadResources;
 
 @Mixin(ThreadDownloadResources.class)
-public class ThreadDownloadResourcesMixin {
+public class MixinThreadDownloadResources {
 
     @ModifyArg(
             at = @At(target = "Ljava/net/URL;<init>(Ljava/lang/String;)V", value = "INVOKE"),

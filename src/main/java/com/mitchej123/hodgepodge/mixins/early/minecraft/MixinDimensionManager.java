@@ -47,10 +47,7 @@ public class MixinDimensionManager {
 
     @Inject(
             method = "registerDimension",
-            at = @At(
-                    shift = At.Shift.BEFORE,
-                    value = "INVOKE",
-                    target = "Ljava/lang/String;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"),
+            at = @At(target = "java/lang/IllegalArgumentException", value = "NEW"),
             remap = false)
     private static void hodgepodge$beforeThrowOnRegisterDimension(int id, int providerType, CallbackInfo ci) {
         log(id);
@@ -58,10 +55,7 @@ public class MixinDimensionManager {
 
     @Inject(
             method = "unregisterDimension",
-            at = @At(
-                    shift = At.Shift.BEFORE,
-                    value = "INVOKE",
-                    target = "Ljava/lang/String;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"),
+            at = @At(target = "java/lang/IllegalArgumentException", value = "NEW"),
             remap = false)
     private static void hodgepodge$beforeThrowOnUnRegisterDimension(int id, CallbackInfo ci) {
         log(id);
@@ -69,10 +63,7 @@ public class MixinDimensionManager {
 
     @Inject(
             method = "getProviderType",
-            at = @At(
-                    shift = At.Shift.BEFORE,
-                    value = "INVOKE",
-                    target = "Ljava/lang/String;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"),
+            at = @At(target = "java/lang/IllegalArgumentException", value = "NEW"),
             remap = false)
     private static void hodgepodge$beforeThrowOnGetProviderType(int dim, CallbackInfoReturnable<Integer> cir) {
         log(dim);
@@ -82,13 +73,13 @@ public class MixinDimensionManager {
     private static void log(int id) {
         Common.log.warn("DimensionManager crashed!");
         Common.log.warn("dimension id: " + id);
-        Common.log.warn("logs for `registerDimension`:");
+        Common.log.warn("logs for 'registerDimension':");
         if (registerLogs != null && registerLogs.containsKey(id)) {
             Common.log.warn(registerLogs.get(id));
         } else {
             Common.log.warn("not available");
         }
-        Common.log.warn("logs for `unregisterDimension`:");
+        Common.log.warn("logs for 'unregisterDimension':");
         if (unregisterLogs != null && unregisterLogs.containsKey(id)) {
             Common.log.warn(unregisterLogs.get(id));
         } else {

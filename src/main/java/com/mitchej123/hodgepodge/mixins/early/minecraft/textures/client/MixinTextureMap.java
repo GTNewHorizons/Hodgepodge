@@ -26,7 +26,7 @@ public abstract class MixinTextureMap extends AbstractTexture {
     private List<TextureAtlasSprite> listAnimatedSprites;
 
     @Unique
-    private static final Minecraft mc = Minecraft.getMinecraft();
+    private static final Minecraft MC = Minecraft.getMinecraft();
 
     /**
      * @author laetansky
@@ -39,7 +39,7 @@ public abstract class MixinTextureMap extends AbstractTexture {
         boolean renderAllAnimations = HodgepodgeClient.animationsMode.is(AnimationMode.ALL);
         boolean renderVisibleAnimations = HodgepodgeClient.animationsMode.is(AnimationMode.VISIBLE_ONLY);
 
-        mc.mcProfiler.startSection("updateAnimations");
+        MC.mcProfiler.startSection("updateAnimations");
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.getGlTextureId());
         // C Style loop should be faster
         int size = listAnimatedSprites.size();
@@ -48,14 +48,14 @@ public abstract class MixinTextureMap extends AbstractTexture {
             IPatchedTextureAtlasSprite patchedTextureAtlasSprite = ((IPatchedTextureAtlasSprite) textureAtlasSprite);
 
             if (renderAllAnimations || (renderVisibleAnimations && patchedTextureAtlasSprite.needsAnimationUpdate())) {
-                mc.mcProfiler.startSection(textureAtlasSprite.getIconName());
+                MC.mcProfiler.startSection(textureAtlasSprite.getIconName());
                 textureAtlasSprite.updateAnimation();
                 patchedTextureAtlasSprite.unmarkNeedsAnimationUpdate();
-                mc.mcProfiler.endSection();
+                MC.mcProfiler.endSection();
             } else {
                 patchedTextureAtlasSprite.updateAnimationsDryRun();
             }
         }
-        mc.mcProfiler.endSection();
+        MC.mcProfiler.endSection();
     }
 }

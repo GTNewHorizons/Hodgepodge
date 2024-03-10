@@ -39,11 +39,8 @@ public class MixinTileWandPedestal extends TileThaumcraft {
         AspectList as = wand.getAspectsWithRoom(wandstack);
         if (as != null && as.size() > 0) {
             for (Aspect aspect : as.getAspects()) {
-                int drained = VisNetHandler.drainVis(this.worldObj, this.xCoord, this.yCoord, this.zCoord, aspect, 25); // Pedestal
-                                                                                                                        // operates
-                                                                                                                        // every
-                                                                                                                        // 5
-                                                                                                                        // tick
+                // Pedestal operates every 5 ticks
+                int drained = VisNetHandler.drainVis(this.worldObj, this.xCoord, this.yCoord, this.zCoord, aspect, 25);
                 if (drained > 0) {
                     wand.addRealVis(wandstack, aspect, drained, true);
                 }

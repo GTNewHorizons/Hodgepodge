@@ -25,9 +25,8 @@ public abstract class MixinEntityPlayer {
     @Inject(
             method = "onLivingUpdate",
             at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/World;getEntitiesWithinAABBExcludingEntity(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/AxisAlignedBB;)Ljava/util/List;",
-                    shift = At.Shift.AFTER))
+                    value = "INVOKE_ASSIGN",
+                    target = "Lnet/minecraft/world/World;getEntitiesWithinAABBExcludingEntity(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/AxisAlignedBB;)Ljava/util/List;"))
     public void hodgepodge$resetItemCounter(CallbackInfo ci,
             @Share("itemEntityCounter") LocalIntRef itemEntityCounter) {
         itemEntityCounter.set(0);
@@ -42,7 +41,7 @@ public abstract class MixinEntityPlayer {
                     from = @At(
                             value = "INVOKE",
                             target = "Lnet/minecraft/world/World;getEntitiesWithinAABBExcludingEntity(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/AxisAlignedBB;)Ljava/util/List;")))
-    public void hodgepodge$ThrottleItemPickupEvent(EntityPlayer instance, Entity entity,
+    public void hodgepodge$throttleItemPickupEvent(EntityPlayer instance, Entity entity,
             @Share("itemEntityCounter") LocalIntRef itemEntityCounter) {
         if (entity instanceof EntityItem) {
             if (itemEntityCounter.get() < FixesConfig.itemStacksPickedUpPerTick) {

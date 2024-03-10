@@ -19,7 +19,7 @@ public class MixinRecipeUnEnchanting {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/enchantment/EnchantmentHelper;setEnchantments(Ljava/util/Map;Lnet/minecraft/item/ItemStack;)V"))
-    public void onEnchantmentApplied(@SuppressWarnings("rawtypes") Map map, ItemStack stack) {
+    public void onEnchantmentApplied(Map<Integer, Integer> map, ItemStack stack) {
         EnchantmentHelper.setEnchantments(map, stack);
         stack.stackSize = 1;
     }

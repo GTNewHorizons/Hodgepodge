@@ -18,12 +18,12 @@ import squeek.applecore.api.food.FoodValues;
 @Mixin(ModuleHarvestCraft.class)
 public class MixinHungerOverhaulModuleHarvestCraft {
 
-    private static final Map<Item, FoodValues> foodValuesMap;
+    private static final Map<Item, FoodValues> FOOD_VALUES;
 
     static {
-        foodValuesMap = new HashMap<>();
-        foodValuesMap.put(ItemRegistry.coffeeItem, new FoodValues(2, 0.1F));
-        foodValuesMap.put(ItemRegistry.chaiteaItem, new FoodValues(2, 0.1F));
+        FOOD_VALUES = new HashMap<>();
+        FOOD_VALUES.put(ItemRegistry.coffeeItem, new FoodValues(2, 0.1F));
+        FOOD_VALUES.put(ItemRegistry.chaiteaItem, new FoodValues(2, 0.1F));
     }
 
     @Redirect(
@@ -33,7 +33,7 @@ public class MixinHungerOverhaulModuleHarvestCraft {
                     target = "Liguanaman/hungeroverhaul/food/FoodModifier;setModifiedFoodValues(Lnet/minecraft/item/Item;Lsqueek/applecore/api/food/FoodValues;)V"),
             remap = false)
     private static void patchFoodValue(Item item, FoodValues foodValue) {
-        FoodValues patchedFoodValue = foodValuesMap.get(item);
+        FoodValues patchedFoodValue = FOOD_VALUES.get(item);
         FoodModifier.setModifiedFoodValues(item, patchedFoodValue != null ? patchedFoodValue : foodValue);
     }
 }

@@ -12,7 +12,7 @@ import com.mitchej123.hodgepodge.config.TweaksConfig;
 public class MixinC01PacketChatMessage_LongerMessages {
 
     @ModifyConstant(method = { "<init>(Ljava/lang/String;)V", "readPacketData" }, constant = @Constant(intValue = 100))
-    public int hodgepodge$LongerMessages(int constant) {
+    public int hodgepodge$longerMessages(int constant) {
         return TweaksConfig.longerSentMessages ? 256 : constant;
     }
 }
