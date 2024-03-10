@@ -14,17 +14,17 @@ configurations {
 dependencies {
     api("com.github.GTNewHorizons:GTNHLib:0.2.10:dev")
 
-    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.5.21-GTNH:dev") // force a more up-to-date NEI version
-    transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-328-GTNH")
+    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.5.24-GTNH:dev") // force a more up-to-date NEI version
+    transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-336-GTNH")
     transformedModCompileOnly("com.github.GTNewHorizons:Baubles:1.0.4:dev")
     // Transitive updates to make runClient17 work
     transformedModCompileOnly("com.github.GTNewHorizons:ForgeMultipart:1.4.8:dev")
-    transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.45.82:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.45.95:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:harvestcraft:1.1.10-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:HungerOverhaul:1.1.0-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:MrTJPCore:1.1.6:dev") // Do not update, fixed afterwards
-    transformedModCompileOnly("com.github.GTNewHorizons:Railcraft:9.15.5:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
-    transformedModCompileOnly("com.github.GTNewHorizons:TinkersConstruct:1.11.11-GTNH:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:Railcraft:9.15.6:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
+    transformedModCompileOnly("com.github.GTNewHorizons:TinkersConstruct:1.11.12-GTNH:dev")
     transformedModCompileOnly(deobfCurse("bibliocraft-228027:2423369"))
     transformedModCompileOnly("curse.maven:biomes-o-plenty-220318:2499612")
     transformedModCompileOnly("curse.maven:cofh-core-69162:2388751")
