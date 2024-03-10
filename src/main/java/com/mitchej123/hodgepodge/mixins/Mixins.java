@@ -655,6 +655,9 @@ public enum Mixins {
     ZTONES_PACKET_FIX(new Builder("Packet Fix").addMixinClasses("ztones.MixinZtonesPatchPacketExploits")
             .setPhase(Phase.LATE).setSide((Side.BOTH)).setApplyIf(() -> FixesConfig.fixZTonesPackets)
             .addTargetedMod(TargetedMod.ZTONES)),
+    ASP_RECIPE_FIX(new Builder("MT Core recipe fix").addMixinClasses("advancedsolarpanels.MixinAdvancedSolarPanel")
+            .addTargetedMod(TargetedMod.ADVANCED_SOLAR_PANELS).setApplyIf(() -> FixesConfig.fixMTCoreRecipe)
+            .setPhase(Phase.LATE).setSide(Side.BOTH)),
 
     // Unbind Keybinds by default
     UNBIND_KEYS_TRAVELLERSGEAR(new Builder("Unbind Traveller's Gear keybinds")

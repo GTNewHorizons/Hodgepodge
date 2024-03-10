@@ -5,6 +5,7 @@ import cpw.mods.fml.common.Mod;
 public enum TargetedMod {
 
     // NOTE: This doesn't work - late mods need a modid, not a coremod class
+    ADVANCED_SOLAR_PANELS("Advanced Solar Panels", null, "AdvancedSolarPanel"),
     ANGELICA("Angelica", "com.gtnewhorizons.angelica.loading.AngelicaTweaker", "angelica"),
     ARCHAICFIX("ArchaicFix", "org.embeddedt.archaicfix.ArchaicCore", "archaicfix"),
     AUTOMAGY("Automagy", null, "Automagy"),
