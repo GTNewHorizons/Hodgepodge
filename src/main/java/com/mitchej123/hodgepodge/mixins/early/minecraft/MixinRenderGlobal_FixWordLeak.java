@@ -39,7 +39,9 @@ public abstract class MixinRenderGlobal_FixWordLeak {
 
             if (worldRenderers != null) {
                 for (WorldRenderer worldRenderer : worldRenderers) {
-                    worldRenderer.stopRendering();
+                    if (worldRenderer != null) {
+                        worldRenderer.stopRendering();
+                    }
                 }
             }
 
