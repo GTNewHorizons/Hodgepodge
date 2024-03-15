@@ -431,6 +431,13 @@ public enum Mixins {
                     .addMixinClasses("minecraft.MixinWorldServer_LimitUpdateRecursion")
                     .setApplyIf(() -> FixesConfig.limitRecursiveBlockUpdateDepth >= 0)),
 
+    FAST_CHUNK_LOADING(new Builder("Lightly threads chunk generation and loading").setPhase(Phase.EARLY)
+            .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA).addMixinClasses(
+                    "minecraft.fastload.MixinIntCache",
+                    "minecraft.fastload.MixinWorldChunkManager",
+                    "minecraft.fastload.MixinWorldServer")
+            .setApplyIf(() -> SpeedupsConfig.fastChunkHandling)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIc2WaterKinetic").setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
