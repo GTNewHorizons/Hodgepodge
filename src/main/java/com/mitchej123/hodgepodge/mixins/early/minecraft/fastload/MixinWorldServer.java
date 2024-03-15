@@ -1,11 +1,8 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
-import com.mitchej123.hodgepodge.server.FastCPS;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
 import net.minecraft.profiler.Profiler;
 import net.minecraft.world.*;
 import net.minecraft.world.chunk.Chunk;
@@ -14,6 +11,7 @@ import net.minecraft.world.chunk.storage.AnvilChunkLoader;
 import net.minecraft.world.chunk.storage.IChunkLoader;
 import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraft.world.storage.ISaveHandler;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -22,8 +20,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.mitchej123.hodgepodge.server.FastCPS;
+
+import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 @Mixin(WorldServer.class)
 public abstract class MixinWorldServer extends World {
@@ -35,12 +38,19 @@ public abstract class MixinWorldServer extends World {
     @Unique
     private final Object2ObjectOpenHashMap<ChunkCoordIntPair, Chunk> hodgepodge$chunks = new Object2ObjectOpenHashMap<>();
 
-    @WrapOperation(method = "createChunkProvider", at = @At(value = "NEW", target = "(Lnet/minecraft/world/WorldServer;Lnet/minecraft/world/chunk/storage/IChunkLoader;Lnet/minecraft/world/chunk/IChunkProvider;)Lnet/minecraft/world/gen/ChunkProviderServer;"))
-    private ChunkProviderServer hodgepodge$replaceChunkProvider(WorldServer server, IChunkLoader loader, IChunkProvider backingCP, Operation<ChunkProviderServer> original) {
+    @WrapOperation(
+            method = "createChunkProvider",
+            at = @At(
+                    value = "NEW",
+                    target = "(Lnet/minecraft/world/WorldServer;Lnet/minecraft/world/chunk/storage/IChunkLoader;Lnet/minecraft/world/chunk/IChunkProvider;)Lnet/minecraft/world/gen/ChunkProviderServer;"))
+    private ChunkProviderServer hodgepodge$replaceChunkProvider(WorldServer server, IChunkLoader loader,
+            IChunkProvider backingCP, Operation<ChunkProviderServer> original) {
         return new FastCPS(server, (AnvilChunkLoader) loader, backingCP);
     }
 
-    @Inject(method = "func_147456_g", at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;"))
+    @Inject(
+            method = "func_147456_g",
+            at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;"))
     private void hodgepodge$threadChunkGen(CallbackInfo ci) {
 
         this.hodgepodge$chunksToLoad.clear();
@@ -59,7 +69,8 @@ public abstract class MixinWorldServer extends World {
                 cf.complete((Chunk) cps.loadedChunkHashMap.getValueByKey(key));
             } else if (acl.chunkExists(this, c.chunkXPos, c.chunkZPos)) {
 
-                // The chunk exists on disk, but needs to be loaded. Trivially threaded, forge already has functions for that.
+                // The chunk exists on disk, but needs to be loaded. Trivially threaded, forge already has functions for
+                // that.
                 ((FastCPS) this.theChunkProviderServer).queueDiskLoad(c.chunkXPos, c.chunkZPos, key, cf);
             } else {
 
@@ -75,18 +86,26 @@ public abstract class MixinWorldServer extends World {
         Object2ObjectMaps.fastForEach(this.hodgepodge$chunksToLoad, e -> {
             try {
                 this.hodgepodge$chunks.put(e.getKey(), e.getValue().get());
-            } catch (InterruptedException | ExecutionException ex) { throw new RuntimeException(ex); }
+            } catch (InterruptedException | ExecutionException ex) {
+                throw new RuntimeException(ex);
+            }
         });
     }
 
-    @Redirect(method = "func_147456_g", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/WorldServer;getChunkFromChunkCoords(II)Lnet/minecraft/world/chunk/Chunk;"))
-    private Chunk hodgepodge$threadChunkGen(WorldServer instance, int cx, int cz, @Local(ordinal = 0) ChunkCoordIntPair c) {
+    @Redirect(
+            method = "func_147456_g",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/WorldServer;getChunkFromChunkCoords(II)Lnet/minecraft/world/chunk/Chunk;"))
+    private Chunk hodgepodge$threadChunkGen(WorldServer instance, int cx, int cz,
+            @Local(ordinal = 0) ChunkCoordIntPair c) {
 
         final Chunk ch = this.hodgepodge$chunks.get(c);
         return ch != null ? ch : this.chunkProvider.provideChunk(cx, cz);
     }
 
-    public MixinWorldServer(ISaveHandler p_i45368_1_, String p_i45368_2_, WorldProvider p_i45368_3_, WorldSettings p_i45368_4_, Profiler p_i45368_5_) {
+    public MixinWorldServer(ISaveHandler p_i45368_1_, String p_i45368_2_, WorldProvider p_i45368_3_,
+            WorldSettings p_i45368_4_, Profiler p_i45368_5_) {
         super(p_i45368_1_, p_i45368_2_, p_i45368_3_, p_i45368_4_, p_i45368_5_);
     }
 }

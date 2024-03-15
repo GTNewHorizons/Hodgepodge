@@ -432,7 +432,8 @@ public enum Mixins {
                     .setApplyIf(() -> FixesConfig.limitRecursiveBlockUpdateDepth >= 0)),
 
     FAST_CHUNK_LOADING(new Builder("Lightly threads chunk generation and loading").setPhase(Phase.EARLY)
-            .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA).addMixinClasses(
+            .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses(
                     "minecraft.fastload.MixinIntCache",
                     "minecraft.fastload.MixinWorldChunkManager",
                     "minecraft.fastload.MixinWorldServer")

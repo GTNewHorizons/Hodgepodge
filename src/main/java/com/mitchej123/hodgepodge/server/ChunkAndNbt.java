@@ -4,6 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.chunk.Chunk;
 
 public class ChunkAndNbt {
+
     private final Chunk chunk;
     private final NBTTagCompound nbt;
 
@@ -12,7 +13,11 @@ public class ChunkAndNbt {
         this.nbt = nbt;
     }
 
-    public Chunk getChunk() { return this.chunk; }
+    public Chunk getChunk() {
+        return this.chunk;
+    }
 
-    public NBTTagCompound getNbt() { return this.nbt; }
+    public NBTTagCompound getNbt() {
+        return this.nbt;
+    }
 }

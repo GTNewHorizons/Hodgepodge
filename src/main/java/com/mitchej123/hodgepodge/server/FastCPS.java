@@ -1,9 +1,14 @@
 package com.mitchej123.hodgepodge.server;
 
-import com.mitchej123.hodgepodge.Common;
-import cpw.mods.fml.common.registry.GameRegistry;
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import static com.mitchej123.hodgepodge.Common.log;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import net.minecraft.block.Block;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
@@ -28,14 +33,9 @@ import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.ChunkDataEvent;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import static com.mitchej123.hodgepodge.Common.log;
+import cpw.mods.fml.common.registry.GameRegistry;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 public class FastCPS extends ChunkProviderServer {
 
@@ -54,8 +54,8 @@ public class FastCPS extends ChunkProviderServer {
     private final int maxWorkers = 6;
     private final ExecutorService workers = Executors.newFixedThreadPool(maxWorkers);
     // A thread-local copy of the backing world generator
-    private final ThreadLocal<IChunkProvider> localProvider =
-            ThreadLocal.withInitial(() -> this.worldObj.provider.createChunkGenerator());
+    private final ThreadLocal<IChunkProvider> localProvider = ThreadLocal
+            .withInitial(() -> this.worldObj.provider.createChunkGenerator());
 
     public FastCPS(WorldServer worldObj, AnvilChunkLoader loader, IChunkProvider backingCP) {
         super(worldObj, loader, backingCP);
@@ -90,7 +90,9 @@ public class FastCPS extends ChunkProviderServer {
 
         try {
             return this.decorateChunk(cf.get(), cx, cz, key);
-        } catch (InterruptedException | ExecutionException e) { throw new RuntimeException(e); }
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -118,8 +120,8 @@ public class FastCPS extends ChunkProviderServer {
     }
 
     /**
-     * Attempt to decorate a generated chunk, meant to run on only one thread at a time (but that doesn't have to be
-     * the main thread). Does no safety checks, be careful!
+     * Attempt to decorate a generated chunk, meant to run on only one thread at a time (but that doesn't have to be the
+     * main thread). Does no safety checks, be careful!
      */
     public Chunk decorateChunk(Chunk chunk, int cx, int cz, long key) {
 
@@ -165,8 +167,10 @@ public class FastCPS extends ChunkProviderServer {
                         chunk.addEntity(entity);
                         Entity riderEntity = entity;
 
-                        for (NBTTagCompound tmpEntityTag = entityTag; tmpEntityTag.hasKey("Riding", 10); tmpEntityTag = tmpEntityTag.getCompoundTag("Riding")) {
-                            final Entity riddenEntity = EntityList.createEntityFromNBT(tmpEntityTag.getCompoundTag("Riding"), this.worldObj);
+                        for (NBTTagCompound tmpEntityTag = entityTag; tmpEntityTag
+                                .hasKey("Riding", 10); tmpEntityTag = tmpEntityTag.getCompoundTag("Riding")) {
+                            final Entity riddenEntity = EntityList
+                                    .createEntityFromNBT(tmpEntityTag.getCompoundTag("Riding"), this.worldObj);
 
                             if (riddenEntity != null) {
 
@@ -205,6 +209,7 @@ public class FastCPS extends ChunkProviderServer {
      * Loading a chunk from disk requires some synchronous action, do it here. Despite taking a
      * {@link CompletableFuture}, this is NOT meant to be run on multiple threads at a time - but it doesn't have to be
      * run on the main thread.
+     * 
      * @param cnbt If this is null, blocks and generates the chunk instead
      */
     public Chunk finishChunkFromDisk(ChunkAndNbt cnbt, int cx, int cz, long key) {
@@ -224,12 +229,12 @@ public class FastCPS extends ChunkProviderServer {
                 for (int j1 = 0; j1 < tileTicks.tagCount(); ++j1) {
                     final NBTTagCompound tickTag = tileTicks.getCompoundTagAt(j1);
                     this.worldObj.func_147446_b(
-                        tickTag.getInteger("x"),
-                        tickTag.getInteger("y"),
-                        tickTag.getInteger("z"),
-                        Block.getBlockById(tickTag.getInteger("i")),
-                        tickTag.getInteger("t"),
-                        tickTag.getInteger("p"));
+                            tickTag.getInteger("x"),
+                            tickTag.getInteger("y"),
+                            tickTag.getInteger("z"),
+                            Block.getBlockById(tickTag.getInteger("i")),
+                            tickTag.getInteger("t"),
+                            tickTag.getInteger("p"));
                 }
             }
         }
@@ -257,17 +262,20 @@ public class FastCPS extends ChunkProviderServer {
     }
 
     /**
-     * marks chunk for unload by "unload100OldestChunks"  if there is no spawn point, or if the center of the chunk is
+     * marks chunk for unload by "unload100OldestChunks" if there is no spawn point, or if the center of the chunk is
      * outside 200 blocks (x or z) of the spawn
      */
     @Override
     public void unloadChunksIfNotNearSpawn(int cx, int cz) {
-        if (this.worldObj.provider.canRespawnHere() && DimensionManager.shouldLoadSpawn(this.worldObj.provider.dimensionId)) {
+        if (this.worldObj.provider.canRespawnHere()
+                && DimensionManager.shouldLoadSpawn(this.worldObj.provider.dimensionId)) {
             final ChunkCoordinates chunkcoordinates = this.worldObj.getSpawnPoint();
             int xBlocksFromSpawn = cx * 16 + 8 - chunkcoordinates.posX;
             int zBlocksFromSpawn = cz * 16 + 8 - chunkcoordinates.posZ;
 
-            if (xBlocksFromSpawn < -128 || xBlocksFromSpawn > 128 || zBlocksFromSpawn < -128 || zBlocksFromSpawn > 128) {
+            if (xBlocksFromSpawn < -128 || xBlocksFromSpawn > 128
+                    || zBlocksFromSpawn < -128
+                    || zBlocksFromSpawn > 128) {
                 this.chunksToUnload.add(ChunkCoordIntPair.chunkXZ2Int(cx, cz));
             }
         } else {
@@ -296,8 +304,8 @@ public class FastCPS extends ChunkProviderServer {
     }
 
     /**
-     * Loads the chunk specified. If it doesn't exist on disk, it will be generated. The callback passed will be run
-     * on loading. Blocks until chunk is ready. This method runs on mServer, and is thus forbidden from decoration.
+     * Loads the chunk specified. If it doesn't exist on disk, it will be generated. The callback passed will be run on
+     * loading. Blocks until chunk is ready. This method runs on mServer, and is thus forbidden from decoration.
      */
     @Override
     public Chunk loadChunk(int cx, int cz, Runnable runnable) {
@@ -305,8 +313,8 @@ public class FastCPS extends ChunkProviderServer {
         long key = ChunkCoordIntPair.chunkXZ2Int(cx, cz);
         this.chunksToUnload.remove(key);
 
-        //while (this.loadingChunks.contains(key))
-        //    LockSupport.parkNanos(1000);
+        // while (this.loadingChunks.contains(key))
+        // LockSupport.parkNanos(1000);
 
         Chunk chunk = (Chunk) this.loadedChunkHashMap.getValueByKey(key);
         AnvilChunkLoader loader = (AnvilChunkLoader) this.currentChunkLoader;
@@ -324,39 +332,42 @@ public class FastCPS extends ChunkProviderServer {
                     this.mChunk.execute(() -> {
                         try {
                             this.finishChunkFromDisk(cf.get(), cx, cz, key);
-                        } catch (InterruptedException | ExecutionException e) { throw new RuntimeException(e); }
+                        } catch (InterruptedException | ExecutionException e) {
+                            throw new RuntimeException(e);
+                        }
                         runnable.run();
                     });
                     return null;
                 } else {
 
                     // Punt to the main worker
-                    if (this.isMChunk.get())
-                        return this.loadChunkFromDisk(cx, cz, key);
+                    if (this.isMChunk.get()) return this.loadChunkFromDisk(cx, cz, key);
 
                     final CompletableFuture<Chunk> cf = new CompletableFuture<>();
                     this.mChunk.execute(() -> cf.complete(this.loadChunkFromDisk(cx, cz, key)));
                     try {
                         chunk = cf.get();
-                    } catch (InterruptedException | ExecutionException e) { throw new RuntimeException(e); }
+                    } catch (InterruptedException | ExecutionException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             } else {
 
                 // Punt to main generator
-                if (this.isMChunk.get())
-                    return this.generateChunk(cx, cz, key);
+                if (this.isMChunk.get()) return this.generateChunk(cx, cz, key);
 
                 final CompletableFuture<Chunk> cf = new CompletableFuture<>();
                 this.mChunk.execute(() -> cf.complete(this.generateChunk(cx, cz, key)));
                 try {
                     chunk = cf.get();
-                } catch (InterruptedException | ExecutionException e) { throw new RuntimeException(e); }
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
         // If we didn't load the chunk async and have a callback run it now
-        if (runnable != null)
-            runnable.run();
+        if (runnable != null) runnable.run();
 
         return chunk;
     }
@@ -370,11 +381,14 @@ public class FastCPS extends ChunkProviderServer {
         this.chunksToUnload.remove(key);
         Chunk chunk = (Chunk) this.loadedChunkHashMap.getValueByKey(key);
 
-        if (chunk != null)
-            return chunk;
+        if (chunk != null) return chunk;
 
         if (!loadingChunks.add(key)) {
-            cpw.mods.fml.common.FMLLog.bigWarning("There is an attempt to load a chunk (%d,%d) in dimension %d that is already being loaded. This will cause weird chunk breakages.", cx, cz, worldObj.provider.dimensionId);
+            cpw.mods.fml.common.FMLLog.bigWarning(
+                    "There is an attempt to load a chunk (%d,%d) in dimension %d that is already being loaded. This will cause weird chunk breakages.",
+                    cx,
+                    cz,
+                    worldObj.provider.dimensionId);
         }
 
         chunk = ForgeChunkManager.fetchDormantChunk(key, this.worldObj);
@@ -385,10 +399,9 @@ public class FastCPS extends ChunkProviderServer {
         final boolean shouldGen = chunk == null;
         final CompletableFuture<Chunk> cf = new CompletableFuture<>();
         final Chunk finalChunk = chunk; // java why do I have to do this, this isn't even a deep copy
-        this.mChunk.execute(() -> cf.complete(
-            shouldGen
-            ? this.generateChunk(cx, cz, key)
-            : this.decorateChunk(finalChunk, cx, cz, key)));
+        this.mChunk.execute(
+                () -> cf.complete(
+                        shouldGen ? this.generateChunk(cx, cz, key) : this.decorateChunk(finalChunk, cx, cz, key)));
 
         try {
             return cf.get();
@@ -404,7 +417,8 @@ public class FastCPS extends ChunkProviderServer {
     @Override
     public Chunk provideChunk(int cx, int cz) {
         Chunk chunk = (Chunk) this.loadedChunkHashMap.getValueByKey(ChunkCoordIntPair.chunkXZ2Int(cx, cz));
-        return chunk == null ? (!this.worldObj.findingSpawnPoint && !this.loadChunkOnProvideRequest ? this.empty : this.loadChunk(cx, cz)) : chunk;
+        return chunk == null ? (!this.worldObj.findingSpawnPoint && !this.loadChunkOnProvideRequest ? this.empty
+                : this.loadChunk(cx, cz)) : chunk;
     }
 
     /**
@@ -416,8 +430,8 @@ public class FastCPS extends ChunkProviderServer {
             return null;
         } else {
             final CompletableFuture<Chunk> cf = new CompletableFuture<>();
-            this.mChunk.execute(
-                () -> cf.complete(this.loadChunkFromDisk(cx, cz, ChunkCoordIntPair.chunkXZ2Int(cx, cz))));
+            this.mChunk
+                    .execute(() -> cf.complete(this.loadChunkFromDisk(cx, cz, ChunkCoordIntPair.chunkXZ2Int(cx, cz))));
 
             try {
                 return cf.get();
@@ -476,8 +490,8 @@ public class FastCPS extends ChunkProviderServer {
     }
 
     /**
-     * Two modes of operation: if passed true, save all Chunks in one go.  If passed false, save up to two chunks.
-     * Return true if all chunks have been saved.
+     * Two modes of operation: if passed true, save all Chunks in one go. If passed false, save up to two chunks. Return
+     * true if all chunks have been saved.
      */
     @Override
     public boolean saveChunks(boolean oneshot, IProgressUpdate p_73151_2_) {
@@ -506,7 +520,7 @@ public class FastCPS extends ChunkProviderServer {
     }
 
     /**
-     * Save extra data not associated with any Chunk.  Not saved during autosave, only during world unload.  Currently
+     * Save extra data not associated with any Chunk. Not saved during autosave, only during world unload. Currently
      * unimplemented.
      */
     @Override
@@ -536,8 +550,11 @@ public class FastCPS extends ChunkProviderServer {
                         this.safeSaveChunk(chunk);
                         this.safeSaveExtraChunkData(chunk);
                         this.loadedChunks.remove(chunk);
-                        ForgeChunkManager.putDormantChunk(ChunkCoordIntPair.chunkXZ2Int(chunk.xPosition, chunk.zPosition), chunk);
-                        if (loadedChunks.isEmpty() && ForgeChunkManager.getPersistentChunksFor(this.worldObj).isEmpty() && !DimensionManager.shouldLoadSpawn(this.worldObj.provider.dimensionId)){
+                        ForgeChunkManager.putDormantChunk(
+                                ChunkCoordIntPair.chunkXZ2Int(chunk.xPosition, chunk.zPosition),
+                                chunk);
+                        if (loadedChunks.isEmpty() && ForgeChunkManager.getPersistentChunksFor(this.worldObj).isEmpty()
+                                && !DimensionManager.shouldLoadSpawn(this.worldObj.provider.dimensionId)) {
                             DimensionManager.unloadWorld(this.worldObj.provider.dimensionId);
                             return currentChunkProvider.unloadQueuedChunks();
                         }
@@ -571,7 +588,9 @@ public class FastCPS extends ChunkProviderServer {
      */
     @Override
     public String makeString() {
-        return "ServerChunkCache: " + this.loadedChunkHashMap.getNumHashElements() + " Drop: " + this.chunksToUnload.size();
+        return "ServerChunkCache: " + this.loadedChunkHashMap.getNumHashElements()
+                + " Drop: "
+                + this.chunksToUnload.size();
     }
 
     /**
