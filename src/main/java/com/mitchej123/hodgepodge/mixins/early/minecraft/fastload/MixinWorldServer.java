@@ -6,6 +6,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import com.mitchej123.hodgepodge.hax.LongChunkCoordIntPairSet;
+import com.mitchej123.hodgepodge.mixins.interfaces.FastWorldServer;
 import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMaps;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
@@ -20,6 +21,7 @@ import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraft.world.storage.ISaveHandler;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,7 +36,7 @@ import com.mitchej123.hodgepodge.server.FastCPS;
 import static com.mitchej123.hodgepodge.Common.log;
 
 @Mixin(WorldServer.class)
-public abstract class MixinWorldServer extends World {
+public abstract class MixinWorldServer extends World implements FastWorldServer {
 
     @Shadow
     public ChunkProviderServer theChunkProviderServer;
@@ -45,19 +47,31 @@ public abstract class MixinWorldServer extends World {
     @Unique
     private int hodgepodge$numNewGen = 0;
     @Unique
-    private int hodgepodge$maxNewGen = 200;
+    private int hodgepodge$maxNewGen = 100;
     @Unique
     private LongChunkCoordIntPairSet hodgepodge$activeChunks2 = new LongChunkCoordIntPairSet();
-    @Unique
-    private LongChunkCoordIntPairSet hodgepodge$activeChunks3;
 
-    @WrapOperation(
+    @Override
+    public boolean isThrottlingGen() {
+        return this.hodgepodge$numNewGen < this.hodgepodge$maxNewGen;
+    }
+
+    @Override
+    public int remainingGenBudget() {
+        return this.hodgepodge$maxNewGen - this.hodgepodge$numNewGen;
+    }
+
+    @Override
+    public void spendGenBudget(int amount) {
+        this.hodgepodge$numNewGen += amount;
+    }
+
+    @Redirect(
             method = "createChunkProvider",
             at = @At(
                     value = "NEW",
                     target = "(Lnet/minecraft/world/WorldServer;Lnet/minecraft/world/chunk/storage/IChunkLoader;Lnet/minecraft/world/chunk/IChunkProvider;)Lnet/minecraft/world/gen/ChunkProviderServer;"))
-    private ChunkProviderServer hodgepodge$replaceChunkProvider(WorldServer server, IChunkLoader loader,
-            IChunkProvider backingCP, Operation<ChunkProviderServer> original) {
+    private ChunkProviderServer hodgepodge$replaceChunkProvider(WorldServer server, IChunkLoader loader, IChunkProvider backingCP) {
         return new FastCPS(server, (AnvilChunkLoader) loader, backingCP);
     }
 
@@ -66,6 +80,7 @@ public abstract class MixinWorldServer extends World {
             at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;"))
     private void hodgepodge$threadChunkGen(CallbackInfo ci) {
 
+        this.hodgepodge$chunks.clear();
         this.hodgepodge$chunksToLoad.clear();
         this.hodgepodge$numNewGen = 0;
         this.hodgepodge$activeChunks2.clear();
@@ -109,9 +124,9 @@ public abstract class MixinWorldServer extends World {
         }
 
         // This little shuffle is needed to swap two variables
-        this.hodgepodge$activeChunks3 = (LongChunkCoordIntPairSet) this.activeChunkSet;
+        LongChunkCoordIntPairSet tmp = (LongChunkCoordIntPairSet) this.activeChunkSet;
         this.activeChunkSet = this.hodgepodge$activeChunks2;
-        this.hodgepodge$activeChunks2 = this.hodgepodge$activeChunks3;
+        this.hodgepodge$activeChunks2 = tmp;
 
         // All mChunk updates need to finish before the tick ends, to avoid CMEs... at least for now.
         // Guarantee that no chunks are still processing before moving on

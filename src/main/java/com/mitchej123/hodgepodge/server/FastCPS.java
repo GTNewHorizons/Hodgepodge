@@ -614,4 +614,22 @@ public class FastCPS extends ChunkProviderServer {
         return this.loadedChunkHashMap.getNumHashElements();
     }
 
+    /**
+     * See {@link #doesChunkExist(int, int, long)}
+     */
+    public boolean doesChunkExist(ChunkCoordIntPair coords) {
+
+        final long key = ChunkCoordIntPair.chunkXZ2Int(coords.chunkXPos, coords.chunkZPos);
+        return this.doesChunkExist(coords.chunkXPos, coords.chunkZPos, key);
+    }
+
+    /**
+     * Given chunk coordinates, returns whether that chunk has been generated already.
+     */
+    public boolean doesChunkExist(int cx, int cz, long key) {
+
+        if (this.loadedChunkHashMap.containsItem(key)) return true;
+        return ((AnvilChunkLoader) this.currentChunkLoader).chunkExists(this.worldObj, cx, cz);
+    }
+
 }
