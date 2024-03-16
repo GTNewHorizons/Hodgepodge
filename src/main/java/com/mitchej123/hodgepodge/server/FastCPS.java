@@ -411,14 +411,17 @@ public class FastCPS extends ChunkProviderServer {
     }
 
     /**
-     * Will return back a chunk, if it doesn't exist and its not a MP client it will generates all the blocks for the
-     * specified chunk from the map seed and chunk seed
+     * Provides the chunk, if it's been loaded. Otherwise, if {@link World#findingSpawnPoint} or
+     * {@link #loadChunkOnProvideRequest}, loads/generates the chunk. If neither is true, returns empty.
      */
     @Override
     public Chunk provideChunk(int cx, int cz) {
         Chunk chunk = (Chunk) this.loadedChunkHashMap.getValueByKey(ChunkCoordIntPair.chunkXZ2Int(cx, cz));
-        return chunk == null ? (!this.worldObj.findingSpawnPoint && !this.loadChunkOnProvideRequest ? this.empty
-                : this.loadChunk(cx, cz)) : chunk;
+        return chunk != null
+            ? chunk
+            : this.worldObj.findingSpawnPoint || this.loadChunkOnProvideRequest
+                ? this.loadChunk(cx, cz)
+                : this.empty;
     }
 
     /**
