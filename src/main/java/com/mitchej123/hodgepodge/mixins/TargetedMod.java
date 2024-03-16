@@ -44,7 +44,7 @@ public enum TargetedMod {
     TINKERSCONSTRUCT("TConstruct", null, "TConstruct"),
     TRAVELLERSGEAR("TravellersGear", null, "TravellersGear"),
     VANILLA("Minecraft", null),
-    VOXELMAP("VoxelMap", "com.thevoxelbox.voxelmap.litemod.VoxelMapTransformer", "VoxelMap"),
+    VOXELMAP("VoxelMap", "com.thevoxelbox.voxelmap.litemod.VoxelMapTransformer", "voxelmap"),
     WITCHERY("Witchery", null, "witchery"),
     XAEROWORLDMAP("Xaero's World Map", null, "XaeroWorldMap"),
     ZTONES("ZTones", null, "Ztones");
