@@ -85,7 +85,7 @@ public abstract class MixinEntityPlayerMP extends EntityPlayer implements ICraft
         return hodgepodge$dummyPacket;
     }
 
-    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetHandlerPlayServer;sendPacket(Lnet/minecraft/network/Packet;)V"))
+    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetHandlerPlayServer;sendPacket(Lnet/minecraft/network/Packet;)V", ordinal = 1))
     private void hodgepodge$sendChunks(NetHandlerPlayServer instance, Packet enumchatvisibility) {
         for (int i = 0; i < hodgepodge$chunkSends.size(); ++i) {
             instance.sendPacket(new S26PacketMapChunkBulk(this.hodgepodge$chunkSends.get(i)));
