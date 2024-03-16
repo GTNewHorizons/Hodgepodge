@@ -45,7 +45,7 @@ public abstract class MixinWorldServer extends World {
     @Unique
     private int hodgepodge$numNewGen = 0;
     @Unique
-    private int hodgepodge$maxNewGen = 180;
+    private int hodgepodge$maxNewGen = 200;
     @Unique
     private LongChunkCoordIntPairSet hodgepodge$activeChunks2 = new LongChunkCoordIntPairSet();
     @Unique

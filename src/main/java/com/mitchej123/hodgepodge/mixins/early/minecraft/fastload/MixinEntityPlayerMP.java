@@ -51,7 +51,7 @@ public abstract class MixinEntityPlayerMP extends EntityPlayer implements ICraft
         return this.hodgepodge$totalChunks;
     }
 
-    @Inject(method = "onUpdate", at = @At(value = "NEW", target = "()Ljava/util/ArrayList;"))
+    @Inject(method = "onUpdate", at = @At(value = "NEW", target = "()Ljava/util/ArrayList;", ordinal = 0))
     private void hodgepodge$setNumChunks(CallbackInfo ci) {
         this.hodgepodge$totalChunks = 0;
         this.hodgepodge$chunkSends.clear();
@@ -64,7 +64,7 @@ public abstract class MixinEntityPlayerMP extends EntityPlayer implements ICraft
 
     @ModifyExpressionValue(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/play/server/S26PacketMapChunkBulk;func_149258_c()I"))
     private int hodgepodge$maxChunks(int value) {
-        return value * 5;
+        return Integer.MAX_VALUE;
     }
 
     @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;", ordinal = 1))
@@ -77,7 +77,10 @@ public abstract class MixinEntityPlayerMP extends EntityPlayer implements ICraft
 
     @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Ljava/util/ArrayList;isEmpty()Z"))
     private boolean hodgepodge$areChunksEmpty(ArrayList<Chunk> chunks) {
-        return this.hodgepodge$chunkSends.isEmpty();
+
+        if (this.hodgepodge$chunkSends.isEmpty() && chunks.isEmpty()) return true;
+        this.hodgepodge$chunkSends.add(new ObjectImmutableList<>(chunks));
+        return false;
     }
 
     @Redirect(method = "onUpdate", at = @At(value = "NEW", target = "(Ljava/util/List;)Lnet/minecraft/network/play/server/S26PacketMapChunkBulk;"))
@@ -96,8 +99,8 @@ public abstract class MixinEntityPlayerMP extends EntityPlayer implements ICraft
     private void hodgepodge$fasterChunkSend(CallbackInfo ci) {
         for (int i = 0; i < this.hodgepodge$chunkSends.size(); ++i) {
             final ObjectImmutableList<Chunk> chunks = this.hodgepodge$chunkSends.get(i);
-            for (int j = 0; j < chunks.size(); ++j) {
-                final Chunk chunk = chunks.get(j);
+            for (int ii = 0; ii < chunks.size(); ++ii) {
+                final Chunk chunk = chunks.get(ii);
                 this.getServerForPlayer().getEntityTracker().func_85172_a(((EntityPlayerMP) (Object) this), chunk);
                 MinecraftForge.EVENT_BUS.post(new ChunkWatchEvent.Watch(chunk.getChunkCoordIntPair(), ((EntityPlayerMP) (Object) this)));
             }
