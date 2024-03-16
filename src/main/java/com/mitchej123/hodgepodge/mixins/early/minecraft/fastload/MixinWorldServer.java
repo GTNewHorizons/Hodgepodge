@@ -53,7 +53,7 @@ public abstract class MixinWorldServer extends World implements FastWorldServer 
 
     @Override
     public boolean isThrottlingGen() {
-        return this.hodgepodge$numNewGen < this.hodgepodge$maxNewGen;
+        return this.hodgepodge$numNewGen >= this.hodgepodge$maxNewGen;
     }
 
     @Override
