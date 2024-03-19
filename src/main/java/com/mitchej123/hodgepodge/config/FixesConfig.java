@@ -17,6 +17,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean enlargePotionArray;
 
+    @Config.Comment("Fix bogus FMLProxyPacket NPEs on integrated server crashes.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBogusIntegratedServerNPEs;
+
     @Config.Comment("Fix wrapped chat lines missing colors")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
