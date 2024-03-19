@@ -193,7 +193,6 @@ public enum Mixins {
             .setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses(
                     "forge.MixinFMLProxyPacket",
-                    "forge.MixinFMLIndexedMessageToMessageCodec",
                     "forge.MixinNetworkDispatcher",
                     "minecraft.NetworkManagerAccessor")
             .setApplyIf(() -> FixesConfig.fixBogusIntegratedServerNPEs).addTargetedMod(TargetedMod.VANILLA)),

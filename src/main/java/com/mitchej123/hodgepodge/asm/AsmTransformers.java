@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.config.ASMConfig;
+import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 
@@ -20,6 +21,12 @@ public enum AsmTransformers {
             () -> ASMConfig.speedupProgressBar,
             Side.CLIENT,
             "com.mitchej123.hodgepodge.asm.transformers.fml.SpeedupProgressBarTransformer"),
+    FIX_BOGUS_INTEGRATED_SERVER_NPE(
+            "Fix bogus FMLProxyPacket NPEs on integrated server crashes",
+            () -> FixesConfig.fixBogusIntegratedServerNPEs,
+            Side.BOTH,
+            "com.mitchej123.hodgepodge.asm.transformers.fml.FMLIndexedMessageToMessageCodecTransformer"
+    ),
     THERMOS_SLEDGEHAMMER_FURNACE_FIX(
             "Take a sledgehammer to CraftServer.resetRecipes() to prevent it from breaking our Furnace Fix",
             () -> Common.thermosTainted && SpeedupsConfig.speedupVanillaFurnace,
