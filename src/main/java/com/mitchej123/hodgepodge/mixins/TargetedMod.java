@@ -33,6 +33,7 @@ public enum TargetedMod {
     LOTR("The Lord of the rings mod", "lotr.common.coremod.LOTRLoadingPlugin", "lotr"),
     LWJGL3IFY("lwjgl3ify", "me.eigenraven.lwjgl3ify.core.Lwjgl3ifyCoremod", "lwjgl3ify"),
     MINECHEM("Minechem", null, "minechem"),
+    MINEFACTORY_RELOADED("MineFactory Reloaded", null, "MineFactoryReloaded"),
     MRTJPCORE("MrTJPCore", null, "MrTJPCoreMod"),
     NOTENOUGHITEMS("NotEnoughItems", "codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
     OPTIFINE("Optifine", "optifine.OptiFineForgeTweaker", "Optifine"),
@@ -41,6 +42,7 @@ public enum TargetedMod {
     RAILCRAFT("Railcraft", null, "Railcraft"),
     THAUMCRAFT("Thaumcraft", null, "Thaumcraft"), // "thaumcraft.codechicken.core.launch.DepLoader"
     THERMALDYNAMICS("Thermal Dynamics", null, "ThermalDynamics"),
+    THERMALEXPANSION("Thermal Expansion", null, "ThermalExpansion"),
     TINKERSCONSTRUCT("TConstruct", null, "TConstruct"),
     TRAVELLERSGEAR("TravellersGear", null, "TravellersGear"),
     VANILLA("Minecraft", null),
