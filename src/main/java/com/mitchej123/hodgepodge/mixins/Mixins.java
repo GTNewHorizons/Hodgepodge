@@ -500,6 +500,16 @@ public enum Mixins {
             new Builder("Remove CoFH tile entity cache").addMixinClasses("minecraft.MixinWorld_CoFH_TE_Cache")
                     .setSide(Side.BOTH).setApplyIf(() -> ASMConfig.cofhWorldTransformer)
                     .addTargetedMod(TargetedMod.COFH_CORE).setPhase(Phase.EARLY)),
+    MFR_FIX_COFH_VALIDATE(new Builder("Remove CoFH TE cache usage from MFR")
+            .addMixinClasses(
+                    "minefactoryreloaded.MixinTileEntityBase",
+                    "minefactoryreloaded.MixinTileEntityRedNetCable")
+            .addTargetedMod(TargetedMod.MINEFACTORY_RELOADED).setApplyIf(() -> ASMConfig.cofhWorldTransformer)
+            .setPhase(Phase.LATE).setSide(Side.BOTH)),
+    TE_FIX_COFH_VALIDATE(new Builder("Remove CoFH TE cache usage from TE")
+            .addMixinClasses("thermalexpansion.MixinTileInventoryTileLightFalse")
+            .addTargetedMod(TargetedMod.THERMALEXPANSION).setApplyIf(() -> ASMConfig.cofhWorldTransformer)
+            .setPhase(Phase.LATE).setSide(Side.BOTH)),
 
     // Immersive engineering
     JAVA12_IMMERSIVE_ENGINERRING(new Builder("Immersive Engineering Java-12 safe potion array resizing")
