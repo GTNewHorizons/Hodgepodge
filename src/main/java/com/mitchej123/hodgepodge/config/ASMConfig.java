@@ -5,7 +5,7 @@ import com.gtnewhorizon.gtnhlib.config.Config;
 @Config(modid = "hodgepodge", category = "asm")
 public class ASMConfig {
 
-    @Config.Comment("Enable Glease's ASM patch to disable unused CoFH tileentity cache")
+    @Config.Comment("Disable CoFH TileEntity cache (and patch MineFactory Reloaded and Thermal Expansion with a workaround)")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean cofhWorldTransformer;
