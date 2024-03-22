@@ -189,6 +189,13 @@ public enum Mixins {
     FIX_HUGE_CHAT_KICK(new Builder("Fix huge chat kick").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinS02PacketChat").setApplyIf(() -> FixesConfig.fixHugeChatKick)
             .addTargetedMod(TargetedMod.VANILLA)),
+    FIX_BOGUS_INTEGRATED_SERVER_NPE(new Builder("Fix bogus FMLProxyPacket NPEs on integrated server crashes")
+            .setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses(
+                    "forge.MixinFMLProxyPacket",
+                    "forge.MixinNetworkDispatcher",
+                    "minecraft.NetworkManagerAccessor")
+            .setApplyIf(() -> FixesConfig.fixBogusIntegratedServerNPEs).addTargetedMod(TargetedMod.VANILLA)),
 
     FIX_LOGIN_DIMENSION_ID_OVERFLOW(
             new Builder("Fix dimension id overflowing when a player first logins on a server").setPhase(Phase.EARLY)
