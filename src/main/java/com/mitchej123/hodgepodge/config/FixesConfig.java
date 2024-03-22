@@ -452,6 +452,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixIc2ReactorDupe;
 
+    @Config.Comment("Fix IC2 not loading translations from resource packs")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixIc2ResourcePackTranslation;
+
     @Config.Comment("Fixes various unchecked IC2 getBlock() methods")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart

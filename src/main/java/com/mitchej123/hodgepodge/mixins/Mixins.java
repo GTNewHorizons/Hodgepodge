@@ -421,6 +421,10 @@ public enum Mixins {
                     "ic2.MixinIC2ArmorSolarHelmet",
                     "ic2.MixinIC2ArmorStaticBoots")
             .setApplyIf(() -> FixesConfig.fixIc2ArmorLag).addTargetedMod(TargetedMod.IC2)),
+    IC2_RESOURCE_PACK_TRANSLATION_FIX(new Builder("IC2 Resource Pack Translation Fix").setPhase(Phase.EARLY)
+            .setSide(Side.CLIENT)
+            .addMixinClasses("forge.MixinLanguageRegistry", "forge.MixinFMLClientHandler", "ic2.MixinLocalization")
+            .setApplyIf(() -> FixesConfig.fixIc2ResourcePackTranslation).addTargetedMod(TargetedMod.IC2)),
 
     // Disable update checkers
     BIBLIOCRAFT_UPDATE_CHECK(new Builder("Yeet Bibliocraft Update Check").setPhase(Phase.LATE).setSide(Side.CLIENT)
