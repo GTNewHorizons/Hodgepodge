@@ -1,7 +1,5 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload;
 
-import java.util.Iterator;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -21,7 +19,6 @@ import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraft.world.storage.ISaveHandler;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,8 +26,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mitchej123.hodgepodge.server.FastCPS;
 
 import static com.mitchej123.hodgepodge.Common.log;
@@ -47,7 +42,15 @@ public abstract class MixinWorldServer extends World implements FastWorldServer 
     @Unique
     private int hodgepodge$numNewGen = 0;
     @Unique
-    private int hodgepodge$maxNewGen = 100;
+    private final int hodgepodge$maxNewGen = 100;
+    @Unique
+    private int hodgepodge$overLoad = 0;
+    @Unique
+    private int hodgepodge$properActive = 0;
+    @Unique
+    private int hodgepodge$realActive = 0;
+    @Unique
+    private boolean hodgepodge$flag = false;
     @Unique
     private LongChunkCoordIntPairSet hodgepodge$activeChunks2 = new LongChunkCoordIntPairSet();
 
@@ -77,12 +80,25 @@ public abstract class MixinWorldServer extends World implements FastWorldServer 
 
     @Inject(
             method = "func_147456_g",
-            at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;"))
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;func_147456_g()V", shift = At.Shift.AFTER))
     private void hodgepodge$threadChunkGen(CallbackInfo ci) {
+
+        if (this.hodgepodge$properActive != this.hodgepodge$realActive) {
+
+            log.warn("{} active chunks last tick, should have been {}", this.hodgepodge$realActive, this.hodgepodge$properActive);
+        }
+        if (this.hodgepodge$overLoad != 0) {
+            log.warn("{} excess chunks loaded last tick", this.hodgepodge$overLoad);
+            this.hodgepodge$overLoad = 0;
+        }
+
+        this.hodgepodge$flag = false;
 
         this.hodgepodge$chunks.clear();
         this.hodgepodge$chunksToLoad.clear();
         this.hodgepodge$numNewGen = 0;
+        this.hodgepodge$properActive = this.activeChunkSet.size();
+        this.hodgepodge$realActive = 0;
         this.hodgepodge$activeChunks2.clear();
 
         // Queue chunks on worker threads or main
@@ -140,6 +156,7 @@ public abstract class MixinWorldServer extends World implements FastWorldServer 
 
         if (this.hodgepodge$numNewGen != 0) {
             log.info("Generated {} new chunks.", this.hodgepodge$numNewGen);
+            log.info("Loading {} chunks.", this.activeChunkSet.size());
         }
     }
 
@@ -150,8 +167,18 @@ public abstract class MixinWorldServer extends World implements FastWorldServer 
                     target = "Lnet/minecraft/world/WorldServer;getChunkFromChunkCoords(II)Lnet/minecraft/world/chunk/Chunk;"))
     private Chunk hodgepodge$threadChunkGen(WorldServer instance, int cx, int cz) {
 
+        if (!this.hodgepodge$flag && this.isThrottlingGen()) {
+            this.hodgepodge$flag = true;
+            log.warn("{} active chunks", this.activeChunkSet.size());
+        }
+
+        ++this.hodgepodge$realActive;
         final Chunk ch = this.hodgepodge$chunks.get(ChunkCoordIntPair.chunkXZ2Int(cx, cz));
-        return ch != null ? ch : this.chunkProvider.provideChunk(cx, cz);
+        if (ch != null) return ch;
+
+        //log.warn("New chunk at x: {} z: {}", cx, cz);
+        ++this.hodgepodge$overLoad;
+        return this.chunkProvider.provideChunk(cx, cz);
     }
 
     public MixinWorldServer(ISaveHandler p_i45368_1_, String p_i45368_2_, WorldProvider p_i45368_3_,

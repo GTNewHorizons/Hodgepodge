@@ -62,6 +62,8 @@ dependencies {
     transformedModCompileOnly(rfg.deobf("curse.maven:candycraft-251118:2330488"))
 
     runtimeOnly(deobf("https://github.com/makamys/CoreTweaks/releases/download/0.3.3.2/CoreTweaks-1.7.10-0.3.3.2+nomixin.jar"))
+    runtimeOnlyNonPublishable(deobfCurse("bsprint-227409:2725690"))
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-alpha35")
 }
 
 // Replace when RFG support deobfuscation from notch mappings
