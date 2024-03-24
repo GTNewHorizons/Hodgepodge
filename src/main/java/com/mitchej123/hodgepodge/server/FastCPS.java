@@ -417,11 +417,9 @@ public class FastCPS extends ChunkProviderServer {
     @Override
     public Chunk provideChunk(int cx, int cz) {
         Chunk chunk = (Chunk) this.loadedChunkHashMap.getValueByKey(ChunkCoordIntPair.chunkXZ2Int(cx, cz));
-        return chunk != null
-            ? chunk
-            : this.worldObj.findingSpawnPoint || this.loadChunkOnProvideRequest
-                ? this.loadChunk(cx, cz)
-                : this.empty;
+        return chunk != null ? chunk
+                : this.worldObj.findingSpawnPoint || this.loadChunkOnProvideRequest ? this.loadChunk(cx, cz)
+                        : this.empty;
     }
 
     /**

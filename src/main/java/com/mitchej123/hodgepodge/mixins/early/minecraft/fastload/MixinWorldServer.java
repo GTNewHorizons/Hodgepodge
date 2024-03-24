@@ -1,16 +1,11 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload;
 
+import static com.mitchej123.hodgepodge.Common.log;
+
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import com.mitchej123.hodgepodge.hax.LongChunkCoordIntPairSet;
-import com.mitchej123.hodgepodge.mixins.interfaces.FastWorldServer;
-import com.mitchej123.hodgepodge.util.ChunkPosUtil;
-import it.unimi.dsi.fastutil.longs.Long2ObjectMaps;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.LongIterator;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.world.*;
@@ -29,9 +24,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.mitchej123.hodgepodge.hax.LongChunkCoordIntPairSet;
+import com.mitchej123.hodgepodge.mixins.interfaces.FastWorldServer;
 import com.mitchej123.hodgepodge.server.FastCPS;
+import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
-import static com.mitchej123.hodgepodge.Common.log;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMaps;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongIterator;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 @Mixin(WorldServer.class)
 public abstract class MixinWorldServer extends World implements FastWorldServer {
@@ -79,7 +80,8 @@ public abstract class MixinWorldServer extends World implements FastWorldServer 
             at = @At(
                     value = "NEW",
                     target = "(Lnet/minecraft/world/WorldServer;Lnet/minecraft/world/chunk/storage/IChunkLoader;Lnet/minecraft/world/chunk/IChunkProvider;)Lnet/minecraft/world/gen/ChunkProviderServer;"))
-    private ChunkProviderServer hodgepodge$replaceChunkProvider(WorldServer server, IChunkLoader loader, IChunkProvider backingCP) {
+    private ChunkProviderServer hodgepodge$replaceChunkProvider(WorldServer server, IChunkLoader loader,
+            IChunkProvider backingCP) {
         return new FastCPS(server, (AnvilChunkLoader) loader, backingCP);
     }
 
@@ -90,7 +92,10 @@ public abstract class MixinWorldServer extends World implements FastWorldServer 
 
         if (this.hodgepodge$properActive != this.hodgepodge$realActive) {
 
-            log.warn("{} active chunks last tick, should have been {}", this.hodgepodge$realActive, this.hodgepodge$properActive);
+            log.warn(
+                    "{} active chunks last tick, should have been {}",
+                    this.hodgepodge$realActive,
+                    this.hodgepodge$properActive);
         }
         if (this.hodgepodge$overLoad != 0) {
             log.warn("{} excess chunks loaded last tick", this.hodgepodge$overLoad);
@@ -113,7 +118,6 @@ public abstract class MixinWorldServer extends World implements FastWorldServer 
             final long key = i.nextLong();
             final int cx = ChunkPosUtil.getPackedX(key);
             final int cz = ChunkPosUtil.getPackedZ(key);
-
 
             // If already loaded, just return it
             if (cps.loadedChunkHashMap.containsItem(key)) {
@@ -181,7 +185,7 @@ public abstract class MixinWorldServer extends World implements FastWorldServer 
         final Chunk ch = this.hodgepodge$chunks.get(ChunkCoordIntPair.chunkXZ2Int(cx, cz));
         if (ch != null) return ch;
 
-        //log.warn("New chunk at x: {} z: {}", cx, cz);
+        // log.warn("New chunk at x: {} z: {}", cx, cz);
         ++this.hodgepodge$overLoad;
         return this.chunkProvider.provideChunk(cx, cz);
     }

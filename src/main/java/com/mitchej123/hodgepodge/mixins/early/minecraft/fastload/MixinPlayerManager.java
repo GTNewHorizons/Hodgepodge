@@ -1,5 +1,19 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.management.PlayerManager;
+import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.WorldServer;
+
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -7,50 +21,38 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.mitchej123.hodgepodge.mixins.interfaces.ExtEntityPlayerMP;
 import com.mitchej123.hodgepodge.mixins.interfaces.FastWorldServer;
 import com.mitchej123.hodgepodge.server.FastCPS;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.management.PlayerManager;
-import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.WorldServer;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Mixin(PlayerManager.class)
 public class MixinPlayerManager {
 
-    @Shadow @Final private WorldServer theWorldServer;
+    @Shadow
+    @Final
+    private WorldServer theWorldServer;
 
-    private static final ChunkCoordIntPair hodgepodge$dummyCoord = new ChunkCoordIntPair(Integer.MAX_VALUE, Integer.MAX_VALUE);
+    private static final ChunkCoordIntPair hodgepodge$dummyCoord = new ChunkCoordIntPair(
+            Integer.MAX_VALUE,
+            Integer.MAX_VALUE);
 
     /**
      * @author ah-OOG-ah
      * @reason throttles new chunk generation in filterChunkLoadQueue
      */
     @WrapOperation(
-        method = "filterChunkLoadQueue",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/server/management/PlayerManager;getOrCreateChunkWatcher(IIZ)Lnet/minecraft/server/management/PlayerManager$PlayerInstance;"),
-        slice = @Slice(
-            from = @At(
-                value = "INVOKE",
-                target = "Lnet/minecraft/server/management/PlayerManager;getOrCreateChunkWatcher(IIZ)Lnet/minecraft/server/management/PlayerManager$PlayerInstance;",
-                ordinal = 1),
-            to = @At(
-                value = "INVOKE",
-                target = "Lnet/minecraft/server/management/PlayerManager;getOrCreateChunkWatcher(IIZ)Lnet/minecraft/server/management/PlayerManager$PlayerInstance;",
-                ordinal = 2)))
-    private PlayerManager.PlayerInstance hodgepodge$throttleChunkGen(
-            PlayerManager instance,
-            int cx,
-            int cz,
-            boolean instantiate,
-            Operation<PlayerManager.PlayerInstance> original,
+            method = "filterChunkLoadQueue",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/server/management/PlayerManager;getOrCreateChunkWatcher(IIZ)Lnet/minecraft/server/management/PlayerManager$PlayerInstance;"),
+            slice = @Slice(
+                    from = @At(
+                            value = "INVOKE",
+                            target = "Lnet/minecraft/server/management/PlayerManager;getOrCreateChunkWatcher(IIZ)Lnet/minecraft/server/management/PlayerManager$PlayerInstance;",
+                            ordinal = 1),
+                    to = @At(
+                            value = "INVOKE",
+                            target = "Lnet/minecraft/server/management/PlayerManager;getOrCreateChunkWatcher(IIZ)Lnet/minecraft/server/management/PlayerManager$PlayerInstance;",
+                            ordinal = 2)))
+    private PlayerManager.PlayerInstance hodgepodge$throttleChunkGen(PlayerManager instance, int cx, int cz,
+            boolean instantiate, Operation<PlayerManager.PlayerInstance> original,
             @Local(argsOnly = true) EntityPlayerMP player) {
 
         final long key = ChunkCoordIntPair.chunkXZ2Int(cx, cz);
@@ -70,36 +72,35 @@ public class MixinPlayerManager {
 
     /**
      * @author ah-OOG-ah
-     * @reason handles nulls passed from {@link #hodgepodge$throttleChunkGen(PlayerManager, int, int, boolean, Operation, EntityPlayerMP)}
+     * @reason handles nulls passed from
+     *         {@link #hodgepodge$throttleChunkGen(PlayerManager, int, int, boolean, Operation, EntityPlayerMP)}
      */
     @WrapOperation(
-        method = "filterChunkLoadQueue",
-        at = @At(
-            value = "FIELD",
-            target = "Lnet/minecraft/server/management/PlayerManager$PlayerInstance;chunkLocation:Lnet/minecraft/world/ChunkCoordIntPair;"),
-        slice = @Slice(
-            from = @At(
-                value = "FIELD",
-                target = "Lnet/minecraft/server/management/PlayerManager$PlayerInstance;chunkLocation:Lnet/minecraft/world/ChunkCoordIntPair;",
-                ordinal = 1),
-            to = @At(
-                value = "FIELD",
-                target = "Lnet/minecraft/server/management/PlayerManager$PlayerInstance;chunkLocation:Lnet/minecraft/world/ChunkCoordIntPair;",
-                ordinal = 2)))
-    private ChunkCoordIntPair hodgepodge$throttleChunkGen(PlayerManager.PlayerInstance instance, Operation<ChunkCoordIntPair> original) {
+            method = "filterChunkLoadQueue",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/server/management/PlayerManager$PlayerInstance;chunkLocation:Lnet/minecraft/world/ChunkCoordIntPair;"),
+            slice = @Slice(
+                    from = @At(
+                            value = "FIELD",
+                            target = "Lnet/minecraft/server/management/PlayerManager$PlayerInstance;chunkLocation:Lnet/minecraft/world/ChunkCoordIntPair;",
+                            ordinal = 1),
+                    to = @At(
+                            value = "FIELD",
+                            target = "Lnet/minecraft/server/management/PlayerManager$PlayerInstance;chunkLocation:Lnet/minecraft/world/ChunkCoordIntPair;",
+                            ordinal = 2)))
+    private ChunkCoordIntPair hodgepodge$throttleChunkGen(PlayerManager.PlayerInstance instance,
+            Operation<ChunkCoordIntPair> original) {
         if (instance != null) return original.call(instance);
         return hodgepodge$dummyCoord;
     }
 
-    @WrapOperation(method = "filterChunkLoadQueue", at = @At(value = "INVOKE", target = "Ljava/util/ArrayList;contains(Ljava/lang/Object;)Z"))
-    private boolean hodgepodge$forceChunkSend(
-            ArrayList<ChunkCoordIntPair> priorChunks,
-            Object o,
-            Operation<Boolean> original,
-            @Local(argsOnly = true) EntityPlayerMP player,
-            @Local(name = "j") int viewRadius,
-            @Local(name = "k") int pcx,
-            @Local(name = "l") int pcz) {
+    @WrapOperation(
+            method = "filterChunkLoadQueue",
+            at = @At(value = "INVOKE", target = "Ljava/util/ArrayList;contains(Ljava/lang/Object;)Z"))
+    private boolean hodgepodge$forceChunkSend(ArrayList<ChunkCoordIntPair> priorChunks, Object o,
+            Operation<Boolean> original, @Local(argsOnly = true) EntityPlayerMP player,
+            @Local(name = "j") int viewRadius, @Local(name = "k") int pcx, @Local(name = "l") int pcz) {
 
         if (o instanceof ChunkCoordIntPair c) {
 
@@ -138,21 +139,18 @@ public class MixinPlayerManager {
      * @author ah-OOG-ah
      * @reason throttles new chunk generation in updatePlayerPertinentChunks
      */
-    @WrapWithCondition(method = "updatePlayerPertinentChunks", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"))
-    private boolean hodgepodge$throttleChunkGen(
-            List<ChunkCoordIntPair> instance,
-            @Coerce Object coord,
-            @Local(argsOnly = true) EntityPlayerMP player,
-            @Local(name = "i") int pcx,
-            @Local(name = "j") int pcz) {
+    @WrapWithCondition(
+            method = "updatePlayerPertinentChunks",
+            at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"))
+    private boolean hodgepodge$throttleChunkGen(List<ChunkCoordIntPair> instance, @Coerce Object coord,
+            @Local(argsOnly = true) EntityPlayerMP player, @Local(name = "i") int pcx, @Local(name = "j") int pcz) {
 
         final ChunkCoordIntPair c = (ChunkCoordIntPair) coord;
         final int cx = c.chunkXPos;
         final int cz = c.chunkZPos;
-        if (cx == pcx && cz == pcz)
-            return true; // Always load the player's chunk
-        if (((FastCPS) this.theWorldServer.theChunkProviderServer).doesChunkExist(c))
-            return true; // Always load generated chunks
+        if (cx == pcx && cz == pcz) return true; // Always load the player's chunk
+        if (((FastCPS) this.theWorldServer.theChunkProviderServer).doesChunkExist(c)) return true; // Always load
+                                                                                                   // generated chunks
         if (((FastWorldServer) this.theWorldServer).isThrottlingGen()) {
 
             ((ExtEntityPlayerMP) player).setThrottled(true);
