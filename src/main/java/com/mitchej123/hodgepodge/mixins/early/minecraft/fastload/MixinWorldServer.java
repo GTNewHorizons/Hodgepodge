@@ -1,5 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload;
 
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -9,6 +10,8 @@ import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMaps;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongIterator;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.world.*;
 import net.minecraft.world.chunk.Chunk;
@@ -49,6 +52,8 @@ public abstract class MixinWorldServer extends World implements FastWorldServer 
     private int hodgepodge$properActive = 0;
     @Unique
     private int hodgepodge$realActive = 0;
+    @Unique
+    private final Set<EntityPlayerMP> hodgepodge$partialRendering = new ObjectOpenHashSet<>();
     @Unique
     private boolean hodgepodge$flag = false;
     @Unique

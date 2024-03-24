@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mitchej123.hodgepodge.mixins.interfaces.ExtEntityPlayerMP;
 import com.mojang.authlib.GameProfile;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectImmutableList;
@@ -30,7 +31,7 @@ import java.util.List;
 import static com.mitchej123.hodgepodge.Common.log;
 
 @Mixin(EntityPlayerMP.class)
-public abstract class MixinEntityPlayerMP extends EntityPlayer implements ICrafting {
+public abstract class MixinEntityPlayerMP extends EntityPlayer implements ICrafting, ExtEntityPlayerMP {
 
     @Unique
     private final List<ObjectImmutableList<Chunk>> hodgepodge$chunkSends = new ObjectArrayList<>();
@@ -38,6 +39,19 @@ public abstract class MixinEntityPlayerMP extends EntityPlayer implements ICraft
     private int hodgepodge$totalChunks = 0;
     @Unique
     private static final S26PacketMapChunkBulk hodgepodge$dummyPacket = new S26PacketMapChunkBulk();
+    @Unique
+    private boolean hodgepodge$isThrottled = false;
+    @Unique
+    private boolean hodgepodge$wasThrottled = false;
+
+    @Override
+    public void setThrottled(boolean val) { this.hodgepodge$isThrottled = val; }
+    @Override
+    public boolean isThrottled() { return this.hodgepodge$isThrottled; }
+    @Override
+    public void setWasThrottled(boolean val) { this.hodgepodge$wasThrottled = val; }
+    @Override
+    public boolean wasThrottled() { return this.hodgepodge$wasThrottled; }
 
     @Shadow
     public abstract WorldServer getServerForPlayer();
