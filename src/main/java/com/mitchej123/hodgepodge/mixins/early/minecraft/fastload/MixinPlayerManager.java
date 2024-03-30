@@ -1,35 +1,45 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload;
 
-import com.llamalad7.mixinextras.sugar.Local;
-import com.mitchej123.hodgepodge.mixins.interfaces.ExtEntityPlayerMP;
-import com.mitchej123.hodgepodge.mixins.interfaces.FastWorldServer;
-import com.mitchej123.hodgepodge.server.FastCPS;
-import com.mitchej123.hodgepodge.util.ChunkPosUtil;
-import it.unimi.dsi.fastutil.longs.LongArrayList;
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.management.PlayerManager;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.WorldServer;
 
 import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import static com.mitchej123.hodgepodge.Common.log;
 
-import java.util.List;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.mitchej123.hodgepodge.mixins.interfaces.ExtEntityPlayerMP;
+import com.mitchej123.hodgepodge.mixins.interfaces.FastWorldServer;
+import com.mitchej123.hodgepodge.server.FastCPS;
+import com.mitchej123.hodgepodge.util.ChunkPosUtil;
+
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 
 @Mixin(PlayerManager.class)
 public abstract class MixinPlayerManager {
 
-    @Shadow @Final private WorldServer theWorldServer;
-    @Shadow private int playerViewRadius;
-    @Shadow protected abstract boolean overlaps(int x1, int z1, int x2, int z2, int radius);
-    @Shadow protected abstract PlayerManager.PlayerInstance getOrCreateChunkWatcher(int cx, int cz, boolean shouldCreate);
-    @Unique final private ChunkPosUtil.FastComparator cmp = new ChunkPosUtil.FastComparator();
+    @Shadow
+    @Final
+    private WorldServer theWorldServer;
+    @Shadow
+    private int playerViewRadius;
+
+    @Shadow
+    protected abstract boolean overlaps(int x1, int z1, int x2, int z2, int radius);
+
+    @Shadow
+    protected abstract PlayerManager.PlayerInstance getOrCreateChunkWatcher(int cx, int cz, boolean shouldCreate);
+
+    @Unique
+    final private ChunkPosUtil.FastComparator cmp = new ChunkPosUtil.FastComparator();
 
     @Unique
     private final ChunkPosUtil.FastComparator hodgepodge$comparator = new ChunkPosUtil.FastComparator();
@@ -41,8 +51,10 @@ public abstract class MixinPlayerManager {
     @Overwrite
     public void filterChunkLoadQueue(EntityPlayerMP player) {
 
-        ((ExtEntityPlayerMP) player).chunksToLoad().removeIf(l -> cmp.setPos(player).withinRadius(l, this.playerViewRadius));
-        ((ExtEntityPlayerMP) player).loadedChunks().removeIf(l -> cmp.setPos(player).withinRadius(l, this.playerViewRadius));
+        ((ExtEntityPlayerMP) player).chunksToLoad()
+                .removeIf(l -> cmp.setPos(player).withinRadius(l, this.playerViewRadius));
+        ((ExtEntityPlayerMP) player).loadedChunks()
+                .removeIf(l -> cmp.setPos(player).withinRadius(l, this.playerViewRadius));
     }
 
     /**
@@ -62,8 +74,7 @@ public abstract class MixinPlayerManager {
 
         // If the player moved less than half a chunk (8^2 = 64), or if the player wasn't throttled last tick, no need
         // to update
-        if (!eemp.wasThrottled() && distMovedSquared < 64)
-            return;
+        if (!eemp.wasThrottled() && distMovedSquared < 64) return;
 
         final int pcx = (int) player.posX >> 4;
         final int pcz = (int) player.posZ >> 4;
@@ -73,8 +84,7 @@ public abstract class MixinPlayerManager {
         final int dpcz = pcz - prev_cz;
 
         // If the player hasn't moved to a new chunk (and wasn't throttled), no need to update
-        if (!eemp.wasThrottled() && dpcx == 0 && dpcz == 0)
-            return;
+        if (!eemp.wasThrottled() && dpcx == 0 && dpcz == 0) return;
 
         int x = 0;
         int z = 0;
@@ -87,21 +97,18 @@ public abstract class MixinPlayerManager {
             final int cx = x + pcx;
             final int cz = z + pcz;
             final long key = ChunkCoordIntPair.chunkXZ2Int(cx, cz);
-            if (!eemp.loadedChunks().contains(key))
-                chunksToLoad.add(key);
+            if (!eemp.loadedChunks().contains(key)) chunksToLoad.add(key);
 
             // At the same time, we can check the previous chunk grid, and remove the ones which are out of range
             if (!this.overlaps(cx - dpcx, cz - dpcz, pcx, pcz, this.playerViewRadius)) {
-                final PlayerManager.PlayerInstance playerinstance = this.getOrCreateChunkWatcher(cx - dpcx, cz - dpcz, false);
+                final PlayerManager.PlayerInstance playerinstance = this
+                        .getOrCreateChunkWatcher(cx - dpcx, cz - dpcz, false);
 
-                if (playerinstance != null)
-                    playerinstance.removePlayer(player);
+                if (playerinstance != null) playerinstance.removePlayer(player);
             }
 
-            if (Math.abs(x) <= Math.abs(z) && (x != z || x >= 0))
-                x += z >= 0 ? 1 : -1;
-            else
-                z += x >= 0 ? -1 : 1;
+            if (Math.abs(x) <= Math.abs(z) && (x != z || x >= 0)) x += z >= 0 ? 1 : -1;
+            else z += x >= 0 ? -1 : 1;
         }
 
         // Purge the old load queue
@@ -115,13 +122,10 @@ public abstract class MixinPlayerManager {
         chunksToLoad.sort(hodgepodge$comparator.setPos(pcx, pcz));
         chunksToLoad.forEach(l -> {
             if (this.hodgepodge$allowChunkGen(l, pcx, pcz, eemp)) {
-                this.getOrCreateChunkWatcher(
-                        ChunkPosUtil.getPackedX(l),
-                        ChunkPosUtil.getPackedZ(l),
-                        true).addPlayer(player);
+                this.getOrCreateChunkWatcher(ChunkPosUtil.getPackedX(l), ChunkPosUtil.getPackedZ(l), true)
+                        .addPlayer(player);
 
-                if (!eemp.chunksToLoad().contains(l))
-                    eemp.chunksToLoad().add(l);
+                if (!eemp.chunksToLoad().contains(l)) eemp.chunksToLoad().add(l);
             }
         });
     }
@@ -135,11 +139,12 @@ public abstract class MixinPlayerManager {
         final int cx = ChunkPosUtil.getPackedX(c);
         final int cz = ChunkPosUtil.getPackedZ(c);
 
-        if (cx == pcx && cz == pcz)
-            return true; // Always load the player's chunk
+        if (cx == pcx && cz == pcz) return true; // Always load the player's chunk
 
-        if (((FastCPS) this.theWorldServer.theChunkProviderServer).doesChunkExist(cx, cz, c))
-            return true; // Always load chunks from disk
+        if (((FastCPS) this.theWorldServer.theChunkProviderServer).doesChunkExist(cx, cz, c)) return true; // Always
+                                                                                                           // load
+                                                                                                           // chunks
+                                                                                                           // from disk
 
         if (((FastWorldServer) this.theWorldServer).isThrottlingGen()) {
 
@@ -153,8 +158,11 @@ public abstract class MixinPlayerManager {
         return true;
     }
 
-    @Redirect(method = "isPlayerWatchingChunk", at = @At(value = "INVOKE", target = "Ljava/util/List;contains(Ljava/lang/Object;)Z"))
-    private boolean hodgepodge$replaceLoadedChunks(List instance, Object o, @Local(argsOnly = true) EntityPlayerMP player) {
+    @Redirect(
+            method = "isPlayerWatchingChunk",
+            at = @At(value = "INVOKE", target = "Ljava/util/List;contains(Ljava/lang/Object;)Z"))
+    private boolean hodgepodge$replaceLoadedChunks(List instance, Object o,
+            @Local(argsOnly = true) EntityPlayerMP player) {
         return ((ExtEntityPlayerMP) player).chunksToLoad().contains(ChunkPosUtil.toLong(o));
     }
 }

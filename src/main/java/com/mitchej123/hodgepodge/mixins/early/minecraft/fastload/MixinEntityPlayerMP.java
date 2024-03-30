@@ -1,13 +1,9 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload;
 
-import com.mitchej123.hodgepodge.mixins.interfaces.ExtEntityPlayerMP;
-import com.mitchej123.hodgepodge.util.ChunkPosUtil;
-import com.mojang.authlib.GameProfile;
-import it.unimi.dsi.fastutil.longs.LongAVLTreeSet;
-import it.unimi.dsi.fastutil.longs.LongIterator;
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectImmutableList;
+import static com.mitchej123.hodgepodge.Common.log;
+
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ICrafting;
@@ -19,6 +15,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.ChunkWatchEvent;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -27,9 +24,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
+import com.mitchej123.hodgepodge.mixins.interfaces.ExtEntityPlayerMP;
+import com.mitchej123.hodgepodge.util.ChunkPosUtil;
+import com.mojang.authlib.GameProfile;
 
-import static com.mitchej123.hodgepodge.Common.log;
+import it.unimi.dsi.fastutil.longs.LongIterator;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectImmutableList;
 
 @Mixin(EntityPlayerMP.class)
 public abstract class MixinEntityPlayerMP extends EntityPlayer implements ICrafting, ExtEntityPlayerMP {
@@ -86,9 +88,11 @@ public abstract class MixinEntityPlayerMP extends EntityPlayer implements ICraft
     @Shadow
     public abstract WorldServer getServerForPlayer();
 
-    @Shadow public NetHandlerPlayServer playerNetServerHandler;
+    @Shadow
+    public NetHandlerPlayServer playerNetServerHandler;
 
-    @Shadow protected abstract void func_147097_b(TileEntity p_147097_1_);
+    @Shadow
+    protected abstract void func_147097_b(TileEntity p_147097_1_);
 
     public MixinEntityPlayerMP(World p_i45324_1_, GameProfile p_i45324_2_) {
         super(p_i45324_1_, p_i45324_2_);
@@ -100,7 +104,7 @@ public abstract class MixinEntityPlayerMP extends EntityPlayer implements ICraft
     }
 
     @Inject(method = "onUpdate", at = @At(value = "TAIL"))
-    private void  hodgepodge$replaceChunkList(CallbackInfo ci) {
+    private void hodgepodge$replaceChunkList(CallbackInfo ci) {
 
         if (this.hodgepodge$chunksToLoad.longStream().anyMatch(this.hodgepodge$loadedChunks::contains))
             log.warn("sending duplicate!!!");
@@ -125,8 +129,11 @@ public abstract class MixinEntityPlayerMP extends EntityPlayer implements ICraft
                     ++this.hodgepodge$totalChunks;
                     this.hodgepodge$rollingChunks.add(chunk);
                     this.hodgepodge$loadedChunks.add(key);
-                    this.hodgepodge$rollingTEs.addAll(((WorldServer) this.worldObj).func_147486_a(cx << 4, 0, cz << 4, (cx << 4) + 15, 256, (cz << 16) + 15));
-                    //BugFix: 16 makes it load an extra chunk, which isn't associated with a player, which makes it not unload unless a player walks near it.
+                    this.hodgepodge$rollingTEs.addAll(
+                            ((WorldServer) this.worldObj)
+                                    .func_147486_a(cx << 4, 0, cz << 4, (cx << 4) + 15, 256, (cz << 16) + 15));
+                    // BugFix: 16 makes it load an extra chunk, which isn't associated with a player, which makes it not
+                    // unload unless a player walks near it.
                     chunkKeys.remove();
                 }
             }
@@ -155,7 +162,8 @@ public abstract class MixinEntityPlayerMP extends EntityPlayer implements ICraft
             for (int i = 0; i < this.hodgepodge$totalChunks; ++i) {
                 chunk = this.hodgepodge$chunkSends.get(i / chunksPPacket).get(i % chunksPPacket);
                 this.getServerForPlayer().getEntityTracker().func_85172_a((EntityPlayerMP) (Object) this, chunk);
-                MinecraftForge.EVENT_BUS.post(new ChunkWatchEvent.Watch(chunk.getChunkCoordIntPair(), (EntityPlayerMP) (Object) this));
+                MinecraftForge.EVENT_BUS
+                        .post(new ChunkWatchEvent.Watch(chunk.getChunkCoordIntPair(), (EntityPlayerMP) (Object) this));
             }
         }
 

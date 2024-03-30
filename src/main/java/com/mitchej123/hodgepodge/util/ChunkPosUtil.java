@@ -1,11 +1,11 @@
 package com.mitchej123.hodgepodge.util;
 
-import it.unimi.dsi.fastutil.longs.LongComparator;
-import it.unimi.dsi.fastutil.longs.LongPredicate;
+import java.util.Comparator;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.ChunkCoordIntPair;
 
-import java.util.Comparator;
+import it.unimi.dsi.fastutil.longs.LongComparator;
 
 public class ChunkPosUtil {
 
@@ -26,8 +26,7 @@ public class ChunkPosUtil {
 
     public static long toLong(Object o) {
 
-        if (o instanceof ChunkCoordIntPair c)
-            return toLong(c.chunkXPos, c.chunkZPos);
+        if (o instanceof ChunkCoordIntPair c) return toLong(c.chunkXPos, c.chunkZPos);
 
         return INVALID_COORD;
     }
@@ -50,8 +49,7 @@ public class ChunkPosUtil {
         @Override
         public int compare(ChunkCoordIntPair c1, ChunkCoordIntPair c2) {
 
-            if (c1 == c2)
-                return 0;
+            if (c1 == c2) return 0;
 
             final int dx1 = c1.chunkXPos - cx;
             final int dz1 = c1.chunkZPos - cz;
@@ -83,11 +81,9 @@ public class ChunkPosUtil {
         }
 
         public boolean withinRadius(long key, int renderDistance) {
-            if (Math.abs(getPackedX(key) - this.cx) > renderDistance)
-                return false;
+            if (Math.abs(getPackedX(key) - this.cx) > renderDistance) return false;
 
-            if (Math.abs(getPackedZ(key) - this.cz) > renderDistance)
-                return false;
+            if (Math.abs(getPackedZ(key) - this.cz) > renderDistance) return false;
 
             return true;
         }
@@ -99,8 +95,7 @@ public class ChunkPosUtil {
         @Override
         public int compare(long c1, long c2) {
 
-            if (c1 == c2)
-                return 0;
+            if (c1 == c2) return 0;
 
             final int dx1 = getPackedX(c1) - cx;
             final int dz1 = getPackedZ(c1) - cz;
