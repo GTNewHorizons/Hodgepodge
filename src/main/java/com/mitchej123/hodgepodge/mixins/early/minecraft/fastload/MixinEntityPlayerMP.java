@@ -1,22 +1,24 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload;
 
-import static com.mitchej123.hodgepodge.Common.log;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.mitchej123.hodgepodge.mixins.interfaces.ExtEntityPlayerMP;
+import com.mitchej123.hodgepodge.util.ChunkPosUtil;
+import com.mojang.authlib.GameProfile;
+import it.unimi.dsi.fastutil.longs.LongAVLTreeSet;
+import it.unimi.dsi.fastutil.longs.LongIterator;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectImmutableList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.network.NetHandlerPlayServer;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S26PacketMapChunkBulk;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.ChunkWatchEvent;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -25,19 +27,19 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.sugar.Local;
-import com.mitchej123.hodgepodge.mixins.interfaces.ExtEntityPlayerMP;
-import com.mojang.authlib.GameProfile;
+import java.util.List;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectImmutableList;
+import static com.mitchej123.hodgepodge.Common.log;
 
 @Mixin(EntityPlayerMP.class)
 public abstract class MixinEntityPlayerMP extends EntityPlayer implements ICrafting, ExtEntityPlayerMP {
 
     @Unique
     private final List<ObjectImmutableList<Chunk>> hodgepodge$chunkSends = new ObjectArrayList<>();
+    @Unique
+    private final List<Chunk> hodgepodge$rollingChunks = new ObjectArrayList<>();
+    @Unique
+    private final List<TileEntity> hodgepodge$rollingTEs = new ObjectArrayList<>();
     @Unique
     private int hodgepodge$totalChunks = 0;
     @Unique
@@ -46,6 +48,10 @@ public abstract class MixinEntityPlayerMP extends EntityPlayer implements ICraft
     private boolean hodgepodge$isThrottled = false;
     @Unique
     private boolean hodgepodge$wasThrottled = false;
+    @Unique
+    private final LongOpenHashSet hodgepodge$loadedChunks = new LongOpenHashSet();
+    @Unique
+    private final LongOpenHashSet hodgepodge$chunksToLoad = new LongOpenHashSet();
 
     @Override
     public void setThrottled(boolean val) {
@@ -67,97 +73,98 @@ public abstract class MixinEntityPlayerMP extends EntityPlayer implements ICraft
         return this.hodgepodge$wasThrottled;
     }
 
+    @Override
+    public LongOpenHashSet chunksToLoad() {
+        return this.hodgepodge$chunksToLoad;
+    }
+
+    @Override
+    public LongOpenHashSet loadedChunks() {
+        return this.hodgepodge$loadedChunks;
+    }
+
     @Shadow
     public abstract WorldServer getServerForPlayer();
+
+    @Shadow public NetHandlerPlayServer playerNetServerHandler;
+
+    @Shadow protected abstract void func_147097_b(TileEntity p_147097_1_);
 
     public MixinEntityPlayerMP(World p_i45324_1_, GameProfile p_i45324_2_) {
         super(p_i45324_1_, p_i45324_2_);
     }
 
-    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Ljava/util/ArrayList;size()I", ordinal = 0))
-    private int hodgepodge$numChunks(ArrayList<Chunk> chunks) {
-        return this.hodgepodge$totalChunks;
+    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z", ordinal = 1))
+    private boolean hodgepodge$skipOGChunkList(List instance) {
+        return true;
     }
 
-    @Inject(method = "onUpdate", at = @At(value = "NEW", target = "()Ljava/util/ArrayList;", ordinal = 0))
-    private void hodgepodge$setNumChunks(CallbackInfo ci) {
-        this.hodgepodge$totalChunks = 0;
-        this.hodgepodge$chunkSends.clear();
-    }
+    @Inject(method = "onUpdate", at = @At(value = "TAIL"))
+    private void  hodgepodge$replaceChunkList(CallbackInfo ci) {
 
-    @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Ljava/util/ArrayList;add(Ljava/lang/Object;)Z"))
-    private void hodgepodge$incNumChunks(CallbackInfo ci) {
-        ++this.hodgepodge$totalChunks;
-    }
+        if (this.hodgepodge$chunksToLoad.longStream().anyMatch(this.hodgepodge$loadedChunks::contains))
+            log.warn("sending duplicate!!!");
 
-    @ModifyExpressionValue(
-            method = "onUpdate",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/network/play/server/S26PacketMapChunkBulk;func_149258_c()I"))
-    private int hodgepodge$maxChunks(int value) {
-        return Integer.MAX_VALUE;
-    }
+        final int chunksPPacket = S26PacketMapChunkBulk.func_149258_c();
+        final LongIterator chunkKeys = this.hodgepodge$chunksToLoad.longIterator();
+        Chunk chunk;
 
-    @Inject(
-            method = "onUpdate",
-            at = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;", ordinal = 1))
-    private void hodgepodge$fasterChunkSend(CallbackInfo ci, @Local(name = "arraylist") ArrayList<Chunk> chunks) {
-        if (chunks.size() == S26PacketMapChunkBulk.func_149258_c()) {
-            this.hodgepodge$chunkSends.add(new ObjectImmutableList<>(chunks));
-            chunks.clear();
+        // For every chunk...
+        while (chunkKeys.hasNext()) {
+
+            final long key = chunkKeys.nextLong();
+            final int cx = ChunkPosUtil.getPackedX(key);
+            final int cz = ChunkPosUtil.getPackedZ(key);
+
+            // Only send the chunk if it exists
+            if (this.worldObj.blockExists(cx << 4, 0, cz << 4)) {
+                chunk = this.worldObj.getChunkFromChunkCoords(cx, cz);
+
+                if (chunk.func_150802_k()) {
+
+                    ++this.hodgepodge$totalChunks;
+                    this.hodgepodge$rollingChunks.add(chunk);
+                    this.hodgepodge$loadedChunks.add(key);
+                    this.hodgepodge$rollingTEs.addAll(((WorldServer) this.worldObj).func_147486_a(cx << 4, 0, cz << 4, (cx << 4) + 15, 256, (cz << 16) + 15));
+                    //BugFix: 16 makes it load an extra chunk, which isn't associated with a player, which makes it not unload unless a player walks near it.
+                    chunkKeys.remove();
+                }
+            }
+
+            // Don't overflow the packet size
+            if (this.hodgepodge$rollingChunks.size() == chunksPPacket) {
+                this.hodgepodge$chunkSends.add(new ObjectImmutableList<>(this.hodgepodge$rollingChunks));
+                this.hodgepodge$rollingChunks.clear();
+            }
         }
-    }
 
-    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Ljava/util/ArrayList;isEmpty()Z"))
-    private boolean hodgepodge$areChunksEmpty(ArrayList<Chunk> chunks) {
+        // Catch a half-full packet
+        if (this.hodgepodge$rollingChunks.size() < chunksPPacket)
+            this.hodgepodge$chunkSends.add(new ObjectImmutableList<>(this.hodgepodge$rollingChunks));
 
-        if (this.hodgepodge$chunkSends.isEmpty() && chunks.isEmpty()) return true;
-        this.hodgepodge$chunkSends.add(new ObjectImmutableList<>(chunks));
-        return false;
-    }
+        if (!this.hodgepodge$chunkSends.isEmpty()) {
 
-    @Redirect(
-            method = "onUpdate",
-            at = @At(
-                    value = "NEW",
-                    target = "(Ljava/util/List;)Lnet/minecraft/network/play/server/S26PacketMapChunkBulk;"))
-    private S26PacketMapChunkBulk hodgepodge$sendChunks(List<Chunk> extracted) {
-        return hodgepodge$dummyPacket;
-    }
+            for (int i = 0; i < this.hodgepodge$chunkSends.size(); ++i) {
+                this.playerNetServerHandler.sendPacket(new S26PacketMapChunkBulk(this.hodgepodge$chunkSends.get(i)));
+            }
 
-    @Redirect(
-            method = "onUpdate",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/network/NetHandlerPlayServer;sendPacket(Lnet/minecraft/network/Packet;)V",
-                    ordinal = 1))
-    private void hodgepodge$sendChunks(NetHandlerPlayServer instance, Packet enumchatvisibility) {
-        for (int i = 0; i < hodgepodge$chunkSends.size(); ++i) {
-            instance.sendPacket(new S26PacketMapChunkBulk(this.hodgepodge$chunkSends.get(i)));
-        }
-    }
+            for (int i = 0; i < this.hodgepodge$rollingTEs.size(); ++i) {
+                this.func_147097_b(this.hodgepodge$rollingTEs.get(i));
+            }
 
-    @Inject(
-            method = "onUpdate",
-            at = @At(
-                    value = "INVOKE_ASSIGN",
-                    target = "Ljava/util/ArrayList;iterator()Ljava/util/Iterator;",
-                    ordinal = 1),
-            cancellable = true)
-    private void hodgepodge$fasterChunkSend(CallbackInfo ci) {
-        for (int i = 0; i < this.hodgepodge$chunkSends.size(); ++i) {
-            final ObjectImmutableList<Chunk> chunks = this.hodgepodge$chunkSends.get(i);
-            for (int ii = 0; ii < chunks.size(); ++ii) {
-                final Chunk chunk = chunks.get(ii);
-                this.getServerForPlayer().getEntityTracker().func_85172_a(((EntityPlayerMP) (Object) this), chunk);
-                MinecraftForge.EVENT_BUS.post(
-                        new ChunkWatchEvent.Watch(chunk.getChunkCoordIntPair(), ((EntityPlayerMP) (Object) this)));
+            for (int i = 0; i < this.hodgepodge$totalChunks; ++i) {
+                chunk = this.hodgepodge$chunkSends.get(i / chunksPPacket).get(i % chunksPPacket);
+                this.getServerForPlayer().getEntityTracker().func_85172_a((EntityPlayerMP) (Object) this, chunk);
+                MinecraftForge.EVENT_BUS.post(new ChunkWatchEvent.Watch(chunk.getChunkCoordIntPair(), (EntityPlayerMP) (Object) this));
             }
         }
 
         if (this.hodgepodge$totalChunks > S26PacketMapChunkBulk.func_149258_c())
             log.info("Sent {} chunks to the client", this.hodgepodge$totalChunks);
-        ci.cancel();
+
+        this.hodgepodge$totalChunks = 0;
+        this.hodgepodge$chunkSends.clear();
+        this.hodgepodge$rollingChunks.clear();
+        this.hodgepodge$rollingTEs.clear();
     }
 }
