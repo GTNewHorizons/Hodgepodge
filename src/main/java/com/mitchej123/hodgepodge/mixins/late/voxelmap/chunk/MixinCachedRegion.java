@@ -12,7 +12,11 @@ import com.thevoxelbox.voxelmap.b.b;
 @Mixin(b.class)
 public class MixinCachedRegion {
 
-    @Inject(at = @At("HEAD"), cancellable = true, method = "do(Lnet/minecraft/world/chunk/Chunk;II)V", remap = false)
+    @Inject(
+            at = @At("HEAD"),
+            cancellable = true,
+            method = "do(Lnet/minecraft/world/chunk/Chunk;II)V", // void loadChunkData(Chunk, int, int)
+            remap = false)
     private void hodgepodge$loadChunkData(Chunk var1, int var2, int var3, CallbackInfo ci) {
         if (var1 == null) ci.cancel();
     }
