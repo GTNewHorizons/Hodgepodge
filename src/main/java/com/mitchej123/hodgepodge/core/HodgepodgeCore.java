@@ -1,5 +1,6 @@
 package com.mitchej123.hodgepodge.core;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +18,7 @@ import com.mitchej123.hodgepodge.config.PollutionRecolorConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.mixins.Mixins;
+import com.mitchej123.hodgepodge.util.VoxelMapCacheMover;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
@@ -71,7 +73,9 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     }
 
     @Override
-    public void injectData(Map<String, Object> data) {}
+    public void injectData(Map<String, Object> data) {
+        VoxelMapCacheMover.changeFileExtensions((File) data.get("mcLocation"));
+    }
 
     @Override
     public String getAccessTransformerClass() {

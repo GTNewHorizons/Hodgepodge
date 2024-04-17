@@ -652,6 +652,13 @@ public enum Mixins {
             .addMixinClasses("voxelmap.chunk.MixinCachedRegion", "voxelmap.chunk.MixinComparisonCachedRegion")
             .addTargetedMod(TargetedMod.VOXELMAP).setApplyIf(() -> FixesConfig.fixVoxelMapChunkNPE).setPhase(Phase.LATE)
             .setSide(Side.CLIENT)),
+    VOXELMAP_FILE_EXT(new Builder("Change VoxelMap cache file extension")
+            .addMixinClasses(
+                    "voxelmap.cache.MixinCachedRegion",
+                    "voxelmap.cache.MixinCachedRegion$1",
+                    "voxelmap.cache.MixinComparisonCachedRegion")
+            .addTargetedMod(TargetedMod.VOXELMAP).setApplyIf(() -> TweaksConfig.changeCacheFileExtension)
+            .setPhase(Phase.LATE).setSide(Side.CLIENT)),
 
     // Witchery
     DISABLE_POTION_ARRAY_EXTENDER(new Builder("Disable Witchery potion array extender")

@@ -249,4 +249,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean hidePotionParticlesFromSelf;
 
+    // VoxelMap
+
+    @Config.Comment("Changes the file extension of VoxelMap's cache files from .zip to .data to stop the TechnicLauncher from deleting them when updating")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean changeCacheFileExtension;
+
 }

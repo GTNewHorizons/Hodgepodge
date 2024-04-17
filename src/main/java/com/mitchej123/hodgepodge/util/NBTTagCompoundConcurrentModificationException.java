@@ -10,6 +10,7 @@ import codechicken.nei.util.NBTJson;
 
 public class NBTTagCompoundConcurrentModificationException extends ConcurrentModificationException {
 
+    private static final long serialVersionUID = -5251615046217506510L;
     private final Deque<String> keyChain = new ArrayDeque<>();
     private final String source;
     private Object fullTag;
