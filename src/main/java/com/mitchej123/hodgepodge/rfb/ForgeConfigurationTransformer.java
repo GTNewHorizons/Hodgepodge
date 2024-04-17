@@ -26,6 +26,11 @@ import com.gtnewhorizons.retrofuturabootstrap.api.ExtensibleClassLoader;
 import com.gtnewhorizons.retrofuturabootstrap.api.RfbClassTransformer;
 import com.mitchej123.hodgepodge.asm.EarlyConfig;
 
+/**
+ * Reduces the memory usage of Forge's Configuration system significantly. Deduplicates identical strings, empty arrays
+ * and switches property maps from TreeMaps to fastutil open hashmaps. Measured in the full GTNH pack to offer a 45
+ * percent memory usage reduction for Configuration classes.
+ */
 public class ForgeConfigurationTransformer implements RfbClassTransformer {
 
     private static final String EARLY_HOOKS_INTERNAL = "com/mitchej123/hodgepodge/asm/hooks/early/EarlyASMCallHooks";
