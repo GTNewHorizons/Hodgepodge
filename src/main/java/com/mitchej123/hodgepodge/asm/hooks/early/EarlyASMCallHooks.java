@@ -33,6 +33,8 @@ public class EarlyASMCallHooks {
 
     private static final String INT_MIN_STRING = Integer.toString(Integer.MIN_VALUE);
     private static final String INT_MAX_STRING = Integer.toString(Integer.MAX_VALUE);
+    private static final String DOUBLE_MAX_STRING = Double.toString(Double.MAX_VALUE);
+    private static final String DOUBLE_NEG_MAX_STRING = Double.toString(-Double.MAX_VALUE);
 
     public static String intToCachedString(int value) {
         return switch (value) {
@@ -48,6 +50,15 @@ public class EarlyASMCallHooks {
             case 100 -> "100";
             default -> String.valueOf(value).intern();
         };
+    }
+
+    public static String doubleToCachedString(double value) {
+        if (value == Double.MAX_VALUE) {
+            return DOUBLE_MAX_STRING;
+        } else if (value == -Double.MAX_VALUE) {
+            return DOUBLE_NEG_MAX_STRING;
+        }
+        return String.valueOf(value).intern();
     }
 
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
