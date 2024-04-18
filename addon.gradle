@@ -1,7 +1,0 @@
-
-jar {
-    manifest {
-        // I need a place to call add this IClassTransformer before CoFHCore loads its transformation target
-        attributes "CCTransformer": "com.mitchej123.hodgepodge.asm.transformers.early.EarlyClassTransformer"
-    }
-}

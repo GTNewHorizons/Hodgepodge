@@ -6,19 +6,7 @@ import static org.objectweb.asm.Opcodes.ASM5;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.POP;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
-import java.util.Properties;
-
 import net.minecraft.launchwrapper.IClassTransformer;
-import net.minecraft.launchwrapper.Launch;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +15,8 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
+
+import com.mitchej123.hodgepodge.asm.EarlyConfig;
 
 /**
  * This class transformer will be loaded by CodeChickenCore, if it is present. It runs much earlier than the rest of
@@ -39,33 +29,21 @@ import org.objectweb.asm.MethodVisitor;
 @SuppressWarnings("unused")
 public class EarlyClassTransformer implements IClassTransformer {
 
-    private static final boolean noNukeBaseMod;
     private static final Logger LOGGER = LogManager.getLogger("HodgePodgeEarly");
 
+    private static final String EARLY_HOOKS_INTERNAL = "com/mitchej123/hodgepodge/asm/hooks/early/EarlyASMCallHooks";
+
     static {
-        Properties config = new Properties();
-        File configLocation = new File(Launch.minecraftHome, "config/hodgepodgeEarly.properties");
-        try (Reader r = new BufferedReader(new FileReader(configLocation))) {
-            config.load(r);
-        } catch (FileNotFoundException e) {
-            LOGGER.debug("No existing configuration file. Will use defaults");
-        } catch (IOException e) {
-            LOGGER.error("Error reading configuration file. Will use defaults", e);
-        }
-        noNukeBaseMod = Boolean.parseBoolean(config.getProperty("noNukeBaseMod"));
-        config.setProperty("noNukeBaseMod", String.valueOf(noNukeBaseMod));
-        try (Writer r = new BufferedWriter(new FileWriter(configLocation))) {
-            config.store(r, "Configuration file for early hodgepodge class transformers");
-        } catch (IOException e) {
-            LOGGER.error("Error reading configuration file. Will use defaults", e);
-        }
+        EarlyConfig.ensureLoaded();
     }
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null || name == null) return basicClass;
         if (name.equals("cpw.mods.fml.common.ModContainerFactory")) {
-            if (noNukeBaseMod) return basicClass;
+            if (EarlyConfig.noNukeBaseMod) {
+                return basicClass;
+            }
             return transformModContainerFactory(basicClass);
         }
         return basicClass;
@@ -95,7 +73,7 @@ public class EarlyClassTransformer implements IClassTransformer {
                         mv.visitVarInsn(ALOAD, 3);
                         mv.visitMethodInsn(
                                 INVOKESTATIC,
-                                "com/mitchej123/hodgepodge/asm/hooks/early/EarlyASMCallHooks",
+                                EARLY_HOOKS_INTERNAL,
                                 "build",
                                 "(Lcpw/mods/fml/common/discovery/asm/ASMModParser;Ljava/io/File;Lcpw/mods/fml/common/discovery/ModCandidate;)Lcpw/mods/fml/common/ModContainer;",
                                 false);
