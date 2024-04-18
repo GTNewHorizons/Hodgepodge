@@ -745,7 +745,14 @@ public enum Mixins {
     TD_NASE_PREVENTION(new Builder("Prevent NegativeArraySizeException on itemduct transfers")
             .addMixinClasses("thermaldynamics.MixinSimulatedInv").setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.preventThermalDynamicsNASE).addTargetedMod(TargetedMod.THERMALDYNAMICS)
-            .setPhase(Phase.LATE));
+            .setPhase(Phase.LATE)),
+    // Chunk generation
+    DISABLE_CHUNK_TERRAIN(new Builder("Disable chunk terrain generation").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinChunkProviderServer_DisableTerrain").addTargetedMod(TargetedMod.VANILLA)
+            .setSide(Side.BOTH).setApplyIf(() -> TweaksConfig.disableChunkTerrainGeneration)),
+    DISABLE_CHUNK_POPULATION(new Builder("Disable chunk population (ores/structure)").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinChunkProviderServer_DisablePopulation").addTargetedMod(TargetedMod.VANILLA)
+            .setSide(Side.BOTH).setApplyIf(() -> TweaksConfig.disableChunkPopulation));
 
     private final List<String> mixinClasses;
     private final List<TargetedMod> targetedMods;

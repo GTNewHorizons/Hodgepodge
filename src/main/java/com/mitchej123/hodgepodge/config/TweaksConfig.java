@@ -256,4 +256,16 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean changeCacheFileExtension;
 
+    // Disable chunk generation
+
+    @Config.Comment("Disable terrain generation for new generated chunks (all blocks become air, biomes remain)")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean disableChunkTerrainGeneration;
+
+    @Config.Comment("Disable population for new generated chunks (ores, misc structures)")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean disableChunkPopulation;
+
 }
