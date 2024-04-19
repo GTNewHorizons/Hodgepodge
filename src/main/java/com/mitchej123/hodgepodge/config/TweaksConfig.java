@@ -256,43 +256,20 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean changeCacheFileExtension;
 
-    // Disable chunk generation
+    // Chunk generation and population config
 
     @Config.Comment("Disable terrain generation for new generated chunks (all blocks become air, biomes remain)")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean disableChunkTerrainGeneration;
 
-    @Config.Comment("Disable world gen associated chunk population for new generated chunks (ores, misc structures)")
+    @Config.Comment("Disable world type associated chunk population for new generated chunks (e.g. vanilla structures in Overworld)")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
-    public static boolean disableChunkPopulation;
+    public static boolean disableWorldTypeChunkPopulation;
 
-    @Config.Comment("Disable all extra mod population for new generated chunks (e.g. Natura clouds)")
+    @Config.Comment("Disable all extra mod chunk population for new generated chunks (e.g. Natura's clouds)")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
-    public static boolean disableExtraModPopulation;
-
-    @Config.Comment("Enable selecting allowed generation classes, see S:generationClassAllowList")
-    @Config.DefaultBoolean(false)
-    @Config.RequiresMcRestart
-    public static boolean enableGenerationClassAllowList;
-
-    @Config.Comment("If B:enableGenerationModAllowList is true, only allow these classes to populate chunks")
-    @Config.DefaultStringList({ "ic2.core.IC2", "cofh.core.world.WorldHandler",
-            "thaumcraft.common.lib.world.ThaumcraftWorldGenerator", "tuhljin.automagy.lib.world.AutomagyWorldGenerator",
-            "com.emoniph.witchery.worldgen.WitcheryWorldGenerator",
-            "eu.usrv.legacylootgames.worldgen.LootGamesWorldGen", "greymerk.roguelike.DungeonGenerator",
-            "tconstruct.world.gen.SlimeIslandGen", "tconstruct.world.gen.TBaseWorldGenerator",
-            "team.chisel.world.GeneratorChisel", "mods.natura.worldgen.BaseCropWorldgen",
-            "mods.natura.worldgen.BaseCloudWorldgen", "mods.natura.worldgen.BaseTreeWorldgen",
-            "binnie.extrabees.worldgen.ModuleGeneration", "com.pam.harvestcraft.PamGardenGenerator",
-            "com.pam.harvestcraft.PamTreeGenerator", "mrtjp.core.world.SimpleGenHandler$",
-            "gtPlusPlus.everglades.gen.gt.WorldGen_GT_Base", "com.pam.harvestthenether.PamGardenGenerator",
-            "com.pam.harvestthenether.PamTreeGenerator", "appeng.worldgen.MeteoriteWorldGen",
-            "forestry.core.worldgen.WorldGenerator", "gregtech.common.GT_Worldgenerator",
-            "com.brandon3055.draconicevolution.common.world.DraconicWorldGenerator",
-            "bloodasp.galacticgreg.GT_Worldgenerator_Space", })
-    @Config.RequiresMcRestart
-    public static String[] generationClassAllowList;
+    public static boolean disableModdedChunkPopulation;
 }
