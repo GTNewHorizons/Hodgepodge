@@ -19,7 +19,7 @@ public class MixinChunkProviderServer_DisableTerrain {
                     value = "INVOKE_ASSIGN",
                     target = "Lnet/minecraft/world/chunk/IChunkProvider;provideChunk(II)Lnet/minecraft/world/chunk/Chunk;"),
             method = "originalLoadChunk")
-    public Chunk hodgepodge$(Chunk chunk) {
+    public Chunk hodgepodge$disableTerrain(Chunk chunk) {
         final Block[] ids = new Block[65536];
         final byte[] metadata = new byte[65536];
         Arrays.fill(ids, Blocks.air);
