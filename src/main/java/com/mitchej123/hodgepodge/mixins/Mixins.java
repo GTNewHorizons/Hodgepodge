@@ -479,6 +479,11 @@ public enum Mixins {
             .setApplyIf(() -> FixesConfig.fixThaumcraftWorldCoordinatesHashingMethod)
             .addTargetedMod(TargetedMod.THAUMCRAFT)),
 
+    FIX_MAGICAL_LEAVES_LAG(new Builder("Fix Thaumcraft leaves frequent ticking")
+            .addMixinClasses("thaumcraft.MixinBlockMagicalLeaves", "thaumcraft.MixinBlockMagicalLog")
+            .setPhase(Phase.LATE).setSide(Side.BOTH).setApplyIf(() -> FixesConfig.fixThaumcraftLeavesLag)
+            .addTargetedMod(TargetedMod.THAUMCRAFT)),
+
     // BOP
     FIX_QUICKSAND_XRAY(new Builder("Fix Xray through block without collision boundingBox").setPhase(Phase.LATE)
             .setSide(Side.BOTH).addMixinClasses("biomesoplenty.MixinBlockMud_FixXray")
