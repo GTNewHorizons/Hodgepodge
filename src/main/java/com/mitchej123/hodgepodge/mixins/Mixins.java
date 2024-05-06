@@ -53,11 +53,6 @@ public enum Mixins {
                     .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinNetHandlerPlayClient_FixHandleSetSlot")
                     .setSide(Side.CLIENT).setApplyIf(() -> FixesConfig.fixNetHandlerPlayClientHandleSetSlot)
                     .addTargetedMod(TargetedMod.VANILLA)),
-    FIX_NETHANDLERLOGINSERVER_OFFLINEMODE(
-            new Builder("Allows the server to assign the logged in UUID to the same username when online_mode is false")
-                    .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinNetHandlerLoginServer_OfflineMode")
-                    .setSide(Side.SERVER).setApplyIf(() -> FixesConfig.fixNetHandlerLoginServerOfflineMode)
-                    .addTargetedMod(TargetedMod.VANILLA)),
     FIX_INVENTORY_POTION_EFFECT_NUMERALS(
             new Builder("Fix potion effects level not displaying properly above a certain value").setPhase(Phase.EARLY)
                     .addMixinClasses(
