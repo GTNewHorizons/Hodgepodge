@@ -3,6 +3,9 @@ package com.mitchej123.hodgepodge.asm.hooks.early;
 import static cpw.mods.fml.common.ModContainerFactory.modTypes;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.logging.log4j.Level;
 
@@ -74,5 +77,10 @@ public class EarlyASMCallHooks {
             array[i] = (array[i] == null) ? null : array[i].intern();
         }
         return array;
+    }
+
+    public static <V> Collection<V> keySortedMapValues(Map<String, V> map) {
+        final TreeMap<String, V> sortedMap = new TreeMap<>(map);
+        return sortedMap.values();
     }
 }
