@@ -25,24 +25,31 @@ public class MixinTileEntityHopper {
                     target = "Lnet/minecraft/tileentity/TileEntityHopper;func_145892_a(Lnet/minecraft/tileentity/IHopper;Lnet/minecraft/inventory/IInventory;II)Z"))
     private static boolean hodgepodge$moveFromHopperToInventory(IHopper hopper, IInventory inventory, int slot,
             int side) {
-        ItemStack is = inventory.getStackInSlot(slot);
-        if (is == null || is.stackSize == 0) return false;
+        ItemStack contentSlot = inventory.getStackInSlot(slot);
+
+        if (contentSlot == null || contentSlot.stackSize == 0) return false;
+
         if (inventory instanceof ISidedInventory) {
             ISidedInventory sidedInventory = (ISidedInventory) inventory;
-            if (!sidedInventory.canExtractItem(slot, is, side)) return false;
+            if (!sidedInventory.canExtractItem(slot, contentSlot, side)) return false;
         }
-        int spaceSlot = getSpaceSlot(hopper, is);
+
+        int spaceSlot = getSpaceSlot(hopper, contentSlot);
         if (spaceSlot == -1) return false;
+
         ItemStack decreased = inventory.decrStackSize(slot, 1);
         if (decreased == null || decreased.stackSize == 0) return false;
+
         ItemStack space = hopper.getStackInSlot(spaceSlot);
         if (space == null) {
-            space = is.copy();
+            space = contentSlot.copy();
             space.stackSize = 1;
             hopper.setInventorySlotContents(spaceSlot, space);
         } else {
             space.stackSize += 1;
         }
+
+        inventory.markDirty();
         return true;
     }
 
