@@ -256,4 +256,20 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean changeCacheFileExtension;
 
+    // Chunk generation and population config
+
+    @Config.Comment("Disable terrain generation for new generated chunks (all blocks become air, biomes remain)")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean disableChunkTerrainGeneration;
+
+    @Config.Comment("Disable world type associated chunk population for new generated chunks (e.g. vanilla structures in Overworld)")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean disableWorldTypeChunkPopulation;
+
+    @Config.Comment("Disable all extra mod chunk population for new generated chunks (e.g. Natura's clouds)")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean disableModdedChunkPopulation;
 }
