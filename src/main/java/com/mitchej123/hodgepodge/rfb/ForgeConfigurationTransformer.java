@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge.rfb;
 
 import static org.objectweb.asm.Opcodes.DUP;
+import static org.objectweb.asm.Opcodes.INVOKEINTERFACE;
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
@@ -116,6 +117,16 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer {
                         mn.instructions.insertBefore(fInsn,
                                 new MethodInsnNode(INVOKESPECIAL, OPEN_MAP_INTERNAL, "<init>", "()V", false));
                         i += 4;
+                    }
+                } else if ("getOrderedValues".equals(mn.name)
+                        && aInsn.getOpcode() == INVOKEINTERFACE
+                        && aInsn instanceof MethodInsnNode mInsn) {
+                    if ("values".equals(mInsn.name) && "()Ljava/util/Collection;".equals(mInsn.desc)) {
+                        mInsn.setOpcode(INVOKESTATIC);
+                        mInsn.owner = EARLY_HOOKS_INTERNAL;
+                        mInsn.name = "keySortedMapValues";
+                        mInsn.desc = "(Ljava/util/Map;)Ljava/util/Collection;";
+                        mInsn.itf = false;
                     }
                 }
                 // spotless:on
