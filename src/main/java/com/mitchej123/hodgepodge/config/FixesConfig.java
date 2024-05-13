@@ -317,6 +317,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean validatePacketEncodingBeforeSendingShouldCrash;
 
+    @Config.Comment("Checks saved TileEntity coordinates earlier to provide a more descriptive error message")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean earlyChunkTileCoordinateCheck;
+
     // affecting multiple mods
 
     @Config.Comment("Remove old/stale/outdated update checks.")
