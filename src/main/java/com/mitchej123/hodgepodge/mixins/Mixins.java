@@ -324,6 +324,11 @@ public enum Mixins {
     FIX_FLUID_CONTAINER_REGISTRY_KEY(new Builder("Fix Forge fluid container registry key").setPhase(Phase.EARLY)
             .addMixinClasses("forge.FluidContainerRegistryAccessor", "forge.MixinFluidRegistry").setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.fixFluidContainerRegistryKey).addTargetedMod(TargetedMod.VANILLA)),
+    FIX_FLUID_RENDERER_CHECKING_BLOCK_AGAIN(
+            new Builder("Fix RenderBlockFluid reading the block type from the world access multiple times")
+                    .setPhase(Phase.EARLY).addMixinClasses("forge.MixinRenderBlockFluid").setSide(Side.BOTH)
+                    .setApplyIf(() -> FixesConfig.fixFluidRendererCheckingBlockAgain)
+                    .addTargetedMod(TargetedMod.VANILLA)),
     CHANGE_MAX_NETWORK_NBT_SIZE_LIMIT(new Builder("Modify the maximum NBT size limit as received from network packets")
             .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinPacketBuffer").setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.changeMaxNetworkNbtSizeLimit).addTargetedMod(TargetedMod.VANILLA)),

@@ -72,6 +72,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixFluidContainerRegistryKey;
 
+    @Config.Comment("Fix RenderBlockFluid reading the block type from the world access multiple times")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixFluidRendererCheckingBlockAgain;
+
     @Config.Comment("Replace recursion with iteration in FontRenderer line wrapping code")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
