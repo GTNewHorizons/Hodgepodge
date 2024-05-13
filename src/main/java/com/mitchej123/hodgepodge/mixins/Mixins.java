@@ -376,6 +376,12 @@ public enum Mixins {
             .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA).addMixinClasses("minecraft.MixinBlock_LighterWater")
             .setApplyIf(() -> TweaksConfig.useLighterWater)),
 
+    EARLY_CHUNK_TILE_COORDINATE_CHECK(
+            new Builder("Checks saved TileEntity coordinates earlier to provide a more descriptive error message")
+                    .setPhase(Phase.EARLY).setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
+                    .addMixinClasses("minecraft.MixinChunk")
+                    .setApplyIf(() -> FixesConfig.earlyChunkTileCoordinateCheck)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIc2WaterKinetic").setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
