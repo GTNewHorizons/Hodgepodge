@@ -6,6 +6,7 @@ import com.mitchej123.hodgepodge.net.NetworkHandler;
 import com.mitchej123.hodgepodge.util.AnchorAlarm;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.ICrashCallable;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -34,6 +35,20 @@ public class Hodgepodge {
 
     static {
         isGTNH = true;
+    }
+
+    public Hodgepodge() {
+        FMLCommonHandler.instance().registerCrashCallable(new ICrashCallable() {
+            @Override
+            public String getLabel() {
+                return "CPU Threads";
+            }
+
+            @Override
+            public String call() {
+                return String.valueOf(Runtime.getRuntime().availableProcessors());
+            }
+        });
     }
 
     @EventHandler
