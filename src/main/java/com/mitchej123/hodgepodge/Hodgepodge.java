@@ -39,6 +39,7 @@ public class Hodgepodge {
 
     public Hodgepodge() {
         FMLCommonHandler.instance().registerCrashCallable(new ICrashCallable() {
+
             @Override
             public String getLabel() {
                 return "CPU Threads";
