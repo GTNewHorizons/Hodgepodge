@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.mixins.late.thaumcraft;
 
 import java.util.ArrayList;
 
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
@@ -24,7 +25,7 @@ import thaumcraft.common.items.wands.ItemWandCasting;
 import thaumcraft.common.tiles.TileWandPedestal;
 
 @Mixin(value = TileWandPedestal.class)
-public abstract class MixinTileWandPedestal extends TileThaumcraft {
+public abstract class MixinTileWandPedestal extends TileThaumcraft implements ISidedInventory {
 
     private int hodgepodge$ticksSinceLastSync = 0;
     private boolean hodgepodge$needSync;
@@ -37,9 +38,6 @@ public abstract class MixinTileWandPedestal extends TileThaumcraft {
 
     @Shadow(remap = false)
     private boolean somethingChanged;
-
-    @Shadow(remap = false)
-    public abstract ItemStack getStackInSlot(int par1);
 
     @Inject(
             method = "updateEntity",
