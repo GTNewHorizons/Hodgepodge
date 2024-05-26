@@ -582,6 +582,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixWitcheryReflections;
 
+    @Config.Comment("Enhanced Witchery Thunder Detection for rituals and Witch Hunters")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixWitcheryThunderDetection;
+
     // Xaero's World Map
 
     @Config.Comment("Fix scrolling in the world map screen")

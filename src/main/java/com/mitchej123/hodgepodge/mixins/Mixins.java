@@ -681,6 +681,15 @@ public enum Mixins {
             .setPhase(Phase.LATE).setApplyIf(() -> FixesConfig.fixWitcheryReflections)
             .addTargetedMod(TargetedMod.WITCHERY)),
 
+    FIX_WITCHERY_THUNDERING_DETECTION(new Builder(
+            "Fixes Witchery Thunder Detection for rituals and Witch Hunters breaking with mods modifying thunder frequency")
+                    .addMixinClasses(
+                            "witchery.MixinBlockCircle",
+                            "witchery.MixinEntityWitchHunter",
+                            "witchery.MixinRiteClimateChange")
+                    .setSide(Side.BOTH).setPhase(Phase.LATE).setApplyIf(() -> FixesConfig.fixWitcheryThunderDetection)
+                    .addTargetedMod(TargetedMod.WITCHERY)),
+
     // Various Exploits/Fixes
     GC_TIME_COMMAND_FIX(new Builder("GC Time Fix").addMixinClasses("minecraft.MixinTimeCommandGalacticraftFix")
             .setPhase(Phase.EARLY).setSide(Side.BOTH).setApplyIf(() -> FixesConfig.fixTimeCommandWithGC)
