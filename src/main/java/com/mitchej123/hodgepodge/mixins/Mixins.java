@@ -639,6 +639,10 @@ public enum Mixins {
             .addMixinClasses("extrautilities.MixinBlockDrum").setSide(Side.BOTH).setPhase(Phase.LATE)
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesDrumEatingCells)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_GREENSCREEN_MICROBLOCKS(new Builder("Fix extra utilities Lapis Caelestis microblocks")
+            .addMixinClasses("extrautilities.MixinFullBrightMicroMaterial").setSide(Side.CLIENT).setPhase(Phase.LATE)
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesGreenscreenMicroblocks)
+            .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
     // PortalGun
     PORTALGUN_FIX_URLS(new Builder("Fix URLs used to download the sound pack")

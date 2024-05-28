@@ -389,6 +389,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixExtraUtilitiesDrumEatingCells;
 
+    @Config.Comment("Fix Extra Utilities Lapis Caelestis microblocks rendering")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixExtraUtilitiesGreenscreenMicroblocks;
+
     @Config.Comment("Fixes rendering issues with transparent items from Extra Utilities")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
