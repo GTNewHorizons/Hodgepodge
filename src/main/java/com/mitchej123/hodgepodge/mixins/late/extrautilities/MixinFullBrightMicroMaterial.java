@@ -1,19 +1,14 @@
 package com.mitchej123.hodgepodge.mixins.late.extrautilities;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-
-import codechicken.lib.render.CCRenderState;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(value = com.rwtema.extrautils.multipart.FullBrightMicroMaterial.Lighting.class, remap = false)
 public class MixinFullBrightMicroMaterial {
 
-    /**
-     * @author DvDmanDT
-     * @reason Fix rendering of Lapis caelestis microblocks.
-     */
-    @Overwrite
-    public void operate() {
-        CCRenderState.setBrightnessStatic(240);
+    @ModifyConstant(method = "operate", constant = @Constant(intValue = 16711935))
+    int injected(int v) {
+        return 240;
     }
 }
