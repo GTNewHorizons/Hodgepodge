@@ -147,6 +147,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean useLighterWater;
 
+    @Config.Comment("Consumes a water source block/a cauldron of water to fill a water bottle.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean disableWaterBottleInfiniteWater;
+
     // affecting multiple mods
 
     @Config.Comment("Unbinds keybinds of certain ARR mods to avoid keybinds conflicts")

@@ -381,6 +381,10 @@ public enum Mixins {
                     .setPhase(Phase.EARLY).setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
                     .addMixinClasses("minecraft.MixinChunk")
                     .setApplyIf(() -> FixesConfig.earlyChunkTileCoordinateCheck)),
+    WATER_BOTTLE_CONSUME_WATER(new Builder("Consumes a water source block/a cauldron of water to fill a water bottle.")
+            .setPhase(Phase.EARLY).setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses("minecraft.MixinItemGlassBottle", "minecraft.MixinBlockCauldron")
+            .setApplyIf(() -> TweaksConfig.disableWaterBottleInfiniteWater)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
