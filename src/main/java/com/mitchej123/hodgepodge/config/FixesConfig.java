@@ -409,6 +409,16 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixExtraUtilitiesUnEnchanting;
 
+    @Config.Comment("Remove rain from the Last Millenium (Extra Utilities)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static Boolean fixExtraUtilitiesLastMilleniumRain;
+
+    @Config.Comment("Remove creatures from the Last Millenium (Extra Utilities)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static Boolean fixExtraUtilitiesLastMilleniumCreatures;
+
     // Galacticraft
 
     @Config.Comment("Fix time commands with GC")
@@ -560,6 +570,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixThaumcraftLeavesLag;
+
+    @Config.Comment("Fix Thaumcraft wand pedestal vis duplication")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixWandPedestalVisDuplication;
 
     // Thermal Dynamics
 
