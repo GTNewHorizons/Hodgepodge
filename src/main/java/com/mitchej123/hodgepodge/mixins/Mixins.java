@@ -82,6 +82,10 @@ public enum Mixins {
     FIX_FRIENDLY_CREATURE_SOUNDS(new Builder("Fix Friendly Creature Sounds").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinSoundHandler").setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> FixesConfig.fixFriendlyCreatureSounds)),
+    LOGARITHMIC_VOLUME_CONTROL(new Builder("Logarithmic Volume Control").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinSoundManager", "minecraft.MixinSoundManagerLibraryLoader")
+            .setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> FixesConfig.logarithmicVolumeControl)),
     THROTTLE_ITEMPICKUPEVENT(new Builder("Throttle Item Pickup Event").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityPlayer").setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.throttleItemPickupEvent).addTargetedMod(TargetedMod.VANILLA)),
@@ -509,7 +513,9 @@ public enum Mixins {
     JAVA12_BOP(new Builder("BOP Java12-safe reflection").setPhase(Phase.LATE).setSide(Side.BOTH)
             .addMixinClasses("biomesoplenty.MixinBOPBiomes").addMixinClasses("biomesoplenty.MixinBOPReflectionHelper")
             .setApplyIf(() -> FixesConfig.java12BopCompat).addTargetedMod(TargetedMod.BOP)),
-
+    DISABLE_QUICKSAND_GENERATION(new Builder("Disable BOP quicksand").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .addMixinClasses("biomesoplenty.MixinDisableQuicksandGeneration")
+            .setApplyIf(() -> TweaksConfig.removeBOPQuicksandGeneration).addTargetedMod(TargetedMod.BOP)),
     // COFH
     COFH_REMOVE_TE_CACHE(
             new Builder("Remove CoFH tile entity cache").addMixinClasses("minecraft.MixinWorld_CoFH_TE_Cache")

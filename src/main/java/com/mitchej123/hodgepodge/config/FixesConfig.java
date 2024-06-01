@@ -92,6 +92,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixFriendlyCreatureSounds;
 
+    @Config.Comment("Fix Volume Slider is ineffective until reaching the lower end")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean logarithmicVolumeControl;
+
     @Config.Comment("Fix vanilla light calculation sometimes cause NPE on thermos")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart

@@ -168,6 +168,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean makeBigFirsPlantable;
 
+    @Config.Comment("Remove the BOP quicksand generation")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean removeBOPQuicksandGeneration;
+
     // Extra Utilities
 
     @Config.Comment("Disables the spawn of zombie aid when zombie is killed by Extra Utilities Spikes, since it can spawn them too far.")
