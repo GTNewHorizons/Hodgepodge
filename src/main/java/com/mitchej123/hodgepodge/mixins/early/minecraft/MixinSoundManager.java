@@ -19,7 +19,8 @@ public class MixinSoundManager {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/audio/SoundManager$SoundSystemStarterThread;setMasterVolume(F)V"),
-            index = 0)
+            index = 0,
+            remap = false)
     public float hodgepodge$modifySetMasterVolumeArg(float volume) {
         return (float) Math.pow(volume, 2);
     }
