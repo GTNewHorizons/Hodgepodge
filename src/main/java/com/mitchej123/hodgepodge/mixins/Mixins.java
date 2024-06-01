@@ -82,6 +82,10 @@ public enum Mixins {
     FIX_FRIENDLY_CREATURE_SOUNDS(new Builder("Fix Friendly Creature Sounds").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinSoundHandler").setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> FixesConfig.fixFriendlyCreatureSounds)),
+    LOGARITHMIC_VOLUME_CONTROL(new Builder("Logarithmic Volume Control").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinSoundManager", "minecraft.MixinSoundManagerLibraryLoader")
+            .setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> FixesConfig.logarithmicVolumeControl)),
     THROTTLE_ITEMPICKUPEVENT(new Builder("Throttle Item Pickup Event").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityPlayer").setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.throttleItemPickupEvent).addTargetedMod(TargetedMod.VANILLA)),
