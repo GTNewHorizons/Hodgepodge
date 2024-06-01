@@ -272,4 +272,8 @@ public class TweaksConfig {
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean disableModdedChunkPopulation;
+
+    @Config.Comment("Avoids droping items on container close, and instead places them in the player inventory. (Inspired from EFR)")
+    @Config.DefaultBoolean(true)
+    public static boolean avoidDroppingItemsWhenClosing;
 }
