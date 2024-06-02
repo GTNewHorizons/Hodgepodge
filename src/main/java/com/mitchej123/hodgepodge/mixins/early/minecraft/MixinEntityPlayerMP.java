@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.google.common.collect.Sets;
+import com.mitchej123.hodgepodge.HodgepodgeEventHandler;
 
 @Mixin(EntityPlayerMP.class)
 public abstract class MixinEntityPlayerMP extends EntityLivingBase {
@@ -71,6 +72,11 @@ public abstract class MixinEntityPlayerMP extends EntityLivingBase {
             toReturn.addAll(attr.getModifiersByOperation(i));
         }
         return toReturn;
+    }
+
+    @Inject(method = "closeContainer", at = @At("HEAD"))
+    private void hodgepodge$detectClosingContainer(CallbackInfo ci) {
+        HodgepodgeEventHandler.playersClosedContainers.add((EntityPlayerMP) (Object) this);
     }
 
     private MixinEntityPlayerMP(World p_i1594_1_) {
