@@ -1,15 +1,10 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.audio.SoundManager;
-import net.minecraft.client.audio.SoundPoolEntry;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SoundManager.class)
 public class MixinSoundManager {
@@ -25,10 +20,14 @@ public class MixinSoundManager {
         return (float) Math.pow(volume, 2);
     }
 
-    @Inject(method = "getNormalizedVolume", at = @At("RETURN"), cancellable = true)
-    private void hodgepodge$modifyCategoryVolume(ISound sound, SoundPoolEntry poolEntry, SoundCategory category,
-            CallbackInfoReturnable<Float> ci) {
-        float scaledVolume = (float) Math.pow(ci.getReturnValue(), 2);
-        ci.setReturnValue(scaledVolume);
+    @ModifyArg(
+            method = "setSoundCategoryVolume",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/audio/SoundManager$SoundSystemStarterThread;setVolume(Ljava/lang/String;F)V"),
+            index = 1,
+            remap = false)
+    private float hodgepodge$modifySetCategoryVolumeArg(float volume) {
+        return (float) Math.pow(volume, 2);
     }
 }
