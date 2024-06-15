@@ -90,6 +90,9 @@ public abstract class MixinRegionFile {
     @Shadow
     protected abstract void write(int sector, byte[] data, int length) throws IOException;
 
+    @Shadow
+    @Final
+    private File fileName;
     @Unique
     final private IOException hodgepodge$magicException = new IOException("cancel the constructor");
 
@@ -248,7 +251,8 @@ public abstract class MixinRegionFile {
             if (sectorsNeeded >= 256) {
                 // crucible - info: chunk has a limit of 255 sectors
                 Common.log.warn(
-                        "[Hodgepodge] Oversized Chunk at ({}, {}) - {} bytes used",
+                        "[Hodgepodge] Oversized Chunk in {} at ({}, {}) - {} bytes used",
+                        this.fileName,
                         x,
                         z,
                         sectorsNeeded * SECTOR_LLENGTH);
