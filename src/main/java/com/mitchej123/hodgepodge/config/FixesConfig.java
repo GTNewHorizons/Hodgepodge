@@ -412,12 +412,12 @@ public class FixesConfig {
     @Config.Comment("Remove rain from the Last Millenium (Extra Utilities)")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static Boolean fixExtraUtilitiesLastMilleniumRain;
+    public static boolean fixExtraUtilitiesLastMilleniumRain;
 
     @Config.Comment("Remove creatures from the Last Millenium (Extra Utilities)")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static Boolean fixExtraUtilitiesLastMilleniumCreatures;
+    public static boolean fixExtraUtilitiesLastMilleniumCreatures;
 
     // Galacticraft
 
