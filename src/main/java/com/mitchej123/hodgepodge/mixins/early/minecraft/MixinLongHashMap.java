@@ -5,6 +5,9 @@ import net.minecraft.util.LongHashMap;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 
@@ -12,7 +15,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 public class MixinLongHashMap {
 
     @Unique
-    private transient Long2ObjectOpenHashMap<Object> fastMap;
+    private final transient Long2ObjectOpenHashMap<Object> hodgepodge$fastMap = new Long2ObjectOpenHashMap<>();
 
     /**
      * @author NotAPenguin
@@ -20,7 +23,7 @@ public class MixinLongHashMap {
      */
     @Overwrite
     public int getNumHashElements() {
-        return fastMap.size();
+        return hodgepodge$fastMap.size();
     }
 
     /**
@@ -29,7 +32,7 @@ public class MixinLongHashMap {
      */
     @Overwrite
     public Object getValueByKey(long key) {
-        return fastMap.get(key);
+        return hodgepodge$fastMap.get(key);
     }
 
     /**
@@ -38,7 +41,7 @@ public class MixinLongHashMap {
      */
     @Overwrite
     public boolean containsItem(long key) {
-        return fastMap.containsKey(key);
+        return hodgepodge$fastMap.containsKey(key);
     }
 
     /**
@@ -47,7 +50,7 @@ public class MixinLongHashMap {
      */
     @Overwrite
     public void add(long key, Object object) {
-        fastMap.put(key, object);
+        hodgepodge$fastMap.put(key, object);
     }
 
     /**
@@ -56,6 +59,6 @@ public class MixinLongHashMap {
      */
     @Overwrite
     public Object remove(long key) {
-        return fastMap.remove(key);
+        return hodgepodge$fastMap.remove(key);
     }
 }
