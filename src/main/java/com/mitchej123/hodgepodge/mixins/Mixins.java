@@ -386,6 +386,12 @@ public enum Mixins {
                     .addMixinClasses("minecraft.MixinChunk")
                     .setApplyIf(() -> FixesConfig.earlyChunkTileCoordinateCheck)),
 
+    FAST_CHUNK_HASHMAP(
+            new Builder("Swaps the LongHashMap holding loaded chunks with a fastutil one")
+                .setPhase(Phase.EARLY).setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
+                .addMixinClasses("minecraft.MixinLongHashMap")
+                .setApplyIf(() -> true)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIc2WaterKinetic").setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
