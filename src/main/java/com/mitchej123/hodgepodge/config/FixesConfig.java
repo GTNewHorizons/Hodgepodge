@@ -327,6 +327,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean earlyChunkTileCoordinateCheck;
 
+    @Config.Comment("Fix the temperature can go below absolute zero at very high place")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixNegativeKelvin;
+
     // affecting multiple mods
 
     @Config.Comment("Remove old/stale/outdated update checks.")
