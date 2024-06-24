@@ -493,6 +493,9 @@ public enum Mixins {
             .addMixinClasses("thaumcraft.MixinBlockMagicalLeaves", "thaumcraft.MixinBlockMagicalLog")
             .setPhase(Phase.LATE).setSide(Side.BOTH).setApplyIf(() -> FixesConfig.fixThaumcraftLeavesLag)
             .addTargetedMod(TargetedMod.THAUMCRAFT)),
+    FIX_THAUMCRAFT_VIS_DUPLICATION(new Builder("Fix Thaumcraft Vis Duplication")
+            .addMixinClasses("thaumcraft.MixinTileWandPedestal_VisDuplication").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.fixWandPedestalVisDuplication).addTargetedMod(TargetedMod.THAUMCRAFT)),
 
     // BOP
     FIX_QUICKSAND_XRAY(new Builder("Fix Xray through block without collision boundingBox").setPhase(Phase.LATE)
@@ -648,6 +651,14 @@ public enum Mixins {
     FIX_GREENSCREEN_MICROBLOCKS(new Builder("Fix extra utilities Lapis Caelestis microblocks")
             .addMixinClasses("extrautilities.MixinFullBrightMicroMaterial").setSide(Side.CLIENT).setPhase(Phase.LATE)
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesGreenscreenMicroblocks)
+            .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_LAST_MILLENIUM_RAIN(new Builder("Remove rain from the Last Millenium (Extra Utilities)")
+            .addMixinClasses("extrautilities.MixinChunkProviderEndOfTime").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesLastMilleniumRain)
+            .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_LAST_MILLENIUM_CREATURES(new Builder("Remove creatures from the Last Millenium (Extra Utilities)")
+            .addMixinClasses("extrautilities.MixinWorldProviderEndOfTime").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesLastMilleniumCreatures)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
     // PortalGun
