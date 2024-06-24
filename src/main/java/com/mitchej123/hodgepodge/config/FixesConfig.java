@@ -332,6 +332,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixNegativeKelvin;
 
+    @Config.Comment("Destroy and log TileEntities failing the safe coordinate instead of crashing the game (can cause loss of data)")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean earlyChunkTileCoordinateCheckDestructive;
+
     // affecting multiple mods
 
     @Config.Comment("Remove old/stale/outdated update checks.")
@@ -413,6 +418,16 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixExtraUtilitiesUnEnchanting;
+
+    @Config.Comment("Remove rain from the Last Millenium (Extra Utilities)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixExtraUtilitiesLastMilleniumRain;
+
+    @Config.Comment("Remove creatures from the Last Millenium (Extra Utilities)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixExtraUtilitiesLastMilleniumCreatures;
 
     // Galacticraft
 
@@ -565,6 +580,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixThaumcraftLeavesLag;
+
+    @Config.Comment("Fix Thaumcraft wand pedestal vis duplication")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixWandPedestalVisDuplication;
 
     // Thermal Dynamics
 
