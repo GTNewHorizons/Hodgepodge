@@ -332,6 +332,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixNegativeKelvin;
 
+@Config.Comment("Destroy and log TileEntities failing the safe coordinate instead of crashing the game (can cause loss of data)")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean earlyChunkTileCoordinateCheckDestructive;
+
     // affecting multiple mods
 
     @Config.Comment("Remove old/stale/outdated update checks.")
