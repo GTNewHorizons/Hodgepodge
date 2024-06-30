@@ -431,6 +431,13 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixTimeCommandWithGC;
 
+    // Gliby's Voice Chat
+
+    @Config.Comment("Fix Gliby's voice chat not shutting down its thread cleanly")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixGlibysVoiceChatThreadStop;
+
     // Hunger Overhaul
 
     @Config.Comment("Fix Hunger Overhaul low stat effects")
