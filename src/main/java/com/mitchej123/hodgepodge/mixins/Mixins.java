@@ -664,6 +664,18 @@ public enum Mixins {
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesLastMilleniumCreatures)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
+    // Gliby's Voice Chat
+    FIX_GLIBYS_VC_THREAD_SHUTDOWN_CLIENT(
+            new Builder("Fix Gliby's voice chat not shutting down its client thread cleanly")
+                    .addMixinClasses("glibysvoicechat.MixinClientNetwork").setPhase(Phase.LATE).setSide(Side.CLIENT)
+                    .setApplyIf(() -> FixesConfig.fixGlibysVoiceChatThreadStop)
+                    .addTargetedMod(TargetedMod.GLIBYS_VOICE_CHAT)),
+    FIX_GLIBYS_VC_THREAD_SHUTDOWN_SERVER(
+            new Builder("Fix Gliby's voice chat not shutting down its server thread cleanly")
+                    .addMixinClasses("glibysvoicechat.MixinVoiceChatServer").setPhase(Phase.LATE).setSide(Side.BOTH)
+                    .setApplyIf(() -> FixesConfig.fixGlibysVoiceChatThreadStop)
+                    .addTargetedMod(TargetedMod.GLIBYS_VOICE_CHAT)),
+
     // PortalGun
     PORTALGUN_FIX_URLS(new Builder("Fix URLs used to download the sound pack")
             .addMixinClasses("portalgun.MixinThreadDownloadResources").addTargetedMod(TargetedMod.PORTAL_GUN)
