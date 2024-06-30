@@ -21,6 +21,11 @@ public enum AsmTransformers {
             () -> ASMConfig.speedupProgressBar,
             Side.CLIENT,
             "com.mitchej123.hodgepodge.asm.transformers.fml.SpeedupProgressBarTransformer"),
+    SPEEDUP_LONG_INT_HASHMAP(
+            "Speed up LongHashMap & IntHashMap",
+            () -> ASMConfig.speedupLongIntHashMap,
+            Side.CLIENT,
+            "com.mitchej123.hodgepodge.asm.transformers.fml.SpeedupLongIntHashMapTransformer"),
     FIX_BOGUS_INTEGRATED_SERVER_NPE(
             "Fix bogus FMLProxyPacket NPEs on integrated server crashes",
             () -> FixesConfig.fixBogusIntegratedServerNPEs,
