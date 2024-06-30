@@ -15,6 +15,11 @@ public class ASMConfig {
     @Config.RequiresMcRestart
     public static boolean speedupProgressBar;
 
+    @Config.Comment("Speedup LongInt HashMap")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupLongIntHashMap;
+
     @Config.Comment("If using Bukkit/Thermos, the CraftServer package.")
     @Config.DefaultString("org.bukkit.craftbukkit.v1_7_R4.CraftServer")
     public static String thermosCraftServerClass;
