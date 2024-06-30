@@ -12,7 +12,7 @@ configurations {
 }
 
 dependencies {
-    api("com.github.GTNewHorizons:GTNHLib:0.3.0:dev")
+    api("com.github.GTNewHorizons:GTNHLib:0.3.1:dev")
 
     compileOnly("com.gtnewhorizons.retrofuturabootstrap:RetroFuturaBootstrap:1.0.2") { transitive = false }
 
