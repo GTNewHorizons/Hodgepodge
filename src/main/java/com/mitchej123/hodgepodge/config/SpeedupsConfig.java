@@ -42,6 +42,11 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean tcpNoDelay;
 
+    @Config.Comment("Lightly threads chunk generation, loading, and discarding. Experimental, use at your own risk!")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean fastChunkHandling;
+
     // Biomes O' Plenty
 
     @Config.Comment("Speedup biome fog rendering in BiomesOPlenty")

@@ -23,7 +23,6 @@ public class ChatHandler {
         return false;
     }
 
-    @SuppressWarnings("unchecked")
     private static boolean areMessagesIdentical(IChatComponent imsg, IChatComponent prevMsg) {
         final int size1 = imsg.getSiblings().size();
         final int size2 = prevMsg.getSiblings().size();
@@ -38,7 +37,7 @@ public class ChatHandler {
         if (!(prevMsg.getSiblings().get(size2 - 1) instanceof ChatComponentCount)) {
             return false;
         }
-        final Object removed = prevMsg.getSiblings().remove(size2 - 1);
+        final IChatComponent removed = prevMsg.getSiblings().remove(size2 - 1);
         final boolean equals = imsg.equals(prevMsg);
         prevMsg.getSiblings().add(removed);
         if (equals) {

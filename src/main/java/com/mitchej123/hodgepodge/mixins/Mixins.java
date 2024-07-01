@@ -380,6 +380,17 @@ public enum Mixins {
             .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA).addMixinClasses("minecraft.MixinBlock_LighterWater")
             .setApplyIf(() -> TweaksConfig.useLighterWater)),
 
+    FAST_CHUNK_LOADING(new Builder("Lightly threads chunk generation and loading").setPhase(Phase.EARLY)
+            .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses(
+                    "minecraft.fastload.MixinIntCache",
+                    "minecraft.fastload.MixinWorldChunkManager",
+                    "minecraft.fastload.MixinWorldServer",
+                    "minecraft.fastload.MixinEntityPlayerMP",
+                    "minecraft.fastload.MixinPlayerManager",
+                    "minecraft.fastload.MixinPlayerInstance")
+            .setApplyIf(() -> SpeedupsConfig.fastChunkHandling)),
+
     EARLY_CHUNK_TILE_COORDINATE_CHECK(
             new Builder("Checks saved TileEntity coordinates earlier to provide a more descriptive error message")
                     .setPhase(Phase.EARLY).setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
