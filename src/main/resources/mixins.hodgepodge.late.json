@@ -4,6 +4,9 @@
   "package": "com.mitchej123.hodgepodge.mixins.late",
   "refmap": "mixins.hodgepodge.refmap.json",
   "target": "@env(DEFAULT)",
-  "compatibilityLevel": "JAVA_8"
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "extrautilities.MixinFluidBufferRetrieval"
+  ]
 }
 
