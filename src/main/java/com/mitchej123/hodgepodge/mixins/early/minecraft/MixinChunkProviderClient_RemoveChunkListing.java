@@ -51,4 +51,19 @@ public class MixinChunkProviderClient_RemoveChunkListing {
         // Get the iterator from the FastUtilLongHashMap instead of the chunkListing list
         return ((FastUtilLongHashMap) chunkMapping).valuesIterator();
     }
+
+    @Redirect(method = "makeString", at = @At(value = "INVOKE", target = "Ljava/util/List;size()I", remap = false))
+    private int hodgepodge$makeStringGetLoadedChunkCount(List instance) {
+        // Return the size of the FastUtilLongHashMap instead of the chunkListing list
+        return chunkMapping.getNumHashElements();
+    }
+
+    @Redirect(
+            method = "getLoadedChunkCount",
+            at = @At(value = "INVOKE", target = "Ljava/util/List;size()I", remap = false))
+    private int hodgepodge$getLoadedChunkCount(List instance) {
+        // Return the size of the FastUtilLongHashMap instead of the chunkListing list
+        return chunkMapping.getNumHashElements();
+    }
+
 }
