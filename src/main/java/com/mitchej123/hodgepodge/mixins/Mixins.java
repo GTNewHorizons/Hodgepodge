@@ -661,7 +661,7 @@ public enum Mixins {
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesLastMilleniumCreatures)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
     FIX_FLUID_RETRIEVAL_NODE(new Builder("Prevent fluid retrieval node from voiding (Extra Utilities)")
-            .addMixinClasses("extrautilities.MixInFluidBufferRetrieval").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .addMixinClasses("extrautilities.MixinFluidBufferRetrieval").setPhase(Phase.LATE).setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFluidRetrievalNode)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
