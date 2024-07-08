@@ -15,8 +15,7 @@ public abstract class MixinBiomeGenBase {
     private static final float ABSOLUTE_ZERO = -459.67f / 100f; // in Fahrenheit scale
 
     @Inject(method = "getFloatTemperature", at = @At("RETURN"), cancellable = true)
-    public final void getFloatTemperature(int p_150564_1_, int p_150564_2_, int p_150564_3_,
-            CallbackInfoReturnable<Float> cir) {
+    public final void hodgepodge$getFloatTemperature(int x, int y, int z, CallbackInfoReturnable<Float> cir) {
         cir.setReturnValue(Math.max(cir.getReturnValue(), ABSOLUTE_ZERO));
     }
 }
