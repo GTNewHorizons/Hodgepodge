@@ -124,6 +124,10 @@ public enum Mixins {
     SPEEDUP_GRASS_BLOCK_RANDOM_TICKING(new Builder("Speed up grass block random ticking").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinBlockGrass").addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)
             .setApplyIf(() -> SpeedupsConfig.speedupGrassBlockRandomTicking)),
+    SPEEDUP_CHUNK_PROVIDER_CLIENT(new Builder("Speed up ChunkProviderClient").setPhase(Phase.EARLY).setSide(Side.CLIENT)
+            .addMixinClasses("minecraft.MixinChunkProviderClient_RemoveChunkListing")
+            .addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> SpeedupsConfig.speedupChunkProviderClient && ASMConfig.speedupLongIntHashMap)),
     CHUNK_COORDINATES_HASHCODE(new Builder("Optimize Chunk Coordinates Hashcode").setPhase(Phase.EARLY)
             .setSide(Side.BOTH).addMixinClasses("minecraft.MixinChunkCoordinates").addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> SpeedupsConfig.speedupChunkCoordinatesHashCode)),
@@ -663,6 +667,18 @@ public enum Mixins {
             .addMixinClasses("extrautilities.MixinWorldProviderEndOfTime").setPhase(Phase.LATE).setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesLastMilleniumCreatures)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+
+    // Gliby's Voice Chat
+    FIX_GLIBYS_VC_THREAD_SHUTDOWN_CLIENT(
+            new Builder("Fix Gliby's voice chat not shutting down its client thread cleanly")
+                    .addMixinClasses("glibysvoicechat.MixinClientNetwork").setPhase(Phase.LATE).setSide(Side.CLIENT)
+                    .setApplyIf(() -> FixesConfig.fixGlibysVoiceChatThreadStop)
+                    .addTargetedMod(TargetedMod.GLIBYS_VOICE_CHAT)),
+    FIX_GLIBYS_VC_THREAD_SHUTDOWN_SERVER(
+            new Builder("Fix Gliby's voice chat not shutting down its server thread cleanly")
+                    .addMixinClasses("glibysvoicechat.MixinVoiceChatServer").setPhase(Phase.LATE).setSide(Side.BOTH)
+                    .setApplyIf(() -> FixesConfig.fixGlibysVoiceChatThreadStop)
+                    .addTargetedMod(TargetedMod.GLIBYS_VOICE_CHAT)),
 
     // PortalGun
     PORTALGUN_FIX_URLS(new Builder("Fix URLs used to download the sound pack")
