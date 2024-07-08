@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.asm.transformers.fml;
+package com.mitchej123.hodgepodge.asm.transformers.mc;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
@@ -19,13 +19,17 @@ import com.gtnewhorizon.gtnhlib.asm.ClassConstantPoolParser;
 public class SpeedupLongIntHashMapTransformer implements IClassTransformer {
 
     public static final String LONG_HASH_MAP = "net/minecraft/util/LongHashMap";
+    public static final String LONG_HASH_MAP_OBF = "qd";
     public static final String INT_HASH_MAP = "net/minecraft/util/IntHashMap";
+    public static final String INT_HASH_MAP_OBF = "pz";
     public static final String FAST_UTIL_LONG_HASH_MAP = "com/mitchej123/hodgepodge/util/FastUtilLongHashMap";
     public static final String FAST_UTIL_INT_HASH_MAP = "com/mitchej123/hodgepodge/util/FastUtilIntHashMap";
 
     private static final ClassConstantPoolParser cstPoolParser = new ClassConstantPoolParser(
             INT_HASH_MAP,
-            LONG_HASH_MAP);
+            INT_HASH_MAP_OBF,
+            LONG_HASH_MAP,
+            LONG_HASH_MAP_OBF);
 
     private static final Logger LOGGER = LogManager.getLogger("SpeedupLongIntHashMapTransformer");
     public static final String INIT = "<init>";
@@ -64,22 +68,26 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer {
         for (MethodNode mn : cn.methods) {
             for (AbstractInsnNode node : mn.instructions.toArray()) {
                 if (node.getOpcode() == Opcodes.NEW && node instanceof TypeInsnNode tNode) {
-                    if (!longHashMapInit && tNode.desc.equals(LONG_HASH_MAP)) {
+                    if (!longHashMapInit
+                            && (tNode.desc.equals(LONG_HASH_MAP) || tNode.desc.equals(LONG_HASH_MAP_OBF))) {
                         longHashMapInit = true;
                         LOGGER.info("Found LongHashMap instantiation in " + transformedName + "." + mn.name);
                         mn.instructions.insertBefore(tNode, new TypeInsnNode(Opcodes.NEW, FAST_UTIL_LONG_HASH_MAP));
                         mn.instructions.remove(tNode);
                         changed = true;
-                    } else if (!intHashMapInit && tNode.desc.equals(INT_HASH_MAP)) {
-                        intHashMapInit = true;
-                        LOGGER.info("Found IntHashMap instantiation in " + transformedName + "." + mn.name);
-                        mn.instructions.insertBefore(tNode, new TypeInsnNode(Opcodes.NEW, FAST_UTIL_INT_HASH_MAP));
-                        mn.instructions.remove(tNode);
-                        changed = true;
-                    }
+                    } else if (!intHashMapInit
+                            && (tNode.desc.equals(INT_HASH_MAP) || tNode.desc.equals(INT_HASH_MAP_OBF))) {
+                                intHashMapInit = true;
+                                LOGGER.info("Found IntHashMap instantiation in " + transformedName + "." + mn.name);
+                                mn.instructions
+                                        .insertBefore(tNode, new TypeInsnNode(Opcodes.NEW, FAST_UTIL_INT_HASH_MAP));
+                                mn.instructions.remove(tNode);
+                                changed = true;
+                            }
                 } else if (node.getOpcode() == Opcodes.INVOKESPECIAL && node instanceof MethodInsnNode mNode) {
                     if (mNode.name.equals(INIT) && mNode.desc.equals(EMPTY_DESC)) {
-                        if (longHashMapInit && mNode.owner.equals(LONG_HASH_MAP)) {
+                        if (longHashMapInit
+                                && (mNode.owner.equals(LONG_HASH_MAP) || mNode.owner.equals(LONG_HASH_MAP_OBF))) {
                             longHashMapInit = false;
                             LOGGER.info("Found LongHashMap constructor call in " + transformedName + "." + mn.name);
                             mn.instructions.insertBefore(
@@ -91,19 +99,21 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer {
                                             EMPTY_DESC,
                                             false));
                             mn.instructions.remove(mNode);
-                        } else if (intHashMapInit && mNode.owner.equals(INT_HASH_MAP)) {
-                            intHashMapInit = false;
-                            LOGGER.info("Found IntHashMap constructor call in " + transformedName + "." + mn.name);
-                            mn.instructions.insertBefore(
-                                    mNode,
-                                    new MethodInsnNode(
-                                            Opcodes.INVOKESPECIAL,
-                                            FAST_UTIL_INT_HASH_MAP,
-                                            INIT,
-                                            EMPTY_DESC,
-                                            false));
-                            mn.instructions.remove(mNode);
-                        }
+                        } else if (intHashMapInit
+                                && (mNode.owner.equals(INT_HASH_MAP) || mNode.owner.equals(INT_HASH_MAP_OBF))) {
+                                    intHashMapInit = false;
+                                    LOGGER.info(
+                                            "Found IntHashMap constructor call in " + transformedName + "." + mn.name);
+                                    mn.instructions.insertBefore(
+                                            mNode,
+                                            new MethodInsnNode(
+                                                    Opcodes.INVOKESPECIAL,
+                                                    FAST_UTIL_INT_HASH_MAP,
+                                                    INIT,
+                                                    EMPTY_DESC,
+                                                    false));
+                                    mn.instructions.remove(mNode);
+                                }
                     }
                 }
             }
