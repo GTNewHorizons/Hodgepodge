@@ -42,6 +42,11 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean tcpNoDelay;
 
+    @Config.Comment("Speeds up ChunkProviderClient by removing chunkListing.  Note: Depends on asm.speedupLongIntHashMap")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupChunkProviderClient;
+
     // Biomes O' Plenty
 
     @Config.Comment("Speedup biome fog rendering in BiomesOPlenty")
