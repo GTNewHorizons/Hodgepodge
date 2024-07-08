@@ -369,6 +369,9 @@ public enum Mixins {
     FAST_BLOCK_PLACING(new Builder("Allows blocks to be placed faster").addTargetedMod(TargetedMod.VANILLA)
             .setSide(Side.CLIENT).setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinMinecraft_FastBlockPlacing")
             .setApplyIf(() -> true)), // Always apply, config handled in mixin
+    FIX_NEGATIVE_KELVIN(new Builder("Fix the local temperature can go below absolute zero")
+            .addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH).setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinBiomeGenBase").setApplyIf(() -> FixesConfig.fixNegativeKelvin)),
 
     SPIGOT_EXTENDED_CHUNKS(new Builder("Spigot-style extended chunk format to remove the 2MB chunk size limit")
             .addTargetedMod(TargetedMod.VANILLA).addExcludedMod(TargetedMod.BUKKIT).setSide(Side.BOTH)
