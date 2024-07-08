@@ -15,8 +15,6 @@ import com.rwtema.extrautils.tileentity.transfernodes.pipes.IPipe;
 @Mixin(value = FluidBufferRetrieval.class, remap = false)
 public class MixinFluidBufferRetrieval extends FluidBuffer {
 
-    // test
-
     /**
      * @author FourIsTheNumber
      * @reason Change transfer logic to prevent voiding
