@@ -1,5 +1,7 @@
 package com.mitchej123.hodgepodge.util;
 
+import java.util.Iterator;
+
 import net.minecraft.util.LongHashMap;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -29,7 +31,6 @@ public class FastUtilLongHashMap extends LongHashMap {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void add(long key, Object value) {
         map.put(key, value);
     }
@@ -37,5 +38,9 @@ public class FastUtilLongHashMap extends LongHashMap {
     @Override
     public Object remove(long key) {
         return map.remove(key);
+    }
+
+    public Iterator<Object> valuesIterator() {
+        return map.values().iterator();
     }
 }
