@@ -327,6 +327,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean earlyChunkTileCoordinateCheck;
 
+    @Config.Comment("Fix the temperature can go below absolute zero at very high place")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixNegativeKelvin;
+
     @Config.Comment("Destroy and log TileEntities failing the safe coordinate instead of crashing the game (can cause loss of data)")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
