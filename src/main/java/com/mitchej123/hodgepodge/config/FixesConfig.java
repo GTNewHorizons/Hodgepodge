@@ -429,6 +429,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixExtraUtilitiesLastMilleniumCreatures;
 
+    @Config.Comment("Prevent fluid retrieval node from voiding (Extra Utilities)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixExtraUtilitiesFluidRetrievalNode;
+
     // Galacticraft
 
     @Config.Comment("Fix time commands with GC")

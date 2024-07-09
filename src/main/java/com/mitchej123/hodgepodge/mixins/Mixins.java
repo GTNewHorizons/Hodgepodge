@@ -667,6 +667,10 @@ public enum Mixins {
             .addMixinClasses("extrautilities.MixinWorldProviderEndOfTime").setPhase(Phase.LATE).setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesLastMilleniumCreatures)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_FLUID_RETRIEVAL_NODE(new Builder("Prevent fluid retrieval node from voiding (Extra Utilities)")
+            .addMixinClasses("extrautilities.MixinFluidBufferRetrieval").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFluidRetrievalNode)
+            .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
     // Gliby's Voice Chat
     FIX_GLIBYS_VC_THREAD_SHUTDOWN_CLIENT(
