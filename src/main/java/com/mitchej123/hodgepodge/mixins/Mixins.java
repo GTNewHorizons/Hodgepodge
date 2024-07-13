@@ -393,6 +393,11 @@ public enum Mixins {
                     .addMixinClasses("minecraft.MixinChunk")
                     .setApplyIf(() -> FixesConfig.earlyChunkTileCoordinateCheck)),
 
+    FIX_DUPLICATE_SOUNDS(new Builder("Fix duplicate sounds being played when you close a gui while one is playing")
+            .setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses("minecraft.MixinMinecraft_FixDuplicateSounds")
+            .setApplyIf(() -> FixesConfig.fixDuplicateSounds)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIc2WaterKinetic").setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
