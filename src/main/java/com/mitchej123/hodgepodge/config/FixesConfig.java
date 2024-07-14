@@ -42,6 +42,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixDimensionChangeHearts;
 
+    @Config.Comment("Fix duplicate sounds from playing when closing a gui.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixDuplicateSounds;
+
     @Config.Comment("Fix deleting stack when eating mushroom stew")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -647,5 +652,4 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixZTonesPackets;
-
 }
