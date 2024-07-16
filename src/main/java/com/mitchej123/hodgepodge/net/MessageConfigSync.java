@@ -10,11 +10,11 @@ import io.netty.buffer.ByteBuf;
 public class MessageConfigSync implements IMessage, IMessageHandler<MessageConfigSync, IMessage> {
 
     private boolean longerSentMessages;
-    private boolean fastBlockPlacingDisableServerSide;
+    private boolean fastBlockPlacingServerSide;
 
     public MessageConfigSync() {
         longerSentMessages = TweaksConfig.longerSentMessages;
-        fastBlockPlacingDisableServerSide = TweaksConfig.fastBlockPlacingDisableServerSide;
+        fastBlockPlacingServerSide = TweaksConfig.fastBlockPlacingServerSide;
     }
 
     @Override
@@ -23,20 +23,20 @@ public class MessageConfigSync implements IMessage, IMessageHandler<MessageConfi
         // Ensures clients with the setting can still join servers without the setting (servers running older versions
         // of the mod)
         if (buf.readableBytes() < 1) {
-            fastBlockPlacingDisableServerSide = false;
+            fastBlockPlacingServerSide = true;
         } else {
-            fastBlockPlacingDisableServerSide = buf.readBoolean();
+            fastBlockPlacingServerSide = buf.readBoolean();
         }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeBoolean(longerSentMessages);
-        buf.writeBoolean(fastBlockPlacingDisableServerSide);
+        buf.writeBoolean(fastBlockPlacingServerSide);
     }
 
-    public boolean isFastBlockPlacingDisableServerSide() {
-        return fastBlockPlacingDisableServerSide;
+    public boolean isFastBlockPlacingServerSide() {
+        return fastBlockPlacingServerSide;
     }
 
     public boolean isLongerSentMessages() {
@@ -47,9 +47,9 @@ public class MessageConfigSync implements IMessage, IMessageHandler<MessageConfi
     public IMessage onMessage(MessageConfigSync message, MessageContext ctx) {
         TweaksConfig.longerSentMessages = message.isLongerSentMessages();
 
-        if (message.isFastBlockPlacingDisableServerSide()) {
+        if (!message.isFastBlockPlacingServerSide()) {
             TweaksConfig.fastBlockPlacing = false;
-            TweaksConfig.fastBlockPlacingDisableServerSide = true;
+            TweaksConfig.fastBlockPlacingServerSide = false;
         }
 
         return null;

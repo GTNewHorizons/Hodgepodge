@@ -44,7 +44,7 @@ public class ClientKeyListener {
                 }
             }
         } else {
-            if (!TweaksConfig.fastBlockPlacingDisableServerSide && FastBlockPlacingKey.isPressed()) {
+            if (TweaksConfig.fastBlockPlacingServerSide && FastBlockPlacingKey.isPressed()) {
                 TweaksConfig.fastBlockPlacing = !TweaksConfig.fastBlockPlacing;
                 AboveHotbarHUD.renderTextAboveHotbar(
                         (TweaksConfig.fastBlockPlacing ? fastBlockPlacingEnabled : fastBlockPlacingDisabled),

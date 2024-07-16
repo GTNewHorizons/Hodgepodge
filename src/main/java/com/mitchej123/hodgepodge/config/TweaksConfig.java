@@ -87,9 +87,9 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean fastBlockPlacing;
 
-    @Config.Comment("Block players on your server from using fast block placement")
-    @Config.DefaultBoolean(false)
-    public static boolean fastBlockPlacingDisableServerSide;
+    @Config.Comment("Allow players on your server to use fast block placement")
+    @Config.DefaultBoolean(true)
+    public static boolean fastBlockPlacingServerSide;
 
     @Config.Comment("Prevents the inventory from shifting when the player has active potion effects")
     @Config.DefaultBoolean(true)
