@@ -20,8 +20,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ClientKeyListener {
 
-    private static String fastBlockPlacingEnabled = StatCollector.translateToLocal("key.fastBlockPlacing.enabled");
-    private static String fastBlockPlacingDisabled = StatCollector.translateToLocal("key.fastBlockPlacing.disabled");
+    private static final String fastBlockPlacingEnabled = StatCollector
+            .translateToLocal("key.fastBlockPlacing.enabled");
+    private static final String fastBlockPlacingDisabled = StatCollector
+            .translateToLocal("key.fastBlockPlacing.disabled");
 
     public static KeyBinding FastBlockPlacingKey = new KeyBinding(
             "key.fastBlockPlacing.desc",
@@ -42,7 +44,7 @@ public class ClientKeyListener {
                 }
             }
         } else {
-            if (FastBlockPlacingKey.isPressed()) {
+            if (!TweaksConfig.fastBlockPlacingDisableServerSide && FastBlockPlacingKey.isPressed()) {
                 TweaksConfig.fastBlockPlacing = !TweaksConfig.fastBlockPlacing;
                 AboveHotbarHUD.renderTextAboveHotbar(
                         (TweaksConfig.fastBlockPlacing ? fastBlockPlacingEnabled : fastBlockPlacingDisabled),

@@ -1,5 +1,7 @@
 package com.mitchej123.hodgepodge;
 
+import java.util.Map;
+
 import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
@@ -13,13 +15,15 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkCheckHandler;
+import cpw.mods.fml.common.versioning.ArtifactVersion;
+import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
 import cpw.mods.fml.relauncher.Side;
 
 @Mod(
         modid = Hodgepodge.MODID,
         version = Hodgepodge.VERSION,
         name = Hodgepodge.NAME,
-        acceptableRemoteVersions = "*",
         dependencies = "required-after:gtnhmixins@[2.0.1,);" + "required-after:unimixins@[0.0.14,);"
                 + "required-after:gtnhlib@[0.2.2,);",
         guiFactory = "com.mitchej123.hodgepodge.config.gui.HodgepodgeGuiConfigFactory")
@@ -32,6 +36,8 @@ public class Hodgepodge {
     public static final String NAME = "Hodgepodge";
 
     public static final boolean isGTNH;
+
+    private final ArtifactVersion minimumClientJoinVersion = new DefaultArtifactVersion("2.5.36");
 
     static {
         isGTNH = true;
@@ -82,5 +88,18 @@ public class Hodgepodge {
         // needed in case ExtraUtilities' Spike was crashed (and game was switched to a main menu), so it didn't update
         // the variable
         EVENT_HANDLER.setAidTriggerDisabled(false);
+    }
+
+    /**
+     * Block any clients older than 2.5.36 from joining servers to ensure the fastBlockPlacingDisableServerSide setting
+     * is respected
+     */
+    @SuppressWarnings("unused")
+    @NetworkCheckHandler
+    public boolean checkModList(Map<String, String> versions, Side side) {
+        if (side == Side.CLIENT && versions.containsKey(Hodgepodge.MODID)) {
+            return minimumClientJoinVersion.compareTo(new DefaultArtifactVersion(versions.get(Hodgepodge.MODID))) <= 0;
+        }
+        return true;
     }
 }
