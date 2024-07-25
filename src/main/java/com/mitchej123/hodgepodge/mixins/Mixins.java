@@ -398,6 +398,10 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinMinecraft_FixDuplicateSounds")
             .setApplyIf(() -> FixesConfig.fixDuplicateSounds)),
 
+    ADD_MOD_ITEM_STATS(new Builder("Add stats for modded items").addMixinClasses("fml.MixinGameRegistry")
+            .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> TweaksConfig.addModItemStats).setPhase(Phase.EARLY)
+            .setSide(Side.BOTH)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIc2WaterKinetic").setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)

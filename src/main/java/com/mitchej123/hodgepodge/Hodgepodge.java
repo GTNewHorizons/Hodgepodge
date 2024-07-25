@@ -4,14 +4,17 @@ import java.util.Map;
 
 import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
+import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
 import com.mitchej123.hodgepodge.util.AnchorAlarm;
+import com.mitchej123.hodgepodge.util.StatHandler;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ICrashCallable;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLModIdMappingEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
@@ -88,6 +91,13 @@ public class Hodgepodge {
         // needed in case ExtraUtilities' Spike was crashed (and game was switched to a main menu), so it didn't update
         // the variable
         EVENT_HANDLER.setAidTriggerDisabled(false);
+    }
+
+    @EventHandler
+    public void onModIdMapping(FMLModIdMappingEvent event) {
+        if (TweaksConfig.addModItemStats) {
+            StatHandler.remap(event.remappedIds);
+        }
     }
 
     /**

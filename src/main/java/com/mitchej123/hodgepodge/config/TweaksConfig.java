@@ -158,6 +158,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean unbindKeybindsByDefault;
 
+    @Config.Comment("Adds non-vanilla blocks/items to the statistics")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean addModItemStats;
+
     // Automagy
 
     @Config.Comment("Implement container for thirsty tank")
