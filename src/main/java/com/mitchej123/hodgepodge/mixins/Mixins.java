@@ -126,7 +126,7 @@ public enum Mixins {
             .setApplyIf(() -> SpeedupsConfig.speedupGrassBlockRandomTicking)),
     SPEEDUP_CHUNK_PROVIDER_CLIENT(new Builder("Speed up ChunkProviderClient").setPhase(Phase.EARLY).setSide(Side.CLIENT)
             .addMixinClasses("minecraft.MixinChunkProviderClient_RemoveChunkListing")
-            .addTargetedMod(TargetedMod.VANILLA)
+            .addTargetedMod(TargetedMod.VANILLA).addExcludedMod(TargetedMod.FASTCRAFT)
             .setApplyIf(() -> SpeedupsConfig.speedupChunkProviderClient && ASMConfig.speedupLongIntHashMap)),
     CHUNK_COORDINATES_HASHCODE(new Builder("Optimize Chunk Coordinates Hashcode").setPhase(Phase.EARLY)
             .setSide(Side.BOTH).addMixinClasses("minecraft.MixinChunkCoordinates").addTargetedMod(TargetedMod.VANILLA)
