@@ -1,14 +1,31 @@
 package com.mitchej123.hodgepodge.util;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityList.EntityEggInfo;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatList;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 import com.google.common.collect.ImmutableList;
 
 import cpw.mods.fml.common.event.FMLModIdMappingEvent.ModRemapping;
 import cpw.mods.fml.common.event.FMLModIdMappingEvent.RemapTarget;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class StatHandler {
+
+    public static final Map<Class<? extends Entity>, EntityEggInfo> ADDITIONAL_ENTITY_EGGS = new HashMap<>();
+    public static String currentEntityName;
 
     // stat arrays mapped to the frozen ids
     private static final StatBase[] STATS_MINE = new StatBase[StatList.mineBlockStatArray.length];
@@ -58,8 +75,62 @@ public class StatHandler {
         arraycopy(statsBreak, StatList.objectBreakStats);
     }
 
+    public static void addEntityStats() {
+        for (Entry<Class<? extends Entity>, String> e : EntityList.classToStringMapping.entrySet()) {
+            Class<? extends Entity> clazz = e.getKey();
+            if (!EntityLivingBase.class.isAssignableFrom(clazz)) {
+                // only entities extending EntityLivingBase can be killed/can kill the player
+                continue;
+            }
+            @SuppressWarnings("unchecked")
+            Integer id = (Integer) EntityList.classToIDMapping.getOrDefault(clazz, 256);
+            if (EntityList.entityEggs.containsKey(id)) {
+                continue;
+            }
+            currentEntityName = e.getValue();
+            ADDITIONAL_ENTITY_EGGS.put(clazz, new EntityInfo(id, currentEntityName));
+        }
+        currentEntityName = null;
+        MinecraftForge.EVENT_BUS.register(new StatHandler());
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onLivingDeathEvent(LivingDeathEvent event) {
+        if (event.entityLiving instanceof EntityPlayerMP player) {
+            // the player was killed
+            EntityLivingBase attackingEntity = player.func_94060_bK();
+            if (attackingEntity == null) {
+                return;
+            }
+            EntityEggInfo info = ADDITIONAL_ENTITY_EGGS.get(attackingEntity.getClass());
+            if (info == null) {
+                return;
+            }
+            player.addStat(info.field_151513_e, 1); // "killed by entity" stat
+            return;
+        }
+        if (event.source.getEntity() instanceof EntityPlayer player) {
+            // the player made a kill
+            EntityEggInfo info = ADDITIONAL_ENTITY_EGGS.get(event.entityLiving.getClass());
+            if (info == null) {
+                return;
+            }
+            player.addStat(info.field_151512_d, 1); // "kill entity" stat
+
+        }
+    }
+
     private static <T> void arraycopy(T[] src, T[] dest) {
         System.arraycopy(src, 0, dest, 0, src.length);
     }
 
+    public static class EntityInfo extends EntityEggInfo {
+
+        public final String name;
+
+        public EntityInfo(int id, String name) {
+            super(id, 0, 0);
+            this.name = name;
+        }
+    }
 }

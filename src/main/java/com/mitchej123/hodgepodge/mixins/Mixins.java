@@ -402,6 +402,14 @@ public enum Mixins {
             .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> TweaksConfig.addModItemStats).setPhase(Phase.EARLY)
             .setSide(Side.BOTH)),
 
+    ADD_MOD_ENTITY_STATS(new Builder("Add stats for modded entities").addMixinClasses("minecraft.MixinStatList")
+            .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> TweaksConfig.addModEntityStats).setPhase(Phase.EARLY)
+            .setSide(Side.BOTH)),
+
+    ADD_MOD_ENTITY_STATS_CLIENT(new Builder("Add stats for modded entities (client side)")
+            .addMixinClasses("minecraft.MixinStatsMobsList").addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> TweaksConfig.addModEntityStats).setPhase(Phase.EARLY).setSide(Side.CLIENT)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIc2WaterKinetic").setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
