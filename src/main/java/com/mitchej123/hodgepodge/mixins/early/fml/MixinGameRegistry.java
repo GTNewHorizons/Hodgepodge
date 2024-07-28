@@ -3,7 +3,6 @@ package com.mitchej123.hodgepodge.mixins.early.fml;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatCrafting;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.ChatComponentTranslation;
@@ -61,7 +60,7 @@ public class MixinGameRegistry {
     private static StatCrafting hodgepodge$createAndRegisterStat(String key, Item item) {
         StatCrafting stat = new StatCrafting(
                 key + '.' + item.delegate.name(),
-                new ChatComponentTranslation(key, new ItemStack(item).func_151000_E()),
+                new ChatComponentTranslation(key, new ChatComponentTranslation(item.getUnlocalizedName())),
                 item);
         stat.registerStat();
         return stat;
