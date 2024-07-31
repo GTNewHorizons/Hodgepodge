@@ -395,6 +395,13 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean removeBOPWarning;
 
+    // Candycraft
+
+    @Config.Comment("Fix NPE when interacting with sugar block")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixCandycraftBlockSugarNPE;
+
     // Extra TiC
 
     @Config.Comment("Disable ExtraTic's Integration with Metallurgy 3 Precious Materials Module: (Brass, Silver, Electrum & Platinum)")
