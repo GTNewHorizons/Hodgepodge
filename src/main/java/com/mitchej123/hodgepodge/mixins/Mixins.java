@@ -840,7 +840,12 @@ public enum Mixins {
     DISABLE_MODDED_CHUNK_POPULATION(new Builder("Disable all other mod chunk population (e.g. Natura clouds")
             .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinChunkProviderServer_DisableModGeneration")
             .addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)
-            .setApplyIf(() -> TweaksConfig.disableModdedChunkPopulation));
+            .setApplyIf(() -> TweaksConfig.disableModdedChunkPopulation)),
+
+    // Candycraft
+    FIX_SUGARBLOCK_NPE(new Builder("Fix NPE when interacting with sugar block")
+            .addMixinClasses("candycraft.MixinBlockSugar").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.fixCandycraftBlockSugarNPE).addTargetedMod(TargetedMod.CANDYCRAFT));
 
     private final List<String> mixinClasses;
     private final List<TargetedMod> targetedMods;

@@ -15,6 +15,7 @@ public enum TargetedMod {
     BOP("BiomesOPlenty", null, "BiomesOPlenty"),
     BUGTORCH("BugTorch", "jss.bugtorch.mixinplugin.BugTorchEarlyMixins", "bugtorch"),
     BUKKIT("Bukkit/Thermos", "Bukkit", null),
+    CANDYCRAFT("candycraftmod", null, "candycraftmod"),
     COFH_CORE("CoFHCore", "cofh.asm.LoadingPlugin", "CoFHCore"),
     DAMAGE_INDICATORS("Damage Indicators", null, "DamageIndicatorsMod"),
     EXTRATIC("ExtraTiC", null, "ExtraTiC"),
