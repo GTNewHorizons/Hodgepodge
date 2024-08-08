@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.forge;
+package com.mitchej123.hodgepodge.mixins.early.fml;
 
 import static org.objectweb.asm.Opcodes.PUTFIELD;
 
@@ -21,7 +21,7 @@ import cpw.mods.fml.common.network.internal.FMLMessage;
 import cpw.mods.fml.common.network.internal.OpenGuiHandler;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-@Mixin(value = { OpenGuiHandler.class })
+@Mixin(value = OpenGuiHandler.class)
 public abstract class MixinOpenGuiHandler extends SimpleChannelInboundHandler<FMLMessage.OpenGui> {
 
     /*

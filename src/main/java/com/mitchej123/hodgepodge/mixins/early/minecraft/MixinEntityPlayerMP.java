@@ -36,7 +36,6 @@ public abstract class MixinEntityPlayerMP extends EntityLivingBase {
             ServersideAttributeMap oldAttributeMap = (ServersideAttributeMap) oldPlayer.getAttributeMap();
 
             // Grab the watched attributes
-            @SuppressWarnings("unchecked")
             Collection<IAttributeInstance> watchedAttribs = oldAttributeMap.getWatchedAttributes();
 
             if (!watchedAttribs.isEmpty()) {
@@ -64,7 +63,6 @@ public abstract class MixinEntityPlayerMP extends EntityLivingBase {
     }
 
     // Helper method based on 1.12
-    @SuppressWarnings("unchecked")
     @Unique
     private Collection<AttributeModifier> getModifiers(ModifiableAttributeInstance attr) {
         Set<AttributeModifier> toReturn = Sets.newHashSet();

@@ -29,7 +29,6 @@ public class MixinServerConfigurationManager {
     private void hodgepodge$sendEntityProperties(EntityPlayerMP player, int dimension, Teleporter teleporter,
             CallbackInfo ci) {
         ServersideAttributeMap attributeMap = (ServersideAttributeMap) player.getAttributeMap();
-        @SuppressWarnings("unchecked")
         Collection<IAttributeInstance> watchedAttribs = attributeMap.getWatchedAttributes();
         if (!watchedAttribs.isEmpty()) {
             player.playerNetServerHandler
