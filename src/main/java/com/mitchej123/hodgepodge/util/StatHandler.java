@@ -64,7 +64,15 @@ public class StatHandler {
             }
             final int newId = remapping.newId;
             final int oldId = remapping.oldId;
-            statsMine[newId] = StatList.mineBlockStatArray[oldId];
+
+            if (newId < 4096 && oldId < 4096) {
+                statsMine[newId] = StatList.mineBlockStatArray[oldId];
+            } else if (newId < 4096 ^ oldId < 4096) {
+                // 0 - 4095 -> blocks
+                // 4096+ -> items
+                // switching domains is unexpected
+                Common.log.warn("Unexpected remap: oldID={}, newId={}, tag={}", oldId, newId, remapping.tag);
+            }
             statsCraft[newId] = StatList.objectCraftStats[oldId];
             statsUse[newId] = StatList.objectUseStats[oldId];
             statsBreak[newId] = StatList.objectBreakStats[oldId];
