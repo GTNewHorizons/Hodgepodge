@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.util;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -18,8 +19,11 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.config.TweaksConfig;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLModIdMappingEvent.ModRemapping;
 import cpw.mods.fml.common.event.FMLModIdMappingEvent.RemapTarget;
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -46,6 +50,7 @@ public class StatHandler {
             arraycopy(StatList.objectBreakStats, STATS_BREAK);
             initFrozenStats = false;
         }
+
         if (remappedIds.isEmpty()) {
             // we are reverting to frozen ids
             arraycopy(STATS_MINE, StatList.mineBlockStatArray);
@@ -92,22 +97,36 @@ public class StatHandler {
             // only populate map once - we don't want duplicate stats
             return;
         }
+
+        Set<String> excludedEntities = Sets.newHashSet(TweaksConfig.entityStatsExclusions);
+        if (Loader.isModLoaded("NotEnoughItems")) {
+            excludedEntities.add("SnowMan");
+            excludedEntities.add("VillagerGolem");
+        }
+
         for (Entry<Class<? extends Entity>, String> e : EntityList.classToStringMapping.entrySet()) {
             Class<? extends Entity> clazz = e.getKey();
             if (!EntityLivingBase.class.isAssignableFrom(clazz)) {
                 // only entities extending EntityLivingBase can be killed/can kill the player
                 continue;
             }
+
             currentEntityName = e.getValue();
+            if (excludedEntities.contains(currentEntityName)) {
+                continue;
+            }
+
             // func_151177_a = getOneShotStat
             if (StatList.func_151177_a("stat.killEntity." + currentEntityName) != null
                     || StatList.func_151177_a("stat.entityKilledBy." + currentEntityName) != null) {
                 continue;
             }
+
             ADDITIONAL_ENTITY_EGGS.put(
                     clazz,
                     new EntityInfo((int) EntityList.classToIDMapping.getOrDefault(clazz, 256), currentEntityName));
         }
+
         currentEntityName = null;
         MinecraftForge.EVENT_BUS.register(new StatHandler());
     }
