@@ -10,12 +10,15 @@ import net.minecraft.entity.EntityList.EntityEggInfo;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.stats.StatBase;
+import net.minecraft.stats.StatCrafting;
 import net.minecraft.stats.StatList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 import com.google.common.collect.ImmutableList;
+import com.mitchej123.hodgepodge.Common;
 
 import cpw.mods.fml.common.event.FMLModIdMappingEvent.ModRemapping;
 import cpw.mods.fml.common.event.FMLModIdMappingEvent.RemapTarget;
@@ -41,7 +44,7 @@ public class StatHandler {
             arraycopy(StatList.objectCraftStats, STATS_CRAFT);
             arraycopy(StatList.objectUseStats, STATS_USE);
             arraycopy(StatList.objectBreakStats, STATS_BREAK);
-            initFrozenStats = true;
+            initFrozenStats = false;
         }
         if (remappedIds.isEmpty()) {
             // we are reverting to frozen ids
@@ -64,7 +67,15 @@ public class StatHandler {
             }
             final int newId = remapping.newId;
             final int oldId = remapping.oldId;
-            statsMine[newId] = StatList.mineBlockStatArray[oldId];
+
+            if (newId < 4096 && oldId < 4096) {
+                statsMine[newId] = StatList.mineBlockStatArray[oldId];
+            } else if (newId < 4096 ^ oldId < 4096) {
+                // 0 - 4095 -> blocks
+                // 4096+ -> items
+                // switching domains is unexpected
+                Common.log.warn("Unexpected remap: oldID={}, newId={}, tag={}", oldId, newId, remapping.tag);
+            }
             statsCraft[newId] = StatList.objectCraftStats[oldId];
             statsUse[newId] = StatList.objectUseStats[oldId];
             statsBreak[newId] = StatList.objectBreakStats[oldId];
@@ -75,20 +86,27 @@ public class StatHandler {
         arraycopy(statsBreak, StatList.objectBreakStats);
     }
 
+    @SuppressWarnings("unchecked")
     public static void addEntityStats() {
+        if (!ADDITIONAL_ENTITY_EGGS.isEmpty()) {
+            // only populate map once - we don't want duplicate stats
+            return;
+        }
         for (Entry<Class<? extends Entity>, String> e : EntityList.classToStringMapping.entrySet()) {
             Class<? extends Entity> clazz = e.getKey();
             if (!EntityLivingBase.class.isAssignableFrom(clazz)) {
                 // only entities extending EntityLivingBase can be killed/can kill the player
                 continue;
             }
-            @SuppressWarnings("unchecked")
-            Integer id = (Integer) EntityList.classToIDMapping.getOrDefault(clazz, 256);
-            if (EntityList.entityEggs.containsKey(id)) {
+            currentEntityName = e.getValue();
+            // func_151177_a = getOneShotStat
+            if (StatList.func_151177_a("stat.killEntity." + currentEntityName) != null
+                    || StatList.func_151177_a("stat.entityKilledBy." + currentEntityName) != null) {
                 continue;
             }
-            currentEntityName = e.getValue();
-            ADDITIONAL_ENTITY_EGGS.put(clazz, new EntityInfo(id, currentEntityName));
+            ADDITIONAL_ENTITY_EGGS.put(
+                    clazz,
+                    new EntityInfo((int) EntityList.classToIDMapping.getOrDefault(clazz, 256), currentEntityName));
         }
         currentEntityName = null;
         MinecraftForge.EVENT_BUS.register(new StatHandler());
@@ -118,6 +136,27 @@ public class StatHandler {
             player.addStat(info.field_151512_d, 1); // "kill entity" stat
 
         }
+    }
+
+    public static StatBase checkBounds(StatBase[] array, int index, StatCrafting statcrafting) {
+        if (index < 0 || index >= array.length) {
+            Item item = statcrafting.func_150959_a();
+            String name = item == null ? "null" : item.delegate.name();
+            if (index == -1) {
+                Common.log.warn(
+                        "Caught out-of-bounds item ID {} for stat {} of item {}",
+                        index,
+                        statcrafting.statId,
+                        name);
+                Common.log
+                        .info("You can ignore this warning if {} is not installed on the server!", name.split(":")[0]);
+                return null;
+            }
+            Common.log
+                    .error("Caught out-of-bounds item ID {} for stat {} of item {}", index, statcrafting.statId, name);
+            return null;
+        }
+        return array[index];
     }
 
     private static <T> void arraycopy(T[] src, T[] dest) {
