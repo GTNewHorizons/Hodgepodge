@@ -10,12 +10,15 @@ import net.minecraft.entity.EntityList.EntityEggInfo;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.stats.StatBase;
+import net.minecraft.stats.StatCrafting;
 import net.minecraft.stats.StatList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 import com.google.common.collect.ImmutableList;
+import com.mitchej123.hodgepodge.Common;
 
 import cpw.mods.fml.common.event.FMLModIdMappingEvent.ModRemapping;
 import cpw.mods.fml.common.event.FMLModIdMappingEvent.RemapTarget;
@@ -130,6 +133,27 @@ public class StatHandler {
             player.addStat(info.field_151512_d, 1); // "kill entity" stat
 
         }
+    }
+
+    public static StatBase checkBounds(StatBase[] array, int index, StatCrafting statcrafting) {
+        if (index < 0 || index >= array.length) {
+            Item item = statcrafting.func_150959_a();
+            String name = item == null ? "null" : item.delegate.name();
+            if (index == -1) {
+                Common.log.warn(
+                        "Caught out-of-bounds item ID {} for stat {} of item {}",
+                        index,
+                        statcrafting.statId,
+                        name);
+                Common.log
+                        .info("You can ignore this warning if {} is not installed on the server!", name.split(":")[0]);
+                return null;
+            }
+            Common.log
+                    .error("Caught out-of-bounds item ID {} for stat {} of item {}", index, statcrafting.statId, name);
+            return null;
+        }
+        return array[index];
     }
 
     private static <T> void arraycopy(T[] src, T[] dest) {
