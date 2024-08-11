@@ -86,6 +86,7 @@ public class StatHandler {
         arraycopy(statsBreak, StatList.objectBreakStats);
     }
 
+    @SuppressWarnings("unchecked")
     public static void addEntityStats() {
         if (!ADDITIONAL_ENTITY_EGGS.isEmpty()) {
             // only populate map once - we don't want duplicate stats
@@ -97,13 +98,15 @@ public class StatHandler {
                 // only entities extending EntityLivingBase can be killed/can kill the player
                 continue;
             }
-            @SuppressWarnings("unchecked")
-            Integer id = (Integer) EntityList.classToIDMapping.getOrDefault(clazz, 256);
-            if (EntityList.entityEggs.containsKey(id)) {
+            currentEntityName = e.getValue();
+            // func_151177_a = getOneShotStat
+            if (StatList.func_151177_a("stat.killEntity." + currentEntityName) != null
+                    || StatList.func_151177_a("stat.entityKilledBy." + currentEntityName) != null) {
                 continue;
             }
-            currentEntityName = e.getValue();
-            ADDITIONAL_ENTITY_EGGS.put(clazz, new EntityInfo(id, currentEntityName));
+            ADDITIONAL_ENTITY_EGGS.put(
+                    clazz,
+                    new EntityInfo((int) EntityList.classToIDMapping.getOrDefault(clazz, 256), currentEntityName));
         }
         currentEntityName = null;
         MinecraftForge.EVENT_BUS.register(new StatHandler());
