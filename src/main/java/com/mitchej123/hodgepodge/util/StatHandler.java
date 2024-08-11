@@ -41,7 +41,7 @@ public class StatHandler {
             arraycopy(StatList.objectCraftStats, STATS_CRAFT);
             arraycopy(StatList.objectUseStats, STATS_USE);
             arraycopy(StatList.objectBreakStats, STATS_BREAK);
-            initFrozenStats = true;
+            initFrozenStats = false;
         }
         if (remappedIds.isEmpty()) {
             // we are reverting to frozen ids
@@ -76,6 +76,10 @@ public class StatHandler {
     }
 
     public static void addEntityStats() {
+        if (!ADDITIONAL_ENTITY_EGGS.isEmpty()) {
+            // only populate map once - we don't want duplicate stats
+            return;
+        }
         for (Entry<Class<? extends Entity>, String> e : EntityList.classToStringMapping.entrySet()) {
             Class<? extends Entity> clazz = e.getKey();
             if (!EntityLivingBase.class.isAssignableFrom(clazz)) {
