@@ -168,6 +168,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean addModEntityStats;
 
+    @Config.Comment("No stats will be registered for these enties (e.g. because another mod already adds them)")
+    @Config.DefaultStringList({ "Mob", "Monster" })
+    @Config.RequiresMcRestart
+    public static String[] entityStatsExclusions;
+
     @Config.Comment("Sort Mob stats lexicographically (Requires addModEntityStats)")
     @Config.DefaultBoolean(true)
     public static boolean sortEntityStats;
