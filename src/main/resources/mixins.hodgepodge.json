@@ -4,9 +4,7 @@
   "refmap": "mixins.hodgepodge.refmap.json",
   "target": "@env(PREINIT)",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [
-    "MixinLoadController_logModTimes"
-  ],
+  "plugin": "com.mitchej123.hodgepodge.mixins.plugin.HodgepodgePreInitMixinPlugin",
   "package": "com.mitchej123.hodgepodge.mixins.preinit"
 }
 

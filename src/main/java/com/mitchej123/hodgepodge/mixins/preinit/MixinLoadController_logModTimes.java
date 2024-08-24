@@ -1,5 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.preinit;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -52,7 +53,7 @@ public class MixinLoadController_logModTimes {
     public void printResults(LoaderState state, Object[] eventData, CallbackInfo ci) {
         if (results == null || state != LoaderState.AVAILABLE) return;
         try {
-            PrintWriter writer = new PrintWriter(new FileWriter("modtimes.csv", false));
+            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("modtimes.csv", false)));
 
             writer.println("event;modid;modname;time");
             results.forEach((type, results) -> {
