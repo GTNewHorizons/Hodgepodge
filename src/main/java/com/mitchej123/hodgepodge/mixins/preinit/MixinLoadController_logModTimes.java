@@ -32,8 +32,7 @@ public class MixinLoadController_logModTimes {
             method = "propogateStateMessage",
             at = @At(
                     value = "INVOKE",
-                    target = "Lcpw/mods/fml/common/LoadController;sendEventToModContainer(Lcpw/mods/fml/common/event/FMLEvent;Lcpw/mods/fml/common/ModContainer;)V"),
-            remap = false)
+                    target = "Lcpw/mods/fml/common/LoadController;sendEventToModContainer(Lcpw/mods/fml/common/event/FMLEvent;Lcpw/mods/fml/common/ModContainer;)V"))
     private void timeModEvent(LoadController instance, FMLEvent event, ModContainer modContainer,
             Operation<Void> original) {
 
@@ -49,7 +48,7 @@ public class MixinLoadController_logModTimes {
 
     @Inject(
             method = "Lcpw/mods/fml/common/LoadController;distributeStateMessage(Lcpw/mods/fml/common/LoaderState;[Ljava/lang/Object;)V",
-            at = @At(value = "TAIL", remap = false))
+            at = @At(value = "TAIL"))
     public void printResults(LoaderState state, Object[] eventData, CallbackInfo ci) {
         if (results == null || state != LoaderState.AVAILABLE) return;
         try {
