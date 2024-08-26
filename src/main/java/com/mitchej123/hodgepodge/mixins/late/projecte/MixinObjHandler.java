@@ -15,7 +15,6 @@ import moze_intel.projecte.gameObjs.ObjHandler;
 @Mixin(ObjHandler.class)
 public class MixinObjHandler {
 
-    @SuppressWarnings("unchecked")
     @Redirect(
             method = "registerPhiloStoneSmelting",
             at = @At(

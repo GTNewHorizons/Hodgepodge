@@ -5,7 +5,7 @@ import net.minecraftforge.client.GuiIngameForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 
 @Mixin(GuiIngameForge.class)
 public class MixinGuiIngameForge_CrosshairInvertColors {
