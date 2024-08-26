@@ -10,6 +10,9 @@ tasks.jar {
         attributes("CCTransformer" to "com.mitchej123.hodgepodge.asm.transformers.early.EarlyClassTransformer")
     }
 }
+minecraft {
+    extraRunJvmArguments.add("-Dhodgepodge.logModTimes=true")
+}
 
 tasks.processResources {
     inputs.property("version", project.version.toString())
