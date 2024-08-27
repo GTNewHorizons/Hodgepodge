@@ -342,6 +342,16 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean earlyChunkTileCoordinateCheckDestructive;
 
+    @Config.Comment("Fix forge command handler not checking for a / and also not running commands with any case")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixSlashCommands;
+
+    @Config.Comment("Fix the command handler not allowing you to run commands typed in any case")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixCaseCommands;
+
     // affecting multiple mods
 
     @Config.Comment("Remove old/stale/outdated update checks.")
