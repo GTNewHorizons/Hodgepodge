@@ -398,6 +398,16 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinMinecraft_FixDuplicateSounds")
             .setApplyIf(() -> FixesConfig.fixDuplicateSounds)),
 
+    FIX_SLASH_COMMAND(
+            new Builder("Fix forge command handler not checking for a / and also not running commands with any case")
+                    .setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
+                    .addMixinClasses("minecraft.MixinClientCommandHandler_CommandFix")
+                    .setApplyIf(() -> FixesConfig.fixSlashCommands)),
+
+    FIX_CASE_COMMAND(new Builder("Fix the command handler not allowing you to run commands typed in any case")
+            .setPhase(Phase.EARLY).setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses("minecraft.MixinCommandHandler_CommandFix").setApplyIf(() -> FixesConfig.fixCaseCommands)),
+
     ADD_MOD_ITEM_STATS(new Builder("Add stats for modded items").addMixinClasses("fml.MixinGameRegistry")
             .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> TweaksConfig.addModItemStats).setPhase(Phase.EARLY)
             .setSide(Side.BOTH)),
