@@ -17,7 +17,13 @@ public class MixinClientCommandHandler_CommandFix {
 
     @Inject(method = "executeCommand", at = @At("HEAD"), cancellable = true)
     private void hodgepodge$checkSlash(ICommandSender sender, String message, CallbackInfoReturnable<Integer> cir) {
-        if (!message.trim().startsWith("/")) {
+        final String trim = message.trim();
+        if (trim.startsWith("=")) {
+            // there is a command that provides a calculator in the chat,
+            // and in that case, it's more convenient to not have to write the `/`
+            return;
+        }
+        if (!trim.startsWith("/")) {
             cir.setReturnValue(0);
         }
     }
