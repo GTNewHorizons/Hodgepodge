@@ -352,6 +352,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixCaseCommands;
 
+    @Config.Comment("Fix onUsingTick not getting called on the server")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixOnUsingTick;
+
     // affecting multiple mods
 
     @Config.Comment("Remove old/stale/outdated update checks.")

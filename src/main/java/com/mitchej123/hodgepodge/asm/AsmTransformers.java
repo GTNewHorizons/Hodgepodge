@@ -51,7 +51,13 @@ public enum AsmTransformers {
             "Removes the logging of GL errors from OptiFine/Shadersmod",
             () -> TweaksConfig.removeOptifineGLErrors,
             Side.CLIENT,
-            "com.mitchej123.hodgepodge.asm.transformers.optifine.GLErrorLoggingTransformer");
+            "com.mitchej123.hodgepodge.asm.transformers.optifine.GLErrorLoggingTransformer"),
+    FIX_ON_USING_TICK(
+            "Changes EntityPlayer.onUpdate to use ItemStack.areItemStacksEqual instead of ==.",
+            () -> FixesConfig.fixOnUsingTick,
+            Side.BOTH,
+            "com.mitchej123.hodgepodge.asm.transformers.mc.EntityPlayerTransformer"
+            );
     // spotless:on
 
     private final Supplier<Boolean> applyIf;
