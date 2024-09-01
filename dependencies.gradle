@@ -35,6 +35,7 @@ dependencies {
     transformedModCompileOnly("curse.maven:extra-utilities-225561:2264384")
     transformedModCompileOnly(rfg.deobf("curse.maven:extratic-72728:2299292"))
     transformedModCompileOnly(rfg.deobf("curse.maven:journeymap-32274:4500658"))
+    transformedModCompileOnly(rfg.deobf("curse.maven:morpheus-69118:2280761"))
     transformedModCompileOnly(deobf('https://dist.creeper.host/ichun/filespg/PortalGun-4.0.0-beta-6.jar'))
     transformedModCompileOnly("curse.maven:travellers-gear-224440:2262113")
     transformedModCompileOnly(rfg.deobf("curse.maven:witchery-69673:2234410"))
