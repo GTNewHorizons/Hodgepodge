@@ -856,7 +856,12 @@ public enum Mixins {
     // Candycraft
     FIX_SUGARBLOCK_NPE(new Builder("Fix NPE when interacting with sugar block")
             .addMixinClasses("candycraft.MixinBlockSugar").setPhase(Phase.LATE).setSide(Side.BOTH)
-            .setApplyIf(() -> FixesConfig.fixCandycraftBlockSugarNPE).addTargetedMod(TargetedMod.CANDYCRAFT));
+            .setApplyIf(() -> FixesConfig.fixCandycraftBlockSugarNPE).addTargetedMod(TargetedMod.CANDYCRAFT)),
+
+    // Morpheus
+    FIX_NOT_WAKING_PLAYERS(new Builder("Fix players not being woken properly when not everyone is sleeping")
+            .addMixinClasses("morpheus.MixinMorpheusWakePlayers").setPhase(Phase.LATE).setSide(Side.SERVER)
+            .setApplyIf(() -> FixesConfig.fixMorpheusWaking).addTargetedMod(TargetedMod.MORPHEUS));
 
     private final List<String> mixinClasses;
     private final List<TargetedMod> targetedMods;
