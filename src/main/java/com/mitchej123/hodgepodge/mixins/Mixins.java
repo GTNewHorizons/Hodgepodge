@@ -200,8 +200,8 @@ public enum Mixins {
     FIX_BOGUS_INTEGRATED_SERVER_NPE(new Builder("Fix bogus FMLProxyPacket NPEs on integrated server crashes")
             .setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses(
-                    "forge.MixinFMLProxyPacket",
-                    "forge.MixinNetworkDispatcher",
+                    "fml.MixinFMLProxyPacket",
+                    "fml.MixinNetworkDispatcher",
                     "minecraft.NetworkManagerAccessor")
             .setApplyIf(() -> FixesConfig.fixBogusIntegratedServerNPEs).addTargetedMod(TargetedMod.VANILLA)),
 
@@ -277,7 +277,7 @@ public enum Mixins {
             .setPhase(Phase.EARLY).addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> TweaksConfig.enhanceNightVision)
             .addMixinClasses("minecraft.MixinEntityRenderer_EnhanceNightVision")),
     OPTIMIZE_ASMDATATABLE_INDEX(new Builder("Optimize ASM DataTable Index").setPhase(Phase.EARLY).setSide(Side.BOTH)
-            .addMixinClasses("forge.MixinASMDataTable").setApplyIf(() -> SpeedupsConfig.optimizeASMDataTable)
+            .addMixinClasses("fml.MixinASMDataTable").setApplyIf(() -> SpeedupsConfig.optimizeASMDataTable)
             .addTargetedMod(TargetedMod.VANILLA)),
     SQUASH_BED_ERROR_MESSAGE(new Builder("Stop \"You can only sleep at night\" message filling the chat")
             .addMixinClasses("minecraft.MixinNetHandlerPlayClient").addTargetedMod(TargetedMod.VANILLA)
@@ -297,7 +297,7 @@ public enum Mixins {
             .addMixinClasses("forge.MixinGuiIngameForge_CrosshairInvertColors").setSide(Side.CLIENT)
             .setApplyIf(() -> TweaksConfig.dontInvertCrosshairColor).addTargetedMod(TargetedMod.VANILLA)),
     FIX_OPENGUIHANDLER_WINDOWID(new Builder("Fix OpenGuiHandler").setPhase(Phase.EARLY).setSide(Side.BOTH)
-            .addMixinClasses("forge.MixinOpenGuiHandler").setApplyIf(() -> FixesConfig.fixForgeOpenGuiHandlerWindowId)
+            .addMixinClasses("fml.MixinOpenGuiHandler").setApplyIf(() -> FixesConfig.fixForgeOpenGuiHandlerWindowId)
             .addTargetedMod(TargetedMod.VANILLA)),
     FIX_KEYBIND_CONFLICTS(new Builder("Trigger all conflicting keybinds").setPhase(Phase.EARLY).setSide(Side.CLIENT)
             .addMixinClasses("minecraft.MixinKeyBinding", "minecraft.MixinMinecraft_UpdateKeys")
@@ -398,6 +398,19 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinMinecraft_FixDuplicateSounds")
             .setApplyIf(() -> FixesConfig.fixDuplicateSounds)),
 
+    ADD_MOD_ITEM_STATS(new Builder("Add stats for modded items").addMixinClasses("fml.MixinGameRegistry")
+            .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> TweaksConfig.addModItemStats).setPhase(Phase.EARLY)
+            .setSide(Side.BOTH)),
+
+    ADD_MOD_ENTITY_STATS(new Builder("Add stats for modded entities").addMixinClasses("minecraft.MixinStatList")
+            .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> TweaksConfig.addModEntityStats).setPhase(Phase.EARLY)
+            .setSide(Side.BOTH)),
+
+    ADD_MOD_ENTITY_STATS_CLIENT(new Builder("Add stats for modded entities (client side)")
+            .addMixinClasses("minecraft.MixinStatsMobsList", "minecraft.MixinStatsBlock", "minecraft.MixinStatsItem")
+            .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> TweaksConfig.addModEntityStats).setPhase(Phase.EARLY)
+            .setSide(Side.CLIENT)),
+
     FIX_SLASH_COMMAND(
             new Builder("Fix forge command handler not checking for a / and also not running commands with any case")
                     .setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
@@ -453,10 +466,10 @@ public enum Mixins {
                     "ic2.MixinIC2ArmorSolarHelmet",
                     "ic2.MixinIC2ArmorStaticBoots")
             .setApplyIf(() -> FixesConfig.fixIc2ArmorLag).addTargetedMod(TargetedMod.IC2)),
-    IC2_RESOURCE_PACK_TRANSLATION_FIX(new Builder("IC2 Resource Pack Translation Fix").setPhase(Phase.EARLY)
-            .setSide(Side.CLIENT)
-            .addMixinClasses("forge.MixinLanguageRegistry", "forge.MixinFMLClientHandler", "ic2.MixinLocalization")
-            .setApplyIf(() -> FixesConfig.fixIc2ResourcePackTranslation).addTargetedMod(TargetedMod.IC2)),
+    IC2_RESOURCE_PACK_TRANSLATION_FIX(
+            new Builder("IC2 Resource Pack Translation Fix").setPhase(Phase.EARLY).setSide(Side.CLIENT)
+                    .addMixinClasses("fml.MixinLanguageRegistry", "fml.MixinFMLClientHandler", "ic2.MixinLocalization")
+                    .setApplyIf(() -> FixesConfig.fixIc2ResourcePackTranslation).addTargetedMod(TargetedMod.IC2)),
 
     // Disable update checkers
     BIBLIOCRAFT_UPDATE_CHECK(new Builder("Yeet Bibliocraft Update Check").setPhase(Phase.LATE).setSide(Side.CLIENT)
