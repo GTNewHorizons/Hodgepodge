@@ -846,9 +846,6 @@ public enum Mixins {
             .setApplyIf(() -> FixesConfig.fixCandycraftBlockSugarNPE).addTargetedMod(TargetedMod.CANDYCRAFT)),
 
     // Morpheus
-    FIX_NOT_WAKING_PLAYERS_ACCESSOR(new Builder("WorldServer Accessor for Morpheus waking fix")
-            .addMixinClasses("minecraft.WorldServerAccessor").setPhase(Phase.EARLY).setSide(Side.SERVER)
-            .setApplyIf(() -> FixesConfig.fixMorpheusWaking).addTargetedMod(TargetedMod.VANILLA)),
     FIX_NOT_WAKING_PLAYERS(new Builder("Fix players not being woken properly when not everyone is sleeping")
             .addMixinClasses("morpheus.MixinMorpheusWakePlayers").setPhase(Phase.LATE).setSide(Side.SERVER)
             .setApplyIf(() -> FixesConfig.fixMorpheusWaking).addTargetedMod(TargetedMod.MORPHEUS));
