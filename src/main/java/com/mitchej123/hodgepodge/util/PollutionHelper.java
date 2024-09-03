@@ -5,7 +5,7 @@ import net.minecraft.world.chunk.Chunk;
 import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.config.PollutionConfig;
 
-import gregtech.common.GT_Pollution;
+import gregtech.common.Pollution;
 
 public class PollutionHelper {
 
@@ -14,7 +14,7 @@ public class PollutionHelper {
      */
     public static void addPollution(Chunk ch, int aPollution) {
         if (Compat.isGT5Present()) {
-            GT_Pollution.addPollution(ch, aPollution);
+            Pollution.addPollution(ch, aPollution);
         }
     }
 
