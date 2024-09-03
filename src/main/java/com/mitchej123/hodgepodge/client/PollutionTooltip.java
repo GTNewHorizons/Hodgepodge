@@ -84,8 +84,7 @@ public class PollutionTooltip {
             }
 
             // Hobbyist's Steam Engine
-            if (GTUtility
-                    .areStacksEqual(event.itemStack, GTModHandler.getModItem("Railcraft", "machine.beta", 1, 7))) {
+            if (GTUtility.areStacksEqual(event.itemStack, GTModHandler.getModItem("Railcraft", "machine.beta", 1, 7))) {
                 event.toolTip
                         .add(String.format(producesPollutionFormat, PollutionConfig.hobbyistEnginePollutionAmount));
             }
