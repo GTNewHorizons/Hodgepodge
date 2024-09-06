@@ -15,4 +15,25 @@ public abstract class MixinWorldProviderEndOfTime extends WorldProvider {
     public boolean canDoRainSnowIce(Chunk chunk) {
         return false;
     }
+
+    @Override
+    public void calculateInitialWeather() {
+        this.worldObj.rainingStrength = 0.0F;
+        this.worldObj.thunderingStrength = 0.0F;
+        this.worldObj.prevRainingStrength = 0.0F;
+        this.worldObj.prevThunderingStrength = 0.0F;
+        this.worldObj.getWorldInfo().setRaining(false);
+        this.worldObj.getWorldInfo().setThundering(false);
+    }
+
+    @Override
+    public void updateWeather() {
+        if (!this.worldObj.isRemote) {
+            this.resetRainAndThunder();
+            this.worldObj.rainingStrength = 0.0F;
+            this.worldObj.thunderingStrength = 0.0F;
+            this.worldObj.prevRainingStrength = 0.0F;
+            this.worldObj.prevThunderingStrength = 0.0F;
+        }
+    }
 }
