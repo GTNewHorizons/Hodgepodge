@@ -57,6 +57,7 @@ dependencies {
     transformedModCompileOnly(rfg.deobf("curse.maven:the-lord-of-the-rings-mod-legacy-423748:4091561"))
     transformedModCompileOnly(deobfNotch("https://mediafiles.forgecdn.net/files/2462/146/mod_voxelMap_1.7.0b_for_1.7.10.litemod"))
     transformedModCompileOnly(rfg.deobf("curse.maven:xaeros-world-map-317780:4716737"))
+    transformedModCompileOnly(rfg.deobf("curse.maven:xaeros-minimap-263420:5637000"))
     transformedModCompileOnly(deobf("https://forum.industrial-craft.net/core/attachment/4316-advancedsolarpanel-1-7-10-3-5-1-jar/"))
     transformedModCompileOnly(rfg.deobf("curse.maven:candycraft-251118:2330488"))
 
