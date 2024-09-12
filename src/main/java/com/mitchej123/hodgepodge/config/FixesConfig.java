@@ -663,6 +663,12 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixWitcheryThunderDetection;
 
+    // Xaero's Minimap
+    @Config.Comment("Fixes the player entity dot rendering when arrow is chosen")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixXaerosMinimapEntityDot;
+
     // Xaero's World Map
 
     @Config.Comment("Fix scrolling in the world map screen")
