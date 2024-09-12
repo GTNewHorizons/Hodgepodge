@@ -631,11 +631,16 @@ public enum Mixins {
             .setPhase(Phase.LATE).setSide(Side.CLIENT).addMixinClasses("journeymap.MixinWaypointManager")
             .setApplyIf(() -> FixesConfig.fixJourneymapJumpyScrolling).addTargetedMod(TargetedMod.JOURNEYMAP)),
 
-    // Xaero's Map
+    // Xaero's World Map
     FIX_XAEROS_WORLDMAP_SCROLL(
             new Builder("Fix Xaero's World Map map screen scrolling").addMixinClasses("xaeroworldmap.MixinGuiMap")
                     .setPhase(Phase.LATE).setSide(Side.CLIENT).setApplyIf(() -> FixesConfig.fixXaerosWorldMapScroll)
                     .addTargetedMod(TargetedMod.XAEROWORLDMAP).addTargetedMod(TargetedMod.LWJGL3IFY)),
+
+    // Xaero's Minimap
+    FIX_XAEROS_MINIMAP_ENTITYDOT(new Builder("Fix Xaero's Minimap player entity dot rendering when arrow is chosen")
+            .addMixinClasses("xaerominimap.MixinMinimapRenderer").setPhase(Phase.LATE).setSide(Side.CLIENT)
+            .setApplyIf(() -> FixesConfig.fixXaerosMinimapEntityDot).addTargetedMod(TargetedMod.XAEROMINIMAP)),
 
     // Pam's Harvest the Nether
     FIX_IGNIS_FRUIT_AABB(new Builder("Ignis Fruit").setPhase(Phase.LATE).setSide(Side.BOTH)

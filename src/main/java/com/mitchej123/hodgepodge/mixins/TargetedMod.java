@@ -51,6 +51,7 @@ public enum TargetedMod {
     VANILLA("Minecraft", null),
     VOXELMAP("VoxelMap", "com.thevoxelbox.voxelmap.litemod.VoxelMapTransformer", "voxelmap"),
     WITCHERY("Witchery", null, "witchery"),
+    XAEROMINIMAP("Xaero's Minimap", null, "XaeroMinimap"),
     XAEROWORLDMAP("Xaero's World Map", null, "XaeroWorldMap"),
     ZTONES("ZTones", null, "Ztones");
 
