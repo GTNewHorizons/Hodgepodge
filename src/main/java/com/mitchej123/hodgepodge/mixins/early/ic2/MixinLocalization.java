@@ -8,6 +8,9 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+import com.mitchej123.hodgepodge.mixins.early.fml.MixinLanguageRegistry;
+import com.mitchej123.hodgepodge.mixins.hooks.IC2ResourcePack;
+
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import ic2.core.init.Localization;
 
@@ -17,8 +20,8 @@ public class MixinLocalization {
     /**
      * Translations are delegated to vanilla lang system
      * 
-     * @see com.mitchej123.hodgepodge.mixins.early.forge.MixinLanguageRegistry
-     * @see com.mitchej123.hodgepodge.mixins.hooks.IC2ResourcePack
+     * @see MixinLanguageRegistry
+     * @see IC2ResourcePack
      */
     @Redirect(
             method = "postInit",
@@ -32,8 +35,8 @@ public class MixinLocalization {
     /**
      * @author miozune
      * @reason Translations are delegated to vanilla lang system
-     * @see com.mitchej123.hodgepodge.mixins.early.forge.MixinLanguageRegistry
-     * @see com.mitchej123.hodgepodge.mixins.hooks.IC2ResourcePack
+     * @see MixinLanguageRegistry
+     * @see IC2ResourcePack
      */
     @Overwrite(remap = false)
     protected static Map<String, String> getStringTranslateMap() {

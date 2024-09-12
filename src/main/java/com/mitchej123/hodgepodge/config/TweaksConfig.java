@@ -158,6 +158,25 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean unbindKeybindsByDefault;
 
+    @Config.Comment("Adds non-vanilla blocks/items to the statistics")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean addModItemStats;
+
+    @Config.Comment("Adds non-vanilla entities to the statistics")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean addModEntityStats;
+
+    @Config.Comment("No stats will be registered for these enties (e.g. because another mod already adds them)")
+    @Config.DefaultStringList({ "Mob", "Monster" })
+    @Config.RequiresMcRestart
+    public static String[] entityStatsExclusions;
+
+    @Config.Comment("Sort Mob stats lexicographically (Requires addModEntityStats)")
+    @Config.DefaultBoolean(true)
+    public static boolean sortEntityStats;
+
     // Automagy
 
     @Config.Comment("Implement container for thirsty tank")
