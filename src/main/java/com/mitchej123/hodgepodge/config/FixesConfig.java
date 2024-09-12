@@ -153,7 +153,7 @@ public class FixesConfig {
     public static boolean fixMTCoreRecipe;
 
     @Config.Comment("Allows the server to assign the logged in UUID to the same username when online_mode is false")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean fixNetHandlerLoginServerOfflineMode;
 
