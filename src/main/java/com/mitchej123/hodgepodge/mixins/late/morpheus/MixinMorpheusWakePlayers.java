@@ -17,8 +17,7 @@ public class MixinMorpheusWakePlayers {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/WorldProvider;resetRainAndThunder()V",
-                    shift = At.Shift.BEFORE,
-                    remap = true))
+                    shift = At.Shift.BEFORE))
     private void hodgepodge$fixWakePlayers(World world, CallbackInfo c) {
         if (!(world instanceof WorldServer worldServer)) return;
         worldServer.wakeAllPlayers();

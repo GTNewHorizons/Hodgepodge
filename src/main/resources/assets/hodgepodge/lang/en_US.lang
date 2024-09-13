@@ -2,3 +2,21 @@ key.hodgepodge.category=Hodgepodge
 key.fastBlockPlacing.desc=Fast Block Placing
 key.fastBlockPlacing.enabled=§fFast Block Placing §aEnabled
 key.fastBlockPlacing.disabled=§fFast Block Placing §cDisabled
+
+tile.dirt.name=Dirt
+tile.sapling.name=Sapling
+tile.sand.name=Sand
+tile.flower1.name=Flower
+tile.flower2.name=Flower
+tile.stoneSlab.name=Slab
+tile.monsterStoneEgg.name=Stone Monster Egg
+tile.woodSlab.name=Slab
+tile.cobbleWall.name=Wall
+tile.quartzBlock.name=Quartz Block
+tile.clayHardenedStained.name=Stained Clay
+tile.woolCarpet.name=Carpet
+tile.doublePlant.name=Large Plant
+
+item.dyePowder.name=Dye
+item.skull.name=Skull
+item.fish.name=Fish

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.util.ChatComponentItemTranslation;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -59,20 +59,9 @@ public class MixinGameRegistry {
 
     @Unique
     private static StatCrafting hodgepodge$createAndRegisterStat(String key, Item item) {
-        String unlocalizedName;
-        try {
-            unlocalizedName = item.getUnlocalizedName();
-        } catch (Exception e) {
-            String registryName = item.delegate.name();
-            unlocalizedName = "item." + registryName + ".name";
-            Common.log.warn(
-                    "An Exception occured while invoking Item.getUnlocalizedName() after registering the item {} ({})! Using fallback unlocalized name.",
-                    registryName,
-                    item.getClass().getName());
-        }
         StatCrafting stat = new StatCrafting(
                 key + ".autogen." + item.delegate.name(),
-                new ChatComponentTranslation(key, new ChatComponentTranslation(unlocalizedName)),
+                new ChatComponentTranslation(key, new ChatComponentItemTranslation(item)),
                 item);
         stat.registerStat();
         return stat;
