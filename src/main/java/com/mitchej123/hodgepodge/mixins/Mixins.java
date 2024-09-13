@@ -86,6 +86,9 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinSoundManager", "minecraft.MixinSoundManagerLibraryLoader")
             .setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> FixesConfig.logarithmicVolumeControl)),
+    FIX_NO_AUDIO_DEVICE_CRASH(new Builder("Fix No Audio Device Crash").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinSoundSystemStarterThread").setSide(Side.CLIENT)
+            .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> FixesConfig.fixNoAudioDeviceCrash)),
     THROTTLE_ITEMPICKUPEVENT(new Builder("Throttle Item Pickup Event").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityPlayer").setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.throttleItemPickupEvent).addTargetedMod(TargetedMod.VANILLA)),

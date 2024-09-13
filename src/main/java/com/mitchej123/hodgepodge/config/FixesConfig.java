@@ -102,6 +102,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean logarithmicVolumeControl;
 
+    @Config.Comment("Fix NPE crash when no audio devices are available")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixNoAudioDeviceCrash;
+
     @Config.Comment("Fix vanilla light calculation sometimes cause NPE on thermos")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
