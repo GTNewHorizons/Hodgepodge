@@ -19,7 +19,8 @@ public abstract class MixinNetHandlerLoginServer_OfflineMode {
     // If the player logged in before while online, they get the same UUID. Fixes issues with mods that store info
     // based on UUID (AE2 is a big one)
     @Inject(method = "func_152506_a", at = @At("HEAD"), cancellable = true)
-    protected void func_152506_a(GameProfile original, CallbackInfoReturnable<GameProfile> cir) {
+    protected void hodgepodge$handleOnlineToOfflinePlayers(GameProfile original,
+            CallbackInfoReturnable<GameProfile> cir) {
         Map<UUID, String> usernameCache = UsernameCache.getMap();
         for (Map.Entry<UUID, String> entry : usernameCache.entrySet()) {
             if (entry.getValue().equals(original.getName())) {
