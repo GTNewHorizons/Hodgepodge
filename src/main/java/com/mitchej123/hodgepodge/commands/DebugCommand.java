@@ -40,9 +40,8 @@ public class DebugCommand extends CommandBase {
                         "\"randomNbt [bytes]\" - adds a random byte array of the given size to the held item"));
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public List addTabCompletionOptions(ICommandSender sender, String[] ss) {
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] ss) {
         List<String> l = new ArrayList<>();
         String test = ss.length == 0 ? "" : ss[0].trim();
         if (ss.length == 0 || ss.length == 1
