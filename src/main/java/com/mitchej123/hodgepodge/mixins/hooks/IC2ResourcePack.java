@@ -47,9 +47,8 @@ public class IC2ResourcePack implements IResourcePack {
         return zipFile.getEntry(locationToName(rl)) != null || fallbackResourcePack.resourceExists(rl);
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public Set getResourceDomains() {
+    public Set<String> getResourceDomains() {
         return ImmutableSet.of("ic2", "minecraft");
     }
 
