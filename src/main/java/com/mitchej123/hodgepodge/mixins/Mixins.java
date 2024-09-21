@@ -420,6 +420,10 @@ public enum Mixins {
     FIX_CASE_COMMAND(new Builder("Fix the command handler not allowing you to run commands typed in any case")
             .setPhase(Phase.EARLY).setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses("minecraft.MixinCommandHandler_CommandFix").setApplyIf(() -> FixesConfig.fixCaseCommands)),
+    FIX_GAMESETTINGS_OUTOFBOUNDS(new Builder("Fix array out of bound error in GameSettings menu").setPhase(Phase.EARLY)
+            .setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses("minecraft.MixinGameSettings_FixArrayOutOfBounds")
+            .setApplyIf(() -> FixesConfig.fixGameSettingsArrayOutOfBounds).addExcludedMod(TargetedMod.LWJGL3IFY)),
 
     LIMIT_RECURSIVE_BLOCK_UPDATE_DEPTH(new Builder(
             "Limit the number of recursive cascading block updates during world generation to prevent stack overflow crashes")

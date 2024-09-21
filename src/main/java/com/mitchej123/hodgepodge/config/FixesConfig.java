@@ -5,7 +5,7 @@ import com.gtnewhorizon.gtnhlib.config.Config;
 @Config(modid = "hodgepodge", category = "fixes")
 public class FixesConfig {
 
-    // Minecraft
+    /* ====== Minecraft fixes start ===== */
 
     @Config.Comment("Modify the maximum NBT size limit when received as a network packet, to avoid large NBT-related crashes")
     @Config.DefaultBoolean(true)
@@ -357,6 +357,13 @@ public class FixesConfig {
     @Config.DefaultInt(256) // A stack overflow with water updates happens somewhere above 300 updates with default Java
                             // settings
     public static int limitRecursiveBlockUpdateDepth;
+
+    @Config.Comment("Fix an array out of bounds caused by the GameSettings getKeyDisplayString method")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixGameSettingsArrayOutOfBounds;
+
+    /* ====== Minecraft fixes end ===== */
 
     // affecting multiple mods
 
