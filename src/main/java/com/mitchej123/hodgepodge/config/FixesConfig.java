@@ -640,6 +640,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixWandPedestalVisDuplication;
 
+    @Config.Comment("Fix handling of null stacks in ItemWispEssence")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixNullHandlingItemWispEssence;
+
     // Thermal Dynamics
 
     @Config.Comment("Prevent crash with Thermal Dynamics from Negative Array Exceptions from item duct transfers")

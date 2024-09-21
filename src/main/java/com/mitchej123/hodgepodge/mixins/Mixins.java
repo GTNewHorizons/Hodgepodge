@@ -541,6 +541,12 @@ public enum Mixins {
     FIX_THAUMCRAFT_VIS_DUPLICATION(new Builder("Fix Thaumcraft Vis Duplication")
             .addMixinClasses("thaumcraft.MixinTileWandPedestal_VisDuplication").setPhase(Phase.LATE).setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.fixWandPedestalVisDuplication).addTargetedMod(TargetedMod.THAUMCRAFT)),
+    FIX_NULL_HANDLING_ITEMWISPESSENCE_CLIENT(new Builder("Fix handling of null stacks in ItemWispEssence")
+            .addMixinClasses("thaumcraft.MixinItemWispEssence_Client").setPhase(Phase.LATE).setSide(Side.CLIENT)
+            .setApplyIf(() -> FixesConfig.fixNullHandlingItemWispEssence).addTargetedMod(TargetedMod.THAUMCRAFT)),
+    FIX_NULL_HANDLING_ITEMWISPESSENCE_BOTH(new Builder("Fix handling of null stacks in ItemWispEssence")
+            .addMixinClasses("thaumcraft.MixinItemWispEssence_Both").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.fixNullHandlingItemWispEssence).addTargetedMod(TargetedMod.THAUMCRAFT)),
 
     // BOP
     FIX_QUICKSAND_XRAY(new Builder("Fix Xray through block without collision boundingBox").setPhase(Phase.LATE)
