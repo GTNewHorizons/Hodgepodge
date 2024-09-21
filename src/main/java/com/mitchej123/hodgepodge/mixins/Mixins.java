@@ -421,6 +421,12 @@ public enum Mixins {
             .setPhase(Phase.EARLY).setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses("minecraft.MixinCommandHandler_CommandFix").setApplyIf(() -> FixesConfig.fixCaseCommands)),
 
+    LIMIT_RECURSIVE_BLOCK_UPDATE_DEPTH(new Builder(
+            "Limit the number of recursive cascading block updates during world generation to prevent stack overflow crashes")
+                    .setPhase(Phase.EARLY).setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
+                    .addMixinClasses("minecraft.MixinWorldServer_LimitUpdateRecursion")
+                    .setApplyIf(() -> FixesConfig.limitRecursiveBlockUpdateDepth >= 0)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIc2WaterKinetic").setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
