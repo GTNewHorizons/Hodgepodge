@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.world.WorldServer;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -14,11 +15,12 @@ import com.mitchej123.hodgepodge.config.FixesConfig;
 @Mixin(WorldServer.class)
 public class MixinWorldServer_LimitUpdateRecursion {
 
-    public int hodgepodge$currentBlockUpdateRecursiveCalls = 0;
+    @Unique
+    private int hodgepodge$currentBlockUpdateRecursiveCalls = 0;
 
     @Inject(method = "scheduleBlockUpdateWithPriority", at = @At("HEAD"), cancellable = true)
-    void hodgepodge$incrementBlockUpdateRecursionCounter(int x, int y, int z, Block block, int tickDelay, int priority,
-            CallbackInfo ci) {
+    private void hodgepodge$incrementBlockUpdateRecursionCounter(int x, int y, int z, Block block, int tickDelay,
+            int priority, CallbackInfo ci) {
         if (hodgepodge$currentBlockUpdateRecursiveCalls >= FixesConfig.limitRecursiveBlockUpdateDepth) {
             final StackOverflowError error = new StackOverflowError(
                     String.format(
@@ -37,8 +39,8 @@ public class MixinWorldServer_LimitUpdateRecursion {
     }
 
     @Inject(method = "scheduleBlockUpdateWithPriority", at = @At("RETURN"))
-    void hodgepodge$decrementBlockUpdateRecursionCounter(int x, int y, int z, Block block, int tickDelay, int priority,
-            CallbackInfo ci) {
+    private void hodgepodge$decrementBlockUpdateRecursionCounter(int x, int y, int z, Block block, int tickDelay,
+            int priority, CallbackInfo ci) {
         hodgepodge$currentBlockUpdateRecursiveCalls = Math.max(0, hodgepodge$currentBlockUpdateRecursiveCalls - 1);
     }
 }
