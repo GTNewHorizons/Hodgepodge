@@ -352,6 +352,12 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixCaseCommands;
 
+    @Config.Comment("Limit the number of recursive cascading block updates during world generation to prevent stack overflow crashes, set to -1 to disable the limit.")
+    @Config.RangeInt(min = -1)
+    @Config.DefaultInt(256) // A stack overflow with water updates happens somewhere above 300 updates with default Java
+                            // settings
+    public static int limitRecursiveBlockUpdateDepth;
+
     // affecting multiple mods
 
     @Config.Comment("Remove old/stale/outdated update checks.")
