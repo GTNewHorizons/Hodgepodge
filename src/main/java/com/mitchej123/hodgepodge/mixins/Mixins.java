@@ -585,6 +585,9 @@ public enum Mixins {
             .addMixinClasses("thermalexpansion.MixinTileInventoryTileLightFalse")
             .addTargetedMod(TargetedMod.THERMALEXPANSION).setApplyIf(() -> ASMConfig.cofhWorldTransformer)
             .setPhase(Phase.LATE).setSide(Side.BOTH)),
+    FIX_ORE_DICT_NPE(new Builder("Fix NPE in OreDictionaryArbiter")
+            .addMixinClasses("cofhcore.MixinOreDictionaryArbiter").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.COFH_CORE).setApplyIf(() -> FixesConfig.fixCofhOreDictNPE)),
 
     // Immersive engineering
     JAVA12_IMMERSIVE_ENGINERRING(new Builder("Immersive Engineering Java-12 safe potion array resizing")

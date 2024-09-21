@@ -425,6 +425,13 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixCandycraftBlockSugarNPE;
 
+    // Cofh
+
+    @Config.Comment("Fix NPE in COFH's oredict")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixCofhOreDictNPE;
+
     // Extra TiC
 
     @Config.Comment("Disable ExtraTic's Integration with Metallurgy 3 Precious Materials Module: (Brass, Silver, Electrum & Platinum)")
