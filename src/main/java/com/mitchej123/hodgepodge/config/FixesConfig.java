@@ -556,6 +556,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean optimizeIc2ReactorInventoryAccess;
 
+    @Config.Comment("Fix IC2 Crops trampling any types of farmland to dirt when sprinting")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixIc2CropTrampling;
+
     // Journey Map
 
     @Config.Comment("Prevents journeymap from using illegal character in file paths")
