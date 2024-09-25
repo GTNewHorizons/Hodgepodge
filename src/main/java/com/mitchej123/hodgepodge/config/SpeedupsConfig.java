@@ -46,6 +46,11 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean speedupChunkProviderClient;
+    
+    @Config.Comment("Lightly threads chunk generation, loading, and discarding. Experimental, use at your own risk!")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean fastChunkHandling;
 
     // Biomes O' Plenty
 
