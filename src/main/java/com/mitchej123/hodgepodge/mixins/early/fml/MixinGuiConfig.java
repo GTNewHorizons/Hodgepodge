@@ -51,9 +51,6 @@ public abstract class MixinGuiConfig extends GuiScreen {
     @Unique
     private int hodgepodge$oldWidth;
 
-    @Shadow
-    public abstract void initGui();
-
     @Inject(
             method = "<init>(Lnet/minecraft/client/gui/GuiScreen;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ZZLjava/lang/String;Ljava/lang/String;)V",
             at = @At(value = "TAIL"))
@@ -69,7 +66,7 @@ public abstract class MixinGuiConfig extends GuiScreen {
 
     @Inject(method = "initGui", at = @At(value = "TAIL"))
     private void hodgepodge$initSearchBar(CallbackInfo ci) {
-        int centeredTitleWidth = fontRendererObj.getStringWidth(this.title) / 2;
+        int centeredTitleWidth = fontRendererObj.getStringWidth(title) / 2;
         int x = width / 2 + centeredTitleWidth + 10;
         int searchWidth = width - x - 10;
         if (hodgepodge$searchBar == null) {
