@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.config;
 import com.gtnewhorizon.gtnhlib.config.Config;
 
 @Config(modid = "hodgepodge", category = "pollution")
+@Config.RequiresMcRestart
 public class PollutionConfig {
 
     // Minecraft
@@ -13,7 +14,6 @@ public class PollutionConfig {
 
     @Config.Comment("Make furnaces Pollute")
     @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
     public static boolean furnacesPollute;
 
     @Config.Comment("Furnace pollution per second, min 1!")
@@ -28,7 +28,6 @@ public class PollutionConfig {
 
     @Config.Comment("Make rockets Pollute")
     @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
     public static boolean rocketsPollute;
 
     // Railcraft
@@ -51,7 +50,6 @@ public class PollutionConfig {
 
     @Config.Comment("Make Railcraft Pollute")
     @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
     public static boolean railcraftPollutes;
 
     @Config.Comment("Pollution Amount for tunnel bore")
