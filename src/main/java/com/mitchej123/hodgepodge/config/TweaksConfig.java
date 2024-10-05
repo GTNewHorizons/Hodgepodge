@@ -177,6 +177,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean sortEntityStats;
 
+    @Config.Comment("Adds a search bar to the mod config GUI")
+    @Config.DefaultBoolean(true)
+    public static boolean addModConfigSearchBar;
+
     // Automagy
 
     @Config.Comment("Implement container for thirsty tank")

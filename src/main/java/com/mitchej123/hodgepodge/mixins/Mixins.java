@@ -431,6 +431,10 @@ public enum Mixins {
                     .addMixinClasses("minecraft.MixinWorldServer_LimitUpdateRecursion")
                     .setApplyIf(() -> FixesConfig.limitRecursiveBlockUpdateDepth >= 0)),
 
+    ADD_MOD_CONFIG_SEARCHBAR(new Builder("Adds a search bar to the mod config GUI").setPhase(Phase.EARLY)
+            .setSide(Side.CLIENT).addMixinClasses("fml.MixinGuiConfig")
+            .setApplyIf(() -> TweaksConfig.addModConfigSearchBar).addExcludedMod(TargetedMod.VANILLA)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIc2WaterKinetic").setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
