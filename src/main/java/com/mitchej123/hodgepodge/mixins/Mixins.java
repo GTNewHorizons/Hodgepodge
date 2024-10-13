@@ -431,6 +431,11 @@ public enum Mixins {
                     .addMixinClasses("minecraft.MixinWorldServer_LimitUpdateRecursion")
                     .setApplyIf(() -> FixesConfig.limitRecursiveBlockUpdateDepth >= 0)),
 
+    FIX_BUTTON_POS_GUIOPENLINK(new Builder("Fix the buttons not being centered in the GuiConfirmOpenLink")
+            .setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses("minecraft.MixinGuiConfirmOpenLink")
+            .setApplyIf(() -> FixesConfig.fixButtonsGuiConfirmOpenLink)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIc2WaterKinetic").setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)

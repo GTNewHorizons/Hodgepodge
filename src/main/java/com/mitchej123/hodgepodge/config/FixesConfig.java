@@ -358,6 +358,11 @@ public class FixesConfig {
                             // settings
     public static int limitRecursiveBlockUpdateDepth;
 
+    @Config.Comment("Fix the buttons not being centered in the GuiConfirmOpenLink")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixButtonsGuiConfirmOpenLink;
+
     @Config.Comment("Fix an array out of bounds caused by the GameSettings getKeyDisplayString method")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
