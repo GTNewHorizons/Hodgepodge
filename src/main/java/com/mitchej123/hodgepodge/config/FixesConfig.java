@@ -363,6 +363,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixGameSettingsArrayOutOfBounds;
 
+    @Config.Comment("Fix the vanilla method to open chat links not working for every OS")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixChatOpenLink;
+
     /* ====== Minecraft fixes end ===== */
 
     // affecting multiple mods
