@@ -17,12 +17,12 @@ public class TileEntityRendererDispatcherMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/tileentity/TileEntitySpecialRenderer;renderTileEntityAt(Lnet/minecraft/tileentity/TileEntity;DDDF)V"))
-    public void hodgepodge$startProfiler(TileEntity te, double x, double y, double z, float partialTicks,
+    private void hodgepodge$startProfiler(TileEntity te, double x, double y, double z, float partialTicks,
             CallbackInfo ci) {
         if (Minecraft.getMinecraft().mcProfiler.profilingEnabled) {
-            String name = me().getSpecialRenderer(te).getClass().getName().replace(".", "/"); // replacing due to
-                                                                                              // specific logic inside
-                                                                                              // profiler based on dots
+            String name = ((TileEntityRendererDispatcher) ((Object) this)).getSpecialRenderer(te)
+                    // replacing due to specific logic inside profiler based on dots
+                    .getClass().getName().replace(".", "/");
             Minecraft.getMinecraft().mcProfiler.startSection(name);
         }
     }
@@ -33,15 +33,10 @@ public class TileEntityRendererDispatcherMixin {
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/tileentity/TileEntitySpecialRenderer;renderTileEntityAt(Lnet/minecraft/tileentity/TileEntity;DDDF)V",
                     shift = At.Shift.AFTER))
-    public void hodgepodge$endProfiler(TileEntity te, double x, double y, double z, float partialTicks,
+    private void hodgepodge$endProfiler(TileEntity te, double x, double y, double z, float partialTicks,
             CallbackInfo ci) {
         if (Minecraft.getMinecraft().mcProfiler.profilingEnabled) {
             Minecraft.getMinecraft().mcProfiler.endSection();
         }
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private TileEntityRendererDispatcher me() {
-        return ((TileEntityRendererDispatcher) ((Object) this));
     }
 }
