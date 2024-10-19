@@ -531,11 +531,6 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixIc2DirectInventoryAccess;
 
-    @Config.Comment("Fix IC2 armors to avoid giving poison")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean fixIc2Hazmat;
-
     @Config.Comment("Fix IC2's armor hover mode")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart

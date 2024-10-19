@@ -462,9 +462,6 @@ public enum Mixins {
     HIDE_IC2_REACTOR_COOLANT_SLOTS(new Builder("IC2 Reactory Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinTileEntityNuclearReactorElectric")
             .setApplyIf(() -> TweaksConfig.hideIc2ReactorSlots).addTargetedMod(TargetedMod.IC2)),
-    IC2_HAZMAT(new Builder("Hazmat").setPhase(Phase.LATE).setSide(Side.BOTH).addMixinClasses("ic2.MixinIc2Hazmat")
-            .setApplyIf(() -> FixesConfig.fixIc2Hazmat).addTargetedMod(TargetedMod.IC2).addTargetedMod(TargetedMod.GT5U)
-            .addExcludedMod(TargetedMod.GT6)),
     IC2_FLUID_CONTAINER_TOOLTIP(new Builder("IC2 Fluid Container Tooltip Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinItemIC2FluidContainer")
             .setApplyIf(() -> TweaksConfig.displayIc2FluidLocalizedName).addTargetedMod(TargetedMod.IC2)),
