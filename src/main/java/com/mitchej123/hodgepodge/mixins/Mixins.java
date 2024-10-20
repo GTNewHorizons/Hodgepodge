@@ -434,7 +434,7 @@ public enum Mixins {
     ADD_MOD_CONFIG_SEARCHBAR(new Builder("Adds a search bar to the mod config GUI").setPhase(Phase.EARLY)
             .setSide(Side.CLIENT).addMixinClasses("fml.MixinGuiConfig")
             .setApplyIf(() -> TweaksConfig.addModConfigSearchBar).addTargetedMod(TargetedMod.VANILLA)),
-  
+
     FIX_BUTTON_POS_GUIOPENLINK(new Builder("Fix the buttons not being centered in the GuiConfirmOpenLink")
             .setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses("minecraft.MixinGuiConfirmOpenLink")
