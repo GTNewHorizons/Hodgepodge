@@ -431,6 +431,11 @@ public enum Mixins {
                     .addMixinClasses("minecraft.MixinWorldServer_LimitUpdateRecursion")
                     .setApplyIf(() -> FixesConfig.limitRecursiveBlockUpdateDepth >= 0)),
 
+    FIX_BUTTON_POS_GUIOPENLINK(new Builder("Fix the buttons not being centered in the GuiConfirmOpenLink")
+            .setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses("minecraft.MixinGuiConfirmOpenLink")
+            .setApplyIf(() -> FixesConfig.fixButtonsGuiConfirmOpenLink)),
+
     FIX_CHAT_OPEN_LINK(new Builder("Fix the vanilla method to open chat links not working for every OS")
             .setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses("minecraft.MixinGuiChat_OpenLinks").setApplyIf(() -> FixesConfig.fixChatOpenLink)),
