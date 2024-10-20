@@ -1,9 +1,5 @@
 package com.mitchej123.hodgepodge;
 
-import java.io.File;
-
-import net.minecraft.launchwrapper.Launch;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
@@ -15,13 +11,11 @@ public class Common {
 
     public static final Logger log = LogManager.getLogger("Hodgepodge");
     public static final Marker securityMarker = MarkerManager.getMarker("SuspiciousPackets");
-    public static LoadingConfig config;
     public static boolean thermosTainted;
     public static XSTR RNG = new XSTR();
 
     static {
         Common.log.info("Initializing Hodgepodge");
-        Common.config = new LoadingConfig(new File(Launch.minecraftHome, "config/hodgepodge.cfg"));
         Common.log.info("Looking for Thermos/Bukkit taint.");
         try {
             Class.forName("org.bukkit.World");

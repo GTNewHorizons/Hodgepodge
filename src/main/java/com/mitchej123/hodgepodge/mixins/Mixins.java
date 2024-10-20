@@ -11,8 +11,6 @@ import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
-import com.mitchej123.hodgepodge.config.PollutionConfig;
-import com.mitchej123.hodgepodge.config.PollutionRecolorConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 
@@ -829,41 +827,6 @@ public enum Mixins {
             .addMixinClasses("automagy.MixinAutomagyKeyHandler").setPhase(Phase.LATE).setSide((Side.CLIENT))
             .setApplyIf(() -> TweaksConfig.unbindKeybindsByDefault).addTargetedMod(TargetedMod.AUTOMAGY)),
 
-    // Pollution
-    POLLUTION_RENDER_BLOCKS(new Builder("Changes colors of certain blocks based on pollution levels")
-            .addMixinClasses("minecraft.MixinRenderBlocks_PollutionWithoutOptifine").addTargetedMod(TargetedMod.GT5U)
-            .addTargetedMod(TargetedMod.VANILLA).addExcludedMod(TargetedMod.OPTIFINE).setSide(Side.CLIENT)
-            .setApplyIf(() -> PollutionRecolorConfig.pollutionBlockRecolor).setPhase(Phase.EARLY)),
-    POLLUTION_RENDER_BLOCKS_OPTIFINE(new Builder("Changes colors of certain blocks based on pollution levels")
-            .addMixinClasses("minecraft.MixinRenderBlocks_PollutionWithOptifine").addTargetedMod(TargetedMod.GT5U)
-            .addTargetedMod(TargetedMod.VANILLA).addTargetedMod(TargetedMod.OPTIFINE)
-            .addExcludedMod(TargetedMod.ANGELICA).setSide(Side.CLIENT)
-            .setApplyIf(() -> PollutionRecolorConfig.pollutionBlockRecolor).setPhase(Phase.EARLY)),
-    POLLUTION_RENDER_BLOCKS_BOP(new Builder("Changes colors of certain blocks based on pollution levels")
-            .addMixinClasses("biomesoplenty.MixinFoliageRenderer_Pollution").addTargetedMod(TargetedMod.GT5U)
-            .addTargetedMod(TargetedMod.BOP).setSide(Side.CLIENT)
-            .setApplyIf(() -> PollutionRecolorConfig.pollutionBlockRecolor).setPhase(Phase.LATE)),
-    POLLUTION_MINECRAFT_FURNACE(new Builder("Minecraft Furnace Pollutes").setPhase(Phase.EARLY)
-            .addMixinClasses("minecraft.MixinTileEntityFurnacePollution").setSide(Side.BOTH)
-            .setApplyIf(() -> PollutionConfig.furnacesPollute).addTargetedMod(TargetedMod.VANILLA)),
-    POLLUTION_IC2_IRON_FURNACE(new Builder("Ic2 Iron Furnace Pollutes")
-            .addMixinClasses("ic2.MixinIC2IronFurnacePollution").setPhase(Phase.LATE).setSide(Side.BOTH)
-            .setApplyIf(() -> PollutionConfig.furnacesPollute).addTargetedMod(TargetedMod.IC2)),
-    POLLUTION_THAUMCRAFT_ALCHEMICAL_FURNACE(new Builder("Thaumcraft Alchemical Construct Pollutes")
-            .addMixinClasses("thaumcraft.MixinThaumcraftAlchemyFurnacePollution").setPhase(Phase.LATE)
-            .setSide(Side.BOTH).setApplyIf(() -> PollutionConfig.furnacesPollute)
-            .addTargetedMod(TargetedMod.THAUMCRAFT)),
-    POLLUTION_RAILCRAFT(new Builder("Make Railcraft Pollute")
-            .addMixinClasses(
-                    "railcraft.MixinRailcraftBoilerPollution",
-                    "railcraft.MixinRailcraftCokeOvenPollution",
-                    "railcraft.MixinRailcraftTunnelBorePollution")
-            .setPhase(Phase.LATE).setSide(Side.BOTH).setApplyIf(() -> PollutionConfig.railcraftPollutes)
-            .addTargetedMod(TargetedMod.RAILCRAFT)),
-    POLLUTION_ROCKET(
-            new Builder("Make Rockets Pollute").addMixinClasses("galacticraftcore.MixinGalacticraftRocketPollution")
-                    .setPhase(Phase.LATE).setSide(Side.BOTH).setApplyIf(() -> PollutionConfig.rocketsPollute)
-                    .addTargetedMod(TargetedMod.GALACTICRAFT_CORE)),
     IC2_CELL(new Builder("No IC2 Cell Consumption in tanks").addMixinClasses("ic2.MixinIC2ItemCell")
             .setPhase(Phase.LATE).setSide(Side.BOTH).setApplyIf(() -> TweaksConfig.ic2CellWithContainer)
             .addTargetedMod(TargetedMod.IC2)),

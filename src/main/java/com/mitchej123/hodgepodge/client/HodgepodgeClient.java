@@ -23,12 +23,6 @@ public class HodgepodgeClient {
     public static final ManagedEnum<AnimationMode> animationsMode = new ManagedEnum<>(AnimationMode.VISIBLE_ONLY);
     public static final ManagedEnum<RenderDebugMode> renderDebugMode = new ManagedEnum<>(RenderDebugMode.REDUCED);
 
-    public static void preInit() {
-        if (Compat.isGT5Present()) {
-            MinecraftForge.EVENT_BUS.register(PollutionTooltip.INSTANCE);
-        }
-    }
-
     public static void postInit() {
 
         if (DebugConfig.renderDebug) {
@@ -45,15 +39,6 @@ public class HodgepodgeClient {
                                 TweaksConfig.defaultLanPort));
                 TweaksConfig.defaultLanPort = 0;
             }
-        }
-
-        if (Compat.isGT5Present()) {
-            Common.config.postInitClient();
-            MinecraftForge.EVENT_BUS.register(Common.config.standardBlocks);
-            MinecraftForge.EVENT_BUS.register(Common.config.liquidBlocks);
-            MinecraftForge.EVENT_BUS.register(Common.config.doublePlants);
-            MinecraftForge.EVENT_BUS.register(Common.config.crossedSquares);
-            MinecraftForge.EVENT_BUS.register(Common.config.blockVine);
         }
 
         FMLCommonHandler.instance().bus().register(ClientTicker.INSTANCE);
