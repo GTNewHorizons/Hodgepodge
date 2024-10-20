@@ -434,6 +434,15 @@ public enum Mixins {
     ADD_MOD_CONFIG_SEARCHBAR(new Builder("Adds a search bar to the mod config GUI").setPhase(Phase.EARLY)
             .setSide(Side.CLIENT).addMixinClasses("fml.MixinGuiConfig")
             .setApplyIf(() -> TweaksConfig.addModConfigSearchBar).addTargetedMod(TargetedMod.VANILLA)),
+  
+    FIX_BUTTON_POS_GUIOPENLINK(new Builder("Fix the buttons not being centered in the GuiConfirmOpenLink")
+            .setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses("minecraft.MixinGuiConfirmOpenLink")
+            .setApplyIf(() -> FixesConfig.fixButtonsGuiConfirmOpenLink)),
+
+    FIX_CHAT_OPEN_LINK(new Builder("Fix the vanilla method to open chat links not working for every OS")
+            .setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses("minecraft.MixinGuiChat_OpenLinks").setApplyIf(() -> FixesConfig.fixChatOpenLink)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)

@@ -293,9 +293,19 @@ public class FixesConfig {
                             // settings
     public static int limitRecursiveBlockUpdateDepth;
 
+    @Config.Comment("Fix the buttons not being centered in the GuiConfirmOpenLink")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixButtonsGuiConfirmOpenLink;
+
     @Config.Comment("Fix an array out of bounds caused by the GameSettings getKeyDisplayString method")
     @Config.DefaultBoolean(true)
     public static boolean fixGameSettingsArrayOutOfBounds;
+
+    @Config.Comment("Fix the vanilla method to open chat links not working for every OS")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixChatOpenLink;
 
     /* ====== Minecraft fixes end ===== */
 
