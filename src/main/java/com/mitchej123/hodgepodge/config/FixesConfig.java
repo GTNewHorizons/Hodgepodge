@@ -440,10 +440,6 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixIc2DirectInventoryAccess;
 
-    @Config.Comment("Fix IC2 armors to avoid giving poison")
-    @Config.DefaultBoolean(true)
-    public static boolean fixIc2Hazmat;
-
     @Config.Comment("Fix IC2's armor hover mode")
     @Config.DefaultBoolean(true)
     public static boolean fixIc2HoverMode;

@@ -66,10 +66,6 @@ public class Hodgepodge {
     public void preinit(FMLPreInitializationEvent event) {
         Compat.init(event.getSide());
         EVENT_HANDLER.preinit();
-
-        if (event.getSide() == Side.CLIENT) {
-            HodgepodgeClient.preInit();
-        }
     }
 
     @EventHandler
