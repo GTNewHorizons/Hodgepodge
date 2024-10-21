@@ -8,6 +8,6 @@ public class HodgepodgeGuiConfigFactory implements SimpleGuiFactory {
 
     @Override
     public Class<? extends GuiScreen> mainConfigGuiClass() {
-        return HodgepdgeGuiConfig.class;
+        return HodgepodgeGuiConfig.class;
     }
 }

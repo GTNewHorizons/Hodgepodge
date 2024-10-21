@@ -11,13 +11,14 @@ import com.mitchej123.hodgepodge.config.GeneralConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 
-public class HodgepdgeGuiConfig extends SimpleGuiConfig {
+public class HodgepodgeGuiConfig extends SimpleGuiConfig {
 
-    public HodgepdgeGuiConfig(GuiScreen parent) throws ConfigException {
+    public HodgepodgeGuiConfig(GuiScreen parent) throws ConfigException {
         super(
                 parent,
                 "hodgepodge",
                 "hodgepodge",
+                true,
                 ASMConfig.class,
                 DebugConfig.class,
                 FixesConfig.class,
