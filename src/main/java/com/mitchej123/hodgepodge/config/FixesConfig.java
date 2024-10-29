@@ -315,6 +315,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean removeUpdateChecks;
 
+    @Config.Comment("Enable multiple fixes to reduce RAM usage")
+    @Config.DefaultBoolean(true)
+    public static boolean enableMemoryFixes;
+
     // BetterHUD
 
     @Config.Comment("Maximum hp for BetterHUD to render as hearts")

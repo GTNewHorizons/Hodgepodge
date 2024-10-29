@@ -442,6 +442,14 @@ public enum Mixins {
             .setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses("minecraft.MixinGuiChat_OpenLinks").setApplyIf(() -> FixesConfig.fixChatOpenLink)),
 
+    MEMORY_FIXES_CLIENT(
+            new Builder("Memory fixes").setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
+                    .addMixinClasses("memory.MixinFMLClientHandler").setApplyIf(() -> FixesConfig.enableMemoryFixes)),
+
+    MEMORY_FIXES_IC2(new Builder("Removes allocation spam from the Direction.applyTo method").setPhase(Phase.LATE)
+            .setSide(Side.BOTH).addMixinClasses("ic2.MixinDirection_Memory")
+            .setApplyIf(() -> FixesConfig.enableMemoryFixes).addTargetedMod(TargetedMod.IC2)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIc2WaterKinetic").setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
