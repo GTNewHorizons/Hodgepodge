@@ -307,6 +307,16 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixChatOpenLink;
 
+    @Config.Comment("Fix nametags of spiders, endermen and ender dragons being rendered too dark")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixNametagBrightness;
+
+    @Config.Comment("Fix spiders, endermen and ender dragons being rendered too red when hit")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixHitEffectBrightness;
+
     /* ====== Minecraft fixes end ===== */
 
     // affecting multiple mods
