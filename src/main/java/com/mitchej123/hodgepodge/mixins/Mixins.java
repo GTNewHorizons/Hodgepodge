@@ -442,6 +442,14 @@ public enum Mixins {
             .setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses("minecraft.MixinGuiChat_OpenLinks").setApplyIf(() -> FixesConfig.fixChatOpenLink)),
 
+    FIX_NAMETAG_BRIGHTNESS(new Builder("Fix nametag brightness").setPhase(Phase.EARLY).setSide(Side.CLIENT)
+            .addMixinClasses("minecraft.MixinRendererLivingEntity_NametagBrightness")
+            .setApplyIf(() -> FixesConfig.fixNametagBrightness).addTargetedMod(TargetedMod.VANILLA)),
+
+    FIX_HIT_EFFECT_BRIGHTNESS(new Builder("Fix hit effect brightness").setPhase(Phase.EARLY).setSide(Side.CLIENT)
+            .addMixinClasses("minecraft.MixinRendererLivingEntity_HitEffectBrightness")
+            .setApplyIf(() -> FixesConfig.fixHitEffectBrightness).addTargetedMod(TargetedMod.VANILLA)),
+
     MEMORY_FIXES_CLIENT(
             new Builder("Memory fixes").setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
                     .addMixinClasses("memory.MixinFMLClientHandler").setApplyIf(() -> FixesConfig.enableMemoryFixes)),
