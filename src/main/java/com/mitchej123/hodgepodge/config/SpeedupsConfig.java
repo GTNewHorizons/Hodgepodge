@@ -40,6 +40,18 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean speedupChunkProviderClient;
 
+    @Config.Comment(
+            "Removes hard caps on chunk handling speed, and replaces some internals with faster/safer replacements. " +
+                    "Experimental and probably incompatible with hybrid servers!")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean fastChunkHandling;
+
+    @Config.Comment("The maximum speed of chunkloading per player, in chunks/tick. High values may overload clients! Only active with fastChunkHandling.\n" +
+            "For reference: Vanilla is 5, or 100 chunks/sec. At 32 render distance = 4225 chunks, loading the world would take 42.25 seconds.")
+    @Config.DefaultInt(50)
+    public static int maxSendSpeed;
+
     // Biomes O' Plenty
 
     @Config.Comment("Speedup biome fog rendering in BiomesOPlenty")
