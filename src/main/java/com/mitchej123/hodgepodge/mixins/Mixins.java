@@ -446,10 +446,9 @@ public enum Mixins {
             new Builder("Memory fixes").setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
                     .addMixinClasses("memory.MixinFMLClientHandler").setApplyIf(() -> FixesConfig.enableMemoryFixes)),
 
-    FAST_CHUNK_LOADING(new Builder("Invasively accelerates chunk handling").setPhase(Phase.EARLY)
-            .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
-            .addMixinClasses(
-//                    "minecraft.fastload.MixinIntCache",
+    FAST_CHUNK_LOADING(new Builder("Invasively accelerates chunk handling").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.VANILLA).addMixinClasses(
+                    // "minecraft.fastload.MixinIntCache",
                     "minecraft.fastload.MixinEntityPlayerMP")
             .setApplyIf(() -> SpeedupsConfig.fastChunkHandling)),
 
