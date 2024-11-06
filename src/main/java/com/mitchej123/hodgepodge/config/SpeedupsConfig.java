@@ -40,8 +40,12 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean speedupChunkProviderClient;
 
-    @Config.Comment("Removes hard caps on chunk handling speed, and replaces some internals with faster/safer replacements. "
-            + "Experimental and probably incompatible with hybrid servers!")
+    @Config.Comment("Rewrites internal cache methods to be safer and faster. Experimental, use at your own risk!")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean fastIntCache;
+
+    @Config.Comment("Removes hard caps on chunk handling speed. Experimental and probably incompatible with hybrid servers!")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean fastChunkHandling;
