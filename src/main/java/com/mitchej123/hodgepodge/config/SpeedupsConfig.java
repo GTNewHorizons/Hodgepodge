@@ -55,6 +55,11 @@ public class SpeedupsConfig {
     @Config.DefaultInt(50)
     public static int maxSendSpeed;
 
+    @Config.Comment("The maximum speed of chunk unloading, in chunks/tick. High values may overload servers! Only active with fastChunkHandling.\n"
+            + "For reference: Vanilla is 100, or 2000 chunks/sec. At 32 render distance = 4225 chunks, unloading the world would take 2.1125 seconds.")
+    @Config.DefaultInt(100)
+    public static int maxUnloadSpeed;
+
     // Biomes O' Plenty
 
     @Config.Comment("Speedup biome fog rendering in BiomesOPlenty")
