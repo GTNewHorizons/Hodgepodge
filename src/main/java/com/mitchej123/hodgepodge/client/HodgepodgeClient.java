@@ -7,6 +7,7 @@ import net.minecraftforge.common.MinecraftForge;
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.client.handlers.ClientKeyListener;
+import com.mitchej123.hodgepodge.client.handlers.ReloadSoundsGui;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
@@ -43,6 +44,8 @@ public class HodgepodgeClient {
 
         FMLCommonHandler.instance().bus().register(ClientTicker.INSTANCE);
         ClientRegistry.registerKeyBinding(ClientKeyListener.FastBlockPlacingKey);
+
+        MinecraftForge.EVENT_BUS.register(new ReloadSoundsGui());
 
         if (TweaksConfig.addSystemInfo) {
             MinecraftForge.EVENT_BUS.register(DebugScreenHandler.INSTANCE);
