@@ -8,6 +8,10 @@ public class TweaksConfig {
 
     // Minecraft
 
+    @Config.Comment("Adds a button in the sounds menu to reload the sound system without needing to press F3 + S")
+    @Config.DefaultBoolean(true)
+    public static boolean reloadSoundsButton;
+
     @Config.Comment("Adds system info to the F3 overlay (Java version and vendor; GPU name; OpenGL version; CPU cores; OS name, version and architecture)")
     @Config.DefaultBoolean(true)
     public static boolean addSystemInfo;
