@@ -13,7 +13,6 @@ import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.util.ManagedEnum;
 
 import biomesoplenty.common.eventhandler.client.gui.WorldTypeMessageEventHandler;
-import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModMetadata;
@@ -42,15 +41,12 @@ public class HodgepodgeClient {
         }
 
         FMLCommonHandler.instance().bus().register(ClientTicker.INSTANCE);
-        ClientRegistry.registerKeyBinding(ClientKeyListener.FastBlockPlacingKey);
 
         if (TweaksConfig.addSystemInfo) {
             MinecraftForge.EVENT_BUS.register(DebugScreenHandler.INSTANCE);
         }
 
-        if (FixesConfig.speedupAnimations) {
-            FMLCommonHandler.instance().bus().register(new ClientKeyListener());
-        }
+        FMLCommonHandler.instance().bus().register(new ClientKeyListener());
 
         if (Compat.isIC2CropPluginPresent()) {
             ModMetadata meta = Loader.instance().getIndexedModList().get("Ic2Nei").getMetadata();
