@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.client.handlers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreenOptionsSounds;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.GuiScreenEvent;
 
 import com.mitchej123.hodgepodge.config.TweaksConfig;
@@ -28,7 +29,12 @@ public class ReloadSoundsGui {
                 posY = event.gui.height / 6 + 168 - (20 + 4) * 2;
             }
             posY += 20 + 4;
-            event.buttonList.add(new GuiButton(BUTTON_ID, posX, posY, "Refresh Sounds"));
+            event.buttonList.add(
+                    new GuiButton(
+                            BUTTON_ID,
+                            posX,
+                            posY,
+                            StatCollector.translateToLocal("hodgepodge.soundsmenu.refreshsounds")));
         }
     }
 
