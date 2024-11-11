@@ -319,6 +319,13 @@ public class FixesConfig {
 
     /* ====== Minecraft fixes end ===== */
 
+    // bukkit fixes
+
+    @Config.Comment("Fix crash on Bukkit with BetterQuesting")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBukkitBetterQuestingCrash;
+
     // affecting multiple mods
 
     @Config.Comment("Remove old/stale/outdated update checks.")
