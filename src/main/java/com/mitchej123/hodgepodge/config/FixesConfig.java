@@ -416,6 +416,14 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesFluidRetrievalNode;
 
+    @Config.Comment("Caps hotkey'd stacks to their maximum stack size in filing cabinets")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesFilingCabinetDupe;
+
+    @Config.Comment("Prevent hotkeying other items onto item filters while they are open")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesFilterDupe;
+
     // Galacticraft
 
     @Config.Comment("Fix time commands with GC")
