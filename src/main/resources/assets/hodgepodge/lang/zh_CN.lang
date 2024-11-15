@@ -1,1 +1,24 @@
+key.hodgepodge.category=Hodgepodge
+key.fastBlockPlacing.desc=快速放置方块
+key.fastBlockPlacing.enabled=§f快速放置方块 §a已启用
+key.fastBlockPlacing.disabled=§f快速放置方块 §c已禁用
 
+tile.dirt.name=泥土
+tile.sapling.name=树苗
+tile.sand.name=沙子
+tile.flower1.name=花
+tile.flower2.name=花
+tile.stoneSlab.name=石板
+tile.monsterStoneEgg.name=石头怪蛋
+tile.woodSlab.name=木板
+tile.cobbleWall.name=墙
+tile.quartzBlock.name=石英块
+tile.clayHardenedStained.name=染色硬化粘土
+tile.woolCarpet.name=地毯
+tile.doublePlant.name=大型植物
+
+item.dyePowder.name=染料
+item.skull.name=头颅
+item.fish.name=鱼
+
+hodgepodge.soundsmenu.refreshsounds=声音重载
