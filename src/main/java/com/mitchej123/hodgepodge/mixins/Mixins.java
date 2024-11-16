@@ -764,6 +764,13 @@ public enum Mixins {
             .addMixinClasses("extrautilities.MixinFluidBufferRetrieval").setPhase(Phase.LATE).setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFluidRetrievalNode)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_FILING_CABINET_DUPE(new Builder("Caps hotkey'd stacks to their maximum stack size in filing cabinets")
+            .addMixinClasses("extrautilities.MixinContainerFilingCabinet").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFilingCabinetDupe)
+            .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_FILTER_DUPE(new Builder("Prevent hotkeying other items onto item filters while they are open")
+            .addMixinClasses("extrautilities.MixinContainerFilter").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFilterDupe).addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
     // Gliby's Voice Chat
     FIX_GLIBYS_VC_THREAD_SHUTDOWN_CLIENT(
