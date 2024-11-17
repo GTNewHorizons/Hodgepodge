@@ -14,14 +14,14 @@ public class DebugScreenHandler {
 
     public static final DebugScreenHandler INSTANCE = new DebugScreenHandler();
 
-    private boolean is64bit;
-    private String javaVersion;
-    private String javaVendor;
-    private String gpuName;
-    private String glVersion;
-    private String osArch;
-    private String osName;
-    private String osVersion;
+    private final boolean is64bit;
+    private final String javaVersion;
+    private final String javaVendor;
+    private final String gpuName;
+    private final String glVersion;
+    private final String osArch;
+    private final String osName;
+    private final String osVersion;
 
     private DebugScreenHandler() {
         this.is64bit = check64bit();
@@ -37,20 +37,24 @@ public class DebugScreenHandler {
     @SubscribeEvent
     public void onRenderGameOverlayTextEvent(RenderGameOverlayEvent.Text event) {
         if (Minecraft.getMinecraft().gameSettings.showDebugInfo) {
-            event.right.add(2, null); // Empty Line
+            int offset = event.right.isEmpty() ? 0 : 2;
+            event.right.add(offset, null); // Empty Line
             event.right.add(
-                    3,
+                    1 + offset,
                     "Java: " + this.javaVersion + (this.is64bit ? " 64bit (" : " 32bit (") + this.javaVendor + ")");
-            event.right.add(4, "GPU: " + this.gpuName);
-            event.right.add(5, "OpenGL: " + this.glVersion);
-            event.right.add(6, "CPU Cores: " + Runtime.getRuntime().availableProcessors());
-            event.right.add(7, "OS: " + this.osName + " (" + this.osVersion + ", " + this.osArch + ")");
+            event.right.add(2 + offset, "GPU: " + this.gpuName);
+            event.right.add(3 + offset, "OpenGL: " + this.glVersion);
+            event.right.add(4 + offset, "CPU Cores: " + Runtime.getRuntime().availableProcessors());
+            event.right.add(5 + offset, "OS: " + this.osName + " (" + this.osVersion + ", " + this.osArch + ")");
 
             if (FixesConfig.speedupAnimations || DebugConfig.renderDebug) {
-                event.right.add(8, null); // Empty Line
-                if (FixesConfig.speedupAnimations)
-                    event.right.add(9, "animationsMode: " + HodgepodgeClient.animationsMode);
-                if (DebugConfig.renderDebug) event.right.add(9, "renderDebugMode: " + HodgepodgeClient.renderDebugMode);
+                event.right.add(6 + offset, null); // Empty Line
+                if (FixesConfig.speedupAnimations) {
+                    event.right.add(7 + offset, "animationsMode: " + HodgepodgeClient.animationsMode);
+                }
+                if (DebugConfig.renderDebug) {
+                    event.right.add(8 + offset, "renderDebugMode: " + HodgepodgeClient.renderDebugMode);
+                }
             }
         }
     }
