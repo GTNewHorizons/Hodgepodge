@@ -17,7 +17,7 @@ public class MixinGuiChat_OpenLinks {
      * @reason The Vanilla method doesn't work on some OS
      */
     @Overwrite
-    private void func_146407_a(URI uri) {
+    protected void func_146407_a(URI uri) {
         FilesUtil.openUri(uri);
     }
 
