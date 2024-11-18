@@ -450,6 +450,10 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinRendererLivingEntity_HitEffectBrightness")
             .setApplyIf(() -> FixesConfig.fixHitEffectBrightness).addTargetedMod(TargetedMod.VANILLA)),
 
+    FIX_BUKKIT_PLAYER_CONTAINER(new Builder("Fix Bukkit BetterQuesting crash").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.BUKKIT).addMixinClasses("minecraft.MixinContainerPlayer")
+            .setApplyIf(() -> FixesConfig.fixBukkitBetterQuestingCrash)),
+
     MEMORY_FIXES_CLIENT(
             new Builder("Memory fixes").setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
                     .addMixinClasses("memory.MixinFMLClientHandler").setApplyIf(() -> FixesConfig.enableMemoryFixes)),
