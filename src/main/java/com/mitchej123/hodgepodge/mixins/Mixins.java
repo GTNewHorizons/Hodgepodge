@@ -633,7 +633,8 @@ public enum Mixins {
     // Minefactory Reloaded
     DISARM_SACRED_TREE(new Builder("Prevents Sacred Rubber Tree Generation")
             .addMixinClasses("minefactoryreloaded..MixinBlockRubberSapling").setPhase(Phase.LATE).setSide(Side.BOTH)
-            .addTargetedMod(TargetedMod.MINEFACTORY_RELOADED).setApplyIf(() -> FixesConfig.disableMassiveSacredTreeGeneration)),
+            .addTargetedMod(TargetedMod.MINEFACTORY_RELOADED)
+            .setApplyIf(() -> FixesConfig.disableMassiveSacredTreeGeneration)),
 
     // Immersive engineering
     JAVA12_IMMERSIVE_ENGINERRING(new Builder("Immersive Engineering Java-12 safe potion array resizing")

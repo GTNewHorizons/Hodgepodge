@@ -529,7 +529,6 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean disableMassiveSacredTreeGeneration;
 
-
     // Morpheus
 
     @Config.Comment("Fix not properly waking players if not everyone is sleeping")
