@@ -442,9 +442,31 @@ public enum Mixins {
             .setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses("minecraft.MixinGuiChat_OpenLinks").setApplyIf(() -> FixesConfig.fixChatOpenLink)),
 
+    FIX_NAMETAG_BRIGHTNESS(new Builder("Fix nametag brightness").setPhase(Phase.EARLY).setSide(Side.CLIENT)
+            .addMixinClasses("minecraft.MixinRendererLivingEntity_NametagBrightness")
+            .setApplyIf(() -> FixesConfig.fixNametagBrightness).addTargetedMod(TargetedMod.VANILLA)),
+
+    FIX_HIT_EFFECT_BRIGHTNESS(new Builder("Fix hit effect brightness").setPhase(Phase.EARLY).setSide(Side.CLIENT)
+            .addMixinClasses("minecraft.MixinRendererLivingEntity_HitEffectBrightness")
+            .setApplyIf(() -> FixesConfig.fixHitEffectBrightness).addTargetedMod(TargetedMod.VANILLA)),
+
+    FIX_BUKKIT_PLAYER_CONTAINER(new Builder("Fix Bukkit BetterQuesting crash").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.BUKKIT).addMixinClasses("minecraft.MixinContainerPlayer")
+            .setApplyIf(() -> FixesConfig.fixBukkitBetterQuestingCrash)),
+
     MEMORY_FIXES_CLIENT(
             new Builder("Memory fixes").setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
                     .addMixinClasses("memory.MixinFMLClientHandler").setApplyIf(() -> FixesConfig.enableMemoryFixes)),
+
+    FAST_INT_CACHE(new Builder("Rewrite internal caching methods to be safer and faster").setPhase(Phase.EARLY)
+            .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses("minecraft.fastload.MixinIntCache", "minecraft.fastload.MixinWorldChunkManager")
+            .setApplyIf(() -> SpeedupsConfig.fastIntCache)),
+
+    FAST_CHUNK_LOADING(new Builder("Invasively accelerates chunk handling").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses("minecraft.fastload.MixinEntityPlayerMP", "minecraft.fastload.MixinChunkProviderServer")
+            .setApplyIf(() -> SpeedupsConfig.fastChunkHandling)),
 
     MEMORY_FIXES_IC2(new Builder("Removes allocation spam from the Direction.applyTo method").setPhase(Phase.LATE)
             .setSide(Side.BOTH).addMixinClasses("ic2.MixinDirection_Memory")
@@ -747,6 +769,13 @@ public enum Mixins {
             .addMixinClasses("extrautilities.MixinFluidBufferRetrieval").setPhase(Phase.LATE).setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFluidRetrievalNode)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_FILING_CABINET_DUPE(new Builder("Caps hotkey'd stacks to their maximum stack size in filing cabinets")
+            .addMixinClasses("extrautilities.MixinContainerFilingCabinet").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFilingCabinetDupe)
+            .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_FILTER_DUPE(new Builder("Prevent hotkeying other items onto item filters while they are open")
+            .addMixinClasses("extrautilities.MixinContainerFilter").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFilterDupe).addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
     // Gliby's Voice Chat
     FIX_GLIBYS_VC_THREAD_SHUTDOWN_CLIENT(

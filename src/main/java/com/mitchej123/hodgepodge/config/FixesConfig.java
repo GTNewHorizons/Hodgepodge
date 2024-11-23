@@ -307,7 +307,24 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixChatOpenLink;
 
+    @Config.Comment("Fix nametags of spiders, endermen and ender dragons being rendered too dark")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixNametagBrightness;
+
+    @Config.Comment("Fix spiders, endermen and ender dragons being rendered too red when hit")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixHitEffectBrightness;
+
     /* ====== Minecraft fixes end ===== */
+
+    // bukkit fixes
+
+    @Config.Comment("Fix crash on Bukkit with BetterQuesting")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBukkitBetterQuestingCrash;
 
     // affecting multiple mods
 
@@ -405,6 +422,14 @@ public class FixesConfig {
     @Config.Comment("Prevent fluid retrieval node from voiding (Extra Utilities)")
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesFluidRetrievalNode;
+
+    @Config.Comment("Caps hotkey'd stacks to their maximum stack size in filing cabinets")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesFilingCabinetDupe;
+
+    @Config.Comment("Prevent hotkeying other items onto item filters while they are open")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesFilterDupe;
 
     // Galacticraft
 
