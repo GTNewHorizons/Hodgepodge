@@ -526,7 +526,7 @@ public class FixesConfig {
     // Minefactory Reloaded
 
     @Config.Comment("Prevents Sacred Rubber Tree Generation")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     public static boolean disableMassiveSacredTreeGeneration;
 
     // Morpheus
