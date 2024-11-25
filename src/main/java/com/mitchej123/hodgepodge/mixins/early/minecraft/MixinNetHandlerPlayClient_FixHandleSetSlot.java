@@ -17,18 +17,27 @@ public class MixinNetHandlerPlayClient_FixHandleSetSlot {
     @Inject(
             locals = LocalCapture.CAPTURE_FAILSOFT,
             method = "handleSetSlot(Lnet/minecraft/network/play/server/S2FPacketSetSlot;)V",
-            at = { @At(
+            at = @At(
                     opcode = Opcodes.GETFIELD,
                     ordinal = 1,
                     target = "Lnet/minecraft/client/entity/EntityClientPlayerMP;inventoryContainer:Lnet/minecraft/inventory/Container;",
                     value = "FIELD"),
-                    @At(
-                            opcode = Opcodes.GETFIELD,
-                            ordinal = 1,
-                            target = "Lnet/minecraft/client/entity/EntityClientPlayerMP;openContainer:Lnet/minecraft/inventory/Container;",
-                            value = "FIELD") },
             cancellable = true)
-    public void hodgepodge$checkPacketItemStackSize(S2FPacketSetSlot packetIn, CallbackInfo ci,
+    public void hodgepodge$checkPacketItemStackSizeInventory(S2FPacketSetSlot packetIn, CallbackInfo ci,
+            EntityClientPlayerMP entityclientplayermp) {
+        if (packetIn.func_149173_d() >= entityclientplayermp.inventoryContainer.inventorySlots.size()) ci.cancel();
+    }
+
+    @Inject(
+            locals = LocalCapture.CAPTURE_FAILSOFT,
+            method = "handleSetSlot(Lnet/minecraft/network/play/server/S2FPacketSetSlot;)V",
+            at = @At(
+                    opcode = Opcodes.GETFIELD,
+                    ordinal = 1,
+                    target = "Lnet/minecraft/client/entity/EntityClientPlayerMP;openContainer:Lnet/minecraft/inventory/Container;",
+                    value = "FIELD"),
+            cancellable = true)
+    public void hodgepodge$checkPacketItemStackSizeContainer(S2FPacketSetSlot packetIn, CallbackInfo ci,
             EntityClientPlayerMP entityclientplayermp) {
         if (packetIn.func_149173_d() >= entityclientplayermp.openContainer.inventorySlots.size()) ci.cancel();
     }
