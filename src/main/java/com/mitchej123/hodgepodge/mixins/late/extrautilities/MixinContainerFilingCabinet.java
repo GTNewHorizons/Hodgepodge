@@ -1,10 +1,15 @@
 package com.mitchej123.hodgepodge.mixins.late.extrautilities;
 
+import java.util.List;
+import java.util.Map;
+
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -12,8 +17,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.rwtema.extrautils.gui.ContainerFilingCabinet;
 
+import invtweaks.api.container.ContainerSection;
+
 @Mixin(value = ContainerFilingCabinet.class)
-public abstract class MixinContainerFilingCabinet {
+public abstract class MixinContainerFilingCabinet extends Container {
+
+    @Shadow(remap = false)
+    public abstract Map<ContainerSection, List<Slot>> getSlots();
 
     @Unique
     private ItemStack hodgepodge$buffer;
@@ -29,8 +39,7 @@ public abstract class MixinContainerFilingCabinet {
         if (mode != 2) {
             return;
         }
-        ContainerFilingCabinet cabinet = (ContainerFilingCabinet) (Object) this;
-        ItemStack stack = cabinet.getInventory().get(slotId);
+        ItemStack stack = this.getInventory().get(slotId);
         if (stack != null && stack.getMaxStackSize() < stack.stackSize) {
             int newSize = stack.stackSize - stack.getMaxStackSize();
             hodgepodge$buffer = stack.copy();
@@ -45,9 +54,9 @@ public abstract class MixinContainerFilingCabinet {
         if (mode != 2) {
             return;
         }
-        ContainerFilingCabinet cabinet = (ContainerFilingCabinet) (Object) this;
-        if (hodgepodge$buffer != null && slotId >= 0 && slotId < cabinet.getSlots().size()) {
-            Slot slot = cabinet.inventorySlots.get(slotId);
+
+        if (hodgepodge$buffer != null && slotId >= 0 && slotId < this.getSlots().size()) {
+            Slot slot = this.inventorySlots.get(slotId);
             if (slot.getStack() == null) {
                 slot.putStack(hodgepodge$buffer.copy());
                 hodgepodge$buffer = null;
