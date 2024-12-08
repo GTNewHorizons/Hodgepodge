@@ -201,9 +201,8 @@ public class TweaksConfig {
 
     @Config.Comment("Ender Quarry RF Storage Override (0 to disable)")
     @Config.RangeInt(min = 0)
-    @Config.DefaultInt(0) // extrautilities default value
+    @Config.DefaultInt(0)
     public static int extraUtilitiesEnderQuarryOverride;
-
 
     // Minechem
 
