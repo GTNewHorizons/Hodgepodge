@@ -841,9 +841,8 @@ public enum Mixins {
                     .addTargetedMod(TargetedMod.WITCHERY)),
 
     FIX_WITCHERY_RENDERING(new Builder("Fixes Witchery Rendering errors")
-            .addMixinClasses("witchery.MixinBlockCircleGlyph")
-            .setSide(Side.CLIENT).setPhase(Phase.LATE).setApplyIf(() -> FixesConfig.fixWitcheryRendering)
-            .addTargetedMod(TargetedMod.WITCHERY)),
+            .addMixinClasses("witchery.MixinBlockCircleGlyph").setSide(Side.CLIENT).setPhase(Phase.LATE)
+            .setApplyIf(() -> FixesConfig.fixWitcheryRendering).addTargetedMod(TargetedMod.WITCHERY)),
 
     // Various Exploits/Fixes
     GC_TIME_COMMAND_FIX(new Builder("GC Time Fix").addMixinClasses("minecraft.MixinTimeCommandGalacticraftFix")
