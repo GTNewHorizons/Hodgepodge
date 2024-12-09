@@ -613,6 +613,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixWitcheryThunderDetection;
 
+    @Config.Comment("Fixes some potential errors in Witchery Rendering")
+    @Config.DefaultBoolean(true)
+    public static boolean fixWitcheryRendering;
+
     // Xaero's Minimap
     @Config.Comment("Fixes the player entity dot rendering when arrow is chosen")
     @Config.DefaultBoolean(true)
