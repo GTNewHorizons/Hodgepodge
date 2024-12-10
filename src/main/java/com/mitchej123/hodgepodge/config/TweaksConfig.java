@@ -199,7 +199,7 @@ public class TweaksConfig {
     @Config.DefaultInt(64)
     public static int ic2SeedMaxStackSize;
 
-    @Config.Comment("Ender Quarry RF Storage Override (0 to disable)")
+    @Config.Comment("Ender Quarry RF Storage Override (ExU default value: 10000000) (0 to use default value)")
     @Config.RangeInt(min = 0)
     @Config.DefaultInt(0)
     public static int extraUtilitiesEnderQuarryOverride;
