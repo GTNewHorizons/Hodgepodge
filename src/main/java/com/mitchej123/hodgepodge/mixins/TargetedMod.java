@@ -25,7 +25,7 @@ public enum TargetedMod {
     GLIBYS_VOICE_CHAT("Gliby's Voice Chat Mod", null, "gvc"),
     GT5U("GregTech5u", null, "gregtech"), // Also matches GT6.
     GT6("GregTech6", "gregtech.asm.GT_ASM", "gregapi"), // Can be used to exclude GT6 from the GT5U target.
-    GTNHLIB("GTNHLib", "com.gtnewhorizon.gtnhlib.core.GTNHLibCore", "gtnhlib"),
+    GTNHLIB("GTNHLib", "GTNHLib Core", "gtnhlib"),
     HARVESTCRAFT("harvestcraft", null, "harvestcraft"),
     HARVESTTHENETHER("harvestthenether", null, "harvestthenether"),
     HUNGER_OVERHAUL("HungerOverhaul", null, "HungerOverhaul"),
