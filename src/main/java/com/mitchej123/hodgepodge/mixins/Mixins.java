@@ -777,6 +777,10 @@ public enum Mixins {
     FIX_FILTER_DUPE(new Builder("Prevent hotkeying other items onto item filters while they are open")
             .addMixinClasses("extrautilities.MixinContainerFilter").setPhase(Phase.LATE).setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFilterDupe).addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    CONFIGURABLE_ENDERQUARRY_ENERGY(new Builder("Ender Quarry energy storage override")
+            .addMixinClasses("extrautilities.MixinTileEntityEnderQuarry").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .setApplyIf(() -> TweaksConfig.extraUtilitiesEnderQuarryOverride > 0)
+            .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
     // Gliby's Voice Chat
     FIX_GLIBYS_VC_THREAD_SHUTDOWN_CLIENT(
@@ -839,6 +843,10 @@ public enum Mixins {
                             "witchery.MixinRiteClimateChange")
                     .setSide(Side.BOTH).setPhase(Phase.LATE).setApplyIf(() -> FixesConfig.fixWitcheryThunderDetection)
                     .addTargetedMod(TargetedMod.WITCHERY)),
+
+    FIX_WITCHERY_RENDERING(new Builder("Fixes Witchery Rendering errors")
+            .addMixinClasses("witchery.MixinBlockCircleGlyph").setSide(Side.CLIENT).setPhase(Phase.LATE)
+            .setApplyIf(() -> FixesConfig.fixWitcheryRendering).addTargetedMod(TargetedMod.WITCHERY)),
 
     // Various Exploits/Fixes
     GC_TIME_COMMAND_FIX(new Builder("GC Time Fix").addMixinClasses("minecraft.MixinTimeCommandGalacticraftFix")
