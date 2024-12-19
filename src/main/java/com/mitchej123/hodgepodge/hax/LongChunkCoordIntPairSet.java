@@ -59,13 +59,13 @@ public class LongChunkCoordIntPairSet implements Set<ChunkCoordIntPair> {
     @NotNull
     @Override
     public Iterator<ChunkCoordIntPair> iterator() {
-        return longSet.stream().map(this::fromLongSafe).iterator();
+        return longSet.longStream().mapToObj(this::fromLongSafe).iterator();
     }
 
     public Iterator<ChunkCoordIntPair> unsafeIterator() {
         // Reuses the same ChunkCoordIntPair object for every iteration, use this when you know the code won't
         // be storing the result anywhere
-        return longSet.stream().map(this::fromLongUnsafe).iterator();
+        return longSet.longStream().mapToObj(this::fromLongUnsafe).iterator();
     }
 
     public LongIterator longIterator() {
@@ -75,7 +75,7 @@ public class LongChunkCoordIntPairSet implements Set<ChunkCoordIntPair> {
     @NotNull
     @Override
     public Object[] toArray() {
-        return longSet.stream().map(this::fromLongSafe).toArray();
+        return longSet.longStream().mapToObj(this::fromLongSafe).toArray();
     }
 
     @NotNull
