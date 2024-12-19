@@ -27,7 +27,7 @@ public class ChunkCoordIntPairUnsafeIterator implements Iterator<ChunkCoordIntPa
 
     @Override
     public ChunkCoordIntPair next() {
-        if (!hasNext()) {
+        if (!longIterator.hasNext()) {
             throw new NoSuchElementException();
         }
         final long pos = longIterator.nextLong();
