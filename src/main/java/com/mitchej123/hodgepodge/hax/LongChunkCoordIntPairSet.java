@@ -17,19 +17,6 @@ import it.unimi.dsi.fastutil.longs.LongSet;
 
 public class LongChunkCoordIntPairSet implements Set<ChunkCoordIntPair> {
 
-    private final MutableChunkCoordIntPair reusableChunkCoordIntPair = (MutableChunkCoordIntPair) new ChunkCoordIntPair(
-            0,
-            0);
-
-    public ChunkCoordIntPair fromLongUnsafe(long pos) {
-        return (ChunkCoordIntPair) reusableChunkCoordIntPair
-                .setChunkPos(ChunkPosUtil.getPackedX(pos), ChunkPosUtil.getPackedZ(pos));
-    }
-
-    public ChunkCoordIntPair fromLongSafe(long pos) {
-        return new ChunkCoordIntPair(ChunkPosUtil.getPackedX(pos), ChunkPosUtil.getPackedZ(pos));
-    }
-
     private LongSet longSet = new LongOpenHashSet();
 
     @Override
@@ -59,13 +46,13 @@ public class LongChunkCoordIntPairSet implements Set<ChunkCoordIntPair> {
     @NotNull
     @Override
     public Iterator<ChunkCoordIntPair> iterator() {
-        return longSet.longStream().mapToObj(this::fromLongSafe).iterator();
+        return new ChunkCoordIntPairIterator(longSet);
     }
 
     public Iterator<ChunkCoordIntPair> unsafeIterator() {
         // Reuses the same ChunkCoordIntPair object for every iteration, use this when you know the code won't
         // be storing the result anywhere
-        return longSet.longStream().mapToObj(this::fromLongUnsafe).iterator();
+        return new ChunkCoordIntPairUnsafeIterator(longSet);
     }
 
     public LongIterator longIterator() {
@@ -75,7 +62,13 @@ public class LongChunkCoordIntPairSet implements Set<ChunkCoordIntPair> {
     @NotNull
     @Override
     public Object[] toArray() {
-        return longSet.longStream().mapToObj(this::fromLongSafe).toArray();
+        LongIterator longIterator = longSet.iterator();
+        final Object[] array = new Object[longSet.size()];
+        for (int i = 0; longIterator.hasNext(); i++) {
+            final long pos = longIterator.nextLong();
+            array[i] = new ChunkCoordIntPair(ChunkPosUtil.getPackedX(pos), ChunkPosUtil.getPackedZ(pos));
+        }
+        return array;
     }
 
     @NotNull
@@ -119,7 +112,9 @@ public class LongChunkCoordIntPairSet implements Set<ChunkCoordIntPair> {
 
     @Override
     public boolean retainAll(@NotNull Collection<?> c) {
-        return longSet.removeIf(l -> !c.contains(fromLongUnsafe(l)));
+        final MutableChunkCoordIntPair reusablePair = (MutableChunkCoordIntPair) new ChunkCoordIntPair(0, 0);
+        return longSet.removeIf(
+                l -> !c.contains(reusablePair.setChunkPos(ChunkPosUtil.getPackedX(l), ChunkPosUtil.getPackedZ(l))));
     }
 
     @Override
