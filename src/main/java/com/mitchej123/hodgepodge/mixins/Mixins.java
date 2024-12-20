@@ -122,6 +122,9 @@ public enum Mixins {
     SPEEDUP_GRASS_BLOCK_RANDOM_TICKING(new Builder("Speed up grass block random ticking").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinBlockGrass").addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)
             .setApplyIf(() -> SpeedupsConfig.speedupGrassBlockRandomTicking)),
+    FIX_REED_PLACING(new Builder("Fix placement of ItemReed").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinItemReed").addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)
+            .setApplyIf(() -> SpeedupsConfig.speedupGrassBlockRandomTicking)),
     SPEEDUP_CHUNK_PROVIDER_CLIENT(new Builder("Speed up ChunkProviderClient").setPhase(Phase.EARLY).setSide(Side.CLIENT)
             .addMixinClasses("minecraft.MixinChunkProviderClient_RemoveChunkListing")
             .addTargetedMod(TargetedMod.VANILLA).addExcludedMod(TargetedMod.FASTCRAFT)
