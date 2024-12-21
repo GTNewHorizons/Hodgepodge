@@ -62,6 +62,11 @@ public class SpeedupsConfig {
     @Config.RangeInt(min = 100)
     public static int maxUnloadSpeed;
 
+    @Config.Comment("Speed up NBT copying")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupNBTCopy;
+
     // Biomes O' Plenty
 
     @Config.Comment("Speedup biome fog rendering in BiomesOPlenty")
