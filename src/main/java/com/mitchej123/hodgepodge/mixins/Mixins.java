@@ -287,8 +287,12 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinNBTTagCompound").setApplyIf(() -> DebugConfig.chunkSaveCMEDebug)
             .addTargetedMod(TargetedMod.VANILLA)),
     SPEEDUP_NBT_COPY(new Builder("Speed up NBT copy").setPhase(Phase.EARLY).setSide(Side.BOTH)
-            .addMixinClasses("minecraft.MixinNBTTagCompound_speedup", "minecraft.MixinNBTTagList_speedup").setApplyIf(() -> SpeedupsConfig.speedupNBTCopy)
-            .addTargetedMod(TargetedMod.VANILLA).addExcludedMod(TargetedMod.BUKKIT)),
+            .addMixinClasses("minecraft.MixinNBTTagCompound_speedup", "minecraft.MixinNBTTagList_speedup")
+            .setApplyIf(() -> SpeedupsConfig.speedupNBTCopy).addTargetedMod(TargetedMod.VANILLA)
+            .addExcludedMod(TargetedMod.BUKKIT)),
+    STRING_POOLER_NBT(new Builder("Pool NBT Strings").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses("minecraft.MixinNBTTagString_stringPooler", "minecraft.MixinNBTTagCompound_stringPooler")
+            .setApplyIf(() -> TweaksConfig.enableStringPooling).addTargetedMod(TargetedMod.VANILLA)),
     RENDER_DEBUG(new Builder("Render Debug").setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinRenderGlobal")
             .setSide(Side.CLIENT).setApplyIf(() -> DebugConfig.renderDebug).addTargetedMod(TargetedMod.VANILLA)),
     STATIC_LAN_PORT(new Builder("Static Lan Port").setPhase(Phase.EARLY)
