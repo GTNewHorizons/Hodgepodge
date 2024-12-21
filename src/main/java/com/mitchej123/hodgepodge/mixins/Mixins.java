@@ -286,6 +286,9 @@ public enum Mixins {
     CHUNK_SAVE_CME_DEBUG(new Builder("Add debugging code to Chunk Save CME").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinNBTTagCompound").setApplyIf(() -> DebugConfig.chunkSaveCMEDebug)
             .addTargetedMod(TargetedMod.VANILLA)),
+    SPEEDUP_NBT_COPY(new Builder("Speed up NBT copy").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses("minecraft.MixinNBTTagCompound_speedup", "minecraft.MixinNBTTagList_speedup").setApplyIf(() -> SpeedupsConfig.speedupNBTCopy)
+            .addTargetedMod(TargetedMod.VANILLA).addExcludedMod(TargetedMod.BUKKIT)),
     RENDER_DEBUG(new Builder("Render Debug").setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinRenderGlobal")
             .setSide(Side.CLIENT).setApplyIf(() -> DebugConfig.renderDebug).addTargetedMod(TargetedMod.VANILLA)),
     STATIC_LAN_PORT(new Builder("Static Lan Port").setPhase(Phase.EARLY)
