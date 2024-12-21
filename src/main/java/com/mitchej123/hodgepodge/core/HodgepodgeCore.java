@@ -16,6 +16,7 @@ import com.mitchej123.hodgepodge.config.GeneralConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.mixins.Mixins;
+import com.mitchej123.hodgepodge.util.StringPooler;
 import com.mitchej123.hodgepodge.util.VoxelMapCacheMover;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
@@ -33,6 +34,7 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
             ConfigurationManager.registerConfig(GeneralConfig.class);
             ConfigurationManager.registerConfig(SpeedupsConfig.class);
             ConfigurationManager.registerConfig(TweaksConfig.class);
+            if (TweaksConfig.enableStringPooling) StringPooler.setupPooler();
         } catch (ConfigException e) {
             throw new RuntimeException(e);
         }
