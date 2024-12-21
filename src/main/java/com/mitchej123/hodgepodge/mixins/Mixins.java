@@ -293,8 +293,15 @@ public enum Mixins {
     STRING_POOLER_NBT(new Builder("Pool NBT Strings").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinNBTTagString_stringPooler", "minecraft.MixinNBTTagCompound_stringPooler")
             .setApplyIf(() -> TweaksConfig.enableStringPooling).addTargetedMod(TargetedMod.VANILLA)),
+    THREADED_WORLDDATA_SAVING(new Builder("Threaded WorldData Saving").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses("minecraft.MixinMapStorage_threadedIO")
+            .setApplyIf(() -> TweaksConfig.threadedWorldDataSaving).addTargetedMod(TargetedMod.VANILLA)),
+    DONT_SLEEP_ON_THREADED_IO(new Builder("Don't sleep on threaded IO").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses("minecraft.MixinThreadedFileIOBase_noSleep")
+            .setApplyIf(() -> TweaksConfig.dontSleepOnThreadedIO).addTargetedMod(TargetedMod.VANILLA)),
     RENDER_DEBUG(new Builder("Render Debug").setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinRenderGlobal")
-            .setSide(Side.CLIENT).setApplyIf(() -> DebugConfig.renderDebug).addTargetedMod(TargetedMod.VANILLA)),
+            .setSide(Side.CLIENT).setApplyIf(() -> DebugConfig.renderDebug).addTargetedMod(TargetedMod.VANILLA)
+            .addExcludedMod(TargetedMod.BUKKIT)),
     STATIC_LAN_PORT(new Builder("Static Lan Port").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.server.MixinHttpUtil").setSide(Side.CLIENT)
             .setApplyIf(() -> TweaksConfig.enableDefaultLanPort).addTargetedMod(TargetedMod.VANILLA)),
