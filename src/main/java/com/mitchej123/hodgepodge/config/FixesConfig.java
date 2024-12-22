@@ -116,6 +116,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixImmobileFireballs;
 
+    @Config.Comment("Fix Sugar Cane inability to replace replaceable blocks indirectly.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixSugarCanePlacement;
+
     @Config.Comment("Fix an overflow of the dimension id when a player logins on a server")
     @Config.DefaultBoolean(true)
     public static boolean fixLoginDimensionIDOverflow;

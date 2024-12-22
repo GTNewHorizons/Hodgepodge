@@ -106,6 +106,9 @@ public enum Mixins {
     FIX_IMMOBILE_FIREBALLS(new Builder("Fix Immobile Fireballs").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityFireball").addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> FixesConfig.fixImmobileFireballs).setSide(Side.BOTH)),
+    FIX_REED_PLACING(new Builder("Fix placement of Sugar Canes").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinItemReed").addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.fixSugarCanePlacement)),
     LONGER_CHAT(new Builder("Longer Chat").setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinGuiNewChat_LongerChat")
             .setSide(Side.CLIENT).setApplyIf(() -> TweaksConfig.longerChat).addTargetedMod(TargetedMod.VANILLA)),
     TRANSPARENT_CHAT(new Builder("Transparent Chat").setPhase(Phase.EARLY)
@@ -121,9 +124,6 @@ public enum Mixins {
             .addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)),
     SPEEDUP_GRASS_BLOCK_RANDOM_TICKING(new Builder("Speed up grass block random ticking").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinBlockGrass").addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)
-            .setApplyIf(() -> SpeedupsConfig.speedupGrassBlockRandomTicking)),
-    FIX_REED_PLACING(new Builder("Fix placement of ItemReed").setPhase(Phase.EARLY)
-            .addMixinClasses("minecraft.MixinItemReed").addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)
             .setApplyIf(() -> SpeedupsConfig.speedupGrassBlockRandomTicking)),
     SPEEDUP_CHUNK_PROVIDER_CLIENT(new Builder("Speed up ChunkProviderClient").setPhase(Phase.EARLY).setSide(Side.CLIENT)
             .addMixinClasses("minecraft.MixinChunkProviderClient_RemoveChunkListing")
