@@ -106,6 +106,9 @@ public enum Mixins {
     FIX_IMMOBILE_FIREBALLS(new Builder("Fix Immobile Fireballs").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityFireball").addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> FixesConfig.fixImmobileFireballs).setSide(Side.BOTH)),
+    FIX_REED_PLACING(new Builder("Fix placement of Sugar Canes").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinItemReed").addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.fixSugarCanePlacement)),
     LONGER_CHAT(new Builder("Longer Chat").setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinGuiNewChat_LongerChat")
             .setSide(Side.CLIENT).setApplyIf(() -> TweaksConfig.longerChat).addTargetedMod(TargetedMod.VANILLA)),
     TRANSPARENT_CHAT(new Builder("Transparent Chat").setPhase(Phase.EARLY)
