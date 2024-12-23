@@ -571,6 +571,9 @@ public enum Mixins {
             .addTargetedMod(TargetedMod.HARVESTCRAFT)),
 
     // Thaumcraft
+    THREADED_THAUMCRAFT_MAZE_SAVING(new Builder("Threaded Thaumcraft Maze Saving").setPhase(Phase.LATE)
+            .setSide(Side.BOTH).addMixinClasses("thaumcraft.MixinMazeHandler_threadedIO")
+            .setApplyIf(() -> TweaksConfig.threadedWorldDataSaving).addTargetedMod(TargetedMod.THAUMCRAFT)),
     ADD_CV_SUPPORT_TO_WAND_PEDESTAL(new Builder("CV Support for Wand Pedestal").setPhase(Phase.LATE).setSide(Side.BOTH)
             .addMixinClasses("thaumcraft.MixinTileWandPedestal")
             .setApplyIf(() -> TweaksConfig.addCVSupportToWandPedestal).addTargetedMod(TargetedMod.THAUMCRAFT)),

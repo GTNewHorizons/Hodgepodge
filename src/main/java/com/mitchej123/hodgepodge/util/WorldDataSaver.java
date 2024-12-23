@@ -18,27 +18,50 @@ import org.apache.logging.log4j.Logger;
 
 public class WorldDataSaver implements IThreadedFileIO {
 
+    static class WrappedNBTTagCompound {
+
+        public final NBTTagCompound tag;
+        public final boolean backup;
+
+        public WrappedNBTTagCompound(NBTTagCompound tag, boolean backup) {
+            this.tag = tag;
+            this.backup = backup;
+        }
+    }
+
     public static final Logger LOGGER = LogManager.getLogger("HodgepodgeWorldDataSaver");
 
     public WorldDataSaver() {}
 
-    private final Map<File, NBTTagCompound> pendingData = Collections.synchronizedMap(new LinkedHashMap<>());
+    private final Map<File, WrappedNBTTagCompound> pendingData = Collections.synchronizedMap(new LinkedHashMap<>());
 
     @Override
     public boolean writeNextIO() {
         final File file;
+        final WrappedNBTTagCompound wrapped;
         final NBTTagCompound data;
+        final boolean backup;
         synchronized (pendingData) {
-            Iterator<Map.Entry<File, NBTTagCompound>> it = pendingData.entrySet().iterator();
+            Iterator<Map.Entry<File, WrappedNBTTagCompound>> it = pendingData.entrySet().iterator();
             if (!it.hasNext()) {
                 return false;
             }
-            Map.Entry<File, NBTTagCompound> entry = it.next();
+            Map.Entry<File, WrappedNBTTagCompound> entry = it.next();
             file = entry.getKey();
-            data = entry.getValue();
+            wrapped = entry.getValue();
+            data = wrapped.tag;
+            backup = wrapped.backup;
             it.remove();
 
         }
+        if (backup) {
+            final File backupFile = new File(file.getParentFile(), file.getName() + "_old");
+            if (backupFile.exists()) {
+                backupFile.delete();
+            }
+            file.renameTo(backupFile);
+        }
+
         try {
             LOGGER.debug("Writing data to file {}", file);
             FileOutputStream fileoutputstream = new FileOutputStream(file);
@@ -53,10 +76,15 @@ public class WorldDataSaver implements IThreadedFileIO {
     }
 
     public void saveData(File file, NBTTagCompound parentTag) {
+        saveData(file, parentTag, false);
+    }
+
+    public void saveData(File file, NBTTagCompound parentTag, boolean backup) {
+        WrappedNBTTagCompound wrapped = new WrappedNBTTagCompound(parentTag, backup);
         if (pendingData.containsKey(file)) {
-            pendingData.replace(file, parentTag);
+            pendingData.replace(file, wrapped);
         } else {
-            pendingData.put(file, parentTag);
+            pendingData.put(file, wrapped);
         }
         ThreadedFileIOBase.threadedIOInstance.queueIO(this);
     }
