@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
+import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.util.WorldDataSaver;
 
 @Mixin(MapStorage.class)
@@ -28,6 +29,8 @@ public class MixinMapStorage_threadedIO {
     @Overwrite
     private void saveData(WorldSavedData data) {
         if (this.saveHandler == null) return;
+
+        if (!TweaksConfig.saveMineshaftData && data.mapName.equals("Mineshaft")) return;
 
         File file = this.saveHandler.getMapFileFromName(data.mapName);
         if (file == null) return;

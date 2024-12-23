@@ -156,6 +156,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean dontSleepOnThreadedIO;
 
+    @Config.Comment({ "Save Mineshaft data (Requires threadedWorldDataSaving for changes to take effect)",
+            "Might cause small worldgen issues if disabled; equivalent to removing the file on each boot if disabled" })
+    @Config.DefaultBoolean(true)
+    public static boolean saveMineshaftData;
+
     // affecting multiple mods
 
     @Config.Comment("Unbinds keybinds of certain ARR mods to avoid keybinds conflicts")
