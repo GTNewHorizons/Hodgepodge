@@ -299,6 +299,13 @@ public enum Mixins {
     DONT_SLEEP_ON_THREADED_IO(new Builder("Don't sleep on threaded IO").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinThreadedFileIOBase_noSleep")
             .setApplyIf(() -> TweaksConfig.dontSleepOnThreadedIO).addTargetedMod(TargetedMod.VANILLA)),
+    OPTIMIZE_MOB_SPAWNING(new Builder("Optimize Mob Spawning").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses(
+                    "minecraft.MixinSpawnerAnimals_optimizeSpawning",
+                    "minecraft.MixinSpawnListEntry_optimizeSpawning")
+            .setApplyIf(() -> SpeedupsConfig.optimizeMobSpawning).addTargetedMod(TargetedMod.VANILLA)
+            .addExcludedMod(TargetedMod.BUKKIT)),
+
     RENDER_DEBUG(new Builder("Render Debug").setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinRenderGlobal")
             .setSide(Side.CLIENT).setApplyIf(() -> DebugConfig.renderDebug).addTargetedMod(TargetedMod.VANILLA)
             .addExcludedMod(TargetedMod.BUKKIT)),

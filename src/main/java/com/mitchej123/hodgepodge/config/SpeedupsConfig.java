@@ -67,6 +67,15 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean speedupNBTCopy;
 
+    @Config.Comment("Optimize mob spawning")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean optimizeMobSpawning;
+
+    @Config.Comment("Limit mob spawning to the view distance")
+    @Config.DefaultBoolean(true)
+    public static boolean limitMobSpawningToViewDistance;
+
     // Biomes O' Plenty
 
     @Config.Comment("Speedup biome fog rendering in BiomesOPlenty")
