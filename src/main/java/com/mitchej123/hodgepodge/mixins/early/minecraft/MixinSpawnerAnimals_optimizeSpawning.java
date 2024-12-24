@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import it.unimi.dsi.fastutil.longs.LongLists;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -125,7 +126,7 @@ public class MixinSpawnerAnimals_optimizeSpawning {
             hodgepodge$shuffledChunks.clear();
             // AddAll will take a fast path with a LongCollection - which the keySet() is a subclass of
             hodgepodge$shuffledChunks.addAll(hodgepodge$eligibleChunks.keySet());
-            Collections.shuffle(hodgepodge$shuffledChunks);
+            LongLists.shuffle(hodgepodge$shuffledChunks, world.rand);
 
             // We can't use a for-each loop here as java will use the boxed variant
             LongListIterator iterator = hodgepodge$shuffledChunks.iterator();
