@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import com.mitchej123.hodgepodge.util.WorldDataSaver;
+import com.mitchej123.hodgepodge.core.HodgepodgeCore;
 
 import thaumcraft.common.lib.world.dim.MazeHandler;
 
@@ -20,8 +20,6 @@ public class MixinMazeHandler_threadedIO {
     private static NBTTagCompound writeNBT() {
         throw new UnsupportedOperationException("Mixin failed to shadow writeNBT");
     }
-
-    private static final WorldDataSaver hodgepodge$mazeSaver = new WorldDataSaver();
 
     /**
      * @author mitchej123
@@ -43,7 +41,7 @@ public class MixinMazeHandler_threadedIO {
 
         final File file = new File(world.getSaveHandler().getWorldDirectory(), filename);
 
-        hodgepodge$mazeSaver.saveData(file, parentTag, true);
+        HodgepodgeCore.saveWorldData(file, parentTag, true);
 
     }
 }

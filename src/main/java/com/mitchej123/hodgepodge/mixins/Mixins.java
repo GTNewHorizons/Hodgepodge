@@ -294,7 +294,10 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinNBTTagString_stringPooler", "minecraft.MixinNBTTagCompound_stringPooler")
             .setApplyIf(() -> TweaksConfig.enableStringPooling).addTargetedMod(TargetedMod.VANILLA)),
     THREADED_WORLDDATA_SAVING(new Builder("Threaded WorldData Saving").setPhase(Phase.EARLY).setSide(Side.BOTH)
-            .addMixinClasses("minecraft.MixinMapStorage_threadedIO")
+            .addMixinClasses(
+                    "minecraft.MixinMapStorage_threadedIO",
+                    "minecraft.MixinSaveHandler_threadedIO",
+                    "forge.MixinForgeChunkManager_threadedIO")
             .setApplyIf(() -> TweaksConfig.threadedWorldDataSaving).addTargetedMod(TargetedMod.VANILLA)),
     DONT_SLEEP_ON_THREADED_IO(new Builder("Don't sleep on threaded IO").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinThreadedFileIOBase_noSleep")

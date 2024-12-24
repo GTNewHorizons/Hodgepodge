@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import com.gtnewhorizon.gtnhlib.config.ConfigException;
 import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
@@ -18,6 +20,7 @@ import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.mixins.Mixins;
 import com.mitchej123.hodgepodge.util.StringPooler;
 import com.mitchej123.hodgepodge.util.VoxelMapCacheMover;
+import com.mitchej123.hodgepodge.util.WorldDataSaver;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
@@ -38,6 +41,15 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
         } catch (ConfigException e) {
             throw new RuntimeException(e);
         }
+    }
+    private final static WorldDataSaver worldDataSaver = new WorldDataSaver();
+
+    public static void saveWorldData(File file, NBTTagCompound tag) {
+        worldDataSaver.saveData(file, tag);
+    }
+
+    public static void saveWorldData(File file, NBTTagCompound tag, boolean backup) {
+        worldDataSaver.saveData(file, tag, backup);
     }
 
     private String[] transformerClasses;
