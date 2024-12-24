@@ -22,7 +22,8 @@ public class MixinSaveHandler_threadedIO {
             at = @At(
                     value = "INVOKE",
                     target = "Lcpw/mods/fml/common/FMLCommonHandler;handleWorldDataSave(Lnet/minecraft/world/storage/SaveHandler;Lnet/minecraft/world/storage/WorldInfo;Lnet/minecraft/nbt/NBTTagCompound;)V",
-                    shift = At.Shift.AFTER),
+                    shift = At.Shift.AFTER,
+                    remap = false),
             cancellable = true)
     private void injectSaveWorldDataWithPlayer(WorldInfo worldInfo, NBTTagCompound playerTag, CallbackInfo ci,
             @Local(ordinal = 2) NBTTagCompound nbttagcompound2) {

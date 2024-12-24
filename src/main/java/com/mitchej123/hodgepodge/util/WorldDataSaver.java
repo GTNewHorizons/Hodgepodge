@@ -18,6 +18,8 @@ import org.apache.logging.log4j.Logger;
 
 public class WorldDataSaver implements IThreadedFileIO {
 
+    public static final WorldDataSaver INSTANCE = new WorldDataSaver();
+
     static class WrappedNBTTagCompound {
 
         public final NBTTagCompound tag;
@@ -31,7 +33,7 @@ public class WorldDataSaver implements IThreadedFileIO {
 
     public static final Logger LOGGER = LogManager.getLogger("HodgepodgeWorldDataSaver");
 
-    public WorldDataSaver() {}
+    protected WorldDataSaver() {}
 
     private final Map<File, WrappedNBTTagCompound> pendingData = Collections.synchronizedMap(new LinkedHashMap<>());
 
