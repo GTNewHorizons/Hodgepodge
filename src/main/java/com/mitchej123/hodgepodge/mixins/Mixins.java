@@ -29,7 +29,8 @@ public enum Mixins {
                     .addMixinClasses(
                             "minecraft.MixinChunkCoordIntPair",
                             "minecraft.MixinWorld_FixAllocations",
-                            "minecraft.MixinWorldClient_FixAllocations")
+                            "minecraft.MixinWorldClient_FixAllocations",
+                            "minecraft.MixinAnvilChunkLoader_FixAllocations")
                     .setApplyIf(() -> FixesConfig.fixTooManyAllocationsChunkPositionIntPair)),
     FIX_TOO_MANY_ALLOCATIONS_CHUNK_POSITION_INT_PAIR_OPTIFINE_INCOMPAT(
             new Builder("Stops MC from allocating too many ChunkPositionIntPair objects")
