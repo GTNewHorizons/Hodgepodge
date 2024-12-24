@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import com.google.common.collect.ImmutableList;
 import com.gtnewhorizon.gtnhmixins.core.GTNHMixinsCore;
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.config.ASMConfig;
@@ -32,9 +33,9 @@ public enum AsmTransformers {
     SPEEDUP_LONG_INT_HASHMAP(
             "Speed up LongHashMap & IntHashMap",
             () -> ASMConfig.speedupLongIntHashMap,
-            Side.CLIENT,
+            Side.BOTH,
             null,
-            Collections.singletonList(TargetedMod.FASTCRAFT),
+            ImmutableList.of(TargetedMod.FASTCRAFT, TargetedMod.BUKKIT),
             "com.mitchej123.hodgepodge.asm.transformers.mc.SpeedupLongIntHashMapTransformer"),
     FIX_BOGUS_INTEGRATED_SERVER_NPE(
             "Fix bogus FMLProxyPacket NPEs on integrated server crashes",

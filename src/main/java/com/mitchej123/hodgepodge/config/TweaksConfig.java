@@ -132,6 +132,35 @@ public class TweaksConfig {
     @Config.DefaultBoolean(false)
     public static boolean useLighterWater;
 
+    // NBT String Pooling
+
+    @Config.Comment("Enable string pooling for NBT tags")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean enableStringPooling;
+
+    @Config.Comment("String pooling mode (0 = Java intern, 1 = Guava strong interner, 2 = Guava weak interner)")
+    @Config.RangeInt(min = 0, max = 2)
+    @Config.DefaultInt(0)
+    @Config.RequiresMcRestart
+    public static int stringPoolMode;
+
+    // Threaded WorldData Saving
+    @Config.Comment("Enable threaded saving for WorldData")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean threadedWorldDataSaving;
+
+    @Config.Comment("Don't sleep on threaded IO")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean dontSleepOnThreadedIO;
+
+    @Config.Comment({ "Save Mineshaft data (Requires threadedWorldDataSaving for changes to take effect)",
+            "Might cause small worldgen issues if disabled; equivalent to removing the file on each boot if disabled" })
+    @Config.DefaultBoolean(true)
+    public static boolean saveMineshaftData;
+
     // affecting multiple mods
 
     @Config.Comment("Unbinds keybinds of certain ARR mods to avoid keybinds conflicts")
