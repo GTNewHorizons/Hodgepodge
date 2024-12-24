@@ -32,7 +32,7 @@ public enum AsmTransformers {
     SPEEDUP_LONG_INT_HASHMAP(
             "Speed up LongHashMap & IntHashMap",
             () -> ASMConfig.speedupLongIntHashMap,
-            Side.CLIENT,
+            Side.BOTH,
             null,
             Collections.singletonList(TargetedMod.FASTCRAFT),
             "com.mitchej123.hodgepodge.asm.transformers.mc.SpeedupLongIntHashMapTransformer"),
