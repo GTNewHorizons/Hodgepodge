@@ -21,6 +21,6 @@ public class MixinForgeChunkManager_threadedIO {
                     value = "INVOKE",
                     target = "Lnet/minecraft/nbt/CompressedStreamTools;write(Lnet/minecraft/nbt/NBTTagCompound;Ljava/io/File;)V"))
     private static void redirectWrite(NBTTagCompound forcedChunkNBTData, File chunkLoaderFile) throws IOException {
-        HodgepodgeCore.saveWorldData(chunkLoaderFile, forcedChunkNBTData);
+        HodgepodgeCore.saveWorldDataUncompressed(chunkLoaderFile, forcedChunkNBTData);
     }
 }

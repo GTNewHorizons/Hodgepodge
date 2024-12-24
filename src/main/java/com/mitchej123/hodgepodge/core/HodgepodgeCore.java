@@ -44,11 +44,19 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     }
 
     public static void saveWorldData(File file, NBTTagCompound tag) {
-        WorldDataSaver.INSTANCE.saveData(file, tag);
+        WorldDataSaver.INSTANCE.saveData(file, tag, true, false);
     }
 
-    public static void saveWorldData(File file, NBTTagCompound tag, boolean backup) {
-        WorldDataSaver.INSTANCE.saveData(file, tag, backup);
+    public static void saveWorldDataUncompressed(File file, NBTTagCompound tag) {
+        WorldDataSaver.INSTANCE.saveData(file, tag, false, false);
+    }
+
+    public static void saveWorldDataBackup(File file, NBTTagCompound tag) {
+        WorldDataSaver.INSTANCE.saveData(file, tag, true, true);
+    }
+
+    public static void savfeWorldDataUncompressedBackup(File file, NBTTagCompound tag) {
+        WorldDataSaver.INSTANCE.saveData(file, tag, false, true);
     }
 
     private String[] transformerClasses;

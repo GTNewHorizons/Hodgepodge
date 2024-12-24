@@ -23,10 +23,12 @@ public class WorldDataSaver implements IThreadedFileIO {
     static class WrappedNBTTagCompound {
 
         public final NBTTagCompound tag;
+        public final boolean compressed;
         public final boolean backup;
 
-        public WrappedNBTTagCompound(NBTTagCompound tag, boolean backup) {
+        public WrappedNBTTagCompound(NBTTagCompound tag, boolean compressed, boolean backup) {
             this.tag = tag;
+            this.compressed = compressed;
             this.backup = backup;
         }
     }
@@ -42,6 +44,7 @@ public class WorldDataSaver implements IThreadedFileIO {
         final File file;
         final WrappedNBTTagCompound wrapped;
         final NBTTagCompound data;
+        final boolean compressed;
         final boolean backup;
         synchronized (pendingData) {
             Iterator<Map.Entry<File, WrappedNBTTagCompound>> it = pendingData.entrySet().iterator();
@@ -53,6 +56,7 @@ public class WorldDataSaver implements IThreadedFileIO {
             wrapped = entry.getValue();
             data = wrapped.tag;
             backup = wrapped.backup;
+            compressed = wrapped.compressed;
             it.remove();
 
         }
@@ -65,10 +69,12 @@ public class WorldDataSaver implements IThreadedFileIO {
         }
 
         try {
-            LOGGER.debug("Writing data to file {}", file);
-            FileOutputStream fileoutputstream = new FileOutputStream(file);
-            CompressedStreamTools.writeCompressed(data, fileoutputstream);
-            fileoutputstream.close();
+            LOGGER.info("Writing data to file {}{}", file, compressed ? " (compressed)" : "");
+            if (compressed) {
+                try (FileOutputStream fileoutputstream = new FileOutputStream(file)) {
+                    CompressedStreamTools.writeCompressed(data, fileoutputstream);
+                }
+            } else CompressedStreamTools.write(data, file);
 
         } catch (IOException e) {
             LOGGER.error("Failed to write data to file {}", file, e);
@@ -77,12 +83,8 @@ public class WorldDataSaver implements IThreadedFileIO {
         return true;
     }
 
-    public void saveData(File file, NBTTagCompound parentTag) {
-        saveData(file, parentTag, false);
-    }
-
-    public void saveData(File file, NBTTagCompound parentTag, boolean backup) {
-        WrappedNBTTagCompound wrapped = new WrappedNBTTagCompound(parentTag, backup);
+    public void saveData(File file, NBTTagCompound parentTag, boolean compressed, boolean backup) {
+        WrappedNBTTagCompound wrapped = new WrappedNBTTagCompound(parentTag, compressed, backup);
         if (pendingData.containsKey(file)) {
             pendingData.replace(file, wrapped);
         } else {

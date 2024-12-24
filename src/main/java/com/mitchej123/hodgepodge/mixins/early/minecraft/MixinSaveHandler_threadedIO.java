@@ -28,7 +28,7 @@ public class MixinSaveHandler_threadedIO {
     private void injectSaveWorldDataWithPlayer(WorldInfo worldInfo, NBTTagCompound playerTag, CallbackInfo ci,
             @Local(ordinal = 2) NBTTagCompound nbttagcompound2) {
         File file = new File(((SaveHandler) (Object) this).getWorldDirectory(), "level.dat");
-        HodgepodgeCore.saveWorldData(file, nbttagcompound2, true);
+        HodgepodgeCore.saveWorldDataBackup(file, nbttagcompound2);
         ci.cancel();
     }
 }

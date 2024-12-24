@@ -41,7 +41,7 @@ public class MixinMazeHandler_threadedIO {
 
         final File file = new File(world.getSaveHandler().getWorldDirectory(), filename);
 
-        HodgepodgeCore.saveWorldData(file, parentTag, true);
+        HodgepodgeCore.saveWorldDataBackup(file, parentTag);
 
     }
 }
