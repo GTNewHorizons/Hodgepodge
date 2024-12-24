@@ -38,6 +38,7 @@ import it.unimi.dsi.fastutil.longs.Long2BooleanMap;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
+import it.unimi.dsi.fastutil.longs.LongListIterator;
 
 @Mixin(value = SpawnerAnimals.class, priority = 900)
 public class MixinSpawnerAnimals_optimizeSpawning {
@@ -48,16 +49,17 @@ public class MixinSpawnerAnimals_optimizeSpawning {
 
     private static final EnumCreatureType[] CREATURE_TYPE_VALUES = EnumCreatureType.values();
     private final Long2BooleanMap hodgepodge$eligibleChunks = new Long2BooleanOpenHashMap();
+    private final LongList hodgepodge$shuffledChunks = new LongArrayList();
 
-    private static final BlockPos reusableBlockPos = new BlockPos(0, 0, 0);
+    private final BlockPos hodgepodge$reusableBlockPos = new BlockPos(0, 0, 0);
 
-    private static BlockPos hodgepodge$getRandomPosInChunk(World world, int chunkX, int chunkZ) {
+    private BlockPos hodgepodge$getRandomPosInChunk(World world, int chunkX, int chunkZ) {
         final Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
         final int randX = chunkX * 16 + world.rand.nextInt(16);
         final int randZ = chunkZ * 16 + world.rand.nextInt(16);
         final int randY = world.rand
                 .nextInt(chunk == null ? world.getActualHeight() : chunk.getTopFilledSegment() + 16 - 1);
-        return reusableBlockPos.set(randX, randY, randZ);
+        return hodgepodge$reusableBlockPos.set(randX, randY, randZ);
     }
 
     /**
@@ -65,7 +67,7 @@ public class MixinSpawnerAnimals_optimizeSpawning {
      * hostileCreatures, passiveCreatures. returns number of eligible chunks.
      *
      * @author mitchej123
-     * @reason Optimize mob spawning
+     * @reason Optimize mob spawning - Switch out the HashMap for a Long2BooleanMap
      */
     @Overwrite
     public int findChunksForSpawning(WorldServer world, boolean spawnHostileMobs, boolean spawnPeacefulMobs,
@@ -119,10 +121,17 @@ public class MixinSpawnerAnimals_optimizeSpawning {
 
                 continue;
             }
-            LongList shuffledChunks = new LongArrayList(hodgepodge$eligibleChunks.keySet());
-            Collections.shuffle(shuffledChunks);
+            // Clear doesn't reset the backing capacity, just sets the size to 0, so we can reuse it
+            hodgepodge$shuffledChunks.clear();
+            // AddAll will take a fast path with a LongCollection - which the keySet() is a subclass of
+            hodgepodge$shuffledChunks.addAll(hodgepodge$eligibleChunks.keySet());
+            Collections.shuffle(hodgepodge$shuffledChunks);
 
-            for (long chunkPos : shuffledChunks) {
+            // We can't use a for-each loop here as java will use the boxed variant
+            LongListIterator iterator = hodgepodge$shuffledChunks.iterator();
+            while (iterator.hasNext()) {
+                final long chunkPos = iterator.nextLong();
+
                 if (this.hodgepodge$eligibleChunks.get(chunkPos)) continue;
                 final int chunkX = ChunkPosUtil.getPackedX(chunkPos);
                 final int chunkZ = ChunkPosUtil.getPackedZ(chunkPos);
@@ -223,7 +232,8 @@ public class MixinSpawnerAnimals_optimizeSpawning {
      * Returns whether or not the specified creature type can spawn at the specified location.
      *
      * @author mitchej123
-     * @reason Optimize mob spawning
+     * @reason Optimize mob spawning - Reorder shortcircuit checks and avoid calling getBlock more than needed Also
+     *         leaves room to add additional checks
      */
     @Overwrite
     public static boolean canCreatureTypeSpawnAtLocation(EnumCreatureType creatureType, World world, int x, int y,
@@ -251,7 +261,8 @@ public class MixinSpawnerAnimals_optimizeSpawning {
      * Called during chunk generation to spawn initial creatures.
      *
      * @author mitchej123
-     * @reason Optimize mob spawning
+     * @reason Optimize mob spawning - Swaps out the constructor with a cached methodref; other micro-optimizations
+     *         Leaves room for additional optimizations and options for server operators
      */
     @Overwrite
     public static void performWorldGenSpawning(World world, BiomeGenBase biome, int startX, int startZ, int areaWidth,
