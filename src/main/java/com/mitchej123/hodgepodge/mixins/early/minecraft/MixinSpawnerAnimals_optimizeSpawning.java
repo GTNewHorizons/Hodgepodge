@@ -1,6 +1,5 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -39,6 +38,7 @@ import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.longs.LongListIterator;
+import it.unimi.dsi.fastutil.longs.LongLists;
 
 @Mixin(value = SpawnerAnimals.class, priority = 900)
 public class MixinSpawnerAnimals_optimizeSpawning {
@@ -125,7 +125,7 @@ public class MixinSpawnerAnimals_optimizeSpawning {
             hodgepodge$shuffledChunks.clear();
             // AddAll will take a fast path with a LongCollection - which the keySet() is a subclass of
             hodgepodge$shuffledChunks.addAll(hodgepodge$eligibleChunks.keySet());
-            Collections.shuffle(hodgepodge$shuffledChunks);
+            LongLists.shuffle(hodgepodge$shuffledChunks, world.rand);
 
             // We can't use a for-each loop here as java will use the boxed variant
             LongListIterator iterator = hodgepodge$shuffledChunks.iterator();
