@@ -13,7 +13,7 @@ public class MixinThreadedFileIOBase_noSleep {
             method = "Lnet/minecraft/world/storage/ThreadedFileIOBase;processQueue()V",
             at = @At(value = "INVOKE", target = "Ljava/lang/Thread;sleep(J)V", ordinal = 0))
     private void noSleepForTheWicked(long millis) {
-        // Do nothing
+        Thread.yield();
     }
 
 }

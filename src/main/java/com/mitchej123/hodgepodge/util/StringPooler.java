@@ -16,9 +16,6 @@ public class StringPooler {
     protected StringPooler() {}
 
     public static void setupPooler() {
-        if (!TweaksConfig.enableStringPooling) {
-            return;
-        }
         if (INSTANCE != null) {
             throw new IllegalStateException("Pooler already set up");
         }
