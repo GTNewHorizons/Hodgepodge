@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge.asm.transformers.mc;
 
 import net.minecraft.launchwrapper.IClassTransformer;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
@@ -50,7 +51,7 @@ public class NBTTagCompoundHashMapTransformerTransformer implements IClassTransf
         boolean changed = false;
         for (MethodNode mn : cn.methods) {
             if (mn.name.equals(INIT) && mn.desc.equals(EMPTY_DESC)) {
-                for(AbstractInsnNode node : mn.instructions.toArray()) {
+                for (AbstractInsnNode node : mn.instructions.toArray()) {
                     if (node.getOpcode() == Opcodes.NEW && node instanceof TypeInsnNode tNode) {
                         if (tNode.desc.equals(HASHMAP)) {
                             LOGGER.info("Found HashMap instantiation in NBTTagCompound.<init>");
@@ -61,7 +62,14 @@ public class NBTTagCompoundHashMapTransformerTransformer implements IClassTransf
                     } else if (node.getOpcode() == Opcodes.INVOKESPECIAL && node instanceof MethodInsnNode mNode) {
                         if (mNode.name.equals(INIT) && mNode.desc.equals(EMPTY_DESC) && mNode.owner.equals(HASHMAP)) {
                             LOGGER.info("Found HashMap constructor call in NBTTagCompound.<init>");
-                            mn.instructions.insertBefore(mNode, new MethodInsnNode(Opcodes.INVOKESPECIAL, FASTUTIL_HASHMAP, INIT, EMPTY_DESC, false));
+                            mn.instructions.insertBefore(
+                                    mNode,
+                                    new MethodInsnNode(
+                                            Opcodes.INVOKESPECIAL,
+                                            FASTUTIL_HASHMAP,
+                                            INIT,
+                                            EMPTY_DESC,
+                                            false));
                             mn.instructions.remove(mNode);
                             changed = true;
                         }

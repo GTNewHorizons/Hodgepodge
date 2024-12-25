@@ -2,8 +2,6 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import java.io.File;
 
-import com.mitchej123.hodgepodge.mixins.interfaces.SafeWriteNBT;
-import com.mitchej123.hodgepodge.util.WorldDataSaver;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.storage.ISaveHandler;
@@ -15,6 +13,8 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.core.HodgepodgeCore;
+import com.mitchej123.hodgepodge.mixins.interfaces.SafeWriteNBT;
+import com.mitchej123.hodgepodge.util.WorldDataSaver;
 
 @Mixin(MapStorage.class)
 public class MixinMapStorage_threadedIO {
@@ -38,7 +38,7 @@ public class MixinMapStorage_threadedIO {
         NBTTagCompound tag = new NBTTagCompound();
         data.writeToNBT(tag);
         WorldDataSaver.LOGGER.info("{} {}", data.getClass().getName(), data instanceof SafeWriteNBT);
-        if(!(data instanceof SafeWriteNBT)) {
+        if (!(data instanceof SafeWriteNBT)) {
             // Copy to avoid potential concurrent modification on the IO Thread
             tag = copyNBT(tag);
         }
@@ -51,6 +51,6 @@ public class MixinMapStorage_threadedIO {
 
     private static NBTTagCompound copyNBT(NBTTagCompound tag) {
         // Implementing as a method so it will show up in profiling separately
-        return (NBTTagCompound)tag.copy();
+        return (NBTTagCompound) tag.copy();
     }
 }

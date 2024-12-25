@@ -144,7 +144,6 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean enableNBTStringPooling;
 
-
     @Config.Comment("String pooling mode (0 = Java intern, 1 = Guava strong interner, 2 = Guava weak interner)")
     @Config.RangeInt(min = 0, max = 2)
     @Config.DefaultInt(1)
