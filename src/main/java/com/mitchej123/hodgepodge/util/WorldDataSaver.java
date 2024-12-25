@@ -69,14 +69,13 @@ public class WorldDataSaver implements IThreadedFileIO {
         }
 
         try {
-            LOGGER.info("Writing data to file {}{}", file, compressed ? " (compressed)" : "");
             if (compressed) {
                 try (FileOutputStream fileoutputstream = new FileOutputStream(file)) {
                     CompressedStreamTools.writeCompressed(data, fileoutputstream);
                 }
             } else CompressedStreamTools.write(data, file);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.error("Failed to write data to file {}", file, e);
             e.printStackTrace();
         }

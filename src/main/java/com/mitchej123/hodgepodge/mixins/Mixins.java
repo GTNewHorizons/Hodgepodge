@@ -289,15 +289,21 @@ public enum Mixins {
             .addTargetedMod(TargetedMod.VANILLA)),
     SPEEDUP_NBT_COPY(new Builder("Speed up NBT copy").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinNBTTagCompound_speedup", "minecraft.MixinNBTTagList_speedup")
-            .setApplyIf(() -> SpeedupsConfig.speedupNBTCopy).addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> ASMConfig.speedupNBTTagCompoundCopy).addTargetedMod(TargetedMod.VANILLA)
             .addExcludedMod(TargetedMod.BUKKIT)),
-    STRING_POOLER_NBT(new Builder("Pool NBT Strings").setPhase(Phase.EARLY).setSide(Side.BOTH)
-            .addMixinClasses("minecraft.MixinNBTTagString_stringPooler", "minecraft.MixinNBTTagCompound_stringPooler")
-            .setApplyIf(() -> TweaksConfig.enableStringPooling).addTargetedMod(TargetedMod.VANILLA)),
+    STRING_POOLER_NBT_TAG(new Builder("Pool NBT Strings").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses("minecraft.MixinNBTTagCompound_stringPooler")
+            .setApplyIf(() -> TweaksConfig.enableTagCompoundStringPooling).addTargetedMod(TargetedMod.VANILLA)),
+    STRING_POOLER_NBT_STRING(new Builder("Pool NBT Strings").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses("minecraft.MixinNBTTagString_stringPooler")
+            .setApplyIf(() -> TweaksConfig.enableNBTStringPooling).addTargetedMod(TargetedMod.VANILLA)),
     THREADED_WORLDDATA_SAVING(new Builder("Threaded WorldData Saving").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses(
                     "minecraft.MixinMapStorage_threadedIO",
                     "minecraft.MixinSaveHandler_threadedIO",
+                    "minecraft.MixinScoreboardSaveData_treadedIO",
+                    "minecraft.MixinVillageCollection_threadedIO",
+                    "minecraft.MixinMapData_threadedIO",
                     "forge.MixinForgeChunkManager_threadedIO")
             .setApplyIf(() -> TweaksConfig.threadedWorldDataSaving).addTargetedMod(TargetedMod.VANILLA)),
     DONT_SLEEP_ON_THREADED_IO(new Builder("Don't sleep on threaded IO").setPhase(Phase.EARLY).setSide(Side.BOTH)

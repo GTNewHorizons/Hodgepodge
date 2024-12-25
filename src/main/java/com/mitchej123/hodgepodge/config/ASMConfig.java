@@ -22,4 +22,7 @@ public class ASMConfig {
     @Config.DefaultString("org.bukkit.craftbukkit.v1_7_R4.CraftServer")
     public static String thermosCraftServerClass;
 
+    @Config.Comment("Speedup NBTTagCompound copy")
+    @Config.DefaultBoolean(true)
+    public static boolean speedupNBTTagCompoundCopy;
 }

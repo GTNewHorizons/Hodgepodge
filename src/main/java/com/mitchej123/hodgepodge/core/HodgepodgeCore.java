@@ -37,7 +37,7 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
             ConfigurationManager.registerConfig(GeneralConfig.class);
             ConfigurationManager.registerConfig(SpeedupsConfig.class);
             ConfigurationManager.registerConfig(TweaksConfig.class);
-            if (TweaksConfig.enableStringPooling) StringPooler.setupPooler();
+            if (TweaksConfig.enableTagCompoundStringPooling || TweaksConfig.enableNBTStringPooling) StringPooler.setupPooler();
         } catch (ConfigException e) {
             throw new RuntimeException(e);
         }

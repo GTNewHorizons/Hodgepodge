@@ -37,6 +37,13 @@ public enum AsmTransformers {
             null,
             ImmutableList.of(TargetedMod.FASTCRAFT, TargetedMod.BUKKIT),
             "com.mitchej123.hodgepodge.asm.transformers.mc.SpeedupLongIntHashMapTransformer"),
+    SPEEDUP_NBT_TAG_COMPOUND_COPY(
+            "Speed up NBTTagCompound.copy()",
+            () -> ASMConfig.speedupNBTTagCompoundCopy,
+            Side.BOTH,
+            null,
+            ImmutableList.of(TargetedMod.FASTCRAFT, TargetedMod.BUKKIT),
+            "com.mitchej123.hodgepodge.asm.transformers.mc.NBTTagCompoundHashMapTransformerTransformer"),
     FIX_BOGUS_INTEGRATED_SERVER_NPE(
             "Fix bogus FMLProxyPacket NPEs on integrated server crashes",
             () -> FixesConfig.fixBogusIntegratedServerNPEs,

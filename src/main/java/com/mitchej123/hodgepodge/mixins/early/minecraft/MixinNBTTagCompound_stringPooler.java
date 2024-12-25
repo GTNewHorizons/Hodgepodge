@@ -15,6 +15,7 @@ public class MixinNBTTagCompound_stringPooler {
             method = "func_152448_b",
             at = @At(value = "INVOKE", target = "Ljava/io/DataInput;readUTF()Ljava/lang/String;"))
     private static String poolString(String s) {
+        // Pool the keys, they're likely to be reused a lot
         return StringPooler.INSTANCE.getString(s);
     }
 }

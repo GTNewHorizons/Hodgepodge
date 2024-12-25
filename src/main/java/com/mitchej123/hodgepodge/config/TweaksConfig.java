@@ -134,14 +134,20 @@ public class TweaksConfig {
 
     // NBT String Pooling
 
-    @Config.Comment("Enable string pooling for NBT tags")
+    @Config.Comment("Enable string pooling for NBT TagCompound Keys")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean enableStringPooling;
+    public static boolean enableTagCompoundStringPooling;
+
+    @Config.Comment("Enable string pooling for NBT Strings - trades performance for memory")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean enableNBTStringPooling;
+
 
     @Config.Comment("String pooling mode (0 = Java intern, 1 = Guava strong interner, 2 = Guava weak interner)")
     @Config.RangeInt(min = 0, max = 2)
-    @Config.DefaultInt(0)
+    @Config.DefaultInt(1)
     @Config.RequiresMcRestart
     public static int stringPoolMode;
 
@@ -301,4 +307,5 @@ public class TweaksConfig {
     @Config.Comment("Avoids droping items on container close, and instead places them in the player inventory. (Inspired from EFR)")
     @Config.DefaultBoolean(true)
     public static boolean avoidDroppingItemsWhenClosing;
+
 }
