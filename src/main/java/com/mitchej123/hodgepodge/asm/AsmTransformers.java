@@ -43,7 +43,7 @@ public enum AsmTransformers {
             Side.BOTH,
             null,
             ImmutableList.of(TargetedMod.FASTCRAFT, TargetedMod.BUKKIT),
-            "com.mitchej123.hodgepodge.asm.transformers.mc.NBTTagCompoundHashMapTransformerTransformer"),
+            "com.mitchej123.hodgepodge.asm.transformers.mc.NBTTagCompoundHashMapTransformer"),
     FIX_BOGUS_INTEGRATED_SERVER_NPE(
             "Fix bogus FMLProxyPacket NPEs on integrated server crashes",
             () -> FixesConfig.fixBogusIntegratedServerNPEs,

@@ -14,7 +14,7 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 
 @SuppressWarnings("unused")
-public class NBTTagCompoundHashMapTransformerTransformer implements IClassTransformer {
+public class NBTTagCompoundHashMapTransformer implements IClassTransformer {
 
     private static final Logger LOGGER = LogManager.getLogger("NBTTagCompoundHashMapTransformerTransformer");
     public static final String INIT = "<init>";
