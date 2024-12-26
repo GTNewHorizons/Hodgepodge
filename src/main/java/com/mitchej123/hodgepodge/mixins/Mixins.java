@@ -506,6 +506,11 @@ public enum Mixins {
             .setSide(Side.BOTH).addMixinClasses("ic2.MixinDirection_Memory")
             .setApplyIf(() -> FixesConfig.enableMemoryFixes).addTargetedMod(TargetedMod.IC2)),
 
+    FIX_PLAYER_BLOCK_PLACEMENT_DISTANCE_CHECK(new Builder("Fix wrong block placement distance check")
+            .setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses("minecraft.MixinNetHandlePlayServer_FixWrongBlockPlacementCheck")
+            .setApplyIf(() -> FixesConfig.fixWrongBlockPlacementDistanceCheck).addTargetedMod(TargetedMod.VANILLA)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIc2WaterKinetic").setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
