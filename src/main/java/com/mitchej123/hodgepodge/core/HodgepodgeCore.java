@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import com.gtnewhorizon.gtnhlib.config.ConfigException;
 import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
@@ -16,7 +18,9 @@ import com.mitchej123.hodgepodge.config.GeneralConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.mixins.Mixins;
+import com.mitchej123.hodgepodge.util.StringPooler;
 import com.mitchej123.hodgepodge.util.VoxelMapCacheMover;
+import com.mitchej123.hodgepodge.util.WorldDataSaver;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
@@ -33,9 +37,27 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
             ConfigurationManager.registerConfig(GeneralConfig.class);
             ConfigurationManager.registerConfig(SpeedupsConfig.class);
             ConfigurationManager.registerConfig(TweaksConfig.class);
+            if (TweaksConfig.enableTagCompoundStringPooling || TweaksConfig.enableNBTStringPooling)
+                StringPooler.setupPooler();
         } catch (ConfigException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void saveWorldData(File file, NBTTagCompound tag) {
+        WorldDataSaver.INSTANCE.saveData(file, tag, true, false);
+    }
+
+    public static void saveWorldDataUncompressed(File file, NBTTagCompound tag) {
+        WorldDataSaver.INSTANCE.saveData(file, tag, false, false);
+    }
+
+    public static void saveWorldDataBackup(File file, NBTTagCompound tag) {
+        WorldDataSaver.INSTANCE.saveData(file, tag, true, true);
+    }
+
+    public static void savfeWorldDataUncompressedBackup(File file, NBTTagCompound tag) {
+        WorldDataSaver.INSTANCE.saveData(file, tag, false, true);
     }
 
     private String[] transformerClasses;
@@ -75,6 +97,12 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     @Override
     public String getAccessTransformerClass() {
+        try {
+            final Class<?> clazz = Class.forName("makamys.coretweaks.Config");
+            CoreCompat.disableCoretweaksConflictingMixins();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         return null;
     }
 }

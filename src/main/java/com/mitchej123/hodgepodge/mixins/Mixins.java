@@ -29,7 +29,8 @@ public enum Mixins {
                     .addMixinClasses(
                             "minecraft.MixinChunkCoordIntPair",
                             "minecraft.MixinWorld_FixAllocations",
-                            "minecraft.MixinWorldClient_FixAllocations")
+                            "minecraft.MixinWorldClient_FixAllocations",
+                            "minecraft.MixinAnvilChunkLoader_FixAllocations")
                     .setApplyIf(() -> FixesConfig.fixTooManyAllocationsChunkPositionIntPair)),
     FIX_TOO_MANY_ALLOCATIONS_CHUNK_POSITION_INT_PAIR_OPTIFINE_INCOMPAT(
             new Builder("Stops MC from allocating too many ChunkPositionIntPair objects")
@@ -286,8 +287,38 @@ public enum Mixins {
     CHUNK_SAVE_CME_DEBUG(new Builder("Add debugging code to Chunk Save CME").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinNBTTagCompound").setApplyIf(() -> DebugConfig.chunkSaveCMEDebug)
             .addTargetedMod(TargetedMod.VANILLA)),
+    SPEEDUP_NBT_COPY(new Builder("Speed up NBT copy").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses("minecraft.MixinNBTTagCompound_speedup", "minecraft.MixinNBTTagList_speedup")
+            .setApplyIf(() -> ASMConfig.speedupNBTTagCompoundCopy).addTargetedMod(TargetedMod.VANILLA)
+            .addExcludedMod(TargetedMod.BUKKIT)),
+    STRING_POOLER_NBT_TAG(new Builder("Pool NBT Strings").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses("minecraft.MixinNBTTagCompound_stringPooler")
+            .setApplyIf(() -> TweaksConfig.enableTagCompoundStringPooling).addTargetedMod(TargetedMod.VANILLA)),
+    STRING_POOLER_NBT_STRING(new Builder("Pool NBT Strings").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses("minecraft.MixinNBTTagString_stringPooler")
+            .setApplyIf(() -> TweaksConfig.enableNBTStringPooling).addTargetedMod(TargetedMod.VANILLA)),
+    THREADED_WORLDDATA_SAVING(new Builder("Threaded WorldData Saving").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses(
+                    "minecraft.MixinMapStorage_threadedIO",
+                    "minecraft.MixinSaveHandler_threadedIO",
+                    "minecraft.MixinScoreboardSaveData_threadedIO",
+                    "minecraft.MixinVillageCollection_threadedIO",
+                    "minecraft.MixinMapData_threadedIO",
+                    "forge.MixinForgeChunkManager_threadedIO")
+            .setApplyIf(() -> TweaksConfig.threadedWorldDataSaving).addTargetedMod(TargetedMod.VANILLA)),
+    DONT_SLEEP_ON_THREADED_IO(new Builder("Don't sleep on threaded IO").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses("minecraft.MixinThreadedFileIOBase_noSleep")
+            .setApplyIf(() -> TweaksConfig.dontSleepOnThreadedIO).addTargetedMod(TargetedMod.VANILLA)),
+    OPTIMIZE_MOB_SPAWNING(new Builder("Optimize Mob Spawning").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses(
+                    "minecraft.MixinSpawnerAnimals_optimizeSpawning",
+                    "minecraft.MixinSpawnListEntry_optimizeSpawning")
+            .setApplyIf(() -> SpeedupsConfig.optimizeMobSpawning).addTargetedMod(TargetedMod.VANILLA)
+            .addExcludedMod(TargetedMod.BUKKIT)),
+
     RENDER_DEBUG(new Builder("Render Debug").setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinRenderGlobal")
-            .setSide(Side.CLIENT).setApplyIf(() -> DebugConfig.renderDebug).addTargetedMod(TargetedMod.VANILLA)),
+            .setSide(Side.CLIENT).setApplyIf(() -> DebugConfig.renderDebug).addTargetedMod(TargetedMod.VANILLA)
+            .addExcludedMod(TargetedMod.BUKKIT)),
     STATIC_LAN_PORT(new Builder("Static Lan Port").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.server.MixinHttpUtil").setSide(Side.CLIENT)
             .setApplyIf(() -> TweaksConfig.enableDefaultLanPort).addTargetedMod(TargetedMod.VANILLA)),
@@ -557,6 +588,9 @@ public enum Mixins {
             .addTargetedMod(TargetedMod.HARVESTCRAFT)),
 
     // Thaumcraft
+    THREADED_THAUMCRAFT_MAZE_SAVING(new Builder("Threaded Thaumcraft Maze Saving").setPhase(Phase.LATE)
+            .setSide(Side.BOTH).addMixinClasses("thaumcraft.MixinMazeHandler_threadedIO")
+            .setApplyIf(() -> TweaksConfig.threadedWorldDataSaving).addTargetedMod(TargetedMod.THAUMCRAFT)),
     ADD_CV_SUPPORT_TO_WAND_PEDESTAL(new Builder("CV Support for Wand Pedestal").setPhase(Phase.LATE).setSide(Side.BOTH)
             .addMixinClasses("thaumcraft.MixinTileWandPedestal")
             .setApplyIf(() -> TweaksConfig.addCVSupportToWandPedestal).addTargetedMod(TargetedMod.THAUMCRAFT)),
