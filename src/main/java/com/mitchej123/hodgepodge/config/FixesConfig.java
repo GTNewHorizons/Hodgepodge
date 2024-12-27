@@ -317,6 +317,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixHitEffectBrightness;
 
+    @Config.Comment("Fix server-side check of block placement distance by players being not identical client-side checks")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixWrongBlockPlacementDistanceCheck;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
