@@ -16,7 +16,7 @@ dependencies {
 
     compileOnly("com.gtnewhorizons.retrofuturabootstrap:RetroFuturaBootstrap:1.0.2") { transitive = false }
 
-    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.5.53-GTNH:dev") // force a more up-to-date NEI version
+    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.6.53-GTNH:dev") // force a more up-to-date NEI version
     transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-483-GTNH")
     transformedModCompileOnly("com.github.GTNewHorizons:Baubles:1.0.4:dev")
     // Transitive updates to make runClient17 work
