@@ -17,7 +17,7 @@ public class MixinNetHandlePlayServer_FixWrongBlockPlacementCheck {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayerMP;getDistanceSq(DDD)D"))
     private double hodgepodge$fixWrongBlockPlacementCheck(EntityPlayerMP entity, double x, double y, double z,
             Operation<Double> original) {
-        y -= entity.getEyeHeight();
+        y -= 0.5D;
         return original.call(entity, x, y, z);
     }
 }
