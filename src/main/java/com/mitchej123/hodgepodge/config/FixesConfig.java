@@ -322,6 +322,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixWrongBlockPlacementDistanceCheck;
 
+    @Config.Comment("Fix inventory sync lag: prevents client to check recipes on empty slots. Particularly fixes lag when trying to eat food when full.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixInventorySyncLag;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
