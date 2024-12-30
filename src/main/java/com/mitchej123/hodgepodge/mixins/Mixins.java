@@ -206,6 +206,9 @@ public enum Mixins {
                     "fml.MixinNetworkDispatcher",
                     "minecraft.NetworkManagerAccessor")
             .setApplyIf(() -> FixesConfig.fixBogusIntegratedServerNPEs).addTargetedMod(TargetedMod.VANILLA)),
+    CRAFTING_OPTIMIZATIONS(new Builder("Crafting Optimizations").setPhase(Phase.EARLY)
+        .addMixinClasses("minecraft.MixinShapedOreRecipe").setSide(Side.BOTH)
+        .setApplyIf(() -> true).addTargetedMod(TargetedMod.VANILLA)),
 
     FIX_LOGIN_DIMENSION_ID_OVERFLOW(
             new Builder("Fix dimension id overflowing when a player first logins on a server").setPhase(Phase.EARLY)
