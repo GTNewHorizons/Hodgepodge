@@ -207,8 +207,8 @@ public enum Mixins {
                     "minecraft.NetworkManagerAccessor")
             .setApplyIf(() -> FixesConfig.fixBogusIntegratedServerNPEs).addTargetedMod(TargetedMod.VANILLA)),
     FIX_LAG_ON_INVENTORY_SYNC(new Builder("Fix inventory sync lag").setPhase(Phase.EARLY)
-        .addMixinClasses("minecraft.MixinInventoryCrafting").setSide(Side.BOTH)
-        .setApplyIf(() -> FixesConfig.fixInventorySyncLag).addTargetedMod(TargetedMod.VANILLA)),
+            .addMixinClasses("minecraft.MixinInventoryCrafting").setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.fixInventorySyncLag).addTargetedMod(TargetedMod.VANILLA)),
 
     FIX_LOGIN_DIMENSION_ID_OVERFLOW(
             new Builder("Fix dimension id overflowing when a player first logins on a server").setPhase(Phase.EARLY)
