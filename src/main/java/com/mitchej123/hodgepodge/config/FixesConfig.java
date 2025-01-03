@@ -397,6 +397,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixCofhOreDictNPE;
 
+    @Config.Comment("Fix race condition in COFH's oredict")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCofhOreDictCME;
+
     // Extra TiC
 
     @Config.Comment("Disable ExtraTic's Integration with Metallurgy 3 Precious Materials Module: (Brass, Silver, Electrum & Platinum)")
