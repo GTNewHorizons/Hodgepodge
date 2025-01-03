@@ -12,10 +12,10 @@ public class MixinSoundManager {
     @ModifyArg(
             method = "setSoundCategoryVolume",
             at = @At(
+                    remap = false,
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/audio/SoundManager$SoundSystemStarterThread;setMasterVolume(F)V"),
-            index = 0,
-            remap = false)
+            index = 0)
     public float hodgepodge$modifySetMasterVolumeArg(float volume) {
         return (float) Math.pow(volume, 2);
     }
@@ -23,10 +23,10 @@ public class MixinSoundManager {
     @ModifyArg(
             method = "setSoundCategoryVolume",
             at = @At(
+                    remap = false,
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/audio/SoundManager$SoundSystemStarterThread;setVolume(Ljava/lang/String;F)V"),
-            index = 1,
-            remap = false)
+            index = 1)
     private float hodgepodge$modifySetCategoryVolumeArg(float volume) {
         return (float) Math.pow(volume, 2);
     }
