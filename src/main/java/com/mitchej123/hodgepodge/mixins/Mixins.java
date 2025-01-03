@@ -674,6 +674,9 @@ public enum Mixins {
     FIX_ORE_DICT_NPE(new Builder("Fix NPE in OreDictionaryArbiter")
             .addMixinClasses("cofhcore.MixinOreDictionaryArbiter").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addTargetedMod(TargetedMod.COFH_CORE).setApplyIf(() -> FixesConfig.fixCofhOreDictNPE)),
+    FIX_ORE_DICT_CME(new Builder("Fix race condition in CoFH oredict").addMixinClasses("cofhcore.MixinFMLEventHandler")
+            .setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.COFH_CORE)
+            .setApplyIf(() -> FixesConfig.fixCofhOreDictCME)),
 
     // Minefactory Reloaded
     DISARM_SACRED_TREE(new Builder("Prevents Sacred Rubber Tree Generation")
