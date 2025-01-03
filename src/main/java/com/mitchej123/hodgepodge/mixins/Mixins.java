@@ -433,9 +433,9 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinMinecraft_FixDuplicateSounds")
             .setApplyIf(() -> FixesConfig.fixDuplicateSounds)),
 
-    ADD_MOD_ITEM_STATS(new Builder("Add stats for modded items").addMixinClasses("fml.MixinGameRegistry")
-            .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> TweaksConfig.addModItemStats).setPhase(Phase.EARLY)
-            .setSide(Side.BOTH)),
+    ADD_MOD_ITEM_STATS(new Builder("Add stats for modded items")
+            .addMixinClasses("fml.MixinGameRegistry", "minecraft.MixinStats").addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> TweaksConfig.addModItemStats).setPhase(Phase.EARLY).setSide(Side.BOTH)),
 
     ADD_MOD_ENTITY_STATS(new Builder("Add stats for modded entities").addMixinClasses("minecraft.MixinStatList")
             .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> TweaksConfig.addModEntityStats).setPhase(Phase.EARLY)

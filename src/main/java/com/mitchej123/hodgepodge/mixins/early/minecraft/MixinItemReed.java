@@ -24,8 +24,7 @@ public class MixinItemReed {
             at = @At(
                     value = "INVOKE_ASSIGN",
                     target = "Lnet/minecraft/world/World;getBlock(III)Lnet/minecraft/block/Block;"),
-            ordinal = 0,
-            remap = false)
+            ordinal = 0)
     private Block onItemUseWithIsReplaceable(Block original, @Local(ordinal = 0, argsOnly = true) World world,
             @Local(ordinal = 0, argsOnly = true) int x, @Local(ordinal = 1, argsOnly = true) int y,
             @Local(ordinal = 2, argsOnly = true) int z) {
