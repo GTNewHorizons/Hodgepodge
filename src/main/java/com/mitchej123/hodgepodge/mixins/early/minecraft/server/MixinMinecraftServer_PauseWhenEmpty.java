@@ -36,6 +36,7 @@ public abstract class MixinMinecraftServer_PauseWhenEmpty extends MinecraftServe
             at = @At(
                     value = "INVOKE",
                     target = "Lcpw/mods/fml/common/FMLCommonHandler;onServerStarted()V",
+                    remap = false,
                     shift = At.Shift.AFTER))
     public void hodgepodge$setupServer(CallbackInfoReturnable<Boolean> cir) {
         hodgepodge$pauseWhenEmptySeconds = settings.getIntProperty("pause-when-empty-seconds", 0);
