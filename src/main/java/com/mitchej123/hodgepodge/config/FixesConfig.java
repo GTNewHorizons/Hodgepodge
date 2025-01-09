@@ -212,6 +212,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixWorldServerLeakingUnloadedEntities;
 
+    @Config.Comment("Fix skin manager leaking client world")
+    @Config.DefaultBoolean(true)
+    public static boolean fixSkinManagerLeakingClientWorld;
+
     @Config.Comment("Increase the maximum network packet size from the default of 2MiB")
     @Config.DefaultBoolean(true)
     public static boolean increasePacketSizeLimit;
