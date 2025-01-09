@@ -423,7 +423,9 @@ public enum Mixins {
 
     PAUSE_WHEN_EMPTY(new Builder("Pauses the server when noone is online after X seconds; Servers Only")
             .setPhase(Phase.EARLY).setSide(Side.SERVER).addTargetedMod(TargetedMod.VANILLA)
-            .addMixinClasses("minecraft.server.MixinMinecraftServer_PauseWhenEmpty")
+            .addMixinClasses(
+                    "minecraft.server.MixinMinecraftServer_PauseWhenEmpty",
+                    "minecraft.server.MixinDedicatedServer_PauseWhenEmpty")
             .setApplyIf(() -> TweaksConfig.pauseWhenEmpty)),
 
     LIGHTER_WATER(new Builder("Decreases water opacity from 3 to 1, like in modern").setPhase(Phase.EARLY)

@@ -1,71 +1,61 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.server;
 
-import java.io.File;
-import java.net.Proxy;
-
+import net.minecraft.network.NetworkSystem;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dedicated.DedicatedServer;
-import net.minecraft.server.dedicated.PropertyManager;
+import net.minecraft.server.management.ServerConfigurationManager;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.mixins.interfaces.IPauseWhenEmpty;
 
-@Mixin(DedicatedServer.class)
-public abstract class MixinMinecraftServer_PauseWhenEmpty extends MinecraftServer {
+@Mixin(MinecraftServer.class)
+public abstract class MixinMinecraftServer_PauseWhenEmpty {
 
     @Shadow
-    private PropertyManager settings;
+    public abstract int getCurrentPlayerCount();
 
-    @Unique
-    private int hodgepodge$pauseWhenEmptySeconds = 0;
+    @Shadow
+    private ServerConfigurationManager serverConfigManager;
+
+    @Shadow
+    protected abstract void saveAllWorlds(boolean dontLog);
+
+    @Shadow
+    public abstract NetworkSystem func_147137_ag();
+
     @Unique
     private int hodgepodge$emptyTicks = 0;
 
-    public MixinMinecraftServer_PauseWhenEmpty(File workDir, Proxy proxy) {
-        super(workDir, proxy);
-    }
-
-    @Inject(
-            method = "startServer",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lcpw/mods/fml/common/FMLCommonHandler;onServerStarted()V",
-                    remap = false,
-                    shift = At.Shift.AFTER))
-    public void hodgepodge$setupServer(CallbackInfoReturnable<Boolean> cir) {
-        hodgepodge$pauseWhenEmptySeconds = settings.getIntProperty("pause-when-empty-seconds", 0);
-    }
-
-    @Override
-    public void tick() {
-        int pauseTicks = hodgepodge$pauseWhenEmptySeconds * 20;
-        if (pauseTicks > 0) {
-            if (getCurrentPlayerCount() == 0) {
-                this.hodgepodge$emptyTicks++;
-            } else {
-                this.hodgepodge$emptyTicks = 0;
-            }
-
-            if (hodgepodge$emptyTicks >= pauseTicks) {
-                if (hodgepodge$emptyTicks == pauseTicks) {
-                    Common.log
-                            .info("Server empty for {} seconds, saving and pausing", hodgepodge$pauseWhenEmptySeconds);
-                    this.serverConfigManager.saveAllPlayerData();
-                    this.saveAllWorlds(true);
+    @Inject(method = "tick", at = @At("HEAD"), cancellable = true, order = 9000)
+    public void tick(CallbackInfo ci) {
+        if ((Object) this instanceof IPauseWhenEmpty p) {
+            int pauseTicks = p.getPauseWhenEmptySeconds() * 20;
+            if (pauseTicks > 0) {
+                if (this.getCurrentPlayerCount() == 0) {
+                    this.hodgepodge$emptyTicks++;
+                } else {
+                    this.hodgepodge$emptyTicks = 0;
                 }
 
-                // to process new connections
-                this.func_147137_ag().networkTick();
-                return;
+                if (hodgepodge$emptyTicks >= pauseTicks) {
+                    if (hodgepodge$emptyTicks == pauseTicks) {
+                        Common.log
+                                .info("Server empty for {} seconds, saving and pausing", p.getPauseWhenEmptySeconds());
+                        this.serverConfigManager.saveAllPlayerData();
+                        this.saveAllWorlds(true);
+                    }
+
+                    // to process new connections
+                    this.func_147137_ag().networkTick();
+                    ci.cancel();
+                }
             }
         }
-
-        super.tick();
     }
 }
