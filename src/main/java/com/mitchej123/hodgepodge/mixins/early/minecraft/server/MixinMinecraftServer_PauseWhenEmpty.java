@@ -33,7 +33,7 @@ public abstract class MixinMinecraftServer_PauseWhenEmpty {
     private int hodgepodge$emptyTicks = 0;
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true, order = 9000)
-    public void tick(CallbackInfo ci) {
+    public void hodgepodge$tick(CallbackInfo ci) {
         if ((Object) this instanceof IPauseWhenEmpty p) {
             int pauseTicks = p.getPauseWhenEmptySeconds() * 20;
             if (pauseTicks > 0) {
