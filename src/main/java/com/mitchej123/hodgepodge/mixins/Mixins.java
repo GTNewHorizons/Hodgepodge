@@ -218,6 +218,9 @@ public enum Mixins {
     FIX_WORLD_SERVER_LEAKING_UNLOADED_ENTITIES(new Builder("Fix world server leaking unloaded entities")
             .setPhase(Phase.EARLY).setSide(Side.BOTH).addMixinClasses("minecraft.MixinWorldServerUpdateEntities")
             .setApplyIf(() -> FixesConfig.fixWorldServerLeakingUnloadedEntities).addTargetedMod(TargetedMod.VANILLA)),
+    FIX_SKIN_MANAGER_CLIENT_WORLD_LEAK(new Builder("Fix skin manager client world leak").setPhase(Phase.EARLY)
+            .setSide(Side.CLIENT).addMixinClasses("minecraft.MixinSkinManager$2")
+            .setApplyIf(() -> FixesConfig.fixSkinManagerLeakingClientWorld).addTargetedMod(TargetedMod.VANILLA)),
 
     FIX_REDSTONE_TORCH_WORLD_LEAK(new Builder("Fix world leak in redstone torch").setPhase(Phase.EARLY)
             .setSide(Side.BOTH).addMixinClasses("minecraft.MixinBlockRedstoneTorch")
