@@ -128,7 +128,7 @@ public class TweaksConfig {
     @Config.DefaultInt(900)
     public static int autoSaveInterval;
 
-    @Config.Comment("Backports 1.20's 'pause-when-empty-seconds' server property")
+    @Config.Comment({"Backports 1.20's 'pause-when-empty-seconds' server property", "Default value: 0 (off)"})
     @Config.DefaultBoolean(true)
     public static boolean pauseWhenEmpty;
 

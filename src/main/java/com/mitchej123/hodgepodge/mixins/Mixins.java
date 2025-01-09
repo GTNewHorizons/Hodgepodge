@@ -421,7 +421,7 @@ public enum Mixins {
             .addMixinClasses("minecraft.server.MixinMinecraftServer_AutoSaveInterval")
             .setApplyIf(() -> TweaksConfig.autoSaveInterval != 900)),
 
-    PAUSE_WHEN_EMPTY(new Builder("Pauses the server when noone is online after X seconds; Servers Only")
+    PAUSE_WHEN_EMPTY(new Builder("Pauses the server when empty after X seconds; Servers Only")
             .setPhase(Phase.EARLY).setSide(Side.SERVER).addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses(
                     "minecraft.server.MixinMinecraftServer_PauseWhenEmpty",
