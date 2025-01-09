@@ -61,7 +61,7 @@ dependencies {
     transformedModCompileOnly(deobf("https://forum.industrial-craft.net/core/attachment/4316-advancedsolarpanel-1-7-10-3-5-1-jar/"))
     transformedModCompileOnly(rfg.deobf("curse.maven:candycraft-251118:2330488"))
 
-    devOnlyNonPublishable(deobf("https://github.com/makamys/CoreTweaks/releases/download/0.3.3.2/CoreTweaks-1.7.10-0.3.3.2+nomixin.jar"))
+    transformedModCompileOnly(deobf("https://github.com/makamys/CoreTweaks/releases/download/0.3.3.2/CoreTweaks-1.7.10-0.3.3.2+nomixin.jar"))
 }
 
 // Replace when RFG support deobfuscation from notch mappings
