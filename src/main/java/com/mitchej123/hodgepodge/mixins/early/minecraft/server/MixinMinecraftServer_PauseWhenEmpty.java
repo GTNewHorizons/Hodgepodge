@@ -32,6 +32,8 @@ public abstract class MixinMinecraftServer_PauseWhenEmpty {
 
     @Unique
     private int hodgepodge$emptyTicks = 0;
+    @Unique
+    private boolean hodgepodge$wasPaused = false;
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true, order = 9000)
     public void hodgepodge$tick(CallbackInfo ci) {
@@ -45,19 +47,27 @@ public abstract class MixinMinecraftServer_PauseWhenEmpty {
                 }
 
                 if (hodgepodge$emptyTicks >= pauseTicks) {
-                    if (hodgepodge$emptyTicks == pauseTicks) {
+                    if (!hodgepodge$wasPaused) {
                         Common.log
                                 .info("Server empty for {} seconds, saving and pausing", p.getPauseWhenEmptySeconds());
                         this.serverConfigManager.saveAllPlayerData();
                         this.saveAllWorlds(true);
+                        hodgepodge$wasPaused = true;
                     }
-
+                    // to finish saving chunks
                     net.minecraftforge.common.chunkio.ChunkIOExecutor.tick();
                     // to process new connections
                     this.func_147137_ag().networkTick();
+                    // to process console commands
                     ds.executePendingCommands();
                     ci.cancel();
+                } else if (hodgepodge$wasPaused) {
+                    Common.log.info("Resuming server");
+                    hodgepodge$wasPaused = false;
                 }
+            } else if (hodgepodge$wasPaused) {
+                Common.log.info("Resuming server");
+                hodgepodge$wasPaused = false;
             }
         }
     }

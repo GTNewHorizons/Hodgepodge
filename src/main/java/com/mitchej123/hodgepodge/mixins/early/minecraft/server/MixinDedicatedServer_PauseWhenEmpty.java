@@ -26,6 +26,15 @@ public class MixinDedicatedServer_PauseWhenEmpty implements IPauseWhenEmpty {
         return hodgepodge$pauseWhenEmptySeconds;
     }
 
+    @Override
+    public void setPauseWhenEmptySeconds(int value) {
+        value = Math.max(value, 0);
+        hodgepodge$pauseWhenEmptySeconds = value;
+
+        settings.setProperty("pause-when-empty-seconds", hodgepodge$pauseWhenEmptySeconds);
+        settings.saveProperties();
+    }
+
     @Inject(
             method = "startServer",
             at = @At(
