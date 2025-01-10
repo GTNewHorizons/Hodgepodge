@@ -32,7 +32,7 @@ public class DebugCommand extends CommandBase {
     }
 
     private void printHelp(ICommandSender sender) {
-        sender.addChatMessage(new ChatComponentText("Usage: hp <toggle|anchor|randomNbt|pause_when_empty>"));
+        sender.addChatMessage(new ChatComponentText("Usage: hp <toggle|anchor|randomNbt|pauseWhenEmpty>"));
         sender.addChatMessage(new ChatComponentText("\"toggle anchordebug\" - toggles RC anchor debugging"));
         sender.addChatMessage(
                 new ChatComponentText(
@@ -51,7 +51,7 @@ public class DebugCommand extends CommandBase {
         String test = ss.length == 0 ? "" : ss[0].trim();
         if (ss.length == 0 || ss.length == 1 && (test.isEmpty()
                 || Stream.of("toggle", "anchor", "randomNbt", "pauseWhenEmpty").anyMatch(s -> s.startsWith(test)))) {
-            Stream.of("toggle", "anchor", "randomNbt", "pause_when_empty")
+            Stream.of("toggle", "anchor", "randomNbt", "pauseWhenEmpty")
                     .filter(s -> test.isEmpty() || s.startsWith(test)).forEach(l::add);
         } else if (test.equals("toggle")) {
             String test1 = ss[1].trim();
