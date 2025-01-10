@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft.server;
 
 import net.minecraft.network.NetworkSystem;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -34,7 +35,7 @@ public abstract class MixinMinecraftServer_PauseWhenEmpty {
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true, order = 9000)
     public void hodgepodge$tick(CallbackInfo ci) {
-        if ((Object) this instanceof IPauseWhenEmpty p) {
+        if ((Object) this instanceof DedicatedServer ds && ds instanceof IPauseWhenEmpty p) {
             int pauseTicks = p.getPauseWhenEmptySeconds() * 20;
             if (pauseTicks > 0) {
                 if (this.getCurrentPlayerCount() == 0) {
@@ -51,8 +52,10 @@ public abstract class MixinMinecraftServer_PauseWhenEmpty {
                         this.saveAllWorlds(true);
                     }
 
+                    net.minecraftforge.common.chunkio.ChunkIOExecutor.tick();
                     // to process new connections
                     this.func_147137_ag().networkTick();
+                    ds.executePendingCommands();
                     ci.cancel();
                 }
             }
