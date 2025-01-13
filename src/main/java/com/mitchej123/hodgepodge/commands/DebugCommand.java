@@ -15,6 +15,8 @@ import net.minecraft.util.ChatComponentText;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.mitchej123.hodgepodge.config.TweaksConfig;
+import com.mitchej123.hodgepodge.mixins.interfaces.IPauseWhenEmpty;
 import com.mitchej123.hodgepodge.util.AnchorAlarm;
 
 public class DebugCommand extends CommandBase {
@@ -26,11 +28,11 @@ public class DebugCommand extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "Usage: hp <subcommand>. Valid subcommands are: toggle, anchor, randomNbt.";
+        return "Usage: hp <subcommand>. Valid subcommands are: toggle, anchor, randomNbt, pauseWhenEmpty.";
     }
 
     private void printHelp(ICommandSender sender) {
-        sender.addChatMessage(new ChatComponentText("Usage: hp <toggle|anchor|randomNbt>"));
+        sender.addChatMessage(new ChatComponentText("Usage: hp <toggle|anchor|randomNbt|pauseWhenEmpty>"));
         sender.addChatMessage(new ChatComponentText("\"toggle anchordebug\" - toggles RC anchor debugging"));
         sender.addChatMessage(
                 new ChatComponentText(
@@ -38,16 +40,19 @@ public class DebugCommand extends CommandBase {
         sender.addChatMessage(
                 new ChatComponentText(
                         "\"randomNbt [bytes]\" - adds a random byte array of the given size to the held item"));
+        sender.addChatMessage(
+                new ChatComponentText(
+                        "\"pauseWhenEmpty [seconds]\" - sets the time the server will wait before pausing when no players are online; 0 to disable"));
     }
 
     @Override
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] ss) {
         List<String> l = new ArrayList<>();
         String test = ss.length == 0 ? "" : ss[0].trim();
-        if (ss.length == 0 || ss.length == 1
-                && (test.isEmpty() || Stream.of("toggle", "anchor", "randomNbt").anyMatch(s -> s.startsWith(test)))) {
-            Stream.of("toggle", "anchor", "randomNbt").filter(s -> test.isEmpty() || s.startsWith(test))
-                    .forEach(l::add);
+        if (ss.length == 0 || ss.length == 1 && (test.isEmpty()
+                || Stream.of("toggle", "anchor", "randomNbt", "pauseWhenEmpty").anyMatch(s -> s.startsWith(test)))) {
+            Stream.of("toggle", "anchor", "randomNbt", "pauseWhenEmpty")
+                    .filter(s -> test.isEmpty() || s.startsWith(test)).forEach(l::add);
         } else if (test.equals("toggle")) {
             String test1 = ss[1].trim();
             if (test1.isEmpty() || "anchordebug".startsWith(test1)) l.add("anchordebug");
@@ -112,6 +117,38 @@ public class DebugCommand extends CommandBase {
                 stack.stackTagCompound.setByteArray("DebugJunk", randomData);
                 player.inventory.inventoryChanged = true;
                 player.inventoryContainer.detectAndSendChanges();
+                break;
+            case "pauseWhenEmpty":
+                if (!TweaksConfig.pauseWhenEmpty) {
+                    sender.addChatMessage(new ChatComponentText("'pauseWhenEmpty' config option is disabled"));
+                    return;
+                }
+                if (strings.length < 2) {
+                    printHelp(sender);
+                    return;
+                }
+                final int pauseTimeout = NumberUtils.toInt(strings[1], -1);
+                if (pauseTimeout < 0) {
+                    printHelp(sender);
+                    return;
+                }
+
+                MinecraftServer server = MinecraftServer.getServer();
+                if (!server.isDedicatedServer()) {
+                    sender.addChatMessage(
+                            new ChatComponentText("'hp pauseWhenEmpty' only applies to dedicated servers"));
+                    return;
+                }
+
+                if (server instanceof IPauseWhenEmpty p) {
+                    p.setPauseWhenEmptySeconds(pauseTimeout);
+                    sender.addChatMessage(
+                            new ChatComponentText(
+                                    String.format(
+                                            "Server property 'pause-when-empty-seconds' set to %d",
+                                            pauseTimeout)));
+                }
+
                 break;
         }
     }
