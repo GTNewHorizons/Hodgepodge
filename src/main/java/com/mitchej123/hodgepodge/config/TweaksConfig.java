@@ -128,10 +128,6 @@ public class TweaksConfig {
     @Config.DefaultInt(900)
     public static int autoSaveInterval;
 
-    @Config.Comment({ "Backports 1.20's 'pause-when-empty-seconds' server property", "Default value: 0 (off)" })
-    @Config.DefaultBoolean(true)
-    public static boolean pauseWhenEmpty;
-
     @Config.Comment("Reduces water opacity from 3 to 1, to match modern")
     @Config.DefaultBoolean(false)
     public static boolean useLighterWater;
@@ -310,4 +306,5 @@ public class TweaksConfig {
     @Config.Comment("Avoids droping items on container close, and instead places them in the player inventory. (Inspired from EFR)")
     @Config.DefaultBoolean(true)
     public static boolean avoidDroppingItemsWhenClosing;
+
 }
