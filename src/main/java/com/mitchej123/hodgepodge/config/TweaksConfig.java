@@ -28,6 +28,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean bedMessageAboveHotbar;
 
+    @Config.Comment("Clicking on a bed while in a valid dimension will always set the player spawn")
+    @Config.DefaultBoolean(true)
+    public static boolean bedAlwaysSetsSpawn;
+
     @Config.Comment("Moves the sprint keybind to the movement category")
     @Config.DefaultBoolean(true)
     public static boolean changeSprintCategory;
