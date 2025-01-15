@@ -357,6 +357,11 @@ public enum Mixins {
     BED_MESSAGE_ABOVE_HOTBAR(new Builder("Bed Message Above Hotbar").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinBlockBed").setSide(Side.BOTH)
             .setApplyIf(() -> TweaksConfig.bedMessageAboveHotbar).addTargetedMod(TargetedMod.VANILLA)),
+    BED_ALWAYS_SETS_SPAWN(new Builder("Clicking a bed in a valid dim will always set your spawn immediately")
+            .setPhase(Phase.EARLY).setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
+            // .addExcludedMod(TargetedMod.ETFURUMREQUIEM) // uncomment when EFR adds this feature
+            .setApplyIf(() -> TweaksConfig.bedAlwaysSetsSpawn)
+            .addMixinClasses("minecraft.MixinBlockBed_AlwaysSetsSpawn")),
     FIX_PLAYER_SKIN_FETCHING(new Builder("Fix player skin fetching").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinAbstractClientPlayer", "minecraft.MixinThreadDownloadImageData")
             .setSide(Side.CLIENT).setApplyIf(() -> FixesConfig.fixPlayerSkinFetching)

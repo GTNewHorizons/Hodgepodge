@@ -18,6 +18,7 @@ public enum TargetedMod {
     CANDYCRAFT("candycraftmod", null, "candycraftmod"),
     COFH_CORE("CoFHCore", "cofh.asm.LoadingPlugin", "CoFHCore"),
     DAMAGE_INDICATORS("Damage Indicators", null, "DamageIndicatorsMod"),
+    ETFURUMREQUIEM("Et Futurum Requiem", "ganymedes01.etfuturum.mixinplugin.EtFuturumEarlyMixins", "etfuturum"),
     EXTRATIC("ExtraTiC", null, "ExtraTiC"),
     EXTRA_UTILITIES("ExtraUtilities", null, "ExtraUtilities"),
     FASTCRAFT("FastCraft", "fastcraft.Tweaker"),
