@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,6 +29,7 @@ public class MixinBlockBed_AlwaysSetsSpawn {
 
         entityPlayerMP.setSpawnChunk(new ChunkCoordinates(x, y, z), false);
         // not render over hotbar due to other mixin
-        entityPlayerMP.addChatComponentMessage(new ChatComponentText("Respawn Point Set"));
+        entityPlayerMP.addChatComponentMessage(
+                new ChatComponentText(StatCollector.translateToLocal("hodgepodge.bed_respawn.msg")));
     }
 }
