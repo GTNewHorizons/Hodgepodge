@@ -10,24 +10,24 @@ import net.minecraftforge.event.ForgeEventFactory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityBlockBreaker;
 
 @Mixin(TileEntityBlockBreaker.class)
-public abstract class MixinTileEntityBlockBreaker {
+public class MixinTileEntityBlockBreaker {
 
-    @WrapOperation(
-            method = "activateMachine",
+    @ModifyExpressionValue(
             at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/block/Block;getDrops(Lnet/minecraft/world/World;IIIII)Ljava/util/ArrayList;"),
+                    target = "Lnet/minecraft/block/Block;getDrops(Lnet/minecraft/world/World;IIIII)Ljava/util/ArrayList;",
+                    value = "INVOKE"),
+            method = "activateMachine",
             remap = false)
-    private ArrayList<ItemStack> hodgepodge$activateMachine$fireDropEvent(Block block, World world, int x, int y, int z,
-            int metadata, int fortune, Operation<ArrayList<ItemStack>> original) {
-        ArrayList<ItemStack> drops = original.call(block, world, x, y, z, metadata, fortune);
-        ForgeEventFactory.fireBlockHarvesting(drops, world, block, 0, 1, 0, metadata, fortune, 1.0f, false, null);
+    private ArrayList<ItemStack> hodgepodge$fireBlockHarvesting(ArrayList<ItemStack> drops,
+            @Local(ordinal = 0) World world, @Local(ordinal = 0) Block block, @Local(ordinal = 0) int x,
+            @Local(ordinal = 1) int y, @Local(ordinal = 2) int z, @Local(ordinal = 3) int meta) {
+        ForgeEventFactory.fireBlockHarvesting(drops, world, block, x, y, z, meta, 0, 1.0f, false, null);
         return drops;
     }
 }

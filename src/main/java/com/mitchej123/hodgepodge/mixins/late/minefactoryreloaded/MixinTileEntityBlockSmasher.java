@@ -3,43 +3,46 @@ package com.mitchej123.hodgepodge.mixins.late.minefactoryreloaded;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityBlockSmasher;
 import powercrystals.minefactoryreloaded.world.SmashingWorld;
 
 @Mixin(TileEntityBlockSmasher.class)
-public abstract class MixinTileEntityBlockSmasher {
+public class MixinTileEntityBlockSmasher {
 
-    @WrapOperation(
-            method = "getOutput",
+    @Shadow(remap = false)
+    private int _fortune = 0;
+
+    @Shadow(remap = false)
+    private SmashingWorld _smashingWorld;
+
+    @ModifyExpressionValue(
             at = @At(
-                    value = "INVOKE",
-                    target = "Lpowercrystals/minefactoryreloaded/world/SmashingWorld;smashBlock(Lnet/minecraft/item/ItemStack;Lnet/minecraft/block/Block;II)Ljava/util/ArrayList;"),
+                    target = "powercrystals/minefactoryreloaded/world/SmashingWorld.smashBlock(Lnet/minecraft/item/ItemStack;Lnet/minecraft/block/Block;II)Ljava/util/ArrayList;",
+                    value = "INVOKE"),
+            method = "getOutput",
             remap = false)
-    private ArrayList<ItemStack> hodgepodge$getOutput$fireDropEvent(SmashingWorld world, ItemStack stack, Block block,
-            int metadata, int fortune, Operation<ArrayList<ItemStack>> original) {
-        ArrayList<ItemStack> drops = original.call(world, stack, block, metadata, fortune);
-        if (drops == null) {
-            drops = block.getDrops((World) (Object) world, 0, 0, 0, metadata, fortune);
-        }
+    private ArrayList<ItemStack> hodgepodge$fireBlockHarvesting(ArrayList<ItemStack> drops, ItemStack lastInputStack,
+            @Local(ordinal = 0) Block block, @Local(ordinal = 0) ItemBlock lastInputItem) {
         ForgeEventFactory.fireBlockHarvesting(
                 drops,
-                (World) (Object) world,
+                this._smashingWorld,
                 block,
                 0,
                 1,
                 0,
-                metadata,
-                fortune,
+                lastInputItem.getMetadata(lastInputStack.getItemDamage()),
+                this._fortune,
                 1.0f,
                 false,
                 null);
