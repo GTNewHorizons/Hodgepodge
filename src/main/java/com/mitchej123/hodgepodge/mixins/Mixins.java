@@ -691,6 +691,12 @@ public enum Mixins {
             .addMixinClasses("minefactoryreloaded.MixinBlockRubberSapling").setPhase(Phase.LATE).setSide(Side.BOTH)
             .addTargetedMod(TargetedMod.MINEFACTORY_RELOADED)
             .setApplyIf(() -> FixesConfig.disableMassiveSacredTreeGeneration)),
+    MFR_IMPROVE_BLOCKSMASHER(new Builder("Improve MFR block smasher")
+            .addMixinClasses("minefactoryreloaded.MixinTileEntityBlockSmasher").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.MINEFACTORY_RELOADED).setApplyIf(() -> FixesConfig.improveMfrBlockSmasher)),
+    MFR_IMPROVE_BLOCKBREAKER(new Builder("Improve MFR block breaker")
+            .addMixinClasses("minefactoryreloaded.MixinTileEntityBlockBreaker").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.MINEFACTORY_RELOADED).setApplyIf(() -> FixesConfig.improveMfrBlockBreaker)),
 
     // Immersive engineering
     JAVA12_IMMERSIVE_ENGINERRING(new Builder("Immersive Engineering Java-12 safe potion array resizing")
