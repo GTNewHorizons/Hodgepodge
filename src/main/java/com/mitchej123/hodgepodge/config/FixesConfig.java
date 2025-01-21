@@ -551,14 +551,6 @@ public class FixesConfig {
     @Config.DefaultBoolean(false)
     public static boolean disableMassiveSacredTreeGeneration;
 
-    @Config.Comment("Improves MineFactory Reloaded smasher block to support other mods manipulating its drops")
-    @Config.DefaultBoolean(true)
-    public static boolean improveMfrBlockSmasher;
-
-    @Config.Comment("Improves MineFactory Reloaded breaker block to support other mods manipulating its drops")
-    @Config.DefaultBoolean(true)
-    public static boolean improveMfrBlockBreaker;
-
     // Morpheus
 
     @Config.Comment("Fix not properly waking players if not everyone is sleeping")
