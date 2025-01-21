@@ -685,12 +685,21 @@ public enum Mixins {
     FIX_ORE_DICT_CME(new Builder("Fix race condition in CoFH oredict").addMixinClasses("cofhcore.MixinFMLEventHandler")
             .setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.COFH_CORE)
             .setApplyIf(() -> FixesConfig.fixCofhOreDictCME)),
+    COFH_IMPROVE_BREAKBLOCK(new Builder("Improve CoFH breakBlock method to support mods")
+            .addMixinClasses("cofhcore.MixinBlockHelper").setPhase(Phase.EARLY).setSide(Side.CLIENT)
+            .addTargetedMod(TargetedMod.COFH_CORE).setApplyIf(() -> TweaksConfig.improveCofhBreakBlock)),
 
     // Minefactory Reloaded
     DISARM_SACRED_TREE(new Builder("Prevents Sacred Rubber Tree Generation")
             .addMixinClasses("minefactoryreloaded.MixinBlockRubberSapling").setPhase(Phase.LATE).setSide(Side.BOTH)
             .addTargetedMod(TargetedMod.MINEFACTORY_RELOADED)
             .setApplyIf(() -> FixesConfig.disableMassiveSacredTreeGeneration)),
+    MFR_IMPROVE_BLOCKSMASHER(new Builder("Improve MFR block smasher")
+            .addMixinClasses("minefactoryreloaded.MixinTileEntityBlockSmasher").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.MINEFACTORY_RELOADED).setApplyIf(() -> TweaksConfig.improveMfrBlockSmasher)),
+    MFR_IMPROVE_BLOCKBREAKER(new Builder("Improve MFR block breaker")
+            .addMixinClasses("minefactoryreloaded.MixinTileEntityBlockBreaker").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.MINEFACTORY_RELOADED).setApplyIf(() -> TweaksConfig.improveMfrBlockBreaker)),
 
     // Immersive engineering
     JAVA12_IMMERSIVE_ENGINERRING(new Builder("Immersive Engineering Java-12 safe potion array resizing")

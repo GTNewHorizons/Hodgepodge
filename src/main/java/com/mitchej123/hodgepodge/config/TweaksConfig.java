@@ -212,6 +212,12 @@ public class TweaksConfig {
     @Config.DefaultBoolean(false)
     public static boolean removeBOPQuicksandGeneration;
 
+    // Cofh
+
+    @Config.Comment("Improve CoFH's breakBlock method")
+    @Config.DefaultBoolean(true)
+    public static boolean improveCofhBreakBlock;
+
     // Extra Utilities
 
     @Config.Comment("Disables the spawn of zombie aid when zombie is killed by Extra Utilities Spikes, since it can spawn them too far.")
@@ -248,6 +254,16 @@ public class TweaksConfig {
     @Config.RangeInt(min = 1, max = 255)
     @Config.DefaultInt(255)
     public static int atropineHighID;
+
+    // Minefactory Reloaded
+
+    @Config.Comment("Improves MineFactory Reloaded smasher block to support other mods manipulating its drops")
+    @Config.DefaultBoolean(true)
+    public static boolean improveMfrBlockSmasher;
+
+    @Config.Comment("Improves MineFactory Reloaded breaker block to support other mods manipulating its drops")
+    @Config.DefaultBoolean(true)
+    public static boolean improveMfrBlockBreaker;
 
     // NotEnoughItems
 
