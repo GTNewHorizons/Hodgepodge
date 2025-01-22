@@ -34,6 +34,10 @@ public class MixinTileEntityBlockSmasher {
             remap = false)
     private ArrayList<ItemStack> hodgepodge$fireBlockHarvesting(ArrayList<ItemStack> drops, ItemStack lastInputStack,
             @Local(ordinal = 0) Block block, @Local(ordinal = 0) ItemBlock lastInputItem) {
+        int metadata = lastInputItem.getMetadata(lastInputStack.getItemDamage());
+        if (drops == null) {
+            drops = block.getDrops(this._smashingWorld, 0, 1, 0, metadata, this._fortune);
+        }
         ForgeEventFactory.fireBlockHarvesting(
                 drops,
                 this._smashingWorld,
@@ -41,7 +45,7 @@ public class MixinTileEntityBlockSmasher {
                 0,
                 1,
                 0,
-                lastInputItem.getMetadata(lastInputStack.getItemDamage()),
+                metadata,
                 this._fortune,
                 1.0f,
                 false,
