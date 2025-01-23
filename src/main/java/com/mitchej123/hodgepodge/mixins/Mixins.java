@@ -846,6 +846,10 @@ public enum Mixins {
             .addMixinClasses("extrautilities.MixinTileEntityEnderQuarry").setPhase(Phase.LATE).setSide(Side.BOTH)
             .setApplyIf(() -> TweaksConfig.extraUtilitiesEnderQuarryOverride > 0)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_ENDERQUARRY_FREEZE(new Builder("Fix Ender Quarry freezes randomly")
+            .addMixinClasses("extrautilities.MixinTileEntityEnderQuarry_FixFreeze").setPhase(Phase.LATE)
+            .setSide(Side.BOTH).setApplyIf(() -> FixesConfig.fixExtraUtilitiesEnderQuarryFreeze)
+            .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
     // Gliby's Voice Chat
     FIX_GLIBYS_VC_THREAD_SHUTDOWN_CLIENT(
