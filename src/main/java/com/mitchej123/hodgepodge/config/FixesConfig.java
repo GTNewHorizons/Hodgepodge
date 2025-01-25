@@ -453,6 +453,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesFilterDupe;
 
+    @Config.Comment("Fixes Ender Quarry get stuck at a mostly random location under certain conditions")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesEnderQuarryFreeze;
+
     // Galacticraft
 
     @Config.Comment("Fix time commands with GC")
