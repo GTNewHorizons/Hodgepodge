@@ -265,6 +265,17 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean improveMfrBlockBreaker;
 
+    // Modular Powersuits
+    @Config.Comment("Prevents ModularPowerSuits from charging and draining RF energy from other non-MPS items in inventory")
+    @Config.DefaultBoolean(false)
+    public static boolean preventMPSEnergyTransferRF;
+    @Config.Comment("Prevents ModularPowerSuits from charging and draining EU energy from other non-MPS items in inventory")
+    @Config.DefaultBoolean(false)
+    public static boolean preventMPSEnergyTransferEU;
+    @Config.Comment("Prevents ModularPowerSuits from charging and draining ME energy from other non-MPS items in inventory")
+    @Config.DefaultBoolean(false)
+    public static boolean preventMPSEnergyTransferME;
+
     // NotEnoughItems
 
     @Config.Comment("Fix vanilla potion effects rendering above the NEI tooltips in the inventory")
