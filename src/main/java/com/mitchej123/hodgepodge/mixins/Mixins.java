@@ -710,6 +710,17 @@ public enum Mixins {
             .addMixinClasses("minechem.MixinPotionInjector").setApplyIf(() -> FixesConfig.java12MineChemCompat)
             .addTargetedMod(TargetedMod.MINECHEM)),
 
+    // Modular Powersuits
+    MPS_PREVENT_RF_ENERGY_SYPHON(new Builder("Prevent MPS from charging and draining RF from Inventory")
+            .setPhase(Phase.LATE).setSide(Side.BOTH).addMixinClasses("mps.MixinElectricAdapterRF")
+            .setApplyIf(() -> TweaksConfig.preventMPSEnergyTransferRF).addTargetedMod(TargetedMod.MODULARPOWERSUITS)),
+    MPS_PREVENT_EU_ENERGY_SYPHON(new Builder("Prevent MPS from charging and draining EU from Inventory")
+            .setPhase(Phase.LATE).setSide(Side.BOTH).addMixinClasses("mps.MixinElectricAdapterEU")
+            .setApplyIf(() -> TweaksConfig.preventMPSEnergyTransferEU).addTargetedMod(TargetedMod.MODULARPOWERSUITS)),
+    MPS_PREVENT_ME_ENERGY_SYPHON(new Builder("Prevent MPS from charging and draining ME from Inventory")
+            .setPhase(Phase.LATE).setSide(Side.BOTH).addMixinClasses("mps.MixinElectricAdapterME")
+            .setApplyIf(() -> TweaksConfig.preventMPSEnergyTransferME).addTargetedMod(TargetedMod.MODULARPOWERSUITS)),
+
     // MrTJPCore (Project Red)
     FIX_HUD_LIGHTING_GLITCH(new Builder("HUD Lighting glitch").setPhase(Phase.LATE).setSide(Side.BOTH)
             .addMixinClasses("mrtjpcore.MixinFXEngine").setApplyIf(() -> TweaksConfig.fixHudLightingGlitch)

@@ -37,6 +37,7 @@ public enum TargetedMod {
     LWJGL3IFY("lwjgl3ify", "me.eigenraven.lwjgl3ify.core.Lwjgl3ifyCoremod", "lwjgl3ify"),
     MINECHEM("Minechem", null, "minechem"),
     MINEFACTORY_RELOADED("MineFactory Reloaded", null, "MineFactoryReloaded"),
+    MODULARPOWERSUITS("MachineMuse's Modular Powersuits", null, "powersuits"),
     MORPHEUS("Morpheus", null, "Morpheus"),
     MRTJPCORE("MrTJPCore", null, "MrTJPCoreMod"),
     NOTENOUGHITEMS("NotEnoughItems", "codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
