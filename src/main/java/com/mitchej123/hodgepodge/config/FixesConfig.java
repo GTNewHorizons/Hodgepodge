@@ -335,6 +335,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixInventorySyncLag;
 
+    @Config.Comment("Prevent the client from crashing due to invalid entity attributes range (MC-150405)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixEntityAttributesRange;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
