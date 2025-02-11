@@ -1,16 +1,11 @@
 package com.mitchej123.hodgepodge.client.handlers;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.input.Keyboard;
 
 import com.gtnewhorizon.gtnhlib.util.AboveHotbarHUD;
-import com.mitchej123.hodgepodge.client.HodgepodgeClient;
-import com.mitchej123.hodgepodge.config.DebugConfig;
-import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
