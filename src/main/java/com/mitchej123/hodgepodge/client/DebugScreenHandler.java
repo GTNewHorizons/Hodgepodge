@@ -6,7 +6,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import org.lwjgl.opengl.GL11;
 
 import com.mitchej123.hodgepodge.config.DebugConfig;
-import com.mitchej123.hodgepodge.config.FixesConfig;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
@@ -47,11 +46,8 @@ public class DebugScreenHandler {
             event.right.add(4 + offset, "CPU Cores: " + Runtime.getRuntime().availableProcessors());
             event.right.add(5 + offset, "OS: " + this.osName + " (" + this.osVersion + ", " + this.osArch + ")");
 
-            if (FixesConfig.speedupAnimations || DebugConfig.renderDebug) {
+            if (DebugConfig.renderDebug) {
                 event.right.add(6 + offset, null); // Empty Line
-                if (FixesConfig.speedupAnimations) {
-                    event.right.add(7 + offset, "animationsMode: " + HodgepodgeClient.animationsMode);
-                }
                 if (DebugConfig.renderDebug) {
                     event.right.add(8 + offset, "renderDebugMode: " + HodgepodgeClient.renderDebugMode);
                 }
