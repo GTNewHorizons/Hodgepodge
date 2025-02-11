@@ -252,22 +252,6 @@ public enum Mixins {
     ADD_TOGGLE_DEBUG_MESSAGE(new Builder("Toggle Debug Message").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinMinecraft_ToggleDebugMessage").setSide(Side.CLIENT)
             .setApplyIf(() -> TweaksConfig.addToggleDebugMessage).addTargetedMod(TargetedMod.VANILLA)),
-    SPEEDUP_VANILLA_ANIMATIONS(new Builder("Speedup Vanilla Animations").setPhase(Phase.EARLY)
-            .setApplyIf(() -> FixesConfig.speedupAnimations).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
-            .addExcludedMod(TargetedMod.ANGELICA).addMixinClasses(
-                    "minecraft.textures.client.MixinTextureAtlasSprite",
-                    "minecraft.textures.client.MixinTextureMap",
-                    "minecraft.textures.client.MixinBlockFire",
-                    "minecraft.textures.client.MixinMinecraftForgeClient",
-                    "minecraft.textures.client.MixinChunkCache",
-                    "minecraft.textures.client.MixinRenderBlocks",
-                    "minecraft.textures.client.MixinRenderBlockFluid",
-                    "minecraft.textures.client.MixinWorldRenderer",
-                    "minecraft.textures.client.MixinRenderItem")),
-    SPEEDUP_VANILLA_ANIMATIONS_FC(new Builder("Speedup Vanilla Animations - Fastcraft").setPhase(Phase.EARLY)
-            .addMixinClasses("minecraft.textures.client.fastcraft.MixinTextureMap").setSide(Side.CLIENT)
-            .setApplyIf(() -> FixesConfig.speedupAnimations).addTargetedMod(TargetedMod.VANILLA)
-            .addTargetedMod(TargetedMod.FASTCRAFT).addExcludedMod(TargetedMod.OPTIFINE)),
     OPTIMIZE_TEXTURE_LOADING(new Builder("Optimize Texture Loading").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.textures.client.MixinTextureUtil").addTargetedMod(TargetedMod.VANILLA)
             .addExcludedMod(TargetedMod.ANGELICA).setApplyIf(() -> SpeedupsConfig.optimizeTextureLoading)
@@ -551,9 +535,6 @@ public enum Mixins {
     IC2_FLUID_CONTAINER_TOOLTIP(new Builder("IC2 Fluid Container Tooltip Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinItemIC2FluidContainer")
             .setApplyIf(() -> TweaksConfig.displayIc2FluidLocalizedName).addTargetedMod(TargetedMod.IC2)),
-    IC2_FLUID_RENDER_FIX(new Builder("IC2 Fluid Render Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
-            .addMixinClasses("ic2.textures.MixinRenderLiquidCell").setApplyIf(() -> FixesConfig.speedupAnimations)
-            .addTargetedMod(TargetedMod.IC2).addExcludedMod(TargetedMod.ANGELICA)),
     IC2_HOVER_MODE_FIX(new Builder("IC2 Hover Mode Fix").setPhase(Phase.LATE).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIc2QuantumSuitHoverMode").setApplyIf(() -> FixesConfig.fixIc2HoverMode)
             .addTargetedMod(TargetedMod.IC2)),

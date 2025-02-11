@@ -46,19 +46,5 @@ public class ClientKeyListener {
                     false);
             return;
         }
-        if (FixesConfig.speedupAnimations) {
-            int key = Keyboard.getEventKey();
-            boolean released = !Keyboard.getEventKeyState();
-            if (released) {
-                if (Minecraft.getMinecraft().gameSettings.showDebugInfo && GuiScreen.isShiftKeyDown()
-                        && GuiScreen.isCtrlKeyDown()) {
-                    if (key == Keyboard.KEY_N) {
-                        HodgepodgeClient.animationsMode.next();
-                    } else if (key == Keyboard.KEY_D && DebugConfig.renderDebug) {
-                        HodgepodgeClient.renderDebugMode.next();
-                    }
-                }
-            }
-        }
     }
 }

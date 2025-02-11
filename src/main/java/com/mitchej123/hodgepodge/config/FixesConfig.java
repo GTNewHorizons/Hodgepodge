@@ -251,10 +251,6 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean removeCreativeSearchTab;
 
-    @Config.Comment("Drastically speedup animated textures (Basically the same as with optifine animations off but animations are working)")
-    @Config.DefaultBoolean(true)
-    public static boolean speedupAnimations;
-
     @Config.Comment("Stop \"You can only sleep at night\" message filling the chat")
     @Config.DefaultBoolean(true)
     public static boolean squashBedErrorMessage;
