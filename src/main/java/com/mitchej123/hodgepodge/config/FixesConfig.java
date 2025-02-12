@@ -616,6 +616,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean preventThermalDynamicsNASE;
 
+    @Config.Comment("Prevent ClassCastException on forming invalid Thermal Dynamic fluid grid")
+    @Config.DefaultBoolean(true)
+    public static boolean preventFluidGridCrash;
+
     // VoxelMap
 
     @Config.Comment("Fix some NullPointerExceptions")

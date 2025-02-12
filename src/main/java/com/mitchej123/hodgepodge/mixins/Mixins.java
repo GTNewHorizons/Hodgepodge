@@ -929,6 +929,14 @@ public enum Mixins {
     ASP_RECIPE_FIX(new Builder("MT Core recipe fix").addMixinClasses("advancedsolarpanels.MixinAdvancedSolarPanel")
             .addTargetedMod(TargetedMod.ADVANCED_SOLAR_PANELS).setApplyIf(() -> FixesConfig.fixMTCoreRecipe)
             .setPhase(Phase.LATE).setSide(Side.BOTH)),
+    TD_NASE_PREVENTION(new Builder("Prevent NegativeArraySizeException on itemduct transfers")
+            .addMixinClasses("thermaldynamics.MixinSimulatedInv").setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.preventThermalDynamicsNASE).addTargetedMod(TargetedMod.THERMALDYNAMICS)
+            .setPhase(Phase.LATE)),
+    TD_FLUID_GRID_CCE(new Builder("Prevent ClassCastException on forming invalid Thermal Dynamic fluid grid")
+            .addMixinClasses("thermaldynamics.MixinTileFluidDuctSuper").setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.preventFluidGridCrash).addTargetedMod(TargetedMod.THERMALDYNAMICS)
+            .setPhase(Phase.LATE)),
 
     // Unbind Keybinds by default
     UNBIND_KEYS_TRAVELLERSGEAR(new Builder("Unbind Traveller's Gear keybinds")
@@ -950,10 +958,6 @@ public enum Mixins {
     IC2_CELL(new Builder("No IC2 Cell Consumption in tanks").addMixinClasses("ic2.MixinIC2ItemCell")
             .setPhase(Phase.LATE).setSide(Side.BOTH).setApplyIf(() -> TweaksConfig.ic2CellWithContainer)
             .addTargetedMod(TargetedMod.IC2)),
-    TD_NASE_PREVENTION(new Builder("Prevent NegativeArraySizeException on itemduct transfers")
-            .addMixinClasses("thermaldynamics.MixinSimulatedInv").setSide(Side.BOTH)
-            .setApplyIf(() -> FixesConfig.preventThermalDynamicsNASE).addTargetedMod(TargetedMod.THERMALDYNAMICS)
-            .setPhase(Phase.LATE)),
 
     // Chunk generation/population
     DISABLE_CHUNK_TERRAIN_GENERATION(new Builder("Disable chunk terrain generation").setPhase(Phase.EARLY)
