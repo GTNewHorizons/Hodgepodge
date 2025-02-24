@@ -53,6 +53,7 @@ public class HodgepodgeEventHandler {
         if (TweaksConfig.avoidDroppingItemsWhenClosing && event.player instanceof EntityPlayerMP
                 && playersClosedContainers.contains(event.player)) {
             if (event.player.inventory.addItemStackToInventory(event.entityItem.getEntityItem())) {
+                event.player.inventory.setItemStack(null); // empty the item in hand
                 ((EntityPlayerMP) event.player).sendContainerToPlayer(event.player.inventoryContainer);
                 event.setCanceled(true);
             }
