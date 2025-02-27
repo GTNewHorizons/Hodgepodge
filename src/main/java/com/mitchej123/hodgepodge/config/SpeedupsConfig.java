@@ -76,6 +76,11 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean limitMobSpawningToViewDistance;
 
+    @Config.Comment("Prevents chunk loads caused by lava blocks")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean lavaChunkLoading;
+
     // Biomes O' Plenty
 
     @Config.Comment("Speedup biome fog rendering in BiomesOPlenty")
