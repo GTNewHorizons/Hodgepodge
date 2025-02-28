@@ -16,7 +16,7 @@ public class MixinBlockStaticLiquid {
             method = "updateTick",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlock(III)Lnet/minecraft/block/Block;"))
     public Block wrapperUpdateTickGetBlock(World world, int x, int y, int z) {
-        if (!world.chunkExists(x >> 4, z >> 4)) {
+        if (!world.blockExists(x, y, z)) {
             // return something that isn't air, but also doesn't block movement so that the loop continues
             return Blocks.grass;
         } else {
@@ -26,7 +26,7 @@ public class MixinBlockStaticLiquid {
 
     @Redirect(method = "updateTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isAirBlock(III)Z"))
     public boolean wrapperUpdateTickIsAirBlock(World world, int x, int y, int z) {
-        if (!world.chunkExists(x >> 4, z >> 4)) {
+        if (!world.blockExists(x, y, z)) {
             // return false so that this.isFlammable doesn't run
             return false;
         } else {
@@ -38,7 +38,7 @@ public class MixinBlockStaticLiquid {
             method = "isFlammable",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlock(III)Lnet/minecraft/block/Block;"))
     public Block wrapperIsFlammableGetBlock(World world, int x, int y, int z) {
-        if (!world.chunkExists(x >> 4, z >> 4)) {
+        if (!world.blockExists(x, y, z)) {
             // return something that isn't flammable so that the or's short circuit
             return Blocks.air;
         } else {
