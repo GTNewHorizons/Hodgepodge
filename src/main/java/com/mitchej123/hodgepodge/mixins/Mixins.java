@@ -510,6 +510,10 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinNetHandlePlayServer_FixWrongBlockPlacementCheck")
             .setApplyIf(() -> FixesConfig.fixWrongBlockPlacementDistanceCheck).addTargetedMod(TargetedMod.VANILLA)),
 
+    PREVENT_LAVA_CHUNK_LOADING(new Builder("Prevent lava blocks from loading chunks").setPhase(Phase.EARLY)
+            .setSide(Side.BOTH).addMixinClasses("minecraft.MixinBlockStaticLiquid")
+            .setApplyIf(() -> SpeedupsConfig.lavaChunkLoading).addTargetedMod(TargetedMod.VANILLA)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIc2WaterKinetic").setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
