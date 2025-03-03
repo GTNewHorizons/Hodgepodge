@@ -931,8 +931,8 @@ public enum Mixins {
             .setPhase(Phase.LATE).setSide((Side.BOTH)).setApplyIf(() -> FixesConfig.fixZTonesPackets)
             .addTargetedMod(TargetedMod.ZTONES)),
     ASP_RECIPE_FIX(new Builder("MT Core recipe fix").addMixinClasses("advancedsolarpanels.MixinAdvancedSolarPanel")
-            .addTargetedMod(TargetedMod.ADVANCED_SOLAR_PANELS).setApplyIf(() -> FixesConfig.fixMTCoreRecipe)
-            .setPhase(Phase.LATE).setSide(Side.BOTH)),
+            .addTargetedMod(TargetedMod.ADVANCED_SOLAR_PANELS).addExcludedMod(TargetedMod.DREAMCRAFT)
+            .setApplyIf(() -> FixesConfig.fixMTCoreRecipe).setPhase(Phase.LATE).setSide(Side.BOTH)),
     TD_NASE_PREVENTION(new Builder("Prevent NegativeArraySizeException on itemduct transfers")
             .addMixinClasses("thermaldynamics.MixinSimulatedInv").setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.preventThermalDynamicsNASE).addTargetedMod(TargetedMod.THERMALDYNAMICS)

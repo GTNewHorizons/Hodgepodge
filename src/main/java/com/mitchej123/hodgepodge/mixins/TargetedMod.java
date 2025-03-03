@@ -18,6 +18,7 @@ public enum TargetedMod {
     CANDYCRAFT("candycraftmod", null, "candycraftmod"),
     COFH_CORE("CoFHCore", "cofh.asm.LoadingPlugin", "CoFHCore"),
     DAMAGE_INDICATORS("Damage Indicators", null, "DamageIndicatorsMod"),
+    DREAMCRAFT("GT: New Horizons", "com.dreammaster.coremod.DreamCoreMod", "dreamcraft"),
     ETFURUMREQUIEM("Et Futurum Requiem", "ganymedes01.etfuturum.mixinplugin.EtFuturumEarlyMixins", "etfuturum"),
     EXTRATIC("ExtraTiC", null, "ExtraTiC"),
     EXTRA_UTILITIES("ExtraUtilities", null, "ExtraUtilities"),
