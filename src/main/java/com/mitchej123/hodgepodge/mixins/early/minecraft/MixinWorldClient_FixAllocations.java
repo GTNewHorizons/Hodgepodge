@@ -6,6 +6,7 @@ import java.util.Set;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.world.ChunkCoordIntPair;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,7 +18,7 @@ import com.mitchej123.hodgepodge.hax.LongChunkCoordIntPairSet;
 public abstract class MixinWorldClient_FixAllocations {
 
     @Shadow
-    private final Set<ChunkCoordIntPair> previousActiveChunkSet = new LongChunkCoordIntPairSet();
+    private @Final Set<ChunkCoordIntPair> previousActiveChunkSet = new LongChunkCoordIntPairSet();
 
     @Redirect(
             method = "func_147456_g",
