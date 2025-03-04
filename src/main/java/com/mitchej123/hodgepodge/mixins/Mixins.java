@@ -19,6 +19,9 @@ import cpw.mods.fml.relauncher.FMLLaunchHandler;
 public enum Mixins {
 
     // Vanilla Fixes
+    ONLY_LOAD_LANGUAGES_ONCE_PER_FILE(new Builder("Only load languages once per file").setPhase(Phase.EARLY)
+            .setSide(Side.BOTH).addMixinClasses("minecraft.MixinLanguageRegistry")
+            .setApplyIf(() -> FixesConfig.onlyLoadLanguagesOnce).addTargetedMod(TargetedMod.VANILLA)),
     CHANGE_CATEGORY_SPRINT_KEY(
             new Builder("Moves the sprint keybind to the movement category").addTargetedMod(TargetedMod.VANILLA)
                     .setSide(Side.CLIENT).setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinGameSettings_SprintKey")

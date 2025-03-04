@@ -8,6 +8,10 @@ public class FixesConfig {
 
     /* ====== Minecraft fixes start ===== */
 
+    @Config.Comment("Only load languages once per File instead of once per Mod")
+    @Config.DefaultBoolean(true)
+    public static boolean onlyLoadLanguagesOnce;
+
     @Config.Comment("Modify the maximum NBT size limit when received as a network packet, to avoid large NBT-related crashes")
     @Config.DefaultBoolean(true)
     public static boolean changeMaxNetworkNbtSizeLimit;
@@ -664,4 +668,5 @@ public class FixesConfig {
     @Config.Comment("Fix ZTones packet exploits")
     @Config.DefaultBoolean(true)
     public static boolean fixZTonesPackets;
+
 }
