@@ -498,13 +498,18 @@ public enum Mixins {
             .addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses(
                     "minecraft.fastload.rand.MixinChunkProviderGenerate",
-                    "minecraft.fastload.MixinMapGenBase",
-                    "minecraft.fastload.MixinMapGenCaves")
+                    "minecraft.fastload.rand.MixinMapGenBase",
+                    "minecraft.fastload.rand.MixinMapGenCaves")
             .setApplyIf(() -> SpeedupsConfig.fastRandom)),
 
     FAST_INT_CACHE(new Builder("Rewrite internal caching methods to be safer and faster").setPhase(Phase.EARLY)
             .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
-            .addMixinClasses("minecraft.fastload.MixinIntCache", "minecraft.fastload.MixinWorldChunkManager")
+            .addMixinClasses(
+                    "minecraft.fastload.intcache.MixinCollectOneCache",
+                    "minecraft.fastload.intcache.MixinCollectTwoCaches",
+                    "minecraft.fastload.intcache.MixinGenLayerEdge",
+                    "minecraft.fastload.intcache.MixinIntCache",
+                    "minecraft.fastload.intcache.MixinWorldChunkManager")
             .setApplyIf(() -> SpeedupsConfig.fastIntCache)),
 
     FAST_CHUNK_LOADING(new Builder("Invasively accelerates chunk handling").setPhase(Phase.EARLY).setSide(Side.BOTH)
