@@ -494,6 +494,14 @@ public enum Mixins {
             new Builder("Memory fixes").setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
                     .addMixinClasses("memory.MixinFMLClientHandler").setApplyIf(() -> FixesConfig.enableMemoryFixes)),
 
+    FAST_RANDOM(new Builder("Replaces uses of stdlib Random with a faster one").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses(
+                    "minecraft.fastload.rand.MixinChunkProviderGenerate",
+                    "minecraft.fastload.MixinMapGenBase",
+                    "minecraft.fastload.MixinMapGenCaves")
+            .setApplyIf(() -> SpeedupsConfig.fastRandom)),
+
     FAST_INT_CACHE(new Builder("Rewrite internal caching methods to be safer and faster").setPhase(Phase.EARLY)
             .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses("minecraft.fastload.MixinIntCache", "minecraft.fastload.MixinWorldChunkManager")
