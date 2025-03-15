@@ -11,6 +11,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -86,7 +87,9 @@ public class CPSPregen {
             } catch (ExecutionException e) {
                 throw new RuntimeException(e);
             } catch (TimeoutException e) {
-                log.warn("Timed out while waiting for chunk generation - discarding partial chunk");
+                log.warn("Timed out while waiting for chunk generation - running through again!");
+                executor.shutdownNow();
+                numGenerated += generateChunksBlocking(cxl, czl, cxh, czh);
             }
         }
 
@@ -95,13 +98,12 @@ public class CPSPregen {
 
     private CompletableFuture<CGTask> submitChunk(int cx, int cz, IChunkProvider gen) {
         var ret = new CompletableFuture<CGTask>();
-        executor.submit(() -> {
-            var undec = gen.provideChunk(cx, cz);
-            ret.complete(new CGTask(undec, toLong(cx, cz)));
-            while (!lock.tryAcquire()) { Thread.yield(); }
-            generators.add(gen);
-            lock.release();
-        });
+        try {
+            executor.submit(() -> {
+                var undec = gen.provideChunk(cx, cz);
+                ret.complete(new CGTask(undec, toLong(cx, cz)));
+            });
+        } catch (RejectedExecutionException ignored) {}
         return ret;
     }
 
