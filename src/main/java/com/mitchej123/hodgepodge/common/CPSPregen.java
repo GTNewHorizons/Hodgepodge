@@ -1,5 +1,6 @@
 package com.mitchej123.hodgepodge.common;
 
+import static com.mitchej123.hodgepodge.Common.log;
 import static com.mitchej123.hodgepodge.util.ChunkPosUtil.getPackedX;
 import static com.mitchej123.hodgepodge.util.ChunkPosUtil.getPackedZ;
 import static com.mitchej123.hodgepodge.util.ChunkPosUtil.toLong;
@@ -11,6 +12,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -70,7 +73,7 @@ public class CPSPregen {
         for (int i = 0; i < tasks.size(); i++) {
             var task = tasks.get(i);
             try {
-                var result = task.get();
+                var result = task.get(5, TimeUnit.MILLISECONDS);
 
                 if (cps.loadedChunkHashMap.containsItem(result.pos)) continue;
 
@@ -82,6 +85,8 @@ public class CPSPregen {
             } catch (InterruptedException ignored) {
             } catch (ExecutionException e) {
                 throw new RuntimeException(e);
+            } catch (TimeoutException e) {
+                log.warn("Timed out while waiting for chunk generation - discarding partial chunk");
             }
         }
 
