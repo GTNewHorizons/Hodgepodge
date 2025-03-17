@@ -1,10 +1,10 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.mitchej123.hodgepodge.mixins.interfaces.NBTCachedHash;
+import java.util.List;
+
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,10 +14,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.List;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.mitchej123.hodgepodge.mixins.interfaces.NBTCachedHash;
 
 @Mixin(NBTTagList.class)
 public class MixinNBTTagList_cacheHash implements NBTCachedHash {
+
     @Shadow
     private List<NBTBase> tagList;
     @Unique
@@ -38,7 +41,9 @@ public class MixinNBTTagList_cacheHash implements NBTCachedHash {
         hodgepodge$cachedHash = 0;
     }
 
-    @Inject(method = "func_150304_a", at = @At(value = "INVOKE", target = "Ljava/util/List;set(ILjava/lang/Object;)Ljava/lang/Object;"))
+    @Inject(
+            method = "func_150304_a",
+            at = @At(value = "INVOKE", target = "Ljava/util/List;set(ILjava/lang/Object;)Ljava/lang/Object;"))
     private void hodgepodge$clearHashOnSet(CallbackInfo ci) {
         hodgepodge$cachedHash = 0;
     }
@@ -48,9 +53,7 @@ public class MixinNBTTagList_cacheHash implements NBTCachedHash {
         hodgepodge$cachedHash = 0;
     }
 
-    @Inject(method = {
-            "getCompoundTagAt",
-            "func_150306_c", // getIntArray
+    @Inject(method = { "getCompoundTagAt", "func_150306_c", // getIntArray
     }, at = @At(value = "INVOKE", target = "Ljava/util/List;get(I)Ljava/lang/Object;"))
     private void hodgepodge$clearHashOnMutGet(CallbackInfoReturnable<?> cir) {
         hodgepodge$cachedHash = 0;
@@ -62,7 +65,9 @@ public class MixinNBTTagList_cacheHash implements NBTCachedHash {
         return original;
     }
 
-    @ModifyExpressionValue(method = "equals", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NBTBase;equals(Ljava/lang/Object;)Z"))
+    @ModifyExpressionValue(
+            method = "equals",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NBTBase;equals(Ljava/lang/Object;)Z"))
     private boolean hodgepodge$testCachedHash(boolean original, Object other) {
         return original && other.hashCode() == this.hashCode();
     }
