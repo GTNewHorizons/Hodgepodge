@@ -44,8 +44,10 @@ public class MixinCommandTime {
         newPossibilities[length] = "get";
         return newPossibilities;
     }
-    
-    @ModifyConstant(constant = @Constant(stringValue = "commands.time.usage"), method = {"getCommandUsage", "processCommand"})
+
+    @ModifyConstant(
+            constant = @Constant(stringValue = "commands.time.usage"),
+            method = { "getCommandUsage", "processCommand" })
     private String hodgepodge$newUsage(String original) {
         return "commands.time.usageWithGet";
     }
