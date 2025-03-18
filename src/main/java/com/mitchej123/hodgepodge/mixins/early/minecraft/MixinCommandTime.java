@@ -5,6 +5,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -38,11 +39,7 @@ public class MixinCommandTime {
             index = 1,
             method = "addTabCompletionOptions")
     private String[] hodgepodge$appendGet(String[] possibilities) {
-        int length = possibilities.length;
-        String[] newPossibilities = new String[length + 1];
-        System.arraycopy(possibilities, 0, newPossibilities, 0, length);
-        newPossibilities[length] = "get";
-        return newPossibilities;
+        return ArrayUtils.add(possibilities, "get");
     }
 
     @ModifyConstant(
