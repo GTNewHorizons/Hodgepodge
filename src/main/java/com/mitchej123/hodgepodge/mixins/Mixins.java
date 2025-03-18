@@ -76,7 +76,9 @@ public enum Mixins {
     DISABLE_REALMS_BUTTON(new Builder("Disable Realms button in main menu").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinGuiMainMenu_DisableRealmsButton").setSide(Side.CLIENT)
             .setApplyIf(() -> TweaksConfig.disableRealmsButton).addTargetedMod(TargetedMod.VANILLA)),
-
+    ADD_TIME_GET(new Builder("Add /time get command").addMixinClasses("minecraft.MixinCommandTime")
+            .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> TweaksConfig.addTimeGet).setPhase(Phase.EARLY)
+            .setSide(Side.BOTH)),
     OPTIMIZE_WORLD_UPDATE_LIGHT(new Builder("Optimize world updateLightByType method").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinWorld_FixLightUpdateLag").setSide(Side.BOTH)
             .addExcludedMod(TargetedMod.ARCHAICFIX).addExcludedMod(TargetedMod.ANGELICA)
