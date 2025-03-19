@@ -16,6 +16,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean addSystemInfo;
 
+    @Config.Comment("Adds the 'get' subcommand to /time to query the current time")
+    @Config.DefaultBoolean(false)
+    public static boolean addTimeGet;
+
     @Config.Comment("Add a debug message in the chat when toggling vanilla debug options")
     @Config.DefaultBoolean(true)
     public static boolean addToggleDebugMessage;
