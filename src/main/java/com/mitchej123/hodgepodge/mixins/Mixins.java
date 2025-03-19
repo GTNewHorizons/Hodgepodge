@@ -858,6 +858,9 @@ public enum Mixins {
             .addMixinClasses("extrautilities.MixinTileEntityEnderQuarry_FixFreeze").setPhase(Phase.LATE)
             .setSide(Side.BOTH).setApplyIf(() -> FixesConfig.fixExtraUtilitiesEnderQuarryFreeze)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_HEALING_AXE_HEAL(new Builder("Fix the healing axe not healing entities when attacking them")
+            .addMixinClasses("extrautilities.MixinItemHealingAxe").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesHealingAxeHeal).addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
     // Gliby's Voice Chat
     FIX_GLIBYS_VC_THREAD_SHUTDOWN_CLIENT(
