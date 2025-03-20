@@ -462,6 +462,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesEnderQuarryFreeze;
 
+    @Config.Comment("Fixes the healing axe not healing mobs when attacking them")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesHealingAxeHeal;
+
     // Galacticraft
 
     @Config.Comment("Fix time commands with GC")
