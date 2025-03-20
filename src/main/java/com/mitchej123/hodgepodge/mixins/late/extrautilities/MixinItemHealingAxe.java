@@ -27,14 +27,6 @@ abstract public class MixinItemHealingAxe {
         return 0F;
     }
 
-    // Cancel the hunger reduction
-    @Redirect(
-            method = "onLeftClickEntity",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayer;addExhaustion(F)V"))
-    private void hodgepodge$redirectAddExhaustion(EntityPlayer player, float p_71020_1_) {
-
-    }
-
     // Always deal the damage at the end of the method to avoid case where the player dies before
     // dealing damage to undead mobs
     @Inject(method = "onLeftClickEntity", at = @At("RETURN"), remap = false)
