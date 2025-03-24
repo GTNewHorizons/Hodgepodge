@@ -252,6 +252,10 @@ public class TweaksConfig {
     @Config.DefaultInt(0)
     public static int extraUtilitiesEnderQuarryOverride;
 
+    @Config.Comment("Synchronize IC2 reactors to the world tick time, allowing for tick-perfect automation.")
+    @Config.DefaultBoolean(false)
+    public static boolean synchronizeIC2Reactors;
+
     // Minechem
 
     @Config.Comment("Minechem Atropine High (Delirium) effect ID")
