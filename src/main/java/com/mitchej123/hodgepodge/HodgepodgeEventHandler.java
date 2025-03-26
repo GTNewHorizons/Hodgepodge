@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge;
 
 import java.util.Set;
 
+import com.mitchej123.hodgepodge.config.FixesConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
@@ -65,6 +66,14 @@ public class HodgepodgeEventHandler {
         if (event.phase == TickEvent.Phase.END && TweaksConfig.avoidDroppingItemsWhenClosing
                 && !playersClosedContainers.isEmpty()) {
             playersClosedContainers.clear();
+        }
+    }
+
+    @SubscribeEvent
+    public void onDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
+        if (FixesConfig.fixDimensionChangeAttributes && event.player instanceof EntityPlayerMP player) {
+            // fixes xp when changing dimensions
+            player.addExperienceLevel(0);
         }
     }
 

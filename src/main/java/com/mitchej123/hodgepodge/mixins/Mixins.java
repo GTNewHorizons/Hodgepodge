@@ -189,7 +189,7 @@ public enum Mixins {
             .setApplyIf(() -> TweaksConfig.enableTileRendererProfiler).addTargetedMod(TargetedMod.VANILLA)),
     DIMENSION_CHANGE_FIX(new Builder("Dimension Change Heart Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinServerConfigurationManager", "minecraft.MixinEntityPlayerMP")
-            .setApplyIf(() -> FixesConfig.fixDimensionChangeHearts).addTargetedMod(TargetedMod.VANILLA)),
+            .setApplyIf(() -> FixesConfig.fixDimensionChangeAttributes).addTargetedMod(TargetedMod.VANILLA)),
     FIX_EATING_STACKED_STEW(new Builder("Stacked Mushroom Stew Eating Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinItemSoup").setApplyIf(() -> FixesConfig.fixEatingStackedStew)
             .addTargetedMod(TargetedMod.VANILLA)),
