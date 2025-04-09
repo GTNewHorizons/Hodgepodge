@@ -569,6 +569,9 @@ public enum Mixins {
     IC2_CROP_TRAMPLING_FIX(new Builder("IC2 Crop Trampling Fix").setPhase(Phase.LATE).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIC2TileEntityCrop").setApplyIf(() -> FixesConfig.fixIc2CropTrampling)
             .addTargetedMod(TargetedMod.IC2)),
+    IC2_SYNC_REACTORS(new Builder("Synchronize IC2 reactors for more consistent operation").setPhase(Phase.LATE)
+            .setSide(Side.BOTH).addMixinClasses("ic2.sync.MixinTEReactorChamber", "ic2.sync.MixinTEReactor")
+            .setApplyIf(() -> TweaksConfig.synchronizeIC2Reactors).addTargetedMod(TargetedMod.IC2)),
 
     // Disable update checkers
     BIBLIOCRAFT_UPDATE_CHECK(new Builder("Yeet Bibliocraft Update Check").setPhase(Phase.LATE).setSide(Side.CLIENT)
