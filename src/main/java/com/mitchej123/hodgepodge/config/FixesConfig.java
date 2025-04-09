@@ -340,6 +340,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixEntityAttributesRange;
 
+    @Config.Comment("Fix Glass Bottles filling with Water from some other Fluid blocks")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixGlassBottleWaterFilling;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
