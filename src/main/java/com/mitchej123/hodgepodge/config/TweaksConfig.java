@@ -342,4 +342,8 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean avoidDroppingItemsWhenClosing;
 
+    @Config.Comment("Simulation distance (needs addSimulationDistance to be active)")
+    @Config.DefaultInt(32)
+    public static int simulationDistance;
+
 }
