@@ -519,6 +519,10 @@ public enum Mixins {
             .setSide(Side.BOTH).addMixinClasses("minecraft.MixinBlockStaticLiquid")
             .setApplyIf(() -> SpeedupsConfig.lavaChunkLoading).addTargetedMod(TargetedMod.VANILLA)),
 
+    FIX_GLASS_BOTTLE_NON_WATER_BLOCKS(new Builder("Fix Glass Bottles filling with Water from some other Fluid blocks")
+            .setPhase(Phase.EARLY).setSide(Side.BOTH).addMixinClasses("minecraft.MixinItemGlassBottle")
+            .setApplyIf(() -> FixesConfig.fixGlassBottleWaterFilling).addTargetedMod(TargetedMod.VANILLA)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIc2WaterKinetic").setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
