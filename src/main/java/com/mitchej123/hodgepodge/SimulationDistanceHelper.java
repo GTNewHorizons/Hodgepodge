@@ -9,7 +9,7 @@ public class SimulationDistanceHelper {
     private static int simulationDistance;
 
     /**
-     * Mark a chunk as no to be simulated, or reset that state. Not thread safe.
+     * Mark a chunk as no to be simulated, or reset that state.
      */
     public static void preventChunkSimulation(World world, ChunkCoordIntPair chunk, boolean prevent) {
         if (!FixesConfig.addSimulationDistance) {
@@ -17,10 +17,6 @@ public class SimulationDistanceHelper {
         }
         ISimulationDistanceWorld mixin = (ISimulationDistanceWorld) world;
         mixin.hodgepodge$preventChunkSimulation(chunk, prevent);
-    }
-
-    public static void setSimulationDistance(int distance) {
-        TweaksConfig.simulationDistance = distance;
     }
 
     public static int getSimulationDistance() {

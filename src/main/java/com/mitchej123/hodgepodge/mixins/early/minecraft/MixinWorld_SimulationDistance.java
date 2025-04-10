@@ -1,12 +1,13 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import com.google.common.collect.ImmutableSetMultimap;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mitchej123.hodgepodge.ISimulationDistanceWorld;
 import com.mitchej123.hodgepodge.SimulationDistanceHelper;
 import com.mitchej123.hodgepodge.mixins.interfaces.MutableChunkCoordIntPair;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongBooleanPair;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,7 +21,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Mixin(World.class)
 public abstract class MixinWorld_SimulationDistance implements ISimulationDistanceWorld {
@@ -29,7 +32,10 @@ public abstract class MixinWorld_SimulationDistance implements ISimulationDistan
     public List<EntityPlayer> playerEntities;
 
     @Unique
-    private Set<ChunkCoordIntPair> hodgepodge$noTickChunks = new HashSet<>();
+    private List<LongBooleanPair> hodgepodge$noTickChunksChanges = Collections.synchronizedList(new ArrayList<>());
+
+    @Unique
+    private Long2ByteOpenHashMap hodgepodge$noTickChunks = new Long2ByteOpenHashMap();
 
     @Unique
     private LongOpenHashSet hodgepodge$forcedChunksMap = LongOpenHashSet.of();
@@ -46,11 +52,8 @@ public abstract class MixinWorld_SimulationDistance implements ISimulationDistan
 
     @Override
     public void hodgepodge$preventChunkSimulation(ChunkCoordIntPair chunk, boolean prevent) {
-        if (prevent) {
-            hodgepodge$noTickChunks.add(chunk);
-        } else {
-            hodgepodge$noTickChunks.remove(chunk);
-        }
+        long key = ChunkCoordIntPair.chunkXZ2Int(chunk.chunkXPos, chunk.chunkZPos);
+        hodgepodge$noTickChunksChanges.add(LongBooleanPair.of(key, prevent));
     }
 
     @Unique
@@ -71,7 +74,7 @@ public abstract class MixinWorld_SimulationDistance implements ISimulationDistan
      */
     @Unique
     private boolean hodgepodge$isForceLoaded(ChunkCoordIntPair pos) {
-        return hodgepodge$forcedChunksMap.contains(pos.chunkXPos | ((long) pos.chunkZPos << 32));
+        return hodgepodge$forcedChunksMap.contains(ChunkCoordIntPair.chunkXZ2Int(pos.chunkXPos, pos.chunkZPos));
     }
 
     /**
@@ -80,13 +83,13 @@ public abstract class MixinWorld_SimulationDistance implements ISimulationDistan
     @Unique
     @Override
     public boolean hodgepodge$shouldProcessTick(ChunkCoordIntPair pos) {
-        long key = pos.chunkXPos | ((long) pos.chunkZPos << 32);
+        long key = ChunkCoordIntPair.chunkXZ2Int(pos.chunkXPos, pos.chunkZPos);
         return hodgepodge$shouldProcessTickCache.computeIfAbsent(key, dummy -> {
             if (hodgepodge$closeToPlayer(pos.chunkXPos, pos.chunkZPos)) {
                 return true;
             }
 
-            if (hodgepodge$noTickChunks.contains(pos)) {
+            if (hodgepodge$noTickChunks.containsKey(key)) {
                 return false;
             }
             return hodgepodge$isForceLoaded(pos);
@@ -98,10 +101,23 @@ public abstract class MixinWorld_SimulationDistance implements ISimulationDistan
      */
     @Inject(method = "tick", at = @At("HEAD"))
     private void hodgepodge$tick(CallbackInfo ci) {
+        List<LongBooleanPair> changes = hodgepodge$noTickChunksChanges;
+        hodgepodge$noTickChunksChanges = Collections.synchronizedList(new ArrayList<>());
+        for (LongBooleanPair update : changes) {
+            long key = update.keyLong();
+            boolean prevent = update.valueBoolean();
+            byte value = hodgepodge$noTickChunks.getOrDefault(key, (byte) 0);
+            value += (byte) (prevent ? 1 : -1);
+            if (value > 0) {
+                hodgepodge$noTickChunks.put(key, value);
+            } else {
+                hodgepodge$noTickChunks.remove(key);
+            }
+        }
         hodgepodge$shouldProcessTickCache.clear();
         hodgepodge$forcedChunksMap.clear();
         for (ChunkCoordIntPair key : ForgeChunkManager.getPersistentChunksFor((World) (Object) this).keys()) {
-            hodgepodge$forcedChunksMap.add(key.chunkXPos | ((long) key.chunkZPos << 32));
+            hodgepodge$forcedChunksMap.add(ChunkCoordIntPair.chunkXZ2Int(key.chunkXPos, key.chunkZPos));
         }
     }
 
