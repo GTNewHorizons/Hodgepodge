@@ -296,9 +296,6 @@ public enum Mixins {
     STRING_POOLER_NBT_STRING(new Builder("Pool NBT Strings").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinNBTTagString_stringPooler")
             .setApplyIf(() -> TweaksConfig.enableNBTStringPooling).addTargetedMod(TargetedMod.VANILLA)),
-    CACHE_NBT_HASH(new Builder("Optimize NBT comparisons").setPhase(Phase.EARLY).setSide(Side.BOTH)
-            .addMixinClasses("minecraft.MixinNBTTagCompound_cacheHash", "minecraft.MixinNBTTagList_cacheHash")
-            .setApplyIf(() -> TweaksConfig.cacheNBTHash).addTargetedMod(TargetedMod.VANILLA)),
     THREADED_WORLDDATA_SAVING(new Builder("Threaded WorldData Saving").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses(
                     "minecraft.MixinMapStorage_threadedIO",

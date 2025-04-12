@@ -158,12 +158,6 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static int stringPoolMode;
 
-    // NBT comparison optimization
-    @Config.Comment("Optimize NBT comparisons by caching the hash code of NBTTagCompound and NBTTagList")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean cacheNBTHash;
-
     // Threaded WorldData Saving
     @Config.Comment("Enable threaded saving for WorldData")
     @Config.DefaultBoolean(true)
