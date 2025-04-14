@@ -4,8 +4,8 @@ import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongBooleanPair;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.entity.player.EntityPlayer;
@@ -91,7 +91,7 @@ public class SimulationDistanceHelper {
     /**
      * Map of ticks to chunk, duplicating pendingTickListEntriesTreeSet for quicker lookup.
      */
-    private final Long2ObjectMap<HashSet<NextTickListEntry>> chunkTickMap = new Long2ObjectArrayMap<>();
+    private final Long2ObjectMap<HashSet<NextTickListEntry>> chunkTickMap = new Long2ObjectOpenHashMap<>();
 
     /**
      * TreeSet pendingTickListEntriesTreeSet from WorldServer
@@ -114,7 +114,7 @@ public class SimulationDistanceHelper {
     private boolean closeToPlayer(int x, int z) {
         int simulationDistance = SimulationDistanceHelper.getSimulationDistance();
         for (EntityPlayer player : world.playerEntities) {
-            if (player.getEntityWorld() != (Object) this) {
+            if (player.getEntityWorld() != world) {
                 continue;
             }
             int playerX = (int) player.posX >> 4;
@@ -181,15 +181,16 @@ public class SimulationDistanceHelper {
 
         // New players, or moved players?
         for (EntityPlayer player : world.playerEntities) {
-            if (player.getEntityWorld() != (Object) this) {
+            if (player.getEntityWorld() != world) {
                 continue;
             }
             ChunkCoordIntPair playerPos = new ChunkCoordIntPair((int) player.posX >> 4, (int) player.posZ >> 4);
             ChunkCoordIntPair playerPosOld = playerPosOldMap.getOrDefault(player, null);
-            LongOpenHashSet chunksNewPos = getPlayerChunksForPos(playerPos);
             if (playerPosOld == null) {
+                LongOpenHashSet chunksNewPos = getPlayerChunksForPos(playerPos);
                 added.addAll(chunksNewPos);
             } else if (!playerPos.equals(playerPosOld)) {
+                LongOpenHashSet chunksNewPos = getPlayerChunksForPos(playerPos);
                 LongOpenHashSet chunksOldPos = getPlayerChunksForPos(playerPosOld);
                 for (long pos : chunksNewPos) {
                     if (!chunksOldPos.contains(pos)) {
@@ -202,7 +203,9 @@ public class SimulationDistanceHelper {
         // Process added chunks
         for (long chunk : added) {
             HashSet<NextTickListEntry> entries = chunkTickMap.get(chunk);
-            pendingTickCandidates.addAll(entries);
+            if (entries != null) {
+                pendingTickCandidates.addAll(entries);
+            }
         }
     }
 
@@ -233,10 +236,11 @@ public class SimulationDistanceHelper {
     }
 
     public void chunkUnloaded(long chunk) {
-        if (!isServer) {
+        HashSet<NextTickListEntry> entries = chunkTickMap.get(chunk);
+        if (!isServer || entries == null) {
             return;
         }
-        HashSet<NextTickListEntry> entries = chunkTickMap.get(chunk);
+
         chunkTickMap.remove(chunk);
         for (NextTickListEntry entry : entries) {
             pendingTickListEntriesTreeSet.remove(entry);
@@ -253,7 +257,7 @@ public class SimulationDistanceHelper {
         if (Compat.isCoreTweaksPresent()) {
             CoreTweaksCompat.removeTickEntry(world, entry);
         }
-        long key = ChunkCoordIntPair.chunkXZ2Int(entry.xCoord, entry.zCoord);
+        long key = ChunkCoordIntPair.chunkXZ2Int(entry.xCoord >> 4, entry.zCoord >> 4);
         HashSet<NextTickListEntry> entries = chunkTickMap.get(key);
         if (entries != null) {
             entries.remove(entry);
@@ -262,9 +266,14 @@ public class SimulationDistanceHelper {
 
     public void addTick(NextTickListEntry entry) {
         pendingTickCandidates.add(entry);
-        long key = ChunkCoordIntPair.chunkXZ2Int(entry.xCoord, entry.zCoord);
-        HashSet<NextTickListEntry> entries = chunkTickMap.computeIfAbsent(key, dummy -> new HashSet<>());
+        long key = ChunkCoordIntPair.chunkXZ2Int(entry.xCoord >> 4, entry.zCoord >> 4);
+        HashSet<NextTickListEntry> entries = chunkTickMap.get(key);
+        if (entries == null) {
+            entries = new HashSet<>();
+            chunkTickMap.put(key, entries);
+        }
         entries.add(entry);
+
     }
 
     public void tickUpdates(boolean processAll, List<NextTickListEntry> pendingTickListEntriesThisTick) {
