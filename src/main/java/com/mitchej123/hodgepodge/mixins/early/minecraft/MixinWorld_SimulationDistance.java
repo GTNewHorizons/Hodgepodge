@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mitchej123.hodgepodge.ISimulationDistanceWorld;
+import com.mitchej123.hodgepodge.ISimulationDistanceWorldServer;
 import com.mitchej123.hodgepodge.SimulationDistanceHelper;
 import com.mitchej123.hodgepodge.mixins.interfaces.MutableChunkCoordIntPair;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
@@ -23,7 +24,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Mixin(World.class)
 public abstract class MixinWorld_SimulationDistance implements ISimulationDistanceWorld {
@@ -38,13 +41,16 @@ public abstract class MixinWorld_SimulationDistance implements ISimulationDistan
     private Long2ByteOpenHashMap hodgepodge$noTickChunks = new Long2ByteOpenHashMap();
 
     @Unique
-    private LongOpenHashSet hodgepodge$forcedChunksMap = LongOpenHashSet.of();
+    private LongOpenHashSet hodgepodge$forcedChunksMap = new LongOpenHashSet();
 
     @Unique
     private MutableChunkCoordIntPair hodgepodge$reusableChunkCoord = (MutableChunkCoordIntPair) (new ChunkCoordIntPair(0, 0));
 
     @Unique
     private Long2BooleanOpenHashMap hodgepodge$shouldProcessTickCache = new Long2BooleanOpenHashMap();
+
+    @Unique
+    private Map<EntityPlayer, ChunkCoordIntPair> hodgepodge$playerPosOld = new HashMap<>();
 
     public MixinWorld_SimulationDistance() {
         // For Mixin
@@ -60,6 +66,9 @@ public abstract class MixinWorld_SimulationDistance implements ISimulationDistan
     private boolean hodgepodge$closeToPlayer(int x, int z) {
         int simulationDistance = SimulationDistanceHelper.getSimulationDistance();
         for (EntityPlayer player : playerEntities) {
+            if (player.getEntityWorld() != (Object) this) {
+                continue;
+            }
             int playerX = (int) player.posX >> 4;
             int playerZ = (int) player.posZ >> 4;
             if (Math.abs(playerX - x) <= simulationDistance && Math.abs(playerZ - z) <= simulationDistance) {
@@ -96,11 +105,25 @@ public abstract class MixinWorld_SimulationDistance implements ISimulationDistan
         });
     }
 
+    @Unique
+    private LongOpenHashSet hodgepodge$getPlayerChunksForPos(ChunkCoordIntPair pos) {
+        int simulationDistance = SimulationDistanceHelper.getSimulationDistance();
+        LongOpenHashSet chunks = new LongOpenHashSet();
+        for (int x = -simulationDistance; x <= simulationDistance; x++) {
+            for (int z = -simulationDistance; z <= simulationDistance; z++) {
+                chunks.add(ChunkCoordIntPair.chunkXZ2Int(pos.chunkXPos + x, pos.chunkZPos + z));
+            }
+        }
+        return chunks;
+    }
+
     /**
      * Reset internal cache on start of tick
      */
     @Inject(method = "tick", at = @At("HEAD"))
     private void hodgepodge$tick(CallbackInfo ci) {
+        LongOpenHashSet forcedChunksOld = new LongOpenHashSet(hodgepodge$forcedChunksMap);
+
         List<LongBooleanPair> changes = hodgepodge$noTickChunksChanges;
         hodgepodge$noTickChunksChanges = Collections.synchronizedList(new ArrayList<>());
         for (LongBooleanPair update : changes) {
@@ -118,6 +141,44 @@ public abstract class MixinWorld_SimulationDistance implements ISimulationDistan
         hodgepodge$forcedChunksMap.clear();
         for (ChunkCoordIntPair key : ForgeChunkManager.getPersistentChunksFor((World) (Object) this).keys()) {
             hodgepodge$forcedChunksMap.add(ChunkCoordIntPair.chunkXZ2Int(key.chunkXPos, key.chunkZPos));
+        }
+
+        if (!((Object) this instanceof WorldServer)) {
+            return;
+        }
+        // Handle added chunks
+
+        LongOpenHashSet added = new LongOpenHashSet();
+        for (long chunk : hodgepodge$forcedChunksMap) {
+            if (!forcedChunksOld.contains(chunk)) {
+                added.add(chunk);
+            }
+        }
+
+        for (EntityPlayer player : playerEntities) {
+            if (player.getEntityWorld() != (Object) this) {
+                continue;
+            }
+            ChunkCoordIntPair playerPos = new ChunkCoordIntPair((int) player.posX >> 4, (int) player.posZ >> 4);
+            ChunkCoordIntPair playerPosOld = hodgepodge$playerPosOld.getOrDefault(player, null);
+            LongOpenHashSet chunksNewPos = hodgepodge$getPlayerChunksForPos(playerPos);
+            if (playerPosOld == null) {
+                added.addAll(chunksNewPos);
+            } else if (!playerPos.equals(playerPosOld)) {
+                LongOpenHashSet chunksOldPos = hodgepodge$getPlayerChunksForPos(playerPosOld);
+                for (long pos : chunksNewPos) {
+                    if (!chunksOldPos.contains(pos)) {
+                        added.add(pos);
+                    }
+                }
+            }
+        }
+
+        ((ISimulationDistanceWorldServer) this).hodgepodge$addTickCandidatesForAddedChunks(added);
+
+        hodgepodge$playerPosOld.clear();
+        for (EntityPlayer player : playerEntities) {
+            hodgepodge$playerPosOld.put(player, new ChunkCoordIntPair((int) player.posX >> 4, (int) player.posZ >> 4));
         }
     }
 
