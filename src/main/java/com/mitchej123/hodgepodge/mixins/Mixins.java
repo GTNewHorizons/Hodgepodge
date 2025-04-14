@@ -45,7 +45,8 @@ public enum Mixins {
                     .addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)
                     .setPhase(Phase.EARLY).addMixinClasses(
                             "minecraft.MixinWorld_SimulationDistance",
-                            "minecraft.MixinWorldServer_SimulationDistance")
+                            "minecraft.MixinWorldServer_SimulationDistance",
+                            "minecraft.MixinChunk_SimulationDistance")
                     .setApplyIf(() -> FixesConfig.addSimulationDistance)),
     FIX_RESOURCEPACK_FOLDER_OPENING(new Builder("Fix resource pack folder sometimes not opening on windows")
             .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinGuiScreenResourcePacks").setSide(Side.CLIENT)

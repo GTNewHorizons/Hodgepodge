@@ -4,4 +4,5 @@ import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 
 public interface ISimulationDistanceWorldServer {
     void hodgepodge$addTickCandidatesForAddedChunks(LongOpenHashSet added);
+    void hodgepodge$chunkUnloaded(long chunk);
 }

@@ -7,6 +7,8 @@ import com.mitchej123.hodgepodge.CoreTweaksCompat;
 import com.mitchej123.hodgepodge.ISimulationDistanceWorld;
 import com.mitchej123.hodgepodge.ISimulationDistanceWorldServer;
 import com.mitchej123.hodgepodge.mixins.interfaces.MutableChunkCoordIntPair;
+import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.NextTickListEntry;
@@ -23,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -47,7 +50,7 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
     private TreeSet<NextTickListEntry> hodgepodge$pendingTickCandidates = new TreeSet<>();
 
     @Unique
-    private int hodgepodge$tickCountForPendingTickReset = 0;
+    Long2ObjectMap<HashSet<NextTickListEntry>> hodgepodge$chunkTickMap = new Long2ObjectArrayMap<>();
 
     @Unique
     private boolean hodgepodge$processCurrentChunk;
@@ -100,7 +103,12 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
                 if (Compat.isCoreTweaksPresent()) {
                     CoreTweaksCompat.removeTickEntry(this, entry);
                 }
-            } else if (((ISimulationDistanceWorld)this).hodgepodge$shouldProcessTick((ChunkCoordIntPair) reusableChunkCoord)) {
+                long key = ChunkCoordIntPair.chunkXZ2Int(entry.xCoord, entry.zCoord);
+                HashSet<NextTickListEntry> entries = hodgepodge$chunkTickMap.get(key);
+                if (entries != null) {
+                    entries.remove(entry);
+                }
+            } else if (((ISimulationDistanceWorld) this).hodgepodge$shouldProcessTick((ChunkCoordIntPair) reusableChunkCoord)) {
                 pendingTickListEntriesTreeSet.remove(entry);
                 pendingTickListEntriesHashSet.remove(entry);
                 if (Compat.isCoreTweaksPresent()) {
@@ -114,16 +122,25 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
         }
     }
 
+    @Override
+    public void hodgepodge$chunkUnloaded(long chunk) {
+        HashSet<NextTickListEntry> entries = hodgepodge$chunkTickMap.get(chunk);
+        hodgepodge$chunkTickMap.remove(chunk);
+        for (NextTickListEntry entry : entries) {
+            pendingTickListEntriesTreeSet.remove(entry);
+            pendingTickListEntriesHashSet.remove(entry);
+            if (Compat.isCoreTweaksPresent()) {
+                CoreTweaksCompat.removeTickEntry(this, entry);
+            }
+        }
+    }
+
     // Called by MixinWorld_SimulationDistance mixin
     @Override
     public void hodgepodge$addTickCandidatesForAddedChunks(LongOpenHashSet added) {
         for (long chunk : added) {
-            for (NextTickListEntry tick : pendingTickListEntriesTreeSet) {
-                long pos = ChunkCoordIntPair.chunkXZ2Int(tick.xCoord >> 4 , tick.zCoord >> 4);
-                if (pos == chunk) {
-                    hodgepodge$pendingTickCandidates.add(tick);
-                }
-            }
+            HashSet<NextTickListEntry> entries = hodgepodge$chunkTickMap.get(chunk);
+            hodgepodge$pendingTickCandidates.addAll(entries);
         }
     }
 
@@ -133,7 +150,7 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
     @WrapOperation(method = "func_147456_g", at = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;"))
     private Object hodgepodge$chunkTicks(Iterator<ChunkCoordIntPair> instance, Operation<ChunkCoordIntPair> original) {
         ChunkCoordIntPair result = original.call(instance);
-        hodgepodge$processCurrentChunk = ((ISimulationDistanceWorld)this).hodgepodge$shouldProcessTick(result);
+        hodgepodge$processCurrentChunk = ((ISimulationDistanceWorld) this).hodgepodge$shouldProcessTick(result);
         return result;
     }
 
@@ -178,7 +195,11 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
      */
     @WrapOperation(method = "scheduleBlockUpdateWithPriority", at = @At(value = "INVOKE", target = "Ljava/util/TreeSet;add(Ljava/lang/Object;)Z"))
     private boolean hodgepodge$addTick1(TreeSet<NextTickListEntry> instance, Object e, Operation<Boolean> original) {
+        NextTickListEntry entry = (NextTickListEntry) e;
         hodgepodge$pendingTickCandidates.add((NextTickListEntry) e);
+        long key = ChunkCoordIntPair.chunkXZ2Int(entry.xCoord, entry.zCoord);
+        HashSet<NextTickListEntry> entries = hodgepodge$chunkTickMap.computeIfAbsent(key, dummy -> new HashSet<>());
+        entries.add(entry);
         return original.call(instance, e);
     }
 
@@ -187,7 +208,11 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
      */
     @WrapOperation(method = "func_147446_b", at = @At(value = "INVOKE", target = "Ljava/util/TreeSet;add(Ljava/lang/Object;)Z"))
     private boolean hodgepodge$addTick2(TreeSet<NextTickListEntry> instance, Object e, Operation<Boolean> original) {
+        NextTickListEntry entry = (NextTickListEntry) e;
         hodgepodge$pendingTickCandidates.add((NextTickListEntry) e);
+        long key = ChunkCoordIntPair.chunkXZ2Int(entry.xCoord, entry.zCoord);
+        HashSet<NextTickListEntry> entries = hodgepodge$chunkTickMap.computeIfAbsent(key, dummy -> new HashSet<>());
+        entries.add(entry);
         return original.call(instance, e);
     }
 
