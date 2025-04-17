@@ -42,6 +42,10 @@ public class SimulationDistanceHelper {
         return TweaksConfig.simulationDistance;
     }
 
+    public static void setSimulationDistance(int distance) {
+        TweaksConfig.simulationDistance = distance;
+    }
+
     public SimulationDistanceHelper(World world) {
         this.world = world;
         isServer = world instanceof WorldServer;
