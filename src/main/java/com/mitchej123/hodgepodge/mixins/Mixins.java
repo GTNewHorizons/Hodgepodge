@@ -189,7 +189,7 @@ public enum Mixins {
             .setApplyIf(() -> TweaksConfig.enableTileRendererProfiler).addTargetedMod(TargetedMod.VANILLA)),
     DIMENSION_CHANGE_FIX(new Builder("Dimension Change Heart Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinServerConfigurationManager", "minecraft.MixinEntityPlayerMP")
-            .setApplyIf(() -> FixesConfig.fixDimensionChangeHearts).addTargetedMod(TargetedMod.VANILLA)),
+            .setApplyIf(() -> FixesConfig.fixDimensionChangeAttributes).addTargetedMod(TargetedMod.VANILLA)),
     FIX_EATING_STACKED_STEW(new Builder("Stacked Mushroom Stew Eating Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinItemSoup").setApplyIf(() -> FixesConfig.fixEatingStackedStew)
             .addTargetedMod(TargetedMod.VANILLA)),
@@ -518,6 +518,10 @@ public enum Mixins {
     PREVENT_LAVA_CHUNK_LOADING(new Builder("Prevent lava blocks from loading chunks").setPhase(Phase.EARLY)
             .setSide(Side.BOTH).addMixinClasses("minecraft.MixinBlockStaticLiquid")
             .setApplyIf(() -> SpeedupsConfig.lavaChunkLoading).addTargetedMod(TargetedMod.VANILLA)),
+
+    FIX_GLASS_BOTTLE_NON_WATER_BLOCKS(new Builder("Fix Glass Bottles filling with Water from some other Fluid blocks")
+            .setPhase(Phase.EARLY).setSide(Side.BOTH).addMixinClasses("minecraft.MixinItemGlassBottle")
+            .setApplyIf(() -> FixesConfig.fixGlassBottleWaterFilling).addTargetedMod(TargetedMod.VANILLA)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new Builder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
@@ -858,6 +862,9 @@ public enum Mixins {
             .addMixinClasses("extrautilities.MixinTileEntityEnderQuarry_FixFreeze").setPhase(Phase.LATE)
             .setSide(Side.BOTH).setApplyIf(() -> FixesConfig.fixExtraUtilitiesEnderQuarryFreeze)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_HEALING_AXE_HEAL(new Builder("Fix the healing axe not healing entities when attacking them")
+            .addMixinClasses("extrautilities.MixinItemHealingAxe").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesHealingAxeHeal).addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
     // Gliby's Voice Chat
     FIX_GLIBYS_VC_THREAD_SHUTDOWN_CLIENT(

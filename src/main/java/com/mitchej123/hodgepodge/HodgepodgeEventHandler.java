@@ -7,6 +7,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.ZombieEvent;
 
+import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.net.MessageConfigSync;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
@@ -65,6 +66,14 @@ public class HodgepodgeEventHandler {
         if (event.phase == TickEvent.Phase.END && TweaksConfig.avoidDroppingItemsWhenClosing
                 && !playersClosedContainers.isEmpty()) {
             playersClosedContainers.clear();
+        }
+    }
+
+    @SubscribeEvent
+    public void onDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
+        if (FixesConfig.fixDimensionChangeAttributes && event.player instanceof EntityPlayerMP player) {
+            // fixes xp when changing dimensions
+            player.addExperienceLevel(0);
         }
     }
 
