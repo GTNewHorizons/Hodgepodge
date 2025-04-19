@@ -192,6 +192,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixTooManyAllocationsChunkPositionIntPair;
 
+    @Config.Comment("Add option to separate simulation distance from rendering distance")
+    @Config.DefaultBoolean(true)
+    public static boolean addSimulationDistance;
+
     @Config.Comment("Fix exiting fullscreen when you tab out of the game")
     @Config.DefaultBoolean(true)
     public static boolean fixUnfocusedFullscreen;
