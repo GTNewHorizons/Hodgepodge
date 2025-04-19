@@ -36,9 +36,9 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixDebugBoundingBox;
 
-    @Config.Comment("Fix losing bonus hearts on dimension change")
+    @Config.Comment("Fix losing attributes on dimension change")
     @Config.DefaultBoolean(true)
-    public static boolean fixDimensionChangeHearts;
+    public static boolean fixDimensionChangeAttributes;
 
     @Config.Comment("Fix duplicate sounds from playing when closing a gui.")
     @Config.DefaultBoolean(true)
@@ -339,6 +339,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixEntityAttributesRange;
+
+    @Config.Comment("Fix Glass Bottles filling with Water from some other Fluid blocks")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixGlassBottleWaterFilling;
 
     /* ====== Minecraft fixes end ===== */
 
