@@ -1,42 +1,41 @@
 package com.mitchej123.hodgepodge.mixins.late.extrautilities;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.rwtema.extrautils.item.ItemHealingAxe;
 
 @Mixin(ItemHealingAxe.class)
-abstract public class MixinItemHealingAxe {
+public abstract class MixinItemHealingAxe {
 
     // The original method uses `getHealth() < getHealth()` which is the cause of the bug,
-    // Replace the second getHealth call in the if statement with 0. (0 < getHealth())
+    // Replace the third getHealth call in the if statement with max health. (getHealth() < getMaxHealth())
     @Redirect(
             method = "onLeftClickEntity",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/EntityLiving;getHealth()F", ordinal = 1))
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/EntityLiving;getHealth()F", ordinal = 2))
     private float hodgepodge$redirectGetHealth(EntityLiving instance) {
-        return 0F;
+        return instance.getMaxHealth();
     }
 
-    // Always deal the damage at the end of the method to avoid case where the player dies before
-    // dealing damage to undead mobs
-    @Inject(method = "onLeftClickEntity", at = @At("RETURN"), remap = false)
-    private void hodgepodge$onLeftClickEntityEnd(ItemStack stack, EntityPlayer player, Entity entity,
-            CallbackInfoReturnable<Boolean> cir, @Local float k) {
-        if (player.getHealth() - (k - 0.5F) > 0F) {
-            player.setHealth(player.getHealth() - (k - 0.5F));
+    // If some amount of healing is done, also damage the player
+    @WrapOperation(
+            method = "onLeftClickEntity",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/EntityLiving;heal(F)V"))
+    private void hodgepodge$onLeftClickHealEntity(EntityLiving entityToHeal, float healAmount, Operation<Void> original,
+            @Local(argsOnly = true) EntityPlayer player) {
+        if (player.getHealth() - (healAmount - 0.5F) > 0F) {
+            player.setHealth(player.getHealth() - (healAmount - 0.5F));
         } else {
-            player.attackEntityFrom(DamageSource.causePlayerDamage(player), (k - 0.5F));
+            player.attackEntityFrom(DamageSource.causePlayerDamage(player), (healAmount - 0.5F));
         }
+        original.call(entityToHeal, healAmount);
     }
-
 }
