@@ -298,7 +298,8 @@ public enum Mixins {
             .setApplyIf(() -> TweaksConfig.enableNBTStringPooling).addTargetedMod(TargetedMod.VANILLA)),
     CACHE_NBT_HASH(new Builder("Optimize NBT comparisons").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinNBTTagCompound_cacheHash", "minecraft.MixinNBTTagList_cacheHash")
-            .setApplyIf(() -> TweaksConfig.cacheNBTHash).addTargetedMod(TargetedMod.VANILLA)),
+            .setApplyIf(() -> TweaksConfig.cacheNBTHash).addTargetedMod(TargetedMod.VANILLA)
+            .addExcludedMod(TargetedMod.BUKKIT)),
     THREADED_WORLDDATA_SAVING(new Builder("Threaded WorldData Saving").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses(
                     "minecraft.MixinMapStorage_threadedIO",
