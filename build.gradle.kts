@@ -12,6 +12,7 @@ tasks.jar {
 }
 minecraft {
     extraRunJvmArguments.add("-Dhodgepodge.logModTimes=true")
+    // extraRunJvmArguments.addAll("-Dlegacy.debugClassLoading=true", "-Dlegacy.debugClassLoadingFiner=true", "-Dlegacy.debugClassLoadingSave=true")
 }
 
 tasks.processResources {
