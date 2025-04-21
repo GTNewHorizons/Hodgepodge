@@ -110,13 +110,18 @@ public class SimulationDistanceHelper {
      */
     private BiPredicate<Integer, Integer> chunkExists;
 
+    /**
+     * Simulation distance from last tick, to detect if it has changed.
+     */
+    private int simulationDistanceOld;
+
     public void preventChunkSimulation(ChunkCoordIntPair chunk, boolean prevent) {
         long key = ChunkCoordIntPair.chunkXZ2Int(chunk.chunkXPos, chunk.chunkZPos);
         noTickChunksChanges.add(LongBooleanPair.of(key, prevent));
     }
 
     private boolean closeToPlayer(int x, int z) {
-        int simulationDistance = SimulationDistanceHelper.getSimulationDistance();
+        int simulationDistance = getSimulationDistance();
         for (EntityPlayer player : world.playerEntities) {
             if (player.getEntityWorld() != world) {
                 continue;
@@ -147,7 +152,7 @@ public class SimulationDistanceHelper {
     }
 
     private LongOpenHashSet getPlayerChunksForPos(ChunkCoordIntPair pos) {
-        int simulationDistance = SimulationDistanceHelper.getSimulationDistance();
+        int simulationDistance = getSimulationDistance();
         LongOpenHashSet chunks = new LongOpenHashSet();
         for (int x = -simulationDistance; x <= simulationDistance; x++) {
             for (int z = -simulationDistance; z <= simulationDistance; z++) {
@@ -175,6 +180,7 @@ public class SimulationDistanceHelper {
 
     private void checkForAddedChunks(LongOpenHashSet forcedChunksOld) {
         LongOpenHashSet added = new LongOpenHashSet();
+        int simulationDistance = getSimulationDistance();
 
         // New forced chunks?
         for (long chunk : forcedChunksMap) {
@@ -190,7 +196,7 @@ public class SimulationDistanceHelper {
             }
             ChunkCoordIntPair playerPos = new ChunkCoordIntPair((int) player.posX >> 4, (int) player.posZ >> 4);
             ChunkCoordIntPair playerPosOld = playerPosOldMap.getOrDefault(player, null);
-            if (playerPosOld == null) {
+            if (playerPosOld == null || simulationDistance != simulationDistanceOld) {
                 LongOpenHashSet chunksNewPos = getPlayerChunksForPos(playerPos);
                 added.addAll(chunksNewPos);
             } else if (!playerPos.equals(playerPosOld)) {
@@ -211,6 +217,7 @@ public class SimulationDistanceHelper {
                 pendingTickCandidates.addAll(entries);
             }
         }
+        simulationDistanceOld = simulationDistance;
     }
 
     public void tickStart() {
