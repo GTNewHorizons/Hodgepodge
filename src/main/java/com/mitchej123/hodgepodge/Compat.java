@@ -132,5 +132,7 @@ public class Compat {
     /**
      * Cannot be used before pre-init phase.
      */
-    public static boolean isCoreTweaksPresent() { return isCoreTweaksPresent; }
+    public static boolean isCoreTweaksPresent() {
+        return isCoreTweaksPresent;
+    }
 }

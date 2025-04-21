@@ -1,20 +1,5 @@
 package com.mitchej123.hodgepodge;
 
-import com.mitchej123.hodgepodge.config.FixesConfig;
-import com.mitchej123.hodgepodge.config.TweaksConfig;
-import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.LongBooleanPair;
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.NextTickListEntry;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.ForgeChunkManager;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,7 +11,25 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.BiPredicate;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.NextTickListEntry;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.ForgeChunkManager;
+
+import com.mitchej123.hodgepodge.config.FixesConfig;
+import com.mitchej123.hodgepodge.config.TweaksConfig;
+
+import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongBooleanPair;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+
 public class SimulationDistanceHelper {
+
     /**
      * Mark a chunk as no to be simulated, or reset that state.
      */
@@ -67,8 +70,8 @@ public class SimulationDistanceHelper {
     private final Long2ByteOpenHashMap noTickChunks = new Long2ByteOpenHashMap();
 
     /**
-     * Changes to the chunks that should not be ticked. Needed since we only update the real map once a tick.
-     * Reason is that forced chunks are also cached and updated once a tick,  we want both in sync.
+     * Changes to the chunks that should not be ticked. Needed since we only update the real map once a tick. Reason is
+     * that forced chunks are also cached and updated once a tick, we want both in sync.
      */
     private List<LongBooleanPair> noTickChunksChanges = Collections.synchronizedList(new ArrayList<>());
 
@@ -260,10 +263,10 @@ public class SimulationDistanceHelper {
                 CoreTweaksCompat.removeTickEntry(world, entry);
             }
             /*
-            Entries would get removed in tickUpdates eventually, but we risk reloading a chunk and having an incompatible,
-            similar entry in pendingTickListEntriesTreeSet/pendingTickListEntriesHashSet that
-            can be removed only from the hashset due to a different equals/comparable check
-            */
+             * Entries would get removed in tickUpdates eventually, but we risk reloading a chunk and having an
+             * incompatible, similar entry in pendingTickListEntriesTreeSet/pendingTickListEntriesHashSet that can be
+             * removed only from the hashset due to a different equals/comparable check
+             */
 
             pendingTickCandidates.remove(entry);
         }
@@ -319,7 +322,8 @@ public class SimulationDistanceHelper {
         }
     }
 
-    public void setServerVariables(TreeSet<NextTickListEntry> pendingTickListEntriesTreeSet, Set<NextTickListEntry> pendingTickListEntriesHashSet, BiPredicate<Integer, Integer> chunkExists) {
+    public void setServerVariables(TreeSet<NextTickListEntry> pendingTickListEntriesTreeSet,
+            Set<NextTickListEntry> pendingTickListEntriesHashSet, BiPredicate<Integer, Integer> chunkExists) {
         this.pendingTickListEntriesTreeSet = pendingTickListEntriesTreeSet;
         this.pendingTickListEntriesHashSet = pendingTickListEntriesHashSet;
         this.chunkExists = chunkExists;
