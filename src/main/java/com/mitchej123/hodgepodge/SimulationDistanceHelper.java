@@ -259,6 +259,13 @@ public class SimulationDistanceHelper {
             if (Compat.isCoreTweaksPresent()) {
                 CoreTweaksCompat.removeTickEntry(world, entry);
             }
+            /*
+            Entries would get removed in tickUpdates eventually, but we risk reloading a chunk and having an incompatible,
+            similar entry in pendingTickListEntriesTreeSet/pendingTickListEntriesHashSet that
+            can be removed only from the hashset due to a different equals/comparable check
+            */
+
+            pendingTickCandidates.remove(entry);
         }
     }
 
