@@ -12,21 +12,21 @@ configurations {
 }
 
 dependencies {
-    api("com.github.GTNewHorizons:GTNHLib:0.6.15:dev")
+    api("com.github.GTNewHorizons:GTNHLib:0.6.19:dev")
 
     compileOnly("com.gtnewhorizons.retrofuturabootstrap:RetroFuturaBootstrap:1.0.2") { transitive = false }
 
-    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.7.30-GTNH:dev") // force a more up-to-date NEI version
-    transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-554-GTNH")
+    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.7.38-GTNH:dev") // force a more up-to-date NEI version
+    transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-586-GTNH")
     transformedModCompileOnly("com.github.GTNewHorizons:Baubles:1.0.4:dev")
     // Transitive updates to make runClient17 work
     transformedModCompileOnly("com.github.GTNewHorizons:ForgeMultipart:1.6.2:dev")
-    transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.51.178:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.51.240:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:harvestcraft:1.3.1-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:HungerOverhaul:1.1.0-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:MrTJPCore:1.3.0:dev") // Do not update, fixed afterwards
-    transformedModCompileOnly("com.github.GTNewHorizons:Railcraft:9.16.4:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
-    transformedModCompileOnly("com.github.GTNewHorizons:TinkersConstruct:1.13.10-GTNH:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:Railcraft:9.16.19:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
+    transformedModCompileOnly("com.github.GTNewHorizons:TinkersConstruct:1.13.18-GTNH:dev")
     transformedModCompileOnly(rfg.deobf("curse.maven:bibliocraft-228027:2423369"))
     transformedModCompileOnly(rfg.deobf("curse.maven:biomes-o-plenty-220318:2499612"))
     transformedModCompileOnly("curse.maven:cofh-core-69162:2388751")

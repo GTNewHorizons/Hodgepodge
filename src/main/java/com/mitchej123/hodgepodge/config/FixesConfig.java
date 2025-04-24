@@ -344,6 +344,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixEntityAttributesRange;
 
+    @Config.Comment("Fix Glass Bottles filling with Water from some other Fluid blocks")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixGlassBottleWaterFilling;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -465,6 +470,10 @@ public class FixesConfig {
     @Config.Comment("Fixes Ender Quarry get stuck at a mostly random location under certain conditions")
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesEnderQuarryFreeze;
+
+    @Config.Comment("Fixes the healing axe not healing mobs when attacking them")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesHealingAxeHeal;
 
     // Galacticraft
 
