@@ -2,7 +2,6 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -34,8 +33,8 @@ public abstract class MixinWorld_SimulationDistance implements ISimulationDistan
     }
 
     @Override
-    public void hodgepodge$preventChunkSimulation(ChunkCoordIntPair chunk, boolean prevent) {
-        hodgepodge$simulationDistanceHelper.preventChunkSimulation(chunk, prevent);
+    public void hodgepodge$preventChunkSimulation(long packedChunkPos, boolean prevent) {
+        hodgepodge$simulationDistanceHelper.preventChunkSimulation(packedChunkPos, prevent);
     }
 
     /**

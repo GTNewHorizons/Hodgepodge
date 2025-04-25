@@ -1,7 +1,6 @@
 package com.mitchej123.hodgepodge;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -33,12 +32,12 @@ public class SimulationDistanceHelper {
     /**
      * Mark a chunk as no to be simulated, or reset that state.
      */
-    public static void preventChunkSimulation(World world, ChunkCoordIntPair chunk, boolean prevent) {
+    public static void preventChunkSimulation(World world, long packedChunkPos, boolean prevent) {
         if (!FixesConfig.addSimulationDistance) {
             return;
         }
         ISimulationDistanceWorld mixin = (ISimulationDistanceWorld) world;
-        mixin.hodgepodge$preventChunkSimulation(chunk, prevent);
+        mixin.hodgepodge$preventChunkSimulation(packedChunkPos, prevent);
     }
 
     public static int getSimulationDistance() {
@@ -118,10 +117,9 @@ public class SimulationDistanceHelper {
      */
     private int simulationDistanceOld;
 
-    public void preventChunkSimulation(ChunkCoordIntPair chunk, boolean prevent) {
-        long key = ChunkCoordIntPair.chunkXZ2Int(chunk.chunkXPos, chunk.chunkZPos);
+    public void preventChunkSimulation(long packedChunkPos, boolean prevent) {
         synchronized (noTickChunksChanges) {
-            noTickChunksChanges.add(LongBooleanPair.of(key, prevent));
+            noTickChunksChanges.add(LongBooleanPair.of(packedChunkPos, prevent));
         }
     }
 
@@ -326,7 +324,7 @@ public class SimulationDistanceHelper {
     }
 
     public void setServerVariables(TreeSet<NextTickListEntry> pendingTickListEntriesTreeSet,
-                                   Set<NextTickListEntry> pendingTickListEntriesHashSet, BiPredicate<Integer, Integer> chunkExists) {
+            Set<NextTickListEntry> pendingTickListEntriesHashSet, BiPredicate<Integer, Integer> chunkExists) {
         this.pendingTickListEntriesTreeSet = pendingTickListEntriesTreeSet;
         this.pendingTickListEntriesHashSet = pendingTickListEntriesHashSet;
         this.chunkExists = chunkExists;
