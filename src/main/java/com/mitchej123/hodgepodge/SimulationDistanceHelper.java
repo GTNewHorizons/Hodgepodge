@@ -1,13 +1,13 @@
 package com.mitchej123.hodgepodge;
 
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.WeakHashMap;
 import java.util.function.BiPredicate;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -88,7 +88,7 @@ public class SimulationDistanceHelper {
     /**
      * Old player positions to see if they moved.
      */
-    private final Map<EntityPlayer, ChunkCoordIntPair> playerPosOldMap = new HashMap<>();
+    private final Map<EntityPlayer, ChunkCoordIntPair> playerPosOldMap = new WeakHashMap<>();
 
     /**
      * All ticks that are currently considered.
