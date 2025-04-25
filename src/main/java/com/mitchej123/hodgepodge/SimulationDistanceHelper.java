@@ -1,7 +1,6 @@
 package com.mitchej123.hodgepodge;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -21,11 +20,12 @@ import net.minecraftforge.common.ForgeChunkManager;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 
+import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.LongBooleanPair;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 
 public class SimulationDistanceHelper {
@@ -73,7 +73,7 @@ public class SimulationDistanceHelper {
      * Changes to the chunks that should not be ticked. Needed since we only update the real map once a tick. Reason is
      * that forced chunks are also cached and updated once a tick, we want both in sync.
      */
-    private final List<LongBooleanPair> noTickChunksChanges = new ArrayList<>();
+    private final LongBooleanArrayList noTickChunksChanges = new LongBooleanArrayList();
 
     /**
      * Cache of forced chunks. Profiler says that is faster.
@@ -119,7 +119,7 @@ public class SimulationDistanceHelper {
     private int simulationDistanceOld;
 
     public void preventChunkSimulation(long packedChunkPos, boolean prevent) {
-        noTickChunksChanges.add(LongBooleanPair.of(packedChunkPos, prevent));
+        noTickChunksChanges.add(packedChunkPos, prevent);
     }
 
     private boolean closeToPlayer(int x, int z) {
@@ -170,9 +170,9 @@ public class SimulationDistanceHelper {
     }
 
     private void mergeNoTickChunkChanges() {
-        for (LongBooleanPair update : noTickChunksChanges) {
-            long key = update.keyLong();
-            boolean prevent = update.valueBoolean();
+        for (int i = 0; i < noTickChunksChanges.size(); i++) {
+            long key = noTickChunksChanges.getLong(i);
+            boolean prevent = noTickChunksChanges.getBoolean(i);
             byte value = noTickChunks.getOrDefault(key, (byte) 0);
             value += (byte) (prevent ? 1 : -1);
             if (value > 0) {
@@ -355,5 +355,33 @@ public class SimulationDistanceHelper {
         this.pendingTickListEntriesTreeSet = pendingTickListEntriesTreeSet;
         this.pendingTickListEntriesHashSet = pendingTickListEntriesHashSet;
         this.chunkExists = chunkExists;
+    }
+
+    static class LongBooleanArrayList {
+
+        private final LongArrayList longs = new LongArrayList();
+        private final BooleanArrayList booleans = new BooleanArrayList();
+
+        public void add(long packedChunkPos, boolean prevent) {
+            longs.add(packedChunkPos);
+            booleans.add(prevent);
+        }
+
+        public int size() {
+            return longs.size();
+        }
+
+        public long getLong(int i) {
+            return longs.getLong(i);
+        }
+
+        public boolean getBoolean(int i) {
+            return booleans.getBoolean(i);
+        }
+
+        public void clear() {
+            longs.clear();
+            booleans.clear();
+        }
     }
 }
