@@ -26,6 +26,7 @@ import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 
 public class SimulationDistanceHelper {
@@ -195,7 +196,9 @@ public class SimulationDistanceHelper {
         int simulationDistance = getSimulationDistance();
 
         // New forced chunks?
-        for (long chunk : forcedChunksMap) {
+        LongIterator iterator = forcedChunksMap.iterator();
+        while (iterator.hasNext()) {
+            long chunk = iterator.nextLong();
             if (!forcedChunksOld.contains(chunk)) {
                 added.add(chunk);
             }
@@ -214,7 +217,9 @@ public class SimulationDistanceHelper {
             } else if (!playerPos.equals(playerPosOld)) {
                 LongOpenHashSet chunksNewPos = getPlayerChunksForPos(playerPos);
                 LongOpenHashSet chunksOldPos = getPlayerChunksForPos(playerPosOld);
-                for (long pos : chunksNewPos) {
+                iterator = chunksNewPos.iterator();
+                while (iterator.hasNext()) {
+                    long pos = iterator.nextLong();
                     if (!chunksOldPos.contains(pos)) {
                         added.add(pos);
                     }
@@ -223,7 +228,9 @@ public class SimulationDistanceHelper {
         }
 
         // Process added chunks
-        for (long chunk : added) {
+        iterator = added.iterator();
+        while (iterator.hasNext()) {
+            long chunk = iterator.nextLong();
             HashSet<NextTickListEntry> entries = chunkTickMap.get(chunk);
             if (entries != null) {
                 pendingTickCandidates.addAll(entries);
