@@ -160,7 +160,8 @@ public class SimulationDistanceHelper {
 
     private LongOpenHashSet getPlayerChunksForPos(ChunkCoordIntPair pos) {
         int simulationDistance = getSimulationDistance();
-        LongOpenHashSet chunks = new LongOpenHashSet();
+        int diameter = simulationDistance * 2 + 1;
+        LongOpenHashSet chunks = new LongOpenHashSet(diameter * diameter);
         for (int x = -simulationDistance; x <= simulationDistance; x++) {
             for (int z = -simulationDistance; z <= simulationDistance; z++) {
                 chunks.add(ChunkCoordIntPair.chunkXZ2Int(pos.chunkXPos + x, pos.chunkZPos + z));
