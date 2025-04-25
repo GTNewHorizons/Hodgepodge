@@ -73,7 +73,7 @@ public class SimulationDistanceHelper {
      * Changes to the chunks that should not be ticked. Needed since we only update the real map once a tick. Reason is
      * that forced chunks are also cached and updated once a tick, we want both in sync.
      */
-    private List<LongBooleanPair> noTickChunksChanges = Collections.synchronizedList(new ArrayList<>());
+    private final List<LongBooleanPair> noTickChunksChanges = new ArrayList<>();
 
     /**
      * Cache of forced chunks. Profiler says that is faster.
@@ -120,7 +120,9 @@ public class SimulationDistanceHelper {
 
     public void preventChunkSimulation(ChunkCoordIntPair chunk, boolean prevent) {
         long key = ChunkCoordIntPair.chunkXZ2Int(chunk.chunkXPos, chunk.chunkZPos);
-        noTickChunksChanges.add(LongBooleanPair.of(key, prevent));
+        synchronized (noTickChunksChanges) {
+            noTickChunksChanges.add(LongBooleanPair.of(key, prevent));
+        }
     }
 
     private boolean closeToPlayer(int x, int z) {
@@ -166,18 +168,19 @@ public class SimulationDistanceHelper {
     }
 
     private void mergeNoTickChunkChanges() {
-        List<LongBooleanPair> changes = noTickChunksChanges;
-        noTickChunksChanges = Collections.synchronizedList(new ArrayList<>());
-        for (LongBooleanPair update : changes) {
-            long key = update.keyLong();
-            boolean prevent = update.valueBoolean();
-            byte value = noTickChunks.getOrDefault(key, (byte) 0);
-            value += (byte) (prevent ? 1 : -1);
-            if (value > 0) {
-                noTickChunks.put(key, value);
-            } else {
-                noTickChunks.remove(key);
+        synchronized (noTickChunksChanges) {
+            for (LongBooleanPair update : noTickChunksChanges) {
+                long key = update.keyLong();
+                boolean prevent = update.valueBoolean();
+                byte value = noTickChunks.getOrDefault(key, (byte) 0);
+                value += (byte) (prevent ? 1 : -1);
+                if (value > 0) {
+                    noTickChunks.put(key, value);
+                } else {
+                    noTickChunks.remove(key);
+                }
             }
+            noTickChunksChanges.clear();
         }
     }
 
@@ -323,7 +326,7 @@ public class SimulationDistanceHelper {
     }
 
     public void setServerVariables(TreeSet<NextTickListEntry> pendingTickListEntriesTreeSet,
-            Set<NextTickListEntry> pendingTickListEntriesHashSet, BiPredicate<Integer, Integer> chunkExists) {
+                                   Set<NextTickListEntry> pendingTickListEntriesHashSet, BiPredicate<Integer, Integer> chunkExists) {
         this.pendingTickListEntriesTreeSet = pendingTickListEntriesTreeSet;
         this.pendingTickListEntriesHashSet = pendingTickListEntriesHashSet;
         this.chunkExists = chunkExists;
