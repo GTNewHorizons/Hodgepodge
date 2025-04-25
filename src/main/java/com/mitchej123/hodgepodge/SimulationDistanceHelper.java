@@ -1,5 +1,6 @@
 package com.mitchej123.hodgepodge;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -49,14 +50,14 @@ public class SimulationDistanceHelper {
     }
 
     public SimulationDistanceHelper(World world) {
-        this.world = world;
+        this.worldRef = new WeakReference<>(world);
         isServer = world instanceof WorldServer;
     }
 
     /**
      * The current world
      */
-    private final World world;
+    private final WeakReference<World> worldRef;
 
     /**
      * True if we have a WorldServer
@@ -122,6 +123,11 @@ public class SimulationDistanceHelper {
     }
 
     private boolean closeToPlayer(int x, int z) {
+        World world = worldRef.get();
+        if (world == null) {
+            return false;
+        }
+
         int simulationDistance = getSimulationDistance();
         for (EntityPlayer player : world.playerEntities) {
             if (player.getEntityWorld() != world) {
@@ -179,6 +185,11 @@ public class SimulationDistanceHelper {
     }
 
     private void checkForAddedChunks(LongOpenHashSet forcedChunksOld) {
+        World world = worldRef.get();
+        if (world == null) {
+            return;
+        }
+
         LongOpenHashSet added = new LongOpenHashSet();
         int simulationDistance = getSimulationDistance();
 
@@ -221,6 +232,11 @@ public class SimulationDistanceHelper {
     }
 
     public void tickStart() {
+        World world = worldRef.get();
+        if (world == null) {
+            return;
+        }
+
         mergeNoTickChunkChanges();
 
         // Processing cache is only valid for one tick
@@ -247,6 +263,11 @@ public class SimulationDistanceHelper {
     }
 
     public void chunkUnloaded(long chunk) {
+        World world = worldRef.get();
+        if (world == null) {
+            return;
+        }
+
         HashSet<NextTickListEntry> entries = chunkTickMap.get(chunk);
         if (!isServer || entries == null) {
             return;
@@ -270,6 +291,11 @@ public class SimulationDistanceHelper {
     }
 
     private void removeTick(NextTickListEntry entry) {
+        World world = worldRef.get();
+        if (world == null) {
+            return;
+        }
+
         pendingTickListEntriesTreeSet.remove(entry);
         pendingTickListEntriesHashSet.remove(entry);
         if (Compat.isCoreTweaksPresent()) {
@@ -295,6 +321,11 @@ public class SimulationDistanceHelper {
     }
 
     public void tickUpdates(boolean processAll, List<NextTickListEntry> pendingTickListEntriesThisTick) {
+        World world = worldRef.get();
+        if (world == null) {
+            return;
+        }
+
         if (pendingTickListEntriesTreeSet.size() != pendingTickListEntriesHashSet.size()) {
             throw new IllegalStateException("TickNextTick list out of synch");
         }
