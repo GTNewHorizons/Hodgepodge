@@ -30,7 +30,7 @@ import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 public class SimulationDistanceHelper {
 
     /**
-     * Mark a chunk as no to be simulated, or reset that state.
+     * Mark a chunk as no to be simulated, or reset that state. Not thread safe!
      */
     public static void preventChunkSimulation(World world, long packedChunkPos, boolean prevent) {
         if (!FixesConfig.addSimulationDistance) {
@@ -118,9 +118,7 @@ public class SimulationDistanceHelper {
     private int simulationDistanceOld;
 
     public void preventChunkSimulation(long packedChunkPos, boolean prevent) {
-        synchronized (noTickChunksChanges) {
-            noTickChunksChanges.add(LongBooleanPair.of(packedChunkPos, prevent));
-        }
+        noTickChunksChanges.add(LongBooleanPair.of(packedChunkPos, prevent));
     }
 
     private boolean closeToPlayer(int x, int z) {
@@ -166,20 +164,18 @@ public class SimulationDistanceHelper {
     }
 
     private void mergeNoTickChunkChanges() {
-        synchronized (noTickChunksChanges) {
-            for (LongBooleanPair update : noTickChunksChanges) {
-                long key = update.keyLong();
-                boolean prevent = update.valueBoolean();
-                byte value = noTickChunks.getOrDefault(key, (byte) 0);
-                value += (byte) (prevent ? 1 : -1);
-                if (value > 0) {
-                    noTickChunks.put(key, value);
-                } else {
-                    noTickChunks.remove(key);
-                }
+        for (LongBooleanPair update : noTickChunksChanges) {
+            long key = update.keyLong();
+            boolean prevent = update.valueBoolean();
+            byte value = noTickChunks.getOrDefault(key, (byte) 0);
+            value += (byte) (prevent ? 1 : -1);
+            if (value > 0) {
+                noTickChunks.put(key, value);
+            } else {
+                noTickChunks.remove(key);
             }
-            noTickChunksChanges.clear();
         }
+        noTickChunksChanges.clear();
     }
 
     private void checkForAddedChunks(LongOpenHashSet forcedChunksOld) {
