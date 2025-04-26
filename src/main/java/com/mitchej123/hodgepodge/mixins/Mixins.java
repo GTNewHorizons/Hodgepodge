@@ -123,6 +123,10 @@ public enum Mixins {
     FIX_ENTITY_ATTRIBUTES_RANGE(new Builder("Fix Entity Attributes Range").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinNetHandlerPlayClient_FixEntityAttributesRange").setSide(Side.CLIENT)
             .setApplyIf(() -> FixesConfig.fixEntityAttributesRange).addTargetedMod(TargetedMod.VANILLA)),
+    ENDERMAN_BLOCK_PLACE_BLACKLIST(new Builder("Disable Endermen Placing Held Blocks").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinEntityEndermanPlace").setSide(Side.BOTH)
+            .setApplyIf(() -> TweaksConfig.endermanBlockPlaceDisable || TweaksConfig.endermanBlockPlaceBlacklist)
+            .addTargetedMod(TargetedMod.VANILLA)),
 
     // config handled in mixin due to server->client config sync
     LONGER_MESSAGES_CLIENT(new Builder("Longer Messages Client Side").setPhase(Phase.EARLY)
