@@ -25,4 +25,8 @@ public class ASMConfig {
     @Config.Comment("Speedup NBTTagCompound copy")
     @Config.DefaultBoolean(true)
     public static boolean speedupNBTTagCompoundCopy;
+
+    @Config.Comment("Speedup PlayerManager")
+    @Config.DefaultBoolean(true)
+    public static boolean speedupPlayerManager;
 }
