@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import com.mitchej123.hodgepodge.mixins.interfaces.MutableChunkCoordIntPair;
 
 @Mixin(ChunkCoordIntPair.class)
-public class MixinChunkCoordIntPair implements MutableChunkCoordIntPair {
+public class MixinChunkCoordIntPair_FixAllocations implements MutableChunkCoordIntPair {
 
     @Mutable
     @Shadow
