@@ -29,4 +29,8 @@ public class ASMConfig {
     @Config.Comment("Speedup PlayerManager")
     @Config.DefaultBoolean(true)
     public static boolean speedupPlayerManager;
+
+    @Config.Comment("Speedup ObjectIntIdentityMap")
+    @Config.DefaultBoolean(true)
+    public static boolean speedupObjectIntIdentityMap;
 }
