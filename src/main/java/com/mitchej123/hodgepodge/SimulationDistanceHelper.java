@@ -28,6 +28,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectAVLTreeSet;
 
 public class SimulationDistanceHelper {
 
@@ -94,7 +95,7 @@ public class SimulationDistanceHelper {
     /**
      * All ticks that are currently considered.
      */
-    private final TreeSet<NextTickListEntry> pendingTickCandidates = new TreeSet<>();
+    private final ObjectAVLTreeSet<NextTickListEntry> pendingTickCandidates = new ObjectAVLTreeSet<>();
 
     /**
      * Map of ticks to chunk, duplicating pendingTickListEntriesTreeSet for quicker lookup.
