@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ChunkCoordinates.class)
-public class MixinChunkCoordinates {
+public class MixinChunkCoordinates_BetterHash {
 
     @Shadow
     public int posX;
