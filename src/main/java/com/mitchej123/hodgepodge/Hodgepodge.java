@@ -28,8 +28,8 @@ import cpw.mods.fml.relauncher.Side;
         modid = Hodgepodge.MODID,
         version = Hodgepodge.VERSION,
         name = Hodgepodge.NAME,
-        dependencies = "required-after:gtnhmixins@[2.0.1,);" + "required-after:unimixins@[0.0.14,);"
-                + "required-after:gtnhlib@[0.5.15,);",
+        dependencies = "required-after:gtnhmixins@[2.0.1,);" + "required-after:unimixins@[0.0.20,);"
+                + "required-after:gtnhlib@[0.6.21,);",
         guiFactory = "com.mitchej123.hodgepodge.config.gui.HodgepodgeGuiConfigFactory")
 public class Hodgepodge {
 
