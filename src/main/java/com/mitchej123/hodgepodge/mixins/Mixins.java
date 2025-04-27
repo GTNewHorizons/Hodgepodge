@@ -134,13 +134,13 @@ public enum Mixins implements IMixins {
     FIX_ENTITY_ATTRIBUTES_RANGE(new MixinBuilder("Fix Entity Attributes Range").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinNetHandlerPlayClient_FixEntityAttributesRange").setSide(Side.CLIENT)
             .setApplyIf(() -> FixesConfig.fixEntityAttributesRange).addTargetedMod(TargetedMod.VANILLA)),
-    ENDERMAN_BLOCK_GRAB_DISABLE(new Builder("Disable Endermen Grabbing Blocks").setPhase(Phase.EARLY)
+    ENDERMAN_BLOCK_GRAB_DISABLE(new MixinBuilder("Disable Endermen Grabbing Blocks").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityEndermanGrab").setSide(Side.BOTH)
             .setApplyIf(() -> TweaksConfig.endermanBlockGrabDisable).addTargetedMod(TargetedMod.VANILLA)),
-    ENDERMAN_BLOCK_PLACE_DISABLE(new Builder("Disable Endermen Placing Held Blocks").setPhase(Phase.EARLY)
+    ENDERMAN_BLOCK_PLACE_DISABLE(new MixinBuilder("Disable Endermen Placing Held Blocks").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityEndermanPlace").setSide(Side.BOTH)
             .setApplyIf(() -> TweaksConfig.endermanBlockPlaceDisable).addTargetedMod(TargetedMod.VANILLA)),
-    ENDERMAN_BLOCK_PLACE_BLACKLIST(new Builder("Disable Endermen Placing Held Blocks on Configured Blocks")
+    ENDERMAN_BLOCK_PLACE_BLACKLIST(new MixinBuilder("Disable Endermen Placing Held Blocks on Configured Blocks")
             .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinEntityEndermanPlaceBlacklist").setSide(Side.BOTH)
             .setApplyIf(() -> TweaksConfig.endermanBlockPlaceBlacklist).addTargetedMod(TargetedMod.VANILLA)),
 
