@@ -140,6 +140,11 @@ public class TweaksConfig {
     @Config.DefaultBoolean(false)
     public static boolean useLighterWater;
 
+    @Config.Comment("Entirely remove Endermen's ability to grab blocks. Should also work for any modded entities that extend EntityEnderman and call its onLivingUpdate")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean endermanBlockGrabDisable;
+
     @Config.Comment("Entirely remove Endermen's ability to place blocks. Should also work for any modded entities that extend EntityEnderman and call its onLivingUpdate")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart

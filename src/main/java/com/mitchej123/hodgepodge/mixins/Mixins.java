@@ -123,6 +123,9 @@ public enum Mixins {
     FIX_ENTITY_ATTRIBUTES_RANGE(new Builder("Fix Entity Attributes Range").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinNetHandlerPlayClient_FixEntityAttributesRange").setSide(Side.CLIENT)
             .setApplyIf(() -> FixesConfig.fixEntityAttributesRange).addTargetedMod(TargetedMod.VANILLA)),
+    ENDERMAN_BLOCK_GRAB_BLACKLIST(new Builder("Disable Endermen Grabbing Blocks").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinEntityEndermanGrab").setSide(Side.BOTH)
+            .setApplyIf(() -> TweaksConfig.endermanBlockGrabDisable).addTargetedMod(TargetedMod.VANILLA)),
     ENDERMAN_BLOCK_PLACE_BLACKLIST(new Builder("Disable Endermen Placing Held Blocks").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityEndermanPlace").setSide(Side.BOTH)
             .setApplyIf(() -> TweaksConfig.endermanBlockPlaceDisable || TweaksConfig.endermanBlockPlaceBlacklist)
