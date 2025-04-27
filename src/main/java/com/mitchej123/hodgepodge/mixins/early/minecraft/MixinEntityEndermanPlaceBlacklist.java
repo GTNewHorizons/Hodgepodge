@@ -27,7 +27,12 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public abstract class MixinEntityEndermanPlaceBlacklist extends EntityMob {
 
     @Unique
-    private static ItemStack[] hodgepodge$blacklist;
+    private static final ArrayList<ItemStack> hodgepodge$blacklist = new ArrayList<>();
+    static {
+        for (String s : TweaksConfig.endermanBlockPlaceBlacklistBlocks) {
+            hodgepodge$blacklist.add(hodgepodge$parseConfigLine(s));
+        }
+    }
 
     public MixinEntityEndermanPlaceBlacklist(World p_i1738_1_) {
         super(p_i1738_1_);
@@ -48,8 +53,7 @@ public abstract class MixinEntityEndermanPlaceBlacklist extends EntityMob {
 
     @Unique
     private boolean hodgepodge$isBlockInEndermanPlaceBlacklist(Item item, int meta) {
-        ItemStack[] blacklist = this.hodgepodge$getBlacklist();
-        for (ItemStack is : blacklist) {
+        for (ItemStack is : hodgepodge$blacklist) {
             if (Objects.equals(is.getItem(), item)
                     && (is.getItemDamage() == OreDictionary.WILDCARD_VALUE || is.getItemDamage() == meta)) {
                 return true;
@@ -59,24 +63,8 @@ public abstract class MixinEntityEndermanPlaceBlacklist extends EntityMob {
         return false;
     }
 
-    /**
-     * This gets built and cached only when it's needed.
-     */
     @Unique
-    private ItemStack[] hodgepodge$getBlacklist() {
-        if (hodgepodge$blacklist != null) {
-            return hodgepodge$blacklist;
-        }
-        ArrayList<ItemStack> list = new ArrayList<>();
-        for (String s : TweaksConfig.endermanBlockPlaceBlacklistBlocks) {
-            list.add(hodgepodge$parseConfigLine(s));
-        }
-        hodgepodge$blacklist = list.toArray(new ItemStack[] {});
-        return hodgepodge$blacklist;
-    }
-
-    @Unique
-    private ItemStack hodgepodge$parseConfigLine(String str) {
+    private static ItemStack hodgepodge$parseConfigLine(String str) {
         String[] input = str.split(":");
         if (input.length < 2) {
             Common.log.warn(
