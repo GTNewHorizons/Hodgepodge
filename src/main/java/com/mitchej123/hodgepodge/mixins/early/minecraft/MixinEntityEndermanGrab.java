@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.mitchej123.hodgepodge.config.TweaksConfig;
 
 @Mixin(EntityEnderman.class)
 public abstract class MixinEntityEndermanGrab extends EntityMob {
@@ -27,11 +26,8 @@ public abstract class MixinEntityEndermanGrab extends EntityMob {
 
     @WrapOperation(
             method = "onLivingUpdate",
-            at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I", remap = false))
-    private int checkEndermanBlockGrab(Random instance, int i, Operation<Integer> original) {
-        if (TweaksConfig.endermanBlockGrabDisable) {
-            return Integer.MAX_VALUE;
-        }
-        return original.call(instance, i);
+            at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I", remap = false, ordinal = 0))
+    private int disableEndermanBlockGrab(Random instance, int i, Operation<Integer> original) {
+        return Integer.MAX_VALUE;
     }
 }
