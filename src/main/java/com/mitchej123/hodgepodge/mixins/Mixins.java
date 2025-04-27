@@ -30,7 +30,7 @@ public enum Mixins {
             new Builder("Stops MC from allocating too many ChunkPositionIntPair objects")
                     .addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH).setPhase(Phase.EARLY)
                     .addMixinClasses(
-                            "minecraft.MixinChunkCoordIntPair",
+                            "minecraft.MixinChunkCoordIntPair_FixAllocations",
                             "minecraft.MixinWorld_FixAllocations",
                             "minecraft.MixinWorldClient_FixAllocations",
                             "minecraft.MixinAnvilChunkLoader_FixAllocations")
@@ -40,6 +40,13 @@ public enum Mixins {
                     .addTargetedMod(TargetedMod.VANILLA).addExcludedMod(TargetedMod.OPTIFINE).setSide(Side.BOTH)
                     .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinWorldServer_FixAllocations")
                     .setApplyIf(() -> FixesConfig.fixTooManyAllocationsChunkPositionIntPair)),
+    ADD_SIMULATION_DISTANCE_OPTION(new Builder("Add option to separate simulation distance from render distance")
+            .addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH).setPhase(Phase.EARLY)
+            .addMixinClasses(
+                    "minecraft.MixinWorld_SimulationDistance",
+                    "minecraft.MixinWorldServer_SimulationDistance",
+                    "minecraft.MixinChunk_SimulationDistance")
+            .setApplyIf(() -> FixesConfig.addSimulationDistance)),
     FIX_RESOURCEPACK_FOLDER_OPENING(new Builder("Fix resource pack folder sometimes not opening on windows")
             .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinGuiScreenResourcePacks").setSide(Side.CLIENT)
             .setApplyIf(() -> FixesConfig.fixResourcePackOpening).addTargetedMod(TargetedMod.VANILLA)),
@@ -146,9 +153,11 @@ public enum Mixins {
             .addMixinClasses("minecraft.MixinChunkProviderClient_RemoveChunkListing")
             .addTargetedMod(TargetedMod.VANILLA).addExcludedMod(TargetedMod.FASTCRAFT)
             .setApplyIf(() -> SpeedupsConfig.speedupChunkProviderClient && ASMConfig.speedupLongIntHashMap)),
-    CHUNK_COORDINATES_HASHCODE(new Builder("Optimize Chunk Coordinates Hashcode").setPhase(Phase.EARLY)
-            .setSide(Side.BOTH).addMixinClasses("minecraft.MixinChunkCoordinates").addTargetedMod(TargetedMod.VANILLA)
-            .setApplyIf(() -> SpeedupsConfig.speedupChunkCoordinatesHashCode)),
+    BETTER_HASHCODES(new Builder("Optimize various Hashcode").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses(
+                    "minecraft.MixinChunkCoordinates_BetterHash",
+                    "minecraft.MixinChunkCoordIntPair_BetterHash")
+            .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> SpeedupsConfig.speedupChunkCoordinatesHashCode)),
     TCP_NODELAY(new Builder("Set TCP NODELAY").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinTcpNoDelay").setApplyIf(() -> SpeedupsConfig.tcpNoDelay)
             .addTargetedMod(TargetedMod.VANILLA)),
