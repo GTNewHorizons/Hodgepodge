@@ -1,5 +1,7 @@
 package com.mitchej123.hodgepodge.mixins;
 
+import static com.gtnewhorizon.gtnhlib.mixin.TargetedMod.ARCHAICFIX;
+
 import static com.gtnewhorizon.gtnhlib.mixin.TargetedMod.OPTIFINE;
 import static com.mitchej123.hodgepodge.mixins.TargetedMod.ANGELICA;
 
@@ -260,7 +262,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixResizableFullscreen).addTargetedMod(TargetedMod.VANILLA)),
     FIX_UNFOCUSED_FULLSCREEN(new MixinBuilder("Fix Unfocused Fullscreen").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinMinecraft_UnfocusedFullscreen").setSide(Side.CLIENT)
-            .setApplyIf(() -> FixesConfig.fixUnfocusedFullscreen).addTargetedMod(TargetedMod.VANILLA)),
+            .setApplyIf(() -> FixesConfig.fixUnfocusedFullscreen).addTargetedMod(TargetedMod.VANILLA).addExcludedMod(ARCHAICFIX)),
     FIX_RENDERERS_WORLD_LEAK(new MixinBuilder("Fix Renderers World Leak").setPhase(Phase.EARLY)
             .addMixinClasses(
                     "minecraft.MixinMinecraft_ClearRenderersWorldLeak",
