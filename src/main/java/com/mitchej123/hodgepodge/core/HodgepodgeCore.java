@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.gtnewhorizon.gtnhlib.config.ConfigException;
 import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
+import com.gtnewhorizon.gtnhlib.mixin.IMixins;
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
 import com.mitchej123.hodgepodge.asm.AsmTransformers;
 import com.mitchej123.hodgepodge.config.ASMConfig;
@@ -69,7 +70,7 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     @Override
     public List<String> getMixins(Set<String> loadedCoreMods) {
-        return Mixins.getEarlyMixins(loadedCoreMods);
+        return IMixins.getEarlyMixins(Mixins.class, loadedCoreMods);
     }
 
     @Override

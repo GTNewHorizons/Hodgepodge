@@ -1,10 +1,11 @@
 package com.mitchej123.hodgepodge.mixins;
 
+import com.gtnewhorizon.gtnhlib.mixin.ITargetedMod;
+
 import cpw.mods.fml.common.Mod;
 
-public enum TargetedMod {
+public enum TargetedMod implements ITargetedMod {
 
-    // NOTE: This doesn't work - late mods need a modid, not a coremod class
     ADVANCED_SOLAR_PANELS("Advanced Solar Panels", null, "AdvancedSolarPanel"),
     ANGELICA("Angelica", "com.gtnewhorizons.angelica.loading.AngelicaTweaker", "angelica"),
     ARCHAICFIX("ArchaicFix", "org.embeddedt.archaicfix.ArchaicCore", "archaicfix"),
@@ -78,5 +79,20 @@ public enum TargetedMod {
     @Override
     public String toString() {
         return "TargetedMod{modName='" + modName + "', coreModClass='" + coreModClass + "', modId='" + modId + "'}";
+    }
+
+    @Override
+    public String getCoreModClass() {
+        return coreModClass;
+    }
+
+    @Override
+    public String getModId() {
+        return modId;
+    }
+
+    @Override
+    public String getModName() {
+        return modName;
     }
 }
