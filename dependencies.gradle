@@ -66,7 +66,9 @@ dependencies {
 
     // For testing - HP and AF are liable to mixin the same targets
     //runtimeOnlyNonPublishable("maven.modrinth:archaicfix:0.7.5")
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:ArchaicFix:HPC99:dev") // mavenLocal location
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:ArchaicFix:99.0.0:dev") // mavenLocal location
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:ServerUtilities:99:dev") // for the pregenerator
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta40:dev") // for TPS graph
 }
 
 // Replace when RFG support deobfuscation from notch mappings
