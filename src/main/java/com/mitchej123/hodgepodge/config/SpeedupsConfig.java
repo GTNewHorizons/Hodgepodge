@@ -40,6 +40,11 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean speedupChunkProviderClient;
 
+    @Config.Comment("Replaces uses of java.util.Random with a faster version, skipping atomic operations.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fastRandom;
+
     @Config.Comment("Rewrites internal cache methods to be safer and faster. Experimental, use at your own risk!")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart

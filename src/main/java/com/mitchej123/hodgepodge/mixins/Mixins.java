@@ -517,6 +517,15 @@ public enum Mixins implements IMixins {
             .addTargetedMod(TargetedMod.VANILLA).addMixinClasses("memory.MixinFMLClientHandler")
             .setApplyIf(() -> FixesConfig.enableMemoryFixes)),
 
+    FAST_RANDOM(new MixinBuilder("Replaces uses of stdlib Random with a faster one").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses(
+                    "minecraft.fastload.rand.MixinChunkProviderGenerate",
+                    "minecraft.fastload.rand.MixinMapGenBase",
+                    "minecraft.fastload.rand.MixinMapGenCaves")
+            .setApplyIf(() -> SpeedupsConfig.fastRandom)),
+
+
     FAST_INT_CACHE(new MixinBuilder("Rewrite internal caching methods to be safer and faster").setPhase(Phase.EARLY)
             .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses("minecraft.fastload.MixinIntCache", "minecraft.fastload.MixinWorldChunkManager")
