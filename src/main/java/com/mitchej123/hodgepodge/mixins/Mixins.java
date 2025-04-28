@@ -40,6 +40,7 @@ public enum Mixins implements IMixins {
                     .setApplyIf(() -> FixesConfig.fixTooManyAllocationsChunkPositionIntPair)),
     ADD_SIMULATION_DISTANCE_OPTION(new MixinBuilder("Add option to separate simulation distance from render distance")
             .addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH).setPhase(Phase.EARLY)
+            .addExcludedMod(TargetedMod.OPTIFINE)
             .addMixinClasses(
                     "minecraft.MixinWorld_SimulationDistance",
                     "minecraft.MixinWorldServer_SimulationDistance",
