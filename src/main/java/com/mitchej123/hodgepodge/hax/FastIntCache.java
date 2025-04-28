@@ -5,6 +5,7 @@ import java.util.Map;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import org.jetbrains.annotations.NotNull;
 
 public class FastIntCache {
 
@@ -14,7 +15,6 @@ public class FastIntCache {
     private static final Map<Integer, List<int[]>> cachedObjects = new Int2ObjectOpenHashMap<>();
 
     public static synchronized int[] getCache(int size) {
-
         // Get the smallest power of two larger than or equal to the number
         final int level = (size <= SMALLEST) ? MIN_LEVEL : 32 - Integer.numberOfLeadingZeros(size - 1);
 
@@ -24,8 +24,7 @@ public class FastIntCache {
         return caches.remove(caches.size() - 1);
     }
 
-    public static synchronized void releaseCache(int[] cache) {
-
+    public static synchronized void releaseCache(int @NotNull [] cache) {
         final int level = (cache.length <= SMALLEST) ? MIN_LEVEL : 32 - Integer.numberOfLeadingZeros(cache.length - 1);
         cachedObjects.computeIfAbsent(level, i -> new ObjectArrayList<>()).add(cache);
     }

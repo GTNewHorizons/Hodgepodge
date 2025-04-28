@@ -520,9 +520,11 @@ public enum Mixins implements IMixins {
     FAST_RANDOM(new MixinBuilder("Replaces uses of stdlib Random with a faster one").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses(
-                    "minecraft.fastload.rand.MixinChunkProviderGenerate",
-                    "minecraft.fastload.rand.MixinMapGenBase",
-                    "minecraft.fastload.rand.MixinMapGenCaves")
+                    "minecraft.fastload.intcache.MixinCollectOneCache",
+                    "minecraft.fastload.intcache.MixinCollectTwoCaches",
+                    "minecraft.fastload.intcache.MixinGenLayerEdge",
+                    "minecraft.fastload.intcache.MixinIntCache",
+                    "minecraft.fastload.intcache.MixinWorldChunkManager")
             .setApplyIf(() -> SpeedupsConfig.fastRandom)),
 
 
