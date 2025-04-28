@@ -30,7 +30,10 @@ public abstract class MixinEntityEndermanPlaceBlacklist extends EntityMob {
     private static final ArrayList<ItemStack> hodgepodge$blacklist = new ArrayList<>();
     static {
         for (String s : TweaksConfig.endermanBlockPlaceBlacklistBlocks) {
-            hodgepodge$blacklist.add(hodgepodge$parseConfigLine(s));
+            ItemStack stack = hodgepodge$parseConfigLine(s);
+            if (stack != null) {
+                hodgepodge$blacklist.add(stack);
+            }
         }
     }
 
