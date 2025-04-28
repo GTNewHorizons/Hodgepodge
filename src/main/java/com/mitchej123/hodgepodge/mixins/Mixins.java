@@ -535,13 +535,12 @@ public enum Mixins implements IMixins {
                     "minecraft.fastload.intcache.MixinWorldChunkManager")
             .setApplyIf(() -> SpeedupsConfig.fastIntCache)),
 
-    NUKE_LONG_BOXING(new MixinBuilder("Remove Long boxing in MapGenStructure").setPhase(Phase.EARLY)
-            .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
-            .addMixinClasses("minecraft.fastload.MixinMapGenStructure")
+    NUKE_LONG_BOXING(new MixinBuilder("Remove Long boxing in MapGenStructure").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.VANILLA).addMixinClasses("minecraft.fastload.MixinMapGenStructure")
             .setApplyIf(() -> SpeedupsConfig.unboxMapGen)),
 
-    EMBED_BLOCKIDS(new MixinBuilder("Embed block IDs directly in the block objects, to speed up lookups").setPhase(Phase.EARLY)
-            .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
+    EMBED_BLOCKIDS(new MixinBuilder("Embed block IDs directly in the block objects, to speed up lookups")
+            .setPhase(Phase.EARLY).setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses(
                     "minecraft.fastload.flatid.MixinBlock",
                     "minecraft.fastload.flatid.MixinFMLControlledNamespacedRegistry")

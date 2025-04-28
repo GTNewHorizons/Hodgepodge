@@ -11,9 +11,8 @@ import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 import static org.objectweb.asm.Opcodes.T_INT;
 
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.launchwrapper.IClassTransformer;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -23,38 +22,28 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 /**
  * Searches for and obliterates varag
  */
 public class VarargDissector implements IClassTransformer {
-    private static final ObjectArrayList<String> TARGETS = new ObjectArrayList<>(new String[]{
-            "net.minecraft.world.gen.layer.GenLayer",
-            "net.minecraft.world.gen.layer.GenLayerZoom",
-            "net.minecraft.world.gen.layer.GenLayerFuzzyZoom"
-    });
+
+    private static final ObjectArrayList<String> TARGETS = new ObjectArrayList<>(
+            new String[] { "net.minecraft.world.gen.layer.GenLayer", "net.minecraft.world.gen.layer.GenLayerZoom",
+                    "net.minecraft.world.gen.layer.GenLayerFuzzyZoom" });
 
     // Technically I could just do a 3 <= x <= 8, but this is clearer and not much slower
-    private static final IntArrayList CONST_INT_BYTECODES = new IntArrayList(new int[]{
-            ICONST_0,
-            ICONST_1,
-            ICONST_2,
-            ICONST_3,
-            ICONST_4,
-            ICONST_5
-    });
+    private static final IntArrayList CONST_INT_BYTECODES = new IntArrayList(
+            new int[] { ICONST_0, ICONST_1, ICONST_2, ICONST_3, ICONST_4, ICONST_5 });
 
     private static final String TARGET_MNAME = "selectRandom";
     private static final String TARGET_MDESC = "([I)I";
 
     private static final String REPLACE_CNAME = "com/mitchej123/hodgepodge/asm/hooks/mc/RandomAid";
     private static final String REPLACE_MNAME = "random";
-    private static final String[] REPLACE_MDESC = {
-            "(II)I",
-            "(III)I",
-            "(IIII)I",
-            "(IIIII)I",
-            "(IIIIII)I"
-    };
+    private static final String[] REPLACE_MDESC = { "(II)I", "(III)I", "(IIII)I", "(IIIII)I", "(IIIIII)I" };
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
@@ -95,7 +84,9 @@ public class VarargDissector implements IClassTransformer {
             int X = -1;
             for (ii = i; ii > lastCall; ii--) {
                 final var insn2 = method.instructions.get(ii);
-                if (!(insn2 instanceof IntInsnNode intInsn) || intInsn.getOpcode() != Opcodes.NEWARRAY || intInsn.operand != T_INT) continue;
+                if (!(insn2 instanceof IntInsnNode intInsn) || intInsn.getOpcode() != Opcodes.NEWARRAY
+                        || intInsn.operand != T_INT)
+                    continue;
 
                 // We have an array - assume it's the correct one. Now, get the size.
                 X = CONST_INT_BYTECODES.indexOf(method.instructions.get(ii - 1).getOpcode());
@@ -103,7 +94,10 @@ public class VarargDissector implements IClassTransformer {
             }
 
             // The array is of variable size, abandon attempt!
-            if (X < 0) { lastCall = i; continue; }
+            if (X < 0) {
+                lastCall = i;
+                continue;
+            }
 
             // The array is of constant size, check if the number of arguments matches up
             // We expect:
@@ -113,31 +107,51 @@ public class VarargDissector implements IClassTransformer {
             // [ DUP, ICONST_<>, ILOAD <>, IASTORE ] * X
             // INVOKEVIRTUAL (at i)
             // So if the call is what we expect, ii + 4*X + 1 == i
-            if (ii + 4 * X + 1 != i) { lastCall = i; continue; }
+            if (ii + 4 * X + 1 != i) {
+                lastCall = i;
+                continue;
+            }
 
             // Insn count validated, now record and validate the argument loading
             final var thisInsn = method.instructions.get(ii - 2);
-            if (!(thisInsn instanceof VarInsnNode varInsn) || varInsn.getOpcode() != Opcodes.ALOAD || varInsn.var != 0) {
-                lastCall = i; continue;
+            if (!(thisInsn instanceof VarInsnNode varInsn) || varInsn.getOpcode() != Opcodes.ALOAD
+                    || varInsn.var != 0) {
+                lastCall = i;
+                continue;
             }
 
             boolean bail = false;
             for (int ni = 0; ni < X; ni++) {
                 final int base = ii + 4 * ni;
                 final var dupInsn = method.instructions.get(base + 1);
-                if (dupInsn.getOpcode() != Opcodes.DUP) { bail = true; break; }
+                if (dupInsn.getOpcode() != Opcodes.DUP) {
+                    bail = true;
+                    break;
+                }
 
                 final var idxInsn = method.instructions.get(base + 2);
-                if (idxInsn.getOpcode() != ICONST_0 + ni) { bail = true; break; }
+                if (idxInsn.getOpcode() != ICONST_0 + ni) {
+                    bail = true;
+                    break;
+                }
 
                 final var loadInsn = method.instructions.get(base + 3);
-                if (loadInsn.getOpcode() != ILOAD) { bail = true; break; }
+                if (loadInsn.getOpcode() != ILOAD) {
+                    bail = true;
+                    break;
+                }
 
                 final var astoreInsn = method.instructions.get(base + 4);
-                if (astoreInsn.getOpcode() != Opcodes.IASTORE) { bail = true; break; }
+                if (astoreInsn.getOpcode() != Opcodes.IASTORE) {
+                    bail = true;
+                    break;
+                }
             }
 
-            if (bail) { lastCall = i; continue; }
+            if (bail) {
+                lastCall = i;
+                continue;
+            }
 
             // We now have a list of ILOADs to use for arguments. At this point, we know that the input is of the
             // correct form, so no more bailing + we can start modifying the method.

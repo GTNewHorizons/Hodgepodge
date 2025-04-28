@@ -5,6 +5,7 @@ package com.mitchej123.hodgepodge.asm.hooks.mc;
  */
 @SuppressWarnings("unused")
 public class RandomAid {
+
     /**
      * Yes, I don't really need this one. But adding this is easier than excluding the 1-arg case, which is still valid
      * bytecode.

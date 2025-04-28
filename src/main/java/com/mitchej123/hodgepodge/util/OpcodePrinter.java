@@ -1,6 +1,5 @@
 package com.mitchej123.hodgepodge.util;
 
-
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FrameNode;
 import org.objectweb.asm.tree.LabelNode;
@@ -13,7 +12,8 @@ import org.objectweb.asm.tree.VarInsnNode;
  */
 @SuppressWarnings("unused")
 public class OpcodePrinter {
-    //spotless:off
+
+    // spotless:off
     private static final String[] MAP = {
         "NOP",
         "ACONST_NULL",
@@ -98,11 +98,9 @@ public class OpcodePrinter {
     //spotless:on
 
     public static String printOpcode(AbstractInsnNode node) {
-        if (node instanceof LabelNode label)
-            return label.toString();
+        if (node instanceof LabelNode label) return label.toString();
 
-        if (node instanceof LineNumberNode line)
-            return "LINENUMBER " + line.line + " " + printOpcode(line.start);
+        if (node instanceof LineNumberNode line) return "LINENUMBER " + line.line + " " + printOpcode(line.start);
 
         if (node instanceof FrameNode frame) {
             return "FRAME " + switch (frame.type) {
