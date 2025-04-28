@@ -50,6 +50,11 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean fastIntCache;
 
+    @Config.Comment("Replaces a boxed primitive map in MapGenStructure with the fastutil equivalent, to reduce allocations.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean unboxMapGen;
+
     @Config.Comment("Removes hard caps on chunk handling speed. Experimental and probably incompatible with hybrid servers!")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart

@@ -535,6 +535,11 @@ public enum Mixins implements IMixins {
                     "minecraft.fastload.intcache.MixinWorldChunkManager")
             .setApplyIf(() -> SpeedupsConfig.fastIntCache)),
 
+    NUKE_LONG_BOXING(new MixinBuilder("Remove Long boxing in MapGenStructure").setPhase(Phase.EARLY)
+            .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses("minecraft.fastload.MixinMapGenStructure")
+            .setApplyIf(() -> SpeedupsConfig.unboxMapGen)),
+
     FAST_CHUNK_LOADING(new MixinBuilder("Invasively accelerates chunk handling").setPhase(Phase.EARLY)
             .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses("minecraft.fastload.MixinEntityPlayerMP", "minecraft.fastload.MixinChunkProviderServer")
