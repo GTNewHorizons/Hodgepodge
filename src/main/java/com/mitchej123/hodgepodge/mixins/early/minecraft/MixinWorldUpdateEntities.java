@@ -1,12 +1,15 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import java.util.Collection;
 import java.util.List;
+
 import net.minecraft.world.World;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
+
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 @Mixin(World.class)
 public class MixinWorldUpdateEntities {
