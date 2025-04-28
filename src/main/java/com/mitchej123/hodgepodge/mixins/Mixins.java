@@ -517,8 +517,8 @@ public enum Mixins implements IMixins {
             .addTargetedMod(TargetedMod.VANILLA).addMixinClasses("memory.MixinFMLClientHandler")
             .setApplyIf(() -> FixesConfig.enableMemoryFixes)),
 
-    FAST_RANDOM(new MixinBuilder("Replaces uses of stdlib Random with a faster one").setPhase(Phase.EARLY).setSide(Side.BOTH)
-            .addTargetedMod(TargetedMod.VANILLA)
+    FAST_RANDOM(new MixinBuilder("Replaces uses of stdlib Random with a faster one").setPhase(Phase.EARLY)
+            .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses(
                     "minecraft.fastload.intcache.MixinCollectOneCache",
                     "minecraft.fastload.intcache.MixinCollectTwoCaches",
@@ -526,7 +526,6 @@ public enum Mixins implements IMixins {
                     "minecraft.fastload.intcache.MixinIntCache",
                     "minecraft.fastload.intcache.MixinWorldChunkManager")
             .setApplyIf(() -> SpeedupsConfig.fastRandom)),
-
 
     FAST_INT_CACHE(new MixinBuilder("Rewrite internal caching methods to be safer and faster").setPhase(Phase.EARLY)
             .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
