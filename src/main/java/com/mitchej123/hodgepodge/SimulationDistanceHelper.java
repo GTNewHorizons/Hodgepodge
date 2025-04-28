@@ -1,25 +1,8 @@
 package com.mitchej123.hodgepodge;
 
-import java.lang.ref.WeakReference;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.WeakHashMap;
-import java.util.function.BiPredicate;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.NextTickListEntry;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.ForgeChunkManager;
-
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
-
+import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
@@ -29,6 +12,21 @@ import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectAVLTreeSet;
+import java.lang.ref.WeakReference;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.WeakHashMap;
+import java.util.function.BiPredicate;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.NextTickListEntry;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.ForgeChunkManager;
 
 public class SimulationDistanceHelper {
 
@@ -124,7 +122,10 @@ public class SimulationDistanceHelper {
         noTickChunksChanges.add(packedChunkPos, prevent);
     }
 
-    private boolean closeToPlayer(int x, int z) {
+    private boolean closeToPlayer(long packedChunkPos) {
+        final int cx = ChunkPosUtil.getPackedX(packedChunkPos);
+        final int cz = ChunkPosUtil.getPackedZ(packedChunkPos);
+
         World world = worldRef.get();
         if (world == null) {
             return false;
@@ -135,9 +136,9 @@ public class SimulationDistanceHelper {
             if (player.getEntityWorld() != world) {
                 continue;
             }
-            int playerX = (int) player.posX >> 4;
-            int playerZ = (int) player.posZ >> 4;
-            if (Math.abs(playerX - x) <= simulationDistance && Math.abs(playerZ - z) <= simulationDistance) {
+            int playerCX = (int) player.posX >> 4;
+            int playerCZ = (int) player.posZ >> 4;
+            if (Math.abs(playerCX - cx) <= simulationDistance && Math.abs(playerCZ - cz) <= simulationDistance) {
                 return true;
             }
         }
@@ -148,15 +149,11 @@ public class SimulationDistanceHelper {
      * Check if a chunk should get processed
      */
     public boolean shouldProcessTick(int x, int z) {
-        long key = ChunkCoordIntPair.chunkXZ2Int(x, z);
-        return cacheShouldProcessTick.computeIfAbsent(key, dummy -> {
-            if (closeToPlayer(x, z)) {
-                return true;
-            }
-            if (noTickChunks.containsKey(key)) {
-                return false;
-            }
-            return forcedChunksMap.contains(key);
+        long key = ChunkPosUtil.toLong(x, z);
+        return cacheShouldProcessTick.computeIfAbsent(key, k -> {
+            if (closeToPlayer(k)) return true;
+            if (noTickChunks.containsKey(k)) return false;
+            return forcedChunksMap.contains(k);
         });
     }
 
