@@ -55,6 +55,11 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean unboxMapGen;
 
+    @Config.Comment("Embeds the block ID into Block itself, massively accelerating block ID lookups.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean embedID;
+
     @Config.Comment("Removes hard caps on chunk handling speed. Experimental and probably incompatible with hybrid servers!")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
