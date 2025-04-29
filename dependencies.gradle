@@ -65,8 +65,8 @@ dependencies {
     devOnlyNonPublishable(deobf("https://github.com/makamys/CoreTweaks/releases/download/0.3.3.2/CoreTweaks-1.7.10-0.3.3.2+nomixin.jar"))
 
     // For testing - HP and AF are liable to mixin the same targets
-    //runtimeOnlyNonPublishable("maven.modrinth:archaicfix:0.7.5")
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:ArchaicFix:99.0.0:dev") // mavenLocal location
+    runtimeOnlyNonPublishable("maven.modrinth:archaicfix:0.7.6")
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:ArchaicFix:99.0.0:dev") // mavenLocal location
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:ServerUtilities:2.1.46:dev") // for the pregenerator
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta40:dev") // for TPS graph
 }

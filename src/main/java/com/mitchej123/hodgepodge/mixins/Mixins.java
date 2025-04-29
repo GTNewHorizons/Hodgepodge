@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.mixins;
 import static com.gtnewhorizon.gtnhlib.mixin.TargetedMod.ARCHAICFIX;
 import static com.gtnewhorizon.gtnhlib.mixin.TargetedMod.OPTIFINE;
 import static com.mitchej123.hodgepodge.mixins.TargetedMod.ANGELICA;
+import static com.mitchej123.hodgepodge.mixins.TargetedMod.FALSETWEAKS;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -44,6 +45,7 @@ public enum Mixins implements IMixins {
                     .setApplyIf(() -> FixesConfig.fixTooManyAllocationsChunkPositionIntPair)),
     ADD_SIMULATION_DISTANCE_OPTION(new MixinBuilder("Add option to separate simulation distance from render distance")
             .addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH).setPhase(Phase.EARLY)
+            .addExcludedMod(TargetedMod.OPTIFINE)
             .addMixinClasses(
                     "minecraft.MixinWorld_SimulationDistance",
                     "minecraft.MixinWorldServer_SimulationDistance",
@@ -572,7 +574,7 @@ public enum Mixins implements IMixins {
     FIX_IOOBE_RENDER_DISTANCE(
             new MixinBuilder("Fix out of bounds render distance when Optifine/Angelica is uninstalled")
                     .setPhase(Phase.EARLY).setSide(Side.CLIENT).addExcludedMod(OPTIFINE).addExcludedMod(ANGELICA)
-                    .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> true)
+                    .addExcludedMod(FALSETWEAKS).addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> true)
                     .addMixinClasses("minecraft.MixinGameSettings_ReduceRenderDistance")),
 
     // Ic2 adjustments
