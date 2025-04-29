@@ -24,6 +24,7 @@ public enum TargetedMod implements ITargetedMod {
     EXTRATIC("ExtraTiC", null, "ExtraTiC"),
     EXTRA_UTILITIES("ExtraUtilities", null, "ExtraUtilities"),
     FASTCRAFT("FastCraft", "fastcraft.Tweaker"),
+    FALSETWEAKS("FalseTweaks", "com.falsepattern.falsetweaks.asm.CoreLoadingPlugin", "falsetweaks"),
     GALACTICRAFT_CORE("GalacticraftCore", "micdoodle8.mods.galacticraft.core.asm.GCLoadingPlugin", "GalacticraftCore"),
     GLIBYS_VOICE_CHAT("Gliby's Voice Chat Mod", null, "gvc"),
     GT5U("GregTech5u", null, "gregtech"), // Also matches GT6.
