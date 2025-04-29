@@ -1,5 +1,6 @@
 package com.mitchej123.hodgepodge.asm.transformers.mc;
 
+import static org.objectweb.asm.Opcodes.DUP;
 import static org.objectweb.asm.Opcodes.ICONST_0;
 import static org.objectweb.asm.Opcodes.ICONST_1;
 import static org.objectweb.asm.Opcodes.ICONST_2;
@@ -124,7 +125,7 @@ public class VarargDissector implements IClassTransformer {
             for (int ni = 0; ni < X; ni++) {
                 final int base = ii + 4 * ni;
                 final var dupInsn = method.instructions.get(base + 1);
-                if (dupInsn.getOpcode() != Opcodes.DUP) {
+                if (dupInsn.getOpcode() != DUP) {
                     bail = true;
                     break;
                 }
