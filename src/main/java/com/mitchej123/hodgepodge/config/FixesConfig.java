@@ -192,7 +192,7 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixTooManyAllocationsChunkPositionIntPair;
 
-    @Config.Comment("Add option to separate simulation distance from rendering distance")
+    @Config.Comment("Add option to separate simulation distance from rendering distance (Incompatible with optifine, will automatically be disabled)")
     @Config.DefaultBoolean(true)
     public static boolean addSimulationDistance;
 
