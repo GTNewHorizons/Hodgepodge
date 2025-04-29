@@ -60,6 +60,12 @@ public enum AsmTransformers {
             ImmutableList.of(TargetedMod.FASTCRAFT, TargetedMod.BUKKIT),
             "com.mitchej123.hodgepodge.asm.transformers.mc.SpeedupObjectIntIdentityMapTransformer"
     ),
+    REMOVE_VARARG_SPAM(
+            "Remove vararg methods in GenLayer classes",
+            () -> ASMConfig.dissectVarargs,
+            Side.BOTH,
+            "com.mitchej123.hodgepodge.asm.transformers.mc.VarargDissector"
+    ),
     FIX_BOGUS_INTEGRATED_SERVER_NPE(
             "Fix bogus FMLProxyPacket NPEs on integrated server crashes",
             () -> FixesConfig.fixBogusIntegratedServerNPEs,

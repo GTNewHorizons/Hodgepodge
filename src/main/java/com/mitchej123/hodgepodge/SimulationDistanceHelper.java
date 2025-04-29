@@ -19,6 +19,7 @@ import net.minecraftforge.common.ForgeChunkManager;
 
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
+import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
@@ -124,7 +125,10 @@ public class SimulationDistanceHelper {
         noTickChunksChanges.add(packedChunkPos, prevent);
     }
 
-    private boolean closeToPlayer(int x, int z) {
+    private boolean closeToPlayer(long packedChunkPos) {
+        final int cx = ChunkPosUtil.getPackedX(packedChunkPos);
+        final int cz = ChunkPosUtil.getPackedZ(packedChunkPos);
+
         World world = worldRef.get();
         if (world == null) {
             return false;
@@ -135,9 +139,9 @@ public class SimulationDistanceHelper {
             if (player.getEntityWorld() != world) {
                 continue;
             }
-            int playerX = (int) player.posX >> 4;
-            int playerZ = (int) player.posZ >> 4;
-            if (Math.abs(playerX - x) <= simulationDistance && Math.abs(playerZ - z) <= simulationDistance) {
+            int playerCX = (int) player.posX >> 4;
+            int playerCZ = (int) player.posZ >> 4;
+            if (Math.abs(playerCX - cx) <= simulationDistance && Math.abs(playerCZ - cz) <= simulationDistance) {
                 return true;
             }
         }
@@ -148,15 +152,11 @@ public class SimulationDistanceHelper {
      * Check if a chunk should get processed
      */
     public boolean shouldProcessTick(int x, int z) {
-        long key = ChunkCoordIntPair.chunkXZ2Int(x, z);
-        return cacheShouldProcessTick.computeIfAbsent(key, dummy -> {
-            if (closeToPlayer(x, z)) {
-                return true;
-            }
-            if (noTickChunks.containsKey(key)) {
-                return false;
-            }
-            return forcedChunksMap.contains(key);
+        long key = ChunkPosUtil.toLong(x, z);
+        return cacheShouldProcessTick.computeIfAbsent(key, k -> {
+            if (closeToPlayer(k)) return true;
+            if (noTickChunks.containsKey(k)) return false;
+            return forcedChunksMap.contains(k);
         });
     }
 

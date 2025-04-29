@@ -1,5 +1,10 @@
 package com.mitchej123.hodgepodge.mixins;
 
+import static com.gtnewhorizon.gtnhlib.mixin.TargetedMod.ARCHAICFIX;
+import static com.gtnewhorizon.gtnhlib.mixin.TargetedMod.OPTIFINE;
+import static com.mitchej123.hodgepodge.mixins.TargetedMod.ANGELICA;
+import static com.mitchej123.hodgepodge.mixins.TargetedMod.FALSETWEAKS;
+
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -40,6 +45,7 @@ public enum Mixins implements IMixins {
                     .setApplyIf(() -> FixesConfig.fixTooManyAllocationsChunkPositionIntPair)),
     ADD_SIMULATION_DISTANCE_OPTION(new MixinBuilder("Add option to separate simulation distance from render distance")
             .addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH).setPhase(Phase.EARLY)
+            .addExcludedMod(TargetedMod.OPTIFINE)
             .addMixinClasses(
                     "minecraft.MixinWorld_SimulationDistance",
                     "minecraft.MixinWorldServer_SimulationDistance",
@@ -91,8 +97,8 @@ public enum Mixins implements IMixins {
             .setSide(Side.BOTH)),
     OPTIMIZE_WORLD_UPDATE_LIGHT(new MixinBuilder("Optimize world updateLightByType method").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinWorld_FixLightUpdateLag").setSide(Side.BOTH)
-            .addExcludedMod(TargetedMod.ARCHAICFIX).addExcludedMod(TargetedMod.ANGELICA)
-            .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> FixesConfig.optimizeWorldUpdateLight)),
+            .addExcludedMod(TargetedMod.ARCHAICFIX).addExcludedMod(ANGELICA).addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> FixesConfig.optimizeWorldUpdateLight)),
     FIX_FRIENDLY_CREATURE_SOUNDS(new MixinBuilder("Fix Friendly Creature Sounds").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinSoundHandler").setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> FixesConfig.fixFriendlyCreatureSounds)),
@@ -105,8 +111,8 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.throttleItemPickupEvent).addTargetedMod(TargetedMod.VANILLA)),
     FIX_PERSPECTIVE_CAMERA(new MixinBuilder("Camera Perspective Fix").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityRenderer").setSide(Side.CLIENT)
-            .addExcludedMod(TargetedMod.ARCHAICFIX).addExcludedMod(TargetedMod.ANGELICA)
-            .addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> FixesConfig.fixPerspectiveCamera)),
+            .addExcludedMod(TargetedMod.ARCHAICFIX).addExcludedMod(ANGELICA).addTargetedMod(TargetedMod.VANILLA)
+            .setApplyIf(() -> FixesConfig.fixPerspectiveCamera)),
     FIX_DEBUG_BOUNDING_BOX(new MixinBuilder("Fix Bounding Box").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinRenderManager").setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> FixesConfig.fixDebugBoundingBox)),
@@ -266,7 +272,8 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixResizableFullscreen).addTargetedMod(TargetedMod.VANILLA)),
     FIX_UNFOCUSED_FULLSCREEN(new MixinBuilder("Fix Unfocused Fullscreen").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinMinecraft_UnfocusedFullscreen").setSide(Side.CLIENT)
-            .setApplyIf(() -> FixesConfig.fixUnfocusedFullscreen).addTargetedMod(TargetedMod.VANILLA)),
+            .setApplyIf(() -> FixesConfig.fixUnfocusedFullscreen).addTargetedMod(TargetedMod.VANILLA)
+            .addExcludedMod(ARCHAICFIX)),
     FIX_RENDERERS_WORLD_LEAK(new MixinBuilder("Fix Renderers World Leak").setPhase(Phase.EARLY)
             .addMixinClasses(
                     "minecraft.MixinMinecraft_ClearRenderersWorldLeak",
@@ -282,8 +289,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.addToggleDebugMessage).addTargetedMod(TargetedMod.VANILLA)),
     OPTIMIZE_TEXTURE_LOADING(new MixinBuilder("Optimize Texture Loading").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.textures.client.MixinTextureUtil").addTargetedMod(TargetedMod.VANILLA)
-            .addExcludedMod(TargetedMod.ANGELICA).setApplyIf(() -> SpeedupsConfig.optimizeTextureLoading)
-            .setSide(Side.CLIENT)),
+            .addExcludedMod(ANGELICA).setApplyIf(() -> SpeedupsConfig.optimizeTextureLoading).setSide(Side.CLIENT)),
     HIDE_POTION_PARTICLES(new MixinBuilder("Hide Potion Particles").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityLivingBase_HidePotionParticles").setSide(Side.CLIENT)
             .setApplyIf(() -> TweaksConfig.hidePotionParticlesFromSelf).addTargetedMod(TargetedMod.VANILLA)),
@@ -522,10 +528,34 @@ public enum Mixins implements IMixins {
             .addTargetedMod(TargetedMod.VANILLA).addMixinClasses("memory.MixinFMLClientHandler")
             .setApplyIf(() -> FixesConfig.enableMemoryFixes)),
 
+    FAST_RANDOM(new MixinBuilder("Replaces uses of stdlib Random with a faster one").setPhase(Phase.EARLY)
+            .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses(
+                    "minecraft.fastload.rand.MixinChunkProviderGenerate",
+                    "minecraft.fastload.rand.MixinMapGenBase",
+                    "minecraft.fastload.rand.MixinMapGenCaves")
+            .setApplyIf(() -> SpeedupsConfig.fastRandom)),
+
     FAST_INT_CACHE(new MixinBuilder("Rewrite internal caching methods to be safer and faster").setPhase(Phase.EARLY)
             .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
-            .addMixinClasses("minecraft.fastload.MixinIntCache", "minecraft.fastload.MixinWorldChunkManager")
+            .addMixinClasses(
+                    "minecraft.fastload.intcache.MixinCollectOneCache",
+                    "minecraft.fastload.intcache.MixinCollectTwoCaches",
+                    "minecraft.fastload.intcache.MixinGenLayerEdge",
+                    "minecraft.fastload.intcache.MixinIntCache",
+                    "minecraft.fastload.intcache.MixinWorldChunkManager")
             .setApplyIf(() -> SpeedupsConfig.fastIntCache)),
+
+    NUKE_LONG_BOXING(new MixinBuilder("Remove Long boxing in MapGenStructure").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.VANILLA).addMixinClasses("minecraft.fastload.MixinMapGenStructure")
+            .setApplyIf(() -> SpeedupsConfig.unboxMapGen)),
+
+    EMBED_BLOCKIDS(new MixinBuilder("Embed block IDs directly in the block objects, to speed up lookups")
+            .setPhase(Phase.EARLY).setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses(
+                    "minecraft.fastload.flatid.MixinBlock",
+                    "minecraft.fastload.flatid.MixinFMLControlledNamespacedRegistry")
+            .setApplyIf(() -> SpeedupsConfig.embedID)),
 
     FAST_CHUNK_LOADING(new MixinBuilder("Invasively accelerates chunk handling").setPhase(Phase.EARLY)
             .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
@@ -549,6 +579,12 @@ public enum Mixins implements IMixins {
             new MixinBuilder("Fix Glass Bottles filling with Water from some other Fluid blocks").setPhase(Phase.EARLY)
                     .setSide(Side.BOTH).addMixinClasses("minecraft.MixinItemGlassBottle")
                     .setApplyIf(() -> FixesConfig.fixGlassBottleWaterFilling).addTargetedMod(TargetedMod.VANILLA)),
+
+    FIX_IOOBE_RENDER_DISTANCE(
+            new MixinBuilder("Fix out of bounds render distance when Optifine/Angelica is uninstalled")
+                    .setPhase(Phase.EARLY).setSide(Side.CLIENT).addExcludedMod(OPTIFINE).addExcludedMod(ANGELICA)
+                    .addExcludedMod(FALSETWEAKS).addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> true)
+                    .addMixinClasses("minecraft.MixinGameSettings_ReduceRenderDistance")),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)

@@ -33,4 +33,8 @@ public class ASMConfig {
     @Config.Comment("Speedup ObjectIntIdentityMap")
     @Config.DefaultBoolean(true)
     public static boolean speedupObjectIntIdentityMap;
+
+    @Config.Comment("Remove various vararg method calls, to make profiling easier.")
+    @Config.DefaultBoolean(true)
+    public static boolean dissectVarargs;
 }
