@@ -519,10 +519,34 @@ public enum Mixins implements IMixins {
             .addTargetedMod(TargetedMod.VANILLA).addMixinClasses("memory.MixinFMLClientHandler")
             .setApplyIf(() -> FixesConfig.enableMemoryFixes)),
 
+    FAST_RANDOM(new MixinBuilder("Replaces uses of stdlib Random with a faster one").setPhase(Phase.EARLY)
+            .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses(
+                    "minecraft.fastload.rand.MixinChunkProviderGenerate",
+                    "minecraft.fastload.rand.MixinMapGenBase",
+                    "minecraft.fastload.rand.MixinMapGenCaves")
+            .setApplyIf(() -> SpeedupsConfig.fastRandom)),
+
     FAST_INT_CACHE(new MixinBuilder("Rewrite internal caching methods to be safer and faster").setPhase(Phase.EARLY)
             .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
-            .addMixinClasses("minecraft.fastload.MixinIntCache", "minecraft.fastload.MixinWorldChunkManager")
+            .addMixinClasses(
+                    "minecraft.fastload.intcache.MixinCollectOneCache",
+                    "minecraft.fastload.intcache.MixinCollectTwoCaches",
+                    "minecraft.fastload.intcache.MixinGenLayerEdge",
+                    "minecraft.fastload.intcache.MixinIntCache",
+                    "minecraft.fastload.intcache.MixinWorldChunkManager")
             .setApplyIf(() -> SpeedupsConfig.fastIntCache)),
+
+    NUKE_LONG_BOXING(new MixinBuilder("Remove Long boxing in MapGenStructure").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.VANILLA).addMixinClasses("minecraft.fastload.MixinMapGenStructure")
+            .setApplyIf(() -> SpeedupsConfig.unboxMapGen)),
+
+    EMBED_BLOCKIDS(new MixinBuilder("Embed block IDs directly in the block objects, to speed up lookups")
+            .setPhase(Phase.EARLY).setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
+            .addMixinClasses(
+                    "minecraft.fastload.flatid.MixinBlock",
+                    "minecraft.fastload.flatid.MixinFMLControlledNamespacedRegistry")
+            .setApplyIf(() -> SpeedupsConfig.embedID)),
 
     FAST_CHUNK_LOADING(new MixinBuilder("Invasively accelerates chunk handling").setPhase(Phase.EARLY)
             .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)

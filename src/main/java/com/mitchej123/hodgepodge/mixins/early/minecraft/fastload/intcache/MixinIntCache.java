@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload;
+package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload.intcache;
 
 import net.minecraft.world.gen.layer.IntCache;
 
@@ -18,5 +18,18 @@ public class MixinIntCache {
     @Overwrite
     public static synchronized int[] getIntCache(int size) {
         return FastIntCache.getCache(size);
+    }
+
+    /**
+     * Note: this should still be removed where possible! I don't know for sure whether the JIT can optimize out blank
+     * synchronize methods, but I wouldn't trust it.
+     *
+     * @author ah-OOG-ah
+     * @reason Unnecessary, since explicit freeing is used now
+     */
+    @Overwrite
+    @Deprecated
+    public static synchronized void resetIntCache() {
+
     }
 }
