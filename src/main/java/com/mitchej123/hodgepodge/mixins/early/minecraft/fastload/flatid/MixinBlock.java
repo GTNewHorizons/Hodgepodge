@@ -14,7 +14,7 @@ import com.mitchej123.hodgepodge.mixins.interfaces.BlockExt_ID;
 public class MixinBlock implements BlockExt_ID {
 
     @Unique
-    private int hodgepodge$id;
+    private int hodgepodge$id = -1;
 
     @SuppressWarnings("AddedMixinMembersNamePattern")
     @Override
@@ -34,6 +34,7 @@ public class MixinBlock implements BlockExt_ID {
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/RegistryNamespaced;getIDForObject(Ljava/lang/Object;)I"))
     private static int hodgepodge$getID(RegistryNamespaced instance, Object object) {
-        return ((BlockExt_ID) object).getID();
+        if (!(object instanceof BlockExt_ID block)) return -1;
+        return block.getID();
     }
 }
