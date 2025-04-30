@@ -325,7 +325,11 @@ public enum Mixins implements IMixins {
     STRING_POOLER_NBT_STRING(new MixinBuilder("Pool NBT Strings").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("minecraft.MixinNBTTagString_stringPooler")
             .setApplyIf(() -> TweaksConfig.enableNBTStringPooling).addTargetedMod(TargetedMod.VANILLA)),
-    THREADED_WORLDDATA_SAVING(new MixinBuilder("Threaded WorldData Saving").setPhase(Phase.EARLY).setSide(Side.BOTH)
+    CACHE_NBT_HASH(new Builder("Optimize NBT comparisons").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addMixinClasses("minecraft.MixinNBTTagCompound_cacheHash", "minecraft.MixinNBTTagList_cacheHash")
+            .setApplyIf(() -> TweaksConfig.cacheNBTHash).addTargetedMod(TargetedMod.VANILLA)
+            .addExcludedMod(TargetedMod.BUKKIT)),
+    THREADED_WORLDDATA_SAVING(new Builder("Threaded WorldData Saving").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses(
                     "minecraft.MixinMapStorage_threadedIO",
                     "minecraft.MixinSaveHandler_threadedIO",
