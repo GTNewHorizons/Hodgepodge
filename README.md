@@ -46,6 +46,7 @@ Hodgepodge is LGPL-3.
 - Block placing repetition delay can be decreased.
 - Crosshair color can be set to not be inverted.
 - Port number of LAN server can be changed.
+- Prevent endermen grabbing and placing blocks.
 - Skyblock support
   - Terrain generation is replaced with all air blocks.
   - Chunk population (structures) is disabled.
