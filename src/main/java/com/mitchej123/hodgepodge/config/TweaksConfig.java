@@ -258,6 +258,11 @@ public class TweaksConfig {
     @Config.DefaultInt(0)
     public static int extraUtilitiesEnderQuarryOverride;
 
+    @Config.Comment("Synchronize IC2 reactors to the world tick time, allowing for tick-perfect automation.")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean synchronizeIC2Reactors;
+
     // Minechem
 
     @Config.Comment("Minechem Atropine High (Delirium) effect ID")
@@ -347,5 +352,9 @@ public class TweaksConfig {
     @Config.Comment("Avoids droping items on container close, and instead places them in the player inventory. (Inspired from EFR)")
     @Config.DefaultBoolean(true)
     public static boolean avoidDroppingItemsWhenClosing;
+
+    @Config.Comment("Simulation distance (needs addSimulationDistance to be active)")
+    @Config.DefaultInt(32)
+    public static int simulationDistance;
 
 }

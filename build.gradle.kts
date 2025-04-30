@@ -12,6 +12,7 @@ tasks.jar {
 }
 minecraft {
     extraRunJvmArguments.add("-Dhodgepodge.logModTimes=true")
+    // extraRunJvmArguments.addAll("-Drfb.dumpLoadedClasses=true", "-Drfb.dumpLoadedClassesPerTransformer=true")
 }
 
 tasks.processResources {

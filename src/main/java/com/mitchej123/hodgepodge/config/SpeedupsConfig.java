@@ -40,10 +40,25 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean speedupChunkProviderClient;
 
+    @Config.Comment("Replaces uses of java.util.Random with a faster version, skipping atomic operations.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fastRandom;
+
     @Config.Comment("Rewrites internal cache methods to be safer and faster. Experimental, use at your own risk!")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean fastIntCache;
+
+    @Config.Comment("Replaces a boxed primitive map in MapGenStructure with the fastutil equivalent, to reduce allocations.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean unboxMapGen;
+
+    @Config.Comment("Embeds the block ID into Block itself, massively accelerating block ID lookups.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean embedID;
 
     @Config.Comment("Removes hard caps on chunk handling speed. Experimental and probably incompatible with hybrid servers!")
     @Config.DefaultBoolean(false)

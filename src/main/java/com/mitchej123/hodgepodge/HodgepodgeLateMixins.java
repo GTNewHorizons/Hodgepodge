@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge;
 import java.util.List;
 import java.util.Set;
 
+import com.gtnewhorizon.gtnhlib.mixin.IMixins;
 import com.gtnewhorizon.gtnhmixins.ILateMixinLoader;
 import com.gtnewhorizon.gtnhmixins.LateMixin;
 import com.mitchej123.hodgepodge.mixins.Mixins;
@@ -17,6 +18,6 @@ public class HodgepodgeLateMixins implements ILateMixinLoader {
 
     @Override
     public List<String> getMixins(Set<String> loadedMods) {
-        return Mixins.getLateMixins(loadedMods);
+        return IMixins.getLateMixins(Mixins.class, loadedMods);
     }
 }
