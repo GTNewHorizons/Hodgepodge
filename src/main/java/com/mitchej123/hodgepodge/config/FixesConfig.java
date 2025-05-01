@@ -32,6 +32,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixContainerPutStacksInSlots;
 
+    @Config.Comment("Backports 1.12's slot shift clicking to prevent recursion when crafting items")
+    @Config.DefaultBoolean(true)
+    public static boolean fixContainerShiftClickRecursion;
+
     @Config.Comment("Fixes the debug hitbox of the player beeing offset")
     @Config.DefaultBoolean(true)
     public static boolean fixDebugBoundingBox;
