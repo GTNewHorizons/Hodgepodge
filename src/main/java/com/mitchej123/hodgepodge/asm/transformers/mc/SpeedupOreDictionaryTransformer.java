@@ -30,6 +30,7 @@ import static org.objectweb.asm.Opcodes.T_INT;
 import java.util.List;
 import java.util.ListIterator;
 
+import com.mitchej123.hodgepodge.Common;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import org.apache.logging.log4j.LogManager;
@@ -108,7 +109,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
                 modified |= transformGetOreIDStringMethod(method);
             } else if ("getOreID".equals(method.name) && "(Lnet/minecraft/item/ItemStack;)I".equals(method.desc)) {
                 modified |= transformGetOreIDItemStackMethod(method);
-            } else if ("getOreIDs".equals(method.name) && "(Lnet/minecraft/item/ItemStack;)[I".equals(method.desc)) {
+            } else if ("getOreIDs".equals(method.name) && "(Lnet/minecraft/item/ItemStack;)[I".equals(method.desc) && !Common.thermosTainted) {
                 modified |= transformGetOreIDsMethod(method);
             } else if ("getOres".equals(method.name) && "(Ljava/lang/String;Z)Ljava/util/List;".equals(method.desc)) {
                 modified |= transformGetOresMethod(method);
