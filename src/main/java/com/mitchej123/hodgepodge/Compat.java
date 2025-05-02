@@ -28,6 +28,7 @@ public class Compat {
     private static boolean isBiomesOPlentyPresent;
     private static boolean isDreamcraftPresent;
     private static boolean isCoreTweaksPresent;
+    private static boolean isKleeSlabsPresent;
 
     static void init(Side side) {
         isClient = side == Side.CLIENT;
@@ -61,6 +62,8 @@ public class Compat {
         isDreamcraftPresent = Loader.isModLoaded("dreamcraft");
 
         isCoreTweaksPresent = Loader.isModLoaded("coretweaks");
+
+        isKleeSlabsPresent = Loader.isModLoaded("kleeslabs");
     }
 
     /**
@@ -134,5 +137,12 @@ public class Compat {
      */
     public static boolean isCoreTweaksPresent() {
         return isCoreTweaksPresent;
+    }
+
+    /**
+     * Cannot be used before pre-init phase.
+     */
+    public static boolean isKleeSlabsPresent() {
+        return isKleeSlabsPresent;
     }
 }

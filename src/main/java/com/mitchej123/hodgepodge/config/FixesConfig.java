@@ -372,6 +372,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean enableMemoryFixes;
 
+    @Config.Comment("Fix broken modlist entries due to wrong mcmod.info files")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixModlistEntries;
+
     // BetterHUD
 
     @Config.Comment("Maximum hp for BetterHUD to render as hearts")
