@@ -18,6 +18,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 public abstract class MixinContainer_FixShiftRecursion {
 
     @Shadow
+    /* dragEvent */
     private int field_94536_g;
 
     @Shadow
@@ -30,21 +31,21 @@ public abstract class MixinContainer_FixShiftRecursion {
     public ItemStack hodgepodge$slotClickWrap(int slotId, int clickedButton, int mode, EntityPlayer player,
             Operation<ItemStack> original) {
         if (field_94536_g == 0 && mode == 1 && (clickedButton == 0 || clickedButton == 1)) {
-            ItemStack itemstack = null;
             if (slotId < 0) {
                 return null;
             }
 
-            Slot slot5 = this.inventorySlots.get(slotId);
+            Slot targetSlot = this.inventorySlots.get(slotId);
 
-            if (slot5 == null || !slot5.canTakeStack(player)) {
+            if (targetSlot == null || !targetSlot.canTakeStack(player)) {
                 return null;
             }
 
-            for (ItemStack itemstack7 = this.transferStackInSlot(player, slotId); itemstack7 != null
-                    && hodgepodge$areItemsEqual(slot5.getStack(), itemstack7); itemstack7 = this
+            ItemStack itemstack = null;
+            for (ItemStack tempStack = this.transferStackInSlot(player, slotId); tempStack != null
+                    && hodgepodge$areItemsEqual(targetSlot.getStack(), tempStack); tempStack = this
                             .transferStackInSlot(player, slotId)) {
-                itemstack = itemstack7.copy();
+                itemstack = tempStack.copy();
             }
 
             return itemstack;
