@@ -30,7 +30,6 @@ import static org.objectweb.asm.Opcodes.T_INT;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.mitchej123.hodgepodge.Common;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import org.apache.logging.log4j.LogManager;
@@ -47,6 +46,7 @@ import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
@@ -54,6 +54,8 @@ import org.objectweb.asm.tree.VarInsnNode;
 import org.objectweb.asm.util.Printer;
 import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceMethodVisitor;
+
+import com.mitchej123.hodgepodge.Common;
 
 /**
  * Transformer that optimizes OreDictionary by replacing boxed Integer types with primitives and swapping standard Java
@@ -154,6 +156,13 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
                 modified = true;
     
                 AbstractInsnNode next = node.getNext();
+                // server side only, there is a label and line number node between idToName and the NEW hash map
+                if (next instanceof LabelNode) {
+                    next = next.getNext();
+                }
+                if (next instanceof LineNumberNode) {
+                    next = next.getNext();
+                }
                 if (next != null && next.getOpcode() == NEW && next instanceof TypeInsnNode tNode && tNode.desc.equals(JAVA_HASH_MAP)) {
                     tNode.desc = FASTUTIL_OBJECT_2_INT_HASH_MAP;
                 } else {
@@ -252,6 +261,13 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
                         vNode.setOpcode(ISTORE);
                     }
                     next = next.getNext();
+                    // server side only, there is a label and line number node between certain nodes
+                    if (next instanceof LabelNode) {
+                        next = next.getNext();
+                    }
+                    if (next instanceof LineNumberNode) {
+                        next = next.getNext();
+                    }
                     if (next.getOpcode() == ALOAD && next instanceof VarInsnNode vNode && vNode.var == 1) {
                         vNode.setOpcode(ILOAD);
                     }
