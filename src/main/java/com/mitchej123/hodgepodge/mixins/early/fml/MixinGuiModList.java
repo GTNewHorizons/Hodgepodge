@@ -96,6 +96,7 @@ public abstract class MixinGuiModList extends GuiScreen implements GetSelectedMo
         if (!sorted) {
             reloadMods();
             Collections.sort(mods, sortType.getComparator());
+            setMods();
             sorted = true;
         }
     }
