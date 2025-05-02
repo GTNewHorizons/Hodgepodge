@@ -1,16 +1,22 @@
 package com.mitchej123.hodgepodge.asm.transformers.mc;
 
+import static org.objectweb.asm.Opcodes.AASTORE;
 import static org.objectweb.asm.Opcodes.ACC_FINAL;
 import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static org.objectweb.asm.Opcodes.ACC_STATIC;
 import static org.objectweb.asm.Opcodes.ALOAD;
+import static org.objectweb.asm.Opcodes.ANEWARRAY;
 import static org.objectweb.asm.Opcodes.ARETURN;
 import static org.objectweb.asm.Opcodes.ASTORE;
+import static org.objectweb.asm.Opcodes.BIPUSH;
 import static org.objectweb.asm.Opcodes.CHECKCAST;
 import static org.objectweb.asm.Opcodes.DUP;
+import static org.objectweb.asm.Opcodes.GETFIELD;
 import static org.objectweb.asm.Opcodes.GETSTATIC;
 import static org.objectweb.asm.Opcodes.GOTO;
+import static org.objectweb.asm.Opcodes.IADD;
 import static org.objectweb.asm.Opcodes.ICONST_0;
+import static org.objectweb.asm.Opcodes.ICONST_1;
 import static org.objectweb.asm.Opcodes.ICONST_M1;
 import static org.objectweb.asm.Opcodes.IFEQ;
 import static org.objectweb.asm.Opcodes.IFNONNULL;
@@ -22,9 +28,12 @@ import static org.objectweb.asm.Opcodes.INVOKEINTERFACE;
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
+import static org.objectweb.asm.Opcodes.IOR;
+import static org.objectweb.asm.Opcodes.ISHL;
 import static org.objectweb.asm.Opcodes.ISTORE;
 import static org.objectweb.asm.Opcodes.NEW;
 import static org.objectweb.asm.Opcodes.NEWARRAY;
+import static org.objectweb.asm.Opcodes.POP;
 import static org.objectweb.asm.Opcodes.PUTSTATIC;
 import static org.objectweb.asm.Opcodes.T_INT;
 
@@ -48,6 +57,8 @@ import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -116,9 +127,14 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
             } else if ("getOreID".equals(method.name) && "(Lnet/minecraft/item/ItemStack;)I".equals(method.desc)) {
                 LOGGER.debug("Transforming OreDictionary.getOreID(ItemStack)");
                 modified |= transformGetOreIDItemStackMethod(method);
-            } else if ("getOreIDs".equals(method.name) && "(Lnet/minecraft/item/ItemStack;)[I".equals(method.desc) && !Common.thermosTainted) {
-                LOGGER.debug("Transforming OreDictionary.getOreIDs(ItemStack)");
-                modified |= transformGetOreIDsMethod(method);
+            } else if ("getOreIDs".equals(method.name) && "(Lnet/minecraft/item/ItemStack;)[I".equals(method.desc)) {
+                if(!Common.thermosTainted) {
+                    LOGGER.debug("Transforming OreDictionary.getOreIDs(ItemStack)");
+                    modified |= transformGetOreIDsMethod(method);
+                } else {
+                    LOGGER.debug("Overwriting OreDictionary.getOreIDs(ItemStack) as it is tainted by Thermos");
+                    modified |= overwriteGetOreIDsMethod(method);
+                }
             } else if ("getOres".equals(method.name) && "(Ljava/lang/String;Z)Ljava/util/List;".equals(method.desc)) {
                 LOGGER.debug("Transforming OreDictionary.getOres(String, boolean)");
                 modified |= transformGetOresMethod(method);
@@ -533,6 +549,179 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
 
         return modified;
     }
+
+
+    /**
+     * Replaces the bytecode of a method with a specific implementation for getOreIDs.
+     * This function is designed for use when Common.thermosTainted is true.
+     *
+     * @param method The method node to transform
+     * @return true if transformation was successful, false otherwise
+     */
+    private boolean overwriteGetOreIDsMethod(MethodNode method) {
+        if (!method.name.equals("getOreIDs") || !method.desc.equals("(Lnet/minecraft/item/ItemStack;)[I")) {
+            return false;
+        }
+
+        // Clear the existing instructions and local variables
+        method.instructions.clear();
+        method.localVariables.clear();
+        method.tryCatchBlocks.clear();
+
+        // Create new instruction list
+        InsnList insns = new InsnList();
+
+        // Create labels
+        LabelNode L0 = new LabelNode(new Label());
+        LabelNode L1 = new LabelNode(new Label());
+        LabelNode L2 = new LabelNode(new Label());
+        LabelNode L3 = new LabelNode(new Label());
+        LabelNode L4 = new LabelNode(new Label());
+        LabelNode L5 = new LabelNode(new Label());
+        LabelNode L6 = new LabelNode(new Label());
+        LabelNode L7 = new LabelNode(new Label());
+        LabelNode L8 = new LabelNode(new Label());
+        LabelNode L9 = new LabelNode(new Label());
+        LabelNode L10 = new LabelNode(new Label());
+        LabelNode L11 = new LabelNode(new Label());
+        LabelNode L12 = new LabelNode(new Label());
+        LabelNode L13 = new LabelNode(new Label());
+        LabelNode L14 = new LabelNode(new Label());
+
+        // Add instructions exactly as in the transformed bytecode on forge
+        insns.add(L0);
+        insns.add(new LineNumberNode(336, L0));
+        insns.add(new VarInsnNode(ALOAD, 0));
+        insns.add(new JumpInsnNode(IFNULL, L1));
+        insns.add(new VarInsnNode(ALOAD, 0));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "net/minecraft/item/ItemStack", "getItem", "()Lnet/minecraft/item/Item;", false));
+        insns.add(new JumpInsnNode(IFNONNULL, L2));
+
+        insns.add(L1);
+        insns.add(new FieldInsnNode(GETSTATIC, "net/minecraftforge/oredict/OreDictionary", "EMPTY_INT_ARRAY", "[I"));
+        insns.add(new InsnNode(ARETURN));
+
+        insns.add(L2);
+        insns.add(new LineNumberNode(338, L2));
+        insns.add(new TypeInsnNode(NEW, "it/unimi/dsi/fastutil/ints/IntOpenHashSet"));
+        insns.add(new InsnNode(DUP));
+        insns.add(new MethodInsnNode(INVOKESPECIAL, "it/unimi/dsi/fastutil/ints/IntOpenHashSet", "<init>", "()V", false));
+        insns.add(new VarInsnNode(ASTORE, 1));
+
+        insns.add(L3);
+        insns.add(new LineNumberNode(343, L3));
+        insns.add(new VarInsnNode(ALOAD, 0));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "net/minecraft/item/ItemStack", "getItem", "()Lnet/minecraft/item/Item;", false));
+        insns.add(new FieldInsnNode(GETFIELD, "net/minecraft/item/Item", "delegate", "Lcpw/mods/fml/common/registry/RegistryDelegate;"));
+        insns.add(new MethodInsnNode(INVOKEINTERFACE, "cpw/mods/fml/common/registry/RegistryDelegate", "name", "()Ljava/lang/String;", true));
+        insns.add(new VarInsnNode(ASTORE, 2));
+
+        insns.add(L4);
+        insns.add(new LineNumberNode(345, L4));
+        insns.add(new VarInsnNode(ALOAD, 2));
+        insns.add(new JumpInsnNode(IFNONNULL, L5));
+
+        insns.add(L6);
+        insns.add(new LineNumberNode(347, L6));
+        insns.add(new FieldInsnNode(GETSTATIC, "org/apache/logging/log4j/Level", "DEBUG", "Lorg/apache/logging/log4j/Level;"));
+        insns.add(new LdcInsnNode("Attempted to find the oreIDs for an unregistered object (%s). This won't work very well."));
+        insns.add(new InsnNode(ICONST_1));
+        insns.add(new TypeInsnNode(ANEWARRAY, "java/lang/Object"));
+        insns.add(new InsnNode(DUP));
+        insns.add(new InsnNode(ICONST_0));
+        insns.add(new VarInsnNode(ALOAD, 0));
+        insns.add(new InsnNode(AASTORE));
+        insns.add(new MethodInsnNode(INVOKESTATIC, "cpw/mods/fml/common/FMLLog", "log", "(Lorg/apache/logging/log4j/Level;Ljava/lang/String;[Ljava/lang/Object;)V", false));
+        insns.add(new FieldInsnNode(GETSTATIC, "net/minecraftforge/oredict/OreDictionary", "EMPTY_INT_ARRAY", "[I"));
+        insns.add(new InsnNode(ARETURN));
+
+        insns.add(L5);
+        insns.add(new LineNumberNode(352, L5));
+        insns.add(new MethodInsnNode(INVOKESTATIC, "cpw/mods/fml/common/registry/GameData", "getItemRegistry", "()Lcpw/mods/fml/common/registry/FMLControlledNamespacedRegistry;", false));
+        insns.add(new VarInsnNode(ALOAD, 2));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "cpw/mods/fml/common/registry/FMLControlledNamespacedRegistry", "getId", "(Ljava/lang/String;)I", false));
+        insns.add(new VarInsnNode(ISTORE, 3));
+
+        insns.add(L7);
+        insns.add(new LineNumberNode(354, L7));
+        insns.add(new FieldInsnNode(GETSTATIC, "net/minecraftforge/oredict/OreDictionary", "stackToId", "Ljava/util/Map;"));
+        insns.add(new TypeInsnNode(CHECKCAST, "it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap"));
+        insns.add(new VarInsnNode(ILOAD, 3));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap", "get", "(I)Ljava/lang/Object;", false));
+        insns.add(new TypeInsnNode(CHECKCAST, "it/unimi/dsi/fastutil/ints/IntList"));
+        insns.add(new VarInsnNode(ASTORE, 4));
+
+        insns.add(L8);
+        insns.add(new LineNumberNode(355, L8));
+        insns.add(new VarInsnNode(ALOAD, 4));
+        insns.add(new JumpInsnNode(IFNULL, L9));
+        insns.add(new VarInsnNode(ALOAD, 1));
+        insns.add(new VarInsnNode(ALOAD, 4));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "it/unimi/dsi/fastutil/ints/IntOpenHashSet", "addAll", "(Lit/unimi/dsi/fastutil/ints/IntCollection;)Z", false));
+        insns.add(new InsnNode(POP));
+
+        insns.add(L9);
+        insns.add(new LineNumberNode(356, L9));
+        insns.add(new FieldInsnNode(GETSTATIC, "net/minecraftforge/oredict/OreDictionary", "stackToId", "Ljava/util/Map;"));
+        insns.add(new TypeInsnNode(CHECKCAST, "it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap"));
+        insns.add(new VarInsnNode(ILOAD, 3));
+        insns.add(new VarInsnNode(ALOAD, 0));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "net/minecraft/item/ItemStack", "getItemDamage", "()I", false));
+        insns.add(new InsnNode(ICONST_1));
+        insns.add(new InsnNode(IADD));
+        insns.add(new IntInsnNode(BIPUSH, 16));
+        insns.add(new InsnNode(ISHL));
+        insns.add(new InsnNode(IOR));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap", "get", "(I)Ljava/lang/Object;", false));
+        insns.add(new TypeInsnNode(CHECKCAST, "it/unimi/dsi/fastutil/ints/IntList"));
+        insns.add(new VarInsnNode(ASTORE, 4));
+
+        insns.add(L10);
+        insns.add(new LineNumberNode(357, L10));
+        insns.add(new VarInsnNode(ALOAD, 4));
+        insns.add(new JumpInsnNode(IFNULL, L11));
+        insns.add(new VarInsnNode(ALOAD, 1));
+        insns.add(new VarInsnNode(ALOAD, 4));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "it/unimi/dsi/fastutil/ints/IntOpenHashSet", "addAll", "(Lit/unimi/dsi/fastutil/ints/IntCollection;)Z", false));
+        insns.add(new InsnNode(POP));
+
+        insns.add(L11);
+        insns.add(new LineNumberNode(359, L11));
+        insns.add(new VarInsnNode(ALOAD, 1));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "it/unimi/dsi/fastutil/ints/IntOpenHashSet", "isEmpty", "()Z", false));
+        insns.add(new JumpInsnNode(IFEQ, L12));
+        insns.add(new FieldInsnNode(GETSTATIC, "net/minecraftforge/oredict/OreDictionary", "EMPTY_INT_ARRAY", "[I"));
+        insns.add(new JumpInsnNode(GOTO, L13));
+
+        insns.add(L12);
+        insns.add(new VarInsnNode(ALOAD, 1));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "it/unimi/dsi/fastutil/ints/IntOpenHashSet", "toIntArray", "()[I", false));
+
+        insns.add(L13);
+        insns.add(new InsnNode(ARETURN));
+
+        insns.add(L14);
+
+        // Set up local variables
+        method.localVariables.add(new LocalVariableNode("x", "I", null, L0, L0, 7));
+        method.localVariables.add(new LocalVariableNode("stack", "Lnet/minecraft/item/ItemStack;", null, L0, L14, 0));
+        method.localVariables.add(new LocalVariableNode("set", "Ljava/util/Set;", "Ljava/util/Set<Ljava/lang/Integer;>;", L3, L14, 1));
+        method.localVariables.add(new LocalVariableNode("registryName", "Ljava/lang/String;", null, L4, L14, 2));
+        method.localVariables.add(new LocalVariableNode("id", "I", null, L7, L14, 3));
+        method.localVariables.add(new LocalVariableNode("ids", "Ljava/util/List;", "Ljava/util/List<Ljava/lang/Integer;>;", L8, L14, 4));
+        method.localVariables.add(new LocalVariableNode("tmp", "[Ljava/lang/Integer;", null, L0, L14, 5));
+        method.localVariables.add(new LocalVariableNode("ret", "[I", null, L0, L14, 6));
+
+        // Set the max stack and locals
+        method.maxStack = 6;
+        method.maxLocals = 8;
+
+        // Add the instructions to the method
+        method.instructions = insns;
+
+        return true;
+    }
+
 
     private boolean transformGetOresIntMethod (MethodNode method){
         boolean modified = false;
