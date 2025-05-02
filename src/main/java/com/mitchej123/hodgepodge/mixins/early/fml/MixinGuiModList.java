@@ -115,7 +115,7 @@ public abstract class MixinGuiModList extends GuiScreen implements GetSelectedMo
     }
 
     // Handle the action when a button is clicked (e.g., for sorting)
-    @Inject(method = "actionPerformed", at = @At("RETURN"))
+    @Inject(method = "actionPerformed", at = @At("TAIL"))
     public void onActionPerformed(GuiButton button, CallbackInfo ci) {
         if (button.id == 30) {
             search.setText("");
@@ -149,7 +149,7 @@ public abstract class MixinGuiModList extends GuiScreen implements GetSelectedMo
     }
 
     // Method to draw the UI, including the search bar and buttons
-    @Inject(method = "drawScreen", at = @At("RETURN"))
+    @Inject(method = "drawScreen", at = @At("TAIL"))
     public void onDrawScreen(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         // Draw the search label and text field
         String searchText = "Search:";
