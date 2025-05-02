@@ -13,6 +13,7 @@ import static org.objectweb.asm.Opcodes.GOTO;
 import static org.objectweb.asm.Opcodes.ICONST_0;
 import static org.objectweb.asm.Opcodes.ICONST_M1;
 import static org.objectweb.asm.Opcodes.IFEQ;
+import static org.objectweb.asm.Opcodes.IFNONNULL;
 import static org.objectweb.asm.Opcodes.IFNULL;
 import static org.objectweb.asm.Opcodes.IF_ICMPEQ;
 import static org.objectweb.asm.Opcodes.IF_ICMPNE;
@@ -27,6 +28,7 @@ import static org.objectweb.asm.Opcodes.NEWARRAY;
 import static org.objectweb.asm.Opcodes.PUTSTATIC;
 import static org.objectweb.asm.Opcodes.T_INT;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -46,7 +48,7 @@ import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.LineNumberNode;
+import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
@@ -102,29 +104,45 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
         // Add EMPTY_INT_ARRAY field
         FieldNode emptyIntArrayField = new FieldNode(ACC_PUBLIC | ACC_STATIC | ACC_FINAL, "EMPTY_INT_ARRAY", "[I", null, null);
         classNode.fields.add(emptyIntArrayField);
-
         // Find and transform the methods
+        LOGGER.debug("Transforming OreDictionary class");
         for (MethodNode method : classNode.methods) {
             if ("<clinit>".equals(method.name)) {
+                LOGGER.debug("Transforming OreDictionary.<clinit>");
                 modified |= transformClinitMethod(method);
             } else if ("getOreID".equals(method.name) && "(Ljava/lang/String;)I".equals(method.desc)) {
+                LOGGER.debug("Transforming OreDictionary.getOreID(String)");
                 modified |= transformGetOreIDStringMethod(method);
             } else if ("getOreID".equals(method.name) && "(Lnet/minecraft/item/ItemStack;)I".equals(method.desc)) {
+                LOGGER.debug("Transforming OreDictionary.getOreID(ItemStack)");
                 modified |= transformGetOreIDItemStackMethod(method);
             } else if ("getOreIDs".equals(method.name) && "(Lnet/minecraft/item/ItemStack;)[I".equals(method.desc) && !Common.thermosTainted) {
+                LOGGER.debug("Transforming OreDictionary.getOreIDs(ItemStack)");
                 modified |= transformGetOreIDsMethod(method);
             } else if ("getOres".equals(method.name) && "(Ljava/lang/String;Z)Ljava/util/List;".equals(method.desc)) {
+                LOGGER.debug("Transforming OreDictionary.getOres(String, boolean)");
                 modified |= transformGetOresMethod(method);
             } else if ("getOres".equals(method.name) && "(I)Ljava/util/ArrayList;".equals(method.desc)) {
+                LOGGER.debug("Transforming OreDictionary.getOres(int)");
                 modified |= transformGetOresIntMethod(method);
             } else if ("registerOreImpl".equals(method.name) && "(Ljava/lang/String;Lnet/minecraft/item/ItemStack;)V".equals(method.desc)) {
+                LOGGER.debug("Transforming OreDictionary.registerOreImpl(String, ItemStack)");
                 modified |= transformRegisterOreImplMethod(method);
             }
-
+            for(LocalVariableNode localVar : method.localVariables) {
+                if ("Ljava/lang/Integer;".equals(localVar.desc)) {
+                    localVar.desc = "I"; // "I" is the descriptor for int
+                    // If signature is present, clear it since primitives don't have signatures
+                    if (localVar.signature != null && localVar.signature.contains("Integer")) {
+                        localVar.signature = null;
+                    }
+                }
+            }
         }
 
         if (modified) {
             try {
+                LOGGER.debug("Writing transformed OreDictionary class");
                 ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
                 classNode.accept(writer);
                 return writer.toByteArray();
@@ -156,13 +174,10 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
                 modified = true;
     
                 AbstractInsnNode next = node.getNext();
-                // server side only, there is a label and line number node between idToName and the NEW hash map
-                if (next instanceof LabelNode) {
+                while(next != null && next.getOpcode() != NEW) {
                     next = next.getNext();
                 }
-                if (next instanceof LineNumberNode) {
-                    next = next.getNext();
-                }
+
                 if (next != null && next.getOpcode() == NEW && next instanceof TypeInsnNode tNode && tNode.desc.equals(JAVA_HASH_MAP)) {
                     tNode.desc = FASTUTIL_OBJECT_2_INT_HASH_MAP;
                 } else {
@@ -248,36 +263,43 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
                 mNext.setOpcode(INVOKEVIRTUAL);
                 mNext.owner = FASTUTIL_OBJECT_2_INT_HASH_MAP;
                 mNext.itf = false;
+                ArrayList<AbstractInsnNode> toRemove = new java.util.ArrayList<>();
                 if (mNext.name.equals("put")) {
                     mNext.desc = "(Ljava/lang/Object;I)I";
                 } else if (mNext.name.equals("get")) {
                     mNext.name = "getInt";
                     mNext.desc = "(Ljava/lang/Object;)I";
-    
-                    AbstractInsnNode checkCastNode = next.getNext();
-                    next = checkCastNode.getNext();
-                    instructions.remove(checkCastNode);
+                    while(next != null && next.getOpcode() != CHECKCAST) {
+                        next = next.getNext();
+                    }
+                    if (next != null && next.getOpcode() == CHECKCAST) {
+                        toRemove.add(next);
+                    }
+                    while(next != null && next.getOpcode() != ASTORE) {
+                        next = next.getNext();
+                    }
                     if (next.getOpcode() == ASTORE && next instanceof VarInsnNode vNode && vNode.var == 1) {
                         vNode.setOpcode(ISTORE);
                     }
-                    next = next.getNext();
-                    // server side only, there is a label and line number node between certain nodes
-                    if (next instanceof LabelNode) {
+                    while(next != null && next.getOpcode() != ALOAD) {
                         next = next.getNext();
                     }
-                    if (next instanceof LineNumberNode) {
-                        next = next.getNext();
-                    }
-                    if (next.getOpcode() == ALOAD && next instanceof VarInsnNode vNode && vNode.var == 1) {
+
+                    if (next != null && next.getOpcode() == ALOAD && next instanceof VarInsnNode vNode && vNode.var == 1) {
                         vNode.setOpcode(ILOAD);
                     }
-                    next = next.getNext(); // IFNONNULL --> IF_ICMPNE
+                    while(next != null && next.getOpcode() != IFNONNULL) {
+                        next = next.getNext();
+                    }
                     if (next instanceof JumpInsnNode jNode) {
                         jNode.setOpcode(IF_ICMPNE);
+                        instructions.insertBefore(next, new InsnNode(ICONST_M1));
                     }
-                    instructions.insertBefore(next, new InsnNode(ICONST_M1));
                 } else {
                     throw new RuntimeException("Unexpected instruction found in OreDictionary.getOreID(String) method");
+                }
+                for(AbstractInsnNode toRemoveNode : toRemove) {
+                    instructions.remove(toRemoveNode);
                 }
     
             } else if ((node.getOpcode() == INVOKESTATIC || node.getOpcode() == INVOKEVIRTUAL) && node instanceof MethodInsnNode mNode && mNode.owner.equals(
@@ -435,13 +457,10 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
             {
                 modified = true;
                 AbstractInsnNode next = iterator.next();
-                int count = 0;
                 while(next != null && next.getOpcode() != ARETURN) {
                     toRemove.add(next);
                     next = next.getNext();
-                    count++;
                 }
-                if (count != 2) throw new RuntimeException("Unexpected number of instructions found in FMLLog.log");
 
                 instructions.insert(node, new FieldInsnNode(GETSTATIC, ORE_DICTIONARY, "EMPTY_INT_ARRAY", "[I"));
             } else if (node.getOpcode() == NEW && node instanceof TypeInsnNode tNode && tNode.desc.equals(JAVA_HASH_SET)) {
@@ -489,16 +508,10 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
 
                 // Then delete everything after this node until ARETURN
                 AbstractInsnNode current = node;
-                int count = 0;
                 while (current != null && current.getOpcode() != ARETURN) {
-                    
                     AbstractInsnNode next = current.getNext();
                     toRemove.add(current);
                     current = next;
-                    count++;
-                }
-                if(count != 29 /* 27 instructions, 2 frames */) {
-                    throw new RuntimeException("Unexpected number of instructions found in Set.size()");
                 }
                 if(current == null || current.getOpcode() != ARETURN) {
                     throw new RuntimeException("Unexpected opcode found in Set.size()");
@@ -571,7 +584,10 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
                 methodNode.itf = false;
 
                 AbstractInsnNode next = node.getNext();
-                if (next.getOpcode() == CHECKCAST && next instanceof TypeInsnNode checkCastNode && checkCastNode.desc.equals("java/util/List")) {
+                while (next != null && next.getOpcode() != CHECKCAST) {
+                    next = next.getNext();
+                }
+                if ( next != null && next.getOpcode() == CHECKCAST && next instanceof TypeInsnNode checkCastNode && checkCastNode.desc.equals("java/util/List")) {
                     checkCastNode.desc = "it/unimi/dsi/fastutil/ints/IntList";
                 }
             } else if (node.getOpcode() == INVOKEINTERFACE && node instanceof MethodInsnNode methodNode && methodNode.owner.equals("java/util/List")
