@@ -65,6 +65,10 @@ public enum Mixins implements IMixins {
             new MixinBuilder("Prevents crash if server sends container with wrong itemStack size").setPhase(Phase.EARLY)
                     .addMixinClasses("minecraft.MixinContainer").setSide(Side.CLIENT)
                     .setApplyIf(() -> FixesConfig.fixContainerPutStacksInSlots).addTargetedMod(TargetedMod.VANILLA)),
+    FIX_CONTAINER_SHIFT_CLICK_RECURSION(
+            new MixinBuilder("Backports 1.12 logic for shift clicking slots to prevent recursion").setPhase(Phase.EARLY)
+                    .addMixinClasses("minecraft.MixinContainer_FixShiftRecursion").setSide(Side.BOTH)
+                    .setApplyIf(() -> FixesConfig.fixContainerShiftClickRecursion).addTargetedMod(TargetedMod.VANILLA)),
     FIX_NETHANDLERPLAYCLIENT_HANDLE_SET_SLOT(
             new MixinBuilder("Prevents crash if server sends itemStack with index larger than client's container")
                     .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinNetHandlerPlayClient_FixHandleSetSlot")
