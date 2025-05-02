@@ -581,6 +581,10 @@ public enum Mixins implements IMixins {
                     .addExcludedMod(FALSETWEAKS).addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> true)
                     .addMixinClasses("minecraft.MixinGameSettings_ReduceRenderDistance")),
 
+    BETTER_MOD_LIST(new MixinBuilder("Better Mod List").setPhase(Phase.EARLY).setSide(Side.CLIENT)
+            .addMixinClasses("fml.MixinGuiModList", "fml.MixinGuiSlotModList")
+            .setApplyIf(() -> TweaksConfig.betterModList).addTargetedMod(TargetedMod.VANILLA)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIc2WaterKinetic").setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
