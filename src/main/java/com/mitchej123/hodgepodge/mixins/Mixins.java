@@ -582,7 +582,7 @@ public enum Mixins implements IMixins {
                     .addMixinClasses("minecraft.MixinGameSettings_ReduceRenderDistance")),
 
     BETTER_MOD_LIST(new MixinBuilder("Better Mod List").setPhase(Phase.EARLY).setSide(Side.CLIENT)
-            .addMixinClasses("fml.MixinGuiModList", "fml.MixinGuiSlotModList")
+            .addMixinClasses("fml.MixinGuiModList", "fml.MixinGuiSlotModList", "fml.MixinGuiScrollingList")
             .setApplyIf(() -> TweaksConfig.betterModList).addTargetedMod(TargetedMod.VANILLA)),
 
     // Ic2 adjustments

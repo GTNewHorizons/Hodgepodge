@@ -2,12 +2,12 @@ package com.mitchej123.hodgepodge.mixins.early.fml;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,7 +19,9 @@ import com.mitchej123.hodgepodge.Hodgepodge;
 import com.mitchej123.hodgepodge.client.bettermodlist.InfoButton;
 import com.mitchej123.hodgepodge.client.bettermodlist.SortType;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
-import com.mitchej123.hodgepodge.mixins.interfaces.GetSelectedMod;
+import com.mitchej123.hodgepodge.mixins.interfaces.IGuiModList;
+import com.mitchej123.hodgepodge.mixins.interfaces.IGuiScrollingList;
+import com.mitchej123.hodgepodge.mixins.interfaces.IGuiSlotModList;
 
 import cpw.mods.fml.client.GuiModList;
 import cpw.mods.fml.client.GuiSlotModList;
@@ -27,7 +29,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 
 @Mixin(GuiModList.class)
-public abstract class MixinGuiModList extends GuiScreen implements GetSelectedMod {
+public class MixinGuiModList extends GuiScreen implements IGuiModList {
 
     @Shadow(remap = false)
     private ArrayList<ModContainer> mods;
@@ -39,21 +41,26 @@ public abstract class MixinGuiModList extends GuiScreen implements GetSelectedMo
     private int selected;
     @Shadow(remap = false)
     private GuiSlotModList modList;
-    private GuiTextField search;
-    private boolean sorted = false;
-    private SortType sortType = SortType.values()[TweaksConfig.defaultModSort];
-    private String lastFilterText = "";
+    private int hodgepodge$buttonMargin = 1;
+    private int hodgepodge$numButtons = SortType.values().length;
+
+    private String hodgepodge$lastFilterText = "";
+
+    private GuiTextField hodgepodge$search;
+    private boolean hodgepodge$sorted = false;
+    private SortType hodgepodge$sortType = SortType.values()[TweaksConfig.defaultModSort];
 
     // Method to initialize GUI components
     @Inject(method = "initGui", at = @At("TAIL"))
     public void onInitGui(CallbackInfo ci) {
         // Initialize search box
-        search = new GuiTextField(this.fontRendererObj, 12, height - 70, listWidth - 4, 14);
-        search.setFocused(true);
-        search.setCanLoseFocus(true);
+        int hodgepodge$xPosition = ((IGuiScrollingList) modList).getBottom() + 17;
+        hodgepodge$search = new GuiTextField(this.fontRendererObj, 12, hodgepodge$xPosition, listWidth - 4, 14);
+        hodgepodge$search.setFocused(true);
+        hodgepodge$search.setCanLoseFocus(true);
 
         // Let's move some buttons
-        for (GuiButton button : (List<GuiButton>) buttonList) {
+        for (GuiButton button : buttonList) {
             if (button.id == 6) // Done button
             {
                 int min = listWidth + 10;
@@ -67,82 +74,88 @@ public abstract class MixinGuiModList extends GuiScreen implements GetSelectedMo
         }
 
         // Initialize sorting buttons
-        int buttonWidth = listWidth / SortType.values().length;
-        int buttonMargin = 1;
+        int buttonWidth = listWidth / hodgepodge$numButtons;
         int x = 10, y = 10;
 
         for (SortType type : SortType.values()) {
-            GuiButton button = new GuiButton(type.getButtonID(), x, y, buttonWidth - buttonMargin, 20, type.getName());
+            GuiButton button = new GuiButton(
+                    type.getButtonID(),
+                    x,
+                    y,
+                    buttonWidth - hodgepodge$buttonMargin,
+                    20,
+                    type.getName());
             buttonList.add(button);
-            x += buttonWidth + buttonMargin;
+            x += buttonWidth + hodgepodge$buttonMargin;
         }
         buttonList.add(new InfoButton(this.hodgepodge$GuiModList()));
         // Load and sort mods
-        reloadMods();
+        hodgepodge$reloadMods();
         // Update button states to reflect the current sorting method
-        updateButtonStates();
+        hodgepodge$updateButtonStates();
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
-        search.updateCursorCounter();
+        hodgepodge$search.updateCursorCounter();
 
-        if (!search.getText().equals(lastFilterText)) {
-            reloadMods();
-            sorted = false;
+        if (!hodgepodge$search.getText().equals(hodgepodge$lastFilterText)) {
+            hodgepodge$reloadMods();
+            hodgepodge$sorted = false;
         }
 
-        if (!sorted) {
-            reloadMods();
-            Collections.sort(mods, sortType.getComparator());
-            setMods();
-            sorted = true;
+        if (!hodgepodge$sorted) {
+            hodgepodge$reloadMods();
+            Collections.sort(mods, hodgepodge$sortType.getComparator());
+            selected = ((IGuiScrollingList) modList).setSelectedIndex(mods.indexOf(selectedMod));
+            hodgepodge$sorted = true;
         }
     }
 
     // Method to reload and filter mods based on search text
-    private void reloadMods() {
+    private void hodgepodge$reloadMods() {
+        ArrayList<ModContainer> mods = ((IGuiSlotModList) modList).getMods();
         mods.clear();
         for (ModContainer m : Loader.instance().getActiveModList()) {
-            if (m.getName().toLowerCase(Locale.US).contains(search.getText().toLowerCase(Locale.US))
+            if (m.getName().toLowerCase(Locale.US).contains(hodgepodge$search.getText().toLowerCase(Locale.US))
                     && m.getMetadata().parentMod == null) {
                 mods.add(m);
             }
         }
-        setMods();
-        lastFilterText = search.getText();
+        this.mods = mods;
+        hodgepodge$lastFilterText = hodgepodge$search.getText();
     }
 
     // Handle the action when a button is clicked (e.g., for sorting)
     @Inject(method = "actionPerformed", at = @At("TAIL"))
     public void onActionPerformed(GuiButton button, CallbackInfo ci) {
         if (button.id == 30) {
-            search.setText("");
-            reloadMods();
+            hodgepodge$search.setText("");
+            hodgepodge$reloadMods();
             for (ModContainer m : mods) {
                 if (m.getName().equals(Hodgepodge.NAME)) {
                     selectedMod = m;
-                    setMods();
+                    selected = ((IGuiScrollingList) modList).setSelectedIndex(mods.indexOf(m));
                 }
             }
         }
         SortType type = SortType.getTypeForButton(button.id);
         if (type != null) {
-            sorted = false;
-            sortType = type;
-            updateButtonStates();
+            hodgepodge$sorted = false;
+            hodgepodge$sortType = type;
+            hodgepodge$updateButtonStates();
+            this.mods = ((IGuiSlotModList) modList).getMods();
         }
-        setMods();
     }
 
     // Update button states (disable active button, enable others)
-    private void updateButtonStates() {
+    private void hodgepodge$updateButtonStates() {
         for (GuiButton button : buttonList) {
             if (SortType.getTypeForButton(button.id) != null) {
                 button.enabled = true;
             }
-            if (button.id == sortType.getButtonID()) {
+            if (button.id == hodgepodge$sortType.getButtonID()) {
                 button.enabled = false;
             }
         }
@@ -151,51 +164,35 @@ public abstract class MixinGuiModList extends GuiScreen implements GetSelectedMo
     // Method to draw the UI, including the search bar and buttons
     @Inject(method = "drawScreen", at = @At("TAIL"))
     public void onDrawScreen(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+        int Bottom = ((IGuiScrollingList) modList).getBottom();
+        int Right = ((IGuiScrollingList) modList).getRight();
         // Draw the search label and text field
-        String searchText = "Search:";
-        int x = ((listWidth + 20) - fontRendererObj.getStringWidth(searchText)) / 2;
-        fontRendererObj.drawString(searchText, x, height - 82, 0xFFFFFF);
-        search.drawTextBox();
+        String text = I18n.format("fml.menu.mods.search").replace("\\", "");;
+        int x = ((10 + Right) / 2) - (fontRendererObj.getStringWidth(text) / 2);
+        fontRendererObj.drawString(text, x, Bottom + 5, 0xFFFFFF);
+        hodgepodge$search.drawTextBox();
     }
 
     @Override
     protected void mouseClicked(int x, int y, int button) {
         super.mouseClicked(x, y, button);
-        search.mouseClicked(x, y, button);
-        if (button == 1 && x >= search.xPosition
-                && x < search.xPosition + search.width
-                && y >= search.yPosition
-                && y < search.yPosition + search.height) {
-            search.setText("");
+        hodgepodge$search.mouseClicked(x, y, button);
+        if (button == 1 && x >= hodgepodge$search.xPosition
+                && x < hodgepodge$search.xPosition + hodgepodge$search.width
+                && y >= hodgepodge$search.yPosition
+                && y < hodgepodge$search.yPosition + hodgepodge$search.height) {
+            hodgepodge$search.setText("");
         }
     }
 
     @Override
     protected void keyTyped(char p_73869_1_, int p_73869_2_) {
         super.keyTyped(p_73869_1_, p_73869_2_);
-        search.textboxKeyTyped(p_73869_1_, p_73869_2_);
+        hodgepodge$search.textboxKeyTyped(p_73869_1_, p_73869_2_);
     }
 
     private GuiModList hodgepodge$GuiModList() {
         return (GuiModList) (Object) this;
-    }
-
-    private void setMods() {
-        List<ModContainer> mod = mods;
-
-        ModContainer sel = selectedMod;
-        boolean found = false;
-        for (int i = 0; !found && i < mod.size(); i++) {
-            if (sel == mod.get(i)) {
-                selected = i;
-                found = true;
-            }
-        }
-        if (!found) {
-            selected = -1;
-            selectedMod = null;
-        }
-        sorted = false;
     }
 
     @Override

@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.StatCollector;
 
 import com.mitchej123.hodgepodge.Hodgepodge;
-import com.mitchej123.hodgepodge.mixins.interfaces.GetSelectedMod;
+import com.mitchej123.hodgepodge.mixins.interfaces.IGuiModList;
 
 import cpw.mods.fml.client.GuiModList;
 import cpw.mods.fml.common.ModContainer;
@@ -22,7 +22,7 @@ public class InfoButton extends GuiButton {
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         if (this.field_146123_n) {
-            ModContainer sel = ((GetSelectedMod) guiModList).selectedMod();
+            ModContainer sel = ((IGuiModList) guiModList).selectedMod();
             if (sel != null && sel.getName().equals(Hodgepodge.NAME)) {
                 this.displayString = StatCollector.translateToLocal("bettermodlist.gui.modlistinfo2");
             } else {
