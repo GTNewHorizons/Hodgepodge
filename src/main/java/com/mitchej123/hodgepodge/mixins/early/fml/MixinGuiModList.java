@@ -7,10 +7,10 @@ import java.util.Locale;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.resources.I18n;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -41,12 +41,13 @@ public class MixinGuiModList extends GuiScreen implements IGuiModList {
     private int selected;
     @Shadow(remap = false)
     private GuiSlotModList modList;
-    private int hodgepodge$buttonMargin = 1;
-    private int hodgepodge$numButtons = SortType.values().length;
-
+    @Unique
+    private final int hodgepodge$numButtons = SortType.values().length;
+    @Unique
     private String hodgepodge$lastFilterText = "";
-
+    @Unique
     private GuiTextField hodgepodge$search;
+    @Unique
     private boolean hodgepodge$sorted = false;
     private SortType hodgepodge$sortType = SortType.values()[TweaksConfig.defaultModSort];
 
@@ -54,7 +55,7 @@ public class MixinGuiModList extends GuiScreen implements IGuiModList {
     @Inject(method = "initGui", at = @At("TAIL"))
     public void onInitGui(CallbackInfo ci) {
         // Initialize search box
-        int hodgepodge$xPosition = ((IGuiScrollingList) modList).getBottom() + 17;
+        int hodgepodge$xPosition = ((IGuiScrollingList) modList).hodgepodge$getBottom() + 17;
         hodgepodge$search = new GuiTextField(this.fontRendererObj, 12, hodgepodge$xPosition, listWidth - 4, 14);
         hodgepodge$search.setFocused(true);
         hodgepodge$search.setCanLoseFocus(true);
@@ -75,6 +76,7 @@ public class MixinGuiModList extends GuiScreen implements IGuiModList {
 
         // Initialize sorting buttons
         int buttonWidth = listWidth / hodgepodge$numButtons;
+        int hodgepodge$buttonMargin = 1;
         int x = 10, y = 10;
 
         for (SortType type : SortType.values()) {
@@ -108,14 +110,15 @@ public class MixinGuiModList extends GuiScreen implements IGuiModList {
         if (!hodgepodge$sorted) {
             hodgepodge$reloadMods();
             Collections.sort(mods, hodgepodge$sortType.getComparator());
-            selected = ((IGuiScrollingList) modList).setSelectedIndex(mods.indexOf(selectedMod));
+            selected = ((IGuiScrollingList) modList).hodgepodge$setSelectedIndex(mods.indexOf(selectedMod));
             hodgepodge$sorted = true;
         }
     }
 
     // Method to reload and filter mods based on search text
+    @Unique
     private void hodgepodge$reloadMods() {
-        ArrayList<ModContainer> mods = ((IGuiSlotModList) modList).getMods();
+        ArrayList<ModContainer> mods = ((IGuiSlotModList) modList).hodgepodge$getMods();
         mods.clear();
         for (ModContainer m : Loader.instance().getActiveModList()) {
             if (m.getName().toLowerCase(Locale.US).contains(hodgepodge$search.getText().toLowerCase(Locale.US))
@@ -136,7 +139,7 @@ public class MixinGuiModList extends GuiScreen implements IGuiModList {
             for (ModContainer m : mods) {
                 if (m.getName().equals(Hodgepodge.NAME)) {
                     selectedMod = m;
-                    selected = ((IGuiScrollingList) modList).setSelectedIndex(mods.indexOf(m));
+                    selected = ((IGuiScrollingList) modList).hodgepodge$setSelectedIndex(mods.indexOf(m));
                 }
             }
         }
@@ -145,11 +148,12 @@ public class MixinGuiModList extends GuiScreen implements IGuiModList {
             hodgepodge$sorted = false;
             hodgepodge$sortType = type;
             hodgepodge$updateButtonStates();
-            this.mods = ((IGuiSlotModList) modList).getMods();
+            this.mods = ((IGuiSlotModList) modList).hodgepodge$getMods();
         }
     }
 
     // Update button states (disable active button, enable others)
+    @Unique
     private void hodgepodge$updateButtonStates() {
         for (GuiButton button : buttonList) {
             if (SortType.getTypeForButton(button.id) != null) {
@@ -164,10 +168,10 @@ public class MixinGuiModList extends GuiScreen implements IGuiModList {
     // Method to draw the UI, including the search bar and buttons
     @Inject(method = "drawScreen", at = @At("TAIL"))
     public void onDrawScreen(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
-        int Bottom = ((IGuiScrollingList) modList).getBottom();
-        int Right = ((IGuiScrollingList) modList).getRight();
+        int Bottom = ((IGuiScrollingList) modList).hodgepodge$getBottom();
+        int Right = ((IGuiScrollingList) modList).hodgepodge$getRight();
         // Draw the search label and text field
-        String text = I18n.format("fml.menu.mods.search").replace("\\", "");;
+        String text = "Search:";
         int x = ((10 + Right) / 2) - (fontRendererObj.getStringWidth(text) / 2);
         fontRendererObj.drawString(text, x, Bottom + 5, 0xFFFFFF);
         hodgepodge$search.drawTextBox();
@@ -191,12 +195,13 @@ public class MixinGuiModList extends GuiScreen implements IGuiModList {
         hodgepodge$search.textboxKeyTyped(p_73869_1_, p_73869_2_);
     }
 
+    @Unique
     private GuiModList hodgepodge$GuiModList() {
         return (GuiModList) (Object) this;
     }
 
     @Override
-    public ModContainer selectedMod() {
+    public ModContainer hodgepodge$selectedMod() {
         return selectedMod;
     }
 }

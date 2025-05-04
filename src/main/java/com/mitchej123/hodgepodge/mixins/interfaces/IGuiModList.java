@@ -4,5 +4,5 @@ import cpw.mods.fml.common.ModContainer;
 
 public interface IGuiModList {
 
-    ModContainer selectedMod();
+    ModContainer hodgepodge$selectedMod();
 }

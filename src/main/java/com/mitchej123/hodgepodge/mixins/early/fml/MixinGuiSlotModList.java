@@ -25,7 +25,7 @@ public class MixinGuiSlotModList implements IGuiSlotModList {
     }
 
     @Override
-    public ArrayList<ModContainer> getMods() {
+    public ArrayList<ModContainer> hodgepodge$getMods() {
         return mods;
     }
 }

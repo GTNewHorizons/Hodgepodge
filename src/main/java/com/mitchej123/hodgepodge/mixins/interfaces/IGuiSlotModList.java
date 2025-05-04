@@ -6,5 +6,5 @@ import cpw.mods.fml.common.ModContainer;
 
 public interface IGuiSlotModList {
 
-    ArrayList<ModContainer> getMods();
+    ArrayList<ModContainer> hodgepodge$getMods();
 }

@@ -2,7 +2,7 @@ package com.mitchej123.hodgepodge.client.bettermodlist;
 
 import java.util.Comparator;
 
-import net.minecraft.util.StatCollector;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.StringUtils;
 
 import cpw.mods.fml.common.ModContainer;
@@ -69,6 +69,6 @@ public enum SortType {
 
     // Method to get the name of the SortType
     public String getName() {
-        return StatCollector.translateToLocal("bettermodlist.sort." + this.name().toLowerCase());
+        return I18n.format("bettermodlist.sort." + this.name().toLowerCase());
     }
 }

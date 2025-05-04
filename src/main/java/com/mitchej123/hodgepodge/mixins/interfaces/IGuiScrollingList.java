@@ -2,9 +2,9 @@ package com.mitchej123.hodgepodge.mixins.interfaces;
 
 public interface IGuiScrollingList {
 
-    int setSelectedIndex(int index);
+    int hodgepodge$setSelectedIndex(int index);
 
-    int getBottom();
+    int hodgepodge$getBottom();
 
-    int getRight();
+    int hodgepodge$getRight();
 }

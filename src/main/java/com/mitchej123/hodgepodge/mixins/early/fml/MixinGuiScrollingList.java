@@ -68,17 +68,17 @@ public class MixinGuiScrollingList implements IGuiScrollingList {
     }
 
     @Override
-    public int setSelectedIndex(int index) {
+    public int hodgepodge$setSelectedIndex(int index) {
         return selectedIndex = index;
     }
 
     @Override
-    public int getBottom() {
+    public int hodgepodge$getBottom() {
         return bottom;
     }
 
     @Override
-    public int getRight() {
+    public int hodgepodge$getRight() {
         return right;
     }
 }
