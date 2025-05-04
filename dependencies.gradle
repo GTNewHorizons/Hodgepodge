@@ -21,7 +21,7 @@ dependencies {
     transformedModCompileOnly("com.github.GTNewHorizons:Baubles:1.0.4:dev")
     // Transitive updates to make runClient17 work
     transformedModCompileOnly("com.github.GTNewHorizons:ForgeMultipart:1.6.2:dev")
-    transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.51.259:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.51.266:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:harvestcraft:1.3.1-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:HungerOverhaul:1.1.0-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:MrTJPCore:1.3.0:dev") // Do not update, fixed afterwards
@@ -67,8 +67,8 @@ dependencies {
     // For testing - HP and AF are liable to mixin the same targets
     runtimeOnlyNonPublishable("maven.modrinth:archaicfix:0.7.6:dev")
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:ArchaicFix:99.0.0:dev") // mavenLocal location
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:ServerUtilities:2.1.46:dev") // for the pregenerator
-//    runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta40:dev") // for TPS graph
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:ServerUtilities:2.1.48:dev") // for the pregenerator
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta41:dev") // for TPS graph
 }
 
 // Replace when RFG support deobfuscation from notch mappings
