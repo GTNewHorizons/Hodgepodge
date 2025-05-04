@@ -26,3 +26,9 @@ commands.time.usageWithGet=/time <set|add> <value> OR /time get
 
 hodgepodge.soundsmenu.refreshsounds=Refresh Sounds
 hodgepodge.bed_respawn.msg=Respawn Set
+
+bettermodlist.sort.normal=Normal
+bettermodlist.sort.a_to_z=A-Z
+bettermodlist.sort.z_to_a=Z-A
+bettermodlist.gui.modlistinfo1=OMG everything is different!
+bettermodlist.gui.modlistinfo2=New layout provided by:

@@ -601,6 +601,13 @@ public enum Mixins implements IMixins {
                     .addExcludedMod(FALSETWEAKS).addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> true)
                     .addMixinClasses("minecraft.MixinGameSettings_ReduceRenderDistance")),
 
+    BETTER_MOD_LIST(new MixinBuilder("Better Mod List").setPhase(Phase.EARLY).setSide(Side.CLIENT)
+            .addMixinClasses("fml.MixinGuiModList", "fml.MixinGuiSlotModList", "fml.MixinGuiScrollingList")
+            .setApplyIf(
+                    () -> TweaksConfig.betterModList
+                            && !classExists("com.enderio.core.common.transform.EnderCoreTransformerClient"))
+            .addTargetedMod(TargetedMod.VANILLA)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
             .addMixinClasses("ic2.MixinIc2WaterKinetic").setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
@@ -1144,5 +1151,14 @@ public enum Mixins implements IMixins {
     @Override
     public List<ITargetedMod> getExcludedMods() {
         return excludedMods;
+    }
+
+    private static boolean classExists(String name) {
+        try {
+            Class.forName(name);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 }
