@@ -8,7 +8,8 @@ import net.minecraft.world.World;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(EntityEgg.class)
 public abstract class MixinEntityEgg extends EntityThrowable {
@@ -17,18 +18,13 @@ public abstract class MixinEntityEgg extends EntityThrowable {
         super(p_i1776_1_);
     }
 
-    @Redirect(
+    @ModifyArgs(
             method = "onImpact",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;spawnParticle(Ljava/lang/String;DDDDDD)V"))
-    private void replaceSpawnParticle(World world, String particleName, double x, double y, double z, double velocityX,
-            double velocityY, double velocityZ) {
-        worldObj.spawnParticle(
-                "iconcrack_" + Item.getIdFromItem(Items.egg),
-                x,
-                y,
-                z,
-                ((double) rand.nextFloat() - 0.5D) * 0.08D,
-                ((double) rand.nextFloat() - 0.5D) * 0.08D,
-                ((double) rand.nextFloat() - 0.5D) * 0.08D);
+    private void replaceSpawnParticleArgs(Args args) {
+        args.set(0, "iconcrack_" + Item.getIdFromItem(Items.egg));
+        args.set(4, ((double) rand.nextFloat() - 0.5D) * 0.08D);
+        args.set(5, ((double) rand.nextFloat() - 0.5D) * 0.08D);
+        args.set(6, ((double) rand.nextFloat() - 0.5D) * 0.08D);
     }
 }
