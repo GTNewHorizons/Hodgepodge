@@ -353,6 +353,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixGlassBottleWaterFilling;
 
+    @Config.Comment("Use correct egg particles instead of snowball ones (MC-7807)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixEggParticles;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
