@@ -498,6 +498,10 @@ public enum Mixins implements IMixins {
             .setSide(Side.CLIENT).addMixinClasses("fml.MixinGuiConfig")
             .setApplyIf(() -> TweaksConfig.addModConfigSearchBar).addTargetedMod(TargetedMod.VANILLA)),
 
+    MAKE_MOD_URL_CLICKABLE(new MixinBuilder("Makes mods urls in the forge mod menu clickable").setPhase(Phase.EARLY)
+            .setSide(Side.CLIENT).addMixinClasses("fml.MixinGuiModList").setApplyIf(() -> TweaksConfig.clickableModUrls)
+            .addTargetedMod(TargetedMod.VANILLA)),
+
     FIX_BUTTON_POS_GUIOPENLINK(new MixinBuilder("Fix the buttons not being centered in the GuiConfirmOpenLink")
             .setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses("minecraft.MixinGuiConfirmOpenLink")
