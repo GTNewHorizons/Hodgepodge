@@ -112,9 +112,9 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
      */
     @WrapOperation(
             method = "func_147456_g",
-            remap = false,
             at = @At(
                     value = "INVOKE",
+                    remap = false,
                     target = "Lnet/minecraft/world/WorldProvider;canDoLightning(Lnet/minecraft/world/chunk/Chunk;)Z"))
     private boolean hodgepodge$canDoLighting(WorldProvider instance, Chunk chunk, Operation<Boolean> original) {
         if (hodgepodge$processCurrentChunk) {
@@ -132,6 +132,7 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
             remap = false,
             at = @At(
                     value = "INVOKE",
+                    remap = false,
                     target = "Lnet/minecraft/world/WorldProvider;canDoRainSnowIce(Lnet/minecraft/world/chunk/Chunk;)Z"))
     private boolean hodgepodge$canDoRainSnowIce(WorldProvider instance, Chunk chunk, Operation<Boolean> original) {
         if (hodgepodge$processCurrentChunk) {
