@@ -140,6 +140,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(false)
     public static boolean useLighterWater;
 
+    @Config.Comment("Make mod links in the mod menu clickable")
+    @Config.DefaultBoolean(true)
+    public static boolean clickableModUrls;
+
     // NBT String Pooling
 
     @Config.Comment("Enable string pooling for NBT TagCompound Keys")
