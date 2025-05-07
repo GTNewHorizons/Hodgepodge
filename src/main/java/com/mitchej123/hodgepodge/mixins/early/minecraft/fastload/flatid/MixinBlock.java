@@ -16,15 +16,13 @@ public class MixinBlock implements BlockExt_ID {
     @Unique
     private int hodgepodge$id = -1;
 
-    @SuppressWarnings("AddedMixinMembersNamePattern")
     @Override
-    public int getID() {
+    public int hodgepodge$getID() {
         return hodgepodge$id;
     }
 
-    @SuppressWarnings("AddedMixinMembersNamePattern")
     @Override
-    public void setID(int id) {
+    public void hodgepodge$setID(int id) {
         hodgepodge$id = id;
     }
 
@@ -35,6 +33,6 @@ public class MixinBlock implements BlockExt_ID {
                     target = "Lnet/minecraft/util/RegistryNamespaced;getIDForObject(Ljava/lang/Object;)I"))
     private static int hodgepodge$getID(RegistryNamespaced instance, Object object) {
         if (!(object instanceof BlockExt_ID block)) return -1;
-        return block.getID();
+        return block.hodgepodge$getID();
     }
 }
