@@ -499,8 +499,8 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.addModConfigSearchBar).addTargetedMod(TargetedMod.VANILLA)),
 
     MAKE_MOD_URL_CLICKABLE(new MixinBuilder("Makes mods urls in the forge mod menu clickable").setPhase(Phase.EARLY)
-            .setSide(Side.CLIENT).addMixinClasses("fml.MixinGuiModList").setApplyIf(() -> TweaksConfig.clickableModUrls)
-            .addTargetedMod(TargetedMod.VANILLA)),
+            .setSide(Side.CLIENT).addMixinClasses("fml.MixinGuiModList_ClickableURL")
+            .setApplyIf(() -> TweaksConfig.clickableModUrls).addTargetedMod(TargetedMod.VANILLA)),
 
     FIX_BUTTON_POS_GUIOPENLINK(new MixinBuilder("Fix the buttons not being centered in the GuiConfirmOpenLink")
             .setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
@@ -585,6 +585,15 @@ public enum Mixins implements IMixins {
                     .addExcludedMod(FALSETWEAKS).addTargetedMod(TargetedMod.VANILLA).setApplyIf(() -> true)
                     .addMixinClasses("minecraft.MixinGameSettings_ReduceRenderDistance")),
 
+    BETTER_MOD_LIST(new MixinBuilder("Better Mod List").setPhase(Phase.EARLY).setSide(Side.CLIENT)
+            .addMixinClasses(
+                    "fml.MixinGuiModList_BetterModList",
+                    "fml.MixinGuiSlotModList",
+                    "fml.MixinGuiScrollingList")
+            .setApplyIf(
+                    () -> TweaksConfig.betterModList
+                            && !classExists("com.enderio.core.common.transform.EnderCoreTransformerClient"))
+            .addTargetedMod(TargetedMod.VANILLA)),
     FIX_EGG_PARTICLE(new MixinBuilder("Use correct egg particles instead of snowball ones (MC-7807)")
             .setPhase(Phase.EARLY).setSide(Side.CLIENT).addMixinClasses("minecraft.MixinEntityEgg")
             .setApplyIf(() -> FixesConfig.fixEggParticles).addTargetedMod(TargetedMod.VANILLA)),
@@ -1132,5 +1141,14 @@ public enum Mixins implements IMixins {
     @Override
     public List<ITargetedMod> getExcludedMods() {
         return excludedMods;
+    }
+
+    private static boolean classExists(String name) {
+        try {
+            Class.forName(name);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 }
