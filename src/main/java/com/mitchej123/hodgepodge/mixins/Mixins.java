@@ -498,6 +498,10 @@ public enum Mixins implements IMixins {
             .setSide(Side.CLIENT).addMixinClasses("fml.MixinGuiConfig")
             .setApplyIf(() -> TweaksConfig.addModConfigSearchBar).addTargetedMod(TargetedMod.VANILLA)),
 
+    MAKE_MOD_URL_CLICKABLE(new MixinBuilder("Makes mods urls in the forge mod menu clickable").setPhase(Phase.EARLY)
+            .setSide(Side.CLIENT).addMixinClasses("fml.MixinGuiModList_ClickableURL")
+            .setApplyIf(() -> TweaksConfig.clickableModUrls).addTargetedMod(TargetedMod.VANILLA)),
+
     FIX_BUTTON_POS_GUIOPENLINK(new MixinBuilder("Fix the buttons not being centered in the GuiConfirmOpenLink")
             .setPhase(Phase.EARLY).setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses("minecraft.MixinGuiConfirmOpenLink")
@@ -582,7 +586,10 @@ public enum Mixins implements IMixins {
                     .addMixinClasses("minecraft.MixinGameSettings_ReduceRenderDistance")),
 
     BETTER_MOD_LIST(new MixinBuilder("Better Mod List").setPhase(Phase.EARLY).setSide(Side.CLIENT)
-            .addMixinClasses("fml.MixinGuiModList", "fml.MixinGuiSlotModList", "fml.MixinGuiScrollingList")
+            .addMixinClasses(
+                    "fml.MixinGuiModList_BetterModList",
+                    "fml.MixinGuiSlotModList",
+                    "fml.MixinGuiScrollingList")
             .setApplyIf(
                     () -> TweaksConfig.betterModList
                             && !classExists("com.enderio.core.common.transform.EnderCoreTransformerClient"))

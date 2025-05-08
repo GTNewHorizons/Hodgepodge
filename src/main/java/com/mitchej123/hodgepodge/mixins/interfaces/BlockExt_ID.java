@@ -2,7 +2,7 @@ package com.mitchej123.hodgepodge.mixins.interfaces;
 
 public interface BlockExt_ID {
 
-    int getID();
+    int hodgepodge$getID();
 
-    void setID(int id);
+    void hodgepodge$setID(int id);
 }
