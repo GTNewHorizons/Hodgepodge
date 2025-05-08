@@ -16,6 +16,6 @@ public class MixinFMLControlledNamespacedRegistry {
     private <I> void hodgepodge$captureID(int id, String name, I thing, CallbackInfo ci) {
         if (!(thing instanceof BlockExt_ID block)) return;
 
-        block.setID(id);
+        block.hodgepodge$setID(id);
     }
 }
