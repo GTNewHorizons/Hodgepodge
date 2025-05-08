@@ -29,7 +29,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 
 @Mixin(GuiModList.class)
-public class MixinGuiModList extends GuiScreen implements IGuiModList {
+public class MixinGuiModList_BetterModList extends GuiScreen implements IGuiModList {
 
     @Shadow(remap = false)
     private ArrayList<ModContainer> mods;
@@ -204,4 +204,5 @@ public class MixinGuiModList extends GuiScreen implements IGuiModList {
     public ModContainer hodgepodge$selectedMod() {
         return selectedMod;
     }
+
 }

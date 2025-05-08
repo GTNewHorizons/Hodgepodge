@@ -163,6 +163,15 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static String[] endermanBlockPlaceBlacklistBlocks;
 
+    @Config.Comment("Better ModList")
+    @Config.DefaultBoolean(true)
+    public static boolean betterModList;
+
+    @Config.Comment({ "Controls the default sorting on the mod list GUI.", "0 - Default sort (load order)",
+            "1 - A to Z sort", "2 - Z to A sort" })
+    @Config.RangeInt(min = 0, max = 2)
+    public static int defaultModSort = 1;
+
     // NBT String Pooling
 
     @Config.Comment("Enable string pooling for NBT TagCompound Keys")
