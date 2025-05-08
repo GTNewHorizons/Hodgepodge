@@ -13,6 +13,7 @@ import com.gtnewhorizon.gtnhlib.mixin.ITargetedMod;
 import com.gtnewhorizon.gtnhlib.mixin.MixinBuilder;
 import com.gtnewhorizon.gtnhlib.mixin.Phase;
 import com.gtnewhorizon.gtnhlib.mixin.Side;
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
@@ -51,6 +52,12 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinWorldServer_SimulationDistance",
                     "minecraft.MixinChunk_SimulationDistance")
             .setApplyIf(() -> FixesConfig.addSimulationDistance)),
+    ADD_SIMULATION_DISTANCE_OPTION_THERMOS_FIX(
+            new MixinBuilder("Add option to separate simulation distance from render distance (Thermos fix)")
+                    .addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH).setPhase(Phase.EARLY)
+                    .addExcludedMod(TargetedMod.OPTIFINE)
+                    .addMixinClasses("minecraft.MixinWorldServer_SimulationDistanceThermosFix")
+                    .setApplyIf(() -> FixesConfig.addSimulationDistance && Common.thermosTainted)),
     FIX_RESOURCEPACK_FOLDER_OPENING(new MixinBuilder("Fix resource pack folder sometimes not opening on windows")
             .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinGuiScreenResourcePacks").setSide(Side.CLIENT)
             .setApplyIf(() -> FixesConfig.fixResourcePackOpening).addTargetedMod(TargetedMod.VANILLA)),
