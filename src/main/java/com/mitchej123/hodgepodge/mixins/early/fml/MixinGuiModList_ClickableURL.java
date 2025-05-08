@@ -16,7 +16,7 @@ import com.gtnewhorizon.gtnhlib.util.FilesUtil;
 import cpw.mods.fml.client.GuiModList;
 
 @Mixin(GuiModList.class)
-public abstract class MixinGuiModList extends GuiScreen {
+public abstract class MixinGuiModList_ClickableURL extends GuiScreen {
 
     @Unique
     int hodgepodge$urlX = 0;
