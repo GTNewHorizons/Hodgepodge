@@ -178,7 +178,7 @@ public class MixinGuiModList_BetterModList extends GuiScreen implements IGuiModL
     }
 
     @Override
-    protected void mouseClicked(int x, int y, int button) {
+    public void mouseClicked(int x, int y, int button) {
         super.mouseClicked(x, y, button);
         hodgepodge$search.mouseClicked(x, y, button);
         if (button == 1 && x >= hodgepodge$search.xPosition
@@ -190,7 +190,7 @@ public class MixinGuiModList_BetterModList extends GuiScreen implements IGuiModL
     }
 
     @Override
-    protected void keyTyped(char p_73869_1_, int p_73869_2_) {
+    public void keyTyped(char p_73869_1_, int p_73869_2_) {
         super.keyTyped(p_73869_1_, p_73869_2_);
         hodgepodge$search.textboxKeyTyped(p_73869_1_, p_73869_2_);
     }
