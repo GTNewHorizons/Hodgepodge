@@ -47,6 +47,12 @@ public class VoxelMapCacheMover {
             String name = file.getFileName().toString();
             if (PATTERN.matcher(name).matches()) {
                 try {
+                    Path newFile = file.resolveSibling(name.replace(".zip", ".data"));
+                    if (Files.exists(newFile) && (!Files.isSameFile(newFile, file)
+                            || Files.getLastModifiedTime(newFile).compareTo(Files.getLastModifiedTime(file)) > 0)) {
+                        this.ignored++;
+                        return FileVisitResult.CONTINUE;
+                    }
                     Files.move(file, file.resolveSibling(name.replace(".zip", ".data")));
                     this.renamed++;
                 } catch (IOException e) {
