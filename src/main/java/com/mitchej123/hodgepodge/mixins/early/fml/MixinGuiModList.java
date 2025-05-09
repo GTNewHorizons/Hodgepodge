@@ -1,5 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.early.fml;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
@@ -13,8 +15,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
+import com.gtnewhorizon.gtnhlib.util.FilesUtil;
 import com.mitchej123.hodgepodge.Hodgepodge;
 import com.mitchej123.hodgepodge.client.bettermodlist.InfoButton;
 import com.mitchej123.hodgepodge.client.bettermodlist.SortType;
@@ -50,6 +55,15 @@ public class MixinGuiModList extends GuiScreen implements IGuiModList {
     @Unique
     private boolean hodgepodge$sorted = false;
     private SortType hodgepodge$sortType = SortType.values()[TweaksConfig.defaultModSort];
+    // Clickable URL
+    @Unique
+    int hodgepodge$urlX = 0;
+
+    @Unique
+    int hodgepodge$urlY = 0;
+
+    @Unique
+    String hodgepodge$urlStr;
 
     // Method to initialize GUI components
     @Inject(method = "initGui", at = @At("TAIL"))
@@ -177,8 +191,28 @@ public class MixinGuiModList extends GuiScreen implements IGuiModList {
         hodgepodge$search.drawTextBox();
     }
 
+    // Clickable URL
+    @ModifyArgs(
+            method = "drawScreen",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lcpw/mods/fml/client/GuiModList;drawLine(Ljava/lang/String;II)I",
+                    remap = false))
+    private void replaceDrawLineArgs(Args args) {
+        String line = args.get(0);
+        int offset = args.get(1);
+        int shifty = args.get(2);
+        if (line != null && line.startsWith("URL: ")) {
+            hodgepodge$urlX = offset + this.fontRendererObj.getStringWidth("URL: ");
+            hodgepodge$urlY = shifty;
+            hodgepodge$urlStr = line.substring("URL: ".length());
+
+            args.set(0, line.replace("URL: ", "URL: §9§n"));
+        }
+    }
+
     @Override
-    protected void mouseClicked(int x, int y, int button) {
+    public void mouseClicked(int x, int y, int button) {
         super.mouseClicked(x, y, button);
         hodgepodge$search.mouseClicked(x, y, button);
         if (button == 1 && x >= hodgepodge$search.xPosition
@@ -187,10 +221,24 @@ public class MixinGuiModList extends GuiScreen implements IGuiModList {
                 && y < hodgepodge$search.yPosition + hodgepodge$search.height) {
             hodgepodge$search.setText("");
         }
+        // Clickable URL
+        if (hodgepodge$urlStr != null) {
+            int height = this.fontRendererObj.FONT_HEIGHT;
+            int width = this.fontRendererObj.getStringWidth(hodgepodge$urlStr);
+            if (x >= hodgepodge$urlX && x <= hodgepodge$urlX + width
+                    && y >= hodgepodge$urlY
+                    && y <= hodgepodge$urlY + height) {
+                try {
+                    FilesUtil.openUri(new URI(hodgepodge$urlStr));
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 
     @Override
-    protected void keyTyped(char p_73869_1_, int p_73869_2_) {
+    public void keyTyped(char p_73869_1_, int p_73869_2_) {
         super.keyTyped(p_73869_1_, p_73869_2_);
         hodgepodge$search.textboxKeyTyped(p_73869_1_, p_73869_2_);
     }
@@ -204,4 +252,5 @@ public class MixinGuiModList extends GuiScreen implements IGuiModList {
     public ModContainer hodgepodge$selectedMod() {
         return selectedMod;
     }
+
 }
