@@ -29,6 +29,7 @@ public abstract class MixinGuiModList_ClickableURL extends GuiScreen {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
         if (hodgepodge$urlStr != null) {
             int height = this.fontRendererObj.FONT_HEIGHT;
             int width = this.fontRendererObj.getStringWidth(hodgepodge$urlStr);
@@ -46,8 +47,10 @@ public abstract class MixinGuiModList_ClickableURL extends GuiScreen {
 
     @ModifyArgs(
             method = "drawScreen",
-            at = @At(value = "INVOKE", target = "Lcpw/mods/fml/client/GuiModList;drawLine(Ljava/lang/String;II)I"),
-            remap = false)
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lcpw/mods/fml/client/GuiModList;drawLine(Ljava/lang/String;II)I",
+                    remap = false))
     private void replaceDrawLineArgs(Args args) {
         String line = args.get(0);
         int offset = args.get(1);
