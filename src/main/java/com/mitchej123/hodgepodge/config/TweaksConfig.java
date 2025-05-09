@@ -144,6 +144,25 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean clickableModUrls;
 
+    @Config.Comment("Entirely remove Endermen's ability to grab blocks. Should also work for any modded entities that extend EntityEnderman and call its onLivingUpdate")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean endermanBlockGrabDisable;
+
+    @Config.Comment("Entirely remove Endermen's ability to place blocks. Should also work for any modded entities that extend EntityEnderman and call its onLivingUpdate")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean endermanBlockPlaceDisable;
+
+    @Config.Comment("Enable the blacklist (defined in endermanBlockPlaceBlacklistBlocks) for blocks that Endermen are unable to place held blocks on top of. Ignored if endermanBlockPlaceDisable is true. Should also work for any modded entities that extend EntityEnderman and call its onLivingUpdate")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean endermanBlockPlaceBlacklist;
+
+    @Config.Comment("The list of blocks that Endermen are unable to place held blocks on top of. Requires endermanBlockPlaceBlacklist to be true. Ignored if endermanBlockPlaceDisable is true. Add entries in the format modId:blockName(:meta optional), with meta of 32767 to prevent endermen from placing on blocks of any meta value with the same id")
+    @Config.RequiresMcRestart
+    public static String[] endermanBlockPlaceBlacklistBlocks;
+
     @Config.Comment("Better ModList")
     @Config.DefaultBoolean(true)
     public static boolean betterModList;
