@@ -55,12 +55,12 @@ public class ProperObjectIntIdentityMap extends ObjectIntIdentityMap {
         objectList.set(value, key);
     }
 
-    private void ensureSize(int value) {
-
-    }
-
     public int get(Object key) {
-        return objectMap.getIntOrDefault(key, -1);
+        if (key instanceof BlockExt_ID block) {
+            return block.hodgepodge$getID();
+        }
+
+        return -1;
     }
 
     public Object getByValue(int value) {
