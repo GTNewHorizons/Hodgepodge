@@ -6,6 +6,7 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.regex.Pattern;
 
@@ -47,7 +48,17 @@ public class VoxelMapCacheMover {
             String name = file.getFileName().toString();
             if (PATTERN.matcher(name).matches()) {
                 try {
-                    Files.move(file, file.resolveSibling(name.replace(".zip", ".data")));
+                    Path newFile = file.resolveSibling(name.replace(".zip", ".data"));
+                    if (Files.exists(newFile) && (!Files.isSameFile(newFile, file)
+                            || Files.getLastModifiedTime(newFile).compareTo(Files.getLastModifiedTime(file)) > 0)) {
+                        this.ignored++;
+                        return FileVisitResult.CONTINUE;
+                    } else {
+                        Files.move(
+                                file,
+                                file.resolveSibling(name.replace(".zip", ".data")),
+                                StandardCopyOption.REPLACE_EXISTING);
+                    }
                     this.renamed++;
                 } catch (IOException e) {
                     Common.log.warn("Failed to change extension of " + file + " to .data", e);
