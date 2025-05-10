@@ -43,8 +43,8 @@ public class ProperObjectIntIdentityMap extends ObjectIntIdentityMap {
     }
 
     public void put(Object key, int value) {
-        if (key instanceof HasID block) {
-            block.hodgepodge$setID(value);
+        if (key instanceof HasID idHaver) {
+            idHaver.hodgepodge$setID(value);
         }
 
         objectMap.put(key, value);
@@ -56,8 +56,8 @@ public class ProperObjectIntIdentityMap extends ObjectIntIdentityMap {
     }
 
     public int get(Object key) {
-        if (key instanceof HasID block) {
-            return block.hodgepodge$getID();
+        if (key instanceof HasID idHaver) {
+            return idHaver.hodgepodge$getID();
         }
 
         return -1;
