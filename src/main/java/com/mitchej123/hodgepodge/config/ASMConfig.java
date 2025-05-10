@@ -37,4 +37,8 @@ public class ASMConfig {
     @Config.Comment("Remove various vararg method calls, to make profiling easier.")
     @Config.DefaultBoolean(true)
     public static boolean dissectVarargs;
+
+    @Config.Comment("Speedup OreDictionary")
+    @Config.DefaultBoolean(true)
+    public static boolean speedupOreDictionary;
 }
