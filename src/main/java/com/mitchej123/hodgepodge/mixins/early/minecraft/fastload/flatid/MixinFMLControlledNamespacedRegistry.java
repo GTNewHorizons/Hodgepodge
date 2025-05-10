@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mitchej123.hodgepodge.mixins.interfaces.BlockExt_ID;
+import com.mitchej123.hodgepodge.mixins.interfaces.HasID;
 
 import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
 
@@ -14,8 +14,8 @@ public class MixinFMLControlledNamespacedRegistry {
 
     @Inject(method = "addObjectRaw", at = @At(value = "RETURN"), remap = false)
     private <I> void hodgepodge$captureID(int id, String name, I thing, CallbackInfo ci) {
-        if (!(thing instanceof BlockExt_ID block)) return;
+        if (!(thing instanceof HasID idHaver)) return;
 
-        block.hodgepodge$setID(id);
+        idHaver.hodgepodge$setID(id);
     }
 }
