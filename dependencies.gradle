@@ -68,7 +68,7 @@ dependencies {
     runtimeOnlyNonPublishable("maven.modrinth:archaicfix:0.7.6:dev")
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:ArchaicFix:99.0.0:dev") // mavenLocal location
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:ServerUtilities:2.1.48:dev") // for the pregenerator
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta41:dev") // for TPS graph
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta41:dev") // for TPS graph
 }
 
 // Replace when RFG support deobfuscation from notch mappings
