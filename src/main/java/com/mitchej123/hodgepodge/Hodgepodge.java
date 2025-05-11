@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
+import com.mitchej123.hodgepodge.compat.BetterCrashesCompat;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
 import com.mitchej123.hodgepodge.util.AnchorAlarm;
@@ -19,6 +20,9 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
 import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
@@ -40,6 +44,7 @@ public class Hodgepodge {
     public static final String NAME = "Hodgepodge";
 
     public static final boolean isGTNH;
+    public static boolean IDSpeedupActive = false;
 
     private final ArtifactVersion minimumClientJoinVersion = new DefaultArtifactVersion("2.5.36");
 
@@ -60,6 +65,7 @@ public class Hodgepodge {
                 return String.valueOf(Runtime.getRuntime().availableProcessors());
             }
         });
+        FMLCommonHandler.instance().bus().register(this);
     }
 
     @EventHandler
@@ -72,6 +78,9 @@ public class Hodgepodge {
     public void init(FMLInitializationEvent event) {
         FMLCommonHandler.instance().bus().register(ANCHOR_ALARM);
         NetworkHandler.init();
+        if (Compat.isGT5Present()) {
+            BetterCrashesCompat.init();
+        }
     }
 
     @EventHandler
@@ -92,9 +101,15 @@ public class Hodgepodge {
 
     @EventHandler
     public void onServerStarted(FMLServerStartedEvent event) {
+        IDSpeedupActive = true;
         if (TweaksConfig.addModEntityStats) {
             StatHandler.addEntityStats();
         }
+    }
+
+    @EventHandler
+    public void onServerStopped(FMLServerStoppedEvent event) {
+        IDSpeedupActive = false;
     }
 
     @EventHandler
@@ -116,4 +131,15 @@ public class Hodgepodge {
         }
         return true;
     }
+
+    @SubscribeEvent
+    public void onClientConnectedToServerEvent(FMLNetworkEvent.ClientConnectedToServerEvent aEvent) {
+        IDSpeedupActive = true;
+    }
+
+    @SubscribeEvent
+    public void onClientDisconnectedFromServerEvent(FMLNetworkEvent.ClientDisconnectionFromServerEvent aEvent) {
+        IDSpeedupActive = false;
+    }
+
 }

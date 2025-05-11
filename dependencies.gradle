@@ -16,6 +16,9 @@ dependencies {
 
     compileOnly("com.gtnewhorizons.retrofuturabootstrap:RetroFuturaBootstrap:1.0.2") { transitive = false }
 
+    // Better Crashes
+    compileOnly("com.github.GTNewHorizons:BetterCrashes:1.4.0-GTNH:dev")
+
     transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.7.40-GTNH:dev") // force a more up-to-date NEI version
     transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-597-GTNH")
     transformedModCompileOnly("com.github.GTNewHorizons:Baubles:1.0.4:dev")
