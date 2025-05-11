@@ -60,7 +60,7 @@ public class ProperObjectIntIdentityMap extends ObjectIntIdentityMap {
             return idHaver.hodgepodge$getID();
         }
 
-        return -1;
+        return objectMap.getIntOrDefault(key, -1);
     }
 
     public Object getByValue(int value) {
