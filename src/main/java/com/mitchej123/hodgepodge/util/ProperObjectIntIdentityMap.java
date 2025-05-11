@@ -2,7 +2,7 @@ package com.mitchej123.hodgepodge.util;
 
 import net.minecraft.util.ObjectIntIdentityMap;
 
-import com.mitchej123.hodgepodge.mixins.interfaces.BlockExt_ID;
+import com.mitchej123.hodgepodge.mixins.interfaces.HasID;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
@@ -43,8 +43,8 @@ public class ProperObjectIntIdentityMap extends ObjectIntIdentityMap {
     }
 
     public void put(Object key, int value) {
-        if (key instanceof BlockExt_ID block) {
-            block.hodgepodge$setID(value);
+        if (key instanceof HasID idHaver) {
+            idHaver.hodgepodge$setID(value);
         }
 
         objectMap.put(key, value);
@@ -55,12 +55,12 @@ public class ProperObjectIntIdentityMap extends ObjectIntIdentityMap {
         objectList.set(value, key);
     }
 
-    private void ensureSize(int value) {
-
-    }
-
     public int get(Object key) {
-        return objectMap.getIntOrDefault(key, -1);
+        if (key instanceof HasID idHaver) {
+            return idHaver.hodgepodge$getID();
+        }
+
+        return -1;
     }
 
     public Object getByValue(int value) {
