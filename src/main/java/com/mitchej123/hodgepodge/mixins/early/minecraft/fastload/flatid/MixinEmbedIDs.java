@@ -1,12 +1,14 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload.flatid;
 
-import com.mitchej123.hodgepodge.mixins.interfaces.HasID;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin({Block.class, Item.class})
+import com.mitchej123.hodgepodge.mixins.interfaces.HasID;
+
+@Mixin({ Block.class, Item.class })
 public class MixinEmbedIDs implements HasID {
 
     @Unique
