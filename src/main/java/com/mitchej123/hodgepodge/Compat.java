@@ -29,6 +29,7 @@ public class Compat {
     private static boolean isDreamcraftPresent;
     private static boolean isCoreTweaksPresent;
     private static boolean isKleeSlabsPresent;
+    private static boolean isBetterCrashesPresent;
 
     static void init(Side side) {
         isClient = side == Side.CLIENT;
@@ -64,6 +65,8 @@ public class Compat {
         isCoreTweaksPresent = Loader.isModLoaded("coretweaks");
 
         isKleeSlabsPresent = Loader.isModLoaded("kleeslabs");
+
+        isBetterCrashesPresent = Loader.isModLoaded("bettercrashes");
     }
 
     /**
@@ -144,5 +147,12 @@ public class Compat {
      */
     public static boolean isKleeSlabsPresent() {
         return isKleeSlabsPresent;
+    }
+
+    /**
+     * Cannot be used before pre-init phase.
+     */
+    public static boolean isBetterCrashesPresent() {
+        return isBetterCrashesPresent;
     }
 }

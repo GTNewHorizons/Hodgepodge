@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.util;
 
 import net.minecraft.util.ObjectIntIdentityMap;
 
+import com.mitchej123.hodgepodge.Hodgepodge;
 import com.mitchej123.hodgepodge.mixins.interfaces.HasID;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -56,7 +57,7 @@ public class ProperObjectIntIdentityMap extends ObjectIntIdentityMap {
     }
 
     public int get(Object key) {
-        if (key instanceof HasID idHaver) {
+        if (Hodgepodge.IDSpeedupActive && key instanceof HasID idHaver) {
             return idHaver.hodgepodge$getID();
         }
 
