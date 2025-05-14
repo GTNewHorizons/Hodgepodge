@@ -78,7 +78,7 @@ public class Hodgepodge {
     public void init(FMLInitializationEvent event) {
         FMLCommonHandler.instance().bus().register(ANCHOR_ALARM);
         NetworkHandler.init();
-        if (Compat.isGT5Present()) {
+        if (Compat.isBetterCrashesPresent()) {
             BetterCrashesCompat.init();
         }
     }
