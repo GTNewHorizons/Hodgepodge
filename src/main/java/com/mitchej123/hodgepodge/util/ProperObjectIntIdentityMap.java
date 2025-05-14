@@ -2,6 +2,9 @@ package com.mitchej123.hodgepodge.util;
 
 import net.minecraft.util.ObjectIntIdentityMap;
 
+import com.mitchej123.hodgepodge.Hodgepodge;
+import com.mitchej123.hodgepodge.mixins.interfaces.HasID;
+
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 // Used via ASM
@@ -41,6 +44,10 @@ public class ProperObjectIntIdentityMap extends ObjectIntIdentityMap {
     }
 
     public void put(Object key, int value) {
+        if (key instanceof HasID idHaver) {
+            idHaver.hodgepodge$setID(value);
+        }
+
         objectMap.put(key, value);
         objectList.ensureCapacity(value + 1);
         while (objectList.size() <= value) {
@@ -49,11 +56,11 @@ public class ProperObjectIntIdentityMap extends ObjectIntIdentityMap {
         objectList.set(value, key);
     }
 
-    private void ensureSize(int value) {
-
-    }
-
     public int get(Object key) {
+        if (Hodgepodge.IDSpeedupActive && key instanceof HasID idHaver) {
+            return idHaver.hodgepodge$getID();
+        }
+
         return objectMap.getIntOrDefault(key, -1);
     }
 
