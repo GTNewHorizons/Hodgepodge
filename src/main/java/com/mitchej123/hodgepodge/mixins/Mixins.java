@@ -1,8 +1,10 @@
 package com.mitchej123.hodgepodge.mixins;
 
 import static com.gtnewhorizon.gtnhlib.mixin.TargetedMod.ARCHAICFIX;
+import static com.gtnewhorizon.gtnhlib.mixin.TargetedMod.FASTCRAFT;
 import static com.gtnewhorizon.gtnhlib.mixin.TargetedMod.OPTIFINE;
 import static com.mitchej123.hodgepodge.mixins.TargetedMod.ANGELICA;
+import static com.mitchej123.hodgepodge.mixins.TargetedMod.BUKKIT;
 import static com.mitchej123.hodgepodge.mixins.TargetedMod.FALSETWEAKS;
 
 import java.util.List;
@@ -561,11 +563,12 @@ public enum Mixins implements IMixins {
             .addTargetedMod(TargetedMod.VANILLA).addMixinClasses("minecraft.fastload.MixinMapGenStructure")
             .setApplyIf(() -> SpeedupsConfig.unboxMapGen)),
 
-    EMBED_BLOCKIDS(new MixinBuilder("Embed block IDs directly in the block objects, to speed up lookups")
-            .setPhase(Phase.EARLY).setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
+    EMBED_BLOCKIDS(new MixinBuilder("Embed IDs directly in the objects, to accelerate lookups").setPhase(Phase.EARLY)
+            .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA).addExcludedMod(FASTCRAFT).addExcludedMod(BUKKIT)
             .addMixinClasses(
-                    "minecraft.fastload.flatid.MixinBlock",
-                    "minecraft.fastload.flatid.MixinFMLControlledNamespacedRegistry")
+                    "minecraft.fastload.flatid.MixinEmbedIDs",
+                    "minecraft.fastload.flatid.MixinFMLControlledNamespacedRegistry",
+                    "minecraft.fastload.flatid.MixinObjectIntIdentityMap")
             .setApplyIf(() -> SpeedupsConfig.embedID)),
 
     FAST_CHUNK_LOADING(new MixinBuilder("Invasively accelerates chunk handling").setPhase(Phase.EARLY)
