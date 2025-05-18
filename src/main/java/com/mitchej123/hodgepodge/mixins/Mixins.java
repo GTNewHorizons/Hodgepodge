@@ -568,7 +568,7 @@ public enum Mixins implements IMixins {
             .addMixinClasses(
                     "minecraft.fastload.flatid.MixinEmbedIDs",
                     "minecraft.fastload.flatid.MixinObjectIntIdentityMap")
-            .setApplyIf(() -> ASMConfig.speedupObjectIntIdentityMap)),
+            .setApplyIf(() -> SpeedupsConfig.embedID)),
 
     FAST_CHUNK_LOADING(new MixinBuilder("Invasively accelerates chunk handling").setPhase(Phase.EARLY)
             .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
