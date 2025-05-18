@@ -94,6 +94,17 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
     private static final String FASTUTIL_INT_2_OBJECT_HASH_MAP = "it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap";
     private static final String INTEGER = "java/lang/Integer";
 
+    private final boolean isObfuscated;
+    private final String itemStackClass;
+    private final String itemClass;
+
+    public SpeedupOreDictionaryTransformer() {
+        this.isObfuscated = !Common.isDeobfuscated();
+        this.itemStackClass = isObfuscated ? "add" : "net/minecraft/item/ItemStack";
+        this.itemClass = isObfuscated ? "adb" : "net/minecraft/item/Item";
+        LOGGER.debug("OreDictionary is obfuscated: {}", isObfuscated);
+    }
+
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null) return null;
@@ -124,10 +135,10 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
             } else if ("getOreID".equals(method.name) && "(Ljava/lang/String;)I".equals(method.desc)) {
                 LOGGER.debug("Transforming OreDictionary.getOreID(String)");
                 modified |= transformGetOreIDStringMethod(method);
-            } else if ("getOreID".equals(method.name) && "(Lnet/minecraft/item/ItemStack;)I".equals(method.desc)) {
+            } else if ("getOreID".equals(method.name) && ("(L" + this.itemStackClass + ";)I").equals(method.desc)) {
                 LOGGER.debug("Transforming OreDictionary.getOreID(ItemStack)");
                 modified |= transformGetOreIDItemStackMethod(method);
-            } else if ("getOreIDs".equals(method.name) && "(Lnet/minecraft/item/ItemStack;)[I".equals(method.desc)) {
+            } else if ("getOreIDs".equals(method.name) && ("(L" + this.itemStackClass + ";)[I").equals(method.desc)) {
                 if(!Common.thermosTainted) {
                     LOGGER.debug("Transforming OreDictionary.getOreIDs(ItemStack)");
                     modified |= transformGetOreIDsMethod(method);
@@ -141,7 +152,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
             } else if ("getOres".equals(method.name) && "(I)Ljava/util/ArrayList;".equals(method.desc)) {
                 LOGGER.debug("Transforming OreDictionary.getOres(int)");
                 modified |= transformGetOresIntMethod(method);
-            } else if ("registerOreImpl".equals(method.name) && "(Ljava/lang/String;Lnet/minecraft/item/ItemStack;)V".equals(method.desc)) {
+            } else if ("registerOreImpl".equals(method.name) && ("(Ljava/lang/String;L" + this.itemStackClass + ";)V").equals(method.desc)) {
                 LOGGER.debug("Transforming OreDictionary.registerOreImpl(String, ItemStack)");
                 modified |= transformRegisterOreImplMethod(method);
             } else if ("rebakeMap".equals(method.name) && "()V".equals(method.desc)) {
@@ -447,8 +458,8 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
             AbstractInsnNode node = iterator.next();
             
             if (!foundFirstReturn && node instanceof MethodInsnNode getItemMethodNode && getItemMethodNode.getOpcode() == INVOKEVIRTUAL
-                    && getItemMethodNode.owner.equals("net/minecraft/item/ItemStack") && getItemMethodNode.name.equals("getItem")
-                    && getItemMethodNode.desc.equals("()Lnet/minecraft/item/Item;")) 
+                    && getItemMethodNode.owner.equals(itemStackClass) && getItemMethodNode.name.equals("getItem")
+                    && getItemMethodNode.desc.equals("()L" + itemClass + ";")) 
             {
                 foundFirstReturn = true;
                 modified = true;
@@ -562,7 +573,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
      * @return true if transformation was successful, false otherwise
      */
     private boolean overwriteGetOreIDsMethod(MethodNode method) {
-        if (!method.name.equals("getOreIDs") || !method.desc.equals("(Lnet/minecraft/item/ItemStack;)[I")) {
+        if (!method.name.equals("getOreIDs") || !method.desc.equals("(L" + itemStackClass + ";)[I")) {
             return false;
         }
 
@@ -597,25 +608,25 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
         insns.add(new VarInsnNode(ALOAD, 0));
         insns.add(new JumpInsnNode(IFNULL, L1));
         insns.add(new VarInsnNode(ALOAD, 0));
-        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "net/minecraft/item/ItemStack", "getItem", "()Lnet/minecraft/item/Item;", false));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, itemStackClass, "getItem", "()L" + itemClass + ";", false));
         insns.add(new JumpInsnNode(IFNONNULL, L2));
 
         insns.add(L1);
-        insns.add(new FieldInsnNode(GETSTATIC, "net/minecraftforge/oredict/OreDictionary", "EMPTY_INT_ARRAY", "[I"));
+        insns.add(new FieldInsnNode(GETSTATIC, ORE_DICTIONARY, "EMPTY_INT_ARRAY", "[I"));
         insns.add(new InsnNode(ARETURN));
 
         insns.add(L2);
         insns.add(new LineNumberNode(338, L2));
-        insns.add(new TypeInsnNode(NEW, "it/unimi/dsi/fastutil/ints/IntOpenHashSet"));
+        insns.add(new TypeInsnNode(NEW, FASTUTIL_INT_OPEN_HASH_SET));
         insns.add(new InsnNode(DUP));
-        insns.add(new MethodInsnNode(INVOKESPECIAL, "it/unimi/dsi/fastutil/ints/IntOpenHashSet", "<init>", "()V", false));
+        insns.add(new MethodInsnNode(INVOKESPECIAL, FASTUTIL_INT_OPEN_HASH_SET, "<init>", "()V", false));
         insns.add(new VarInsnNode(ASTORE, 1));
 
         insns.add(L3);
         insns.add(new LineNumberNode(343, L3));
         insns.add(new VarInsnNode(ALOAD, 0));
-        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "net/minecraft/item/ItemStack", "getItem", "()Lnet/minecraft/item/Item;", false));
-        insns.add(new FieldInsnNode(GETFIELD, "net/minecraft/item/Item", "delegate", "Lcpw/mods/fml/common/registry/RegistryDelegate;"));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, itemStackClass, "getItem", "()L" + itemClass + ";", false));
+        insns.add(new FieldInsnNode(GETFIELD, itemClass, "delegate", "Lcpw/mods/fml/common/registry/RegistryDelegate;"));
         insns.add(new MethodInsnNode(INVOKEINTERFACE, "cpw/mods/fml/common/registry/RegistryDelegate", "name", "()Ljava/lang/String;", true));
         insns.add(new VarInsnNode(ASTORE, 2));
 
@@ -635,7 +646,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
         insns.add(new VarInsnNode(ALOAD, 0));
         insns.add(new InsnNode(AASTORE));
         insns.add(new MethodInsnNode(INVOKESTATIC, "cpw/mods/fml/common/FMLLog", "log", "(Lorg/apache/logging/log4j/Level;Ljava/lang/String;[Ljava/lang/Object;)V", false));
-        insns.add(new FieldInsnNode(GETSTATIC, "net/minecraftforge/oredict/OreDictionary", "EMPTY_INT_ARRAY", "[I"));
+        insns.add(new FieldInsnNode(GETSTATIC, ORE_DICTIONARY, "EMPTY_INT_ARRAY", "[I"));
         insns.add(new InsnNode(ARETURN));
 
         insns.add(L5);
@@ -647,10 +658,10 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
 
         insns.add(L7);
         insns.add(new LineNumberNode(354, L7));
-        insns.add(new FieldInsnNode(GETSTATIC, "net/minecraftforge/oredict/OreDictionary", "stackToId", "Ljava/util/Map;"));
-        insns.add(new TypeInsnNode(CHECKCAST, "it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap"));
+        insns.add(new FieldInsnNode(GETSTATIC, ORE_DICTIONARY, "stackToId", "Ljava/util/Map;"));
+        insns.add(new TypeInsnNode(CHECKCAST, FASTUTIL_INT_2_OBJECT_HASH_MAP));
         insns.add(new VarInsnNode(ILOAD, 3));
-        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap", "get", "(I)Ljava/lang/Object;", false));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_2_OBJECT_HASH_MAP, "get", "(I)Ljava/lang/Object;", false));
         insns.add(new TypeInsnNode(CHECKCAST, "it/unimi/dsi/fastutil/ints/IntList"));
         insns.add(new VarInsnNode(ASTORE, 4));
 
@@ -660,22 +671,22 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
         insns.add(new JumpInsnNode(IFNULL, L9));
         insns.add(new VarInsnNode(ALOAD, 1));
         insns.add(new VarInsnNode(ALOAD, 4));
-        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "it/unimi/dsi/fastutil/ints/IntOpenHashSet", "addAll", "(Lit/unimi/dsi/fastutil/ints/IntCollection;)Z", false));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_OPEN_HASH_SET, "addAll", "(L" + FASTUTIL_INT_COLLECTION + ";)Z", false));
         insns.add(new InsnNode(POP));
 
         insns.add(L9);
         insns.add(new LineNumberNode(356, L9));
-        insns.add(new FieldInsnNode(GETSTATIC, "net/minecraftforge/oredict/OreDictionary", "stackToId", "Ljava/util/Map;"));
-        insns.add(new TypeInsnNode(CHECKCAST, "it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap"));
+        insns.add(new FieldInsnNode(GETSTATIC, ORE_DICTIONARY, "stackToId", "Ljava/util/Map;"));
+        insns.add(new TypeInsnNode(CHECKCAST, FASTUTIL_INT_2_OBJECT_HASH_MAP));
         insns.add(new VarInsnNode(ILOAD, 3));
         insns.add(new VarInsnNode(ALOAD, 0));
-        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "net/minecraft/item/ItemStack", "getItemDamage", "()I", false));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, itemStackClass, "getItemDamage", "()I", false));
         insns.add(new InsnNode(ICONST_1));
         insns.add(new InsnNode(IADD));
         insns.add(new IntInsnNode(BIPUSH, 16));
         insns.add(new InsnNode(ISHL));
         insns.add(new InsnNode(IOR));
-        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap", "get", "(I)Ljava/lang/Object;", false));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_2_OBJECT_HASH_MAP, "get", "(I)Ljava/lang/Object;", false));
         insns.add(new TypeInsnNode(CHECKCAST, "it/unimi/dsi/fastutil/ints/IntList"));
         insns.add(new VarInsnNode(ASTORE, 4));
 
@@ -685,20 +696,20 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
         insns.add(new JumpInsnNode(IFNULL, L11));
         insns.add(new VarInsnNode(ALOAD, 1));
         insns.add(new VarInsnNode(ALOAD, 4));
-        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "it/unimi/dsi/fastutil/ints/IntOpenHashSet", "addAll", "(Lit/unimi/dsi/fastutil/ints/IntCollection;)Z", false));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_OPEN_HASH_SET, "addAll", "(L" + FASTUTIL_INT_COLLECTION + ";)Z", false));
         insns.add(new InsnNode(POP));
 
         insns.add(L11);
         insns.add(new LineNumberNode(359, L11));
         insns.add(new VarInsnNode(ALOAD, 1));
-        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "it/unimi/dsi/fastutil/ints/IntOpenHashSet", "isEmpty", "()Z", false));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_OPEN_HASH_SET, "isEmpty", "()Z", false));
         insns.add(new JumpInsnNode(IFEQ, L12));
-        insns.add(new FieldInsnNode(GETSTATIC, "net/minecraftforge/oredict/OreDictionary", "EMPTY_INT_ARRAY", "[I"));
+        insns.add(new FieldInsnNode(GETSTATIC, ORE_DICTIONARY, "EMPTY_INT_ARRAY", "[I"));
         insns.add(new JumpInsnNode(GOTO, L13));
 
         insns.add(L12);
         insns.add(new VarInsnNode(ALOAD, 1));
-        insns.add(new MethodInsnNode(INVOKEVIRTUAL, "it/unimi/dsi/fastutil/ints/IntOpenHashSet", "toIntArray", "()[I", false));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_OPEN_HASH_SET, "toIntArray", "()[I", false));
 
         insns.add(L13);
         insns.add(new InsnNode(ARETURN));
@@ -707,7 +718,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
 
         // Set up local variables
         method.localVariables.add(new LocalVariableNode("x", "I", null, L0, L0, 7));
-        method.localVariables.add(new LocalVariableNode("stack", "Lnet/minecraft/item/ItemStack;", null, L0, L14, 0));
+        method.localVariables.add(new LocalVariableNode("stack", "L" + itemStackClass + ";", null, L0, L14, 0));
         method.localVariables.add(new LocalVariableNode("set", "Ljava/util/Set;", "Ljava/util/Set<Ljava/lang/Integer;>;", L3, L14, 1));
         method.localVariables.add(new LocalVariableNode("registryName", "Ljava/lang/String;", null, L4, L14, 2));
         method.localVariables.add(new LocalVariableNode("id", "I", null, L7, L14, 3));
