@@ -52,10 +52,6 @@ public class FastUtilsObjectIntIdentityHashMap<K> extends IdentityHashMap<K, Int
         return containsKey(key) ? forwardMap.getInt(key) : defaultValue;
     }
 
-    public int getIntOrDefault(Object key, int defaultValue) {
-        return containsKey(key) ? forwardMap.getInt(key) : defaultValue;
-    }
-
     @Override
     public boolean containsKey(Object key) {
         return forwardMap.containsKey(key);
