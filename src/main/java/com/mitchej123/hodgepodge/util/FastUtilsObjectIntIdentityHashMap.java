@@ -1,15 +1,13 @@
 package com.mitchej123.hodgepodge.util;
 
+import com.mitchej123.hodgepodge.mixins.interfaces.HasID;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
-
 import org.jetbrains.annotations.NotNull;
-
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
-import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 
 public class FastUtilsObjectIntIdentityHashMap<K> extends IdentityHashMap<K, Integer> {
 
@@ -24,20 +22,26 @@ public class FastUtilsObjectIntIdentityHashMap<K> extends IdentityHashMap<K, Int
     @Override
     @Deprecated
     public Integer put(K key, Integer value) {
-        return forwardMap.put(key, value);
+        final int ret = put(key, value.intValue());
+        return ret == -1 ? null : ret;
     }
 
     public int put(K key, int value) {
+        if (key instanceof HasID idHaver) idHaver.hodgepodge$setID(value);
         return forwardMap.put(key, value);
     }
 
     @Override
     public Integer get(Object key) {
-        int value = forwardMap.getInt(key);
+        int value = getInt(key);
+
         return value == -1 ? null : value;
     }
 
-    public int getInt(Objects key) {
+    public int getInt(Object key) {
+        if (key instanceof HasID idHaver)
+            return idHaver.hodgepodge$getID();
+
         return forwardMap.getInt(key);
     }
 
@@ -65,11 +69,17 @@ public class FastUtilsObjectIntIdentityHashMap<K> extends IdentityHashMap<K, Int
 
     @Override
     public Integer remove(Object key) {
+        if (key instanceof HasID idHaver) idHaver.hodgepodge$setID(-1);
+
         return forwardMap.removeInt(key);
     }
 
     @Override
     public void clear() {
+        forwardMap.forEach((k, v) -> {
+            if (k instanceof HasID idHaver) idHaver.hodgepodge$setID(-1);
+        });
+
         forwardMap.clear();
     }
 

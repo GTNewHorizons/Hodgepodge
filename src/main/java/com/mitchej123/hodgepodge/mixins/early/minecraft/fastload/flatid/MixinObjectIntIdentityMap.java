@@ -1,7 +1,5 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload.flatid;
 
-import com.mitchej123.hodgepodge.Hodgepodge;
-import com.mitchej123.hodgepodge.mixins.interfaces.HasID;
 import com.mitchej123.hodgepodge.util.FastUtilsObjectIntIdentityHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.util.IdentityHashMap;
@@ -77,10 +75,6 @@ public abstract class MixinObjectIntIdentityMap {
 
     @Unique
     public void hodgepodge$put(Object key, int value) {
-        if (key instanceof HasID idHaver) {
-            idHaver.hodgepodge$setID(value);
-        }
-
         hodgepodge$objectMap.put(key, value);
         hodgepodge$objectList.ensureCapacity(value + 1);
         while (hodgepodge$objectList.size() <= value) {
@@ -91,10 +85,6 @@ public abstract class MixinObjectIntIdentityMap {
 
     @Unique
     public int hodgepodge$get(Object key) {
-        if (Hodgepodge.IDSpeedupActive && key instanceof HasID idHaver) {
-            return idHaver.hodgepodge$getID();
-        }
-
         return hodgepodge$objectMap.getIntOrDefault(key, -1);
     }
 
