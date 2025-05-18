@@ -89,6 +89,7 @@ public abstract class MixinObjectIntIdentityMap implements TypeSettable {
 
     @Unique
     public int hodgepodge$get(Object key) {
+        if (key == null) return -1;
         return hodgepodge$objectMap.getInt(key);
     }
 
