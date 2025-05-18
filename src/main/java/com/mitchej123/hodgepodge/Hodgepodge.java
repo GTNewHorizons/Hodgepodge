@@ -1,11 +1,14 @@
 package com.mitchej123.hodgepodge;
 
+import java.util.Map;
+
 import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
 import com.mitchej123.hodgepodge.util.AnchorAlarm;
 import com.mitchej123.hodgepodge.util.StatHandler;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ICrashCallable;
 import cpw.mods.fml.common.Mod;
@@ -20,7 +23,6 @@ import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
 import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
 import cpw.mods.fml.relauncher.Side;
-import java.util.Map;
 
 @Mod(
         modid = Hodgepodge.MODID,
