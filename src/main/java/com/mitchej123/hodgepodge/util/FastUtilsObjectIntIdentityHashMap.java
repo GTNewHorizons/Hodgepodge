@@ -15,10 +15,6 @@ public class FastUtilsObjectIntIdentityHashMap<K> extends IdentityHashMap<K, Int
 
     private final Reference2IntMap<K> forwardMap;
 
-    public FastUtilsObjectIntIdentityHashMap() {
-        this(32);
-    }
-
     public FastUtilsObjectIntIdentityHashMap(int expectedMaxSize) {
         super(0); // Don't allocate in parent
         this.forwardMap = new Reference2IntOpenHashMap<>(expectedMaxSize);
@@ -26,6 +22,7 @@ public class FastUtilsObjectIntIdentityHashMap<K> extends IdentityHashMap<K, Int
     }
 
     @Override
+    @Deprecated
     public Integer put(K key, Integer value) {
         return forwardMap.put(key, value);
     }
@@ -97,6 +94,7 @@ public class FastUtilsObjectIntIdentityHashMap<K> extends IdentityHashMap<K, Int
     }
 
     @Override
+    @Deprecated
     public @NotNull Set<Map.Entry<K, Integer>> entrySet() {
         return forwardMap.entrySet();
     }
