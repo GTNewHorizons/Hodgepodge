@@ -567,6 +567,7 @@ public enum Mixins implements IMixins {
             .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA).addExcludedMod(FASTCRAFT).addExcludedMod(BUKKIT)
             .addMixinClasses(
                     "minecraft.fastload.flatid.MixinEmbedIDs",
+                    "minecraft.fastload.flatid.MixinFMLControlledNamespacedRegistry",
                     "minecraft.fastload.flatid.MixinObjectIntIdentityMap")
             .setApplyIf(() -> SpeedupsConfig.embedID)),
 
