@@ -1,10 +1,10 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload.flatid;
 
-import com.mitchej123.hodgepodge.util.FastUtilsObjectIntIdentityHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
+
 import net.minecraft.util.ObjectIntIdentityMap;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,12 +13,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.mitchej123.hodgepodge.util.FastUtilsObjectIntIdentityHashMap;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 @Mixin(ObjectIntIdentityMap.class)
 public abstract class MixinObjectIntIdentityMap {
 
-    @Shadow protected IdentityHashMap<Object, Integer> field_148749_a;
+    @Shadow
+    protected IdentityHashMap<Object, Integer> field_148749_a;
 
-    @Shadow protected List<Object> field_148748_b;
+    @Shadow
+    protected List<Object> field_148748_b;
 
     @Unique
     private FastUtilsObjectIntIdentityHashMap<Object> hodgepodge$objectMap;
@@ -43,7 +49,6 @@ public abstract class MixinObjectIntIdentityMap {
         hodgepodge$put(key, val);
     }
 
-
     /**
      * @author ah-OOG-ah
      * @reason reduce integer boxing (ported from ASM)
@@ -53,7 +58,6 @@ public abstract class MixinObjectIntIdentityMap {
         return hodgepodge$get(key);
     }
 
-
     /**
      * @author ah-OOG-ah
      * @reason reduce integer boxing (ported from ASM)
@@ -62,7 +66,6 @@ public abstract class MixinObjectIntIdentityMap {
     public Object func_148745_a(int val) {
         return hodgepodge$getByValue(val);
     }
-
 
     /**
      * @author ah-OOG-ah
