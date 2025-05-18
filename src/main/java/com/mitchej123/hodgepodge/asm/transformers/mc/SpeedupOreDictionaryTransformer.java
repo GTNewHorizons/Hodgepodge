@@ -144,9 +144,6 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
             } else if ("registerOreImpl".equals(method.name) && "(Ljava/lang/String;Lnet/minecraft/item/ItemStack;)V".equals(method.desc)) {
                 LOGGER.debug("Transforming OreDictionary.registerOreImpl(String, ItemStack)");
                 modified |= transformRegisterOreImplMethod(method);
-            } else if ("rebakeMap".equals(method.name) && "()V".equals(method.desc)) {
-                LOGGER.debug("Transforming OreDictionary.rebakeMap()");
-                modified |= transformRebakeMapMethod(method);
             }
             for(LocalVariableNode localVar : method.localVariables) {
                 if ("Ljava/lang/Integer;".equals(localVar.desc)) {
@@ -809,61 +806,6 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
             }
 
         }
-        return modified;
-    }
-
-    private boolean transformRebakeMapMethod(MethodNode method) {
-        InsnList instructions = method.instructions;
-        boolean modified = false;
-
-        ListIterator<AbstractInsnNode> iterator = instructions.iterator();
-        while (iterator.hasNext()) {
-            AbstractInsnNode node = iterator.next();
-            if (node.getOpcode() == INVOKESTATIC && node instanceof MethodInsnNode methodNode && methodNode.owner.equals(
-                    "com/google/common/collect/Lists") && methodNode.name.equals("newArrayList") && methodNode.desc.equals("()Ljava/util/ArrayList;")) {
-                modified = true;
-                instructions.insertBefore(node, new TypeInsnNode(NEW, "it/unimi/dsi/fastutil/ints/IntArrayList"));
-                instructions.insertBefore(node, new InsnNode(DUP));
-                instructions.insertBefore(node, new MethodInsnNode(INVOKESPECIAL, "it/unimi/dsi/fastutil/ints/IntArrayList", "<init>", "()V", false));
-                instructions.remove(node);
-            } else if (node.getOpcode() == INVOKEINTERFACE && node instanceof MethodInsnNode methodNode && methodNode.owner.equals("java/util/List") && methodNode.name.equals("add")) {
-                modified = true;
-                methodNode.owner = "it/unimi/dsi/fastutil/ints/IntList";
-                methodNode.desc = "(I)Z";
-            } else if (node.getOpcode() == CHECKCAST && node instanceof TypeInsnNode checkCastNode && checkCastNode.desc.equals("java/util/List")) {
-                modified = true;
-                checkCastNode.desc = "it/unimi/dsi/fastutil/ints/IntList";
-            } else if (node.getOpcode() == INVOKEINTERFACE && node instanceof MethodInsnNode methodNode && methodNode.owner.equals("java/util/List") && methodNode.name.equals("contains")) {
-                modified = true;
-                methodNode.owner = "it/unimi/dsi/fastutil/ints/IntList";
-                methodNode.desc = "(I)Z";
-            } else if (node.getOpcode() == INVOKESTATIC && node instanceof MethodInsnNode methodNode && methodNode.owner.equals(INTEGER) && methodNode.name.equals("valueOf")) {
-                modified = true;
-                instructions.remove(node);
-            } else if (node.getOpcode() == INVOKEVIRTUAL && node instanceof MethodInsnNode methodNode && methodNode.owner.equals(INTEGER) && methodNode.name.equals("intValue")) {
-                modified = true;
-                instructions.remove(node);
-            } else if (node.getOpcode() == CHECKCAST && node instanceof TypeInsnNode checkCastNode && checkCastNode.desc.equals(INTEGER)) {
-                modified = true;
-                instructions.remove(node);
-            } else if (node.getOpcode() == GETSTATIC && node instanceof FieldInsnNode fNode && fNode.owner.equals(ORE_DICTIONARY) && fNode.name.equals("stackToId")) {
-                modified = true;
-                instructions.insert(node, new TypeInsnNode(CHECKCAST, FASTUTIL_INT_2_OBJECT_HASH_MAP));
-            } else if (node.getOpcode() == INVOKEINTERFACE && node instanceof MethodInsnNode methodNode && methodNode.owner.equals(JAVA_MAP) && methodNode.name.equals("put")) {
-                modified = true;
-                methodNode.setOpcode(INVOKEVIRTUAL);
-                methodNode.owner = FASTUTIL_INT_2_OBJECT_HASH_MAP;
-                methodNode.desc = "(ILjava/lang/Object;)Ljava/lang/Object;";
-                methodNode.itf = false;
-            } else if (node.getOpcode() == INVOKEINTERFACE && node instanceof MethodInsnNode methodNode && methodNode.owner.equals(JAVA_MAP) && methodNode.name.equals("get")) {
-                modified = true;
-                methodNode.setOpcode(INVOKEVIRTUAL);
-                methodNode.owner = FASTUTIL_INT_2_OBJECT_HASH_MAP;
-                methodNode.desc = "(I)Ljava/lang/Object;";
-                methodNode.itf = false;
-            }
-        }
-
         return modified;
     }
 
