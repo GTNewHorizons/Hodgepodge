@@ -52,14 +52,6 @@ public enum AsmTransformers {
             ImmutableList.of(TargetedMod.FASTCRAFT, TargetedMod.BUKKIT),
             "com.mitchej123.hodgepodge.asm.transformers.mc.PlayerManagerTransformer"
     ),
-    SPEEDUP_OBJECT_INT_IDENTITY_MAP(
-            "Speed up ObjectIntIdentityMap",
-            () -> ASMConfig.speedupObjectIntIdentityMap,
-            Side.BOTH,
-            null,
-            ImmutableList.of(TargetedMod.FASTCRAFT, TargetedMod.BUKKIT),
-            "com.mitchej123.hodgepodge.asm.transformers.mc.SpeedupObjectIntIdentityMapTransformer"
-    ),
     REMOVE_VARARG_SPAM(
             "Remove vararg methods in GenLayer classes",
             () -> ASMConfig.dissectVarargs,
