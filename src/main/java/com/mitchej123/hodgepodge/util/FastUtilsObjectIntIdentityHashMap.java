@@ -15,11 +15,16 @@ import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 public class FastUtilsObjectIntIdentityHashMap<K> extends IdentityHashMap<K, Integer> {
 
     private final Reference2IntMap<K> forwardMap;
+    private Class<?> type = null;
 
     public FastUtilsObjectIntIdentityHashMap(int expectedMaxSize) {
         super(0); // Don't allocate in parent
         this.forwardMap = new Reference2IntOpenHashMap<>(expectedMaxSize);
         this.forwardMap.defaultReturnValue(-1);
+    }
+
+    public void setType(Class<?> type) {
+        this.type = type;
     }
 
     @Override
@@ -30,6 +35,10 @@ public class FastUtilsObjectIntIdentityHashMap<K> extends IdentityHashMap<K, Int
     }
 
     public int put(K key, int value) {
+        final Class<?> keyClass = key.getClass();
+        if (type != null && !type.isAssignableFrom(keyClass))
+            throw new ClassCastException("Expected a " + type.getName() + " but got a " + keyClass.getName());
+
         if (key instanceof HasID idHaver) idHaver.hodgepodge$setID(value);
         return forwardMap.put(key, value);
     }
@@ -42,6 +51,8 @@ public class FastUtilsObjectIntIdentityHashMap<K> extends IdentityHashMap<K, Int
     }
 
     public int getInt(Object key) {
+        final Class<?> keyClass = key.getClass();
+        if (type != null && !type.isAssignableFrom(keyClass)) return -1;
         if (key instanceof HasID idHaver) return idHaver.hodgepodge$getID();
 
         return forwardMap.getInt(key);

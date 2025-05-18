@@ -1,5 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload.flatid;
 
+import com.mitchej123.hodgepodge.mixins.interfaces.TypeSettable;
 import java.util.IdentityHashMap;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import com.mitchej123.hodgepodge.util.FastUtilsObjectIntIdentityHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 @Mixin(ObjectIntIdentityMap.class)
-public abstract class MixinObjectIntIdentityMap {
+public abstract class MixinObjectIntIdentityMap implements TypeSettable {
 
     @Shadow
     protected IdentityHashMap<Object, Integer> field_148749_a;
@@ -99,5 +100,10 @@ public abstract class MixinObjectIntIdentityMap {
     @Unique
     public boolean hodgepodge$contains(int value) {
         return hodgepodge$getByValue(value) != null;
+    }
+
+    @Override
+    public void hodgepodge$setType(Class<?> type) {
+        hodgepodge$objectMap.setType(type);
     }
 }
