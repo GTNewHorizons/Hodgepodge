@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mitchej123.hodgepodge.mixins.interfaces.TypeSettable;
-import com.mitchej123.hodgepodge.util.FastUtilsObjectIntIdentityHashMap;
+import com.mitchej123.hodgepodge.util.EmbeddedObjectIntMap;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
@@ -28,13 +28,13 @@ public abstract class MixinObjectIntIdentityMap implements TypeSettable {
     protected List<Object> field_148748_b;
 
     @Unique
-    private FastUtilsObjectIntIdentityHashMap<Object> hodgepodge$objectMap;
+    private EmbeddedObjectIntMap<Object> hodgepodge$objectMap;
     @Unique
     private ObjectArrayList<Object> hodgepodge$objectList;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void hodgepodge$replaceCollections(CallbackInfo ci) {
-        hodgepodge$objectMap = new FastUtilsObjectIntIdentityHashMap<>(512);
+        hodgepodge$objectMap = new EmbeddedObjectIntMap<>(512);
         this.field_148749_a = hodgepodge$objectMap;
 
         hodgepodge$objectList = new ObjectArrayList<>(512);

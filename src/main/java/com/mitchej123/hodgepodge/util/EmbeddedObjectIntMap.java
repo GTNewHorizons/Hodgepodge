@@ -12,12 +12,12 @@ import com.mitchej123.hodgepodge.mixins.interfaces.HasID;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 
-public class FastUtilsObjectIntIdentityHashMap<K> extends IdentityHashMap<K, Integer> {
+public class EmbeddedObjectIntMap<K> extends IdentityHashMap<K, Integer> {
 
     private final Reference2IntMap<K> forwardMap;
     private Class<?> type = null;
 
-    public FastUtilsObjectIntIdentityHashMap(int expectedMaxSize) {
+    public EmbeddedObjectIntMap(int expectedMaxSize) {
         super(0); // Don't allocate in parent
         this.forwardMap = new Reference2IntOpenHashMap<>(expectedMaxSize);
         this.forwardMap.defaultReturnValue(-1);
