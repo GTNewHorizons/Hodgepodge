@@ -88,7 +88,7 @@ public abstract class MixinObjectIntIdentityMap {
 
     @Unique
     public int hodgepodge$get(Object key) {
-        return hodgepodge$objectMap.getIntOrDefault(key, -1);
+        return hodgepodge$objectMap.getInt(key);
     }
 
     @Unique
