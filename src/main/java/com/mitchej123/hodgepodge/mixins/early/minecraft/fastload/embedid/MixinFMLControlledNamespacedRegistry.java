@@ -1,5 +1,6 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload.flatid;
+package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload.embedid;
 
+import com.mitchej123.hodgepodge.mixins.interfaces.EmbedToggle;
 import net.minecraft.util.RegistryNamespaced;
 
 import org.objectweb.asm.Opcodes;
@@ -14,14 +15,19 @@ import com.mitchej123.hodgepodge.mixins.interfaces.TypeSettable;
 
 import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
 
-@Mixin(FMLControlledNamespacedRegistry.class)
-public abstract class MixinFMLControlledNamespacedRegistry<I> extends RegistryNamespaced {
+@Mixin(value = FMLControlledNamespacedRegistry.class)
+public abstract class MixinFMLControlledNamespacedRegistry<I> extends RegistryNamespaced implements EmbedToggle {
 
-    @Shadow
+    @Shadow(remap = false)
     @Final
     private Class<I> superType;
 
-    @Inject(method = "<init>", at = @At("RETURN"))
+    @Override
+    public void hodgepodge$setUseEmbed(boolean useEmbed) {
+        ((EmbedToggle) underlyingIntegerMap).hodgepodge$setUseEmbed(useEmbed);
+    }
+
+    @Inject(method = "<init>", at = @At("RETURN"), remap = false)
     private void hodgepodge$setType(String optionalDefault, int maxIdValue, int minIdValue, Class<I> type,
             char discriminator, CallbackInfo ci) {
         ((TypeSettable) this.underlyingIntegerMap).hodgepodge$setType(this.superType);

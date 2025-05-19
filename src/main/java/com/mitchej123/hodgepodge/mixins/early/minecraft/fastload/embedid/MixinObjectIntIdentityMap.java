@@ -1,5 +1,6 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload.flatid;
+package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload.embedid;
 
+import com.mitchej123.hodgepodge.mixins.interfaces.EmbedToggle;
 import java.util.IdentityHashMap;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import com.mitchej123.hodgepodge.util.EmbeddedObjectIntMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 @Mixin(ObjectIntIdentityMap.class)
-public abstract class MixinObjectIntIdentityMap implements TypeSettable {
+public abstract class MixinObjectIntIdentityMap implements TypeSettable, EmbedToggle {
 
     @Shadow
     protected IdentityHashMap<Object, Integer> field_148749_a;
@@ -31,6 +32,11 @@ public abstract class MixinObjectIntIdentityMap implements TypeSettable {
     private EmbeddedObjectIntMap<Object> hodgepodge$objectMap;
     @Unique
     private ObjectArrayList<Object> hodgepodge$objectList;
+
+    @Override
+    public void hodgepodge$setUseEmbed(boolean useEmbed) {
+        hodgepodge$objectMap.setEmbed(useEmbed);
+    }
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void hodgepodge$replaceCollections(CallbackInfo ci) {

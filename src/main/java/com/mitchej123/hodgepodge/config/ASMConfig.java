@@ -33,4 +33,9 @@ public class ASMConfig {
     @Config.Comment("Remove various vararg method calls, to make profiling easier.")
     @Config.DefaultBoolean(true)
     public static boolean dissectVarargs;
+
+    @Config.Comment("Embeds the block ID into Block itself, massively accelerating block ID lookups.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean embedID;
 }

@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload.flatid;
+package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload.embedid;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
