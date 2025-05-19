@@ -56,6 +56,8 @@ public class EmbeddedObjectIntMap<K> extends IdentityHashMap<K, Integer> {
     }
 
     public int getInt(Object key) {
+        if (key == null) return -1;
+
         final Class<?> keyClass = key.getClass();
         if (type != null && !type.isAssignableFrom(keyClass)) return -1;
         if (useEmbed && key instanceof HasID idHaver) return idHaver.hodgepodge$getID();
