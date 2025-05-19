@@ -37,8 +37,13 @@ public abstract class MixinGameData {
     private FMLControlledNamespacedRegistry<Item> iItemRegistry;
 
     @Unique
-    private EmbedToggle getRegistry(boolean isBlock) {
-        return (EmbedToggle) (isBlock ? this.iBlockRegistry : this.iItemRegistry);
+    private EmbedToggle hodgepodge$getBlockRegistry() {
+        return (EmbedToggle) this.iBlockRegistry;
+    }
+
+    @Unique
+    private EmbedToggle hodgepodge$getItemRegistry() {
+        return (EmbedToggle) this.iItemRegistry;
     }
 
     @ModifyVariable(
@@ -48,8 +53,8 @@ public abstract class MixinGameData {
         ((EmbedToggle) getBlockRegistry()).hodgepodge$setUseEmbed(false);
         ((EmbedToggle) getItemRegistry()).hodgepodge$setUseEmbed(false);
 
-        ((MixinGameData) (Object) newData).getRegistry(true).hodgepodge$setUseEmbed(false);
-        ((MixinGameData) (Object) newData).getRegistry(false).hodgepodge$setUseEmbed(false);
+        ((MixinGameData) (Object) newData).hodgepodge$getBlockRegistry().hodgepodge$setUseEmbed(false);
+        ((MixinGameData) (Object) newData).hodgepodge$getItemRegistry().hodgepodge$setUseEmbed(false);
         return newData;
     }
 
@@ -63,7 +68,7 @@ public abstract class MixinGameData {
         ((EmbedToggle) getBlockRegistry()).hodgepodge$setUseEmbed(true);
         ((EmbedToggle) getItemRegistry()).hodgepodge$setUseEmbed(true);
 
-        ((MixinGameData) (Object) newData).getRegistry(true).hodgepodge$setUseEmbed(true);
-        ((MixinGameData) (Object) newData).getRegistry(false).hodgepodge$setUseEmbed(true);
+        ((MixinGameData) (Object) newData).hodgepodge$getBlockRegistry().hodgepodge$setUseEmbed(true);
+        ((MixinGameData) (Object) newData).hodgepodge$getItemRegistry().hodgepodge$setUseEmbed(true);
     }
 }
