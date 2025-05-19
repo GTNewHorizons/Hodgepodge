@@ -826,22 +826,35 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
     private boolean transformRebakeMapMethod(MethodNode method) {
         InsnList instructions = method.instructions;
         boolean modified = false;
+        boolean inIdToStackContext = false;
 
         ListIterator<AbstractInsnNode> iterator = instructions.iterator();
         while (iterator.hasNext()) {
             AbstractInsnNode node = iterator.next();
+            // Check if we're working with stackToId or idToStack
+            if (node.getOpcode() == GETSTATIC && node instanceof FieldInsnNode fieldNode) {
+                if (fieldNode.owner.equals(ORE_DICTIONARY) && fieldNode.name.equals("stackToId")) {
+                    inIdToStackContext = false;
+                } else if (fieldNode.owner.equals(ORE_DICTIONARY) && fieldNode.name.equals("idToStack")) {
+                    inIdToStackContext = true;
+                }
+            }
+
             if (node.getOpcode() == INVOKESTATIC && node instanceof MethodInsnNode methodNode && methodNode.owner.equals(
                     "com/google/common/collect/Lists") && methodNode.name.equals("newArrayList") && methodNode.desc.equals("()Ljava/util/ArrayList;")) {
-                modified = true;
-                instructions.insertBefore(node, new TypeInsnNode(NEW, "it/unimi/dsi/fastutil/ints/IntArrayList"));
-                instructions.insertBefore(node, new InsnNode(DUP));
-                instructions.insertBefore(node, new MethodInsnNode(INVOKESPECIAL, "it/unimi/dsi/fastutil/ints/IntArrayList", "<init>", "()V", false));
-                instructions.remove(node);
-            } else if (node.getOpcode() == INVOKEINTERFACE && node instanceof MethodInsnNode methodNode && methodNode.owner.equals("java/util/List") && methodNode.name.equals("add")) {
+                // Only transform ArrayList creation if we're in stackToId context or not in idToStack context
+                if (!inIdToStackContext) {
+                    modified = true;
+                    instructions.insertBefore(node, new TypeInsnNode(NEW, "it/unimi/dsi/fastutil/ints/IntArrayList"));
+                    instructions.insertBefore(node, new InsnNode(DUP));
+                    instructions.insertBefore(node, new MethodInsnNode(INVOKESPECIAL, "it/unimi/dsi/fastutil/ints/IntArrayList", "<init>", "()V", false));
+                    instructions.remove(node);
+                }
+            } else if (node.getOpcode() == INVOKEINTERFACE && node instanceof MethodInsnNode methodNode && methodNode.owner.equals("java/util/List") && methodNode.name.equals("add") && !inIdToStackContext) {
                 modified = true;
                 methodNode.owner = "it/unimi/dsi/fastutil/ints/IntList";
                 methodNode.desc = "(I)Z";
-            } else if (node.getOpcode() == CHECKCAST && node instanceof TypeInsnNode checkCastNode && checkCastNode.desc.equals("java/util/List")) {
+            } else if (node.getOpcode() == CHECKCAST && node instanceof TypeInsnNode checkCastNode && checkCastNode.desc.equals("java/util/List") && !inIdToStackContext) {
                 modified = true;
                 checkCastNode.desc = "it/unimi/dsi/fastutil/ints/IntList";
             } else if (node.getOpcode() == INVOKEINTERFACE && node instanceof MethodInsnNode methodNode && methodNode.owner.equals("java/util/List") && methodNode.name.equals("contains")) {
