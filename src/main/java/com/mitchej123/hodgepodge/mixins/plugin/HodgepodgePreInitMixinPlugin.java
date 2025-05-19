@@ -8,6 +8,8 @@ import org.spongepowered.asm.lib.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
+import com.mitchej123.hodgepodge.config.ASMConfig;
+
 public class HodgepodgePreInitMixinPlugin implements IMixinConfigPlugin {
 
     @Override
@@ -35,6 +37,10 @@ public class HodgepodgePreInitMixinPlugin implements IMixinConfigPlugin {
         List<String> mixins = new ArrayList<>();
         if (Boolean.getBoolean("hodgepodge.logModTimes")) {
             mixins.add("MixinLoadController_logModTimes");
+        }
+
+        if (ASMConfig.embedID) {
+            mixins.add("embedid.MixinGameData");
         }
         return mixins;
     }

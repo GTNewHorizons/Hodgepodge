@@ -60,6 +60,7 @@ public class Hodgepodge {
                 return String.valueOf(Runtime.getRuntime().availableProcessors());
             }
         });
+        FMLCommonHandler.instance().bus().register(this);
     }
 
     @EventHandler
