@@ -1,6 +1,5 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload.embedid;
 
-import com.mitchej123.hodgepodge.mixins.interfaces.EmbedToggle;
 import java.util.IdentityHashMap;
 import java.util.List;
 
@@ -14,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.mitchej123.hodgepodge.mixins.interfaces.EmbedToggle;
 import com.mitchej123.hodgepodge.mixins.interfaces.TypeSettable;
 import com.mitchej123.hodgepodge.util.EmbeddedObjectIntMap;
 

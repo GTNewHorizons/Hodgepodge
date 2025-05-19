@@ -1,6 +1,5 @@
 package com.mitchej123.hodgepodge.mixins.plugin;
 
-import com.mitchej123.hodgepodge.config.ASMConfig;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -8,6 +7,8 @@ import java.util.Set;
 import org.spongepowered.asm.lib.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
+
+import com.mitchej123.hodgepodge.config.ASMConfig;
 
 public class HodgepodgePreInitMixinPlugin implements IMixinConfigPlugin {
 
