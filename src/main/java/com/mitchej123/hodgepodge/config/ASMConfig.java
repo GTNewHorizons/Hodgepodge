@@ -38,4 +38,7 @@ public class ASMConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean embedID;
+    @Config.Comment("Speedup OreDictionary")
+    @Config.DefaultBoolean(true)
+    public static boolean speedupOreDictionary;
 }
