@@ -8,10 +8,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.rwtema.extrautils.tileentity.chests.TileFullChest;
 import com.rwtema.extrautils.tileentity.chests.TileMiniChest;
 
-@Mixin(TileMiniChest.class)
-public abstract class MixinTileMiniChest extends TileEntity {
+@Mixin({ TileFullChest.class, TileMiniChest.class })
+public abstract class MixinExtraUtilsChest extends TileEntity {
 
     @Inject(method = "markDirty", at = @At("TAIL"))
     private void hodgepodge$updateComparatorOnInventoryChange(CallbackInfo ci) {
