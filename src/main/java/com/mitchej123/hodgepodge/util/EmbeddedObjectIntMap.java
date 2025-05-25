@@ -3,53 +3,70 @@ package com.mitchej123.hodgepodge.util;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.mitchej123.hodgepodge.mixins.interfaces.HasID;
+
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 
-public class FastUtilsObjectIntIdentityHashMap<K> extends IdentityHashMap<K, Integer> {
+public class EmbeddedObjectIntMap<K> extends IdentityHashMap<K, Integer> {
 
     private final Reference2IntMap<K> forwardMap;
+    private Class<?> type = null;
+    private boolean useEmbed = true;
 
-    public FastUtilsObjectIntIdentityHashMap() {
-        this(32);
-    }
-
-    public FastUtilsObjectIntIdentityHashMap(int expectedMaxSize) {
+    public EmbeddedObjectIntMap(int expectedMaxSize) {
         super(0); // Don't allocate in parent
         this.forwardMap = new Reference2IntOpenHashMap<>(expectedMaxSize);
         this.forwardMap.defaultReturnValue(-1);
     }
 
+    public void setEmbed(boolean useEmbed) {
+        this.useEmbed = useEmbed;
+    }
+
+    public void setType(Class<?> type) {
+        this.type = type;
+    }
+
     @Override
+    @Deprecated
     public Integer put(K key, Integer value) {
-        return forwardMap.put(key, value);
+        final int ret = put(key, value.intValue());
+        return ret == -1 ? null : ret;
     }
 
     public int put(K key, int value) {
+        final Class<?> keyClass = key.getClass();
+        if (type != null && !type.isAssignableFrom(keyClass))
+            throw new ClassCastException("Expected a " + type.getName() + " but got a " + keyClass.getName());
+
+        if (key instanceof HasID idHaver) idHaver.hodgepodge$setID(value);
         return forwardMap.put(key, value);
     }
 
     @Override
     public Integer get(Object key) {
-        int value = forwardMap.getInt(key);
+        int value = getInt(key);
+
         return value == -1 ? null : value;
     }
 
-    public int getInt(Objects key) {
+    public int getInt(Object key) {
+        if (key == null) return -1;
+
+        final Class<?> keyClass = key.getClass();
+        if (type != null && !type.isAssignableFrom(keyClass)) return -1;
+        if (useEmbed && key instanceof HasID idHaver) return idHaver.hodgepodge$getID();
+
         return forwardMap.getInt(key);
     }
 
     @Override
     public Integer getOrDefault(Object key, Integer defaultValue) {
-        return containsKey(key) ? forwardMap.getInt(key) : defaultValue;
-    }
-
-    public int getIntOrDefault(Object key, int defaultValue) {
         return containsKey(key) ? forwardMap.getInt(key) : defaultValue;
     }
 
@@ -68,11 +85,15 @@ public class FastUtilsObjectIntIdentityHashMap<K> extends IdentityHashMap<K, Int
 
     @Override
     public Integer remove(Object key) {
+        if (key instanceof HasID idHaver) idHaver.hodgepodge$setID(-1);
+
         return forwardMap.removeInt(key);
     }
 
     @Override
     public void clear() {
+        forwardMap.forEach((k, v) -> { if (k instanceof HasID idHaver) idHaver.hodgepodge$setID(-1); });
+
         forwardMap.clear();
     }
 
@@ -97,6 +118,7 @@ public class FastUtilsObjectIntIdentityHashMap<K> extends IdentityHashMap<K, Int
     }
 
     @Override
+    @Deprecated
     public @NotNull Set<Map.Entry<K, Integer>> entrySet() {
         return forwardMap.entrySet();
     }

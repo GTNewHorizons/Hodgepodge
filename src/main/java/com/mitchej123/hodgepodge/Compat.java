@@ -42,7 +42,7 @@ public class Compat {
                         && isBookmarkPanelHiddenMethod.getReturnType().equals(boolean.class)) {
                     doesNeiHaveBookmarkAPI = true;
                 }
-            } catch (Exception e) {}
+            } catch (Exception ignored) {}
         }
 
         isGT5Present = Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi");
