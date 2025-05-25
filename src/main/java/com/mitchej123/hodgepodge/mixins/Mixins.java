@@ -954,7 +954,7 @@ public enum Mixins implements IMixins {
             .addMixinClasses("extrautilities.MixinItemHealingAxe").setPhase(Phase.LATE).setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesHealingAxeHeal).addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
     FIX_CHEST_COMPARATOR_UPDATE(
-            new MixinBuilder("Fix comparator redstone signal updates for mini and slightly larger chests")
+            new MixinBuilder("Fix Extra Utilities chests not updating comparator redstone signals when their inventories change")
                     .addMixinClasses("extrautilities.MixinExtraUtilsChest").setPhase(Phase.LATE).setSide(Side.BOTH)
                     .setApplyIf(() -> FixesConfig.fixExtraUtilitiesChestComparatorUpdate)
                     .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
