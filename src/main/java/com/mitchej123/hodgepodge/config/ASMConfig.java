@@ -34,6 +34,10 @@ public class ASMConfig {
     @Config.DefaultBoolean(true)
     public static boolean dissectVarargs;
 
+    @Config.Comment("Speedup OreDictionary")
+    @Config.DefaultBoolean(true)
+    public static boolean speedupOreDictionary;
+
     @Config.Comment("Embeds the block ID into Block itself, massively accelerating block ID lookups.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart

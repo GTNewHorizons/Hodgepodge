@@ -58,6 +58,14 @@ public enum AsmTransformers {
             Side.BOTH,
             "com.mitchej123.hodgepodge.asm.transformers.mc.VarargDissector"
     ),
+    SPEEDUP_ORE_DICTIONARY(
+            "Speed up Forge OreDictionary",
+            () -> ASMConfig.speedupOreDictionary,
+            Side.BOTH,
+            null,
+            ImmutableList.of(TargetedMod.FASTCRAFT, TargetedMod.BUKKIT),
+            "com.mitchej123.hodgepodge.asm.transformers.mc.SpeedupOreDictionaryTransformer"
+    ),
     FIX_BOGUS_INTEGRATED_SERVER_NPE(
             "Fix bogus FMLProxyPacket NPEs on integrated server crashes",
             () -> FixesConfig.fixBogusIntegratedServerNPEs,
