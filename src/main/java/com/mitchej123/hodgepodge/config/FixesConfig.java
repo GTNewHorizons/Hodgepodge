@@ -489,7 +489,7 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesHealingAxeHeal;
 
-    @Config.Comment("Fixes Extra Utilities chests not updating comparators Redstone signal when their inventory changes")
+    @Config.Comment("Fix Extra Utilities chests not updating comparator redstone signals when their inventories change")
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesChestComparatorUpdate;
 
