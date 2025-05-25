@@ -489,6 +489,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesHealingAxeHeal;
 
+    @Config.Comment("Fix Extra Utilities chests not updating comparator redstone signals when their inventories change")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesChestComparatorUpdate;
+
     // Galacticraft
 
     @Config.Comment("Fix time commands with GC")
