@@ -965,6 +965,10 @@ public enum Mixins implements IMixins {
                     .addMixinClasses("extrautilities.MixinExtraUtilsChest").setPhase(Phase.LATE).setSide(Side.BOTH)
                     .setApplyIf(() -> FixesConfig.fixExtraUtilitiesChestComparatorUpdate)
                     .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_ETHERIC_SWORD_UNBREAKABLE(new MixinBuilder("Make Etheric Sword truly unbreakable")
+            .addMixinClasses("extrautilities.MixinItemEthericSword").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesEthericSwordUnbreakable)
+            .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
     // Gliby's Voice Chat
     FIX_GLIBYS_VC_THREAD_SHUTDOWN_CLIENT(

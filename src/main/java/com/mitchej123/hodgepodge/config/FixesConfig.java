@@ -493,6 +493,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesChestComparatorUpdate;
 
+    @Config.Comment("Make Etheric Sword truly unbreakable")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesEthericSwordUnbreakable;
+
     // Galacticraft
 
     @Config.Comment("Fix time commands with GC")
