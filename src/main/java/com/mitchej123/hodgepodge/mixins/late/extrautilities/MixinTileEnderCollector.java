@@ -26,7 +26,8 @@ public class MixinTileEnderCollector {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         Block blockBelow = world.getBlock(x, y, z);
 
-        if (tileEntity instanceof TileGrate || blockBelow instanceof BlockCableIntake || blockBelow instanceof BlockOpenCrate) {
+        if (tileEntity instanceof TileGrate || blockBelow instanceof BlockCableIntake
+                || blockBelow instanceof BlockOpenCrate) {
             return null;
         }
 
