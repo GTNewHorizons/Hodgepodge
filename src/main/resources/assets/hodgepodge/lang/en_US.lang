@@ -27,8 +27,8 @@ commands.time.usageWithGet=/time <set|add> <value> OR /time get
 hodgepodge.soundsmenu.refreshsounds=Refresh Sounds
 hodgepodge.bed_respawn.msg=Respawn Set
 
-hodgepodge.aainfo.ctrl_hint=Press CTRL for Advanced Info
-hodgepodge.aainfo.nbt_hint=[Press Shift]
+hodgepodge.aainfo.ctrl_hint=Hold CTRL for Advanced Info
+hodgepodge.aainfo.nbt_hint=[Hold Shift]
 hodgepodge.aainfo.oredicts=OreDicts:
 hodgepodge.aainfo.reg_name=Registry Name:
 hodgepodge.aainfo.item_unlocalized_name=Item's Unlocalized Name:
