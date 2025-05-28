@@ -27,6 +27,14 @@ commands.time.usageWithGet=/time <set|add> <value> OR /time get
 hodgepodge.soundsmenu.refreshsounds=Refresh Sounds
 hodgepodge.bed_respawn.msg=Respawn Set
 
+hodgepodge.aainfo.ctrl_hint=Press CTRL for Advanced Info
+hodgepodge.aainfo.nbt_hint=[Press Shift]
+hodgepodge.aainfo.oredicts=OreDicts:
+hodgepodge.aainfo.reg_name=Registry Name:
+hodgepodge.aainfo.item_unlocalized_name=Item's Unlocalized Name:
+hodgepodge.aainfo.meta_unlocalized_name=Meta's Unlocalized Name:
+hodgepodge.aainfo.nbt=NBT:
+
 bettermodlist.sort.normal=Normal
 bettermodlist.sort.a_to_z=A-Z
 bettermodlist.sort.z_to_a=Z-A
