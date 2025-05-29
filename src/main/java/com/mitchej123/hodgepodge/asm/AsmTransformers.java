@@ -52,19 +52,19 @@ public enum AsmTransformers {
             ImmutableList.of(TargetedMod.FASTCRAFT, TargetedMod.BUKKIT),
             "com.mitchej123.hodgepodge.asm.transformers.mc.PlayerManagerTransformer"
     ),
-    SPEEDUP_OBJECT_INT_IDENTITY_MAP(
-            "Speed up ObjectIntIdentityMap",
-            () -> ASMConfig.speedupObjectIntIdentityMap,
-            Side.BOTH,
-            null,
-            ImmutableList.of(TargetedMod.FASTCRAFT, TargetedMod.BUKKIT),
-            "com.mitchej123.hodgepodge.asm.transformers.mc.SpeedupObjectIntIdentityMapTransformer"
-    ),
     REMOVE_VARARG_SPAM(
             "Remove vararg methods in GenLayer classes",
             () -> ASMConfig.dissectVarargs,
             Side.BOTH,
             "com.mitchej123.hodgepodge.asm.transformers.mc.VarargDissector"
+    ),
+    SPEEDUP_ORE_DICTIONARY(
+            "Speed up Forge OreDictionary",
+            () -> ASMConfig.speedupOreDictionary,
+            Side.BOTH,
+            null,
+            ImmutableList.of(TargetedMod.FASTCRAFT, TargetedMod.BUKKIT),
+            "com.mitchej123.hodgepodge.asm.transformers.mc.SpeedupOreDictionaryTransformer"
     ),
     FIX_BOGUS_INTEGRATED_SERVER_NPE(
             "Fix bogus FMLProxyPacket NPEs on integrated server crashes",

@@ -1,8 +1,10 @@
 package com.mitchej123.hodgepodge.mixins;
 
 import static com.gtnewhorizon.gtnhlib.mixin.TargetedMod.ARCHAICFIX;
+import static com.gtnewhorizon.gtnhlib.mixin.TargetedMod.FASTCRAFT;
 import static com.gtnewhorizon.gtnhlib.mixin.TargetedMod.OPTIFINE;
 import static com.mitchej123.hodgepodge.mixins.TargetedMod.ANGELICA;
+import static com.mitchej123.hodgepodge.mixins.TargetedMod.BUKKIT;
 import static com.mitchej123.hodgepodge.mixins.TargetedMod.FALSETWEAKS;
 
 import java.util.List;
@@ -564,17 +566,22 @@ public enum Mixins implements IMixins {
             .addTargetedMod(TargetedMod.VANILLA).addMixinClasses("minecraft.fastload.MixinMapGenStructure")
             .setApplyIf(() -> SpeedupsConfig.unboxMapGen)),
 
-    EMBED_BLOCKIDS(new MixinBuilder("Embed block IDs directly in the block objects, to speed up lookups")
-            .setPhase(Phase.EARLY).setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
+    EMBED_BLOCKIDS(new MixinBuilder("Embed IDs directly in the objects, to accelerate lookups").setPhase(Phase.EARLY)
+            .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA).addExcludedMod(FASTCRAFT).addExcludedMod(BUKKIT)
             .addMixinClasses(
-                    "minecraft.fastload.flatid.MixinBlock",
-                    "minecraft.fastload.flatid.MixinFMLControlledNamespacedRegistry")
-            .setApplyIf(() -> SpeedupsConfig.embedID)),
+                    "minecraft.fastload.embedid.MixinEmbedIDs",
+                    "minecraft.fastload.embedid.MixinFMLControlledNamespacedRegistry",
+                    "minecraft.fastload.embedid.MixinObjectIntIdentityMap")
+            .setApplyIf(() -> ASMConfig.embedID)),
 
     FAST_CHUNK_LOADING(new MixinBuilder("Invasively accelerates chunk handling").setPhase(Phase.EARLY)
             .setSide(Side.BOTH).addTargetedMod(TargetedMod.VANILLA)
             .addMixinClasses("minecraft.fastload.MixinEntityPlayerMP", "minecraft.fastload.MixinChunkProviderServer")
             .setApplyIf(() -> SpeedupsConfig.fastChunkHandling)),
+
+    CANCEL_NONE_SOUNDS(new MixinBuilder("Skips playing 'none' sounds").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.VANILLA).addMixinClasses("minecraft.shutup.MixinEntityLiving")
+            .setApplyIf(() -> true)),
 
     MEMORY_FIXES_IC2(new MixinBuilder("Removes allocation spam from the Direction.applyTo method").setPhase(Phase.LATE)
             .setSide(Side.BOTH).addMixinClasses("ic2.MixinDirection_Memory")
@@ -956,6 +963,15 @@ public enum Mixins implements IMixins {
     FIX_HEALING_AXE_HEAL(new MixinBuilder("Fix the healing axe not healing entities when attacking them")
             .addMixinClasses("extrautilities.MixinItemHealingAxe").setPhase(Phase.LATE).setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesHealingAxeHeal).addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_CHEST_COMPARATOR_UPDATE(new MixinBuilder(
+            "Fix Extra Utilities chests not updating comparator redstone signals when their inventories change")
+                    .addMixinClasses("extrautilities.MixinExtraUtilsChest").setPhase(Phase.LATE).setSide(Side.BOTH)
+                    .setApplyIf(() -> FixesConfig.fixExtraUtilitiesChestComparatorUpdate)
+                    .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_ETHERIC_SWORD_UNBREAKABLE(new MixinBuilder("Make Etheric Sword truly unbreakable")
+            .addMixinClasses("extrautilities.MixinItemEthericSword").setPhase(Phase.LATE).setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesEthericSwordUnbreakable)
+            .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
     // Gliby's Voice Chat
     FIX_GLIBYS_VC_THREAD_SHUTDOWN_CLIENT(
