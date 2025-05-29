@@ -160,8 +160,8 @@ public enum Mixins implements IMixins {
     ENDERMAN_BLOCK_PLACE_BLACKLIST(new MixinBuilder("Disable Endermen Placing Held Blocks on Configured Blocks")
             .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinEntityEndermanPlaceBlacklist").setSide(Side.BOTH)
             .setApplyIf(() -> TweaksConfig.endermanBlockPlaceBlacklist).addTargetedMod(TargetedMod.VANILLA)),
-    WITCH_POTION_METADATA(new MixinBuilder("Fix Metadata of Witch Potions")
-            .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinEntityWitch").setSide(Side.BOTH)
+    WITCH_POTION_METADATA(new MixinBuilder("Fix Metadata of Witch Potions").setPhase(Phase.EARLY)
+            .addMixinClasses("minecraft.MixinEntityWitch").setSide(Side.BOTH)
             .setApplyIf(() -> TweaksConfig.witchPotionMetadata).addTargetedMod(TargetedMod.VANILLA)),
 
     // config handled in mixin due to server->client config sync
