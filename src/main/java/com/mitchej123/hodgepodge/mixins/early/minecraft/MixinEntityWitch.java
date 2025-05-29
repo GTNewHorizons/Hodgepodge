@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -39,15 +40,15 @@ public abstract class MixinEntityWitch {
         return new EntityPotion(world, witch, 16396);
     }
 
-    @WrapOperation(
+    @ModifyArg(
             method = "attackEntityWithRangedAttack",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/EntityPotion;setPotionDamage(I)V"))
-    private void changeThrownPotion(EntityPotion instance, int meta, Operation<ItemStack> original) {
+    private int changeThrownPotion(int meta) {
         switch (meta) {
             case 32698 -> meta = 16394; // Slowness
             case 32660 -> meta = 16388; // Poison
             case 32696 -> meta = 16392; // Weakness
         }
-        original.call(instance, meta);
+        return meta;
     }
 }
