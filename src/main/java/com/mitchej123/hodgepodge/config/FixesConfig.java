@@ -497,6 +497,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesEthericSwordUnbreakable;
 
+    @Config.Comment("Prevent Extra Utilities Ender Collector from inserting into auto-dropping Blocks that create a crash-loop")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesEnderCollectorCrash;
+
     // Galacticraft
 
     @Config.Comment("Fix time commands with GC")
