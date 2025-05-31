@@ -8,11 +8,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+import com.mitchej123.hodgepodge.Compat;
 import com.rwtema.extrautils.tileentity.endercollector.TileEnderCollector;
-
-import thaumcraft.common.tiles.TileGrate;
-import vazkii.botania.common.block.BlockOpenCrate;
-import vswe.stevesfactory.blocks.BlockCableIntake;
 
 @Mixin(TileEnderCollector.class)
 public class MixinTileEnderCollector {
@@ -25,10 +22,24 @@ public class MixinTileEnderCollector {
     private TileEntity hodgepodge$blockTransferToBlacklist(World world, int x, int y, int z) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         Block blockBelow = world.getBlock(x, y, z);
+        if (Compat.isThaumcraftPresent()) {
+            if (tileEntity != null && tileEntity.getClass().getName().equals("thaumcraft.common.tiles.TileGrate")) {
+                return null;
+            }
+        }
 
-        if (tileEntity instanceof TileGrate || blockBelow instanceof BlockCableIntake
-                || blockBelow instanceof BlockOpenCrate) {
-            return null;
+        if (Compat.isBotaniaPresent()) {
+            if (blockBelow != null
+                    && blockBelow.getClass().getName().equals("vazkii.botania.common.block.BlockOpenCrate")) {
+                return null;
+            }
+        }
+
+        if (Compat.isSFMPresent()) {
+            if (blockBelow != null
+                    && blockBelow.getClass().getName().equals("vswe.stevesfactory.blocks.BlockCableIntake")) {
+                return null;
+            }
         }
 
         return tileEntity;
