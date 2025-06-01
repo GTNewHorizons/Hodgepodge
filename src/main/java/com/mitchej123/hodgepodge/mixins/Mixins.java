@@ -972,6 +972,11 @@ public enum Mixins implements IMixins {
             .addMixinClasses("extrautilities.MixinItemEthericSword").setPhase(Phase.LATE).setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesEthericSwordUnbreakable)
             .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
+    FIX_ENDER_COLLECTOR_CRASH(new MixinBuilder(
+            "Prevent Extra Utilities Ender Collector from inserting into auto-dropping Blocks that create a crash-loop")
+                    .addMixinClasses("extrautilities.MixinTileEnderCollector").setPhase(Phase.LATE).setSide(Side.BOTH)
+                    .setApplyIf(() -> FixesConfig.fixExtraUtilitiesEnderCollectorCrash)
+                    .addTargetedMod(TargetedMod.EXTRA_UTILITIES)),
 
     // Gliby's Voice Chat
     FIX_GLIBYS_VC_THREAD_SHUTDOWN_CLIENT(
