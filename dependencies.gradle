@@ -12,17 +12,17 @@ configurations {
 }
 
 dependencies {
-    api("com.github.GTNewHorizons:GTNHLib:0.6.26:dev")
+    api("com.github.GTNewHorizons:GTNHLib:0.6.28:dev")
 
     compileOnly("com.gtnewhorizons.retrofuturabootstrap:RetroFuturaBootstrap:1.0.2") { transitive = false }
 
-    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.7.49-GTNH:dev") // force a more up-to-date NEI version
-    transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-626-GTNH")
+    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.7.51-GTNH:dev") // force a more up-to-date NEI version
+    transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-629-GTNH")
     transformedModCompileOnly("com.github.GTNewHorizons:Baubles:1.0.4:dev")
     // Transitive updates to make runClient17 work
     transformedModCompileOnly("com.github.GTNewHorizons:Steve-s-Factory-Manager:1.3.4-GTNH:dev")
-    transformedModCompileOnly("com.github.GTNewHorizons:ForgeMultipart:1.6.3:dev")
-    transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.51.328:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:ForgeMultipart:1.6.4:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.51.332:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:harvestcraft:1.3.2-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:HungerOverhaul:1.1.0-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:MrTJPCore:1.3.0:dev") // Do not update, fixed afterwards
