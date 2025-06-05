@@ -616,6 +616,10 @@ public enum Mixins implements IMixins {
     FIX_EGG_PARTICLE(new MixinBuilder("Use correct egg particles instead of snowball ones (MC-7807)")
             .setPhase(Phase.EARLY).setSide(Side.CLIENT).addMixinClasses("minecraft.MixinEntityEgg")
             .setApplyIf(() -> FixesConfig.fixEggParticles).addTargetedMod(TargetedMod.VANILLA)),
+    FIX_EVENTBUS_MEMORY_LEAK(
+            new MixinBuilder("Fix EventBus keeping object references after unregistering event handlers.")
+                    .setPhase(Phase.EARLY).setSide(Side.BOTH).addMixinClasses("fml.MixinEventBus")
+                    .setApplyIf(() -> FixesConfig.fixEventBusMemoryLeak).addTargetedMod(TargetedMod.VANILLA)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
