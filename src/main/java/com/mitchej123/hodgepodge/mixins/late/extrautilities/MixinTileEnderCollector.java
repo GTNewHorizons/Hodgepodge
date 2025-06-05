@@ -28,13 +28,6 @@ public class MixinTileEnderCollector {
             }
         }
 
-        if (Compat.isBotaniaPresent()) {
-            if (blockBelow != null
-                    && blockBelow.getClass().getName().equals("vazkii.botania.common.block.BlockOpenCrate")) {
-                return null;
-            }
-        }
-
         if (Compat.isSFMPresent()) {
             if (blockBelow != null
                     && blockBelow.getClass().getName().equals("vswe.stevesfactory.blocks.BlockCableIntake")) {
