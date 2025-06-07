@@ -26,6 +26,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
@@ -47,12 +48,17 @@ public class MixinSpawnerAnimals_optimizeSpawning {
     @Shadow
     private final HashMap<ChunkCoordIntPair, Boolean> eligibleChunksForSpawning = null;
 
+    @Unique
     private static final EnumCreatureType[] CREATURE_TYPE_VALUES = EnumCreatureType.values();
+    @Unique
     private final Long2BooleanMap hodgepodge$eligibleChunks = new Long2BooleanOpenHashMap();
+    @Unique
     private final LongList hodgepodge$shuffledChunks = new LongArrayList();
 
+    @Unique
     private final BlockPos hodgepodge$reusableBlockPos = new BlockPos(0, 0, 0);
 
+    @Unique
     private BlockPos hodgepodge$getRandomPosInChunk(World world, int chunkX, int chunkZ) {
         final Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
         final int randX = chunkX * 16 + world.rand.nextInt(16);
@@ -106,7 +112,6 @@ public class MixinSpawnerAnimals_optimizeSpawning {
         final int creatureTypeCount = CREATURE_TYPE_VALUES.length;
         int totalSpawnedEntities = 0;
 
-        // TODO: See if this works with archaicfix's mixins
         final double playerDistanceCheck = 24.0D;
 
         // noinspection ForLoopReplaceableByForEach
@@ -154,7 +159,6 @@ public class MixinSpawnerAnimals_optimizeSpawning {
 
                         for (int attempt = 0; attempt < 4; ++attempt) {
                             attemptX += world.rand.nextInt(spawnRangeOffset) - world.rand.nextInt(spawnRangeOffset);
-                            attemptY += world.rand.nextInt(1) - world.rand.nextInt(1);
                             attemptZ += world.rand.nextInt(spawnRangeOffset) - world.rand.nextInt(spawnRangeOffset);
 
                             if (canCreatureTypeSpawnAtLocation(creatureType, world, attemptX, attemptY, attemptZ)) {
@@ -229,7 +233,7 @@ public class MixinSpawnerAnimals_optimizeSpawning {
     }
 
     /**
-     * Returns whether or not the specified creature type can spawn at the specified location.
+     * Returns whether the specified creature type can spawn at the specified location.
      *
      * @author mitchej123
      * @reason Optimize mob spawning - Reorder shortcircuit checks and avoid calling getBlock more than needed Also
@@ -253,7 +257,6 @@ public class MixinSpawnerAnimals_optimizeSpawning {
             } else {
                 return false;
             }
-
         }
     }
 
