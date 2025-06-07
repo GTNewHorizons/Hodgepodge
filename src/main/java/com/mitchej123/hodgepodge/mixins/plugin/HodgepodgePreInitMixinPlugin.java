@@ -39,7 +39,7 @@ public class HodgepodgePreInitMixinPlugin implements IMixinConfigPlugin {
             mixins.add("MixinLoadController_logModTimes");
         }
 
-        if (ASMConfig.embedID) {
+        if (ASMConfig.embedID_experimental) {
             mixins.add("embedid.MixinGameData");
         }
         return mixins;
