@@ -1,9 +1,5 @@
 package com.mitchej123.hodgepodge;
 
-import java.io.IOException;
-
-import net.minecraft.launchwrapper.LaunchClassLoader;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
@@ -33,18 +29,5 @@ public class Common {
             Common.thermosTainted = false;
             Common.log.info("Thermos/Bukkit NOT detected :-D");
         }
-    }
-
-    public static boolean isDeobfuscated() {
-        try {
-            ClassLoader loader = Common.class.getClassLoader();
-            if (loader instanceof LaunchClassLoader launchClassLoader) {
-                byte[] bs = launchClassLoader.getClassBytes("net.minecraft.world.World");
-                return bs != null;
-            }
-        } catch (IOException ignored) {}
-
-        return false;
-
     }
 }

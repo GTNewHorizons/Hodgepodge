@@ -1,42 +1,5 @@
 package com.mitchej123.hodgepodge.asm.transformers.mc;
 
-import static org.objectweb.asm.Opcodes.AASTORE;
-import static org.objectweb.asm.Opcodes.ACC_FINAL;
-import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
-import static org.objectweb.asm.Opcodes.ACC_STATIC;
-import static org.objectweb.asm.Opcodes.ALOAD;
-import static org.objectweb.asm.Opcodes.ANEWARRAY;
-import static org.objectweb.asm.Opcodes.ARETURN;
-import static org.objectweb.asm.Opcodes.ASTORE;
-import static org.objectweb.asm.Opcodes.BIPUSH;
-import static org.objectweb.asm.Opcodes.CHECKCAST;
-import static org.objectweb.asm.Opcodes.DUP;
-import static org.objectweb.asm.Opcodes.GETFIELD;
-import static org.objectweb.asm.Opcodes.GETSTATIC;
-import static org.objectweb.asm.Opcodes.GOTO;
-import static org.objectweb.asm.Opcodes.IADD;
-import static org.objectweb.asm.Opcodes.ICONST_0;
-import static org.objectweb.asm.Opcodes.ICONST_1;
-import static org.objectweb.asm.Opcodes.ICONST_M1;
-import static org.objectweb.asm.Opcodes.IFEQ;
-import static org.objectweb.asm.Opcodes.IFNONNULL;
-import static org.objectweb.asm.Opcodes.IFNULL;
-import static org.objectweb.asm.Opcodes.IF_ICMPEQ;
-import static org.objectweb.asm.Opcodes.IF_ICMPNE;
-import static org.objectweb.asm.Opcodes.ILOAD;
-import static org.objectweb.asm.Opcodes.INVOKEINTERFACE;
-import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
-import static org.objectweb.asm.Opcodes.INVOKESTATIC;
-import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
-import static org.objectweb.asm.Opcodes.IOR;
-import static org.objectweb.asm.Opcodes.ISHL;
-import static org.objectweb.asm.Opcodes.ISTORE;
-import static org.objectweb.asm.Opcodes.NEW;
-import static org.objectweb.asm.Opcodes.NEWARRAY;
-import static org.objectweb.asm.Opcodes.POP;
-import static org.objectweb.asm.Opcodes.PUTSTATIC;
-import static org.objectweb.asm.Opcodes.T_INT;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -48,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
@@ -64,11 +28,9 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
-import org.objectweb.asm.util.Printer;
-import org.objectweb.asm.util.Textifier;
-import org.objectweb.asm.util.TraceMethodVisitor;
 
 import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.core.HodgepodgeCore;
 
 /**
  * Transformer that optimizes OreDictionary by replacing boxed Integer types with primitives and swapping standard Java
@@ -76,13 +38,13 @@ import com.mitchej123.hodgepodge.Common;
  */
 // Spotless keeps indenting each else-if to the right every time
 // spotless:off
-public class SpeedupOreDictionaryTransformer implements IClassTransformer {
+public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcodes {
 
     public static final String JAVA_HASH_SET = "java/util/HashSet";
 
     private static final Logger LOGGER = LogManager.getLogger("SpeedupOreDictionaryTransformer");
-    private static final Printer printer = new Textifier();
-    private static final TraceMethodVisitor mp = new TraceMethodVisitor(printer);
+    //private static final Printer printer = new Textifier();
+    //private static final TraceMethodVisitor mp = new TraceMethodVisitor(printer);
 
     private static final String ORE_DICTIONARY = "net/minecraftforge/oredict/OreDictionary";
 
@@ -94,22 +56,18 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer {
     private static final String FASTUTIL_INT_2_OBJECT_HASH_MAP = "it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap";
     private static final String INTEGER = "java/lang/Integer";
 
-    private final boolean isObfuscated;
-    private final String itemStackClass;
-    private final String itemClass;
-
-    public SpeedupOreDictionaryTransformer() {
-        this.isObfuscated = !Common.isDeobfuscated();
-        this.itemStackClass = isObfuscated ? "add" : "net/minecraft/item/ItemStack";
-        this.itemClass = isObfuscated ? "adb" : "net/minecraft/item/Item";
-        LOGGER.debug("OreDictionary is obfuscated: {}", isObfuscated);
-    }
+    private String itemStackClass;
+    private String itemClass;
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null) return null;
 
         if (transformedName.equals("net.minecraftforge.oredict.OreDictionary")) {
+            boolean isObf = HodgepodgeCore.isObf();
+            this.itemStackClass = isObf ? "add" : "net/minecraft/item/ItemStack";
+            this.itemClass = isObf ? "adb" : "net/minecraft/item/Item";
+            LOGGER.debug("OreDictionary is obfuscated: {}", isObf);
             return transformOreDictionary(basicClass);
         }
 
