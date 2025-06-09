@@ -30,6 +30,9 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 @IFMLLoadingPlugin.DependsOn("cofh.asm.LoadingPlugin")
 public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
+    private static boolean isObf;
+    private String[] transformerClasses;
+
     static {
         try {
             ConfigurationManager.registerConfig(ASMConfig.class);
@@ -60,8 +63,6 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     public static void savfeWorldDataUncompressedBackup(File file, NBTTagCompound tag) {
         WorldDataSaver.INSTANCE.saveData(file, tag, false, true);
     }
-
-    private String[] transformerClasses;
 
     @Override
     public String getMixinConfig() {
@@ -94,6 +95,7 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     @Override
     public void injectData(Map<String, Object> data) {
         VoxelMapCacheMover.changeFileExtensions((File) data.get("mcLocation"));
+        isObf = (boolean) data.get("runtimeDeobfuscationEnabled");
     }
 
     @Override
@@ -103,5 +105,9 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
             CoreCompat.disableCoretweaksConflictingMixins();
         } catch (ClassNotFoundException e) {}
         return null;
+    }
+
+    public static boolean isObf() {
+        return isObf;
     }
 }
