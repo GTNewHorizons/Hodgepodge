@@ -120,7 +120,7 @@ public enum Mixins implements IMixins {
             .setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> FixesConfig.logarithmicVolumeControl)),
     THROTTLE_ITEMPICKUPEVENT(new MixinBuilder("Throttle Item Pickup Event").setPhase(Phase.EARLY)
-            .addMixinClasses("minecraft.MixinEntityPlayer").setSide(Side.BOTH)
+            .addMixinClasses("minecraft.MixinEntityPlayer_ThrottlePickup").setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.throttleItemPickupEvent).addTargetedMod(TargetedMod.VANILLA)),
     FIX_PERSPECTIVE_CAMERA(new MixinBuilder("Camera Perspective Fix").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityRenderer").setSide(Side.CLIENT)

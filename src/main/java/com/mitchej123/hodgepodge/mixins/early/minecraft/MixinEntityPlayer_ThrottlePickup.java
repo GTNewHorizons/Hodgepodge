@@ -19,7 +19,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 
 @Mixin(EntityPlayer.class)
-public abstract class MixinEntityPlayer {
+public abstract class MixinEntityPlayer_ThrottlePickup {
 
     @Shadow
     protected abstract void collideWithPlayer(Entity p_71044_1_);
@@ -29,7 +29,7 @@ public abstract class MixinEntityPlayer {
             at = @At(
                     value = "INVOKE_ASSIGN",
                     target = "Lnet/minecraft/world/World;getEntitiesWithinAABBExcludingEntity(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/AxisAlignedBB;)Ljava/util/List;"))
-    public void hodgepodge$resetItemCounter(CallbackInfo ci,
+    private void hodgepodge$resetItemCounter(CallbackInfo ci,
             @Share("itemEntityCounter") LocalIntRef itemEntityCounter) {
         itemEntityCounter.set(0);
     }
@@ -43,7 +43,7 @@ public abstract class MixinEntityPlayer {
                     from = @At(
                             value = "INVOKE",
                             target = "Lnet/minecraft/world/World;getEntitiesWithinAABBExcludingEntity(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/AxisAlignedBB;)Ljava/util/List;")))
-    public void hodgepodge$throttleItemPickupEvent(EntityPlayer instance, Entity entity,
+    private void hodgepodge$throttleItemPickupEvent(EntityPlayer instance, Entity entity,
             @Share("itemEntityCounter") LocalIntRef itemEntityCounter) {
         if (entity instanceof EntityItem) {
             if (itemEntityCounter.get() < FixesConfig.itemStacksPickedUpPerTick) {
