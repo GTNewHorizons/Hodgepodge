@@ -20,27 +20,39 @@ public class MixinS0EPacketSpawnObject_ItemThrower implements S0EPacketSpawnObje
 
     @Unique
     private String hodgepodge$itemThrower = null;
+    @Unique
+    private int hodgepodge$pickupDelay;
 
     @Inject(method = "<init>(Lnet/minecraft/entity/Entity;II)V", at = @At("TAIL"))
     private void hodgepodge$init(Entity entity, int p_i45166_2_, int p_i45166_3_, CallbackInfo ci) {
-        if (entity instanceof EntityItem entityItem && entityItem.func_145800_j() != null) {
-            hodgepodge$itemThrower = entityItem.func_145800_j();
+        if (entity instanceof EntityItem entityItem) {
+            if (entityItem.func_145800_j() != null) {
+                hodgepodge$itemThrower = entityItem.func_145800_j();
+            }
+            hodgepodge$pickupDelay = entityItem.delayBeforeCanPickup;
         }
     }
 
     @Inject(method = "writePacketData", at = @At("TAIL"))
     private void hodgepodge$write(PacketBuffer data, CallbackInfo ci) throws IOException {
         data.writeStringToBuffer(hodgepodge$itemThrower == null ? "" : hodgepodge$itemThrower);
+        data.writeByte((byte) hodgepodge$pickupDelay);
     }
 
     @Inject(method = "readPacketData", at = @At("TAIL"))
     private void hodgepodge$read(PacketBuffer data, CallbackInfo ci) throws IOException {
         final String name = data.readStringFromBuffer(16);
         hodgepodge$itemThrower = name.isEmpty() ? null : name;
+        hodgepodge$pickupDelay = data.readByte();
     }
 
     @Override
     public String hodgepodge$getThrower() {
         return hodgepodge$itemThrower;
+    }
+
+    @Override
+    public int hodgepodge$getDelay() {
+        return hodgepodge$pickupDelay;
     }
 }

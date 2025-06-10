@@ -21,6 +21,7 @@ public class MixinNetHandlerPlayClient_ItemThrower {
     private EntityItem hodgepodge$addThrower(EntityItem entityItem, S0EPacketSpawnObject packetIn) {
         if (packetIn instanceof S0EPacketSpawnObjectExt accessor) {
             entityItem.func_145799_b(accessor.hodgepodge$getThrower());
+            entityItem.delayBeforeCanPickup = accessor.hodgepodge$getDelay();
         }
         return entityItem;
     }

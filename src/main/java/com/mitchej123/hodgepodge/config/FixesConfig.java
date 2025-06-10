@@ -275,7 +275,7 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean addThrowerTagToDroppedItems;
 
-    @Config.Comment("Synchonize from server to client the thrower of an item entity")
+    @Config.Comment("Synchonize from server to client the thrower and pickup delay of an item entity")
     @Config.DefaultBoolean(true)
     public static boolean syncItemThrower;
 
