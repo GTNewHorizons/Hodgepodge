@@ -36,14 +36,14 @@ public class MixinS0EPacketSpawnObject_ItemThrower implements S0EPacketSpawnObje
     @Inject(method = "writePacketData", at = @At("TAIL"))
     private void hodgepodge$write(PacketBuffer data, CallbackInfo ci) throws IOException {
         data.writeStringToBuffer(hodgepodge$itemThrower == null ? "" : hodgepodge$itemThrower);
-        data.writeByte((byte) hodgepodge$pickupDelay);
+        data.writeInt(hodgepodge$pickupDelay);
     }
 
     @Inject(method = "readPacketData", at = @At("TAIL"))
     private void hodgepodge$read(PacketBuffer data, CallbackInfo ci) throws IOException {
         final String name = data.readStringFromBuffer(16);
         hodgepodge$itemThrower = name.isEmpty() ? null : name;
-        hodgepodge$pickupDelay = data.readByte();
+        hodgepodge$pickupDelay = data.readInt();
     }
 
     @Override
