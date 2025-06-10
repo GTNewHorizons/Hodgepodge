@@ -271,6 +271,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean throttleItemPickupEvent;
 
+    @Config.Comment("Adds the thrower tag to all dropped EntityItems")
+    @Config.DefaultBoolean(true)
+    public static boolean addThrowerTagToDroppedItems;
+
     @Config.Comment("Triggers all conflicting key bindings on key press instead of a random one")
     @Config.DefaultBoolean(true)
     public static boolean triggerAllConflictingKeybindings;
