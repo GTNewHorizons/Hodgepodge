@@ -122,6 +122,9 @@ public enum Mixins implements IMixins {
     THROTTLE_ITEMPICKUPEVENT(new MixinBuilder("Throttle Item Pickup Event").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityPlayer_ThrottlePickup").setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.throttleItemPickupEvent).addTargetedMod(TargetedMod.VANILLA)),
+    ADD_THROWER_TO_DROPPED_ITEM(new MixinBuilder("Adds the thrower tag to all dropped EntityItems")
+            .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinEntityPlayer_ItemThrower").setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.addThrowerTagToDroppedItems).addTargetedMod(TargetedMod.VANILLA)),
     FIX_PERSPECTIVE_CAMERA(new MixinBuilder("Camera Perspective Fix").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityRenderer").setSide(Side.CLIENT)
             .addExcludedMod(TargetedMod.ARCHAICFIX).addExcludedMod(ANGELICA).addTargetedMod(TargetedMod.VANILLA)

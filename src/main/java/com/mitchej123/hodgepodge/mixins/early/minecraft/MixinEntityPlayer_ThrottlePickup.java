@@ -8,12 +8,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.mitchej123.hodgepodge.config.FixesConfig;
@@ -53,16 +51,5 @@ public abstract class MixinEntityPlayer_ThrottlePickup {
             return;
         }
         this.collideWithPlayer(entity);
-    }
-
-    @ModifyArg(
-            method = "dropPlayerItemWithRandomChoice",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraftforge/common/ForgeHooks;onPlayerTossEvent(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;"),
-            index = 2,
-            remap = false)
-    public boolean hodgepodge$passThrower(boolean ignored, @Local(argsOnly = true) boolean p_71019_2_) {
-        return p_71019_2_;
     }
 }
