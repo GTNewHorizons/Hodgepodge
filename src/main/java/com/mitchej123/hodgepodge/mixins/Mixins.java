@@ -624,7 +624,7 @@ public enum Mixins implements IMixins {
             .addMixinClasses("fml.MixinGuiModList", "fml.MixinGuiSlotModList", "fml.MixinGuiScrollingList")
             .setApplyIf(
                     () -> TweaksConfig.betterModList
-                            && !classExists("com.enderio.core.common.transform.EnderCoreTransformerClient"))
+                            && !doesResourceExist("com/enderio/core/common/transform/EnderCoreTransformerClient.class"))
             .addTargetedMod(TargetedMod.VANILLA)),
     FIX_EGG_PARTICLE(new MixinBuilder("Use correct egg particles instead of snowball ones (MC-7807)")
             .setPhase(Phase.EARLY).setSide(Side.CLIENT).addMixinClasses("minecraft.MixinEntityEgg")
@@ -1189,11 +1189,16 @@ public enum Mixins implements IMixins {
         return excludedMods;
     }
 
-    private static boolean classExists(String name) {
+    /**
+     * Checks if a resource is present.
+     *
+     * @param name The name of a resource is a '{@code /}'-separated path name that identifies the resource. For example
+     *             "net/minecraft/client/Minecraft.class"
+     */
+    private static boolean doesResourceExist(String name) {
         try {
-            Class.forName(name);
-            return true;
-        } catch (ClassNotFoundException e) {
+            return ClassLoader.getSystemClassLoader().getResource(name) != null;
+        } catch (Exception e) {
             return false;
         }
     }
