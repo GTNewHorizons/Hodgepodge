@@ -120,8 +120,21 @@ public enum Mixins implements IMixins {
             .setSide(Side.CLIENT).addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> FixesConfig.logarithmicVolumeControl)),
     THROTTLE_ITEMPICKUPEVENT(new MixinBuilder("Throttle Item Pickup Event").setPhase(Phase.EARLY)
-            .addMixinClasses("minecraft.MixinEntityPlayer").setSide(Side.BOTH)
+            .addMixinClasses("minecraft.MixinEntityPlayer_ThrottlePickup").setSide(Side.BOTH)
             .setApplyIf(() -> FixesConfig.throttleItemPickupEvent).addTargetedMod(TargetedMod.VANILLA)),
+    ADD_THROWER_TO_DROPPED_ITEM(new MixinBuilder("Adds the thrower tag to all dropped EntityItems")
+            .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinEntityPlayer_ItemThrower").setSide(Side.BOTH)
+            .setApplyIf(() -> FixesConfig.addThrowerTagToDroppedItems).addTargetedMod(TargetedMod.VANILLA)),
+    SYNC_ITEM_THROWER_COMMON(
+            new MixinBuilder("Synchonize from server to client the thrower and pickup delay of an item entity")
+                    .setPhase(Phase.EARLY).addMixinClasses("minecraft.packets.MixinS0EPacketSpawnObject_ItemThrower")
+                    .setSide(Side.BOTH).setApplyIf(() -> FixesConfig.syncItemThrower)
+                    .addTargetedMod(TargetedMod.VANILLA)),
+    SYNC_ITEM_THROWER_CLIENT(
+            new MixinBuilder("Synchonize from server to client the thrower and pickup delay of an item entity")
+                    .setPhase(Phase.EARLY).addMixinClasses("minecraft.MixinNetHandlerPlayClient_ItemThrower")
+                    .setSide(Side.CLIENT).setApplyIf(() -> FixesConfig.syncItemThrower)
+                    .addTargetedMod(TargetedMod.VANILLA)),
     FIX_PERSPECTIVE_CAMERA(new MixinBuilder("Camera Perspective Fix").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinEntityRenderer").setSide(Side.CLIENT)
             .addExcludedMod(TargetedMod.ARCHAICFIX).addExcludedMod(ANGELICA).addTargetedMod(TargetedMod.VANILLA)
@@ -611,7 +624,7 @@ public enum Mixins implements IMixins {
             .addMixinClasses("fml.MixinGuiModList", "fml.MixinGuiSlotModList", "fml.MixinGuiScrollingList")
             .setApplyIf(
                     () -> TweaksConfig.betterModList
-                            && !classExists("com.enderio.core.common.transform.EnderCoreTransformerClient"))
+                            && !doesResourceExist("com/enderio/core/common/transform/EnderCoreTransformerClient.class"))
             .addTargetedMod(TargetedMod.VANILLA)),
     FIX_EGG_PARTICLE(new MixinBuilder("Use correct egg particles instead of snowball ones (MC-7807)")
             .setPhase(Phase.EARLY).setSide(Side.CLIENT).addMixinClasses("minecraft.MixinEntityEgg")
@@ -1180,11 +1193,16 @@ public enum Mixins implements IMixins {
         return excludedMods;
     }
 
-    private static boolean classExists(String name) {
+    /**
+     * Checks if a resource is present.
+     *
+     * @param name The name of a resource is a '{@code /}'-separated path name that identifies the resource. For example
+     *             "net/minecraft/client/Minecraft.class"
+     */
+    private static boolean doesResourceExist(String name) {
         try {
-            Class.forName(name);
-            return true;
-        } catch (ClassNotFoundException e) {
+            return ClassLoader.getSystemClassLoader().getResource(name) != null;
+        } catch (Exception e) {
             return false;
         }
     }
