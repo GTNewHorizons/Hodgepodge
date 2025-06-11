@@ -1189,6 +1189,12 @@ public enum Mixins implements IMixins {
         return excludedMods;
     }
 
+    /**
+     * Checks if a class is present on the class path.
+     *
+     * @param name The name of a resource is a '{@code /}'-separated path name that identifies the resource. For example
+     *             "net/minecraft/client/Minecraft.class"
+     */
     private static boolean classExists(String name) {
         try {
             return ClassLoader.getSystemClassLoader().getResource(name) != null;
