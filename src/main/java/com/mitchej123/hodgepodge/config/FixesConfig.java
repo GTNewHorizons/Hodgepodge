@@ -366,6 +366,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixEggParticles;
 
+    @Config.Comment("Fix EventBus keeping object references after unregistering event handlers.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixEventBusMemoryLeak;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
