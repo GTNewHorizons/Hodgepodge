@@ -48,7 +48,7 @@ public enum Mixins implements IMixins {
                     .setApplyIf(() -> FixesConfig.fixTooManyAllocationsChunkPositionIntPair)),
     ADD_SIMULATION_DISTANCE_OPTION(new MixinBuilder("Add option to separate simulation distance from render distance")
             .addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH).setPhase(Phase.EARLY)
-            .addExcludedMod(TargetedMod.OPTIFINE)
+            .addExcludedMod(TargetedMod.OPTIFINE).addExcludedMod(TargetedMod.ULTRAMINE)
             .addMixinClasses(
                     "minecraft.MixinWorld_SimulationDistance",
                     "minecraft.MixinWorldServer_SimulationDistance",
@@ -57,7 +57,7 @@ public enum Mixins implements IMixins {
     ADD_SIMULATION_DISTANCE_OPTION_THERMOS_FIX(
             new MixinBuilder("Add option to separate simulation distance from render distance (Thermos fix)")
                     .addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH).setPhase(Phase.EARLY)
-                    .addExcludedMod(TargetedMod.OPTIFINE)
+                    .addExcludedMod(TargetedMod.OPTIFINE).addExcludedMod(TargetedMod.ULTRAMINE)
                     .addMixinClasses("minecraft.MixinWorldServer_SimulationDistanceThermosFix")
                     .setApplyIf(() -> FixesConfig.addSimulationDistance && Common.thermosTainted)),
     FIX_RESOURCEPACK_FOLDER_OPENING(new MixinBuilder("Fix resource pack folder sometimes not opening on windows")
