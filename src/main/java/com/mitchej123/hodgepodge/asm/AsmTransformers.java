@@ -63,7 +63,7 @@ public enum AsmTransformers {
             () -> ASMConfig.speedupOreDictionary,
             Side.BOTH,
             null,
-            ImmutableList.of(TargetedMod.FASTCRAFT, TargetedMod.BUKKIT),
+            ImmutableList.of(TargetedMod.FASTCRAFT, TargetedMod.BUKKIT, TargetedMod.ULTRAMINE),
             "com.mitchej123.hodgepodge.asm.transformers.mc.SpeedupOreDictionaryTransformer"
     ),
     FIX_BOGUS_INTEGRATED_SERVER_NPE(
