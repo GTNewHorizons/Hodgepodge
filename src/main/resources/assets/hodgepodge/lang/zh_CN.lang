@@ -21,5 +21,14 @@ item.dyePowder.name=染料
 item.skull.name=头颅
 item.fish.name=鱼
 
+commands.time.get=当前世界时间为 %s（一天中的时间：%s）
+commands.time.usageWithGet=/time <set|add> <数值> 或 /time get
+
 hodgepodge.soundsmenu.refreshsounds=声音重载
 hodgepodge.bed_respawn.msg=已设置重生点
+
+bettermodlist.sort.normal=默认
+bettermodlist.sort.a_to_z=A-Z
+bettermodlist.sort.z_to_a=Z-A
+bettermodlist.gui.modlistinfo1=天啊！一切都焕然一新！
+bettermodlist.gui.modlistinfo2=新版布局由以下提供：
