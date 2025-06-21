@@ -20,6 +20,6 @@ public class MixinEntityLiving {
                     shift = At.Shift.AFTER),
             cancellable = true)
     private void hodgepodge$skipNoneSounds(CallbackInfo ci, @Local String s) {
-        if ("none".equals(s)) ci.cancel();
+        if ("none".equals(s) || "".equals(s)) ci.cancel();
     }
 }
