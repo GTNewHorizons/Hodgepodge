@@ -17,12 +17,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(World.class)
 public class MixinWorld {
-    @Inject(
-        method = "playSoundAtEntity",
-        at = @At(
-            value = "HEAD"),
-        cancellable = true)
+
+    @Inject(method = "playSoundAtEntity", at = @At(value = "HEAD"), cancellable = true)
     private void hodgepodge$skipEmptySounds(Entity e, String soundName, float vol, float pitch, CallbackInfo ci) {
-        if("none".equals(soundName) || "".equals(soundName)) ci.cancel();
+        if ("none".equals(soundName) || "".equals(soundName)) ci.cancel();
     }
 }
