@@ -631,7 +631,8 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixEggParticles).addTargetedMod(TargetedMod.VANILLA)),
     FIX_EVENTBUS_MEMORY_LEAK(
             new MixinBuilder("Fix EventBus keeping object references after unregistering event handlers.")
-                    .setPhase(Phase.EARLY).setSide(Side.BOTH).addMixinClasses("fml.MixinListenerListInst")
+                    .setPhase(Phase.EARLY).setSide(Side.BOTH)
+                    .addMixinClasses("fml.MixinListenerListInst", "fml.MixinEventBus")
                     .setApplyIf(() -> FixesConfig.fixEventBusMemoryLeak).addTargetedMod(TargetedMod.VANILLA)),
 
     // Ic2 adjustments

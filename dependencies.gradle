@@ -12,22 +12,22 @@ configurations {
 }
 
 dependencies {
-    api("com.github.GTNewHorizons:GTNHLib:0.6.30:dev")
+    api("com.github.GTNewHorizons:GTNHLib:0.6.31:dev")
 
     compileOnly("com.gtnewhorizons.retrofuturabootstrap:RetroFuturaBootstrap:1.0.2") { transitive = false }
 
-    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.7.51-GTNH:dev") // force a more up-to-date NEI version
-    transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-629-GTNH")
+    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.7.56-GTNH:dev") // force a more up-to-date NEI version
+    transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-632-GTNH")
     transformedModCompileOnly("com.github.GTNewHorizons:Baubles:1.0.4:dev")
     // Transitive updates to make runClient17 work
     transformedModCompileOnly("com.github.GTNewHorizons:Steve-s-Factory-Manager:1.3.4-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:ForgeMultipart:1.6.6:dev")
-    transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.51.339:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.51.345:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:harvestcraft:1.3.2-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:HungerOverhaul:1.1.0-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:MrTJPCore:1.3.0:dev") // Do not update, fixed afterwards
     transformedModCompileOnly("com.github.GTNewHorizons:Railcraft:9.16.30:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
-    transformedModCompileOnly("com.github.GTNewHorizons:TinkersConstruct:1.13.33-GTNH:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:TinkersConstruct:1.13.37-GTNH:dev")
     transformedModCompileOnly(rfg.deobf("curse.maven:bibliocraft-228027:2423369"))
     transformedModCompileOnly(rfg.deobf("curse.maven:biomes-o-plenty-220318:2499612"))
     transformedModCompileOnly("curse.maven:cofh-core-69162:2388751")
@@ -69,7 +69,7 @@ dependencies {
     runtimeOnlyNonPublishable("maven.modrinth:archaicfix:0.7.6:dev")
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:ArchaicFix:99.0.0:dev") // mavenLocal location
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:ServerUtilities:2.1.54:dev") // for the pregenerator
-    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta45:dev") // for TPS graph
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta46:dev") // for TPS graph
 }
 
 // Replace when RFG support deobfuscation from notch mappings
