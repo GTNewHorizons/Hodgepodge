@@ -371,7 +371,7 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixEventBusMemoryLeak;
 
-    @Config.Comment("Skips playing 'none' and '' sounds.")
+    @Config.Comment("Skips playing empty sounds.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean skipEmptySounds;
