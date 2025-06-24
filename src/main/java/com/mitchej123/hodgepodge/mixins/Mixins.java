@@ -592,9 +592,9 @@ public enum Mixins implements IMixins {
             .addMixinClasses("minecraft.fastload.MixinEntityPlayerMP", "minecraft.fastload.MixinChunkProviderServer")
             .setApplyIf(() -> SpeedupsConfig.fastChunkHandling)),
 
-    CANCEL_NONE_SOUNDS(new MixinBuilder("Skips playing 'none' sounds").setPhase(Phase.EARLY).setSide(Side.BOTH)
-            .addTargetedMod(TargetedMod.VANILLA).addMixinClasses("minecraft.shutup.MixinEntityLiving")
-            .setApplyIf(() -> true)),
+    CANCEL_NONE_SOUNDS(new MixinBuilder("Skips playing empty sounds.").setPhase(Phase.EARLY).setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.VANILLA).addMixinClasses("minecraft.shutup.MixinWorld")
+            .setApplyIf(() -> FixesConfig.skipEmptySounds)),
 
     MEMORY_FIXES_IC2(new MixinBuilder("Removes allocation spam from the Direction.applyTo method").setPhase(Phase.LATE)
             .setSide(Side.BOTH).addMixinClasses("ic2.MixinDirection_Memory")
