@@ -521,7 +521,7 @@ public class FixesConfig {
 
     // Galacticraft
 
-    @Config.Comment("Fix time commands with GC")
+    @Config.Comment("Fix time commands with Galacticraft")
     @Config.DefaultBoolean(true)
     public static boolean fixTimeCommandWithGC;
 
