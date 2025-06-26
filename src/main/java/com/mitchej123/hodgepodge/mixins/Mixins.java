@@ -390,7 +390,10 @@ public enum Mixins implements IMixins {
             .addTargetedMod(TargetedMod.VANILLA)),
     FIX_KEYBIND_CONFLICTS(new MixinBuilder("Trigger all conflicting keybinds").setPhase(Phase.EARLY)
             .setSide(Side.CLIENT).addMixinClasses("minecraft.MixinKeyBinding", "minecraft.MixinMinecraft_UpdateKeys")
-            .setApplyIf(() -> FixesConfig.triggerAllConflictingKeybindings).addTargetedMod(TargetedMod.VANILLA)),
+            .setApplyIf(
+                    () -> FixesConfig.triggerAllConflictingKeybindings
+                            && !doesResourceExist("committee/nova/mkb/ModernKeyBinding.class"))
+            .addTargetedMod(TargetedMod.VANILLA)),
     REMOVE_SPAWN_MINECART_SOUND(new MixinBuilder("Remove sound when spawning a minecart").setPhase(Phase.EARLY)
             .setSide(Side.CLIENT).addMixinClasses("minecraft.MixinWorldClient").addTargetedMod(TargetedMod.VANILLA)
             .setApplyIf(() -> TweaksConfig.removeSpawningMinecartSound)),
