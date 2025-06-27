@@ -13,10 +13,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mitchej123.hodgepodge.mixins.interfaces.NBTTagListExt;
 
 @Mixin(NBTTagList.class)
-public class MixinNBTTagList_speedup implements NBTTagListExt {
+public class MixinNBTTagList_speedup {
 
     @Shadow
     private List tagList;
@@ -27,16 +26,11 @@ public class MixinNBTTagList_speedup implements NBTTagListExt {
                     value = "INVOKE",
                     target = "Ljava/util/List;iterator()Ljava/util/Iterator;",
                     shift = At.Shift.AFTER))
-    public void copyEnsureCapacity(CallbackInfoReturnable<NBTBase> cir, @Local NBTTagList nbttaglist) {
-        // Ensure the capacity of the new tag list is the same as the old one so we don't need to resize it later
-        ((NBTTagListExt) nbttaglist).ensureCapacity(tagList.size());
-
-    }
-
-    @Override
-    public void ensureCapacity(int capacity) {
-        if (tagList instanceof ArrayList tagArrayList) {
-            tagArrayList.ensureCapacity(capacity);
+    public void copyEnsureCapacity(CallbackInfoReturnable<NBTBase> cir, @Local NBTTagList newTagList) {
+        // Ensure the capacity of the new tag list is the same as the old one,
+        // so we don't need to resize (multiple times) during the copy
+        if (((MixinNBTTagList_speedup) (Object) (newTagList)).tagList instanceof ArrayList list) {
+            list.ensureCapacity(tagList.size());
         }
     }
 }
