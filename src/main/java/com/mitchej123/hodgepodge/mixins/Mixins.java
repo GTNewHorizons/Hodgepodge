@@ -556,6 +556,11 @@ public enum Mixins implements IMixins {
             .setSide(Side.BOTH).addTargetedMod(TargetedMod.BUKKIT).addMixinClasses("minecraft.MixinContainerPlayer")
             .setApplyIf(() -> FixesConfig.fixBukkitBetterQuestingCrash)),
 
+    FIX_BUKKIT_FIRE_SPREAD_NPE(new MixinBuilder("Fix vanilla fire spread sometimes causing NPE on thermos")
+            .addTargetedMod(TargetedMod.VANILLA).addTargetedMod(TargetedMod.BUKKIT).setPhase(Phase.EARLY)
+            .setSide(Side.BOTH).addMixinClasses("minecraft.MixinBlockFireSpread")
+            .setApplyIf(() -> FixesConfig.fixFireSpread)),
+
     MEMORY_FIXES_CLIENT(new MixinBuilder("Memory fixes").setPhase(Phase.EARLY).setSide(Side.CLIENT)
             .addTargetedMod(TargetedMod.VANILLA).addMixinClasses("memory.MixinFMLClientHandler")
             .setApplyIf(() -> FixesConfig.enableMemoryFixes)),

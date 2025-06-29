@@ -64,7 +64,7 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixFenceConnections;
 
-    @Config.Comment("Fix vanilla fire spread sometimes cause NPE on thermos")
+    @Config.Comment("Fix vanilla fire spread sometimes causing NPE on thermos")
     @Config.DefaultBoolean(true)
     public static boolean fixFireSpread;
 
