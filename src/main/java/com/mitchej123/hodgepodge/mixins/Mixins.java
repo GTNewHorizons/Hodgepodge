@@ -187,6 +187,9 @@ public enum Mixins implements IMixins {
     LONGER_MESSAGES_SERVER(new MixinBuilder("Longer Messages Server Side").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinC01PacketChatMessage_LongerMessages").setApplyIf(() -> true)
             .addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)),
+    SPEEDUP_REMOVE_FORMATTING_CODES(new MixinBuilder("Speed up the vanilla method to remove formatting codes")
+            .setPhase(Phase.EARLY).setSide(Side.CLIENT).addMixinClasses("minecraft.MixinEnumChatFormatting_FastFormat")
+            .setApplyIf(() -> SpeedupsConfig.speedupRemoveFormatting).addTargetedMod(TargetedMod.VANILLA)),
     SPEEDUP_GRASS_BLOCK_RANDOM_TICKING(new MixinBuilder("Speed up grass block random ticking").setPhase(Phase.EARLY)
             .addMixinClasses("minecraft.MixinBlockGrass").addTargetedMod(TargetedMod.VANILLA).setSide(Side.BOTH)
             .setApplyIf(() -> SpeedupsConfig.speedupGrassBlockRandomTicking)),
