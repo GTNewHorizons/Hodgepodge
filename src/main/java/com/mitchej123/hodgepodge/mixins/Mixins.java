@@ -1080,7 +1080,7 @@ public enum Mixins implements IMixins {
                     .addTargetedMod(TargetedMod.BIBLIOCRAFT)),
     BIBLIOCRAFT_PATH_SANITIZATION_FIX(new MixinBuilder("Path sanitization fix")
             .addMixinClasses("bibliocraft.MixinPathSanitization").setPhase(Phase.LATE).setSide((Side.BOTH))
-            .setApplyIf(() -> FixesConfig.fixBibliocraftPackets).addTargetedMod(TargetedMod.BIBLIOCRAFT)),
+            .setApplyIf(() -> FixesConfig.fixBibliocraftPathSanitization).addTargetedMod(TargetedMod.BIBLIOCRAFT)),
     ZTONES_PACKET_FIX(new MixinBuilder("Packet Fix").addMixinClasses("ztones.MixinZtonesPatchPacketExploits")
             .setPhase(Phase.LATE).setSide((Side.BOTH)).setApplyIf(() -> FixesConfig.fixZTonesPackets)
             .addTargetedMod(TargetedMod.ZTONES)),
