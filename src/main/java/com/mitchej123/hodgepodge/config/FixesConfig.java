@@ -64,7 +64,7 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixFenceConnections;
 
-    @Config.Comment("Fix vanilla fire spread sometimes cause NPE on thermos")
+    @Config.Comment("Fix vanilla fire spread sometimes causing NPE on thermos")
     @Config.DefaultBoolean(true)
     public static boolean fixFireSpread;
 
@@ -215,10 +215,6 @@ public class FixesConfig {
     @Config.Comment("Fixes village unchecked getBlock() calls")
     @Config.DefaultBoolean(true)
     public static boolean fixVillageUncheckedGetBlock;
-
-    @Config.Comment("Fix unprotected getBlock() in World")
-    @Config.DefaultBoolean(true)
-    public static boolean fixWorldGetBlock;
 
     @Config.Comment("Fix WorldServer leaking entities when no players are present in a dimension")
     @Config.DefaultBoolean(true)

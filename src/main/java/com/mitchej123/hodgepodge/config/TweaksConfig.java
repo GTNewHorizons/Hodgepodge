@@ -140,10 +140,6 @@ public class TweaksConfig {
     @Config.DefaultBoolean(false)
     public static boolean useLighterWater;
 
-    @Config.Comment("Make mod links in the mod menu clickable")
-    @Config.DefaultBoolean(true)
-    public static boolean clickableModUrls;
-
     @Config.Comment("Entirely remove Endermen's ability to grab blocks. Should also work for any modded entities that extend EntityEnderman and call its onLivingUpdate")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
