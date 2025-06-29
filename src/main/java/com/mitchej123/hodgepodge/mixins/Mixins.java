@@ -913,7 +913,7 @@ public enum Mixins implements IMixins {
             .addTargetedMod(TargetedMod.HARVESTTHENETHER)),
     FIX_NETHER_LEAVES_FACE_RENDERING(new MixinBuilder("Nether Leaves")
             .addMixinClasses("harvestthenether.MixinBlockNetherLeaves").setPhase(Phase.LATE).setSide(Side.CLIENT)
-            .setApplyIf(() -> FixesConfig.fixIgnisFruitAABB).addTargetedMod(TargetedMod.HARVESTTHENETHER)),
+            .setApplyIf(() -> FixesConfig.fixNetherLeavesFaceRendering).addTargetedMod(TargetedMod.HARVESTTHENETHER)),
 
     // Potion Render Offset Fixes - Various Mods
     FIX_BAUBLES_INVENTORY_OFFSET_WITH_POTIONS(new MixinBuilder("Baubles Inventory with Potions")
