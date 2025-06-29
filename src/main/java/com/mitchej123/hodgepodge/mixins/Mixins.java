@@ -703,6 +703,9 @@ public enum Mixins implements IMixins {
     IC2_SYNC_REACTORS(new MixinBuilder("Synchronize IC2 reactors for more consistent operation").setPhase(Phase.LATE)
             .setSide(Side.BOTH).addMixinClasses("ic2.sync.MixinTEReactorChamber", "ic2.sync.MixinTEReactor")
             .setApplyIf(() -> TweaksConfig.synchronizeIC2Reactors).addTargetedMod(TargetedMod.IC2)),
+    IC2_CELL(new MixinBuilder("No IC2 Cell Consumption in tanks").addMixinClasses("ic2.MixinIC2ItemCell")
+            .setPhase(Phase.LATE).setSide(Side.BOTH).setApplyIf(() -> TweaksConfig.ic2CellWithContainer)
+            .addTargetedMod(TargetedMod.IC2)),
 
     // Disable update checkers
     BIBLIOCRAFT_UPDATE_CHECK(new MixinBuilder("Yeet Bibliocraft Update Check").setPhase(Phase.LATE).setSide(Side.CLIENT)
@@ -1123,10 +1126,6 @@ public enum Mixins implements IMixins {
     CHANGE_KEYBIND_CATEGORY_AUTOMAGY(new MixinBuilder("Change keybind category of Automagy")
             .addMixinClasses("automagy.MixinAutomagyKeyHandler").setPhase(Phase.LATE).setSide((Side.CLIENT))
             .setApplyIf(() -> TweaksConfig.unbindKeybindsByDefault).addTargetedMod(TargetedMod.AUTOMAGY)),
-
-    IC2_CELL(new MixinBuilder("No IC2 Cell Consumption in tanks").addMixinClasses("ic2.MixinIC2ItemCell")
-            .setPhase(Phase.LATE).setSide(Side.BOTH).setApplyIf(() -> TweaksConfig.ic2CellWithContainer)
-            .addTargetedMod(TargetedMod.IC2)),
 
     // Chunk generation/population
     DISABLE_CHUNK_TERRAIN_GENERATION(new MixinBuilder("Disable chunk terrain generation").setPhase(Phase.EARLY)
