@@ -86,6 +86,11 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean lavaChunkLoading;
 
+    @Config.Comment("Speed up the vanilla method to remove formatting codes")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupRemoveFormatting;
+
     // Biomes O' Plenty
 
     @Config.Comment("Speedup biome fog rendering in BiomesOPlenty")

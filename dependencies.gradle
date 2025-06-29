@@ -70,6 +70,10 @@ dependencies {
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:ArchaicFix:99.0.0:dev") // mavenLocal location
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:ServerUtilities:2.1.54:dev") // for the pregenerator
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta46:dev") // for TPS graph
+
+    testImplementation(platform('org.junit:junit-bom:5.9.2'))
+    testImplementation('org.junit.jupiter:junit-jupiter')
+    testImplementation("org.mockito:mockito-core:5.+")
 }
 
 // Replace when RFG support deobfuscation from notch mappings
