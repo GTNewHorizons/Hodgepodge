@@ -216,10 +216,6 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixVillageUncheckedGetBlock;
 
-    @Config.Comment("Fix unprotected getBlock() in World")
-    @Config.DefaultBoolean(true)
-    public static boolean fixWorldGetBlock;
-
     @Config.Comment("Fix WorldServer leaking entities when no players are present in a dimension")
     @Config.DefaultBoolean(true)
     public static boolean fixWorldServerLeakingUnloadedEntities;
