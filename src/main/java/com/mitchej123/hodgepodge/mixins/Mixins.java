@@ -567,6 +567,11 @@ public enum Mixins implements IMixins {
             .setSide(Side.BOTH).addTargetedMod(TargetedMod.BUKKIT).addMixinClasses("minecraft.MixinContainerPlayer")
             .setApplyIf(() -> FixesConfig.fixBukkitBetterQuestingCrash)),
 
+    FIX_BUKKIT_FIRE_SPREAD_NPE(new MixinBuilder("Fix vanilla fire spread sometimes causing NPE on thermos")
+            .addTargetedMod(TargetedMod.VANILLA).addTargetedMod(TargetedMod.BUKKIT).setPhase(Phase.EARLY)
+            .setSide(Side.BOTH).addMixinClasses("minecraft.MixinBlockFireSpread")
+            .setApplyIf(() -> FixesConfig.fixFireSpread)),
+
     MEMORY_FIXES_CLIENT(new MixinBuilder("Memory fixes").setPhase(Phase.EARLY).setSide(Side.CLIENT)
             .addTargetedMod(TargetedMod.VANILLA).addMixinClasses("memory.MixinFMLClientHandler")
             .setApplyIf(() -> FixesConfig.enableMemoryFixes)),
@@ -919,7 +924,7 @@ public enum Mixins implements IMixins {
             .addTargetedMod(TargetedMod.HARVESTTHENETHER)),
     FIX_NETHER_LEAVES_FACE_RENDERING(new MixinBuilder("Nether Leaves")
             .addMixinClasses("harvestthenether.MixinBlockNetherLeaves").setPhase(Phase.LATE).setSide(Side.CLIENT)
-            .setApplyIf(() -> FixesConfig.fixIgnisFruitAABB).addTargetedMod(TargetedMod.HARVESTTHENETHER)),
+            .setApplyIf(() -> FixesConfig.fixNetherLeavesFaceRendering).addTargetedMod(TargetedMod.HARVESTTHENETHER)),
 
     // Potion Render Offset Fixes - Various Mods
     FIX_BAUBLES_INVENTORY_OFFSET_WITH_POTIONS(new MixinBuilder("Baubles Inventory with Potions")
@@ -1086,7 +1091,7 @@ public enum Mixins implements IMixins {
                     .addTargetedMod(TargetedMod.BIBLIOCRAFT)),
     BIBLIOCRAFT_PATH_SANITIZATION_FIX(new MixinBuilder("Path sanitization fix")
             .addMixinClasses("bibliocraft.MixinPathSanitization").setPhase(Phase.LATE).setSide((Side.BOTH))
-            .setApplyIf(() -> FixesConfig.fixBibliocraftPackets).addTargetedMod(TargetedMod.BIBLIOCRAFT)),
+            .setApplyIf(() -> FixesConfig.fixBibliocraftPathSanitization).addTargetedMod(TargetedMod.BIBLIOCRAFT)),
     ZTONES_PACKET_FIX(new MixinBuilder("Packet Fix").addMixinClasses("ztones.MixinZtonesPatchPacketExploits")
             .setPhase(Phase.LATE).setSide((Side.BOTH)).setApplyIf(() -> FixesConfig.fixZTonesPackets)
             .addTargetedMod(TargetedMod.ZTONES)),
