@@ -38,8 +38,12 @@ public enum Mixins implements IMixins {
                     .addMixinClasses(
                             "minecraft.MixinChunkCoordIntPair_FixAllocations",
                             "minecraft.MixinWorld_FixAllocations",
-                            "minecraft.MixinWorldClient_FixAllocations",
                             "minecraft.MixinAnvilChunkLoader_FixAllocations")
+                    .setApplyIf(() -> FixesConfig.fixTooManyAllocationsChunkPositionIntPair)),
+    FIX_TOO_MANY_ALLOCATIONS_CHUNK_POSITION_INT_PAIR_CLIENT(
+            new MixinBuilder("Stops MC from allocating too many ChunkPositionIntPair objects")
+                    .addTargetedMod(TargetedMod.VANILLA).setSide(Side.CLIENT).setPhase(Phase.EARLY)
+                    .addMixinClasses("minecraft.MixinWorldClient_FixAllocations")
                     .setApplyIf(() -> FixesConfig.fixTooManyAllocationsChunkPositionIntPair)),
     FIX_TOO_MANY_ALLOCATIONS_CHUNK_POSITION_INT_PAIR_OPTIFINE_INCOMPAT(
             new MixinBuilder("Stops MC from allocating too many ChunkPositionIntPair objects")
