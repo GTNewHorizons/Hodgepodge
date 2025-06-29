@@ -21,18 +21,14 @@ public class MixinBlockNetherLeaves extends BlockLeavesBase {
 
     @Override
     public boolean shouldSideBeRendered(IBlockAccess worldIn, int x, int y, int z, int side) {
-        return !Minecraft.isFancyGraphicsEnabled() && worldIn.getBlock(x, y, z) == this ? false
-                : (side == 0 && this.minY > 0.0D ? true
-                        : (side == 1 && this.maxY < 1.0D ? true
-                                : (side == 2 && this.minZ > 0.0D ? true
-                                        : (side == 3 && this.maxZ < 1.0D ? true
-                                                : (side == 4 && this.minX > 0.0D ? true
-                                                        : (side == 5 && this.maxX < 1.0D ? true
-                                                                : isTranslucent(worldIn, x, y, z)))))));
+        return (Minecraft.isFancyGraphicsEnabled() || worldIn.getBlock(x, y, z) != this)
+                && (side == 0 && this.minY > 0.0D || (side == 1 && this.maxY < 1.0D || (side == 2 && this.minZ > 0.0D
+                        || (side == 3 && this.maxZ < 1.0D || (side == 4 && this.minX > 0.0D
+                                || (side == 5 && this.maxX < 1.0D || hodgepodge$isTranslucent(worldIn, x, y, z)))))));
     }
 
     @Unique
-    private static boolean isTranslucent(IBlockAccess world, int x, int y, int z) {
+    private static boolean hodgepodge$isTranslucent(IBlockAccess world, int x, int y, int z) {
         Block block = world.getBlock(x, y, z);
         return block == BlockRegistry.netherLeaves ? Minecraft.isFancyGraphicsEnabled() : !block.isOpaqueCube();
     }
