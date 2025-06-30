@@ -23,8 +23,8 @@ public enum TargetedMod implements ITargetedMod {
     ETFURUMREQUIEM("ganymedes01.etfuturum.mixinplugin.EtFuturumEarlyMixins", "etfuturum"),
     EXTRATIC(null, "ExtraTiC"),
     EXTRA_UTILITIES(null, "ExtraUtilities"),
-    FASTCRAFT("fastcraft.Tweaker", null),
     FALSETWEAKS("com.falsepattern.falsetweaks.asm.CoreLoadingPlugin", "falsetweaks"),
+    FASTCRAFT("fastcraft.Tweaker", null),
     GALACTICRAFT_CORE("micdoodle8.mods.galacticraft.core.asm.GCLoadingPlugin", "GalacticraftCore"),
     GLIBYS_VOICE_CHAT(null, "gvc"),
     GT5U(null, "gregtech"), // Also matches GT6.
