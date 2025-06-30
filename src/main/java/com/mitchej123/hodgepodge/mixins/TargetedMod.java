@@ -1,7 +1,7 @@
 package com.mitchej123.hodgepodge.mixins;
 
-
 import com.gtnewhorizon.gtnhlib.mixin.ITargetedMod;
+
 import cpw.mods.fml.common.Mod;
 
 public enum TargetedMod implements ITargetedMod {
