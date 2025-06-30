@@ -18,7 +18,7 @@ import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.GeneralConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
-import com.mitchej123.hodgepodge.mixins.Mixins;
+import com.mitchej123.hodgepodge.mixins.EarlyMixins;
 import com.mitchej123.hodgepodge.util.StringPooler;
 import com.mitchej123.hodgepodge.util.VoxelMapCacheMover;
 import com.mitchej123.hodgepodge.util.WorldDataSaver;
@@ -71,7 +71,7 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     @Override
     public List<String> getMixins(Set<String> loadedCoreMods) {
-        return IMixins.getEarlyMixins(Mixins.class, loadedCoreMods);
+        return IMixins.getEarlyMixins(EarlyMixins.class, loadedCoreMods);
     }
 
     @Override
