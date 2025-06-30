@@ -167,7 +167,7 @@ public enum EarlyMixins implements IMixins {
     PREVENT_LAVA_CHUNK_LOADING(new MixinBuilder("Prevent lava blocks from loading chunks").addCommonMixins("minecraft.MixinBlockStaticLiquid").setApplyIf(() -> SpeedupsConfig.lavaChunkLoading)),
     FIX_GLASS_BOTTLE_NON_WATER_BLOCKS(new MixinBuilder("Fix Glass Bottles filling with Water from some other Fluid blocks").addCommonMixins("minecraft.MixinItemGlassBottle").setApplyIf(() -> FixesConfig.fixGlassBottleWaterFilling)),
     FIX_IOOBE_RENDER_DISTANCE(new MixinBuilder("Fix out of bounds render distance when Optifine/Angelica is uninstalled").addExcludedMod(TargetedMod.OPTIFINE).addExcludedMod(TargetedMod.ANGELICA).addExcludedMod(TargetedMod.FALSETWEAKS).setApplyIf(() -> true).addClientMixins("minecraft.MixinGameSettings_ReduceRenderDistance")),
-    BETTER_MOD_LIST(new MixinBuilder("Better Mod List").addClientMixins("fml.MixinGuiModList", "fml.MixinGuiSlotModList", "fml.MixinGuiScrollingList").setApplyIf(() -> TweaksConfig.betterModList).addExcludedMod(TargetedMod.ENDERIO)),
+    BETTER_MOD_LIST(new MixinBuilder("Better Mod List").addClientMixins("fml.MixinGuiModList", "fml.MixinGuiSlotModList", "fml.MixinGuiScrollingList").setApplyIf(() -> TweaksConfig.betterModList).addExcludedMod(TargetedMod.ENDERCORE_WITH_MODLIST)),
     FIX_EGG_PARTICLE(new MixinBuilder("Use correct egg particles instead of snowball ones (MC-7807)").addClientMixins("minecraft.MixinEntityEgg").setApplyIf(() -> FixesConfig.fixEggParticles)),
     FIX_EVENTBUS_MEMORY_LEAK(new MixinBuilder("Fix EventBus keeping object references after unregistering event handlers.").addCommonMixins("fml.MixinListenerListInst", "fml.MixinEventBus").setApplyIf(() -> FixesConfig.fixEventBusMemoryLeak)),
 

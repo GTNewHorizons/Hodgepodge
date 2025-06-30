@@ -1,13 +1,13 @@
 package com.mitchej123.hodgepodge.mixins;
 
+import javax.annotation.Nonnull;
+
 import com.gtnewhorizon.gtnhlib.mixin.IMixins;
 import com.gtnewhorizon.gtnhlib.mixin.MixinBuilder;
 import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
-
-import javax.annotation.Nonnull;
 
 public enum LateMixins implements IMixins {
 

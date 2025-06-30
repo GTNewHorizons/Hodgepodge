@@ -18,7 +18,10 @@ public enum TargetedMod implements ITargetedMod {
     COFH_CORE("cofh.asm.LoadingPlugin", "CoFHCore"),
     DAMAGE_INDICATORS(null, "DamageIndicatorsMod"),
     DREAMCRAFT("com.dreammaster.coremod.DreamCoreMod", "dreamcraft"),
-    ENDERIO(null, null, "com.enderio.core.common.transform.EnderCoreTransformerClient"),
+    // this is not ender io but a library for it, it used to contain the
+    // transformer that got removed and added via mixin in this mod, so we don't
+    // load our mixins if an old version of the mod that contains this class is loaded
+    ENDERCORE_WITH_MODLIST(null, null, "com.enderio.core.common.transform.EnderCoreTransformerClient"),
     ETFURUMREQUIEM("ganymedes01.etfuturum.mixinplugin.EtFuturumEarlyMixins", "etfuturum"),
     EXTRATIC(null, "ExtraTiC"),
     EXTRA_UTILITIES(null, "ExtraUtilities"),
@@ -28,7 +31,7 @@ public enum TargetedMod implements ITargetedMod {
     GLIBYS_VOICE_CHAT(null, "gvc"),
     GT5U(null, "gregtech"), // Also matches GT6.
     GT6("gregtech.asm.GT_ASM", "gregapi"), // Can be used to exclude GT6 from the GT5U target.
-    GTNHLIB(null, "gtnhlib"),
+    GTNHLIB("com.gtnewhorizon.gtnhlib.core.GTNHLibCore", "gtnhlib"),
     HARVESTCRAFT(null, "harvestcraft"),
     HARVESTTHENETHER(null, "harvestthenether"),
     HUNGER_OVERHAUL(null, "HungerOverhaul"),
