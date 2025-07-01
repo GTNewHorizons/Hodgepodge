@@ -26,8 +26,6 @@ public enum EarlyMixins implements IMixins {
                     "minecraft.MixinChunkCoordIntPair_FixAllocations",
                     "minecraft.MixinWorld_FixAllocations",
                     "minecraft.MixinAnvilChunkLoader_FixAllocations")
-            .setApplyIf(() -> FixesConfig.fixTooManyAllocationsChunkPositionIntPair)),
-    FIX_TOO_MANY_ALLOCATIONS_CHUNK_POSITION_INT_PAIR_CLIENT(new MixinBuilder("Stops MC from allocating too many ChunkPositionIntPair objects")
             .addClientMixins("minecraft.MixinWorldClient_FixAllocations")
             .setApplyIf(() -> FixesConfig.fixTooManyAllocationsChunkPositionIntPair)),
     FIX_TOO_MANY_ALLOCATIONS_CHUNK_POSITION_INT_PAIR_OPTIFINE_INCOMPAT(new MixinBuilder("Stops MC from allocating too many ChunkPositionIntPair objects")
@@ -98,10 +96,8 @@ public enum EarlyMixins implements IMixins {
     ADD_THROWER_TO_DROPPED_ITEM(new MixinBuilder("Adds the thrower tag to all dropped EntityItems")
             .addCommonMixins("minecraft.MixinEntityPlayer_ItemThrower")
             .setApplyIf(() -> FixesConfig.addThrowerTagToDroppedItems)),
-    SYNC_ITEM_THROWER_COMMON(new MixinBuilder("Synchonize from server to client the thrower and pickup delay of an item entity")
+    SYNC_ITEM_THROWER(new MixinBuilder("Synchonize from server to client the thrower and pickup delay of an item entity")
             .addCommonMixins("minecraft.packets.MixinS0EPacketSpawnObject_ItemThrower")
-            .setApplyIf(() -> FixesConfig.syncItemThrower)),
-    SYNC_ITEM_THROWER_CLIENT(new MixinBuilder("Synchonize from server to client the thrower and pickup delay of an item entity")
             .addClientMixins("minecraft.MixinNetHandlerPlayClient_ItemThrower")
             .setApplyIf(() -> FixesConfig.syncItemThrower)),
     FIX_PERSPECTIVE_CAMERA(new MixinBuilder("Camera Perspective Fix")
@@ -149,13 +145,9 @@ public enum EarlyMixins implements IMixins {
             .addCommonMixins("minecraft.MixinEntityWitch")
             .setApplyIf(() -> TweaksConfig.witchPotionMetadata)),
     // config handled in mixin due to server->client config sync
-    LONGER_MESSAGES_CLIENT(new MixinBuilder("Longer Messages Client Side")
+    LONGER_MESSAGES(new MixinBuilder()
             .addClientMixins("minecraft.MixinGuiChat_LongerMessages")
-            .setApplyIf(() -> true)),
-    // config handled in mixin due to server->client config sync
-    LONGER_MESSAGES_SERVER(new MixinBuilder("Longer Messages Server Side")
-            .addCommonMixins("minecraft.MixinC01PacketChatMessage_LongerMessages")
-            .setApplyIf(() -> true)),
+            .addCommonMixins("minecraft.MixinC01PacketChatMessage_LongerMessages")),
     SPEEDUP_REMOVE_FORMATTING_CODES(new MixinBuilder("Speed up the vanilla method to remove formatting codes")
             .addClientMixins("minecraft.MixinEnumChatFormatting_FastFormat")
             .setApplyIf(() -> SpeedupsConfig.speedupRemoveFormatting)),
@@ -213,10 +205,8 @@ public enum EarlyMixins implements IMixins {
     FIX_HOPPER_HIT_BOX(new MixinBuilder("Fix Vanilla Hopper hit box")
             .addCommonMixins("minecraft.MixinBlockHopper")
             .setApplyIf(() -> FixesConfig.fixHopperHitBox)),
-    TILE_RENDERER_PROFILER_DISPATCHER(new MixinBuilder("TileEntity Render Dispatcher Fix")
+    TILE_ENTITY_RENDERER_PROFILER(new MixinBuilder()
             .addClientMixins("minecraft.profiler.TileEntityRendererDispatcherMixin")
-            .setApplyIf(() -> TweaksConfig.enableTileRendererProfiler)),
-    TILE_RENDERER_PROFILER_MINECRAFT(new MixinBuilder("Tile Entity Render Profiler")
             .addClientMixins("minecraft.profiler.MinecraftMixin")
             .setApplyIf(() -> TweaksConfig.enableTileRendererProfiler)),
     DIMENSION_CHANGE_FIX(new MixinBuilder("Dimension Change Heart Fix")
@@ -375,9 +365,7 @@ public enum EarlyMixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.removeSpawningMinecartSound)),
     MACOS_KEYS_TEXTFIELD_SHORTCUTS(new MixinBuilder("Macos use CMD to copy/select/delete text")
             .addClientMixins("minecraft.MixinGuiTextField")
-            .setApplyIf(() -> System.getProperty("os.name")
-                                      .toLowerCase()
-                                      .contains("mac") && TweaksConfig.enableMacosCmdShortcuts)),
+            .setApplyIf(() -> TweaksConfig.enableMacosCmdShortcuts && System.getProperty("os.name").toLowerCase().contains("mac"))),
     FIX_FONT_RENDERER_LINEWRAP_RECURSION(new MixinBuilder("Replace recursion with iteration in FontRenderer line wrapping code")
             .addClientMixins("minecraft.MixinFontRenderer")
             .setApplyIf(() -> FixesConfig.fixFontRendererLinewrapRecursion)),
@@ -437,9 +425,9 @@ public enum EarlyMixins implements IMixins {
     TESSELATOR_PRESERVE_QUAD_ORDER(new MixinBuilder("Preserve the rendering order of layered quads on terrain pass 1")
             .addClientMixins("minecraft.MixinTessellator")
             .setApplyIf(() -> FixesConfig.fixPreserveQuadOrder)),
+    // Always apply, config handled in mixin
     FAST_BLOCK_PLACING(new MixinBuilder("Allows blocks to be placed faster")
-            .addClientMixins("minecraft.MixinMinecraft_FastBlockPlacing")
-            .setApplyIf(() -> true)), // Always apply, config handled in mixin
+            .addClientMixins("minecraft.MixinMinecraft_FastBlockPlacing")),
     FIX_NEGATIVE_KELVIN(new MixinBuilder("Fix the local temperature can go below absolute zero")
             .addCommonMixins("minecraft.MixinBiomeGenBase")
             .setApplyIf(() -> FixesConfig.fixNegativeKelvin)),
@@ -461,14 +449,10 @@ public enum EarlyMixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixDuplicateSounds)),
     ADD_MOD_ITEM_STATS(new MixinBuilder("Add stats for modded items")
             .addCommonMixins("fml.MixinGameRegistry")
-            .setApplyIf(() -> TweaksConfig.addModItemStats)),
-    ADD_MOD_ITEM_STATS_CLIENT(new MixinBuilder("Add stats for modded items")
             .addClientMixins("minecraft.MixinStats")
             .setApplyIf(() -> TweaksConfig.addModItemStats)),
     ADD_MOD_ENTITY_STATS(new MixinBuilder("Add stats for modded entities")
             .addCommonMixins("minecraft.MixinStatList")
-            .setApplyIf(() -> TweaksConfig.addModEntityStats)),
-    ADD_MOD_ENTITY_STATS_CLIENT(new MixinBuilder("Add stats for modded entities (client side)")
             .addClientMixins(
                     "minecraft.MixinStatsMobsList",
                     "minecraft.MixinStatsBlock",
@@ -559,7 +543,6 @@ public enum EarlyMixins implements IMixins {
             .addExcludedMod(TargetedMod.OPTIFINE)
             .addExcludedMod(TargetedMod.ANGELICA)
             .addExcludedMod(TargetedMod.FALSETWEAKS)
-            .setApplyIf(() -> true)
             .addClientMixins(
                     "minecraft.MixinGameSettings_ReduceRenderDistance")),
     BETTER_MOD_LIST(new MixinBuilder("Better Mod List")
