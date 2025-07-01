@@ -17,11 +17,11 @@ public enum LateMixins implements IMixins {
             .addCommonMixins("ic2.MixinDirection_Memory")
             .setApplyIf(() -> FixesConfig.enableMemoryFixes)
             .addRequiredMod(TargetedMod.IC2)),
-    IC2_HOVER_MODE_FIX(new MixinBuilder("IC2 Hover Mode Fix")
+    IC2_HOVER_MODE_FIX(new MixinBuilder()
             .addCommonMixins("ic2.MixinIc2QuantumSuitHoverMode")
             .setApplyIf(() -> FixesConfig.fixIc2HoverMode)
             .addRequiredMod(TargetedMod.IC2)),
-    IC2_ARMOR_LAG_FIX(new MixinBuilder("IC2 Armor Lag Fix")
+    IC2_ARMOR_LAG_FIX(new MixinBuilder()
             .addCommonMixins(
                     "ic2.MixinElectricItemManager",
                     "ic2.MixinIC2ArmorHazmat",
@@ -33,7 +33,7 @@ public enum LateMixins implements IMixins {
                     "ic2.MixinIC2ArmorStaticBoots")
             .setApplyIf(() -> FixesConfig.fixIc2ArmorLag)
             .addRequiredMod(TargetedMod.IC2)),
-    IC2_CROP_TRAMPLING_FIX(new MixinBuilder("IC2 Crop Trampling Fix")
+    IC2_CROP_TRAMPLING_FIX(new MixinBuilder()
             .addCommonMixins("ic2.MixinIC2TileEntityCrop")
             .setApplyIf(() -> FixesConfig.fixIc2CropTrampling)
             .addRequiredMod(TargetedMod.IC2)),
@@ -82,7 +82,7 @@ public enum LateMixins implements IMixins {
             .addRequiredMod(TargetedMod.HARVESTCRAFT)),
 
     // Thaumcraft
-    THREADED_THAUMCRAFT_MAZE_SAVING(new MixinBuilder("Threaded Thaumcraft Maze Saving")
+    THREADED_THAUMCRAFT_MAZE_SAVING(new MixinBuilder()
             .addCommonMixins("thaumcraft.MixinMazeHandler_threadedIO")
             .setApplyIf(() -> TweaksConfig.threadedWorldDataSaving)
             .addRequiredMod(TargetedMod.THAUMCRAFT)),
@@ -114,7 +114,7 @@ public enum LateMixins implements IMixins {
                     "thaumcraft.MixinBlockMagicalLog")
             .setApplyIf(() -> FixesConfig.fixThaumcraftLeavesLag)
             .addRequiredMod(TargetedMod.THAUMCRAFT)),
-    FIX_THAUMCRAFT_VIS_DUPLICATION(new MixinBuilder("Fix Thaumcraft Vis Duplication")
+    FIX_THAUMCRAFT_VIS_DUPLICATION(new MixinBuilder()
             .addCommonMixins("thaumcraft.MixinTileWandPedestal_VisDuplication")
             .setApplyIf(() -> FixesConfig.fixWandPedestalVisDuplication)
             .addRequiredMod(TargetedMod.THAUMCRAFT)),
@@ -207,7 +207,7 @@ public enum LateMixins implements IMixins {
             .addCommonMixins("mrtjpcore.MixinFXEngine")
             .setApplyIf(() -> TweaksConfig.fixHudLightingGlitch)
             .addRequiredMod(TargetedMod.MRTJPCORE)),
-    FIX_POPPING_OFF(new MixinBuilder("Fix Popping Off")
+    FIX_POPPING_OFF(new MixinBuilder()
             .addCommonMixins("mrtjpcore.MixinPlacementLib")
             .setApplyIf(() -> TweaksConfig.fixComponentsPoppingOff)
             .addRequiredMod(TargetedMod.MRTJPCORE)),
@@ -249,11 +249,11 @@ public enum LateMixins implements IMixins {
             .addRequiredMod(TargetedMod.LOTR)),
 
     // Journeymap
-    FIX_JOURNEYMAP_KEYBINDS(new MixinBuilder("Fix Journeymap Keybinds")
+    FIX_JOURNEYMAP_KEYBINDS(new MixinBuilder()
             .addClientMixins("journeymap.MixinConstants")
             .setApplyIf(() -> FixesConfig.fixJourneymapKeybinds)
             .addRequiredMod(TargetedMod.JOURNEYMAP)),
-    FIX_JOURNEYMAP_ILLEGAL_FILE_PATH_CHARACTER(new MixinBuilder("Fix Journeymap Illegal File Path Character")
+    FIX_JOURNEYMAP_ILLEGAL_FILE_PATH_CHARACTER(new MixinBuilder()
             .addClientMixins("journeymap.MixinWorldData")
             .setApplyIf(() -> FixesConfig.fixJourneymapFilePath)
             .addRequiredMod(TargetedMod.JOURNEYMAP)),
@@ -390,7 +390,7 @@ public enum LateMixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixPortalGunURLs)),
 
     // VoxelMap
-    REPLACE_VOXELMAP_REFLECTION(new MixinBuilder("Replace VoxelMap Reflection")
+    REPLACE_VOXELMAP_REFLECTION(new MixinBuilder()
             .addClientMixins(
                     "voxelmap.reflection.MixinAddonResourcePack",
                     "voxelmap.reflection.MixinColorManager",
