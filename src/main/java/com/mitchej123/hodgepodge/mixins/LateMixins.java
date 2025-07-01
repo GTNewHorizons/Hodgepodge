@@ -59,12 +59,10 @@ public enum LateMixins implements IMixins {
             .addRequiredMod(TargetedMod.DAMAGE_INDICATORS)),
 
     // Railcraft Anchors
-    WAKE_ANCHORS_ON_LOGIN_PASSIVE(new MixinBuilder("Wake passive anchors on login")
-            .addCommonMixins("railcraft.MixinTileAnchorPassive")
-            .setApplyIf(() -> TweaksConfig.installAnchorAlarm)
-            .addRequiredMod(TargetedMod.RAILCRAFT)),
-    WAKE_ANCHORS_ON_LOGIN_PERSONAL(new MixinBuilder("Wake person anchors on login")
-            .addCommonMixins("railcraft.MixinTileAnchorPersonal")
+    WAKE_ANCHORS_ON_LOGIN(new MixinBuilder("Wake passive anchors on login")
+            .addCommonMixins(
+                    "railcraft.MixinTileAnchorPassive",
+                    "railcraft.MixinTileAnchorPersonal")
             .setApplyIf(() -> TweaksConfig.installAnchorAlarm)
             .addRequiredMod(TargetedMod.RAILCRAFT)),
 
@@ -120,12 +118,9 @@ public enum LateMixins implements IMixins {
             .addCommonMixins("thaumcraft.MixinTileWandPedestal_VisDuplication")
             .setApplyIf(() -> FixesConfig.fixWandPedestalVisDuplication)
             .addRequiredMod(TargetedMod.THAUMCRAFT)),
-    FIX_NULL_HANDLING_ITEMWISPESSENCE_CLIENT(new MixinBuilder("Fix handling of null stacks in ItemWispEssence")
-            .addClientMixins("thaumcraft.MixinItemWispEssence_Client")
-            .setApplyIf(() -> FixesConfig.fixNullHandlingItemWispEssence)
-            .addRequiredMod(TargetedMod.THAUMCRAFT)),
-    FIX_NULL_HANDLING_ITEMWISPESSENCE_BOTH(new MixinBuilder("Fix handling of null stacks in ItemWispEssence")
+    FIX_NULL_HANDLING_ITEMWISPESSENCE(new MixinBuilder("Fix handling of null stacks in ItemWispEssence")
             .addCommonMixins("thaumcraft.MixinItemWispEssence_Both")
+            .addClientMixins("thaumcraft.MixinItemWispEssence_Client")
             .setApplyIf(() -> FixesConfig.fixNullHandlingItemWispEssence)
             .addRequiredMod(TargetedMod.THAUMCRAFT)),
 
@@ -139,11 +134,9 @@ public enum LateMixins implements IMixins {
             .setApplyIf(() -> FixesConfig.deduplicateForestryCompatInBOP)
             .addRequiredMod(TargetedMod.BOP)),
     SPEEDUP_BOP_BIOME_FOG(new MixinBuilder("BOP Biome Fog")
-            .addClientMixins("biomesoplenty.MixinFogHandler")
-            .setApplyIf(() -> SpeedupsConfig.speedupBOPFogHandling)
-            .addRequiredMod(TargetedMod.BOP)),
-    SPEEDUP_BOP_BIOME_FOG_ACCESSOR(new MixinBuilder("BOP Biome Fog Accessor")
-            .addClientMixins("biomesoplenty.AccessorFogHandler")
+            .addClientMixins(
+                    "biomesoplenty.MixinFogHandler",
+                    "biomesoplenty.AccessorFogHandler")
             .setApplyIf(() -> SpeedupsConfig.speedupBOPFogHandling)
             .addRequiredMod(TargetedMod.BOP)),
     BIG_FIR_TREES(new MixinBuilder("BOP Fir Trees")
@@ -384,12 +377,9 @@ public enum LateMixins implements IMixins {
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)),
 
     // Gliby's Voice Chat
-    FIX_GLIBYS_VC_THREAD_SHUTDOWN_CLIENT(new MixinBuilder("Fix Gliby's voice chat not shutting down its client thread cleanly")
-            .addClientMixins("glibysvoicechat.MixinClientNetwork")
-            .setApplyIf(() -> FixesConfig.fixGlibysVoiceChatThreadStop)
-            .addRequiredMod(TargetedMod.GLIBYS_VOICE_CHAT)),
-    FIX_GLIBYS_VC_THREAD_SHUTDOWN_SERVER(new MixinBuilder("Fix Gliby's voice chat not shutting down its server thread cleanly")
+    FIX_GLIBYS_VC_THREAD_SHUTDOWN(new MixinBuilder("Fix Gliby's voice chat not shutting down its threads cleanly")
             .addCommonMixins("glibysvoicechat.MixinVoiceChatServer")
+            .addClientMixins("glibysvoicechat.MixinClientNetwork")
             .setApplyIf(() -> FixesConfig.fixGlibysVoiceChatThreadStop)
             .addRequiredMod(TargetedMod.GLIBYS_VOICE_CHAT)),
 
