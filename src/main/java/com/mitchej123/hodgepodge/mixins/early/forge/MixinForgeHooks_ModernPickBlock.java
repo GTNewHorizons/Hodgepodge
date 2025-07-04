@@ -25,8 +25,7 @@ public class MixinForgeHooks_ModernPickBlock {
         Minecraft clientObject = Minecraft.getMinecraft();
         for (int x = 9; x < 36; x++) {
             ItemStack stack = player.inventory.getStackInSlot(x);
-            if (stack != null && stack.isItemEqual(result)
-                    && ItemStack.areItemStackTagsEqual(stack, result)) {
+            if (stack != null && stack.isItemEqual(result) && ItemStack.areItemStackTagsEqual(stack, result)) {
                 int moveSlot = hodgepodge$getSuitableHotbarSlot(player);
                 player.inventory.currentItem = moveSlot;
                 moveSlot = 36 + moveSlot;
