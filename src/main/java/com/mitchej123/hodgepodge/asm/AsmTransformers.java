@@ -121,8 +121,6 @@ public enum AsmTransformers {
         if (targetedMods == null || targetedMods.isEmpty()) return true;
 
         for (TargetedMod target : targetedMods) {
-            if (target == TargetedMod.VANILLA) continue;
-
             if (!loadedCoreMods.isEmpty() && target.coreModClass != null
                     && !loadedCoreMods.contains(target.coreModClass))
                 return false;
@@ -135,8 +133,6 @@ public enum AsmTransformers {
         if (targetedMods == null || targetedMods.isEmpty()) return true;
 
         for (TargetedMod target : targetedMods) {
-            if (target == TargetedMod.VANILLA) continue;
-
             if (!loadedCoreMods.isEmpty() && target.coreModClass != null
                     && loadedCoreMods.contains(target.coreModClass))
                 return false;
