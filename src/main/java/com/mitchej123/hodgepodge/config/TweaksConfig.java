@@ -384,4 +384,8 @@ public class TweaksConfig {
     @Config.DefaultInt(32)
     public static int simulationDistance;
 
+    @Config.Comment("Add a gamerule to disable hunger")
+    @Config.DefaultBoolean(true)
+    public static boolean hungerGameRule;
+
 }

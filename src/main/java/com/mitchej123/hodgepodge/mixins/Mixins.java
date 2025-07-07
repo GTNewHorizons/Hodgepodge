@@ -653,6 +653,13 @@ public enum Mixins implements IMixins {
                     .setPhase(Phase.EARLY).setSide(Side.BOTH)
                     .addMixinClasses("fml.MixinListenerListInst", "fml.MixinEventBus")
                     .setApplyIf(() -> FixesConfig.fixEventBusMemoryLeak).addTargetedMod(TargetedMod.VANILLA)),
+    ADD_HUNGER_GAMERULE(new MixinBuilder("Add a gamerule to disable hunger")
+            .addMixinClasses(
+                    "minecraft.MixinEntityPlayer_HungerRule",
+                    "minecraft.MixinFoodStats_HungerRule",
+                    "minecraft.MixinGameRules_HungerRule")
+            .setPhase(Phase.EARLY).setApplyIf(() -> TweaksConfig.hungerGameRule).setSide(Side.BOTH)
+            .addTargetedMod(TargetedMod.VANILLA)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix").setPhase(Phase.EARLY).setSide(Side.BOTH)
