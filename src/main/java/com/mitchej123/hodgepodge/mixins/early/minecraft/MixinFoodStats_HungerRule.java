@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.mitchej123.hodgepodge.mixins.interfaces.GameRuleHunger;
 
 // applecore overwrites the method at
 // priority = 1000, so we inject after
@@ -17,6 +18,6 @@ public class MixinFoodStats_HungerRule {
             method = "onUpdate",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/util/FoodStats;addExhaustion(F)V"))
     private boolean hodgepodge$hungerRule(FoodStats foodStats, float amount, EntityPlayer player) {
-        return !player.worldObj.getGameRules().getGameRuleBooleanValue("disableHunger");
+        return !((GameRuleHunger) player.worldObj.getGameRules()).hodgepodge$isHungerDisabled();
     }
 }
