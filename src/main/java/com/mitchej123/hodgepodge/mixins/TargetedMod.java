@@ -16,7 +16,7 @@ public enum TargetedMod implements ITargetMod {
     BIBLIOCRAFT("BiblioCraft"),
     BOP("BiomesOPlenty"),
     BUGTORCH("jss.bugtorch.mixinplugin.BugTorchEarlyMixins", "bugtorch"),
-    BUKKIT("Bukkit", null),
+    BUKKIT(null, null, "org.bukkit.World"),
     CANDYCRAFT("candycraftmod"),
     COFH_CORE("cofh.asm.LoadingPlugin", "CoFHCore"),
     DAMAGE_INDICATORS("DamageIndicatorsMod"),

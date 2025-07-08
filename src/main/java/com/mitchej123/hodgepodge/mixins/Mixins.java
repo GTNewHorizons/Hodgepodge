@@ -4,7 +4,6 @@ import javax.annotation.Nonnull;
 
 import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 import com.gtnewhorizon.gtnhmixins.builders.MixinBuilder;
-import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
@@ -46,10 +45,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.addSimulationDistance)
             .setPhase(Phase.EARLY)),
     ADD_SIMULATION_DISTANCE_OPTION_THERMOS_FIX(new MixinBuilder("Add option to separate simulation distance from render distance (Thermos fix)")
+            .addRequiredMod(TargetedMod.BUKKIT)
             .addExcludedMod(TargetedMod.OPTIFINE)
             .addExcludedMod(TargetedMod.ULTRAMINE)
             .addCommonMixins("minecraft.MixinWorldServer_SimulationDistanceThermosFix")
-            .setApplyIf(() -> FixesConfig.addSimulationDistance && Common.thermosTainted)
+            .setApplyIf(() -> FixesConfig.addSimulationDistance)
             .setPhase(Phase.EARLY)),
     FIX_RESOURCEPACK_FOLDER_OPENING(new MixinBuilder("Fix resource pack folder sometimes not opening on windows")
             .addClientMixins("minecraft.MixinGuiScreenResourcePacks")
