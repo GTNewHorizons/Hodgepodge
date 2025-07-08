@@ -29,7 +29,7 @@ public enum TargetedMod implements ITargetMod {
     EXTRATIC("ExtraTiC"),
     EXTRA_UTILITIES("ExtraUtilities"),
     FALSETWEAKS("com.falsepattern.falsetweaks.asm.CoreLoadingPlugin", "falsetweaks"),
-    FASTCRAFT("fastcraft.Tweaker", null),
+    FASTCRAFT(null, null, "fastcraft.Tweaker"),
     GALACTICRAFT_CORE("micdoodle8.mods.galacticraft.core.asm.GCLoadingPlugin", "GalacticraftCore"),
     GLIBYS_VOICE_CHAT("gvc"),
     GT5U("gregtech"), // Also matches GT6.
@@ -59,7 +59,7 @@ public enum TargetedMod implements ITargetMod {
     THERMALEXPANSION("ThermalExpansion"),
     TINKERSCONSTRUCT("TConstruct"),
     TRAVELLERSGEAR("TravellersGear"),
-    ULTRAMINE("org.ultramine.server.UltraminePlugin", "UltramineServer"),
+    ULTRAMINE(null, null, "org.ultramine.server.UltraminePlugin"),
     VOXELMAP("com.thevoxelbox.voxelmap.litemod.VoxelMapTransformer", "voxelmap"),
     WITCHERY("witchery"),
     XAEROMINIMAP("XaeroMinimap"),
