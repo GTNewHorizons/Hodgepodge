@@ -2,8 +2,8 @@ package com.mitchej123.hodgepodge.mixins;
 
 import javax.annotation.Nonnull;
 
-import com.gtnewhorizon.gtnhlib.mixin.IMixins;
-import com.gtnewhorizon.gtnhlib.mixin.MixinBuilder;
+import com.gtnewhorizon.gtnhmixins.builders.IMixins;
+import com.gtnewhorizon.gtnhmixins.builders.MixinBuilder;
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.config.DebugConfig;

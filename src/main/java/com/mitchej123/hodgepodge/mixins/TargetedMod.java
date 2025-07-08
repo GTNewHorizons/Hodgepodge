@@ -1,8 +1,11 @@
 package com.mitchej123.hodgepodge.mixins;
 
-import com.gtnewhorizon.gtnhlib.mixin.ITargetedMod;
+import javax.annotation.Nonnull;
 
-public enum TargetedMod implements ITargetedMod {
+import com.gtnewhorizon.gtnhmixins.builders.ITargetMod;
+import com.gtnewhorizon.gtnhmixins.builders.TargetModBuilder;
+
+public enum TargetedMod implements ITargetMod {
 
     ADVANCED_SOLAR_PANELS(null, "AdvancedSolarPanel"),
     ANGELICA("com.gtnewhorizons.angelica.loading.AngelicaTweaker", "angelica"),
@@ -63,32 +66,19 @@ public enum TargetedMod implements ITargetedMod {
     XAEROWORLDMAP(null, "XaeroWorldMap"),
     ZTONES(null, "Ztones");
 
-    public final String coreModClass;
-    public final String modId;
-    public final String targetClass;
+    private final TargetModBuilder builder;
 
     TargetedMod(String coreModClass, String modId) {
         this(coreModClass, modId, null);
     }
 
     TargetedMod(String coreModClass, String modId, String targetClass) {
-        this.coreModClass = coreModClass;
-        this.modId = modId;
-        this.targetClass = targetClass;
+        this.builder = new TargetModBuilder().setCoreModClass(coreModClass).setModId(modId).setTargetClass(targetClass);
     }
 
+    @Nonnull
     @Override
-    public String getCoreModClass() {
-        return coreModClass;
-    }
-
-    @Override
-    public String getModId() {
-        return modId;
-    }
-
-    @Override
-    public String getTargetClass() {
-        return targetClass;
+    public TargetModBuilder getBuilder() {
+        return builder;
     }
 }
