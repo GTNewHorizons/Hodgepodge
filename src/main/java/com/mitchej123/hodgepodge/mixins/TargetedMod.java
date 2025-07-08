@@ -34,7 +34,8 @@ public enum TargetedMod implements ITargetMod {
     GLIBYS_VOICE_CHAT("gvc"),
     GT5U("gregtech"), // Also matches GT6.
     GT6("gregtech.asm.GT_ASM", "gregapi"), // Can be used to exclude GT6 from the GT5U target.
-    GTNHLIB("com.gtnewhorizon.gtnhlib.core.GTNHLibCore", "gtnhlib"),
+    // this is not a class name, but it's what actually shows up in the coremod list
+    GTNHLIB("GTNHLib Core", "gtnhlib"),
     HARVESTCRAFT("harvestcraft"),
     HARVESTTHENETHER("harvestthenether"),
     HUNGER_OVERHAUL("HungerOverhaul"),
