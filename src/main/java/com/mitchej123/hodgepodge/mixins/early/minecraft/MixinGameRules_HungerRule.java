@@ -9,10 +9,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mitchej123.hodgepodge.mixins.interfaces.GameRuleHunger;
+import com.mitchej123.hodgepodge.mixins.interfaces.GameRuleExt;
 
 @Mixin(GameRules.class)
-public abstract class MixinGameRules_HungerRule implements GameRuleHunger {
+public abstract class MixinGameRules_HungerRule implements GameRuleExt {
 
     @Unique
     private boolean hodgepodge$disableHunger;

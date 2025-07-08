@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.interfaces;
 
-public interface GameRuleHunger {
+public interface GameRuleExt {
 
     boolean hodgepodge$isHungerDisabled();
 }

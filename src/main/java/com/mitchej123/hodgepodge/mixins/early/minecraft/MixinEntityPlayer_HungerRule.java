@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import com.mitchej123.hodgepodge.mixins.interfaces.GameRuleHunger;
+import com.mitchej123.hodgepodge.mixins.interfaces.GameRuleExt;
 import com.mojang.authlib.GameProfile;
 
 @Mixin(EntityPlayer.class)
@@ -19,7 +19,7 @@ public abstract class MixinEntityPlayer_HungerRule extends EntityLivingBase {
             method = "addExhaustion",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/util/FoodStats;addExhaustion(F)V"))
     private boolean hodgepodge$hungerRule(FoodStats foodStats, float amount) {
-        return !((GameRuleHunger) this.worldObj.getGameRules()).hodgepodge$isHungerDisabled();
+        return !((GameRuleExt) this.worldObj.getGameRules()).hodgepodge$isHungerDisabled();
     }
 
     private MixinEntityPlayer_HungerRule(World world, GameProfile gameProfile) {
