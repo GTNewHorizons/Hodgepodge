@@ -29,7 +29,6 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.core.HodgepodgeCore;
 
 /**
@@ -97,13 +96,8 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
                 LOGGER.debug("Transforming OreDictionary.getOreID(ItemStack)");
                 modified |= transformGetOreIDItemStackMethod(method);
             } else if ("getOreIDs".equals(method.name) && ("(L" + this.itemStackClass + ";)[I").equals(method.desc)) {
-                if(!Common.thermosTainted) {
-                    LOGGER.debug("Transforming OreDictionary.getOreIDs(ItemStack)");
-                    modified |= transformGetOreIDsMethod(method);
-                } else {
-                    LOGGER.debug("Overwriting OreDictionary.getOreIDs(ItemStack) as it is tainted by Thermos");
-                    modified |= overwriteGetOreIDsMethod(method);
-                }
+                LOGGER.debug("Transforming OreDictionary.getOreIDs(ItemStack)");
+                modified |= transformGetOreIDsMethod(method);
             } else if ("getOres".equals(method.name) && "(Ljava/lang/String;Z)Ljava/util/List;".equals(method.desc)) {
                 LOGGER.debug("Transforming OreDictionary.getOres(String, boolean)");
                 modified |= transformGetOresMethod(method);
