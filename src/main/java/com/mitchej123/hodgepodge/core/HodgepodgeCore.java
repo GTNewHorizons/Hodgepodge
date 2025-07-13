@@ -7,10 +7,15 @@ import java.util.Set;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+import org.spongepowered.asm.lib.tree.ClassNode;
+import org.spongepowered.asm.service.MixinService;
+
 import com.gtnewhorizon.gtnhlib.config.ConfigException;
 import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
-import com.gtnewhorizon.gtnhlib.mixin.IMixins;
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
+import com.gtnewhorizon.gtnhmixins.builders.IMixins;
+import com.gtnewhorizon.gtnhmixins.builders.ITransformers;
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.asm.AsmTransformers;
 import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.config.DebugConfig;
@@ -48,6 +53,20 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
         }
     }
 
+    // spotless:off
+    static {
+        try {
+            ClassNode classNode = MixinService.getService().getBytecodeProvider().getClassNode("org.bukkit.World", false);
+            if (classNode != null) {
+                Common.log.warn("==================================================================================================");
+                Common.log.warn("Thermos/Bukkit detected; This is an unsupported configuration -- Things may not function properly.");
+                Common.log.warn("Using `{}` for CraftServer Package. If this is not correct, please update your config file!", ASMConfig.thermosCraftServerClass);
+                Common.log.warn("==================================================================================================");
+            }
+        } catch (Exception ignored) {}
+    }
+    // spotless:on
+
     public static void saveWorldData(File file, NBTTagCompound tag) {
         WorldDataSaver.INSTANCE.saveData(file, tag, true, false);
     }
@@ -77,7 +96,7 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     @Override
     public String[] getASMTransformerClass() {
         if (transformerClasses == null) {
-            transformerClasses = AsmTransformers.getTransformers();
+            transformerClasses = ITransformers.getTransformers(AsmTransformers.class);
         }
         return transformerClasses;
     }
