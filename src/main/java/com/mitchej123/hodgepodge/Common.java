@@ -10,8 +10,4 @@ public class Common {
     public static final Logger log = LogManager.getLogger("Hodgepodge");
     public static final Marker securityMarker = MarkerManager.getMarker("SuspiciousPackets");
     public static XSTR RNG = new XSTR();
-
-    static {
-        Common.log.info("Initializing Hodgepodge");
-    }
 }
