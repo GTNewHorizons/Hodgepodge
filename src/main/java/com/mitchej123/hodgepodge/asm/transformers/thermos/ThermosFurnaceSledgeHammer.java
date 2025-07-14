@@ -14,6 +14,7 @@ import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.config.ASMConfig;
 
 @SuppressWarnings("unused")
@@ -24,13 +25,13 @@ public class ThermosFurnaceSledgeHammer implements IClassTransformer {
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (ASMConfig.thermosCraftServerClass.equals(transformedName)) {
-            LOGGER.info("Patching Thermos or derivative to not break our furnace fix");
+            Common.logASM(LOGGER, "Patching Thermos or derivative to not break our furnace fix");
             final ClassReader cr = new ClassReader(basicClass);
             final ClassNode cn = new ClassNode(ASM5);
             cr.accept(cn, 0);
             for (MethodNode m : cn.methods) {
                 if ("resetRecipes".equals(m.name)) {
-                    LOGGER.info("Taking a sledgehammer to CraftServer.resetRecipes()");
+                    Common.logASM(LOGGER, "Taking a sledgehammer to CraftServer.resetRecipes()");
                     // Replace the body with a RETURN opcode
                     InsnList insnList = new InsnList();
                     insnList.add(new InsnNode(Opcodes.RETURN));
