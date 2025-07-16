@@ -20,6 +20,9 @@ public class HodgepodgeRfbPlugin implements RfbPlugin {
 
     @Override
     public @NotNull RfbClassTransformer @Nullable [] makeTransformers() {
-        return new RfbClassTransformer[] { new ForgeConfigurationTransformer() };
+        return new RfbClassTransformer[] {
+                new ForgeConfigurationTransformer(),
+                new DragonAPINBTFix()
+        };
     }
 }
