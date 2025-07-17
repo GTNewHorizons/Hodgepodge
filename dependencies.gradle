@@ -13,6 +13,7 @@ configurations {
 
 dependencies {
     api("com.github.GTNewHorizons:GTNHLib:0.6.36:dev")
+    api("io.github.legacymoddingmc:unimixins:99.0.0:dev")
 
     compileOnly("com.gtnewhorizons.retrofuturabootstrap:RetroFuturaBootstrap:1.0.2") { transitive = false }
 

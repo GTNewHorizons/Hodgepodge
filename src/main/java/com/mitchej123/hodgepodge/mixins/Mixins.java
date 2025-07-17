@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 
 import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 import com.gtnewhorizon.gtnhmixins.builders.MixinBuilder;
+import com.mitchej123.hodgepodge.asm.EarlyConfig;
 import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
@@ -263,6 +264,7 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.profiler.TileEntityRendererDispatcherMixin")
             .addClientMixins("minecraft.profiler.MinecraftMixin")
             .setApplyIf(() -> TweaksConfig.enableTileRendererProfiler)
+            .addExcludedMod(TargetedMod.DRAGON_API)
             .setPhase(Phase.EARLY)),
     DIMENSION_CHANGE_FIX(new MixinBuilder("Dimension Change Heart Fix")
             .addCommonMixins(
@@ -397,10 +399,12 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinNBTTagList_speedup")
             .setApplyIf(() -> ASMConfig.speedupNBTTagCompoundCopy)
             .addExcludedMod(TargetedMod.BUKKIT)
+            .addExcludedModIf(TargetedMod.DRAGON_API, !EarlyConfig.enableDAPINBTCompat)
             .setPhase(Phase.EARLY)),
     STRING_POOLER_NBT_TAG(new MixinBuilder("Pool NBT Strings")
             .addCommonMixins("minecraft.MixinNBTTagCompound_stringPooler")
             .setApplyIf(() -> TweaksConfig.enableTagCompoundStringPooling)
+            .addExcludedModIf(TargetedMod.DRAGON_API, !EarlyConfig.enableDAPINBTCompat)
             .setPhase(Phase.EARLY)),
     STRING_POOLER_NBT_STRING(new MixinBuilder("Pool NBT Strings")
             .addCommonMixins("minecraft.MixinNBTTagString_stringPooler")
@@ -676,6 +680,7 @@ public enum Mixins implements IMixins {
     PREVENT_LAVA_CHUNK_LOADING(new MixinBuilder("Prevent lava blocks from loading chunks")
             .addCommonMixins("minecraft.MixinBlockStaticLiquid")
             .setApplyIf(() -> SpeedupsConfig.lavaChunkLoading)
+            .addExcludedMod(TargetedMod.DRAGON_API)
             .setPhase(Phase.EARLY)),
     FIX_GLASS_BOTTLE_NON_WATER_BLOCKS(new MixinBuilder("Fix Glass Bottles filling with Water from some other Fluid blocks")
             .addCommonMixins("minecraft.MixinItemGlassBottle")
