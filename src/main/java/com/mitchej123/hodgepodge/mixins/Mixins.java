@@ -717,6 +717,10 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)
             .setApplyIf(() -> Boolean.getBoolean("hodgepodge.logEventTimes"))
             .addCommonMixins("fml.MixinEventBus_DebugRegistration")),
+    SPEEDUP_EVENT_REGISTRATION(new MixinBuilder()
+            .setPhase(Phase.EARLY)
+            // TODO add config
+            .addCommonMixins("fml.MixinEventBus_FastRegistration")),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
