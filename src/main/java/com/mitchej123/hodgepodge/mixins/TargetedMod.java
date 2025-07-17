@@ -20,6 +20,7 @@ public enum TargetedMod implements ITargetMod {
     CANDYCRAFT("candycraftmod"),
     COFH_CORE("cofh.asm.LoadingPlugin", "CoFHCore"),
     DAMAGE_INDICATORS("DamageIndicatorsMod"),
+    DRAGON_API("Reika.DragonAPI.Auxiliary.DragonAPIASMHandler", "DragonAPI", "Reika.DragonAPI.DragonAPIInit"),
     DREAMCRAFT("com.dreammaster.coremod.DreamCoreMod", "dreamcraft"),
     // this is not ender io but a library for it, it used to contain the
     // transformer that got removed and added via mixin in this mod, so we don't
