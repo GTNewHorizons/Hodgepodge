@@ -22,6 +22,8 @@ public final class EarlyConfig {
 
     public static final boolean noNukeBaseMod;
     public static final boolean noLeanerForgeConfiguration;
+    // Off by default, as the compat transformer is slow
+    public static final boolean enableDAPINBTCompat;
 
     static {
         Properties config = new Properties();
@@ -33,10 +35,16 @@ public final class EarlyConfig {
         } catch (IOException e) {
             LOGGER.error("Error reading configuration file. Will use defaults", e);
         }
+
         noNukeBaseMod = Boolean.parseBoolean(config.getProperty("noNukeBaseMod"));
         config.setProperty("noNukeBaseMod", String.valueOf(noNukeBaseMod));
+
         noLeanerForgeConfiguration = Boolean.parseBoolean(config.getProperty("noLeanerForgeConfiguration"));
         config.setProperty("noLeanerForgeConfiguration", String.valueOf(noLeanerForgeConfiguration));
+
+        enableDAPINBTCompat = Boolean.parseBoolean(config.getProperty("enableDAPINBTCompat"));
+        config.setProperty("enableDAPINBTCompat", String.valueOf(enableDAPINBTCompat));
+
         try (Writer r = new BufferedWriter(new FileWriter(configLocation))) {
             config.store(r, "Configuration file for early hodgepodge class transformers");
         } catch (IOException e) {

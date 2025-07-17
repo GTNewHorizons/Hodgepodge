@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.rfb;
 import com.gtnewhorizons.retrofuturabootstrap.api.ClassNodeHandle;
 import com.gtnewhorizons.retrofuturabootstrap.api.ExtensibleClassLoader;
 import com.gtnewhorizons.retrofuturabootstrap.api.RfbClassTransformer;
+import com.mitchej123.hodgepodge.asm.EarlyConfig;
 import java.nio.charset.StandardCharsets;
 import java.util.jar.Manifest;
 import org.intellij.lang.annotations.Pattern;
@@ -28,6 +29,7 @@ public class DragonAPINBTFix implements RfbClassTransformer {
 
     @Override
     public boolean shouldTransformClass(@NotNull ExtensibleClassLoader classLoader, @NotNull Context context, @Nullable Manifest manifest, @NotNull String className, @NotNull ClassNodeHandle classNode) {
+        if (!EarlyConfig.enableDAPINBTCompat) return false;
         if ("Reika.DragonAPI.Instantiable.Data.Maps.MultiMap".equals(className))
             return true;
 
