@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 
-public class FileLogger {
+public class FileLogger implements AutoCloseable {
 
     private final SimpleDateFormat dateFormat;
     private PrintStream printStream = null;
@@ -63,5 +63,10 @@ public class FileLogger {
     public void printStackTrace() {
         if (printStream == null) return;
         new Exception().printStackTrace(printStream);
+    }
+
+    public void close() {
+        if (printStream == null) return;
+        printStream.close();
     }
 }
