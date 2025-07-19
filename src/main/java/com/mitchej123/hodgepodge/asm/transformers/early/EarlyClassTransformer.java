@@ -8,8 +8,6 @@ import static org.objectweb.asm.Opcodes.POP;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -28,8 +26,6 @@ import com.mitchej123.hodgepodge.asm.EarlyConfig;
  */
 @SuppressWarnings("unused")
 public class EarlyClassTransformer implements IClassTransformer {
-
-    private static final Logger LOGGER = LogManager.getLogger("HodgePodgeEarly");
 
     private static final String EARLY_HOOKS_INTERNAL = "com/mitchej123/hodgepodge/asm/hooks/early/EarlyASMCallHooks";
 

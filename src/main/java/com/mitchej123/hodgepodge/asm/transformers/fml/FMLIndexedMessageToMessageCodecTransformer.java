@@ -15,6 +15,8 @@ import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import com.mitchej123.hodgepodge.Common;
+
 // This can't be a mixin because of mixinDebug causing it to generate a
 // java.lang.reflect.MalformedParameterizedTypeException
 public class FMLIndexedMessageToMessageCodecTransformer implements IClassTransformer {
@@ -24,14 +26,14 @@ public class FMLIndexedMessageToMessageCodecTransformer implements IClassTransfo
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if ("cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec".equals(transformedName)) {
-            LOGGER.info("TRANSFORMING cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec");
+            Common.logASM(LOGGER, "TRANSFORMING cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec");
             final ClassReader cr = new ClassReader(basicClass);
             final ClassNode cn = new ClassNode();
             cr.accept(cn, 0);
             if (cn.methods != null) {
                 for (MethodNode m : cn.methods) {
                     if ("encode".equals(m.name)) {
-                        LOGGER.info("Adding dispatcher safety");
+                        Common.logASM(LOGGER, "Adding dispatcher safety");
                         int ctxIdx = 1;
                         int proxyIdx = 7;
                         if (m.localVariables != null) {
