@@ -516,6 +516,7 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiContainerCreative")
             .setApplyIf(() -> FixesConfig.removeCreativeSearchTab)
             .addRequiredMod(TargetedMod.NOTENOUGHITEMS)
+            .addExcludedMod(TargetedMod.ARCHAICFIX)
             .setPhase(Phase.EARLY)),
     FIX_CHAT_COLOR_WRAPPING(new MixinBuilder("Fix wrapped chat lines missing colors")
             .addClientMixins("minecraft.MixinGuiNewChat_FixColorWrapping")
