@@ -516,6 +516,7 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiContainerCreative")
             .setApplyIf(() -> FixesConfig.removeCreativeSearchTab)
             .addRequiredMod(TargetedMod.NOTENOUGHITEMS)
+            .addExcludedMod(TargetedMod.ARCHAICFIX)
             .setPhase(Phase.EARLY)),
     FIX_CHAT_COLOR_WRAPPING(new MixinBuilder("Fix wrapped chat lines missing colors")
             .addClientMixins("minecraft.MixinGuiNewChat_FixColorWrapping")
@@ -713,6 +714,10 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinGameRules_HungerRule")
             .setApplyIf(() -> TweaksConfig.hungerGameRule)
             .setPhase(Phase.EARLY)),
+    DEBUG_EVENT_REGISTRATION(new MixinBuilder()
+            .setPhase(Phase.EARLY)
+            .setApplyIf(() -> Boolean.getBoolean("hodgepodge.logEventTimes"))
+            .addCommonMixins("fml.MixinEventBus_DebugRegistration")),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
