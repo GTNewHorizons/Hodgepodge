@@ -29,6 +29,7 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.core.HodgepodgeCore;
 
 /**
@@ -66,7 +67,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
             boolean isObf = HodgepodgeCore.isObf();
             this.itemStackClass = isObf ? "add" : "net/minecraft/item/ItemStack";
             this.itemClass = isObf ? "adb" : "net/minecraft/item/Item";
-            LOGGER.debug("OreDictionary is obfuscated: {}", isObf);
+            Common.logASM(LOGGER,"OreDictionary is obfuscated: {"+isObf+"}");
             return transformOreDictionary(basicClass);
         }
 
@@ -84,31 +85,31 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
         FieldNode emptyIntArrayField = new FieldNode(ACC_PUBLIC | ACC_STATIC | ACC_FINAL, "EMPTY_INT_ARRAY", "[I", null, null);
         classNode.fields.add(emptyIntArrayField);
         // Find and transform the methods
-        LOGGER.debug("Transforming OreDictionary class");
+        Common.logASM(LOGGER,"Transforming OreDictionary class");
         for (MethodNode method : classNode.methods) {
             if ("<clinit>".equals(method.name)) {
-                LOGGER.debug("Transforming OreDictionary.<clinit>");
+                Common.logASM(LOGGER,"Transforming OreDictionary.<clinit>");
                 modified |= transformClinitMethod(method);
             } else if ("getOreID".equals(method.name) && "(Ljava/lang/String;)I".equals(method.desc)) {
-                LOGGER.debug("Transforming OreDictionary.getOreID(String)");
+                Common.logASM(LOGGER,"Transforming OreDictionary.getOreID(String)");
                 modified |= transformGetOreIDStringMethod(method);
             } else if ("getOreID".equals(method.name) && ("(L" + this.itemStackClass + ";)I").equals(method.desc)) {
-                LOGGER.debug("Transforming OreDictionary.getOreID(ItemStack)");
+                Common.logASM(LOGGER,"Transforming OreDictionary.getOreID(ItemStack)");
                 modified |= transformGetOreIDItemStackMethod(method);
             } else if ("getOreIDs".equals(method.name) && ("(L" + this.itemStackClass + ";)[I").equals(method.desc)) {
-                LOGGER.debug("Transforming OreDictionary.getOreIDs(ItemStack)");
+                Common.logASM(LOGGER,"Transforming OreDictionary.getOreIDs(ItemStack)");
                 modified |= transformGetOreIDsMethod(method);
             } else if ("getOres".equals(method.name) && "(Ljava/lang/String;Z)Ljava/util/List;".equals(method.desc)) {
-                LOGGER.debug("Transforming OreDictionary.getOres(String, boolean)");
+                Common.logASM(LOGGER,"Transforming OreDictionary.getOres(String, boolean)");
                 modified |= transformGetOresMethod(method);
             } else if ("getOres".equals(method.name) && "(I)Ljava/util/ArrayList;".equals(method.desc)) {
-                LOGGER.debug("Transforming OreDictionary.getOres(int)");
+                Common.logASM(LOGGER,"Transforming OreDictionary.getOres(int)");
                 modified |= transformGetOresIntMethod(method);
             } else if ("registerOreImpl".equals(method.name) && ("(Ljava/lang/String;L" + this.itemStackClass + ";)V").equals(method.desc)) {
-                LOGGER.debug("Transforming OreDictionary.registerOreImpl(String, ItemStack)");
+                Common.logASM(LOGGER,"Transforming OreDictionary.registerOreImpl(String, ItemStack)");
                 modified |= transformRegisterOreImplMethod(method);
             } else if ("rebakeMap".equals(method.name) && "()V".equals(method.desc)) {
-                LOGGER.debug("Transforming OreDictionary.rebakeMap()");
+                Common.logASM(LOGGER,"Transforming OreDictionary.rebakeMap()");
                 modified |= transformRebakeMapMethod(method);
             }
             for(LocalVariableNode localVar : method.localVariables) {
@@ -124,7 +125,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
 
         if (modified) {
             try {
-                LOGGER.debug("Writing transformed OreDictionary class");
+                Common.logASM(LOGGER,"Writing transformed OreDictionary class");
                 ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
                 classNode.accept(writer);
                 return writer.toByteArray();

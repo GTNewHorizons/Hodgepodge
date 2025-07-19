@@ -13,10 +13,12 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 
+import com.mitchej123.hodgepodge.Common;
+
 @SuppressWarnings("unused")
 public class NBTTagCompoundHashMapTransformer implements IClassTransformer {
 
-    private static final Logger LOGGER = LogManager.getLogger("NBTTagCompoundHashMapTransformerTransformer");
+    private static final Logger LOGGER = LogManager.getLogger("NBTTagCompoundHashMapTransformer");
     public static final String INIT = "<init>";
     public static final String EMPTY_DESC = "()V";
     public static final String HASHMAP = "java/util/HashMap";
@@ -54,14 +56,14 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer {
                 for (AbstractInsnNode node : mn.instructions.toArray()) {
                     if (node.getOpcode() == Opcodes.NEW && node instanceof TypeInsnNode tNode) {
                         if (tNode.desc.equals(HASHMAP)) {
-                            LOGGER.info("Found HashMap instantiation in NBTTagCompound.<init>");
+                            Common.logASM(LOGGER, "Found HashMap instantiation in NBTTagCompound.<init>");
                             mn.instructions.insertBefore(tNode, new TypeInsnNode(Opcodes.NEW, FASTUTIL_HASHMAP));
                             mn.instructions.remove(tNode);
                             changed = true;
                         }
                     } else if (node.getOpcode() == Opcodes.INVOKESPECIAL && node instanceof MethodInsnNode mNode) {
                         if (mNode.name.equals(INIT) && mNode.desc.equals(EMPTY_DESC) && mNode.owner.equals(HASHMAP)) {
-                            LOGGER.info("Found HashMap constructor call in NBTTagCompound.<init>");
+                            Common.logASM(LOGGER, "Found HashMap constructor call in NBTTagCompound.<init>");
                             mn.instructions.insertBefore(
                                     mNode,
                                     new MethodInsnNode(
