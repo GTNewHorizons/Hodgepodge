@@ -7,15 +7,22 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 
+import com.mitchej123.hodgepodge.core.HodgepodgeCore;
+
 public class FileLogger implements AutoCloseable {
 
     private final SimpleDateFormat dateFormat;
     private PrintStream printStream = null;
 
-    public FileLogger(File logFolder, String filename) {
-        this(logFolder, filename, "HH:mm:ss");
+    public FileLogger(String filename) {
+        this(HodgepodgeCore.getMcLocation(), filename);
     }
 
+    public FileLogger(File logFolder, String filename) {
+        this(logFolder, filename, null);
+    }
+
+    // timeFormat "HH:mm:ss"
     public FileLogger(File logFolder, String filename, String timeFormat) {
         if (timeFormat == null) {
             dateFormat = null;

@@ -1,7 +1,5 @@
 package com.mitchej123.hodgepodge.mixins.early.fml;
 
-import net.minecraft.launchwrapper.Launch;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,7 +14,7 @@ import cpw.mods.fml.common.eventhandler.EventBus;
 public class MixinEventBus_DebugRegistration {
 
     @Unique
-    private static final FileLogger debug$log = new FileLogger(Launch.minecraftHome, "DebugEventRegistration.txt");
+    private static final FileLogger debug$log = new FileLogger("EventRegistrationTime.txt");
     @Unique
     private static long debug$totalTime;
 

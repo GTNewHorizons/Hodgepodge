@@ -35,6 +35,7 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 @IFMLLoadingPlugin.DependsOn("cofh.asm.LoadingPlugin")
 public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
+    private static File mcLocation;
     private static boolean isObf;
     private String[] transformerClasses;
 
@@ -113,8 +114,9 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     @Override
     public void injectData(Map<String, Object> data) {
-        VoxelMapCacheMover.changeFileExtensions((File) data.get("mcLocation"));
+        mcLocation = (File) data.get("mcLocation");
         isObf = (boolean) data.get("runtimeDeobfuscationEnabled");
+        VoxelMapCacheMover.changeFileExtensions(mcLocation);
     }
 
     @Override
@@ -124,6 +126,10 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
             CoreCompat.disableCoretweaksConflictingMixins();
         } catch (ClassNotFoundException e) {}
         return null;
+    }
+
+    public static File getMcLocation() {
+        return mcLocation;
     }
 
     public static boolean isObf() {

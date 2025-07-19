@@ -3,8 +3,6 @@ package com.mitchej123.hodgepodge.mixins.preinit;
 import java.util.ArrayList;
 import java.util.Map;
 
-import net.minecraft.launchwrapper.Launch;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -51,7 +49,7 @@ public class MixinLoadController_logModTimes {
             at = @At(value = "TAIL"))
     public void printResults(LoaderState state, Object[] eventData, CallbackInfo ci) {
         if (hodgepodge$results == null || state != LoaderState.AVAILABLE) return;
-        try (FileLogger logger = new FileLogger(Launch.minecraftHome, "modtimes.csv", null)) {
+        try (FileLogger logger = new FileLogger("modtimes.csv")) {
             logger.log("event;modid;modname;time");
             hodgepodge$results.forEach((type, results) -> {
                 results.sort(null);
@@ -59,7 +57,6 @@ public class MixinLoadController_logModTimes {
                     final String modid = result.mod.getModId();
                     logger.log(type + ";" + modid + ";" + result.mod.getName() + ";" + result.time / 1000000);
                 });
-
             });
         }
         hodgepodge$results = null;
