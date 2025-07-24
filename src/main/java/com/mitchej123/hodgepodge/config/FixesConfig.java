@@ -677,6 +677,16 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean preventFluidGridCrash;
 
+    // Travellers' Gear
+
+    @Config.Comment({ "Return items placed in Traveller's Gear slots after the mod is removed when players log in.",
+            "Sends messages to the log that start with \"[Hodgepodge]: [TG Recovery]\".",
+            "Removes players from the TG items file after returning items. Deletes it if it's empty.",
+            "Automatically disables itself on servers after deleting the TG items file.",
+            "Clients leave it on to allow for joining multiple SP worlds with TG items." })
+    @Config.DefaultBoolean(true)
+    public static boolean returnTravellersGearItems;
+
     // VoxelMap
 
     @Config.Comment("Fix some NullPointerExceptions")

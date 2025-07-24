@@ -30,6 +30,7 @@ public class Compat {
     private static boolean isCoreTweaksPresent;
     private static boolean isKleeSlabsPresent;
     private static boolean isSFMPresent;
+    private static boolean isTravellersGearPresent;
 
     static void init(Side side) {
         isClient = side == Side.CLIENT;
@@ -67,6 +68,8 @@ public class Compat {
         isKleeSlabsPresent = Loader.isModLoaded("kleeslabs");
 
         isSFMPresent = Loader.isModLoaded("StevesFactoryManager");
+
+        isTravellersGearPresent = Loader.isModLoaded("TravellersGear");
     }
 
     /**
@@ -154,5 +157,12 @@ public class Compat {
      */
     public static boolean isSFMPresent() {
         return isSFMPresent;
+    }
+
+    /**
+     * Cannot be used before pre-init phase.
+     */
+    public static boolean isTravellersGearPresent() {
+        return isTravellersGearPresent;
     }
 }
