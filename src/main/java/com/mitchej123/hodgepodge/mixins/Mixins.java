@@ -808,6 +808,12 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.ic2CellWithContainer)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
+    IC2_REACTORS_FIX_LAG(new MixinBuilder("Cache IC2 reactor size to reduce lag")
+        .addCommonMixins(
+            "ic2.MixinTEReactorCacheReactorSize")
+        .setApplyIf(() -> TweaksConfig.cacheIC2ReactorSize)
+        .addRequiredMod(TargetedMod.IC2)
+        .setPhase(Phase.LATE)),
 
     // Disable update checkers
     COFH_CORE_UPDATE_CHECK(new MixinBuilder("Yeet COFH Core Update Check")
