@@ -103,4 +103,11 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean replaceVoxelMapReflection;
 
+    // IC2
+
+    @Config.Comment("Speedup IC2 reactor size computation")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupIC2ReactorSize;
+
 }
