@@ -45,24 +45,21 @@ public class MixinTEReactorCacheReactorSize extends TileEntity {
      */
     @Overwrite
     public short getReactorSize() {
+        if (this.worldObj == null) {
+            return 9;
+        }
         if (hodgepodge$reactorSize != -1 && !this.worldObj.isRemote) {
             return hodgepodge$reactorSize;
         }
-        if (this.worldObj == null) {
-            return 9;
-        } else {
-            short cols = 3;
-
-            for (Direction direction : Direction.directions) {
-                TileEntity target = direction.applyToTileEntity(this);
-                if (target instanceof TileEntityReactorChamberElectric) {
-                    ++cols;
-                }
+        short cols = 3;
+        for (Direction direction : Direction.directions) {
+            TileEntity target = direction.applyToTileEntity(this);
+            if (target instanceof TileEntityReactorChamberElectric) {
+                ++cols;
             }
-
-            hodgepodge$reactorSize = cols;
-            return cols;
         }
+        hodgepodge$reactorSize = cols;
+        return cols;
     }
 
 }
