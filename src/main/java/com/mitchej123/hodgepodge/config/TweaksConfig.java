@@ -290,11 +290,6 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean synchronizeIC2Reactors;
 
-    @Config.Comment("Cache IC2 reactor size to reduce lag")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean cacheIC2ReactorSize;
-
     // Minechem
 
     @Config.Comment("Minechem Atropine High (Delirium) effect ID")

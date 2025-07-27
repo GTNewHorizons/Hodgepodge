@@ -768,11 +768,6 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixIc2ResourcePackTranslation)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.EARLY)),
-    MEMORY_FIXES_IC2(new MixinBuilder("Removes allocation spam from the Direction.applyTo method")
-            .addCommonMixins("ic2.MixinDirection_Memory")
-            .setApplyIf(() -> FixesConfig.enableMemoryFixes)
-            .addRequiredMod(TargetedMod.IC2)
-            .setPhase(Phase.LATE)),
     IC2_HOVER_MODE_FIX(new MixinBuilder()
             .addCommonMixins("ic2.MixinIc2QuantumSuitHoverMode")
             .setApplyIf(() -> FixesConfig.fixIc2HoverMode)
@@ -808,10 +803,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.ic2CellWithContainer)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
-    IC2_REACTORS_FIX_LAG(new MixinBuilder("Cache IC2 reactor size to reduce lag")
+    IC2_SPEEDUP_REACTOR_SIZE_COMPUTATION(new MixinBuilder()
         .addCommonMixins(
-            "ic2.MixinTEReactorCacheReactorSize")
-        .setApplyIf(() -> TweaksConfig.cacheIC2ReactorSize)
+            "ic2.MixinTEReactorCacheReactorSize",
+                "ic2.MixinDirection_Memory")
+        .setApplyIf(() -> SpeedupsConfig.speedupIC2ReactorSize)
         .addRequiredMod(TargetedMod.IC2)
         .setPhase(Phase.LATE)),
 
