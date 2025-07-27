@@ -15,7 +15,7 @@ import ic2.core.ContainerBase;
 import ic2.core.block.reactor.tileentity.TileEntityNuclearReactorElectric;
 import ic2.core.block.reactor.tileentity.TileEntityReactorChamberElectric;
 
-@Mixin(value = TileEntityNuclearReactorElectric.class)
+@Mixin(value = TileEntityNuclearReactorElectric.class, remap = false)
 public class MixinTEReactorCacheReactorSize extends TileEntity {
 
     @Unique
@@ -27,13 +27,12 @@ public class MixinTEReactorCacheReactorSize extends TileEntity {
                     value = "INVOKE",
                     target = "Lic2/core/block/reactor/tileentity/TileEntityNuclearReactorElectric;getReactorSize()S",
                     shift = At.Shift.BEFORE,
-                    ordinal = 0),
-            remap = false)
+                    ordinal = 0))
     private void hodgepodge$resetReactorSize(CallbackInfo ci) {
         hodgepodge$reactorSize = -1;
     }
 
-    @Inject(method = "getGuiContainer", at = @At("HEAD"), remap = false)
+    @Inject(method = "getGuiContainer", at = @At("HEAD"))
     private void hodgepodge$resetReactorSizeOnGui(
             CallbackInfoReturnable<ContainerBase<TileEntityNuclearReactorElectric>> cir) {
         // Reset reactor size when opening the GUI, so that it is recalculated immediately
@@ -44,7 +43,7 @@ public class MixinTEReactorCacheReactorSize extends TileEntity {
      * @author kuba6000
      * @reason cache reactor size to reduce lags
      */
-    @Overwrite(remap = false)
+    @Overwrite
     public short getReactorSize() {
         if (hodgepodge$reactorSize != -1 && !this.worldObj.isRemote) {
             return hodgepodge$reactorSize;
