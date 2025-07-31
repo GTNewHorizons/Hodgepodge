@@ -918,6 +918,11 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.LATE)),
 
     // Thaumcraft
+    REMOVE_DEPLOADER(new MixinBuilder("Remove thaumcraft dependencies downloader (for baubles)")
+            .addCommonMixins("thaumcraft.MixinDepLoader")
+            .setApplyIf(() -> TweaksConfig.removeThaumcraftDependenciesDownloader)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.EARLY)),
     THREADED_THAUMCRAFT_MAZE_SAVING(new MixinBuilder()
             .addCommonMixins("thaumcraft.MixinMazeHandler_threadedIO")
             .setApplyIf(() -> TweaksConfig.threadedWorldDataSaving)

@@ -348,6 +348,10 @@ public class TweaksConfig {
 
     // Thaumcraft
 
+    @Config.Comment("Remove thaumcraft dependencies downloader (for baubles)")
+    @Config.DefaultBoolean(true)
+    public static boolean removeThaumcraftDependenciesDownloader;
+
     @Config.Comment("Add CV support to Thaumcraft wand recharge pedestal")
     @Config.DefaultBoolean(true)
     public static boolean addCVSupportToWandPedestal;
