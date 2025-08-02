@@ -21,6 +21,7 @@ import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
+import cpw.mods.fml.common.FMLLog;
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
@@ -271,6 +272,14 @@ public class SimulationDistanceHelper {
         }
     }
 
+    private void dumpTickList(NextTickListEntry removingEntry) {
+        FMLLog.info("Trying to remove entry: " + removingEntry);
+        FMLLog.info("pendingTickListEntriesTreeSet:");
+        for (NextTickListEntry entry : pendingTickListEntriesTreeSet) {
+            FMLLog.info("    " + entry);
+        }
+    }
+
     public void chunkUnloaded(long chunk) {
         World world = worldRef.get();
         if (world == null) {
@@ -284,7 +293,10 @@ public class SimulationDistanceHelper {
 
         chunkTickMap.remove(chunk);
         for (NextTickListEntry entry : entries) {
-            pendingTickListEntriesTreeSet.remove(entry);
+            if (!pendingTickListEntriesTreeSet.remove(entry)) {
+                dumpTickList(entry);
+                throw new IllegalStateException("Failed to remove tick! See logs for more.");
+            }
             pendingTickListEntriesHashSet.remove(entry);
             if (Compat.isCoreTweaksPresent()) {
                 CoreTweaksCompat.removeTickEntry(world, entry);
@@ -305,7 +317,10 @@ public class SimulationDistanceHelper {
             return;
         }
 
-        pendingTickListEntriesTreeSet.remove(entry);
+        if (!pendingTickListEntriesTreeSet.remove(entry)) {
+            dumpTickList(entry);
+            throw new IllegalStateException("Failed to remove tick! See logs for more.");
+        }
         pendingTickListEntriesHashSet.remove(entry);
         if (Compat.isCoreTweaksPresent()) {
             CoreTweaksCompat.removeTickEntry(world, entry);
