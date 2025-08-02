@@ -41,11 +41,10 @@ public abstract class MixinContainer_FixShiftRecursion {
                 return null;
             }
 
-            ItemStack itemstack = null;
-            for (ItemStack tempStack = this.transferStackInSlot(player, slotId); tempStack != null
-                    && hodgepodge$areItemsEqual(targetSlot.getStack(), tempStack); tempStack = this
-                            .transferStackInSlot(player, slotId)) {
-                itemstack = tempStack.copy();
+            ItemStack tempStack = this.transferStackInSlot(player, slotId);
+            ItemStack itemstack = tempStack.copy();
+            while (tempStack != null && hodgepodge$areItemsEqual(targetSlot.getStack(), tempStack)) {
+                tempStack = this.transferStackInSlot(player, slotId);
             }
 
             return itemstack;
