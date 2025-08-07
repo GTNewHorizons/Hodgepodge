@@ -718,7 +718,7 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)
             .setApplyIf(() -> Boolean.getBoolean("hodgepodge.logEventTimes"))
             .addCommonMixins("fml.MixinEventBus_DebugRegistration")),
-    CACHE_LAST_MATCHING_RECIPE(new MixinBuilder()
+    CACHE_LAST_MATCHING_RECIPES(new MixinBuilder()
             .setPhase(Phase.EARLY)
             .setApplyIf(() -> SpeedupsConfig.cacheLastMatchingRecipe)
             .addCommonMixins("minecraft.MixinCraftingManager")),
