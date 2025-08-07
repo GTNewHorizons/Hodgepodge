@@ -718,6 +718,10 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)
             .setApplyIf(() -> Boolean.getBoolean("hodgepodge.logEventTimes"))
             .addCommonMixins("fml.MixinEventBus_DebugRegistration")),
+    CACHE_LAST_MATCHING_RECIPE(new MixinBuilder()
+            .setPhase(Phase.EARLY)
+            .setApplyIf(() -> SpeedupsConfig.cacheLastMatchingRecipe)
+            .addCommonMixins("minecraft.MixinCraftingManager")),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
@@ -804,12 +808,12 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
     IC2_SPEEDUP_REACTOR_SIZE_COMPUTATION(new MixinBuilder()
-        .addCommonMixins(
-            "ic2.MixinTEReactorCacheReactorSize",
-                "ic2.MixinDirection_Memory")
-        .setApplyIf(() -> SpeedupsConfig.speedupIC2ReactorSize)
-        .addRequiredMod(TargetedMod.IC2)
-        .setPhase(Phase.LATE)),
+            .addCommonMixins(
+                    "ic2.MixinTEReactorCacheReactorSize",
+                    "ic2.MixinDirection_Memory")
+            .setApplyIf(() -> SpeedupsConfig.speedupIC2ReactorSize)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
 
     // Disable update checkers
     COFH_CORE_UPDATE_CHECK(new MixinBuilder("Yeet COFH Core Update Check")

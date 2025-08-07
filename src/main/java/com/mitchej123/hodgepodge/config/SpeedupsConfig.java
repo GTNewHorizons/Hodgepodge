@@ -91,6 +91,11 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean speedupRemoveFormatting;
 
+    @Config.Comment("Cache last matching recipe in crafting manager")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean cacheLastMatchingRecipe;
+
     // Biomes O' Plenty
 
     @Config.Comment("Speedup biome fog rendering in BiomesOPlenty")
