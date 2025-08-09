@@ -718,6 +718,10 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)
             .setApplyIf(() -> Boolean.getBoolean("hodgepodge.logEventTimes"))
             .addCommonMixins("fml.MixinEventBus_DebugRegistration")),
+    FIX_HOUSE_CHAR_RENDERING(new MixinBuilder()
+            .addClientMixins("minecraft.MixinFontRenderer_House")
+            .setApplyIf(() -> FixesConfig.fixHouseCharRendering)
+            .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
