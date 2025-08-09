@@ -379,7 +379,7 @@ public enum Mixins implements IMixins {
             .addClientMixins(
                     "minecraft.MixinEntityRenderer_EnhanceNightVision")
             .setPhase(Phase.EARLY)),
-    NIGHT_VISION_FADE(new MixinBuilder("Replaces night vision expiry effect with a fade-out effect")
+    NIGHT_VISION_FADE(new MixinBuilder()
         .setApplyIf(() -> TweaksConfig.fadeNightVision)
         .addClientMixins(
             "minecraft.MixinEntityRenderer_NightVisionFade")
