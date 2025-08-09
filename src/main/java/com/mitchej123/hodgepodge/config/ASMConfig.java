@@ -30,11 +30,16 @@ public class ASMConfig {
     @Config.DefaultBoolean(true)
     public static boolean speedupPlayerManager;
 
-    @Config.Comment("Speedup ObjectIntIdentityMap")
-    @Config.DefaultBoolean(true)
-    public static boolean speedupObjectIntIdentityMap;
-
     @Config.Comment("Remove various vararg method calls, to make profiling easier.")
     @Config.DefaultBoolean(true)
     public static boolean dissectVarargs;
+
+    @Config.Comment("Speedup OreDictionary")
+    @Config.DefaultBoolean(true)
+    public static boolean speedupOreDictionary;
+
+    @Config.Comment("Embeds the block ID into Block itself, massively accelerating block ID lookups. [EXPERIMENTAL]")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean embedID_experimental;
 }

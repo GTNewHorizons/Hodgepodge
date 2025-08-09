@@ -76,6 +76,7 @@ Hodgepodge is LGPL-3.
 - Thaumcraft: Aspects are sorted by localized name instead of internal tag.
 - Thaumcraft: Golems function in dimensions higher than 255.
 - Thaumcraft: Wand Recharge Pedestals accept Centivis.
+- Traveller's Gear: Return items that were placed in TG slots after the mod is removed.
 - VoxelMap: The file extension is changed from .zip to .data to stop an adverse reaction with the Technic launcher.
 - VoxelMap: The Y coordinate is no longer off by one.
 - Witchery: Inhabited mirrors have fixed player skin reflections.

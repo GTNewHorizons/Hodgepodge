@@ -55,11 +55,6 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean unboxMapGen;
 
-    @Config.Comment("Embeds the block ID into Block itself, massively accelerating block ID lookups.")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean embedID;
-
     @Config.Comment("Removes hard caps on chunk handling speed. Experimental and probably incompatible with hybrid servers!")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
@@ -77,11 +72,6 @@ public class SpeedupsConfig {
     @Config.RangeInt(min = 100)
     public static int maxUnloadSpeed;
 
-    @Config.Comment("Speed up NBT copying")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean speedupNBTCopy;
-
     @Config.Comment("Optimize mob spawning")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -96,6 +86,11 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean lavaChunkLoading;
 
+    @Config.Comment("Speed up the vanilla method to remove formatting codes")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupRemoveFormatting;
+
     // Biomes O' Plenty
 
     @Config.Comment("Speedup biome fog rendering in BiomesOPlenty")
@@ -107,5 +102,12 @@ public class SpeedupsConfig {
     @Config.Comment("Replace reflection in VoxelMap to directly access the fields instead.")
     @Config.DefaultBoolean(true)
     public static boolean replaceVoxelMapReflection;
+
+    // IC2
+
+    @Config.Comment("Speedup IC2 reactor size computation")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupIC2ReactorSize;
 
 }

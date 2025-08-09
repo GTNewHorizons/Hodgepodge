@@ -9,7 +9,8 @@ import makamys.coretweaks.optimization.ChunkPendingBlockUpdateMap;
 public class CoreTweaksCompat {
 
     public static void removeTickEntry(World world, NextTickListEntry entry) {
-        IPendingBlockUpdatesWorldServer coretweaksMixin = (IPendingBlockUpdatesWorldServer) world;
-        ChunkPendingBlockUpdateMap.remove(coretweaksMixin, entry);
+        if (world instanceof IPendingBlockUpdatesWorldServer coretweaksWorld) {
+            ChunkPendingBlockUpdateMap.remove(coretweaksWorld, entry);
+        }
     }
 }

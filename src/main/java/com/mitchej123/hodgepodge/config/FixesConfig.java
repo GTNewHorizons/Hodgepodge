@@ -64,7 +64,7 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixFenceConnections;
 
-    @Config.Comment("Fix vanilla fire spread sometimes cause NPE on thermos")
+    @Config.Comment("Fix vanilla fire spread sometimes causing NPE on thermos")
     @Config.DefaultBoolean(true)
     public static boolean fixFireSpread;
 
@@ -216,10 +216,6 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixVillageUncheckedGetBlock;
 
-    @Config.Comment("Fix unprotected getBlock() in World")
-    @Config.DefaultBoolean(true)
-    public static boolean fixWorldGetBlock;
-
     @Config.Comment("Fix WorldServer leaking entities when no players are present in a dimension")
     @Config.DefaultBoolean(true)
     public static boolean fixWorldServerLeakingUnloadedEntities;
@@ -270,6 +266,14 @@ public class FixesConfig {
     @Config.Comment("Limits the amount of times the ItemPickupEvent triggers per tick since it can lead to a lot of lag")
     @Config.DefaultBoolean(true)
     public static boolean throttleItemPickupEvent;
+
+    @Config.Comment("Adds the thrower tag to all dropped EntityItems")
+    @Config.DefaultBoolean(true)
+    public static boolean addThrowerTagToDroppedItems;
+
+    @Config.Comment("Synchonize from server to client the thrower and pickup delay of an item entity")
+    @Config.DefaultBoolean(true)
+    public static boolean syncItemThrower;
 
     @Config.Comment("Triggers all conflicting key bindings on key press instead of a random one")
     @Config.DefaultBoolean(true)
@@ -357,6 +361,16 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixEggParticles;
+
+    @Config.Comment("Fix EventBus keeping object references after unregistering event handlers.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixEventBusMemoryLeak;
+
+    @Config.Comment("Skips playing empty sounds.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean skipEmptySounds;
 
     /* ====== Minecraft fixes end ===== */
 
@@ -489,9 +503,21 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesHealingAxeHeal;
 
+    @Config.Comment("Fix Extra Utilities chests not updating comparator redstone signals when their inventories change")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesChestComparatorUpdate;
+
+    @Config.Comment("Make Etheric Sword truly unbreakable")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesEthericSwordUnbreakable;
+
+    @Config.Comment("Prevent Extra Utilities Ender Collector from inserting into auto-dropping Blocks that create a crash-loop")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesEnderCollectorCrash;
+
     // Galacticraft
 
-    @Config.Comment("Fix time commands with GC")
+    @Config.Comment("Fix time commands with Galacticraft")
     @Config.DefaultBoolean(true)
     public static boolean fixTimeCommandWithGC;
 
@@ -650,6 +676,16 @@ public class FixesConfig {
     @Config.Comment("Prevent ClassCastException on forming invalid Thermal Dynamic fluid grid")
     @Config.DefaultBoolean(true)
     public static boolean preventFluidGridCrash;
+
+    // Travellers' Gear
+
+    @Config.Comment({ "Return items placed in Traveller's Gear slots after the mod is removed when players log in.",
+            "Sends messages to the log that start with \"[Hodgepodge]: [TG Recovery]\".",
+            "Removes players from the TG items file after returning items. Deletes it if it's empty.",
+            "Automatically disables itself on servers after deleting the TG items file.",
+            "Clients leave it on to allow for joining multiple SP worlds with TG items." })
+    @Config.DefaultBoolean(true)
+    public static boolean returnTravellersGearItems;
 
     // VoxelMap
 

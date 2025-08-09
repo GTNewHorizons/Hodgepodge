@@ -140,10 +140,6 @@ public class TweaksConfig {
     @Config.DefaultBoolean(false)
     public static boolean useLighterWater;
 
-    @Config.Comment("Make mod links in the mod menu clickable")
-    @Config.DefaultBoolean(true)
-    public static boolean clickableModUrls;
-
     @Config.Comment("Entirely remove Endermen's ability to grab blocks. Should also work for any modded entities that extend EntityEnderman and call its onLivingUpdate")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
@@ -158,6 +154,11 @@ public class TweaksConfig {
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean endermanBlockPlaceBlacklist;
+
+    @Config.Comment("Fix the metadata of potions dropped and thrown by witches.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean witchPotionMetadata;
 
     @Config.Comment("The list of blocks that Endermen are unable to place held blocks on top of. Requires endermanBlockPlaceBlacklist to be true. Ignored if endermanBlockPlaceDisable is true. Add entries in the format modId:blockName(:meta optional), with meta of 32767 to prevent endermen from placing on blocks of any meta value with the same id")
     @Config.RequiresMcRestart
@@ -382,5 +383,9 @@ public class TweaksConfig {
     @Config.Comment("Simulation distance (needs addSimulationDistance to be active)")
     @Config.DefaultInt(32)
     public static int simulationDistance;
+
+    @Config.Comment("Add a gamerule to disable hunger")
+    @Config.DefaultBoolean(true)
+    public static boolean hungerGameRule;
 
 }

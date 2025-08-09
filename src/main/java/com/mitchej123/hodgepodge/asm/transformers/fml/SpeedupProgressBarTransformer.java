@@ -16,6 +16,8 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
+import com.mitchej123.hodgepodge.Common;
+
 @SuppressWarnings("unused")
 public class SpeedupProgressBarTransformer implements IClassTransformer {
 
@@ -24,13 +26,13 @@ public class SpeedupProgressBarTransformer implements IClassTransformer {
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if ("cpw.mods.fml.client.FMLClientHandler".equals(transformedName)) {
-            LOGGER.info("TRANSFORMING cpw.mods.fml.client.FMLClientHandler");
+            Common.logASM(LOGGER, "TRANSFORMING cpw.mods.fml.client.FMLClientHandler");
             final ClassReader cr = new ClassReader(basicClass);
             final ClassNode cn = new ClassNode(ASM5);
             cr.accept(cn, 0);
             for (MethodNode m : cn.methods) {
                 if ("stripSpecialChars".equals(m.name) && "(Ljava/lang/String;)Ljava/lang/String;".equals(m.desc)) {
-                    LOGGER.info("Speeding up stripSpecialChars");
+                    Common.logASM(LOGGER, "Speeding up stripSpecialChars");
                     final InsnList i = m.instructions;
                     i.clear();
                     i.add(new VarInsnNode(Opcodes.ALOAD, 1));

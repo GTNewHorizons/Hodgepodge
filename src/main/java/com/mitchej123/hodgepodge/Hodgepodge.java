@@ -4,10 +4,12 @@ import java.util.Map;
 
 import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
+import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
 import com.mitchej123.hodgepodge.util.AnchorAlarm;
 import com.mitchej123.hodgepodge.util.StatHandler;
+import com.mitchej123.hodgepodge.util.TravellersGear;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ICrashCallable;
@@ -94,6 +96,10 @@ public class Hodgepodge {
     public void onServerStarted(FMLServerStartedEvent event) {
         if (TweaksConfig.addModEntityStats) {
             StatHandler.addEntityStats();
+        }
+
+        if (FixesConfig.returnTravellersGearItems && !Compat.isTravellersGearPresent()) {
+            TravellersGear.initialize();
         }
     }
 

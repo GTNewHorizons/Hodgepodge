@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.interfaces;
 
-public interface BlockExt_ID {
+public interface HasID {
 
     int hodgepodge$getID();
 
