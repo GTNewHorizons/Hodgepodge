@@ -243,11 +243,18 @@ public class TweaksConfig {
 
     @Config.Comment("Allow 5 Fir Sapling planted together ('+' shape) to grow to a big fir tree")
     @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
     public static boolean makeBigFirsPlantable;
 
     @Config.Comment("Remove the BOP quicksand generation")
     @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
     public static boolean removeBOPQuicksandGeneration;
+
+    @Config.Comment("Remove the BOP donator effect which blocks the main thread when starting the game")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean removeBOPDonatorEffect;
 
     // Cofh
 
