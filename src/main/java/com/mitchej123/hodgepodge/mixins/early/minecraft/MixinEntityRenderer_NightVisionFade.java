@@ -22,8 +22,13 @@ public class MixinEntityRenderer_NightVisionFade {
      */
     @Overwrite
     private float getNightVisionBrightness(EntityPlayer plr, float renderPartialTicks) {
-        int duration = plr.getActivePotionEffect(Potion.nightVision).getDuration();
-        return duration > TweaksConfig.fadeNightVisionDuration ? 1.0F
-                : (float) duration / (float) TweaksConfig.fadeNightVisionDuration;
+        int potionDuration = plr.getActivePotionEffect(Potion.nightVision).getDuration();
+        float effectiveDuration = potionDuration - renderPartialTicks;
+
+        if (effectiveDuration > TweaksConfig.fadeNightVisionDuration) {
+            return 1f;
+        } else {
+            return effectiveDuration / (float) TweaksConfig.fadeNightVisionDuration;
+        }
     }
 }
