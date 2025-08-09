@@ -720,9 +720,13 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.hungerGameRule)
             .setPhase(Phase.EARLY)),
     DEBUG_EVENT_REGISTRATION(new MixinBuilder()
-            .setPhase(Phase.EARLY)
+            .addCommonMixins("fml.MixinEventBus_DebugRegistration")
             .setApplyIf(() -> Boolean.getBoolean("hodgepodge.logEventTimes"))
-            .addCommonMixins("fml.MixinEventBus_DebugRegistration")),
+            .setPhase(Phase.EARLY)),
+    CACHE_LAST_MATCHING_RECIPES(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinCraftingManager")
+            .setApplyIf(() -> SpeedupsConfig.cacheLastMatchingRecipe)
+            .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
@@ -773,11 +777,6 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixIc2ResourcePackTranslation)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.EARLY)),
-    MEMORY_FIXES_IC2(new MixinBuilder("Removes allocation spam from the Direction.applyTo method")
-            .addCommonMixins("ic2.MixinDirection_Memory")
-            .setApplyIf(() -> FixesConfig.enableMemoryFixes)
-            .addRequiredMod(TargetedMod.IC2)
-            .setPhase(Phase.LATE)),
     IC2_HOVER_MODE_FIX(new MixinBuilder()
             .addCommonMixins("ic2.MixinIc2QuantumSuitHoverMode")
             .setApplyIf(() -> FixesConfig.fixIc2HoverMode)
@@ -811,6 +810,13 @@ public enum Mixins implements IMixins {
     IC2_CELL(new MixinBuilder("No IC2 Cell Consumption in tanks")
             .addCommonMixins("ic2.MixinIC2ItemCell")
             .setApplyIf(() -> TweaksConfig.ic2CellWithContainer)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
+    IC2_SPEEDUP_REACTOR_SIZE_COMPUTATION(new MixinBuilder()
+            .addCommonMixins(
+                    "ic2.MixinTEReactorCacheReactorSize",
+                    "ic2.MixinDirection_Memory")
+            .setApplyIf(() -> SpeedupsConfig.speedupIC2ReactorSize)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
 

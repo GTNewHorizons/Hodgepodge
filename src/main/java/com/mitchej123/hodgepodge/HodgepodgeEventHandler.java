@@ -11,6 +11,7 @@ import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.net.MessageConfigSync;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
+import com.mitchej123.hodgepodge.util.TravellersGear;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.Event;
@@ -44,6 +45,9 @@ public class HodgepodgeEventHandler {
     @SubscribeEvent
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         NetworkHandler.instance.sendTo(new MessageConfigSync(), (EntityPlayerMP) event.player);
+        if (FixesConfig.returnTravellersGearItems && !Compat.isTravellersGearPresent()) {
+            TravellersGear.returnTGItems(event.player);
+        }
     }
 
     @SubscribeEvent
