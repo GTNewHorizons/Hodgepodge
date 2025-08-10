@@ -55,7 +55,7 @@ public class MixinLoadController_logModTimes {
                 results.sort(null);
                 results.forEach(result -> {
                     final String modid = result.mod.getModId();
-                    logger.log(type + ";" + modid + ";" + result.mod.getName() + ";" + result.time / 1000000);
+                    logger.log(type + ";" + modid + ";" + result.mod.getName() + ";" + result.time / 1_000_000);
                 });
             });
         }

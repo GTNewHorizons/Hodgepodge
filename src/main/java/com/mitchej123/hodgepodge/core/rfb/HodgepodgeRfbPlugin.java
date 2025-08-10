@@ -12,6 +12,7 @@ import com.gtnewhorizons.retrofuturabootstrap.api.RfbClassTransformer;
 import com.gtnewhorizons.retrofuturabootstrap.api.RfbPlugin;
 import com.mitchej123.hodgepodge.core.rfb.transformers.ForgeConfigurationTransformer;
 import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
+import com.mitchej123.hodgepodge.rfb.transformers.ConfigParsingTimeTransformer;
 
 public class HodgepodgeRfbPlugin implements RfbPlugin {
 
@@ -26,6 +27,9 @@ public class HodgepodgeRfbPlugin implements RfbPlugin {
         ArrayList<RfbClassTransformer> list = new ArrayList<>();
         if (!EarlyConfig.noLeanerForgeConfiguration) {
             list.add(new ForgeConfigurationTransformer());
+        }
+        if (EarlyConfig.debugLogConfigParsingTimes) {
+            list.add(new ConfigParsingTimeTransformer());
         }
         return list.toArray(new RfbClassTransformer[0]);
     }
