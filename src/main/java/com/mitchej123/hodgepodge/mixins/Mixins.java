@@ -379,6 +379,11 @@ public enum Mixins implements IMixins {
             .addClientMixins(
                     "minecraft.MixinEntityRenderer_EnhanceNightVision")
             .setPhase(Phase.EARLY)),
+    NIGHT_VISION_FADE(new MixinBuilder()
+        .setApplyIf(() -> TweaksConfig.fadeNightVision)
+        .addClientMixins(
+            "minecraft.MixinEntityRenderer_NightVisionFade")
+        .setPhase(Phase.EARLY)),
     OPTIMIZE_ASMDATATABLE_INDEX(new MixinBuilder("Optimize ASM DataTable Index")
             .addCommonMixins("fml.MixinASMDataTable")
             .setApplyIf(() -> SpeedupsConfig.optimizeASMDataTable)
@@ -715,12 +720,16 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.hungerGameRule)
             .setPhase(Phase.EARLY)),
     DEBUG_EVENT_REGISTRATION(new MixinBuilder()
-            .setPhase(Phase.EARLY)
+            .addCommonMixins("fml.MixinEventBus_DebugRegistration")
             .setApplyIf(() -> Boolean.getBoolean("hodgepodge.logEventTimes"))
             .addCommonMixins("fml.MixinEventBus_DebugRegistration")),
     FIX_HOUSE_CHAR_RENDERING(new MixinBuilder()
             .addClientMixins("minecraft.MixinFontRenderer_House")
             .setApplyIf(() -> FixesConfig.fixHouseCharRendering)
+            .setPhase(Phase.EARLY)),
+    CACHE_LAST_MATCHING_RECIPES(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinCraftingManager")
+            .setApplyIf(() -> SpeedupsConfig.cacheLastMatchingRecipe)
             .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
@@ -808,12 +817,12 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
     IC2_SPEEDUP_REACTOR_SIZE_COMPUTATION(new MixinBuilder()
-        .addCommonMixins(
-            "ic2.MixinTEReactorCacheReactorSize",
-                "ic2.MixinDirection_Memory")
-        .setApplyIf(() -> SpeedupsConfig.speedupIC2ReactorSize)
-        .addRequiredMod(TargetedMod.IC2)
-        .setPhase(Phase.LATE)),
+            .addCommonMixins(
+                    "ic2.MixinTEReactorCacheReactorSize",
+                    "ic2.MixinDirection_Memory")
+            .setApplyIf(() -> SpeedupsConfig.speedupIC2ReactorSize)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
 
     // Disable update checkers
     COFH_CORE_UPDATE_CHECK(new MixinBuilder("Yeet COFH Core Update Check")
@@ -969,6 +978,11 @@ public enum Mixins implements IMixins {
             .addCommonMixins("thaumcraft.MixinItemWispEssence_Both")
             .addClientMixins("thaumcraft.MixinItemWispEssence_Client")
             .setApplyIf(() -> FixesConfig.fixNullHandlingItemWispEssence)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
+    FIX_THAUMCRAFT_CHECK_FOR_EE3_ITEM(new MixinBuilder()
+            .addCommonMixins("thaumcraft.MixinUtils")
+            .setApplyIf(() -> FixesConfig.fixThaumcraftEE3Check)
             .addRequiredMod(TargetedMod.THAUMCRAFT)
             .setPhase(Phase.LATE)),
 

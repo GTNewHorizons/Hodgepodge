@@ -672,6 +672,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixNullHandlingItemWispEssence;
 
+    @Config.Comment("Fix check for EE3 item in Thaumcraft to prevent issues on modern Java.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixThaumcraftEE3Check;
+
     // Thermal Dynamics
 
     @Config.Comment("Prevent crash with Thermal Dynamics from Negative Array Exceptions from item duct transfers")

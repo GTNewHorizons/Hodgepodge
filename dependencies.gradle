@@ -25,7 +25,7 @@ dependencies {
     transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.51.426:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:harvestcraft:1.3.2-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:HungerOverhaul:1.1.0-GTNH:dev")
-    transformedModCompileOnly("com.github.GTNewHorizons:MrTJPCore:1.3.1:dev") // Do not update, fixed afterwards
+    transformedModCompileOnly("com.github.GTNewHorizons:MrTJPCore:1.3.2:dev") // Do not update, fixed afterwards
     transformedModCompileOnly("com.github.GTNewHorizons:Railcraft:9.16.32:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
     transformedModCompileOnly("com.github.GTNewHorizons:TinkersConstruct:1.13.48-GTNH:dev")
     transformedModCompileOnly(rfg.deobf("curse.maven:bibliocraft-228027:2423369"))
@@ -66,7 +66,7 @@ dependencies {
     devOnlyNonPublishable(deobf("https://github.com/makamys/CoreTweaks/releases/download/0.3.3.2/CoreTweaks-1.7.10-0.3.3.2+nomixin.jar"))
 
     // For testing - HP and AF are liable to mixin the same targets
-    runtimeOnlyNonPublishable("maven.modrinth:archaicfix:0.7.6:dev")
+    runtimeOnlyNonPublishable("maven.modrinth:archaicfix:0.7.7:dev")
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:ArchaicFix:99.0.0:dev") // mavenLocal location
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:ServerUtilities:2.1.57:dev") // for the pregenerator
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta53:dev") // for TPS graph
