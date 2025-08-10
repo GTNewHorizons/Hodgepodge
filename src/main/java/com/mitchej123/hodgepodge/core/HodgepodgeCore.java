@@ -122,7 +122,7 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     @Override
     public String getAccessTransformerClass() {
         try {
-            final Class<?> clazz = Class.forName("makamys.coretweaks.Config");
+            Class.forName("makamys.coretweaks.Config");
             CoreCompat.disableCoretweaksConflictingMixins();
         } catch (ClassNotFoundException e) {}
         return null;

@@ -722,6 +722,11 @@ public enum Mixins implements IMixins {
     DEBUG_EVENT_REGISTRATION(new MixinBuilder()
             .addCommonMixins("fml.MixinEventBus_DebugRegistration")
             .setApplyIf(() -> Boolean.getBoolean("hodgepodge.logEventTimes"))
+            .addCommonMixins("fml.MixinEventBus_DebugRegistration")
+            .setPhase(Phase.EARLY)),
+    FIX_HOUSE_CHAR_RENDERING(new MixinBuilder()
+            .addClientMixins("minecraft.MixinFontRenderer_House")
+            .setApplyIf(() -> FixesConfig.fixHouseCharRendering)
             .setPhase(Phase.EARLY)),
     CACHE_LAST_MATCHING_RECIPES(new MixinBuilder()
             .addCommonMixins("minecraft.MixinCraftingManager")
@@ -974,6 +979,11 @@ public enum Mixins implements IMixins {
             .addCommonMixins("thaumcraft.MixinItemWispEssence_Both")
             .addClientMixins("thaumcraft.MixinItemWispEssence_Client")
             .setApplyIf(() -> FixesConfig.fixNullHandlingItemWispEssence)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
+    FIX_THAUMCRAFT_CHECK_FOR_EE3_ITEM(new MixinBuilder()
+            .addCommonMixins("thaumcraft.MixinUtils")
+            .setApplyIf(() -> FixesConfig.fixThaumcraftEE3Check)
             .addRequiredMod(TargetedMod.THAUMCRAFT)
             .setPhase(Phase.LATE)),
 

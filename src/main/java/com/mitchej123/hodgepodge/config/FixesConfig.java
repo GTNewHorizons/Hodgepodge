@@ -372,6 +372,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean skipEmptySounds;
 
+    @Config.Comment("Render the house character (\u2302 - Unicode index 2302) in the Minecraft font.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixHouseCharRendering;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -674,6 +679,10 @@ public class FixesConfig {
     @Config.Comment("Fix handling of null stacks in ItemWispEssence")
     @Config.DefaultBoolean(true)
     public static boolean fixNullHandlingItemWispEssence;
+
+    @Config.Comment("Fix check for EE3 item in Thaumcraft to prevent issues on modern Java.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixThaumcraftEE3Check;
 
     // Thermal Dynamics
 
