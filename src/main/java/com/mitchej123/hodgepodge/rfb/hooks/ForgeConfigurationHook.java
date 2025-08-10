@@ -51,6 +51,10 @@ public class ForgeConfigurationHook {
         return array;
     }
 
+    public static String[] emptyStringArray() {
+        return EMPTY_STRING_ARRAY;
+    }
+
     public static <V> Collection<V> keySortedMapValues(Map<String, V> map) {
         final TreeMap<String, V> sortedMap = new TreeMap<>(map);
         return sortedMap.values();

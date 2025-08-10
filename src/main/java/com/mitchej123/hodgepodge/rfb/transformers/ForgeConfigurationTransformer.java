@@ -74,8 +74,8 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
                         mInsn.owner = HOOK_CLASS_INTERNAL;
                         mInsn.name = "doubleToCachedString";
                     }
-                } else if (aInsn.getOpcode() == PUTFIELD && aInsn instanceof FieldInsnNode fInsn) {
-                    if (PROPERTY_INTERNAL.equals(fInsn.owner) && ("value".equals(fInsn.name) || "defaultValue".equals(fInsn.name))) {
+                } else if (aInsn.getOpcode() == PUTFIELD && aInsn instanceof FieldInsnNode fInsn && PROPERTY_INTERNAL.equals(fInsn.owner)) {
+                    if ("Ljava/lang/String;".equals(fInsn.desc) && ("value".equals(fInsn.name) || "defaultValue".equals(fInsn.name))) {
                         mn.instructions.insertBefore(fInsn,
                                 new MethodInsnNode(
                                         INVOKEVIRTUAL,
@@ -84,7 +84,7 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
                                         "()Ljava/lang/String;",
                                         false));
                         i++;
-                    } else if (PROPERTY_INTERNAL.equals(fInsn.owner) && ("values".equals(fInsn.name) || "defaultValues".equals(fInsn.name) || "validValues".equals(fInsn.name))) {
+                    } else if ("[Ljava/lang/String;".equals(fInsn.desc) && ("values".equals(fInsn.name) || "defaultValues".equals(fInsn.name) || "validValues".equals(fInsn.name))) {
                         mn.instructions.insertBefore(fInsn,
                                 new MethodInsnNode(
                                         INVOKESTATIC,
@@ -93,6 +93,20 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
                                         "([Ljava/lang/String;)[Ljava/lang/String;",
                                         false));
                         i++;
+                    }
+                } else if (aInsn.getOpcode() == ICONST_0) {
+                    final AbstractInsnNode nextNode = aInsn.getNext();
+                    if (nextNode.getOpcode() == ANEWARRAY && nextNode instanceof TypeInsnNode tInsn && "java/lang/String".equals(tInsn.desc)) {
+                        mn.instructions.insert(nextNode,
+                                new MethodInsnNode(
+                                        INVOKESTATIC,
+                                        HOOK_CLASS_INTERNAL,
+                                        "emptyStringArray",
+                                        "()[Ljava/lang/String;",
+                                        false));
+                        mn.instructions.remove(aInsn);
+                        mn.instructions.remove(nextNode);
+                        i--;
                     }
                 }
             }
