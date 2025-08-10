@@ -24,12 +24,12 @@ public class MixinUtils {
     @Overwrite(remap = false)
     public static boolean isEETransmutionItem(Item item) {
         if (!hp$initEECheck) {
+            hp$initEECheck = true;
             if (Loader.isModLoaded("ee")) {
                 try {
                     hp$classEE = Class.forName("com.pahimar.ee3.item.ITransmutationStone");
                 } catch (Exception ignored) {}
             }
-            hp$initEECheck = true;
         }
         return hp$classEE != null && hp$classEE.isAssignableFrom(item.getClass());
     }
