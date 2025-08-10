@@ -1,17 +1,5 @@
 package com.mitchej123.hodgepodge.asm.transformers.mc;
 
-import static org.objectweb.asm.Opcodes.DUP;
-import static org.objectweb.asm.Opcodes.ICONST_0;
-import static org.objectweb.asm.Opcodes.ICONST_1;
-import static org.objectweb.asm.Opcodes.ICONST_2;
-import static org.objectweb.asm.Opcodes.ICONST_3;
-import static org.objectweb.asm.Opcodes.ICONST_4;
-import static org.objectweb.asm.Opcodes.ICONST_5;
-import static org.objectweb.asm.Opcodes.ILOAD;
-import static org.objectweb.asm.Opcodes.INVOKESTATIC;
-import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
-import static org.objectweb.asm.Opcodes.T_INT;
-
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import org.objectweb.asm.ClassReader;
@@ -24,16 +12,12 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 /**
- * Searches for and obliterates varag
+ * Searches for and obliterates var-arg
  */
-public class VarargDissector implements IClassTransformer {
-
-    private static final ObjectArrayList<String> TARGETS = new ObjectArrayList<>(
-            new String[] { "net.minecraft.world.gen.layer.GenLayer", "net.minecraft.world.gen.layer.GenLayerZoom",
-                    "net.minecraft.world.gen.layer.GenLayerFuzzyZoom" });
+@SuppressWarnings("unused")
+public class VarargDissector implements IClassTransformer, Opcodes {
 
     // Technically I could just do a 3 <= x <= 8, but this is clearer and not much slower
     private static final IntArrayList CONST_INT_BYTECODES = new IntArrayList(
@@ -48,28 +32,37 @@ public class VarargDissector implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
-        if (!TARGETS.contains(transformedName)) return basicClass;
+        if (basicClass == null) return null;
+        if (isTargetClass(transformedName)) {
+            return transformBytes(transformedName, basicClass);
+        }
+        return basicClass;
+    }
 
+    private static boolean isTargetClass(String s) {
+        return "net.minecraft.world.gen.layer.GenLayer".equals(s)
+                || "net.minecraft.world.gen.layer.GenLayerZoom".equals(s)
+                || "net.minecraft.world.gen.layer.GenLayerFuzzyZoom".equals(s);
+    }
+
+    private static byte[] transformBytes(String transformedName, byte[] basicClass) {
         ClassReader classReader = new ClassReader(basicClass);
         ClassNode classNode = new ClassNode();
         classReader.accept(classNode, 0);
-
         boolean changed = false;
-
         for (MethodNode method : classNode.methods) {
-            changed |= transformMethod(transformedName.replace('.', '/'), method);
+            changed |= transformMethod(transformedName, method);
         }
-
         if (changed) {
             ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             classNode.accept(classWriter);
             return classWriter.toByteArray();
         }
-
         return basicClass;
     }
 
-    private boolean transformMethod(String className, MethodNode method) {
+    private static boolean transformMethod(String transformedName, MethodNode method) {
+        final String className = transformedName.replace('.', '/');
         boolean changed = false;
 
         // Loop until we find a call
