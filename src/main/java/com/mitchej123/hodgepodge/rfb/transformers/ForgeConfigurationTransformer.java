@@ -1,22 +1,15 @@
 package com.mitchej123.hodgepodge.rfb.transformers;
 
-import static org.objectweb.asm.Opcodes.DUP;
-import static org.objectweb.asm.Opcodes.INVOKEINTERFACE;
-import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
-import static org.objectweb.asm.Opcodes.INVOKESTATIC;
-import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
-import static org.objectweb.asm.Opcodes.NEW;
-import static org.objectweb.asm.Opcodes.POP;
-import static org.objectweb.asm.Opcodes.PUTFIELD;
-
 import java.util.jar.Manifest;
 
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -33,7 +26,7 @@ import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
  * and switches property maps from TreeMaps to fastutil open hashmaps. Measured in the full GTNH pack to offer a 45
  * percent memory usage reduction for Configuration classes.
  */
-public class ForgeConfigurationTransformer implements RfbClassTransformer {
+public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcodes {
 
     private static final String HOOK_CLASS_INTERNAL = "com/mitchej123/hodgepodge/rfb/hooks/ForgeConfigurationHook";
     private static final String CATEGORY_INTERNAL = "net/minecraftforge/common/config/ConfigCategory";
@@ -61,77 +54,103 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer {
         if (cn == null) {
             return;
         }
-        transformClassNode(cn);
+        if (className.equals("net.minecraftforge.common.config.Property")) {
+            transformProperty(cn);
+        } else if (className.equals("net.minecraftforge.common.config.ConfigCategory")) {
+            transformConfigCategory(cn);
+        }
         if (EarlyConfig.dumpASMClass) {
             HodgepodgeClassDump.dumpRFBClass(className, classNode, this);
         }
     }
 
-    private static void transformClassNode(ClassNode cn) {
+    private static void transformProperty(ClassNode cn) {
+        // spotless:off
         for (final MethodNode mn : cn.methods) {
             for (int i = 0; i < mn.instructions.size(); i++) {
                 final AbstractInsnNode aInsn = mn.instructions.get(i);
-                // Spotless keeps indenting each else-if to the right every time here for some reason
-                // spotless:off
                 if (aInsn.getOpcode() == INVOKESTATIC && aInsn instanceof MethodInsnNode mInsn) {
-                    if (("java/lang/String".equals(mInsn.owner)
-                            && "valueOf".equals(mInsn.name)
-                            && "(I)Ljava/lang/String;".equals(mInsn.desc)) || ("java/lang/Integer".equals(mInsn.owner)
-                            && "toString".equals(mInsn.name)
-                            && "(I)Ljava/lang/String;".equals(mInsn.desc))) {
+                    if (isString$valueOfI(mInsn) || isInteger$toString(mInsn)) {
                         mInsn.owner = HOOK_CLASS_INTERNAL;
                         mInsn.name = "intToCachedString";
-                    } else if (("java/lang/String".equals(mInsn.owner)
-                            && "valueOf".equals(mInsn.name)
-                            && "(D)Ljava/lang/String;".equals(mInsn.desc)) || ("java/lang/Double".equals(mInsn.owner)
-                            && "toString".equals(mInsn.name)
-                            && "(D)Ljava/lang/String;".equals(mInsn.desc))) {
+                    } else if (isString$valueOfD(mInsn) || isDouble$toString(mInsn)) {
                         mInsn.owner = HOOK_CLASS_INTERNAL;
                         mInsn.name = "doubleToCachedString";
                     }
                 } else if (aInsn.getOpcode() == PUTFIELD && aInsn instanceof FieldInsnNode fInsn) {
-                    if (PROPERTY_INTERNAL.equals(fInsn.owner) && ("value".equals(fInsn.name) || "defaultValue".equals(
-                            fInsn.name))) {
-                        final MethodInsnNode intern = new MethodInsnNode(INVOKEVIRTUAL,
-                                "java/lang/String",
-                                "intern",
-                                "()Ljava/lang/String;",
-                                false);
-                        mn.instructions.insertBefore(fInsn, intern);
-                        i++;
-                    } else if (PROPERTY_INTERNAL.equals(fInsn.owner) && ("values".equals(fInsn.name)
-                            || "defaultValues".equals(fInsn.name)
-                            || "validValues".equals(fInsn.name))) {
-                        final MethodInsnNode intern = new MethodInsnNode(INVOKESTATIC,
-                                HOOK_CLASS_INTERNAL,
-                                "internArray",
-                                "([Ljava/lang/String;)[Ljava/lang/String;",
-                                false);
-                        mn.instructions.insertBefore(fInsn, intern);
-                        i++;
-                    } else if (CATEGORY_INTERNAL.equals(fInsn.owner)
-                            && "properties".equals(fInsn.name)
-                            && "<init>".equals(mn.name)) {
-                        mn.instructions.insertBefore(fInsn, new InsnNode(POP));
-                        mn.instructions.insertBefore(fInsn, new TypeInsnNode(NEW, OPEN_MAP_INTERNAL));
-                        mn.instructions.insertBefore(fInsn, new InsnNode(DUP));
+                    if (PROPERTY_INTERNAL.equals(fInsn.owner) && ("value".equals(fInsn.name) || "defaultValue".equals(fInsn.name))) {
                         mn.instructions.insertBefore(fInsn,
-                                new MethodInsnNode(INVOKESPECIAL, OPEN_MAP_INTERNAL, "<init>", "()V", false));
-                        i += 4;
-                    }
-                } else if ("getOrderedValues".equals(mn.name)
-                        && aInsn.getOpcode() == INVOKEINTERFACE
-                        && aInsn instanceof MethodInsnNode mInsn) {
-                    if ("values".equals(mInsn.name) && "()Ljava/util/Collection;".equals(mInsn.desc)) {
-                        mInsn.setOpcode(INVOKESTATIC);
-                        mInsn.owner = HOOK_CLASS_INTERNAL;
-                        mInsn.name = "keySortedMapValues";
-                        mInsn.desc = "(Ljava/util/Map;)Ljava/util/Collection;";
-                        mInsn.itf = false;
+                                new MethodInsnNode(
+                                        INVOKEVIRTUAL,
+                                        "java/lang/String",
+                                        "intern",
+                                        "()Ljava/lang/String;",
+                                        false));
+                        i++;
+                    } else if (PROPERTY_INTERNAL.equals(fInsn.owner) && ("values".equals(fInsn.name) || "defaultValues".equals(fInsn.name) || "validValues".equals(fInsn.name))) {
+                        mn.instructions.insertBefore(fInsn,
+                                new MethodInsnNode(
+                                        INVOKESTATIC,
+                                        HOOK_CLASS_INTERNAL,
+                                        "internArray",
+                                        "([Ljava/lang/String;)[Ljava/lang/String;",
+                                        false));
+                        i++;
                     }
                 }
-                // spotless:on
             }
         }
+        // spotless:on
+    }
+
+    private static void transformConfigCategory(ClassNode cn) {
+        for (final MethodNode mn : cn.methods) {
+            if ("<init>".equals(mn.name)) {
+                for (AbstractInsnNode aInsn : mn.instructions.toArray()) {
+                    if (aInsn.getOpcode() == PUTFIELD && aInsn instanceof FieldInsnNode fInsn) {
+                        if (CATEGORY_INTERNAL.equals(fInsn.owner) && "properties".equals(fInsn.name)) {
+                            InsnList list = new InsnList();
+                            list.add(new InsnNode(POP));
+                            list.add(new TypeInsnNode(NEW, OPEN_MAP_INTERNAL));
+                            list.add(new InsnNode(DUP));
+                            list.add(new MethodInsnNode(INVOKESPECIAL, OPEN_MAP_INTERNAL, "<init>", "()V", false));
+                            mn.instructions.insertBefore(fInsn, list);
+                        }
+                    }
+                }
+            } else if ("getOrderedValues".equals(mn.name)) {
+                for (AbstractInsnNode aInsn : mn.instructions.toArray()) {
+                    if (aInsn.getOpcode() == INVOKEINTERFACE && aInsn instanceof MethodInsnNode mInsn) {
+                        if ("values".equals(mInsn.name) && "()Ljava/util/Collection;".equals(mInsn.desc)) {
+                            mInsn.setOpcode(INVOKESTATIC);
+                            mInsn.owner = HOOK_CLASS_INTERNAL;
+                            mInsn.name = "keySortedMapValues";
+                            mInsn.desc = "(Ljava/util/Map;)Ljava/util/Collection;";
+                            mInsn.itf = false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static boolean isDouble$toString(MethodInsnNode mInsn) {
+        return "java/lang/Double".equals(mInsn.owner) && "toString".equals(mInsn.name)
+                && "(D)Ljava/lang/String;".equals(mInsn.desc);
+    }
+
+    private static boolean isString$valueOfD(MethodInsnNode mInsn) {
+        return "java/lang/String".equals(mInsn.owner) && "valueOf".equals(mInsn.name)
+                && "(D)Ljava/lang/String;".equals(mInsn.desc);
+    }
+
+    private static boolean isInteger$toString(MethodInsnNode mInsn) {
+        return "java/lang/Integer".equals(mInsn.owner) && "toString".equals(mInsn.name)
+                && "(I)Ljava/lang/String;".equals(mInsn.desc);
+    }
+
+    private static boolean isString$valueOfI(MethodInsnNode mInsn) {
+        return "java/lang/String".equals(mInsn.owner) && "valueOf".equals(mInsn.name)
+                && "(I)Ljava/lang/String;".equals(mInsn.desc);
     }
 }
