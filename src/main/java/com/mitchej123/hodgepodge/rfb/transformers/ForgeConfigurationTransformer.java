@@ -9,8 +9,6 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
@@ -29,7 +27,6 @@ import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
 public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcodes {
 
     private static final String HOOK_CLASS_INTERNAL = "com/mitchej123/hodgepodge/rfb/hooks/ForgeConfigurationHook";
-    private static final String CATEGORY_INTERNAL = "net/minecraftforge/common/config/ConfigCategory";
     private static final String PROPERTY_INTERNAL = "net/minecraftforge/common/config/Property";
     private static final String OPEN_MAP_INTERNAL = "it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap";
 
@@ -107,14 +104,15 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
         for (final MethodNode mn : cn.methods) {
             if ("<init>".equals(mn.name)) {
                 for (AbstractInsnNode aInsn : mn.instructions.toArray()) {
-                    if (aInsn.getOpcode() == PUTFIELD && aInsn instanceof FieldInsnNode fInsn) {
-                        if (CATEGORY_INTERNAL.equals(fInsn.owner) && "properties".equals(fInsn.name)) {
-                            InsnList list = new InsnList();
-                            list.add(new InsnNode(POP));
-                            list.add(new TypeInsnNode(NEW, OPEN_MAP_INTERNAL));
-                            list.add(new InsnNode(DUP));
-                            list.add(new MethodInsnNode(INVOKESPECIAL, OPEN_MAP_INTERNAL, "<init>", "()V", false));
-                            mn.instructions.insertBefore(fInsn, list);
+                    if (aInsn.getOpcode() == NEW && aInsn instanceof TypeInsnNode tInsn
+                            && "java/util/TreeMap".equals(tInsn.desc)) {
+                        AbstractInsnNode secondNode = aInsn.getNext();
+                        if (secondNode.getOpcode() == DUP) {
+                            AbstractInsnNode thirdNode = secondNode.getNext();
+                            if (thirdNode instanceof MethodInsnNode mInsn && isTreeMapInit(mInsn)) {
+                                tInsn.desc = OPEN_MAP_INTERNAL;
+                                mInsn.owner = OPEN_MAP_INTERNAL;
+                            }
                         }
                     }
                 }
@@ -132,6 +130,12 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
                 }
             }
         }
+    }
+
+    private static boolean isTreeMapInit(MethodInsnNode node) {
+        return node.getOpcode() == INVOKESPECIAL && node.owner.equals("java/util/TreeMap")
+                && node.name.equals("<init>")
+                && node.desc.equals("()V");
     }
 
     private static boolean isDouble$toString(MethodInsnNode mInsn) {
