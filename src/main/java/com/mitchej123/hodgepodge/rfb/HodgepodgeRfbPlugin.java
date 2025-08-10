@@ -1,5 +1,7 @@
 package com.mitchej123.hodgepodge.rfb;
 
+import java.util.ArrayList;
+
 import net.minecraft.launchwrapper.Launch;
 
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +11,7 @@ import com.gtnewhorizons.retrofuturabootstrap.api.PluginContext;
 import com.gtnewhorizons.retrofuturabootstrap.api.RfbClassTransformer;
 import com.gtnewhorizons.retrofuturabootstrap.api.RfbPlugin;
 import com.mitchej123.hodgepodge.asm.EarlyConfig;
+import com.mitchej123.hodgepodge.rfb.transformers.ForgeConfigurationTransformer;
 
 public class HodgepodgeRfbPlugin implements RfbPlugin {
 
@@ -20,6 +23,10 @@ public class HodgepodgeRfbPlugin implements RfbPlugin {
 
     @Override
     public @NotNull RfbClassTransformer @Nullable [] makeTransformers() {
-        return new RfbClassTransformer[] { new ForgeConfigurationTransformer() };
+        ArrayList<RfbClassTransformer> list = new ArrayList<>();
+        if (!EarlyConfig.noLeanerForgeConfiguration) {
+            list.add(new ForgeConfigurationTransformer());
+        }
+        return list.toArray(new RfbClassTransformer[0]);
     }
 }

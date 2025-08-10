@@ -25,7 +25,6 @@ import org.objectweb.asm.tree.TypeInsnNode;
 import com.gtnewhorizons.retrofuturabootstrap.api.ClassNodeHandle;
 import com.gtnewhorizons.retrofuturabootstrap.api.ExtensibleClassLoader;
 import com.gtnewhorizons.retrofuturabootstrap.api.RfbClassTransformer;
-import com.mitchej123.hodgepodge.asm.EarlyConfig;
 
 /**
  * Reduces the memory usage of Forge's Configuration system significantly. Deduplicates identical strings, empty arrays
@@ -49,9 +48,8 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer {
     public boolean shouldTransformClass(@NotNull ExtensibleClassLoader classLoader,
             @NotNull RfbClassTransformer.Context context, @Nullable Manifest manifest, @NotNull String className,
             @NotNull ClassNodeHandle classNode) {
-        return (!EarlyConfig.noLeanerForgeConfiguration) && classNode.isPresent()
-                && (className.equals("net.minecraftforge.common.config.Property")
-                        || className.equals("net.minecraftforge.common.config.ConfigCategory"));
+        return classNode.isPresent() && (className.equals("net.minecraftforge.common.config.Property")
+                || className.equals("net.minecraftforge.common.config.ConfigCategory"));
     }
 
     @Override
