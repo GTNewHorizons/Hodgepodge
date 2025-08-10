@@ -11,28 +11,18 @@ import org.objectweb.asm.Opcodes;
 import com.mitchej123.hodgepodge.asm.EarlyConfig;
 
 /**
- * This class transformer will be loaded by CodeChickenCore, if it is present. It runs much earlier than the rest of
- * class transformers and mixins do and can modify more of forge's and fml's classes.
- * <p>
- * Due to peculiarity with CCC, and to prevent loading too many classes from messing up the delicate class loading
- * order, we will try to minimize the class dependencies on this class, meaning we will not use the usual Configuration
- * class to handle configurations
+ * The targeted class is loaded too early by cofh/asm/LoadingPlugin$CoFHDummyContainer#call(), it's an IFMLCallHook
+ * which gets called before our ASM transformers are registered in the usual way. This is why we register this
+ * transformer manually when our IFMLLoadingPlugin is instantiated.
  */
 @SuppressWarnings("unused")
 public class ModContainerFactoryTransformer implements IClassTransformer, Opcodes {
 
     private static final String HOOK_CLASS_INTERNAL = "com/mitchej123/hodgepodge/asm/hooks/early/ModContainerFactoryHook";
 
-    static {
-        EarlyConfig.ensureLoaded();
-    }
-
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null) return null;
-        if (EarlyConfig.noNukeBaseMod) {
-            return basicClass;
-        }
         if ("cpw.mods.fml.common.ModContainerFactory".equals(name)) {
             return transformModContainerFactory(basicClass);
         }

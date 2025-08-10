@@ -4,12 +4,6 @@ plugins {
     id("com.gtnewhorizons.gtnhconvention")
 }
 
-tasks.jar {
-    manifest {
-        // I need a place to call add this IClassTransformer before CoFHCore loads its transformation target
-        attributes("CCTransformer" to "com.mitchej123.hodgepodge.asm.transformers.early.ModContainerFactoryTransformer")
-    }
-}
 minecraft {
     extraRunJvmArguments.add("-Dhodgepodge.logModTimes=true")
     /*extraRunJvmArguments.addAll(

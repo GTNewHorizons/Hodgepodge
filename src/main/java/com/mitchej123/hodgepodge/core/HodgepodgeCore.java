@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
 
 import org.spongepowered.asm.lib.tree.ClassNode;
@@ -17,6 +18,7 @@ import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 import com.gtnewhorizon.gtnhmixins.builders.ITransformers;
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.asm.AsmTransformers;
+import com.mitchej123.hodgepodge.asm.EarlyConfig;
 import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
@@ -28,17 +30,23 @@ import com.mitchej123.hodgepodge.util.StringPooler;
 import com.mitchej123.hodgepodge.util.VoxelMapCacheMover;
 import com.mitchej123.hodgepodge.util.WorldDataSaver;
 
+import cpw.mods.fml.relauncher.FMLRelaunchLog;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.MCVersion("1.7.10")
 @IFMLLoadingPlugin.TransformerExclusions({ "com.mitchej123.hodgepodge.asm", "optifine" })
-@IFMLLoadingPlugin.DependsOn("cofh.asm.LoadingPlugin")
 public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     private static boolean isObf;
     private String[] transformerClasses;
 
     static {
+        EarlyConfig.ensureLoaded();
+        if (!EarlyConfig.noNukeBaseMod) {
+            String transformer = "com.mitchej123.hodgepodge.asm.transformers.early.ModContainerFactoryTransformer";
+            FMLRelaunchLog.finer("Registering transformer %s", transformer);
+            Launch.classLoader.registerTransformer(transformer);
+        }
         try {
             ConfigurationManager.registerConfig(ASMConfig.class);
             ConfigurationManager.registerConfig(DebugConfig.class);
@@ -52,10 +60,7 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
         } catch (ConfigException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    // spotless:off
-    static {
+        // spotless:off
         try {
             ClassNode classNode = MixinService.getService().getBytecodeProvider().getClassNode("org.bukkit.World", false);
             if (classNode != null) {
@@ -65,8 +70,8 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
                 Common.log.warn("==================================================================================================");
             }
         } catch (Exception ignored) {}
+        // spotless:on
     }
-    // spotless:on
 
     public static void saveWorldData(File file, NBTTagCompound tag) {
         WorldDataSaver.INSTANCE.saveData(file, tag, true, false);
