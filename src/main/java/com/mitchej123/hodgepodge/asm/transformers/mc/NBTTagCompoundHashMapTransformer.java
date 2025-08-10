@@ -14,28 +14,34 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 
 import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
 
 @SuppressWarnings("unused")
 public class NBTTagCompoundHashMapTransformer implements IClassTransformer {
 
     private static final Logger LOGGER = LogManager.getLogger("NBTTagCompoundHashMapTransformer");
-    public static final String INIT = "<init>";
-    public static final String EMPTY_DESC = "()V";
-    public static final String HASHMAP = "java/util/HashMap";
-    public static final String FASTUTIL_HASHMAP = "it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap";
-    public static final String NBT_TAG_COMPOUND = "net.minecraft.nbt.NBTTagCompound";
+    private static final String INIT = "<init>";
+    private static final String EMPTY_DESC = "()V";
+    private static final String HASHMAP = "java/util/HashMap";
+    private static final String FASTUTIL_HASHMAP = "it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap";
+    private static final String NBT_TAG_COMPOUND = "net.minecraft.nbt.NBTTagCompound";
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null) return null;
-        if (!transformedName.equals(NBT_TAG_COMPOUND)) {
-            return basicClass;
+        if (NBT_TAG_COMPOUND.equals(transformedName)) {
+            final byte[] transformedBytes = transformBytes(basicClass);
+            HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
+            return transformedBytes;
         }
+        return basicClass;
+    }
 
+    private static byte[] transformBytes(byte[] basicClass) {
         final ClassReader cr = new ClassReader(basicClass);
         final ClassNode cn = new ClassNode();
         cr.accept(cn, 0);
-        final boolean changed = transformClassNode(transformedName, cn);
+        final boolean changed = transformClassNode(cn);
         if (changed) {
             ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             cn.accept(cw);
@@ -45,11 +51,7 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer {
     }
 
     /** @return Was the class changed? */
-    public boolean transformClassNode(String transformedName, ClassNode cn) {
-        if (cn == null) {
-            return false;
-        }
-
+    private static boolean transformClassNode(ClassNode cn) {
         boolean changed = false;
         for (MethodNode mn : cn.methods) {
             if (mn.name.equals(INIT) && mn.desc.equals(EMPTY_DESC)) {

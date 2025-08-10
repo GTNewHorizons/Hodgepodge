@@ -30,6 +30,7 @@ import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
 import com.mitchej123.hodgepodge.core.HodgepodgeCore;
 
 /**
@@ -38,16 +39,12 @@ import com.mitchej123.hodgepodge.core.HodgepodgeCore;
  */
 // Spotless keeps indenting each else-if to the right every time
 // spotless:off
+@SuppressWarnings("unused")
 public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcodes {
 
-    public static final String JAVA_HASH_SET = "java/util/HashSet";
-
     private static final Logger LOGGER = LogManager.getLogger("SpeedupOreDictionaryTransformer");
-    //private static final Printer printer = new Textifier();
-    //private static final TraceMethodVisitor mp = new TraceMethodVisitor(printer);
-
     private static final String ORE_DICTIONARY = "net/minecraftforge/oredict/OreDictionary";
-
+    private static final String JAVA_HASH_SET = "java/util/HashSet";
     private static final String JAVA_HASH_MAP = "java/util/HashMap";
     private static final String JAVA_MAP = "java/util/Map";
     private static final String FASTUTIL_INT_OPEN_HASH_SET = "it/unimi/dsi/fastutil/ints/IntOpenHashSet";
@@ -62,15 +59,15 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null) return null;
-
-        if (transformedName.equals("net.minecraftforge.oredict.OreDictionary")) {
+        if ("net.minecraftforge.oredict.OreDictionary".equals(transformedName)) {
             boolean isObf = HodgepodgeCore.isObf();
             this.itemStackClass = isObf ? "add" : "net/minecraft/item/ItemStack";
             this.itemClass = isObf ? "adb" : "net/minecraft/item/Item";
             Common.logASM(LOGGER,"OreDictionary is obfuscated: {"+isObf+"}");
-            return transformOreDictionary(basicClass);
+            final byte[] transformedBytes = transformOreDictionary(basicClass);
+            HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
+            return transformedBytes;
         }
-
         return basicClass;
     }
 

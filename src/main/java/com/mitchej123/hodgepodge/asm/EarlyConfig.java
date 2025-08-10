@@ -18,10 +18,11 @@ import org.apache.logging.log4j.Logger;
 
 public final class EarlyConfig {
 
-    private static final Logger LOGGER = LogManager.getLogger("HodgePodgeEarly");
+    private static final Logger LOGGER = LogManager.getLogger("HodgepodgeEarly");
 
     public static final boolean noNukeBaseMod;
     public static final boolean noLeanerForgeConfiguration;
+    public static final boolean dumpASMClass;
 
     static {
         Properties config = new Properties();
@@ -33,10 +34,13 @@ public final class EarlyConfig {
         } catch (IOException e) {
             LOGGER.error("Error reading configuration file. Will use defaults", e);
         }
+        // =========== Config Definitions ===========
         noNukeBaseMod = Boolean.parseBoolean(config.getProperty("noNukeBaseMod"));
         config.setProperty("noNukeBaseMod", String.valueOf(noNukeBaseMod));
         noLeanerForgeConfiguration = Boolean.parseBoolean(config.getProperty("noLeanerForgeConfiguration"));
         config.setProperty("noLeanerForgeConfiguration", String.valueOf(noLeanerForgeConfiguration));
+        dumpASMClass = Boolean.getBoolean("hodgepodge.dumpClass");
+        // ==========================================
         try (Writer r = new BufferedWriter(new FileWriter(configLocation))) {
             config.store(r, "Configuration file for early hodgepodge class transformers");
         } catch (IOException e) {

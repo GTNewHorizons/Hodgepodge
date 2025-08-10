@@ -14,6 +14,8 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 
+import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
+
 @SuppressWarnings("unused")
 public class PlayerManagerTransformer implements IClassTransformer {
 
@@ -23,32 +25,34 @@ public class PlayerManagerTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
-        if (!TARGET_CLASS.equals(transformedName)) {
-            return basicClass;
+        if (basicClass == null) return null;
+        if (TARGET_CLASS.equals(transformedName)) {
+            final byte[] transformedBytes = transformBytes(basicClass);
+            HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
+            return transformedBytes;
         }
+        return basicClass;
+    }
 
+    private static byte[] transformBytes(byte[] basicClass) {
         ClassReader classReader = new ClassReader(basicClass);
         ClassNode classNode = new ClassNode();
         classReader.accept(classNode, 0);
-
         boolean changed = false;
-
         for (MethodNode method : classNode.methods) {
             if (isTargetMethod(method)) {
                 changed |= transformMethod(method);
             }
         }
-
         if (changed) {
             ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
             classNode.accept(classWriter);
             return classWriter.toByteArray();
         }
-
         return basicClass;
     }
 
-    private boolean isTargetMethod(MethodNode method) {
+    private static boolean isTargetMethod(MethodNode method) {
         if (METHOD_NAME.equals(method.name)) {
             return true;
         }
@@ -60,7 +64,7 @@ public class PlayerManagerTransformer implements IClassTransformer {
         return false;
     }
 
-    private boolean transformMethod(MethodNode method) {
+    private static boolean transformMethod(MethodNode method) {
         boolean changed = false;
 
         ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();

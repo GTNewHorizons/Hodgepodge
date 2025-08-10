@@ -11,6 +11,8 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
+import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
+
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 /**
@@ -34,7 +36,9 @@ public class VarargDissector implements IClassTransformer, Opcodes {
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null) return null;
         if (isTargetClass(transformedName)) {
-            return transformBytes(transformedName, basicClass);
+            final byte[] transformedBytes = transformBytes(transformedName, basicClass);
+            HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
+            return transformedBytes;
         }
         return basicClass;
     }

@@ -25,6 +25,8 @@ import org.objectweb.asm.tree.TypeInsnNode;
 import com.gtnewhorizons.retrofuturabootstrap.api.ClassNodeHandle;
 import com.gtnewhorizons.retrofuturabootstrap.api.ExtensibleClassLoader;
 import com.gtnewhorizons.retrofuturabootstrap.api.RfbClassTransformer;
+import com.mitchej123.hodgepodge.asm.EarlyConfig;
+import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
 
 /**
  * Reduces the memory usage of Forge's Configuration system significantly. Deduplicates identical strings, empty arrays
@@ -59,6 +61,13 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer {
         if (cn == null) {
             return;
         }
+        transformClassNode(cn);
+        if (EarlyConfig.dumpASMClass) {
+            HodgepodgeClassDump.dumpRFBClass(className, classNode, this);
+        }
+    }
+
+    private static void transformClassNode(ClassNode cn) {
         for (final MethodNode mn : cn.methods) {
             for (int i = 0; i < mn.instructions.size(); i++) {
                 final AbstractInsnNode aInsn = mn.instructions.get(i);

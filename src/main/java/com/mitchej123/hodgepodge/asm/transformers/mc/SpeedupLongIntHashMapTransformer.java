@@ -15,16 +15,17 @@ import org.objectweb.asm.tree.TypeInsnNode;
 
 import com.gtnewhorizon.gtnhlib.asm.ClassConstantPoolParser;
 import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
 
 @SuppressWarnings("unused")
 public class SpeedupLongIntHashMapTransformer implements IClassTransformer {
 
-    public static final String LONG_HASH_MAP = "net/minecraft/util/LongHashMap";
-    public static final String LONG_HASH_MAP_OBF = "qd";
-    public static final String INT_HASH_MAP = "net/minecraft/util/IntHashMap";
-    public static final String INT_HASH_MAP_OBF = "pz";
-    public static final String FAST_UTIL_LONG_HASH_MAP = "com/mitchej123/hodgepodge/util/FastUtilLongHashMap";
-    public static final String FAST_UTIL_INT_HASH_MAP = "com/mitchej123/hodgepodge/util/FastUtilIntHashMap";
+    private static final String LONG_HASH_MAP = "net/minecraft/util/LongHashMap";
+    private static final String LONG_HASH_MAP_OBF = "qd";
+    private static final String INT_HASH_MAP = "net/minecraft/util/IntHashMap";
+    private static final String INT_HASH_MAP_OBF = "pz";
+    private static final String FAST_UTIL_LONG_HASH_MAP = "com/mitchej123/hodgepodge/util/FastUtilLongHashMap";
+    private static final String FAST_UTIL_INT_HASH_MAP = "com/mitchej123/hodgepodge/util/FastUtilIntHashMap";
 
     private static final ClassConstantPoolParser cstPoolParser = new ClassConstantPoolParser(
             INT_HASH_MAP,
@@ -33,16 +34,21 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer {
             LONG_HASH_MAP_OBF);
 
     private static final Logger LOGGER = LogManager.getLogger("SpeedupLongIntHashMapTransformer");
-    public static final String INIT = "<init>";
-    public static final String EMPTY_DESC = "()V";
+    private static final String INIT = "<init>";
+    private static final String EMPTY_DESC = "()V";
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null) return null;
-        if (!cstPoolParser.find(basicClass, true)) {
-            return basicClass;
+        if (cstPoolParser.find(basicClass, true) && !transformedName.startsWith("com.mitchej123.hodgepodge.util")) {
+            final byte[] transformedBytes = transformBytes(transformedName, basicClass);
+            HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
+            return transformedBytes;
         }
+        return basicClass;
+    }
 
+    private static byte[] transformBytes(String transformedName, byte[] basicClass) {
         final ClassReader cr = new ClassReader(basicClass);
         final ClassNode cn = new ClassNode();
         cr.accept(cn, 0);
@@ -56,14 +62,7 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer {
     }
 
     /** @return Was the class changed? */
-    public boolean transformClassNode(String transformedName, ClassNode cn) {
-        if (cn == null) {
-            return false;
-        }
-        if (transformedName.startsWith("com.mitchej123.hodgepodge.util")) {
-            return false;
-        }
-
+    private static boolean transformClassNode(String transformedName, ClassNode cn) {
         boolean changed = false;
         boolean longHashMapInit = false, intHashMapInit = false;
         for (MethodNode mn : cn.methods) {

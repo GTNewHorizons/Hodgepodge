@@ -6,19 +6,14 @@ package com.mitchej123.hodgepodge.asm.hooks.mc;
 @SuppressWarnings("unused")
 public class RandomAid {
 
-    /**
-     * Yes, I don't really need this one. But adding this is easier than excluding the 1-arg case, which is still valid
-     * bytecode.
-     */
+    // Yes, I don't really need this one. But adding this is easier than excluding the 1-arg case,
+    // which is still valid bytecode.
     public static int random(int selector, int a) {
         return a;
     }
 
     public static int random(int selector, int a, int b) {
-        return switch (selector % 2) {
-            case 1 -> b;
-            default -> a;
-        };
+        return selector % 2 == 1 ? b : a;
     }
 
     public static int random(int selector, int a, int b, int c) {

@@ -8,7 +8,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-import com.mitchej123.hodgepodge.asm.EarlyConfig;
+import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
 
 /**
  * The targeted class is loaded too early by cofh/asm/LoadingPlugin$CoFHDummyContainer#call(), it's an IFMLCallHook
@@ -24,12 +24,14 @@ public class ModContainerFactoryTransformer implements IClassTransformer, Opcode
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null) return null;
         if ("cpw.mods.fml.common.ModContainerFactory".equals(name)) {
-            return transformModContainerFactory(basicClass);
+            final byte[] transformedBytes = transformBytes(basicClass);
+            HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
+            return transformedBytes;
         }
         return basicClass;
     }
 
-    private static byte[] transformModContainerFactory(byte[] basicClass) {
+    private static byte[] transformBytes(byte[] basicClass) {
         ClassReader cr = new ClassReader(basicClass);
         ClassWriter cw = new ClassWriter(0);
         ClassVisitor cv = new ClassVisitor(ASM5, cw) {
