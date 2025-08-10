@@ -372,6 +372,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean skipEmptySounds;
 
+    @Config.Comment("Render the house character (\u2302 - Unicode index 2302) in the Minecraft font.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixHouseCharRendering;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
