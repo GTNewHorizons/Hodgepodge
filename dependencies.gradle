@@ -33,7 +33,8 @@ dependencies {
     transformedModCompileOnly("curse.maven:cofh-core-69162:2388751")
     transformedModCompileOnly("curse.maven:minefactory-reloaded-66672:2277486")
     transformedModCompileOnly(rfg.deobf('curse.maven:damage-indicators-mod-59489:2692129'))
-    transformedModCompileOnly("curse.maven:extra-utilities-225561:2264384")
+    api("curse.maven:extra-utilities-225561:2264384")
+    runtimeOnly("ganymedes01.etfuturum:Et-Futurum-Requiem:2.6.2.21-GTNH-daily:dev")
     transformedModCompileOnly(rfg.deobf("curse.maven:extratic-72728:2299292"))
     transformedModCompileOnly(rfg.deobf("curse.maven:journeymap-32274:4500658"))
     transformedModCompileOnly("curse.maven:modular-powersuits-235442:2666986")
@@ -45,7 +46,7 @@ dependencies {
     transformedModCompileOnly("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
     transformedModCompileOnly("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev")
     transformedModCompileOnly(rfg.deobf("curse.maven:glibys-voice-chat-225110:2301492"))
-
+    
     transformedModCompileOnly(rfg.deobf("curse.maven:automagy-222153:2285272"))
     transformedModCompileOnly("com.github.GTNewHorizons:Galacticraft:3.3.10-GTNH:dev")
     transformedModCompileOnly("curse.maven:minechem-368422:2905830")
