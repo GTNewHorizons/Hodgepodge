@@ -17,6 +17,6 @@ public class MixinItemErosionShovelUnbreakable extends Item
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void hodgepodge$makeUnbreakableErosionShovel(CallbackInfo ci) {
-        ((Item) (Object) this).setMaxDamage(0);
+        this.setMaxDamage(0);
     }
 }

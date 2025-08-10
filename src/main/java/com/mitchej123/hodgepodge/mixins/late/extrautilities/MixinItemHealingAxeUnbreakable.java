@@ -17,6 +17,6 @@ public class MixinItemHealingAxeUnbreakable extends Item
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void hodgepodge$makeUnbreakableHealingAxe(CallbackInfo ci) {
-        ((Item) (Object) this).setMaxDamage(0);
+        this.setMaxDamage(0);
     }
 }
