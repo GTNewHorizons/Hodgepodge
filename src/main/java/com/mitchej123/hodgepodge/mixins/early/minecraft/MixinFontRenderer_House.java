@@ -19,7 +19,7 @@ public class MixinFontRenderer_House {
             method = { "renderCharAtPos", "renderStringAtPos", "getCharWidth" },
             order = 1000000)
     private String hodgepodge$insertHouseChar(String original) {
-        // cache result to avoid creating any copying two char arrays à 512 bytes per call
+        // cache result to avoid creating and copying two char arrays à 512 bytes per call
         if (this.hodgepodge$defaultChars == null) {
             final char[] chars = original.toCharArray();
             chars[127] = '\u2302';
