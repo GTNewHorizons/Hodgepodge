@@ -976,6 +976,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixNullHandlingItemWispEssence)
             .addRequiredMod(TargetedMod.THAUMCRAFT)
             .setPhase(Phase.LATE)),
+    FIX_THAUMCRAFT_CHECK_FOR_EE3_ITEM(new MixinBuilder()
+            .addCommonMixins("thaumcraft.MixinUtils")
+            .setApplyIf(() -> FixesConfig.fixThaumcraftEE3Check)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
 
     // BOP
     FIX_QUICKSAND_XRAY(new MixinBuilder("Fix Xray through block without collision boundingBox")
