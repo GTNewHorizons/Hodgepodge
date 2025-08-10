@@ -24,6 +24,7 @@ public abstract class MixinItemHealingAxe {
     private float hodgepodge$redirectGetHealth(EntityLiving instance) {
         return instance.getMaxHealth();
     }
+
     // If some amount of healing is done, also damage the player
     @WrapOperation(
             method = "onLeftClickEntity",
