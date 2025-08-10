@@ -7,13 +7,13 @@ import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.InstructionAdapter;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.LocalVariableNode;
+import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
@@ -21,7 +21,7 @@ import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
 // This can't be a mixin because of mixinDebug causing it to generate a
 // java.lang.reflect.MalformedParameterizedTypeException
 @SuppressWarnings("unused")
-public class FMLIndexedMessageToMessageCodecTransformer implements IClassTransformer {
+public class FMLIndexedMessageToMessageCodecTransformer implements IClassTransformer, Opcodes {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
@@ -55,24 +55,25 @@ public class FMLIndexedMessageToMessageCodecTransformer implements IClassTransfo
                             }
                         }
                     }
-                    final InsnList i = m.instructions;
-                    final AbstractInsnNode tail = i.getLast();
-                    if (tail.getOpcode() == Opcodes.RETURN) {
-                        i.remove(tail);
+                    for (AbstractInsnNode insnNode : m.instructions.toArray()) {
+                        if (insnNode.getOpcode() == RETURN) {
+                            final InsnList list = new InsnList();
+                            list.add(new VarInsnNode(ALOAD, ctxIdx));
+                            list.add(new VarInsnNode(ALOAD, proxyIdx));
+                            list.add(
+                                    new MethodInsnNode(
+                                            INVOKESTATIC,
+                                            "com/mitchej123/hodgepodge/asm/hooks/fml/FMLIndexedMessageToMessageCodecHook",
+                                            "addMissingDispatcher",
+                                            "(Lio/netty/channel/ChannelHandlerContext;Lcpw/mods/fml/common/network/internal/FMLProxyPacket;)V",
+                                            false));
+                            m.instructions.insertBefore(insnNode, list);
+                        }
                     }
-                    final InstructionAdapter ia = new InstructionAdapter(m);
-                    ia.load(ctxIdx, Type.getType("Lio/netty/channel/ChannelHandlerContext;"));
-                    ia.load(proxyIdx, Type.getType("Lcpw/mods/fml/common/network/internal/FMLProxyPacket;"));
-                    ia.invokestatic(
-                            "com/mitchej123/hodgepodge/asm/hooks/fml/FMLIndexedMessageToMessageCodecHook",
-                            "addMissingDispatcher",
-                            "(Lio/netty/channel/ChannelHandlerContext;Lcpw/mods/fml/common/network/internal/FMLProxyPacket;)V",
-                            false);
-                    ia.areturn(Type.VOID_TYPE);
                 }
             }
         }
-        final ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES);
+        final ClassWriter cw = new ClassWriter(cr, 0);
         cn.accept(cw);
         return cw.toByteArray();
     }
