@@ -15,18 +15,15 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 
 import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
+import com.mitchej123.hodgepodge.core.HodgepodgeCore;
 
 @SuppressWarnings("unused")
 public class PlayerManagerTransformer implements IClassTransformer {
 
-    private static final String TARGET_CLASS = "net.minecraft.server.management.PlayerManager";
-    private static final String METHOD_NAME = "filterChunkLoadQueue";
-    private static final String[] METHOD_NAMES_OBF = { "func_72691_b", "b" };
-
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null) return null;
-        if (TARGET_CLASS.equals(transformedName)) {
+        if ("net.minecraft.server.management.PlayerManager".equals(transformedName)) {
             final byte[] transformedBytes = transformBytes(basicClass);
             HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
             return transformedBytes;
@@ -53,15 +50,12 @@ public class PlayerManagerTransformer implements IClassTransformer {
     }
 
     private static boolean isTargetMethod(MethodNode method) {
-        if (METHOD_NAME.equals(method.name)) {
-            return true;
+        if (HodgepodgeCore.isObf()) {
+            return "b".equals(method.name) && "(Lmw;)V".equals(method.desc);
+        } else {
+            return "filterChunkLoadQueue".equals(method.name)
+                    && "(Lnet/minecraft/entity/player/EntityPlayerMP;)V".equals(method.desc);
         }
-        for (String obfName : METHOD_NAMES_OBF) {
-            if (obfName.equals(method.name)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private static boolean transformMethod(MethodNode method) {
