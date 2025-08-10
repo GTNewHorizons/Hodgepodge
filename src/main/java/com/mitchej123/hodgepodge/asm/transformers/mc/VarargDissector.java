@@ -12,6 +12,7 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
+import com.mitchej123.hodgepodge.core.HodgepodgeCore;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
@@ -24,9 +25,6 @@ public class VarargDissector implements IClassTransformer, Opcodes {
     // Technically I could just do a 3 <= x <= 8, but this is clearer and not much slower
     private static final IntArrayList CONST_INT_BYTECODES = new IntArrayList(
             new int[] { ICONST_0, ICONST_1, ICONST_2, ICONST_3, ICONST_4, ICONST_5 });
-
-    private static final String TARGET_MNAME = "selectRandom";
-    private static final String TARGET_MDESC = "([I)I";
 
     private static final String REPLACE_CNAME = "com/mitchej123/hodgepodge/asm/hooks/mc/RandomAid";
     private static final String REPLACE_MNAME = "random";
@@ -67,6 +65,8 @@ public class VarargDissector implements IClassTransformer, Opcodes {
 
     private static boolean transformMethod(String transformedName, MethodNode method) {
         final String className = transformedName.replace('.', '/');
+        final String TARGET_MNAME = HodgepodgeCore.isObf() ? "a" : "selectRandom";
+        final String TARGET_MDESC = "([I)I";
         boolean changed = false;
 
         // Loop until we find a call
