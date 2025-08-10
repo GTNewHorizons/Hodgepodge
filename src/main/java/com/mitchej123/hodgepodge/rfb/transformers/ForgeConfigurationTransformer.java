@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.rfb;
+package com.mitchej123.hodgepodge.rfb.transformers;
 
 import static org.objectweb.asm.Opcodes.DUP;
 import static org.objectweb.asm.Opcodes.INVOKEINTERFACE;
@@ -33,7 +33,7 @@ import com.gtnewhorizons.retrofuturabootstrap.api.RfbClassTransformer;
  */
 public class ForgeConfigurationTransformer implements RfbClassTransformer {
 
-    private static final String EARLY_HOOKS_INTERNAL = "com/mitchej123/hodgepodge/asm/hooks/early/EarlyASMCallHooks";
+    private static final String HOOK_CLASS_INTERNAL = "com/mitchej123/hodgepodge/rfb/hooks/ForgeConfigurationHook";
     private static final String CATEGORY_INTERNAL = "net/minecraftforge/common/config/ConfigCategory";
     private static final String PROPERTY_INTERNAL = "net/minecraftforge/common/config/Property";
     private static final String OPEN_MAP_INTERNAL = "it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap";
@@ -59,13 +59,7 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer {
         if (cn == null) {
             return;
         }
-        if (cn.methods == null) {
-            return;
-        }
         for (final MethodNode mn : cn.methods) {
-            if (mn.instructions == null || mn.instructions.size() == 0) {
-                continue;
-            }
             for (int i = 0; i < mn.instructions.size(); i++) {
                 final AbstractInsnNode aInsn = mn.instructions.get(i);
                 // Spotless keeps indenting each else-if to the right every time here for some reason
@@ -76,14 +70,14 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer {
                             && "(I)Ljava/lang/String;".equals(mInsn.desc)) || ("java/lang/Integer".equals(mInsn.owner)
                             && "toString".equals(mInsn.name)
                             && "(I)Ljava/lang/String;".equals(mInsn.desc))) {
-                        mInsn.owner = EARLY_HOOKS_INTERNAL;
+                        mInsn.owner = HOOK_CLASS_INTERNAL;
                         mInsn.name = "intToCachedString";
                     } else if (("java/lang/String".equals(mInsn.owner)
                             && "valueOf".equals(mInsn.name)
                             && "(D)Ljava/lang/String;".equals(mInsn.desc)) || ("java/lang/Double".equals(mInsn.owner)
                             && "toString".equals(mInsn.name)
                             && "(D)Ljava/lang/String;".equals(mInsn.desc))) {
-                        mInsn.owner = EARLY_HOOKS_INTERNAL;
+                        mInsn.owner = HOOK_CLASS_INTERNAL;
                         mInsn.name = "doubleToCachedString";
                     }
                 } else if (aInsn.getOpcode() == PUTFIELD && aInsn instanceof FieldInsnNode fInsn) {
@@ -100,7 +94,7 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer {
                             || "defaultValues".equals(fInsn.name)
                             || "validValues".equals(fInsn.name))) {
                         final MethodInsnNode intern = new MethodInsnNode(INVOKESTATIC,
-                                EARLY_HOOKS_INTERNAL,
+                                HOOK_CLASS_INTERNAL,
                                 "internArray",
                                 "([Ljava/lang/String;)[Ljava/lang/String;",
                                 false);
@@ -121,7 +115,7 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer {
                         && aInsn instanceof MethodInsnNode mInsn) {
                     if ("values".equals(mInsn.name) && "()Ljava/util/Collection;".equals(mInsn.desc)) {
                         mInsn.setOpcode(INVOKESTATIC);
-                        mInsn.owner = EARLY_HOOKS_INTERNAL;
+                        mInsn.owner = HOOK_CLASS_INTERNAL;
                         mInsn.name = "keySortedMapValues";
                         mInsn.desc = "(Ljava/util/Map;)Ljava/util/Collection;";
                         mInsn.itf = false;

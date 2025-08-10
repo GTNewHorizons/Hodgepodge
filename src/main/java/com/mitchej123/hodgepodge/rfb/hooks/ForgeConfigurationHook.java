@@ -1,43 +1,17 @@
-package com.mitchej123.hodgepodge.asm.hooks.early;
+package com.mitchej123.hodgepodge.rfb.hooks;
 
-import static cpw.mods.fml.common.ModContainerFactory.modTypes;
-
-import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.logging.log4j.Level;
-
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.discovery.ModCandidate;
-import cpw.mods.fml.common.discovery.asm.ASMModParser;
-import cpw.mods.fml.common.discovery.asm.ModAnnotation;
-
 @SuppressWarnings("unused")
-public class EarlyASMCallHooks {
-
-    public static ModContainer build(ASMModParser modParser, File modSource, ModCandidate container) {
-        String className = modParser.getASMType().getClassName();
-        for (ModAnnotation ann : modParser.getAnnotations()) {
-            if (modTypes.containsKey(ann.getASMType())) {
-                FMLLog.fine("Identified a mod of type %s (%s) - loading", ann.getASMType(), className);
-                try {
-                    return modTypes.get(ann.getASMType()).newInstance(className, container, ann.getValues());
-                } catch (Exception e) {
-                    FMLLog.log(Level.ERROR, e, "Unable to construct %s container", ann.getASMType().getClassName());
-                    return null;
-                }
-            }
-        }
-        return null;
-    }
+public class ForgeConfigurationHook {
 
     private static final String INT_MIN_STRING = Integer.toString(Integer.MIN_VALUE);
     private static final String INT_MAX_STRING = Integer.toString(Integer.MAX_VALUE);
     private static final String DOUBLE_MAX_STRING = Double.toString(Double.MAX_VALUE);
     private static final String DOUBLE_NEG_MAX_STRING = Double.toString(-Double.MAX_VALUE);
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     public static String intToCachedString(int value) {
         return switch (value) {
@@ -63,8 +37,6 @@ public class EarlyASMCallHooks {
         }
         return String.valueOf(value).intern();
     }
-
-    private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     public static String[] internArray(String[] array) {
         if (array == null) {

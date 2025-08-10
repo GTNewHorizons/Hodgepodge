@@ -25,9 +25,9 @@ import com.mitchej123.hodgepodge.asm.EarlyConfig;
  * class to handle configurations
  */
 @SuppressWarnings("unused")
-public class EarlyClassTransformer implements IClassTransformer {
+public class ModContainerFactoryTransformer implements IClassTransformer {
 
-    private static final String EARLY_HOOKS_INTERNAL = "com/mitchej123/hodgepodge/asm/hooks/early/EarlyASMCallHooks";
+    private static final String HOOK_CLASS_INTERNAL = "com/mitchej123/hodgepodge/asm/hooks/early/ModContainerFactoryHook";
 
     static {
         EarlyConfig.ensureLoaded();
@@ -69,7 +69,7 @@ public class EarlyClassTransformer implements IClassTransformer {
                         mv.visitVarInsn(ALOAD, 3);
                         mv.visitMethodInsn(
                                 INVOKESTATIC,
-                                EARLY_HOOKS_INTERNAL,
+                                HOOK_CLASS_INTERNAL,
                                 "build",
                                 "(Lcpw/mods/fml/common/discovery/asm/ASMModParser;Ljava/io/File;Lcpw/mods/fml/common/discovery/ModCandidate;)Lcpw/mods/fml/common/ModContainer;",
                                 false);
