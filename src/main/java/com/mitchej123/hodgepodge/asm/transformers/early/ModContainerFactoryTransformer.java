@@ -1,18 +1,12 @@
 package com.mitchej123.hodgepodge.asm.transformers.early;
 
-import static org.objectweb.asm.Opcodes.ALOAD;
-import static org.objectweb.asm.Opcodes.ARETURN;
-import static org.objectweb.asm.Opcodes.ASM5;
-import static org.objectweb.asm.Opcodes.INVOKESTATIC;
-import static org.objectweb.asm.Opcodes.POP;
-
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 import com.mitchej123.hodgepodge.asm.EarlyConfig;
 
@@ -25,7 +19,7 @@ import com.mitchej123.hodgepodge.asm.EarlyConfig;
  * class to handle configurations
  */
 @SuppressWarnings("unused")
-public class ModContainerFactoryTransformer implements IClassTransformer {
+public class ModContainerFactoryTransformer implements IClassTransformer, Opcodes {
 
     private static final String HOOK_CLASS_INTERNAL = "com/mitchej123/hodgepodge/asm/hooks/early/ModContainerFactoryHook";
 
@@ -35,11 +29,11 @@ public class ModContainerFactoryTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
-        if (basicClass == null || name == null) return basicClass;
-        if (name.equals("cpw.mods.fml.common.ModContainerFactory")) {
-            if (EarlyConfig.noNukeBaseMod) {
-                return basicClass;
-            }
+        if (basicClass == null) return null;
+        if (EarlyConfig.noNukeBaseMod) {
+            return basicClass;
+        }
+        if ("cpw.mods.fml.common.ModContainerFactory".equals(name)) {
             return transformModContainerFactory(basicClass);
         }
         return basicClass;
@@ -51,45 +45,24 @@ public class ModContainerFactoryTransformer implements IClassTransformer {
         ClassVisitor cv = new ClassVisitor(ASM5, cw) {
 
             @Override
-            public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
-                // we no longer need to check for basemod, so this regex is also useless now. remove it.
-                if ("modClass".equals(name)) return null;
-                return super.visitField(access, name, desc, signature, value);
-            }
-
-            @Override
             public MethodVisitor visitMethod(int access, String name, String desc, String signature,
                     String[] exceptions) {
                 MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
-                switch (name) {
-                    case "build":
-                        // inject callhook
-                        mv.visitVarInsn(ALOAD, 1);
-                        mv.visitVarInsn(ALOAD, 2);
-                        mv.visitVarInsn(ALOAD, 3);
-                        mv.visitMethodInsn(
-                                INVOKESTATIC,
-                                HOOK_CLASS_INTERNAL,
-                                "build",
-                                "(Lcpw/mods/fml/common/discovery/asm/ASMModParser;Ljava/io/File;Lcpw/mods/fml/common/discovery/ModCandidate;)Lcpw/mods/fml/common/ModContainer;",
-                                false);
-                        mv.visitInsn(ARETURN);
-                        mv.visitMaxs(3, 4);
-                        mv.visitEnd();
-                        return null;
-                    case "<clinit>":
-                        mv = new MethodVisitor(ASM5, mv) {
-
-                            @Override
-                            public void visitFieldInsn(int opcode, String owner, String name, String desc) {
-                                if (name.equals("modClass")) {
-                                    // remove access to modClass
-                                    super.visitInsn(POP);
-                                } else {
-                                    super.visitFieldInsn(opcode, owner, name, desc);
-                                }
-                            }
-                        };
+                if (name.equals("build")) {
+                    // inject callhook
+                    mv.visitVarInsn(ALOAD, 1);
+                    mv.visitVarInsn(ALOAD, 2);
+                    mv.visitVarInsn(ALOAD, 3);
+                    mv.visitMethodInsn(
+                            INVOKESTATIC,
+                            HOOK_CLASS_INTERNAL,
+                            "build",
+                            "(Lcpw/mods/fml/common/discovery/asm/ASMModParser;Ljava/io/File;Lcpw/mods/fml/common/discovery/ModCandidate;)Lcpw/mods/fml/common/ModContainer;",
+                            false);
+                    mv.visitInsn(ARETURN);
+                    mv.visitMaxs(3, 4);
+                    mv.visitEnd();
+                    return null;
                 }
                 return mv;
             }
