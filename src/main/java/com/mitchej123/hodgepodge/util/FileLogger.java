@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 
-import com.mitchej123.hodgepodge.core.HodgepodgeCore;
+import net.minecraft.launchwrapper.Launch;
 
 public class FileLogger implements AutoCloseable {
 
@@ -15,7 +15,7 @@ public class FileLogger implements AutoCloseable {
     private PrintStream printStream = null;
 
     public FileLogger(String filename) {
-        this(HodgepodgeCore.getMcLocation(), filename);
+        this(Launch.minecraftHome, filename);
     }
 
     public FileLogger(File logFolder, String filename) {
