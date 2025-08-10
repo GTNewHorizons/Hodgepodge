@@ -379,6 +379,11 @@ public enum Mixins implements IMixins {
             .addClientMixins(
                     "minecraft.MixinEntityRenderer_EnhanceNightVision")
             .setPhase(Phase.EARLY)),
+    NIGHT_VISION_FADE(new MixinBuilder()
+        .setApplyIf(() -> TweaksConfig.fadeNightVision)
+        .addClientMixins(
+            "minecraft.MixinEntityRenderer_NightVisionFade")
+        .setPhase(Phase.EARLY)),
     OPTIMIZE_ASMDATATABLE_INDEX(new MixinBuilder("Optimize ASM DataTable Index")
             .addCommonMixins("fml.MixinASMDataTable")
             .setApplyIf(() -> SpeedupsConfig.optimizeASMDataTable)
