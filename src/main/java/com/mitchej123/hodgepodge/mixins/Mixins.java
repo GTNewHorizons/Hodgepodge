@@ -976,7 +976,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixNullHandlingItemWispEssence)
             .addRequiredMod(TargetedMod.THAUMCRAFT)
             .setPhase(Phase.LATE)),
-    FIX_THAUMCRAFT_CHECK_FOR_EE3_ITEM(new MixinBuilder("Fix check for EE3 item in Thaumcraft")
+    FIX_THAUMCRAFT_CHECK_FOR_EE3_ITEM(new MixinBuilder()
             .addCommonMixins("thaumcraft.MixinUtils")
             .setApplyIf(() -> FixesConfig.fixThaumcraftEE3Check)
             .addRequiredMod(TargetedMod.THAUMCRAFT)

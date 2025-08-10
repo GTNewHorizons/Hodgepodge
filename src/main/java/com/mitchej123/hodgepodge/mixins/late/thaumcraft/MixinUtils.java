@@ -15,25 +15,22 @@ public class MixinUtils {
     private static boolean hp$initEECheck;
 
     @Unique
-    @SuppressWarnings("rawtypes")
-    private static Class hp$classEE;
+    private static Class<?> hp$classEE;
 
+    /**
+     * @author Pilzinsel64
+     * @reason fix cascading ClassNotFoundException + Cache reflection
+     */
     @Overwrite(remap = false)
-    @SuppressWarnings("unchecked")
     public static boolean isEETransmutionItem(Item item) {
         if (!hp$initEECheck) {
             if (Loader.isModLoaded("ee")) {
                 try {
                     hp$classEE = Class.forName("com.pahimar.ee3.item.ITransmutationStone");
-                } catch (Exception var3) {
-                    ;
-                }
+                } catch (Exception ignored) {}
             }
             hp$initEECheck = true;
         }
-        if (hp$classEE != null && hp$classEE.isAssignableFrom(item.getClass())) {
-            return true;
-        }
-        return false;
+        return hp$classEE != null && hp$classEE.isAssignableFrom(item.getClass());
     }
 }
