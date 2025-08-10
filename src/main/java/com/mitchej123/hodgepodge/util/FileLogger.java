@@ -24,16 +24,16 @@ public class FileLogger implements AutoCloseable {
 
     // timeFormat "HH:mm:ss"
     public FileLogger(File logFolder, String filename, String timeFormat) {
+        if (filename == null) {
+            throw new IllegalStateException("FileLogger file name cannot be null!");
+        }
         if (timeFormat == null) {
             dateFormat = null;
         } else {
             dateFormat = new SimpleDateFormat(timeFormat);
         }
         if (logFolder == null) {
-            throw new IllegalStateException("FileLogger logFolder cannot be null!");
-        }
-        if (filename == null) {
-            throw new IllegalStateException("FileLogger file name cannot be null!");
+            logFolder = new File("");
         }
         // noinspection ResultOfMethodCallIgnored
         logFolder.mkdirs();
