@@ -507,7 +507,7 @@ public class FixesConfig {
     @Config.Comment("Fixes the healing axe not healing mobs when attacking them")
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesHealingAxeHeal;
-    
+
     @Config.Comment("Fixes the healing axe to be unbreakable during damage checks that aren't breaking blocks or attacking.")
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesHealingAxeUnbreakable;
@@ -515,7 +515,7 @@ public class FixesConfig {
     @Config.Comment("Fixes the erosion shovel to be unbreakable during damage checks that aren't breaking blocks or attacking.")
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesErosionShovelUnbreakable;
-    
+
     @Config.Comment("Fix Extra Utilities chests not updating comparator redstone signals when their inventories change")
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesChestComparatorUpdate;
