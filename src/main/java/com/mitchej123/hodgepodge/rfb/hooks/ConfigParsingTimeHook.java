@@ -15,6 +15,16 @@ public class ConfigParsingTimeHook {
     }
 
     public static void onEnd(File file, long time) {
-        logger.log(file.getName() + ';' + (time / 1_000_000));
+        logger.log(getConfigName(file) + ';' + (time / 1_000_000));
+    }
+
+    private static String getConfigName(File file) {
+        String name = file.getAbsolutePath().replace(File.separatorChar, '/').replace("/./", "/");
+        final String split = "/config/";
+        final int index = name.indexOf(split);
+        if (index > -1) {
+            name = name.substring(index + split.length());
+        }
+        return name;
     }
 }
