@@ -30,7 +30,7 @@ import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import com.mitchej123.hodgepodge.Common;
-import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
+import com.mitchej123.hodgepodge.asm.shared.HodgepodgeClassDump;
 import com.mitchej123.hodgepodge.core.HodgepodgeCore;
 
 /**

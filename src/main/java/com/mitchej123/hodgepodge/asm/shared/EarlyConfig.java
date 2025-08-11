@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.asm;
+package com.mitchej123.hodgepodge.asm.shared;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

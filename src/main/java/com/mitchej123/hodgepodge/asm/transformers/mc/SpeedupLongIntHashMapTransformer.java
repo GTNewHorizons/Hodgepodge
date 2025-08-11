@@ -15,7 +15,7 @@ import org.objectweb.asm.tree.TypeInsnNode;
 
 import com.gtnewhorizon.gtnhlib.asm.ClassConstantPoolParser;
 import com.mitchej123.hodgepodge.Common;
-import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
+import com.mitchej123.hodgepodge.asm.shared.HodgepodgeClassDump;
 
 @SuppressWarnings("unused")
 public class SpeedupLongIntHashMapTransformer implements IClassTransformer {

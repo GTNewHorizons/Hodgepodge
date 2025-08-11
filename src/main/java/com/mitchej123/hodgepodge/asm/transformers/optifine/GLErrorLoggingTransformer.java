@@ -17,7 +17,7 @@ import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
+import com.mitchej123.hodgepodge.asm.shared.HodgepodgeClassDump;
 
 @SuppressWarnings("unused")
 public class GLErrorLoggingTransformer implements IClassTransformer, Opcodes {

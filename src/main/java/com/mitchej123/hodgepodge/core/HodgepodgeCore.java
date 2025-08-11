@@ -18,7 +18,7 @@ import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 import com.gtnewhorizon.gtnhmixins.builders.ITransformers;
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.asm.AsmTransformers;
-import com.mitchej123.hodgepodge.asm.EarlyConfig;
+import com.mitchej123.hodgepodge.asm.shared.EarlyConfig;
 import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;

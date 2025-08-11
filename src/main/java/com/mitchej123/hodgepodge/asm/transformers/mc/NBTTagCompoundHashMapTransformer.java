@@ -14,7 +14,7 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 
 import com.mitchej123.hodgepodge.Common;
-import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
+import com.mitchej123.hodgepodge.asm.shared.HodgepodgeClassDump;
 
 @SuppressWarnings("unused")
 public class NBTTagCompoundHashMapTransformer implements IClassTransformer {

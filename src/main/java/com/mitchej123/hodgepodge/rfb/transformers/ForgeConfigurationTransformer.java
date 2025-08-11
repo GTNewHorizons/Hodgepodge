@@ -16,8 +16,8 @@ import org.objectweb.asm.tree.TypeInsnNode;
 import com.gtnewhorizons.retrofuturabootstrap.api.ClassNodeHandle;
 import com.gtnewhorizons.retrofuturabootstrap.api.ExtensibleClassLoader;
 import com.gtnewhorizons.retrofuturabootstrap.api.RfbClassTransformer;
-import com.mitchej123.hodgepodge.asm.EarlyConfig;
-import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
+import com.mitchej123.hodgepodge.asm.shared.EarlyConfig;
+import com.mitchej123.hodgepodge.asm.shared.HodgepodgeClassDump;
 
 /**
  * Reduces the memory usage of Forge's Configuration system significantly. Deduplicates identical strings, empty arrays

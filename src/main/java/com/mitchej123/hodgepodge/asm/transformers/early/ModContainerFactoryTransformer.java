@@ -8,7 +8,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
+import com.mitchej123.hodgepodge.asm.shared.HodgepodgeClassDump;
 
 /**
  * The targeted class is loaded too early by cofh/asm/LoadingPlugin$CoFHDummyContainer#call(), it's an IFMLCallHook

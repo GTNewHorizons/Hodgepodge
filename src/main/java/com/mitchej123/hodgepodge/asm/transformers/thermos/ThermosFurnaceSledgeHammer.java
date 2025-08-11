@@ -15,7 +15,7 @@ import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import com.mitchej123.hodgepodge.Common;
-import com.mitchej123.hodgepodge.asm.HodgepodgeClassDump;
+import com.mitchej123.hodgepodge.asm.shared.HodgepodgeClassDump;
 import com.mitchej123.hodgepodge.config.ASMConfig;
 
 @SuppressWarnings("unused")
