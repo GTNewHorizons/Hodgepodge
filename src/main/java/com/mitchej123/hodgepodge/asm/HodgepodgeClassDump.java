@@ -3,6 +3,8 @@ package com.mitchej123.hodgepodge.asm;
 import com.gtnewhorizon.gtnhlib.asm.ASMUtil;
 import com.gtnewhorizons.retrofuturabootstrap.api.ClassNodeHandle;
 
+// This is a separate class because it will be class loaded
+// twice by both RFB and FML on different classloaders
 public class HodgepodgeClassDump {
 
     public static void dumpClass(String className, byte[] originalBytes, byte[] transformedBytes, Object transformer) {
