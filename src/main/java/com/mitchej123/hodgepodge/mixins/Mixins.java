@@ -1262,6 +1262,18 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesHealingAxeHeal)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
+    FIX_HEALING_AXE_UNBREAKABLE(new MixinBuilder("Fix the healing axe to be truely unbreakable for damage calls.")
+            .addCommonMixins("extrautilities.MixinItemHealingAxeUnbreakable")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesHealingAxeUnbreakable)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)
+    ),
+    FIX_EROSION_SHOVEL_UNBREAKABLE(new MixinBuilder("Fix thet erosion shovel to be truely unbreakable for damage calls.")
+            .addCommonMixins("extrautilities.MixinItemErosionShovelUnbreakable")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesErosionShovelUnbreakable)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)
+    ),
     FIX_CHEST_COMPARATOR_UPDATE(new MixinBuilder("Fix Extra Utilities chests not updating comparator redstone signals when their inventories change")
             .addCommonMixins("extrautilities.MixinExtraUtilsChest")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesChestComparatorUpdate)
