@@ -1,5 +1,6 @@
 /**
- * Package that contains classes that may be loaded both by RFB and/or FML classloader, the code contained in this
- * package should reference minimal amounts of code from outside of this package to avoid classloading issues.
+ * Package that contains classes that may be loaded both by RFB and FML classloaders, the code contained in this package
+ * should not reference any code from outside of this package to avoid causing hard to debug classloading issues unless
+ * the code is known to be safe with different classloaders.
  */
 package com.mitchej123.hodgepodge.asm.shared;
