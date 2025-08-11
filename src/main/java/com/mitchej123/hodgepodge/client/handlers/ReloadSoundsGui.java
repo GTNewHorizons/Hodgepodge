@@ -14,6 +14,7 @@ public class ReloadSoundsGui {
 
     private static final int BUTTON_ID = 51861;
 
+    @SuppressWarnings("unchecked")
     @SubscribeEvent
     public void onInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
         if (TweaksConfig.reloadSoundsButton && event.gui instanceof GuiScreenOptionsSounds) {

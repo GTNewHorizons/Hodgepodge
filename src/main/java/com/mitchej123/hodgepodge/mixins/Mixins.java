@@ -722,6 +722,11 @@ public enum Mixins implements IMixins {
     DEBUG_EVENT_REGISTRATION(new MixinBuilder()
             .addCommonMixins("fml.MixinEventBus_DebugRegistration")
             .setApplyIf(() -> Boolean.getBoolean("hodgepodge.logEventTimes"))
+            .addCommonMixins("fml.MixinEventBus_DebugRegistration")
+            .setPhase(Phase.EARLY)),
+    FIX_HOUSE_CHAR_RENDERING(new MixinBuilder()
+            .addClientMixins("minecraft.MixinFontRenderer_House")
+            .setApplyIf(() -> FixesConfig.fixHouseCharRendering)
             .setPhase(Phase.EARLY)),
     CACHE_LAST_MATCHING_RECIPES(new MixinBuilder()
             .addCommonMixins("minecraft.MixinCraftingManager")
@@ -974,6 +979,11 @@ public enum Mixins implements IMixins {
             .addCommonMixins("thaumcraft.MixinItemWispEssence_Both")
             .addClientMixins("thaumcraft.MixinItemWispEssence_Client")
             .setApplyIf(() -> FixesConfig.fixNullHandlingItemWispEssence)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
+    FIX_THAUMCRAFT_CHECK_FOR_EE3_ITEM(new MixinBuilder()
+            .addCommonMixins("thaumcraft.MixinUtils")
+            .setApplyIf(() -> FixesConfig.fixThaumcraftEE3Check)
             .addRequiredMod(TargetedMod.THAUMCRAFT)
             .setPhase(Phase.LATE)),
 
@@ -1252,6 +1262,18 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesHealingAxeHeal)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
+    FIX_HEALING_AXE_UNBREAKABLE(new MixinBuilder("Fix the healing axe to be truely unbreakable for damage calls.")
+            .addCommonMixins("extrautilities.MixinItemHealingAxeUnbreakable")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesHealingAxeUnbreakable)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)
+    ),
+    FIX_EROSION_SHOVEL_UNBREAKABLE(new MixinBuilder("Fix thet erosion shovel to be truely unbreakable for damage calls.")
+            .addCommonMixins("extrautilities.MixinItemErosionShovelUnbreakable")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesErosionShovelUnbreakable)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)
+    ),
     FIX_CHEST_COMPARATOR_UPDATE(new MixinBuilder("Fix Extra Utilities chests not updating comparator redstone signals when their inventories change")
             .addCommonMixins("extrautilities.MixinExtraUtilsChest")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesChestComparatorUpdate)

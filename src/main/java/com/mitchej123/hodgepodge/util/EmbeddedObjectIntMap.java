@@ -14,6 +14,7 @@ import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 
 public class EmbeddedObjectIntMap<K> extends IdentityHashMap<K, Integer> {
 
+    private static final long serialVersionUID = 7695726922765252503L;
     private final Reference2IntMap<K> forwardMap;
     private Class<?> type = null;
     private boolean useEmbed = true;

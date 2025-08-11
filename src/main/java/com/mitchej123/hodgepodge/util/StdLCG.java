@@ -9,6 +9,7 @@ import java.util.Random;
  */
 public class StdLCG extends Random {
 
+    private static final long serialVersionUID = 3029703444052229824L;
     private static final long mask = -1L >>> 16;
     private static final long multiplier = 0x5DEECE66DL;
     private static final long increment = 11;

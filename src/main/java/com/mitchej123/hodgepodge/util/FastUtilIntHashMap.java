@@ -24,7 +24,6 @@ public class FastUtilIntHashMap extends IntHashMap {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void addKey(int key, Object value) {
         map.put(key, value);
     }
