@@ -3,4 +3,4 @@
  * should not reference any code from outside of this package to avoid causing hard to debug classloading issues unless
  * the code is known to be safe with different classloaders.
  */
-package com.mitchej123.hodgepodge.asm.shared;
+package com.mitchej123.hodgepodge.core.shared;

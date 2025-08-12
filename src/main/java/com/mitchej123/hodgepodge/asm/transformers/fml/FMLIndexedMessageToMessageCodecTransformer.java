@@ -16,7 +16,7 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import com.mitchej123.hodgepodge.Common;
-import com.mitchej123.hodgepodge.asm.shared.HodgepodgeClassDump;
+import com.mitchej123.hodgepodge.core.shared.HodgepodgeClassDump;
 
 // This can't be a mixin because of mixinDebug causing it to generate a
 // java.lang.reflect.MalformedParameterizedTypeException

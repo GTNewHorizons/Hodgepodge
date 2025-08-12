@@ -14,8 +14,8 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 
-import com.mitchej123.hodgepodge.asm.shared.HodgepodgeClassDump;
 import com.mitchej123.hodgepodge.core.HodgepodgeCore;
+import com.mitchej123.hodgepodge.core.shared.HodgepodgeClassDump;
 
 @SuppressWarnings("unused")
 public class PlayerManagerTransformer implements IClassTransformer {

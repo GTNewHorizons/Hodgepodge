@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.asm.shared;
+package com.mitchej123.hodgepodge.core.shared;
 
 import com.gtnewhorizon.gtnhlib.asm.ASMUtil;
 import com.gtnewhorizons.retrofuturabootstrap.api.ClassNodeHandle;

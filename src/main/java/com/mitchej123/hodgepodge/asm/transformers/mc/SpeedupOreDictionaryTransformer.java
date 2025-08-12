@@ -30,8 +30,8 @@ import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import com.mitchej123.hodgepodge.Common;
-import com.mitchej123.hodgepodge.asm.shared.HodgepodgeClassDump;
 import com.mitchej123.hodgepodge.core.HodgepodgeCore;
+import com.mitchej123.hodgepodge.core.shared.HodgepodgeClassDump;
 
 /**
  * Transformer that optimizes OreDictionary by replacing boxed Integer types with primitives and swapping standard Java
