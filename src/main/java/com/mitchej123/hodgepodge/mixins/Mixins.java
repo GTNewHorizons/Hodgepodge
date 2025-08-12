@@ -44,6 +44,10 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinChunk_SimulationDistance")
             .setApplyIf(() -> FixesConfig.addSimulationDistance)
             .setPhase(Phase.EARLY)),
+    FIX_RCON_THREADING(new MixinBuilder("Fix RCON Threading by forcing it to run on the main thread")
+            .addServerMixins("minecraft.MixinMinecraftServer_RconThreadingFix")
+            .setApplyIf(() -> FixesConfig.fixRconThreading)
+            .setPhase(Phase.EARLY)),
     ADD_SIMULATION_DISTANCE_OPTION_THERMOS_FIX(new MixinBuilder("Add option to separate simulation distance from render distance (Thermos fix)")
             .addRequiredMod(TargetedMod.BUKKIT)
             .addExcludedMod(TargetedMod.OPTIFINE)
