@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.rfb.hooks;
+package com.mitchej123.hodgepodge.core.rfb.hooks;
 
 import java.util.Collection;
 import java.util.Map;

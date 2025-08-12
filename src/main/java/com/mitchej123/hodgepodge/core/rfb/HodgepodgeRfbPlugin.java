@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.rfb;
+package com.mitchej123.hodgepodge.core.rfb;
 
 import java.util.ArrayList;
 
@@ -10,8 +10,8 @@ import org.jetbrains.annotations.Nullable;
 import com.gtnewhorizons.retrofuturabootstrap.api.PluginContext;
 import com.gtnewhorizons.retrofuturabootstrap.api.RfbClassTransformer;
 import com.gtnewhorizons.retrofuturabootstrap.api.RfbPlugin;
+import com.mitchej123.hodgepodge.core.rfb.transformers.ForgeConfigurationTransformer;
 import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
-import com.mitchej123.hodgepodge.rfb.transformers.ForgeConfigurationTransformer;
 
 public class HodgepodgeRfbPlugin implements RfbPlugin {
 

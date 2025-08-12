@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.rfb.transformers;
+package com.mitchej123.hodgepodge.core.rfb.transformers;
 
 import java.util.jar.Manifest;
 
@@ -26,7 +26,7 @@ import com.mitchej123.hodgepodge.core.shared.HodgepodgeClassDump;
  */
 public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcodes {
 
-    private static final String HOOK_CLASS_INTERNAL = "com/mitchej123/hodgepodge/rfb/hooks/ForgeConfigurationHook";
+    private static final String HOOK_CLASS_INTERNAL = "com/mitchej123/hodgepodge/core/rfb/hooks/ForgeConfigurationHook";
     private static final String PROPERTY_INTERNAL = "net/minecraftforge/common/config/Property";
     private static final String OPEN_MAP_INTERNAL = "it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap";
 
