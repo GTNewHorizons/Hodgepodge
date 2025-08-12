@@ -351,7 +351,7 @@ public class SimulationDistanceHelper {
         }
 
         if (pendingTickListEntriesTreeSet.size() != pendingTickListEntriesHashSet.size()) {
-            throw new IllegalStateException("TickNextTick list out of synch");
+            throw new IllegalStateException("TickNextTick list out of sync");
         }
 
         Iterator<NextTickListEntry> iterator = pendingTickCandidates.iterator();
