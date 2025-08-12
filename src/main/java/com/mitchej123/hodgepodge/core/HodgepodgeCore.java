@@ -127,7 +127,11 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     public String getAccessTransformerClass() {
         try {
             Class.forName("makamys.coretweaks.Config");
-            CoreCompat.disableCoretweaksConflictingMixins();
+            if (TweaksConfig.threadedWorldDataSaving) {
+                FMLRelaunchLog
+                        .info("[HodgepodgeCoreCompat] Disabled CoreTweaks conflicting mixin: enhanceMapStorageErrors");
+                makamys.coretweaks.Config.enhanceMapStorageErrors.disable();
+            }
         } catch (ClassNotFoundException e) {}
         return null;
     }
