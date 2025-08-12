@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mitchej123.hodgepodge.core.HodgepodgeCore;
+import com.mitchej123.hodgepodge.mixins.hooks.WorldDataSaverHook;
 
 @Mixin(SaveHandler.class)
 public class MixinSaveHandler_threadedIO {
@@ -28,7 +28,7 @@ public class MixinSaveHandler_threadedIO {
     private void injectSaveWorldDataWithPlayer(WorldInfo worldInfo, NBTTagCompound playerTag, CallbackInfo ci,
             @Local(ordinal = 2) NBTTagCompound nbttagcompound2) {
         File file = new File(((SaveHandler) (Object) this).getWorldDirectory(), "level.dat");
-        HodgepodgeCore.saveWorldDataBackup(file, nbttagcompound2);
+        WorldDataSaverHook.saveWorldDataBackup(file, nbttagcompound2);
         ci.cancel();
     }
 }

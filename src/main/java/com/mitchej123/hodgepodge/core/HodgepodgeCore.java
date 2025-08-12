@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.launchwrapper.Launch;
-import net.minecraft.nbt.NBTTagCompound;
 
 import org.spongepowered.asm.lib.tree.ClassNode;
 import org.spongepowered.asm.service.MixinService;
@@ -28,7 +27,6 @@ import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
 import com.mitchej123.hodgepodge.mixins.Mixins;
 import com.mitchej123.hodgepodge.util.StringPooler;
 import com.mitchej123.hodgepodge.util.VoxelMapCacheMover;
-import com.mitchej123.hodgepodge.util.WorldDataSaver;
 
 import cpw.mods.fml.relauncher.FMLRelaunchLog;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
@@ -71,22 +69,6 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
             }
         } catch (Exception ignored) {}
         // spotless:on
-    }
-
-    public static void saveWorldData(File file, NBTTagCompound tag) {
-        WorldDataSaver.INSTANCE.saveData(file, tag, true, false);
-    }
-
-    public static void saveWorldDataUncompressed(File file, NBTTagCompound tag) {
-        WorldDataSaver.INSTANCE.saveData(file, tag, false, false);
-    }
-
-    public static void saveWorldDataBackup(File file, NBTTagCompound tag) {
-        WorldDataSaver.INSTANCE.saveData(file, tag, true, true);
-    }
-
-    public static void savfeWorldDataUncompressedBackup(File file, NBTTagCompound tag) {
-        WorldDataSaver.INSTANCE.saveData(file, tag, false, true);
     }
 
     @Override
