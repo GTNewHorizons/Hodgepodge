@@ -7,6 +7,7 @@ import java.util.Set;
 
 import net.minecraft.launchwrapper.Launch;
 
+import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.lib.tree.ClassNode;
 import org.spongepowered.asm.service.MixinService;
 
@@ -123,5 +124,13 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
             throw new IllegalStateException("Obfuscation state has been accessed too early!");
         }
         return isObf;
+    }
+
+    public static void logASM(Logger log, String message) {
+        if (isObf == null || isObf) {
+            log.debug(message);
+        } else {
+            log.info(message);
+        }
     }
 }

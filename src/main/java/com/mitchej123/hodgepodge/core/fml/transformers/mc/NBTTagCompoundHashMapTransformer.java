@@ -13,7 +13,7 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 
-import com.mitchej123.hodgepodge.core.fml.AsmLogger;
+import com.mitchej123.hodgepodge.core.HodgepodgeCore;
 import com.mitchej123.hodgepodge.core.shared.HodgepodgeClassDump;
 
 @SuppressWarnings("unused")
@@ -58,14 +58,14 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer {
                 for (AbstractInsnNode node : mn.instructions.toArray()) {
                     if (node.getOpcode() == Opcodes.NEW && node instanceof TypeInsnNode tNode) {
                         if (tNode.desc.equals(HASHMAP)) {
-                            AsmLogger.log(LOGGER, "Found HashMap instantiation in NBTTagCompound.<init>");
+                            HodgepodgeCore.logASM(LOGGER, "Found HashMap instantiation in NBTTagCompound.<init>");
                             mn.instructions.insertBefore(tNode, new TypeInsnNode(Opcodes.NEW, FASTUTIL_HASHMAP));
                             mn.instructions.remove(tNode);
                             changed = true;
                         }
                     } else if (node.getOpcode() == Opcodes.INVOKESPECIAL && node instanceof MethodInsnNode mNode) {
                         if (mNode.name.equals(INIT) && mNode.desc.equals(EMPTY_DESC) && mNode.owner.equals(HASHMAP)) {
-                            AsmLogger.log(LOGGER, "Found HashMap constructor call in NBTTagCompound.<init>");
+                            HodgepodgeCore.logASM(LOGGER, "Found HashMap constructor call in NBTTagCompound.<init>");
                             mn.instructions.insertBefore(
                                     mNode,
                                     new MethodInsnNode(
