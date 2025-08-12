@@ -352,6 +352,14 @@ public class SimulationDistanceHelper {
         }
         entries.add(entry);
 
+        if (!pendingTickListEntriesTreeSet.add(entry)) {
+            dumpTickLists(entry);
+            throw new IllegalStateException("Failed to add tick! See logs for more.");
+        }
+        if (!pendingTickListEntriesHashSet.add(entry)) {
+            dumpTickLists(entry);
+            throw new IllegalStateException("Failed to add tick! See logs for more.");
+        }
     }
 
     public void tickUpdates(boolean processAll, List<NextTickListEntry> pendingTickListEntriesThisTick) {
@@ -389,6 +397,11 @@ public class SimulationDistanceHelper {
         this.pendingTickListEntriesTreeSet = pendingTickListEntriesTreeSet;
         this.pendingTickListEntriesHashSet = pendingTickListEntriesHashSet;
         this.chunkExists = chunkExists;
+    }
+
+    public boolean isReadyToAdd() {
+        // Only need to check one set
+        return pendingTickListEntriesTreeSet != null;
     }
 
     static class LongBooleanArrayList {
