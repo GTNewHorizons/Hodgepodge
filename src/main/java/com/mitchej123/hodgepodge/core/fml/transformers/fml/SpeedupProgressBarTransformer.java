@@ -1,6 +1,4 @@
-package com.mitchej123.hodgepodge.asm.transformers.thermos;
-
-import static org.objectweb.asm.Opcodes.ASM5;
+package com.mitchej123.hodgepodge.core.fml.transformers.fml;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
@@ -12,19 +10,22 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 import com.mitchej123.hodgepodge.Common;
-import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.core.shared.HodgepodgeClassDump;
 
 @SuppressWarnings("unused")
-public class ThermosFurnaceSledgeHammer implements IClassTransformer {
+public class SpeedupProgressBarTransformer implements IClassTransformer, Opcodes {
+
+    private static final Logger LOGGER = LogManager.getLogger("ProgressBarSpeedup");
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null) return null;
-        if (ASMConfig.thermosCraftServerClass.equals(transformedName)) {
+        if ("cpw.mods.fml.client.FMLClientHandler".equals(transformedName)) {
             final byte[] transformedBytes = transformBytes(basicClass);
             HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
             return transformedBytes;
@@ -33,19 +34,24 @@ public class ThermosFurnaceSledgeHammer implements IClassTransformer {
     }
 
     private static byte[] transformBytes(byte[] basicClass) {
-        Logger LOGGER = LogManager.getLogger("ThermosFurnaceSledgeHammer");
-        Common.logASM(LOGGER, "Patching Thermos or derivative to not break our furnace fix");
+        Common.logASM(LOGGER, "TRANSFORMING cpw.mods.fml.client.FMLClientHandler");
         final ClassReader cr = new ClassReader(basicClass);
         final ClassNode cn = new ClassNode(ASM5);
         cr.accept(cn, 0);
         for (MethodNode m : cn.methods) {
-            if ("resetRecipes".equals(m.name)) {
-                Common.logASM(LOGGER, "Taking a sledgehammer to CraftServer.resetRecipes()");
-                // Replace the body with a RETURN opcode
-                InsnList insnList = new InsnList();
-                insnList.add(new InsnNode(Opcodes.RETURN));
-                m.instructions = insnList;
-                m.maxStack = 0;
+            if ("stripSpecialChars".equals(m.name) && "(Ljava/lang/String;)Ljava/lang/String;".equals(m.desc)) {
+                Common.logASM(LOGGER, "Speeding up stripSpecialChars");
+                final InsnList i = m.instructions;
+                i.clear();
+                i.add(new VarInsnNode(ALOAD, 1));
+                i.add(
+                        new MethodInsnNode(
+                                INVOKESTATIC,
+                                "com/mitchej123/hodgepodge/core/fml/hooks/fml/FMLClientHandlerHook",
+                                m.name,
+                                m.desc,
+                                false));
+                i.add(new InsnNode(ARETURN));
             }
         }
         final ClassWriter cw = new ClassWriter(0);

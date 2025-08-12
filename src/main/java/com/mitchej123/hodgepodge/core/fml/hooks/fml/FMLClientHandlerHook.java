@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.asm.hooks.fml;
+package com.mitchej123.hodgepodge.core.fml.hooks.fml;
 
 import net.minecraft.util.StringUtils;
 

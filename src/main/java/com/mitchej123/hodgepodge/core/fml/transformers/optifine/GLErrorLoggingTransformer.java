@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.asm.transformers.optifine;
+package com.mitchej123.hodgepodge.core.fml.transformers.optifine;
 
 import java.util.Iterator;
 

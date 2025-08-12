@@ -17,13 +17,13 @@ import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
 import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 import com.gtnewhorizon.gtnhmixins.builders.ITransformers;
 import com.mitchej123.hodgepodge.Common;
-import com.mitchej123.hodgepodge.asm.AsmTransformers;
 import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.GeneralConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
+import com.mitchej123.hodgepodge.core.fml.AsmTransformers;
 import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
 import com.mitchej123.hodgepodge.mixins.Mixins;
 import com.mitchej123.hodgepodge.util.StringPooler;
@@ -34,7 +34,7 @@ import cpw.mods.fml.relauncher.FMLRelaunchLog;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.MCVersion("1.7.10")
-@IFMLLoadingPlugin.TransformerExclusions({ "com.mitchej123.hodgepodge.asm", "optifine" })
+@IFMLLoadingPlugin.TransformerExclusions({ "com.mitchej123.hodgepodge.core", "optifine" })
 public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     private static boolean isObf;
@@ -43,7 +43,7 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     static {
         EarlyConfig.ensureLoaded();
         if (!EarlyConfig.noNukeBaseMod) {
-            String transformer = "com.mitchej123.hodgepodge.asm.transformers.early.ModContainerFactoryTransformer";
+            String transformer = "com.mitchej123.hodgepodge.core.fml.transformers.early.ModContainerFactoryTransformer";
             FMLRelaunchLog.finer("Registering transformer %s", transformer);
             Launch.classLoader.registerTransformer(transformer);
         }

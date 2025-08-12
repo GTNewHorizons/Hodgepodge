@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.asm.transformers.fml;
+package com.mitchej123.hodgepodge.core.fml.transformers.fml;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
@@ -63,7 +63,7 @@ public class FMLIndexedMessageToMessageCodecTransformer implements IClassTransfo
                             list.add(
                                     new MethodInsnNode(
                                             INVOKESTATIC,
-                                            "com/mitchej123/hodgepodge/asm/hooks/fml/FMLIndexedMessageToMessageCodecHook",
+                                            "com/mitchej123/hodgepodge/core/fml/hooks/fml/FMLIndexedMessageToMessageCodecHook",
                                             "addMissingDispatcher",
                                             "(Lio/netty/channel/ChannelHandlerContext;Lcpw/mods/fml/common/network/internal/FMLProxyPacket;)V",
                                             false));

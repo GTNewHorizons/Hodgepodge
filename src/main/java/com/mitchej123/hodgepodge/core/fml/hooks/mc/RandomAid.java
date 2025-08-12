@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.asm.hooks.mc;
+package com.mitchej123.hodgepodge.core.fml.hooks.mc;
 
 /**
  * All methods assume that selector is greater than 0 and less than the number of non-selector arguments

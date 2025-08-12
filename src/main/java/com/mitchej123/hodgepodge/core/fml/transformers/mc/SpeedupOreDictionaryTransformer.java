@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.asm.transformers.mc;
+package com.mitchej123.hodgepodge.core.fml.transformers.mc;
 
 import java.util.ArrayList;
 import java.util.List;

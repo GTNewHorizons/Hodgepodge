@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.asm.hooks.early;
+package com.mitchej123.hodgepodge.core.fml.hooks.early;
 
 import java.io.File;
 

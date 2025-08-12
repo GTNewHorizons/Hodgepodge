@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.asm.transformers.mc;
+package com.mitchej123.hodgepodge.core.fml.transformers.mc;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
@@ -26,7 +26,7 @@ public class VarargDissector implements IClassTransformer, Opcodes {
     private static final IntArrayList CONST_INT_BYTECODES = new IntArrayList(
             new int[] { ICONST_0, ICONST_1, ICONST_2, ICONST_3, ICONST_4, ICONST_5 });
 
-    private static final String REPLACE_CNAME = "com/mitchej123/hodgepodge/asm/hooks/mc/RandomAid";
+    private static final String REPLACE_CNAME = "com/mitchej123/hodgepodge/core/fml/hooks/mc/RandomAid";
     private static final String REPLACE_MNAME = "random";
     private static final String[] REPLACE_MDESC = { "(II)I", "(III)I", "(IIII)I", "(IIIII)I", "(IIIIII)I" };
 

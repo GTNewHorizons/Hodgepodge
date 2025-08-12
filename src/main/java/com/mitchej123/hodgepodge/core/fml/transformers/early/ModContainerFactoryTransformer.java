@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.asm.transformers.early;
+package com.mitchej123.hodgepodge.core.fml.transformers.early;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
@@ -18,7 +18,7 @@ import com.mitchej123.hodgepodge.core.shared.HodgepodgeClassDump;
 @SuppressWarnings("unused")
 public class ModContainerFactoryTransformer implements IClassTransformer, Opcodes {
 
-    private static final String HOOK_CLASS_INTERNAL = "com/mitchej123/hodgepodge/asm/hooks/early/ModContainerFactoryHook";
+    private static final String HOOK_CLASS_INTERNAL = "com/mitchej123/hodgepodge/core/fml/hooks/early/ModContainerFactoryHook";
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {

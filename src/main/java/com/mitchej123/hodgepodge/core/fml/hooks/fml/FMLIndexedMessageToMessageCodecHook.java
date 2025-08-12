@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.asm.hooks.fml;
+package com.mitchej123.hodgepodge.core.fml.hooks.fml;
 
 import com.mitchej123.hodgepodge.mixins.hooks.NetworkDispatcherFallbackLookup;
 

@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.asm;
+package com.mitchej123.hodgepodge.core.fml;
 
 import java.util.function.Supplier;
 
@@ -19,47 +19,47 @@ public enum AsmTransformers implements ITransformers {
             "Speed up Progress Bar by speeding up stripSpecialCharacters",
             () -> ASMConfig.speedupProgressBar,
             Side.CLIENT,
-            "com.mitchej123.hodgepodge.asm.transformers.fml.SpeedupProgressBarTransformer"),
+            "com.mitchej123.hodgepodge.core.fml.transformers.fml.SpeedupProgressBarTransformer"),
     SPEEDUP_LONG_INT_HASHMAP(new TransformerBuilder()
             .setApplyIf(() -> ASMConfig.speedupLongIntHashMap)
             .addExcludedMod(TargetedMod.FASTCRAFT)
             .addExcludedMod(TargetedMod.BUKKIT)
-            .addCommonTransformers("com.mitchej123.hodgepodge.asm.transformers.mc.SpeedupLongIntHashMapTransformer")),
+            .addCommonTransformers("com.mitchej123.hodgepodge.core.fml.transformers.mc.SpeedupLongIntHashMapTransformer")),
     SPEEDUP_NBT_TAG_COMPOUND_COPY(new TransformerBuilder()
             .setApplyIf(() -> ASMConfig.speedupNBTTagCompoundCopy)
             .addExcludedMod(TargetedMod.FASTCRAFT)
             .addExcludedMod(TargetedMod.BUKKIT)
-            .addCommonTransformers("com.mitchej123.hodgepodge.asm.transformers.mc.NBTTagCompoundHashMapTransformer")),
+            .addCommonTransformers("com.mitchej123.hodgepodge.core.fml.transformers.mc.NBTTagCompoundHashMapTransformer")),
     SPEEDUP_PLAYER_MANAGER(new TransformerBuilder()
             .setApplyIf(() -> ASMConfig.speedupPlayerManager)
             .addExcludedMod(TargetedMod.FASTCRAFT)
             .addExcludedMod(TargetedMod.BUKKIT)
-            .addCommonTransformers("com.mitchej123.hodgepodge.asm.transformers.mc.PlayerManagerTransformer")),
+            .addCommonTransformers("com.mitchej123.hodgepodge.core.fml.transformers.mc.PlayerManagerTransformer")),
     REMOVE_VARARG_SPAM(
             "Remove vararg methods in GenLayer classes",
             () -> ASMConfig.dissectVarargs,
             Side.COMMON,
-            "com.mitchej123.hodgepodge.asm.transformers.mc.VarargDissector"),
+            "com.mitchej123.hodgepodge.core.fml.transformers.mc.VarargDissector"),
     SPEEDUP_FORGE_ORE_DICTIONARY(new TransformerBuilder()
             .setApplyIf(() -> ASMConfig.speedupOreDictionary)
             .addExcludedMod(TargetedMod.FASTCRAFT)
             .addExcludedMod(TargetedMod.BUKKIT)
             .addExcludedMod(TargetedMod.ULTRAMINE)
-            .addCommonTransformers("com.mitchej123.hodgepodge.asm.transformers.mc.SpeedupOreDictionaryTransformer")),
+            .addCommonTransformers("com.mitchej123.hodgepodge.core.fml.transformers.mc.SpeedupOreDictionaryTransformer")),
     FIX_BOGUS_INTEGRATED_SERVER_NPE(
             "Fix bogus FMLProxyPacket NPEs on integrated server crashes",
             () -> FixesConfig.fixBogusIntegratedServerNPEs,
             Side.COMMON,
-            "com.mitchej123.hodgepodge.asm.transformers.fml.FMLIndexedMessageToMessageCodecTransformer"),
+            "com.mitchej123.hodgepodge.core.fml.transformers.fml.FMLIndexedMessageToMessageCodecTransformer"),
     THERMOS_SLEDGEHAMMER_FURNACE_FIX(new TransformerBuilder("Take a sledgehammer to CraftServer.resetRecipes() to prevent it from breaking our Furnace Fix")
             .setApplyIf(() -> SpeedupsConfig.speedupVanillaFurnace)
             .addRequiredMod(TargetedMod.BUKKIT)
-            .addCommonTransformers("com.mitchej123.hodgepodge.asm.transformers.thermos.ThermosFurnaceSledgeHammer")),
+            .addCommonTransformers("com.mitchej123.hodgepodge.core.fml.transformers.thermos.ThermosFurnaceSledgeHammer")),
     OPTIFINE_REMOVE_GLERROR_LOGGING(
             "Removes the logging of GL errors from OptiFine/Shadersmod",
             () -> TweaksConfig.removeOptifineGLErrors,
             Side.CLIENT,
-            "com.mitchej123.hodgepodge.asm.transformers.optifine.GLErrorLoggingTransformer");
+            "com.mitchej123.hodgepodge.core.fml.transformers.optifine.GLErrorLoggingTransformer");
     // spotless:on
 
     private final TransformerBuilder builder;
