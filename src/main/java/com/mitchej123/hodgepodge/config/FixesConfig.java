@@ -200,6 +200,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean addSimulationDistance;
 
+    @Config.Comment("Fix RCON Threading by forcing it to run on the main thread")
+    @Config.DefaultBoolean(true)
+    public static boolean fixRconThreading;
+
     @Config.Comment("Fix exiting fullscreen when you tab out of the game")
     @Config.DefaultBoolean(true)
     public static boolean fixUnfocusedFullscreen;
@@ -372,6 +376,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean skipEmptySounds;
 
+    @Config.Comment("Render the house character (\u2302 - Unicode index 2302) in the Minecraft font.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixHouseCharRendering;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -502,6 +511,14 @@ public class FixesConfig {
     @Config.Comment("Fixes the healing axe not healing mobs when attacking them")
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesHealingAxeHeal;
+
+    @Config.Comment("Fixes the healing axe to be unbreakable during damage checks that aren't breaking blocks or attacking.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesHealingAxeUnbreakable;
+
+    @Config.Comment("Fixes the erosion shovel to be unbreakable during damage checks that aren't breaking blocks or attacking.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesErosionShovelUnbreakable;
 
     @Config.Comment("Fix Extra Utilities chests not updating comparator redstone signals when their inventories change")
     @Config.DefaultBoolean(true)
@@ -666,6 +683,10 @@ public class FixesConfig {
     @Config.Comment("Fix handling of null stacks in ItemWispEssence")
     @Config.DefaultBoolean(true)
     public static boolean fixNullHandlingItemWispEssence;
+
+    @Config.Comment("Fix check for EE3 item in Thaumcraft to prevent issues on modern Java.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixThaumcraftEE3Check;
 
     // Thermal Dynamics
 

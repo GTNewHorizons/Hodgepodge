@@ -82,6 +82,14 @@ public class TweaksConfig {
     @Config.DefaultBoolean(false)
     public static boolean enhanceNightVision;
 
+    @Config.Comment("Replaces night vision expiry effect with a fade-out effect")
+    @Config.DefaultBoolean(true)
+    public static boolean fadeNightVision;
+
+    @Config.Comment("Night vision fade-out duration (in ticks)")
+    @Config.DefaultInt(50)
+    public static int fadeNightVisionDuration;
+
     @Config.Comment("Allows blocks to be placed at a faster rate (toggleable via keybind)")
     @Config.DefaultBoolean(false)
     public static boolean fastBlockPlacing;

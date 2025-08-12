@@ -18,7 +18,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 public class MixinNBTTagList_speedup {
 
     @Shadow
-    private List tagList;
+    private List<NBTBase> tagList;
 
     @Inject(
             method = "copy",
