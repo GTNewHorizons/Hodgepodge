@@ -15,7 +15,7 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.core.fml.AsmLogger;
 import com.mitchej123.hodgepodge.core.shared.HodgepodgeClassDump;
 
 // This can't be a mixin because of mixinDebug causing it to generate a
@@ -36,14 +36,14 @@ public class FMLIndexedMessageToMessageCodecTransformer implements IClassTransfo
 
     private static byte[] transformBytes(byte[] basicClass) {
         final Logger LOGGER = LogManager.getLogger("FMLIndexedMessageToMessageCodecTransformer");
-        Common.logASM(LOGGER, "TRANSFORMING cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec");
+        AsmLogger.log(LOGGER, "TRANSFORMING cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec");
         final ClassReader cr = new ClassReader(basicClass);
         final ClassNode cn = new ClassNode();
         cr.accept(cn, 0);
         if (cn.methods != null) {
             for (MethodNode m : cn.methods) {
                 if ("encode".equals(m.name)) {
-                    Common.logASM(LOGGER, "Adding dispatcher safety");
+                    AsmLogger.log(LOGGER, "Adding dispatcher safety");
                     int ctxIdx = 1;
                     int proxyIdx = 7;
                     if (m.localVariables != null) {

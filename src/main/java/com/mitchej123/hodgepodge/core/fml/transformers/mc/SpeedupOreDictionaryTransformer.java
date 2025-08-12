@@ -29,8 +29,8 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.core.HodgepodgeCore;
+import com.mitchej123.hodgepodge.core.fml.AsmLogger;
 import com.mitchej123.hodgepodge.core.shared.HodgepodgeClassDump;
 
 /**
@@ -63,7 +63,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
             boolean isObf = HodgepodgeCore.isObf();
             this.itemStackClass = isObf ? "add" : "net/minecraft/item/ItemStack";
             this.itemClass = isObf ? "adb" : "net/minecraft/item/Item";
-            Common.logASM(LOGGER,"OreDictionary is obfuscated: {"+isObf+"}");
+            AsmLogger.log(LOGGER, "OreDictionary is obfuscated: {" + isObf + "}");
             final byte[] transformedBytes = transformOreDictionary(basicClass);
             HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
             return transformedBytes;
@@ -82,31 +82,31 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
         FieldNode emptyIntArrayField = new FieldNode(ACC_PUBLIC | ACC_STATIC | ACC_FINAL, "EMPTY_INT_ARRAY", "[I", null, null);
         classNode.fields.add(emptyIntArrayField);
         // Find and transform the methods
-        Common.logASM(LOGGER,"Transforming OreDictionary class");
+        AsmLogger.log(LOGGER,"Transforming OreDictionary class");
         for (MethodNode method : classNode.methods) {
             if ("<clinit>".equals(method.name)) {
-                Common.logASM(LOGGER,"Transforming OreDictionary.<clinit>");
+                AsmLogger.log(LOGGER,"Transforming OreDictionary.<clinit>");
                 modified |= transformClinitMethod(method);
             } else if ("getOreID".equals(method.name) && "(Ljava/lang/String;)I".equals(method.desc)) {
-                Common.logASM(LOGGER,"Transforming OreDictionary.getOreID(String)");
+                AsmLogger.log(LOGGER,"Transforming OreDictionary.getOreID(String)");
                 modified |= transformGetOreIDStringMethod(method);
             } else if ("getOreID".equals(method.name) && ("(L" + this.itemStackClass + ";)I").equals(method.desc)) {
-                Common.logASM(LOGGER,"Transforming OreDictionary.getOreID(ItemStack)");
+                AsmLogger.log(LOGGER,"Transforming OreDictionary.getOreID(ItemStack)");
                 modified |= transformGetOreIDItemStackMethod(method);
             } else if ("getOreIDs".equals(method.name) && ("(L" + this.itemStackClass + ";)[I").equals(method.desc)) {
-                Common.logASM(LOGGER,"Transforming OreDictionary.getOreIDs(ItemStack)");
+                AsmLogger.log(LOGGER,"Transforming OreDictionary.getOreIDs(ItemStack)");
                 modified |= transformGetOreIDsMethod(method);
             } else if ("getOres".equals(method.name) && "(Ljava/lang/String;Z)Ljava/util/List;".equals(method.desc)) {
-                Common.logASM(LOGGER,"Transforming OreDictionary.getOres(String, boolean)");
+                AsmLogger.log(LOGGER,"Transforming OreDictionary.getOres(String, boolean)");
                 modified |= transformGetOresMethod(method);
             } else if ("getOres".equals(method.name) && "(I)Ljava/util/ArrayList;".equals(method.desc)) {
-                Common.logASM(LOGGER,"Transforming OreDictionary.getOres(int)");
+                AsmLogger.log(LOGGER,"Transforming OreDictionary.getOres(int)");
                 modified |= transformGetOresIntMethod(method);
             } else if ("registerOreImpl".equals(method.name) && ("(Ljava/lang/String;L" + this.itemStackClass + ";)V").equals(method.desc)) {
-                Common.logASM(LOGGER,"Transforming OreDictionary.registerOreImpl(String, ItemStack)");
+                AsmLogger.log(LOGGER,"Transforming OreDictionary.registerOreImpl(String, ItemStack)");
                 modified |= transformRegisterOreImplMethod(method);
             } else if ("rebakeMap".equals(method.name) && "()V".equals(method.desc)) {
-                Common.logASM(LOGGER,"Transforming OreDictionary.rebakeMap()");
+                AsmLogger.log(LOGGER,"Transforming OreDictionary.rebakeMap()");
                 modified |= transformRebakeMapMethod(method);
             }
             for(LocalVariableNode localVar : method.localVariables) {
@@ -122,7 +122,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
 
         if (modified) {
             try {
-                Common.logASM(LOGGER,"Writing transformed OreDictionary class");
+                AsmLogger.log(LOGGER,"Writing transformed OreDictionary class");
                 ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
                 classNode.accept(writer);
                 return writer.toByteArray();

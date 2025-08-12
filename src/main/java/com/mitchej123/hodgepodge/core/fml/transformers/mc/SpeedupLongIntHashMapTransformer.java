@@ -14,7 +14,7 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 
 import com.gtnewhorizon.gtnhlib.asm.ClassConstantPoolParser;
-import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.core.fml.AsmLogger;
 import com.mitchej123.hodgepodge.core.shared.HodgepodgeClassDump;
 
 @SuppressWarnings("unused")
@@ -71,14 +71,14 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer {
                     if (!longHashMapInit
                             && (tNode.desc.equals(LONG_HASH_MAP) || tNode.desc.equals(LONG_HASH_MAP_OBF))) {
                         longHashMapInit = true;
-                        Common.logASM(LOGGER, "Found LongHashMap instantiation in " + transformedName + "." + mn.name);
+                        AsmLogger.log(LOGGER, "Found LongHashMap instantiation in " + transformedName + "." + mn.name);
                         mn.instructions.insertBefore(tNode, new TypeInsnNode(Opcodes.NEW, FAST_UTIL_LONG_HASH_MAP));
                         mn.instructions.remove(tNode);
                         changed = true;
                     } else if (!intHashMapInit
                             && (tNode.desc.equals(INT_HASH_MAP) || tNode.desc.equals(INT_HASH_MAP_OBF))) {
                                 intHashMapInit = true;
-                                Common.logASM(
+                                AsmLogger.log(
                                         LOGGER,
                                         "Found IntHashMap instantiation in " + transformedName + "." + mn.name);
                                 mn.instructions
@@ -91,7 +91,7 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer {
                         if (longHashMapInit
                                 && (mNode.owner.equals(LONG_HASH_MAP) || mNode.owner.equals(LONG_HASH_MAP_OBF))) {
                             longHashMapInit = false;
-                            Common.logASM(
+                            AsmLogger.log(
                                     LOGGER,
                                     "Found LongHashMap constructor call in " + transformedName + "." + mn.name);
                             mn.instructions.insertBefore(
@@ -106,7 +106,7 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer {
                         } else if (intHashMapInit
                                 && (mNode.owner.equals(INT_HASH_MAP) || mNode.owner.equals(INT_HASH_MAP_OBF))) {
                                     intHashMapInit = false;
-                                    Common.logASM(
+                                    AsmLogger.log(
                                             LOGGER,
                                             "Found IntHashMap constructor call in " + transformedName + "." + mn.name);
                                     mn.instructions.insertBefore(
