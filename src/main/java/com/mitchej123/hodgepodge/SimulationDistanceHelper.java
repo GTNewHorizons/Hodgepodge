@@ -278,6 +278,10 @@ public class SimulationDistanceHelper {
         for (NextTickListEntry entry : pendingTickListEntriesTreeSet) {
             FMLLog.info("    " + entry);
         }
+        FMLLog.info("pendingTickListEntriesHashSet:");
+        for (NextTickListEntry entry : pendingTickListEntriesHashSet) {
+            FMLLog.info("    " + entry);
+        }
     }
 
     public void chunkUnloaded(long chunk) {
@@ -297,7 +301,10 @@ public class SimulationDistanceHelper {
                 dumpTickLists(entry);
                 throw new IllegalStateException("Failed to remove tick! See logs for more.");
             }
-            pendingTickListEntriesHashSet.remove(entry);
+            if (!pendingTickListEntriesHashSet.remove(entry)) {
+                dumpTickLists(entry);
+                throw new IllegalStateException("Failed to remove tick! See logs for more.");
+            }
             if (Compat.isCoreTweaksPresent()) {
                 CoreTweaksCompat.removeTickEntry(world, entry);
             }
@@ -321,7 +328,10 @@ public class SimulationDistanceHelper {
             dumpTickLists(entry);
             throw new IllegalStateException("Failed to remove tick! See logs for more.");
         }
-        pendingTickListEntriesHashSet.remove(entry);
+        if (!pendingTickListEntriesHashSet.remove(entry)) {
+            dumpTickLists(entry);
+            throw new IllegalStateException("Failed to remove tick! See logs for more.");
+        }
         if (Compat.isCoreTweaksPresent()) {
             CoreTweaksCompat.removeTickEntry(world, entry);
         }
