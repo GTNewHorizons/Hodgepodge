@@ -272,8 +272,8 @@ public class SimulationDistanceHelper {
         }
     }
 
-    private void dumpTickList(NextTickListEntry removingEntry) {
-        FMLLog.info("Trying to remove entry: " + removingEntry);
+    private void dumpTickLists(NextTickListEntry currentEntry) {
+        FMLLog.info("Trying to process entry: " + currentEntry);
         FMLLog.info("pendingTickListEntriesTreeSet:");
         for (NextTickListEntry entry : pendingTickListEntriesTreeSet) {
             FMLLog.info("    " + entry);
@@ -294,7 +294,7 @@ public class SimulationDistanceHelper {
         chunkTickMap.remove(chunk);
         for (NextTickListEntry entry : entries) {
             if (!pendingTickListEntriesTreeSet.remove(entry)) {
-                dumpTickList(entry);
+                dumpTickLists(entry);
                 throw new IllegalStateException("Failed to remove tick! See logs for more.");
             }
             pendingTickListEntriesHashSet.remove(entry);
@@ -318,7 +318,7 @@ public class SimulationDistanceHelper {
         }
 
         if (!pendingTickListEntriesTreeSet.remove(entry)) {
-            dumpTickList(entry);
+            dumpTickLists(entry);
             throw new IllegalStateException("Failed to remove tick! See logs for more.");
         }
         pendingTickListEntriesHashSet.remove(entry);
