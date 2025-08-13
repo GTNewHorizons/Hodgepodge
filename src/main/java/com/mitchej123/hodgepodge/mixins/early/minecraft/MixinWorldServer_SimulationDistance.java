@@ -163,11 +163,43 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
      */
     @WrapOperation(
             method = "scheduleBlockUpdateWithPriority",
-            at = @At(value = "INVOKE", target = "Ljava/util/TreeSet;add(Ljava/lang/Object;)Z"))
-    private boolean hodgepodge$addTick1(TreeSet<NextTickListEntry> instance, Object e, Operation<Boolean> original) {
+            at = @At(value = "INVOKE", target = "Ljava/util/Set;add(Ljava/lang/Object;)Z"))
+    private boolean hodgepodge$addTick1Set(Set<NextTickListEntry> instance, Object e, Operation<Boolean> original) {
         SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
+        if (!helper.isReadyToAdd()) {
+            return original.call(instance, e);
+        }
+        return true; // Fake success for hashset, we will add that later ourselves
+    }
+
+    /**
+     * Handle adding ticks
+     */
+    @WrapOperation(
+            method = "scheduleBlockUpdateWithPriority",
+            at = @At(value = "INVOKE", target = "Ljava/util/TreeSet;add(Ljava/lang/Object;)Z"))
+    private boolean hodgepodge$addTick1Tree(TreeSet<NextTickListEntry> instance, Object e,
+            Operation<Boolean> original) {
+        SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
+        if (!helper.isReadyToAdd()) {
+            return original.call(instance, e);
+        }
         helper.addTick((NextTickListEntry) e);
-        return original.call(instance, e);
+        return true;
+    }
+
+    /**
+     * Handle adding ticks
+     */
+    @WrapOperation(
+            method = "func_147446_b",
+            at = @At(value = "INVOKE", target = "Ljava/util/Set;add(Ljava/lang/Object;)Z"))
+    private boolean hodgepodge$addTick2Set(Set<NextTickListEntry> instance, Object e, Operation<Boolean> original) {
+        SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
+        if (!helper.isReadyToAdd()) {
+            return original.call(instance, e);
+        }
+        return true; // Fake success for hashset, we will add that later ourselves
     }
 
     /**
@@ -176,10 +208,14 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
     @WrapOperation(
             method = "func_147446_b",
             at = @At(value = "INVOKE", target = "Ljava/util/TreeSet;add(Ljava/lang/Object;)Z"))
-    private boolean hodgepodge$addTick2(TreeSet<NextTickListEntry> instance, Object e, Operation<Boolean> original) {
+    private boolean hodgepodge$addTick2Tree(TreeSet<NextTickListEntry> instance, Object e,
+            Operation<Boolean> original) {
         SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
+        if (!helper.isReadyToAdd()) {
+            return original.call(instance, e);
+        }
         helper.addTick((NextTickListEntry) e);
-        return original.call(instance, e);
+        return true;
     }
 
 }
