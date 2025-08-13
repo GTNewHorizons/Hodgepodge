@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 import com.mitchej123.hodgepodge.config.TweaksConfig;
-import com.mitchej123.hodgepodge.core.HodgepodgeCore;
+import com.mitchej123.hodgepodge.mixins.hooks.WorldDataSaverHook;
 import com.mitchej123.hodgepodge.mixins.interfaces.SafeWriteNBT;
 
 @Mixin(MapStorage.class)
@@ -43,7 +43,7 @@ public class MixinMapStorage_threadedIO {
         NBTTagCompound parentTag = new NBTTagCompound();
         parentTag.setTag("data", tag);
 
-        HodgepodgeCore.saveWorldData(file, parentTag);
+        WorldDataSaverHook.saveWorldData(file, parentTag);
 
     }
 
