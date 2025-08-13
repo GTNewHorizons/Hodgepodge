@@ -53,9 +53,12 @@ public class SimulationDistanceHelper {
         TweaksConfig.simulationDistance = distance;
     }
 
+    private Thread thread;
+
     public SimulationDistanceHelper(World world) {
         this.worldRef = new WeakReference<>(world);
         isServer = world instanceof WorldServer;
+        thread = Thread.currentThread();
     }
 
     /**
@@ -272,15 +275,22 @@ public class SimulationDistanceHelper {
         }
     }
 
-    private void dumpTickList(NextTickListEntry removingEntry) {
-        FMLLog.info("Trying to remove entry: " + removingEntry);
+    private void dumpTickLists(NextTickListEntry currentEntry) {
+        FMLLog.info("Trying to process entry: " + currentEntry);
         FMLLog.info("pendingTickListEntriesTreeSet:");
         for (NextTickListEntry entry : pendingTickListEntriesTreeSet) {
+            FMLLog.info("    " + entry);
+        }
+        FMLLog.info("pendingTickListEntriesHashSet:");
+        for (NextTickListEntry entry : pendingTickListEntriesHashSet) {
             FMLLog.info("    " + entry);
         }
     }
 
     public void chunkUnloaded(long chunk) {
+        if (thread != null && thread != Thread.currentThread()) {
+            throw new RuntimeException("Called from different thread!");
+        }
         World world = worldRef.get();
         if (world == null) {
             return;
@@ -294,10 +304,13 @@ public class SimulationDistanceHelper {
         chunkTickMap.remove(chunk);
         for (NextTickListEntry entry : entries) {
             if (!pendingTickListEntriesTreeSet.remove(entry)) {
-                dumpTickList(entry);
+                dumpTickLists(entry);
                 throw new IllegalStateException("Failed to remove tick! See logs for more.");
             }
-            pendingTickListEntriesHashSet.remove(entry);
+            if (!pendingTickListEntriesHashSet.remove(entry)) {
+                dumpTickLists(entry);
+                throw new IllegalStateException("Failed to remove tick! See logs for more.");
+            }
             if (Compat.isCoreTweaksPresent()) {
                 CoreTweaksCompat.removeTickEntry(world, entry);
             }
@@ -318,10 +331,13 @@ public class SimulationDistanceHelper {
         }
 
         if (!pendingTickListEntriesTreeSet.remove(entry)) {
-            dumpTickList(entry);
+            dumpTickLists(entry);
             throw new IllegalStateException("Failed to remove tick! See logs for more.");
         }
-        pendingTickListEntriesHashSet.remove(entry);
+        if (!pendingTickListEntriesHashSet.remove(entry)) {
+            dumpTickLists(entry);
+            throw new IllegalStateException("Failed to remove tick! See logs for more.");
+        }
         if (Compat.isCoreTweaksPresent()) {
             CoreTweaksCompat.removeTickEntry(world, entry);
         }
@@ -333,6 +349,13 @@ public class SimulationDistanceHelper {
     }
 
     public void addTick(NextTickListEntry entry) {
+        if (thread != null && thread != Thread.currentThread()) {
+            throw new RuntimeException("Called from different thread!");
+        }
+        World world = worldRef.get();
+        if (world == null) {
+            return;
+        }
         pendingTickCandidates.add(entry);
         long key = ChunkCoordIntPair.chunkXZ2Int(entry.xCoord >> 4, entry.zCoord >> 4);
         HashSet<NextTickListEntry> entries = chunkTickMap.get(key);
@@ -341,17 +364,31 @@ public class SimulationDistanceHelper {
             chunkTickMap.put(key, entries);
         }
         entries.add(entry);
+        if (Compat.isCoreTweaksPresent()) {
+            CoreTweaksCompat.addTickEntry(world, entry);
+        }
 
+        if (!pendingTickListEntriesTreeSet.add(entry)) {
+            dumpTickLists(entry);
+            throw new IllegalStateException("Failed to add tick! See logs for more.");
+        }
+        if (!pendingTickListEntriesHashSet.add(entry)) {
+            dumpTickLists(entry);
+            throw new IllegalStateException("Failed to add tick! See logs for more.");
+        }
     }
 
     public void tickUpdates(boolean processAll, List<NextTickListEntry> pendingTickListEntriesThisTick) {
+        if (thread != null && thread != Thread.currentThread()) {
+            throw new RuntimeException("Called from different thread!");
+        }
         World world = worldRef.get();
         if (world == null) {
             return;
         }
 
         if (pendingTickListEntriesTreeSet.size() != pendingTickListEntriesHashSet.size()) {
-            throw new IllegalStateException("TickNextTick list out of synch");
+            throw new IllegalStateException("TickNextTick list out of sync");
         }
 
         Iterator<NextTickListEntry> iterator = pendingTickCandidates.iterator();
@@ -379,6 +416,11 @@ public class SimulationDistanceHelper {
         this.pendingTickListEntriesTreeSet = pendingTickListEntriesTreeSet;
         this.pendingTickListEntriesHashSet = pendingTickListEntriesHashSet;
         this.chunkExists = chunkExists;
+    }
+
+    public boolean isReadyToAdd() {
+        // Only need to check one set
+        return pendingTickListEntriesTreeSet != null;
     }
 
     static class LongBooleanArrayList {
