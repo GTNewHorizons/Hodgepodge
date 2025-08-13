@@ -44,6 +44,10 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinChunk_SimulationDistance")
             .setApplyIf(() -> FixesConfig.addSimulationDistance)
             .setPhase(Phase.EARLY)),
+    FIX_RCON_THREADING(new MixinBuilder("Fix RCON Threading by forcing it to run on the main thread")
+            .addServerMixins("minecraft.MixinMinecraftServer_RconThreadingFix")
+            .setApplyIf(() -> FixesConfig.fixRconThreading)
+            .setPhase(Phase.EARLY)),
     ADD_SIMULATION_DISTANCE_OPTION_THERMOS_FIX(new MixinBuilder("Add option to separate simulation distance from render distance (Thermos fix)")
             .addRequiredMod(TargetedMod.BUKKIT)
             .addExcludedMod(TargetedMod.OPTIFINE)
@@ -988,24 +992,24 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.LATE)),
 
     // BOP
-    FIX_QUICKSAND_XRAY(new MixinBuilder("Fix Xray through block without collision boundingBox")
+    FIX_QUICKSAND_XRAY(new MixinBuilder()
             .addCommonMixins("biomesoplenty.MixinBlockMud_FixXray")
             .setApplyIf(() -> FixesConfig.fixPerspectiveCamera)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
-    DEDUPLICATE_FORESTRY_COMPAT_IN_BOP(new MixinBuilder("BOP Forestry Compat")
+    DEDUPLICATE_FORESTRY_COMPAT_IN_BOP(new MixinBuilder()
             .addCommonMixins("biomesoplenty.MixinForestryIntegration")
             .setApplyIf(() -> FixesConfig.deduplicateForestryCompatInBOP)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
-    SPEEDUP_BOP_BIOME_FOG(new MixinBuilder("BOP Biome Fog")
+    SPEEDUP_BOP_BIOME_FOG(new MixinBuilder()
             .addClientMixins(
                     "biomesoplenty.MixinFogHandler",
                     "biomesoplenty.AccessorFogHandler")
             .setApplyIf(() -> SpeedupsConfig.speedupBOPFogHandling)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
-    BIG_FIR_TREES(new MixinBuilder("BOP Fir Trees")
+    BIG_FIR_TREES(new MixinBuilder()
             .addCommonMixins("biomesoplenty.MixinBlockBOPSapling")
             .setApplyIf(() -> TweaksConfig.makeBigFirsPlantable)
             .addRequiredMod(TargetedMod.BOP)
@@ -1016,9 +1020,16 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.java12BopCompat)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
-    DISABLE_QUICKSAND_GENERATION(new MixinBuilder("Disable BOP quicksand")
+    DISABLE_QUICKSAND_GENERATION(new MixinBuilder()
             .addCommonMixins("biomesoplenty.MixinDisableQuicksandGeneration")
             .setApplyIf(() -> TweaksConfig.removeBOPQuicksandGeneration)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    DISABLE_DONATOR_EFFECTS(new MixinBuilder()
+            .addCommonMixins(
+                    "biomesoplenty.MixinBOPEventHandler",
+                    "biomesoplenty.MixinTrailManager")
+            .setApplyIf(() -> TweaksConfig.removeBOPDonatorEffect)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
 

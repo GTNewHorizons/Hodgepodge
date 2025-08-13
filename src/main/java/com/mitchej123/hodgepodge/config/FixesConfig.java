@@ -200,6 +200,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean addSimulationDistance;
 
+    @Config.Comment("Fix RCON Threading by forcing it to run on the main thread")
+    @Config.DefaultBoolean(true)
+    public static boolean fixRconThreading;
+
     @Config.Comment("Fix exiting fullscreen when you tab out of the game")
     @Config.DefaultBoolean(true)
     public static boolean fixUnfocusedFullscreen;
