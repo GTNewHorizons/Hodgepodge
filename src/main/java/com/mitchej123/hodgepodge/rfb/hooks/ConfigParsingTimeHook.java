@@ -2,7 +2,7 @@ package com.mitchej123.hodgepodge.rfb.hooks;
 
 import java.io.File;
 
-import com.mitchej123.hodgepodge.util.FileLogger;
+import com.mitchej123.hodgepodge.core.shared.FileLogger;
 
 @SuppressWarnings("unused")
 public class ConfigParsingTimeHook {

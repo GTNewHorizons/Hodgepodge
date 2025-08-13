@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.util;
+package com.mitchej123.hodgepodge.core.shared;
 
 import java.io.File;
 import java.io.FileNotFoundException;
