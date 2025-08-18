@@ -42,7 +42,7 @@ dependencies {
     transformedModCompileOnly("curse.maven:travellers-gear-224440:2262113")
     transformedModCompileOnly(rfg.deobf("curse.maven:witchery-69673:2234410"))
     transformedModCompileOnly(rfg.deobf("curse.maven:ztones-224369:2223720"))
-    api("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
+    transformedModCompileOnly("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
     transformedModCompileOnly("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev")
     transformedModCompileOnly(rfg.deobf("curse.maven:glibys-voice-chat-225110:2301492"))
 
