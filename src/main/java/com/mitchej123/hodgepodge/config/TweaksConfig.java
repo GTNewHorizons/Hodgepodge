@@ -305,6 +305,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean synchronizeIC2Reactors;
 
+    @Config.Comment("Allow Dispensers to dispense IC2 ITNT.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean ic2DispenserITNT;
+
     // Minechem
 
     @Config.Comment("Minechem Atropine High (Delirium) effect ID")
