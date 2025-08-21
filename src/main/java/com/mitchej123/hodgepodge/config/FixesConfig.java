@@ -8,6 +8,10 @@ public class FixesConfig {
 
     /* ====== Minecraft fixes start ===== */
 
+    @Config.Comment("Fix Vanilla IOOBE when rendering chunks at a distance larger than 16")
+    @Config.DefaultBoolean(true)
+    public static boolean fixVanillaIOOBERenderDistance;
+
     @Config.Comment("Only load languages once per File instead of once per Mod")
     @Config.DefaultBoolean(true)
     public static boolean onlyLoadLanguagesOnce;

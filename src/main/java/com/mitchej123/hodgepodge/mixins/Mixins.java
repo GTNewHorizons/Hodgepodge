@@ -406,6 +406,7 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinNBTTagList_speedup")
             .setApplyIf(() -> ASMConfig.speedupNBTTagCompoundCopy)
             .addExcludedMod(TargetedMod.BUKKIT)
+            .addExcludedMod(TargetedMod.FASTCRAFT)
             .setPhase(Phase.EARLY)),
     STRING_POOLER_NBT_TAG(new MixinBuilder("Pool NBT Strings")
             .addCommonMixins("minecraft.MixinNBTTagCompound_stringPooler")
@@ -695,8 +696,10 @@ public enum Mixins implements IMixins {
             .addExcludedMod(TargetedMod.OPTIFINE)
             .addExcludedMod(TargetedMod.ANGELICA)
             .addExcludedMod(TargetedMod.FALSETWEAKS)
+            .addExcludedMod(TargetedMod.ARCHAICFIX)
             .addClientMixins(
                     "minecraft.MixinGameSettings_ReduceRenderDistance")
+            .setApplyIf(() -> FixesConfig.fixVanillaIOOBERenderDistance)
             .setPhase(Phase.EARLY)),
     BETTER_MOD_LIST(new MixinBuilder()
             .addClientMixins(
