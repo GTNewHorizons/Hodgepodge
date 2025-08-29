@@ -14,7 +14,7 @@ public class MixinEntityRenderer_NightVisionFade {
 
     /**
      * Originally from: <a href=
-     * "https://github.com/Tesseract4D/BetterEffects/blob/master/src/main/java/mods/tesseract/bettereffects/FixesEffects.java">exp5core
+     * "https://github.com/Tesseract4D/BetterEffects/blob/master/src/main/java/mods/tesseract/bettereffects/FixesEffects.java">BetterEffects
      * </a>
      *
      * @author Tesseract4D
