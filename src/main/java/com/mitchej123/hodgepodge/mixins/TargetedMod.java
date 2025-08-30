@@ -25,6 +25,7 @@ public enum TargetedMod implements ITargetMod {
     // transformer that got removed and added via mixin in this mod, so we don't
     // load our mixins if an old version of the mod that contains this class is loaded
     ENDERCORE_WITH_MODLIST(null, null, "com.enderio.core.common.transform.EnderCoreTransformerClient"),
+    ENDERIO("EnderIO"), // Using just this, on the other hand, you can match both GTNH and non-GTNH versions of Ender IO
     ETFURUMREQUIEM("ganymedes01.etfuturum.mixinplugin.EtFuturumEarlyMixins", "etfuturum"),
     EXTRATIC("ExtraTiC"),
     EXTRA_UTILITIES("ExtraUtilities"),
