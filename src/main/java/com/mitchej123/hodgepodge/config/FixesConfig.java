@@ -740,6 +740,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixWitcheryRendering;
 
+    @Config.Comment("Fixes Witchery Demon trading menu preventing use of EnderIO's Soul Vial")
+    @Config.DefaultBoolean(true)
+    public static boolean fixWitcheryDemonSoulVialInteraction;
+
     // Xaero's Minimap
     @Config.Comment("Fixes the player entity dot rendering when arrow is chosen")
     @Config.DefaultBoolean(true)

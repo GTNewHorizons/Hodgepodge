@@ -1378,6 +1378,12 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixWitcheryRendering)
             .addRequiredMod(TargetedMod.WITCHERY)
             .setPhase(Phase.LATE)),
+    FIX_WITCHERY_DEMON_SOUL_VIAL_INTERACTION(new MixinBuilder("Fixes Witchery Demon trading menu preventing use of EnderIO's Soul Vial")
+            .addCommonMixins("witchery.MixinEntityDemon")
+            .setApplyIf(() -> FixesConfig.fixWitcheryDemonSoulVialInteraction)
+            .addRequiredMod(TargetedMod.WITCHERY)
+            .addRequiredMod(TargetedMod.ENDERIO)
+            .setPhase(Phase.LATE)),
 
     // Various Exploits/Fixes
     BIBLIOCRAFT_PACKET_FIX(new MixinBuilder("Packet Fix")
