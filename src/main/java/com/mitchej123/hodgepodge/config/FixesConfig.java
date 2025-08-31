@@ -740,9 +740,9 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixWitcheryRendering;
 
-    @Config.Comment({"Prevent the Witchery Demon's trading menu from opening when shift-clicking.",
-        "This allows for some item interactions that are otherwise impossible,",
-        "such as capturing the Demon in an EnderIO Soul Vial."})
+    @Config.Comment({ "Prevent the Witchery Demon's trading menu from opening when shift-clicking.",
+            "This allows for some item interactions that are otherwise impossible,",
+            "such as capturing the Demon in an EnderIO Soul Vial." })
     @Config.DefaultBoolean(true)
     public static boolean fixWitcheryDemonShiftClick;
 
