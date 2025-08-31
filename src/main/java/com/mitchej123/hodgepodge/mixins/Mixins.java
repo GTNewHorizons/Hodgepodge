@@ -1378,6 +1378,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixWitcheryRendering)
             .addRequiredMod(TargetedMod.WITCHERY)
             .setPhase(Phase.LATE)),
+    FIX_WITCHERY_DEMON_SHIFT_CLICK(new MixinBuilder("Prevent the Witchery Demon's trading menu from opening when shift-clicking")
+            .addCommonMixins("witchery.MixinEntityDemon")
+            .setApplyIf(() -> FixesConfig.fixWitcheryDemonShiftClick)
+            .addRequiredMod(TargetedMod.WITCHERY)
+            .setPhase(Phase.LATE)),
 
     // Various Exploits/Fixes
     BIBLIOCRAFT_PACKET_FIX(new MixinBuilder("Packet Fix")
