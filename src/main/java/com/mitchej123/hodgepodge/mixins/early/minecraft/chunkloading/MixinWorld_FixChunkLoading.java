@@ -3,14 +3,13 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft.chunkloading;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(World.class)
 public class MixinWorld_FixChunkLoading {
@@ -23,35 +22,61 @@ public class MixinWorld_FixChunkLoading {
         throw new RuntimeException("Mixin failed to apply");
     }
 
-    @Inject(method = "notifyBlockOfNeighborChange", at = @At("HEAD"), cancellable = true)
-    private void hodgepodge$onNotifyBlockOfNeighborChange(int x, int y, int z, final Block block, CallbackInfo ci) {
-        if (!this.isRemote && !blockExists(x, y, z)) {
-            ci.cancel();
-        }
+    @Shadow
+    protected boolean chunkExists(int p_72916_1_, int p_72916_2_) {
+        throw new RuntimeException("Mixin failed to apply");
     }
 
-    @Inject(method = "getBlockLightValue_do", at = @At("HEAD"), cancellable = true)
-    private void hodgepodge$onGetBlockLightValue_do(int x, int y, int z, boolean checkNeighbors,
-            CallbackInfoReturnable<Integer> ci) {
+    @Redirect(
+            method = "notifyBlockOfNeighborChange",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlock(III)Lnet/minecraft/block/Block;"))
+    private Block hodgepodge$onNotifyBlockOfNeighborChange(World world, int x, int y, int z) {
         if (!this.isRemote && !blockExists(x, y, z)) {
-            ci.setReturnValue(0);
+            return Blocks.air;
         }
+        return world.getBlock(x, y, z);
     }
 
-    @Inject(method = "getIndirectPowerLevelTo", at = @At("HEAD"), cancellable = true)
-    private void hodgepodge$onGetIndirectPowerLevelTo(int x, int y, int z, int directionIn,
-            CallbackInfoReturnable<Integer> ci) {
+    @Redirect(
+            method = "getBlockLightValue_do",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlock(III)Lnet/minecraft/block/Block;"))
+    private Block hodgepodge$onGetBlockLightValue_do_block(World world, int x, int y, int z) {
         if (!this.isRemote && !blockExists(x, y, z)) {
-            ci.setReturnValue(0);
+            return Blocks.air;
         }
+        return world.getBlock(x, y, z);
     }
 
-    @Inject(method = "isBlockProvidingPowerTo", at = @At("HEAD"), cancellable = true)
-    private void hodgepodge$onIsBlockProvidingPowerTo(int x, int y, int z, int directionIn,
-            CallbackInfoReturnable<Integer> ci) {
-        if (!this.isRemote && !blockExists(x, y, z)) {
-            ci.setReturnValue(0);
+    @Redirect(
+            method = "getBlockLightValue_do",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/World;getChunkFromChunkCoords(II)Lnet/minecraft/world/chunk/Chunk;"))
+    private Chunk hodgepodge$onGetBlockLightValue_do_chunk(World world, int x, int y) {
+        if (((World) (Object) this) instanceof WorldServer worldServer && !chunkExists(x, y)) {
+            return worldServer.theChunkProviderServer.defaultEmptyChunk;
         }
+        return world.getChunkFromChunkCoords(x, y);
+    }
+
+    @Redirect(
+            method = "getIndirectPowerLevelTo",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlock(III)Lnet/minecraft/block/Block;"))
+    private Block hodgepodge$onGetIndirectPowerLevelTo(World world, int x, int y, int z) {
+        if (!this.isRemote && !blockExists(x, y, z)) {
+            return Blocks.air;
+        }
+        return world.getBlock(x, y, z);
+    }
+
+    @Redirect(
+            method = "isBlockProvidingPowerTo",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlock(III)Lnet/minecraft/block/Block;"))
+    private Block hodgepodge$onIsBlockProvidingPowerTo(World world, int x, int y, int z) {
+        if (!this.isRemote && !blockExists(x, y, z)) {
+            return Blocks.air;
+        }
+        return world.getBlock(x, y, z);
     }
 
     @Redirect(
