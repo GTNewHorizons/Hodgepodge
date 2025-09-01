@@ -385,7 +385,7 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixHouseCharRendering;
 
-    @Config.Comment("Fix chunk loading.")
+    @Config.Comment("Fix chunk loading from block updates.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixChunkLoading;
