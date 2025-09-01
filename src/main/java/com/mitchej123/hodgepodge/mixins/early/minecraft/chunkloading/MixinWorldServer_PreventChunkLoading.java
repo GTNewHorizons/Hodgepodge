@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(WorldServer.class)
-public abstract class MixinWorldServer_FixChunkLoading extends World {
+public abstract class MixinWorldServer_PreventChunkLoading extends World {
 
     @Shadow
     public ChunkProviderServer theChunkProviderServer;
@@ -29,6 +29,10 @@ public abstract class MixinWorldServer_FixChunkLoading extends World {
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/Block;updateTick(Lnet/minecraft/world/World;IIILjava/util/Random;)V"))
     private void hodgepodge$onUpdateTick(Block block, World worldIn, int x, int y, int z, Random random) {
+        if (!theChunkProviderServer.loadChunkOnProvideRequest) {
+            block.updateTick(worldIn, x, y, z, random);
+            return;
+        }
         theChunkProviderServer.loadChunkOnProvideRequest = false;
         try {
             block.updateTick(worldIn, x, y, z, random);
@@ -41,6 +45,10 @@ public abstract class MixinWorldServer_FixChunkLoading extends World {
             method = "updateEntities",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateEntities()V"))
     private void hodgepodge$onUpdateEntities(World world) {
+        if (!theChunkProviderServer.loadChunkOnProvideRequest) {
+            super.updateEntities();
+            return;
+        }
         theChunkProviderServer.loadChunkOnProvideRequest = false;
         try {
             super.updateEntities();
@@ -50,7 +58,7 @@ public abstract class MixinWorldServer_FixChunkLoading extends World {
     }
 
     // for the compiler to shut up
-    public MixinWorldServer_FixChunkLoading(ISaveHandler p_i45368_1_, String p_i45368_2_, WorldProvider p_i45368_3_,
+    public MixinWorldServer_PreventChunkLoading(ISaveHandler p_i45368_1_, String p_i45368_2_, WorldProvider p_i45368_3_,
             WorldSettings p_i45368_4_, Profiler p_i45368_5_) {
         super(p_i45368_1_, p_i45368_2_, p_i45368_3_, p_i45368_4_, p_i45368_5_);
     }

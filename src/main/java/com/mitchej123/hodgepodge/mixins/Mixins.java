@@ -738,12 +738,12 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinCraftingManager")
             .setApplyIf(() -> SpeedupsConfig.cacheLastMatchingRecipe)
             .setPhase(Phase.EARLY)),
-    FIX_CHUNK_LOADING(new MixinBuilder("Fix block updates causing chunk loads")
+    FIX_CHUNK_LOADING_FROM_BLOCK_UPDATES(new MixinBuilder("Fix block updates causing chunk loads")
             .setPhase(Phase.EARLY)
-            .setApplyIf(() -> FixesConfig.fixChunkLoading)
+            .setApplyIf(() -> FixesConfig.fixChunkLoadingFromBlockUpdates)
             .addCommonMixins(
-                    "minecraft.chunkloading.MixinWorldServer_FixChunkLoading",
-                    "minecraft.chunkloading.MixinWorld_FixChunkLoading")),
+                    "minecraft.chunkloading.MixinWorldServer_PreventChunkLoading",
+                    "minecraft.chunkloading.MixinWorld_PreventChunkLoading")),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(World.class)
-public class MixinWorld_FixChunkLoading {
+public class MixinWorld_PreventChunkLoading {
 
     @Shadow
     public boolean isRemote;

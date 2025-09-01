@@ -388,7 +388,7 @@ public class FixesConfig {
     @Config.Comment("Fix chunk loading from block updates.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean fixChunkLoading;
+    public static boolean fixChunkLoadingFromBlockUpdates;
 
     /* ====== Minecraft fixes end ===== */
 
