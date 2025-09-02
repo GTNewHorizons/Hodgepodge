@@ -12,20 +12,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(World.class)
-public class MixinWorld_PreventChunkLoading {
+public abstract class MixinWorld_PreventChunkLoading {
 
     @Shadow
     public boolean isRemote;
 
     @Shadow
-    public boolean blockExists(int x, int y, int z) {
-        throw new RuntimeException("Mixin failed to apply");
-    }
+    abstract public boolean blockExists(int x, int y, int z);
 
     @Shadow
-    protected boolean chunkExists(int p_72916_1_, int p_72916_2_) {
-        throw new RuntimeException("Mixin failed to apply");
-    }
+    abstract boolean chunkExists(int p_72916_1_, int p_72916_2_);
 
     @Redirect(
             method = "notifyBlockOfNeighborChange",
