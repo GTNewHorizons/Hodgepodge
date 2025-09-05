@@ -1,5 +1,8 @@
 package com.mitchej123.hodgepodge;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,6 +13,7 @@ import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.function.BiPredicate;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.NextTickListEntry;
@@ -21,6 +25,7 @@ import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
@@ -275,16 +280,38 @@ public class SimulationDistanceHelper {
         }
     }
 
+    private void writeCustomLog(String filename, String content) {
+        try {
+            File mcDir;
+
+            if (FMLCommonHandler.instance().getSide().isClient()) {
+                mcDir = Minecraft.getMinecraft().mcDataDir;
+            } else {
+                mcDir = new File("."); // server root
+            }
+
+            File logsFolder = new File(mcDir, "logs");
+            File outFile = new File(logsFolder, filename);
+            try (FileWriter writer = new FileWriter(outFile, true)) {
+                writer.write(content);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void dumpTickLists(NextTickListEntry currentEntry) {
         FMLLog.info("Trying to process entry: " + currentEntry);
-        FMLLog.info("pendingTickListEntriesTreeSet:");
+        StringBuilder logTree = new StringBuilder();
+        StringBuilder logHash = new StringBuilder();
         for (NextTickListEntry entry : pendingTickListEntriesTreeSet) {
-            FMLLog.info("    " + entry);
+            logTree.append(entry).append("\n");
         }
-        FMLLog.info("pendingTickListEntriesHashSet:");
         for (NextTickListEntry entry : pendingTickListEntriesHashSet) {
-            FMLLog.info("    " + entry);
+            logHash.append(entry).append("\n");
         }
+        writeCustomLog("pendingTickListEntriesTreeSet", logTree.toString());
+        writeCustomLog("pendingTickListEntriesHashSet", logHash.toString());
     }
 
     public void chunkUnloaded(long chunk) {
