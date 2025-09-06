@@ -16,12 +16,14 @@ import net.minecraft.world.WorldSettings;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.storage.ISaveHandler;
+import net.minecraft.world.storage.WorldInfo;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -68,8 +70,28 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
      * Disable the add to the pendingTickListCandidate
      */
     @Redirect(method = "tickUpdates", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"))
-    private boolean hodgepodge$disablePendingAdd(List instance, Object e) {
+    private boolean hodgepodge$disablePendingAdd(List<NextTickListEntry> instance, Object e) {
         return true;
+    }
+
+    /**
+     * Disable limit in tickUpdates
+     */
+    @ModifyVariable(method = "tickUpdates", at = @At(value = "STORE", ordinal = 1))
+    private int hodgepodge$disableLimit(int i) {
+        SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
+        return helper.getTicksToRemove().size();
+    }
+
+    /**
+     * Disable early exit in tickUpdates
+     */
+
+    @Redirect(
+            method = "tickUpdates",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/storage/WorldInfo;getWorldTotalTime()J"))
+    private long hodgepodge$disableBreak(WorldInfo instance) {
+        return Long.MAX_VALUE;
     }
 
     /**

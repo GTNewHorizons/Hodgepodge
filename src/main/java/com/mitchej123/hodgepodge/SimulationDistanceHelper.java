@@ -349,9 +349,8 @@ public class SimulationDistanceHelper {
                 dumpTickLists(entry);
                 throw new IllegalStateException("Failed to remove tick! See logs for more.");
             }
-            if (Compat.isCoreTweaksPresent()) {
-                CoreTweaksCompat.removeTickEntry(world, entry);
-            }
+            tickToRemove.add(entry);
+
             /*
              * Entries would get removed in tickUpdates eventually, but we risk reloading a chunk and having an
              * incompatible, similar entry in pendingTickListEntriesTreeSet/pendingTickListEntriesHashSet that can be
