@@ -8,6 +8,10 @@ public class FixesConfig {
 
     /* ====== Minecraft fixes start ===== */
 
+    @Config.Comment("Fix Vanilla IOOBE when rendering chunks at a distance larger than 16")
+    @Config.DefaultBoolean(true)
+    public static boolean fixVanillaIOOBERenderDistance;
+
     @Config.Comment("Only load languages once per File instead of once per Mod")
     @Config.DefaultBoolean(true)
     public static boolean onlyLoadLanguagesOnce;
@@ -199,6 +203,10 @@ public class FixesConfig {
     @Config.Comment("Add option to separate simulation distance from rendering distance (Incompatible with optifine, will automatically be disabled)")
     @Config.DefaultBoolean(true)
     public static boolean addSimulationDistance;
+
+    @Config.Comment("Fix RCON Threading by forcing it to run on the main thread")
+    @Config.DefaultBoolean(true)
+    public static boolean fixRconThreading;
 
     @Config.Comment("Fix exiting fullscreen when you tab out of the game")
     @Config.DefaultBoolean(true)
@@ -731,6 +739,12 @@ public class FixesConfig {
     @Config.Comment("Fixes some potential errors in Witchery Rendering")
     @Config.DefaultBoolean(true)
     public static boolean fixWitcheryRendering;
+
+    @Config.Comment({ "Prevent the Witchery Demon's trading menu from opening when shift-clicking.",
+            "This allows for some item interactions that are otherwise impossible,",
+            "such as capturing the Demon in an EnderIO Soul Vial." })
+    @Config.DefaultBoolean(true)
+    public static boolean fixWitcheryDemonShiftClick;
 
     // Xaero's Minimap
     @Config.Comment("Fixes the player entity dot rendering when arrow is chosen")
