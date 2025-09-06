@@ -184,7 +184,7 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
         if (!helper.isReadyToAdd()) {
             return original.call(instance, e);
         }
-        helper.addTick((NextTickListEntry) e);
+        helper.addTick((NextTickListEntry) e, original);
         return true;
     }
 
@@ -214,7 +214,7 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
         if (!helper.isReadyToAdd()) {
             return original.call(instance, e);
         }
-        helper.addTick((NextTickListEntry) e);
+        helper.addTick((NextTickListEntry) e, original);
         return true;
     }
 

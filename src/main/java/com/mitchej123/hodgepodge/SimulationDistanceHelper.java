@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeChunkManager;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.util.ChunkPosUtil;
@@ -375,7 +376,7 @@ public class SimulationDistanceHelper {
         }
     }
 
-    public void addTick(NextTickListEntry entry) {
+    public void addTick(NextTickListEntry entry, Operation<Boolean> originalTreeAdd) {
         if (thread != null && thread != Thread.currentThread()) {
             throw new RuntimeException("Called from different thread!");
         }
@@ -388,7 +389,7 @@ public class SimulationDistanceHelper {
         }
         entries.add(entry);
 
-        if (!pendingTickListEntriesTreeSet.add(entry)) {
+        if (!originalTreeAdd.call(pendingTickListEntriesTreeSet, entry)) {
             dumpTickLists(entry);
             throw new IllegalStateException("Failed to add tick! See logs for more.");
         }
