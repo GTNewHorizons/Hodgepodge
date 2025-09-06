@@ -28,13 +28,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mitchej123.hodgepodge.ISimulationDistanceWorld;
 import com.mitchej123.hodgepodge.SimulationDistanceHelper;
 
 /**
  * Must run after MixinWorldClient_FixAllocations
  */
-@Mixin(value = WorldServer.class, priority = 1001)
+@Mixin(value = WorldServer.class, priority = 1010)
 public abstract class MixinWorldServer_SimulationDistance extends World implements ISimulationDistanceWorld {
 
     @Shadow
@@ -64,11 +65,20 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
     }
 
     /**
+     * Disable the add to the pendingTickListCandidate
+     */
+    @Redirect(method = "tickUpdates", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"))
+    private boolean hodgepodge$disablePendingAdd(List instance, Object e) {
+        return true;
+    }
+
+    /**
      * Fake HashSet size so the original MC code doesn't process any ticks
      */
     @Redirect(method = "tickUpdates", at = @At(value = "INVOKE", target = "Ljava/util/TreeSet;size()I"))
     private int hodgepodge$fakeTreeSetSize(TreeSet<NextTickListEntry> instance) {
-        return 0;
+        SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
+        return helper.getTicksToRemove().size();
     }
 
     /**
@@ -76,22 +86,28 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
      */
     @Redirect(method = "tickUpdates", at = @At(value = "INVOKE", target = "Ljava/util/Set;size()I"))
     private int hodgepodge$fakeHashSetSize(Set<NextTickListEntry> instance) {
-        return 0;
+        SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
+        return helper.getTicksToRemove().size();
     }
 
     /**
      * Skip ticks that are outside of simulation distance, and delete ticks for unloaded chunks
      */
-    @Inject(
-            method = "tickUpdates",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/profiler/Profiler;startSection(Ljava/lang/String;)V",
-                    ordinal = 0,
-                    shift = At.Shift.AFTER))
+    @Inject(method = "tickUpdates", at = @At(value = "HEAD"))
     private void hodgepodge$tickUpdates(boolean p_72955_1_, CallbackInfoReturnable<Boolean> cir) {
         SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
         helper.tickUpdates(p_72955_1_, pendingTickListEntriesThisTick);
+    }
+
+    /**
+     * Redirect first to get the ticks we want to remove
+     */
+    @Redirect(
+            method = "tickUpdates",
+            at = @At(value = "INVOKE", target = "Ljava/util/TreeSet;first()Ljava/lang/Object;"))
+    private Object hodgepodge$redirectFirst(TreeSet<NextTickListEntry> instance, @Local(ordinal = 1) int index) {
+        SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
+        return helper.getTicksToRemove().get(index);
     }
 
     /**

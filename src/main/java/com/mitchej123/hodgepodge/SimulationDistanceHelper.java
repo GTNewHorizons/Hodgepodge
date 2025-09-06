@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -131,8 +132,17 @@ public class SimulationDistanceHelper {
      */
     private int simulationDistanceOld;
 
+    /**
+     * Ticks to be removed, for compatibility
+     */
+    private List<NextTickListEntry> tickToRemove = new ArrayList<>();
+
     public void preventChunkSimulation(long packedChunkPos, boolean prevent) {
         noTickChunksChanges.add(packedChunkPos, prevent);
+    }
+
+    public List<NextTickListEntry> getTicksToRemove() {
+        return tickToRemove;
     }
 
     private boolean closeToPlayer(long packedChunkPos) {
@@ -366,14 +376,12 @@ public class SimulationDistanceHelper {
             dumpTickLists(entry);
             throw new IllegalStateException("Failed to remove tick! See logs for more.");
         }
-        if (Compat.isCoreTweaksPresent()) {
-            CoreTweaksCompat.removeTickEntry(world, entry);
-        }
         long key = ChunkCoordIntPair.chunkXZ2Int(entry.xCoord >> 4, entry.zCoord >> 4);
         HashSet<NextTickListEntry> entries = chunkTickMap.get(key);
         if (entries != null) {
             entries.remove(entry);
         }
+        tickToRemove.add(entry);
     }
 
     public void addTick(NextTickListEntry entry, Operation<Boolean> originalTreeAdd) {
@@ -411,6 +419,8 @@ public class SimulationDistanceHelper {
         if (pendingTickListEntriesTreeSet.size() != pendingTickListEntriesHashSet.size()) {
             throw new IllegalStateException("TickNextTick list out of sync");
         }
+
+        tickToRemove.clear();
 
         Iterator<NextTickListEntry> iterator = pendingTickCandidates.iterator();
         while (iterator.hasNext()) {
