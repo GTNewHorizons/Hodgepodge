@@ -13,10 +13,4 @@ public class CoreTweaksCompat {
             ChunkPendingBlockUpdateMap.remove(coretweaksWorld, entry);
         }
     }
-
-    public static void addTickEntry(World world, NextTickListEntry entry) {
-        if (world instanceof IPendingBlockUpdatesWorldServer coretweaksWorld) {
-            ChunkPendingBlockUpdateMap.add(coretweaksWorld, entry);
-        }
-    }
 }

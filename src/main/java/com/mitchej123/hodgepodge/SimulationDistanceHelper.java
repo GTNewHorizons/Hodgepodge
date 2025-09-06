@@ -379,10 +379,6 @@ public class SimulationDistanceHelper {
         if (thread != null && thread != Thread.currentThread()) {
             throw new RuntimeException("Called from different thread!");
         }
-        World world = worldRef.get();
-        if (world == null) {
-            return;
-        }
         pendingTickCandidates.add(entry);
         long key = ChunkCoordIntPair.chunkXZ2Int(entry.xCoord >> 4, entry.zCoord >> 4);
         HashSet<NextTickListEntry> entries = chunkTickMap.get(key);
@@ -391,9 +387,6 @@ public class SimulationDistanceHelper {
             chunkTickMap.put(key, entries);
         }
         entries.add(entry);
-        if (Compat.isCoreTweaksPresent()) {
-            CoreTweaksCompat.addTickEntry(world, entry);
-        }
 
         if (!pendingTickListEntriesTreeSet.add(entry)) {
             dumpTickLists(entry);
