@@ -1216,6 +1216,13 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesUnEnchanting)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
+    FIX_EXTRA_UTILITIES_REPAIR_COST(new MixinBuilder("Fix Exu spikes losing NBT tags (other than enchantments) when being placed on the ground" )
+            .addCommonMixins(
+                    "extrautilities.MixinBlockSpike_PreserveNBT",
+                    "extrautilities.MixinTileEntityEnchantedSpike_PreserveNBT")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesPreserveSpikeNBT)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
     DISABLE_AID_SPAWN_XU_SPIKES(new MixinBuilder("Fixes the vanilla zombie aid spawn triggering when killed by Extra Utilities Spikes")
             .addCommonMixins("extrautilities.MixinBlockSpike")
             .setApplyIf(() -> TweaksConfig.disableAidSpawnByXUSpikes)
