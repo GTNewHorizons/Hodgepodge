@@ -1,5 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.late.extrautilities;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,6 +17,9 @@ import com.rwtema.extrautils.tileentity.TileEntityEnchantedSpike;
 @SuppressWarnings("UnusedMixin")
 @Mixin(TileEntityEnchantedSpike.class)
 public abstract class MixinTileEntityEnchantedSpike_PreserveNBT {
+
+    @Unique
+    private static final List<String> hodgepodge$IGNORED_TAGS = Arrays.asList("ench", "x", "y", "z", "id");
 
     @Unique
     private NBTTagCompound hodgepodge$preservedNBT;
@@ -40,7 +45,17 @@ public abstract class MixinTileEntityEnchantedSpike_PreserveNBT {
     @WrapMethod(method = "readFromNBT")
     private void hodgepodge$readFromNBT(NBTTagCompound nbt, Operation<Void> original) {
         original.call(nbt);
-        this.hodgepodge$preservedNBT = nbt.getCompoundTag("hodgepodge_injectedNBT");
+        if (nbt == null || nbt.hasNoTags()) return;
+
+        NBTTagCompound preservedNBT = new NBTTagCompound();
+        Set<String> preservedTags = nbt.func_150296_c();
+        for (String tag : preservedTags) {
+            if (hodgepodge$IGNORED_TAGS.contains(tag)) continue;
+            preservedNBT.setTag(tag, nbt.getTag(tag));
+        }
+
+        if (preservedNBT.hasNoTags()) return;
+        this.hodgepodge$preservedNBT = preservedNBT;
     }
 
     @WrapMethod(method = "writeToNBT")
@@ -62,6 +77,7 @@ public abstract class MixinTileEntityEnchantedSpike_PreserveNBT {
 
         Set<String> preservedTags = this.hodgepodge$preservedNBT.func_150296_c();
         for (String tag : preservedTags) {
+            if (hodgepodge$IGNORED_TAGS.contains(tag)) continue;
             nbt.setTag(tag, this.hodgepodge$preservedNBT.getTag(tag));
         }
     }
