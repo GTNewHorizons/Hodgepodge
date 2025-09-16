@@ -27,7 +27,6 @@ public class Compat {
     private static boolean isGalacticraftPresent;
     private static boolean isBiomesOPlentyPresent;
     private static boolean isDreamcraftPresent;
-    private static boolean isCoreTweaksPresent;
     private static boolean isKleeSlabsPresent;
     private static boolean isSFMPresent;
     private static boolean isTravellersGearPresent;
@@ -63,8 +62,6 @@ public class Compat {
         isBiomesOPlentyPresent = Loader.isModLoaded("BiomesOPlenty");
 
         isDreamcraftPresent = Loader.isModLoaded("dreamcraft");
-
-        isCoreTweaksPresent = Loader.isModLoaded("coretweaks");
 
         isKleeSlabsPresent = Loader.isModLoaded("kleeslabs");
 
@@ -139,13 +136,6 @@ public class Compat {
      */
     public static boolean isDreamcraftPresent() {
         return isDreamcraftPresent;
-    }
-
-    /**
-     * Cannot be used before pre-init phase.
-     */
-    public static boolean isCoreTweaksPresent() {
-        return isCoreTweaksPresent;
     }
 
     /**
