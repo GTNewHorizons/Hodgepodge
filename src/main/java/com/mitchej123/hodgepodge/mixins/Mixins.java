@@ -739,6 +739,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinCraftingManager")
             .setApplyIf(() -> SpeedupsConfig.cacheLastMatchingRecipe)
             .setPhase(Phase.EARLY)),
+    FIX_MOUSE_BUTTON_BINDINGS(new MixinBuilder()
+            .addClientMixins("minecraft.MixinMinecraft_KeyInputEventOnMouseButton")
+            .setApplyIf(() -> FixesConfig.fixMouseButtonBindings)
+            .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
