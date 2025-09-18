@@ -729,7 +729,6 @@ public enum Mixins implements IMixins {
     DEBUG_EVENT_REGISTRATION(new MixinBuilder()
             .addCommonMixins("fml.MixinEventBus_DebugRegistration")
             .setApplyIf(() -> Boolean.getBoolean("hodgepodge.logEventTimes"))
-            .addCommonMixins("fml.MixinEventBus_DebugRegistration")
             .setPhase(Phase.EARLY)),
     FIX_HOUSE_CHAR_RENDERING(new MixinBuilder()
             .addClientMixins("minecraft.MixinFontRenderer_House")
@@ -739,6 +738,12 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinCraftingManager")
             .setApplyIf(() -> SpeedupsConfig.cacheLastMatchingRecipe)
             .setPhase(Phase.EARLY)),
+    FIX_CHUNK_LOADING_FROM_BLOCK_UPDATES(new MixinBuilder("Fix block updates causing chunk loads")
+            .setPhase(Phase.EARLY)
+            .setApplyIf(() -> FixesConfig.fixChunkLoadingFromBlockUpdates)
+            .addCommonMixins(
+                    "minecraft.chunkloading.MixinWorldServer_PreventChunkLoading",
+                    "minecraft.chunkloading.MixinWorld_PreventChunkLoading")),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")

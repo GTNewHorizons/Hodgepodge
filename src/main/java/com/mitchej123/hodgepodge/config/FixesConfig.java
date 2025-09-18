@@ -385,6 +385,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixHouseCharRendering;
 
+    @Config.Comment("Fix chunk loading from block updates.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixChunkLoadingFromBlockUpdates;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
