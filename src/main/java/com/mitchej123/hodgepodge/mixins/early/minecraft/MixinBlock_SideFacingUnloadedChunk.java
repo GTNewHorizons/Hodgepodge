@@ -9,24 +9,29 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.sugar.Local;
 
 @Mixin(Block.class)
 public class MixinBlock_SideFacingUnloadedChunk {
 
-    @Inject(method = "shouldSideBeRendered", at = @At("HEAD"), cancellable = true)
-    private void shouldSideBeRenderedFix(IBlockAccess blockAccess, int x, int y, int z, int side,
-            CallbackInfoReturnable<Boolean> cir) {
-        ForgeDirection direction = ForgeDirection.getOrientation(side);
-        if (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN || y < 0 || y > 255) {
-            return;
-        }
+    @ModifyReturnValue(method = "shouldSideBeRendered", at = @At("TAIL"))
+    private boolean shouldSideBeRenderedFix(boolean original, @Local(argsOnly = true) IBlockAccess blockAccess,
+            @Local(argsOnly = true, ordinal = 0) int x, @Local(argsOnly = true, ordinal = 2) int z,
+            @Local(argsOnly = true, ordinal = 3) int side) {
+        ForgeDirection direction = ForgeDirection.VALID_DIRECTIONS[side];
 
-        x += direction.offsetX;
-        z += direction.offsetZ;
+        // Subtract to get original block pos, our position is the block the new side faces already!
+        int originalChunkX = (x - direction.offsetX) >> 4;
+        int originalChunkZ = (z - direction.offsetZ) >> 4;
+
         x >>= 4;
         z >>= 4;
+
+        if (originalChunkX == x && originalChunkZ == z) {
+            return original;
+        }
 
         if (blockAccess instanceof ChunkCache) {
             MixinChunkCache_SideFacingUnloaded cache = (MixinChunkCache_SideFacingUnloaded) blockAccess;
@@ -36,10 +41,11 @@ public class MixinBlock_SideFacingUnloadedChunk {
             z -= cache.getChunkZ();
 
             if (x < 0 || x >= chunks.length || z < 0 || z >= chunks[x].length) {
-                cir.setReturnValue(false);
+                return false;
             } else if (chunks[x][z] instanceof EmptyChunk) {
-                cir.setReturnValue(false);
+                return false;
             }
         }
+        return original;
     }
 }
