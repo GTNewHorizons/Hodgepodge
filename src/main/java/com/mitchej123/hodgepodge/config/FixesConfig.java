@@ -385,6 +385,10 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixHouseCharRendering;
 
+    @Config.Comment("Prevents sides facing unloaded chunks from being rendered. Mostly visible with translucent blocks.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBlockSidesFacingUnloadedChunksBeingRendered;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -605,6 +609,10 @@ public class FixesConfig {
     @Config.Comment("Fix IC2 Crops trampling any types of farmland to dirt when sprinting")
     @Config.DefaultBoolean(true)
     public static boolean fixIc2CropTrampling;
+
+    @Config.Comment("Fix IC2 Keybinds activating in GUIs")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2KeybindsInGuis;
 
     // Journey Map
 

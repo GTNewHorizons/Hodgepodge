@@ -41,9 +41,11 @@ public class MixinS0EPacketSpawnObject_ItemThrower implements S0EPacketSpawnObje
 
     @Inject(method = "readPacketData", at = @At("TAIL"))
     private void hodgepodge$read(PacketBuffer data, CallbackInfo ci) throws IOException {
-        final String name = data.readStringFromBuffer(16);
-        hodgepodge$itemThrower = name.isEmpty() ? null : name;
-        hodgepodge$pickupDelay = data.readInt();
+        if (data.readableBytes() >= 5) {
+            final String name = data.readStringFromBuffer(16);
+            hodgepodge$itemThrower = name.isEmpty() ? null : name;
+            hodgepodge$pickupDelay = data.readInt();
+        }
     }
 
     @Override

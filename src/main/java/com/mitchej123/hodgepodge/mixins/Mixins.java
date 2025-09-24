@@ -351,6 +351,12 @@ public enum Mixins implements IMixins {
             .addClientMixins(
                     "minecraft.MixinGameSettings_FixOFChunkLoading")
             .setPhase(Phase.EARLY)),
+    FIX_SIDE_FACING_UNLOADED_CHUNKS_BEING_RENDERED(new MixinBuilder()
+            .setApplyIf(() -> FixesConfig.fixBlockSidesFacingUnloadedChunksBeingRendered)
+            .addClientMixins(
+                    "minecraft.MixinBlock_SideFacingUnloadedChunk",
+                    "minecraft.MixinChunkCache_SideFacingUnloaded")
+            .setPhase(Phase.EARLY)),
     ADD_TOGGLE_DEBUG_MESSAGE(new MixinBuilder("Toggle Debug Message")
             .addClientMixins("minecraft.MixinMinecraft_ToggleDebugMessage")
             .setApplyIf(() -> TweaksConfig.addToggleDebugMessage)
@@ -829,6 +835,11 @@ public enum Mixins implements IMixins {
                     "ic2.MixinTEReactorCacheReactorSize",
                     "ic2.MixinDirection_Memory")
             .setApplyIf(() -> SpeedupsConfig.speedupIC2ReactorSize)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
+    IC2_KEYBINDS_ACTIVATE_IN_GUI_FIX(new MixinBuilder("Prevent Industrialcraft keybinds from activating in GUIs")
+            .addClientMixins("ic2.MixinKeyboardClient_sendKeyUpdate")
+            .setApplyIf(() -> FixesConfig.fixIc2KeybindsInGuis)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
 
