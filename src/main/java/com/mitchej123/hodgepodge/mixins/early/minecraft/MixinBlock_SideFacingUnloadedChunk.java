@@ -20,7 +20,8 @@ public class MixinBlock_SideFacingUnloadedChunk {
     private boolean shouldSideBeRenderedFix(boolean original, @Local(argsOnly = true) IBlockAccess blockAccess,
             @Local(argsOnly = true, ordinal = 0) int x, @Local(argsOnly = true, ordinal = 2) int z,
             @Local(argsOnly = true, ordinal = 3) int side) {
-        if (side < 0 || side >= 6) {
+        // Skip invalid orientations, and early exit for UP/DOWN
+        if (side < 2 || side >= 6) {
             return original;
         }
         ForgeDirection direction = ForgeDirection.VALID_DIRECTIONS[side];
