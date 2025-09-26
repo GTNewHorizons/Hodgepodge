@@ -9,6 +9,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
@@ -64,13 +65,14 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer {
                     } else if (node.getOpcode() == Opcodes.INVOKESPECIAL && node instanceof MethodInsnNode mNode) {
                         if (mNode.name.equals(INIT) && mNode.desc.equals(EMPTY_DESC) && mNode.owner.equals(HASHMAP)) {
                             Common.logASM(LOGGER, "Found HashMap constructor call in NBTTagCompound.<init>");
+                            mn.instructions.insertBefore(mNode, new LdcInsnNode(4));
                             mn.instructions.insertBefore(
                                     mNode,
                                     new MethodInsnNode(
                                             Opcodes.INVOKESPECIAL,
                                             FASTUTIL_HASHMAP,
                                             INIT,
-                                            EMPTY_DESC,
+                                            "(I)V", // constructor descriptor with int parameter
                                             false));
                             mn.instructions.remove(mNode);
                             changed = true;
