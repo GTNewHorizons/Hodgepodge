@@ -65,6 +65,7 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer {
                     } else if (node.getOpcode() == Opcodes.INVOKESPECIAL && node instanceof MethodInsnNode mNode) {
                         if (mNode.name.equals(INIT) && mNode.desc.equals(EMPTY_DESC) && mNode.owner.equals(HASHMAP)) {
                             Common.logASM(LOGGER, "Found HashMap constructor call in NBTTagCompound.<init>");
+                            // Due to loadFactor being 0.75, the actual initialCapacity is 6, not 4.
                             mn.instructions.insertBefore(mNode, new LdcInsnNode(4));
                             mn.instructions.insertBefore(
                                     mNode,
