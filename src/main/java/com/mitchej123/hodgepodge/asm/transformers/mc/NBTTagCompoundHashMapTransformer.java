@@ -67,14 +67,16 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer {
                             Common.logASM(LOGGER, "Found HashMap constructor call in NBTTagCompound.<init>");
                             // Due to loadFactor being 0.75, the actual initialCapacity is 6, not 4.
                             mn.instructions.insertBefore(mNode, new LdcInsnNode(4));
+                            // spotless:off (this became unreadable)
                             mn.instructions.insertBefore(
                                     mNode,
                                     new MethodInsnNode(
                                             Opcodes.INVOKESPECIAL,
                                             FASTUTIL_HASHMAP,
                                             INIT,
-                                            "(I)V", // constructor descriptor with int parameter
+                                            "(I)V",
                                             false));
+                            //spotless:on
                             mn.instructions.remove(mNode);
                             changed = true;
                         }
