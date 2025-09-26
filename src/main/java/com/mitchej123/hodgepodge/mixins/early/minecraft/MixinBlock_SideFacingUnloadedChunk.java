@@ -13,7 +13,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 
-@Mixin(Block.class)
+// Need to come after Angelica
+@Mixin(value = Block.class, priority = 1010)
 public class MixinBlock_SideFacingUnloadedChunk {
 
     @ModifyReturnValue(method = "shouldSideBeRendered", at = @At("TAIL"))
