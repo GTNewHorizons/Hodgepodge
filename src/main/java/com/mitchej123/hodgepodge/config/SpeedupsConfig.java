@@ -8,6 +8,14 @@ public class SpeedupsConfig {
 
     // Minecraft
 
+    @Config.Comment({
+            "Improves the performance of items significantly by not checking collisions against other entities for them.",
+            "(10x fps improvements with a lot of dropped items)",
+            "Also works serverside, improving tick times. (Adapted from FalseTweaks)" })
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fastItemEntityPhysics;
+
     @Config.Comment("Optimize ASMDataTable getAnnotationsFor for faster startup")
     @Config.DefaultBoolean(true)
     public static boolean optimizeASMDataTable;
