@@ -607,6 +607,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixIc2CropTrampling;
 
+    @Config.Comment("Fix IC2 Keybinds activating in GUIs")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2KeybindsInGuis;
+
     // Journey Map
 
     @Config.Comment("Prevents journeymap from using illegal character in file paths")
