@@ -385,10 +385,10 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixHouseCharRendering;
 
-    @Config.Comment("Fix chunk loading from block updates.")
+    @Config.Comment("Prevent block and entity updates from loading unloaded chunks.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean fixChunkLoadingFromBlockUpdates;
+    public static boolean preventChunkLoadingFromBlockUpdates;
 
     /* ====== Minecraft fixes end ===== */
 

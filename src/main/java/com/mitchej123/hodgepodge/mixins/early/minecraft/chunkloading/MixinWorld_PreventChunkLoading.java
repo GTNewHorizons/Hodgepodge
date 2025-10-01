@@ -11,6 +11,13 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+/**
+ * Add guards to various World interaction methods to prevent them from loading chunks. Breaks vanilla behavior, but is
+ * generally more desirable for performance and avoiding unintended chunkloads. Sibling mixin to
+ * {@link MixinWorldServer_PreventChunkLoading}
+ *
+ * @author kuba6000
+ */
 @Mixin(World.class)
 public abstract class MixinWorld_PreventChunkLoading {
 
