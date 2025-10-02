@@ -60,12 +60,14 @@ public class SimulationDistanceHelper {
         TweaksConfig.simulationDistance = distance;
     }
 
-    private Thread thread;
+    private final Thread thread;
+    private final Exception originalStackTraceException;
 
     public SimulationDistanceHelper(World world) {
         this.worldRef = new WeakReference<>(world);
         isServer = world instanceof WorldServer;
         thread = Thread.currentThread();
+        originalStackTraceException = new RuntimeException();
     }
 
     /**
@@ -325,10 +327,16 @@ public class SimulationDistanceHelper {
         writeCustomLog("pendingTickListEntriesHashSet", logHash.toString());
     }
 
-    public void chunkUnloaded(long chunk) {
+    private void checkThread() {
         if (thread != null && thread != Thread.currentThread()) {
+            FMLLog.getLogger().error("Original stacktrace:");
+            originalStackTraceException.printStackTrace();
             throw new RuntimeException("Called from different thread!");
         }
+    }
+
+    public void chunkUnloaded(long chunk) {
+        checkThread();
         World world = worldRef.get();
         if (world == null) {
             return;
@@ -384,9 +392,7 @@ public class SimulationDistanceHelper {
     }
 
     public void addTick(NextTickListEntry entry, Operation<Boolean> originalTreeAdd) {
-        if (thread != null && thread != Thread.currentThread()) {
-            throw new RuntimeException("Called from different thread!");
-        }
+        checkThread();
         pendingTickCandidates.add(entry);
         long key = ChunkCoordIntPair.chunkXZ2Int(entry.xCoord >> 4, entry.zCoord >> 4);
         HashSet<NextTickListEntry> entries = chunkTickMap.get(key);
@@ -407,9 +413,7 @@ public class SimulationDistanceHelper {
     }
 
     public void tickUpdates(boolean processAll, List<NextTickListEntry> pendingTickListEntriesThisTick) {
-        if (thread != null && thread != Thread.currentThread()) {
-            throw new RuntimeException("Called from different thread!");
-        }
+        checkThread();
         World world = worldRef.get();
         if (world == null) {
             return;
