@@ -1247,12 +1247,12 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
     FIX_LAST_MILLENIUM_RAIN(new MixinBuilder("Remove rain from the Last Millenium (Extra Utilities)")
-            .addCommonMixins("extrautilities.MixinChunkProviderEndOfTime")
+            .addCommonMixins("extrautilities.MixinWorldProviderEndOfTime")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesLastMilleniumRain)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
     FIX_LAST_MILLENIUM_CREATURES(new MixinBuilder("Remove creatures from the Last Millenium (Extra Utilities)")
-            .addCommonMixins("extrautilities.MixinWorldProviderEndOfTime")
+            .addCommonMixins("extrautilities.MixinChunkProviderEndOfTime")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesLastMilleniumCreatures)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
