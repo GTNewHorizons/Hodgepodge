@@ -351,12 +351,6 @@ public enum Mixins implements IMixins {
             .addClientMixins(
                     "minecraft.MixinGameSettings_FixOFChunkLoading")
             .setPhase(Phase.EARLY)),
-    FIX_SIDE_FACING_UNLOADED_CHUNKS_BEING_RENDERED(new MixinBuilder()
-            .setApplyIf(() -> FixesConfig.fixBlockSidesFacingUnloadedChunksBeingRendered)
-            .addClientMixins(
-                    "minecraft.MixinBlock_SideFacingUnloadedChunk",
-                    "minecraft.MixinChunkCache_SideFacingUnloaded")
-            .setPhase(Phase.EARLY)),
     ADD_TOGGLE_DEBUG_MESSAGE(new MixinBuilder("Toggle Debug Message")
             .addClientMixins("minecraft.MixinMinecraft_ToggleDebugMessage")
             .setApplyIf(() -> TweaksConfig.addToggleDebugMessage)
@@ -1248,12 +1242,12 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
     FIX_LAST_MILLENIUM_RAIN(new MixinBuilder("Remove rain from the Last Millenium (Extra Utilities)")
-            .addCommonMixins("extrautilities.MixinChunkProviderEndOfTime")
+            .addCommonMixins("extrautilities.MixinWorldProviderEndOfTime")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesLastMilleniumRain)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
     FIX_LAST_MILLENIUM_CREATURES(new MixinBuilder("Remove creatures from the Last Millenium (Extra Utilities)")
-            .addCommonMixins("extrautilities.MixinWorldProviderEndOfTime")
+            .addCommonMixins("extrautilities.MixinChunkProviderEndOfTime")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesLastMilleniumCreatures)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
