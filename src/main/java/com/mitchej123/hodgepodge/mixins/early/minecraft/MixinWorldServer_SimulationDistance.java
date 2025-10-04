@@ -52,6 +52,11 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
     @Unique
     private boolean hodgepodge$processCurrentChunk;
 
+    @Override
+    public void hodgepodge$SetProcessCurrentChunk(boolean value) {
+        hodgepodge$processCurrentChunk = value;
+    }
+
     @Unique
     private ExtendedBlockStorage[] hodgepodge$emptyBlockStorage = new ExtendedBlockStorage[0];
 
