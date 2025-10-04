@@ -200,9 +200,9 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixTooManyAllocationsChunkPositionIntPair;
 
-    @Config.Comment("Add option to separate simulation distance from rendering distance (Incompatible with optifine, will automatically be disabled)")
-    @Config.DefaultBoolean(true)
-    public static boolean addSimulationDistance;
+    @Config.Comment("[Experimental] Add option to separate simulation distance from rendering distance (Incompatible with optifine, will automatically be disabled). WARNING: May lead to TPS issues")
+    @Config.DefaultBoolean(false)
+    public static boolean addSimulationDistance_WIP;
 
     @Config.Comment("Fix RCON Threading by forcing it to run on the main thread")
     @Config.DefaultBoolean(true)
