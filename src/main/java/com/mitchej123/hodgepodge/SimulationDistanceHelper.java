@@ -252,10 +252,7 @@ public class SimulationDistanceHelper {
         iterator = added.iterator();
         while (iterator.hasNext()) {
             long chunk = iterator.nextLong();
-            HashSet<NextTickListEntry> entries = chunkTickMap.get(chunk);
-            if (entries != null) {
-                pendingTickCandidates.addAll(entries);
-            }
+            promoteChunkEntries(chunk);
         }
         simulationDistanceOld = simulationDistance;
     }
@@ -403,6 +400,39 @@ public class SimulationDistanceHelper {
         if (!pendingTickListEntriesHashSet.add(entry)) {
             dumpTickLists(entry);
             throw new IllegalStateException("Failed to add tick! See logs for more.");
+        }
+    }
+
+    public void stageTickWithoutVanillaAdd(NextTickListEntry entry) {
+        if (thread != null && thread != Thread.currentThread()) {
+            throw new RuntimeException("Called from different thread!");
+        }
+        long key = ChunkCoordIntPair.chunkXZ2Int(entry.xCoord >> 4, entry.zCoord >> 4);
+        HashSet<NextTickListEntry> entries = chunkTickMap.get(key);
+        if (entries == null) {
+            entries = new HashSet<>();
+            chunkTickMap.put(key, entries);
+        }
+        entries.add(entry);
+        // NOTE: do not touch pendingTickListEntriesTreeSet/HashSet or pendingTickCandidates here.
+    }
+
+    private void promoteChunkEntries(long chunkKey) {
+        HashSet<NextTickListEntry> entries = chunkTickMap.get(chunkKey);
+        if (entries == null || entries.isEmpty()) return;
+
+        for (NextTickListEntry entry : entries) {
+            if (!pendingTickListEntriesHashSet.contains(entry)) {
+                if (!pendingTickListEntriesTreeSet.add(entry)) {
+                    dumpTickLists(entry);
+                    throw new IllegalStateException("Failed to add tick to TreeSet during promotion!");
+                }
+                if (!pendingTickListEntriesHashSet.add(entry)) {
+                    dumpTickLists(entry);
+                    throw new IllegalStateException("Failed to add tick to HashSet during promotion!");
+                }
+            }
+            pendingTickCandidates.add(entry);
         }
     }
 

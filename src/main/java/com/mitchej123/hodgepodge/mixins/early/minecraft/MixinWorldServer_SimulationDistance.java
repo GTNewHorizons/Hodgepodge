@@ -204,10 +204,16 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
             at = @At(value = "INVOKE", target = "Ljava/util/Set;add(Ljava/lang/Object;)Z"))
     private boolean hodgepodge$addTick1Set(Set<NextTickListEntry> instance, Object e, Operation<Boolean> original) {
         SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
-        if (!helper.isReadyToAdd()) {
-            return original.call(instance, e);
+        if (!helper.isReadyToAdd()) return original.call(instance, e);
+
+        NextTickListEntry entry = (NextTickListEntry) e;
+        int cx = entry.xCoord >> 4, cz = entry.zCoord >> 4;
+
+        if (!helper.shouldProcessTick(cx, cz)) {
+            helper.stageTickWithoutVanillaAdd(entry);
+            return true;
         }
-        return true; // Fake success for hashset, we will add that later ourselves
+        return true;
     }
 
     /**
@@ -219,10 +225,16 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
     private boolean hodgepodge$addTick1Tree(TreeSet<NextTickListEntry> instance, Object e,
             Operation<Boolean> original) {
         SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
-        if (!helper.isReadyToAdd()) {
-            return original.call(instance, e);
+        if (!helper.isReadyToAdd()) return original.call(instance, e);
+
+        NextTickListEntry entry = (NextTickListEntry) e;
+        int cx = entry.xCoord >> 4, cz = entry.zCoord >> 4;
+
+        if (!helper.shouldProcessTick(cx, cz)) {
+            helper.stageTickWithoutVanillaAdd(entry);
+            return true;
         }
-        helper.addTick((NextTickListEntry) e, original);
+        helper.addTick(entry, original);
         return true;
     }
 
@@ -234,10 +246,16 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
             at = @At(value = "INVOKE", target = "Ljava/util/Set;add(Ljava/lang/Object;)Z"))
     private boolean hodgepodge$addTick2Set(Set<NextTickListEntry> instance, Object e, Operation<Boolean> original) {
         SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
-        if (!helper.isReadyToAdd()) {
-            return original.call(instance, e);
+        if (!helper.isReadyToAdd()) return original.call(instance, e);
+
+        NextTickListEntry entry = (NextTickListEntry) e;
+        int cx = entry.xCoord >> 4, cz = entry.zCoord >> 4;
+
+        if (!helper.shouldProcessTick(cx, cz)) {
+            helper.stageTickWithoutVanillaAdd(entry);
+            return true;
         }
-        return true; // Fake success for hashset, we will add that later ourselves
+        return true;
     }
 
     /**
@@ -249,10 +267,16 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
     private boolean hodgepodge$addTick2Tree(TreeSet<NextTickListEntry> instance, Object e,
             Operation<Boolean> original) {
         SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
-        if (!helper.isReadyToAdd()) {
-            return original.call(instance, e);
+        if (!helper.isReadyToAdd()) return original.call(instance, e);
+
+        NextTickListEntry entry = (NextTickListEntry) e;
+        int cx = entry.xCoord >> 4, cz = entry.zCoord >> 4;
+
+        if (!helper.shouldProcessTick(cx, cz)) {
+            helper.stageTickWithoutVanillaAdd(entry);
+            return true;
         }
-        helper.addTick((NextTickListEntry) e, original);
+        helper.addTick(entry, original);
         return true;
     }
 
