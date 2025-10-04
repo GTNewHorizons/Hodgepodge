@@ -660,7 +660,7 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixNetherLeavesFaceRendering;
 
-    @Config.Comment("Fix getPlant method to return an actual Block instead of null")
+    @Config.Comment("Fix ItemNetherSeed.getPlant method to return an actual Block instead of null")
     @Config.DefaultBoolean(true)
     public static boolean fixNetherSeedPlantBlockNull;
 
