@@ -660,6 +660,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixNetherLeavesFaceRendering;
 
+    @Config.Comment("Fix ItemNetherSeed.getPlant method to return an actual Block instead of null")
+    @Config.DefaultBoolean(true)
+    public static boolean fixNetherSeedPlantBlockNull;
+
     // PortalGun
 
     @Config.Comment("Fix outdated URLs used in the PortalGun mod to download the sound pack")
