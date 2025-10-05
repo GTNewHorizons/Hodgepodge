@@ -14,7 +14,7 @@ public class MixinTileFluidDuctSuper {
 
     @Inject(method = "setGrid", at = @At(value = "HEAD"), remap = false, cancellable = true)
     public void hodgepodge$setGrid(MultiBlockGrid par1, CallbackInfo ci) {
-        if (!(par1 instanceof FluidGridSuper)) {
+        if (par1 != null && !(par1 instanceof FluidGridSuper)) {
             par1.destroy();
             ci.cancel();
         }

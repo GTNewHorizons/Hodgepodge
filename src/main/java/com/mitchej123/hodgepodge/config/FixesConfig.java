@@ -606,6 +606,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixIc2CropTrampling;
 
+    @Config.Comment("Fix IC2 Keybinds activating in GUIs")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2KeybindsInGuis;
+
     // Journey Map
 
     @Config.Comment("Prevents journeymap from using illegal character in file paths")
@@ -659,6 +663,10 @@ public class FixesConfig {
     @Config.Comment("If fancy graphics are enabled, Nether Leaves render sides with other Nether Leaves adjacent too")
     @Config.DefaultBoolean(true)
     public static boolean fixNetherLeavesFaceRendering;
+
+    @Config.Comment("Fix ItemNetherSeed.getPlant method to return an actual Block instead of null")
+    @Config.DefaultBoolean(true)
+    public static boolean fixNetherSeedPlantBlockNull;
 
     // PortalGun
 
