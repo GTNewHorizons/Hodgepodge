@@ -8,6 +8,10 @@ public class FixesConfig {
 
     /* ====== Minecraft fixes start ===== */
 
+    @Config.Comment("Fix Vanilla IOOBE when rendering chunks at a distance larger than 16")
+    @Config.DefaultBoolean(true)
+    public static boolean fixVanillaIOOBERenderDistance;
+
     @Config.Comment("Only load languages once per File instead of once per Mod")
     @Config.DefaultBoolean(true)
     public static boolean onlyLoadLanguagesOnce;
@@ -598,6 +602,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixIc2CropTrampling;
 
+    @Config.Comment("Fix IC2 Keybinds activating in GUIs")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2KeybindsInGuis;
+
     // Journey Map
 
     @Config.Comment("Prevents journeymap from using illegal character in file paths")
@@ -651,6 +659,10 @@ public class FixesConfig {
     @Config.Comment("If fancy graphics are enabled, Nether Leaves render sides with other Nether Leaves adjacent too")
     @Config.DefaultBoolean(true)
     public static boolean fixNetherLeavesFaceRendering;
+
+    @Config.Comment("Fix ItemNetherSeed.getPlant method to return an actual Block instead of null")
+    @Config.DefaultBoolean(true)
+    public static boolean fixNetherSeedPlantBlockNull;
 
     // PortalGun
 
@@ -735,6 +747,12 @@ public class FixesConfig {
     @Config.Comment("Fixes some potential errors in Witchery Rendering")
     @Config.DefaultBoolean(true)
     public static boolean fixWitcheryRendering;
+
+    @Config.Comment({ "Prevent the Witchery Demon's trading menu from opening when shift-clicking.",
+            "This allows for some item interactions that are otherwise impossible,",
+            "such as capturing the Demon in an EnderIO Soul Vial." })
+    @Config.DefaultBoolean(true)
+    public static boolean fixWitcheryDemonShiftClick;
 
     // Xaero's Minimap
     @Config.Comment("Fixes the player entity dot rendering when arrow is chosen")
