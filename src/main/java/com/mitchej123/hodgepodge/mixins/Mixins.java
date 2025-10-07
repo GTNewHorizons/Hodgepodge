@@ -1189,6 +1189,12 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixNetherLeavesFaceRendering)
             .addRequiredMod(TargetedMod.HARVESTTHENETHER)
             .setPhase(Phase.LATE)),
+    FIX_NETHER_SEED_PLANT_BLOCK_NULL(
+            new MixinBuilder("Nether Seeds")
+                    .addCommonMixins("harvestthenether.MixinItemNetherSeed")
+                    .setApplyIf(() -> FixesConfig.fixNetherSeedPlantBlockNull)
+                    .addRequiredMod(TargetedMod.HARVESTTHENETHER)
+                    .setPhase(Phase.LATE)),
 
     // Potion Render Offset Fixes - Various Mods
     FIX_BAUBLES_INVENTORY_OFFSET_WITH_POTIONS(new MixinBuilder("Baubles Inventory with Potions")
