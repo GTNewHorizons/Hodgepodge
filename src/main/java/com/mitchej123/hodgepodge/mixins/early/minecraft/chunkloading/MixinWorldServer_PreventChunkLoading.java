@@ -14,7 +14,9 @@ import net.minecraft.world.storage.ISaveHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
 /**
  * Prevent any random ticking blocks and entity ticking from loading chunks. Breaks vanilla behavior, but is generally
@@ -30,35 +32,36 @@ public abstract class MixinWorldServer_PreventChunkLoading extends World {
     public ChunkProviderServer theChunkProviderServer;
 
     // prevent chunkloading on random ticks (crops for example)
-    @Redirect(
+    @WrapOperation(
             method = { "func_147456_g", "scheduleBlockUpdateWithPriority", "tickUpdates" },
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/Block;updateTick(Lnet/minecraft/world/World;IIILjava/util/Random;)V"))
-    private void hodgepodge$onUpdateTick(Block block, World worldIn, int x, int y, int z, Random random) {
+    private void hodgepodge$onUpdateTick(Block instance, World worldIn, int x, int y, int z, Random random,
+            Operation<Void> original) {
         if (!theChunkProviderServer.loadChunkOnProvideRequest) {
-            block.updateTick(worldIn, x, y, z, random);
+            original.call(instance, worldIn, x, y, z, random);
             return;
         }
         theChunkProviderServer.loadChunkOnProvideRequest = false;
         try {
-            block.updateTick(worldIn, x, y, z, random);
+            original.call(instance, worldIn, x, y, z, random);
         } finally {
             theChunkProviderServer.loadChunkOnProvideRequest = true;
         }
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "updateEntities",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateEntities()V"))
-    private void hodgepodge$onUpdateEntities(World world) {
+    private void hodgepodge$onUpdateEntities(WorldServer instance, Operation<Void> original) {
         if (!theChunkProviderServer.loadChunkOnProvideRequest) {
-            super.updateEntities();
+            original.call(instance);
             return;
         }
         theChunkProviderServer.loadChunkOnProvideRequest = false;
         try {
-            super.updateEntities();
+            original.call(instance);
         } finally {
             theChunkProviderServer.loadChunkOnProvideRequest = true;
         }
