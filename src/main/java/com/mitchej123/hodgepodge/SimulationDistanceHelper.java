@@ -4,12 +4,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.function.BiPredicate;
@@ -137,14 +137,14 @@ public class SimulationDistanceHelper {
     /**
      * Ticks to be removed, for compatibility
      */
-    private List<NextTickListEntry> tickToRemove = new ArrayList<>();
+    private final Stack<NextTickListEntry> ticksToRemove = new Stack<>();
 
     public void preventChunkSimulation(long packedChunkPos, boolean prevent) {
         noTickChunksChanges.add(packedChunkPos, prevent);
     }
 
-    public List<NextTickListEntry> getTicksToRemove() {
-        return tickToRemove;
+    public Stack<NextTickListEntry> getTicksToRemove() {
+        return ticksToRemove;
     }
 
     private boolean closeToPlayer(long packedChunkPos) {
@@ -357,7 +357,7 @@ public class SimulationDistanceHelper {
                 dumpTickLists(entry);
                 throw new IllegalStateException("Failed to remove tick! See logs for more.");
             }
-            tickToRemove.add(entry);
+            ticksToRemove.add(entry);
 
             /*
              * Entries would get removed in tickUpdates eventually, but we risk reloading a chunk and having an
@@ -388,7 +388,7 @@ public class SimulationDistanceHelper {
         if (entries != null) {
             entries.remove(entry);
         }
-        tickToRemove.add(entry);
+        ticksToRemove.add(entry);
     }
 
     public void addTick(NextTickListEntry entry, Operation<Boolean> originalTreeAdd) {
@@ -422,8 +422,6 @@ public class SimulationDistanceHelper {
         if (pendingTickListEntriesTreeSet.size() != pendingTickListEntriesHashSet.size()) {
             throw new IllegalStateException("TickNextTick list out of sync");
         }
-
-        tickToRemove.clear();
 
         Iterator<NextTickListEntry> iterator = pendingTickCandidates.iterator();
         while (iterator.hasNext()) {
