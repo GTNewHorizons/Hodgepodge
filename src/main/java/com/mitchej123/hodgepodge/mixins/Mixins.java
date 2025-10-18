@@ -42,7 +42,7 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinWorld_SimulationDistance",
                     "minecraft.MixinWorldServer_SimulationDistance",
                     "minecraft.MixinChunk_SimulationDistance")
-            .setApplyIf(() -> FixesConfig.addSimulationDistance)
+            .setApplyIf(() -> FixesConfig.addSimulationDistance_WIP)
             .setPhase(Phase.EARLY)),
     FIX_RCON_THREADING(new MixinBuilder("Fix RCON Threading by forcing it to run on the main thread")
             .addServerMixins("minecraft.MixinMinecraftServer_RconThreadingFix")
@@ -53,7 +53,7 @@ public enum Mixins implements IMixins {
             .addExcludedMod(TargetedMod.OPTIFINE)
             .addExcludedMod(TargetedMod.ULTRAMINE)
             .addCommonMixins("minecraft.MixinWorldServer_SimulationDistanceThermosFix")
-            .setApplyIf(() -> FixesConfig.addSimulationDistance)
+            .setApplyIf(() -> FixesConfig.addSimulationDistance_WIP)
             .setPhase(Phase.EARLY)),
     FIX_RESOURCEPACK_FOLDER_OPENING(new MixinBuilder("Fix resource pack folder sometimes not opening on windows")
             .addClientMixins("minecraft.MixinGuiScreenResourcePacks")
