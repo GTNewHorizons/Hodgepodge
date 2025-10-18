@@ -45,7 +45,7 @@ public class SimulationDistanceHelper {
      * Mark a chunk as no to be simulated, or reset that state. Not thread safe!
      */
     public static void preventChunkSimulation(World world, long packedChunkPos, boolean prevent) {
-        if (!FixesConfig.addSimulationDistance) {
+        if (!FixesConfig.addSimulationDistance_WIP) {
             return;
         }
         ISimulationDistanceWorld mixin = (ISimulationDistanceWorld) world;
