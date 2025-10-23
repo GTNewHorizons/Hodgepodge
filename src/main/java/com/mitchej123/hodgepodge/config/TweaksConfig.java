@@ -408,4 +408,16 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean hungerGameRule;
 
+    @Config.Comment("Enable custom configurable MOTD with color codes and variables")
+    @Config.DefaultBoolean(false)
+    public static boolean customMotdEnabled;
+
+    @Config.Comment("First line of MOTD. Supports color codes (§), variables ({players}, {maxPlayers}, {tps}, {memory}, {uptime})")
+    @Config.DefaultString("§6§lMy Server §r§7| §e{players}§7/§e{maxPlayers} online")
+    public static String motdLine1;
+
+    @Config.Comment("Second line of MOTD. Supports color codes (§), variables ({players}, {maxPlayers}, {tps}, {memory}, {uptime})")
+    @Config.DefaultString("§aUptime: §f{uptime} §7| §bTPS: §f{tps}")
+    public static String motdLine2;
+
 }

@@ -565,6 +565,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.server.MixinMinecraftServer_AutoSaveInterval")
             .setApplyIf(() -> TweaksConfig.autoSaveInterval != 900)
             .setPhase(Phase.EARLY)),
+    CUSTOM_MOTD(new MixinBuilder("Custom configurable MOTD with color codes and variables")
+            .addServerMixins("minecraft.server.MixinMinecraftServer_CustomMotd")
+            .setApplyIf(() -> TweaksConfig.customMotdEnabled)
+            .setPhase(Phase.EARLY)),
     LIGHTER_WATER(new MixinBuilder("Decreases water opacity from 3 to 1, like in modern")
             .addCommonMixins("minecraft.MixinBlock_LighterWater")
             .setApplyIf(() -> TweaksConfig.useLighterWater)
