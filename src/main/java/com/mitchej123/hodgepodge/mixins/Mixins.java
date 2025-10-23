@@ -42,7 +42,7 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinWorld_SimulationDistance",
                     "minecraft.MixinWorldServer_SimulationDistance",
                     "minecraft.MixinChunk_SimulationDistance")
-            .setApplyIf(() -> FixesConfig.addSimulationDistance)
+            .setApplyIf(() -> FixesConfig.addSimulationDistance_WIP)
             .setPhase(Phase.EARLY)),
     FIX_RCON_THREADING(new MixinBuilder("Fix RCON Threading by forcing it to run on the main thread")
             .addServerMixins("minecraft.MixinMinecraftServer_RconThreadingFix")
@@ -53,7 +53,7 @@ public enum Mixins implements IMixins {
             .addExcludedMod(TargetedMod.OPTIFINE)
             .addExcludedMod(TargetedMod.ULTRAMINE)
             .addCommonMixins("minecraft.MixinWorldServer_SimulationDistanceThermosFix")
-            .setApplyIf(() -> FixesConfig.addSimulationDistance)
+            .setApplyIf(() -> FixesConfig.addSimulationDistance_WIP)
             .setPhase(Phase.EARLY)),
     FIX_RESOURCEPACK_FOLDER_OPENING(new MixinBuilder("Fix resource pack folder sometimes not opening on windows")
             .addClientMixins("minecraft.MixinGuiScreenResourcePacks")
@@ -1184,6 +1184,12 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixNetherLeavesFaceRendering)
             .addRequiredMod(TargetedMod.HARVESTTHENETHER)
             .setPhase(Phase.LATE)),
+    FIX_NETHER_SEED_PLANT_BLOCK_NULL(
+            new MixinBuilder("Nether Seeds")
+                    .addCommonMixins("harvestthenether.MixinItemNetherSeed")
+                    .setApplyIf(() -> FixesConfig.fixNetherSeedPlantBlockNull)
+                    .addRequiredMod(TargetedMod.HARVESTTHENETHER)
+                    .setPhase(Phase.LATE)),
 
     // Potion Render Offset Fixes - Various Mods
     FIX_BAUBLES_INVENTORY_OFFSET_WITH_POTIONS(new MixinBuilder("Baubles Inventory with Potions")
@@ -1242,12 +1248,12 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
     FIX_LAST_MILLENIUM_RAIN(new MixinBuilder("Remove rain from the Last Millenium (Extra Utilities)")
-            .addCommonMixins("extrautilities.MixinChunkProviderEndOfTime")
+            .addCommonMixins("extrautilities.MixinWorldProviderEndOfTime")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesLastMilleniumRain)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
     FIX_LAST_MILLENIUM_CREATURES(new MixinBuilder("Remove creatures from the Last Millenium (Extra Utilities)")
-            .addCommonMixins("extrautilities.MixinWorldProviderEndOfTime")
+            .addCommonMixins("extrautilities.MixinChunkProviderEndOfTime")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesLastMilleniumCreatures)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
