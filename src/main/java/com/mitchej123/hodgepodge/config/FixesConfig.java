@@ -200,9 +200,9 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixTooManyAllocationsChunkPositionIntPair;
 
-    @Config.Comment("Add option to separate simulation distance from rendering distance (Incompatible with optifine, will automatically be disabled)")
-    @Config.DefaultBoolean(true)
-    public static boolean addSimulationDistance;
+    @Config.Comment("[Experimental] Add option to separate simulation distance from rendering distance (Incompatible with optifine, will automatically be disabled). WARNING: May lead to TPS issues")
+    @Config.DefaultBoolean(false)
+    public static boolean addSimulationDistance_WIP;
 
     @Config.Comment("Fix RCON Threading by forcing it to run on the main thread")
     @Config.DefaultBoolean(true)
@@ -384,10 +384,6 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixHouseCharRendering;
-
-    @Config.Comment("Prevents sides facing unloaded chunks from being rendered. Mostly visible with translucent blocks.")
-    @Config.DefaultBoolean(true)
-    public static boolean fixBlockSidesFacingUnloadedChunksBeingRendered;
 
     /* ====== Minecraft fixes end ===== */
 
@@ -667,6 +663,10 @@ public class FixesConfig {
     @Config.Comment("If fancy graphics are enabled, Nether Leaves render sides with other Nether Leaves adjacent too")
     @Config.DefaultBoolean(true)
     public static boolean fixNetherLeavesFaceRendering;
+
+    @Config.Comment("Fix ItemNetherSeed.getPlant method to return an actual Block instead of null")
+    @Config.DefaultBoolean(true)
+    public static boolean fixNetherSeedPlantBlockNull;
 
     // PortalGun
 
