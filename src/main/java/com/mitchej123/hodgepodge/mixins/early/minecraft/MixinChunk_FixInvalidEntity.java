@@ -1,7 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.chunk.Chunk;
 
 import org.apache.logging.log4j.Level;
@@ -50,8 +49,8 @@ public class MixinChunk_FixInvalidEntity {
             return;
         }
 
-        long entityChunkX = MathHelper.floor_double(entity.posX / 16.0D);
-        long entityChunkY = MathHelper.floor_double(entity.posZ / 16.0D);
+        long entityChunkX = (long) Math.floor(entity.posX / 16.0D);
+        long entityChunkY = (long) Math.floor(entity.posZ / 16.0D);
         long dist = Math.abs(entityChunkX - this.xPosition) + Math.abs(entityChunkY - this.zPosition);
 
         // If it's more than 1000 chunks away from its expected position, it's safe to assume it's invalid
