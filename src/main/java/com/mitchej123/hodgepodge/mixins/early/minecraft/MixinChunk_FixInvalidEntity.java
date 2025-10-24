@@ -54,7 +54,8 @@ public class MixinChunk_FixInvalidEntity {
         double diffX = Math.abs(entityChunkX - this.xPosition);
         double diffZ = Math.abs(entityChunkZ - this.zPosition);
 
-        // If it's more than 1000 chunks away from its expected position in either direction, it's safe to assume it's invalid
+        // If it's more than 1000 chunks away from its expected position in either direction, it's safe to assume it's
+        // invalid
         if (diffX > 1000 || diffZ > 1000) {
             double dist = diffX + diffZ;
             logger.log(
