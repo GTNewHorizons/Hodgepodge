@@ -49,12 +49,14 @@ public class MixinChunk_FixInvalidEntity {
             return;
         }
 
-        long entityChunkX = (long) Math.floor(entity.posX / 16.0D);
-        long entityChunkY = (long) Math.floor(entity.posZ / 16.0D);
-        long dist = Math.abs(entityChunkX - this.xPosition) + Math.abs(entityChunkY - this.zPosition);
+        double entityChunkX = entity.posX / 16.0D;
+        double entityChunkZ = entity.posZ / 16.0D;
+        double diffX = Math.abs(entityChunkX - this.xPosition);
+        double diffZ = Math.abs(entityChunkZ - this.zPosition);
 
-        // If it's more than 1000 chunks away from its expected position, it's safe to assume it's invalid
-        if (dist > 1000) {
+        // If it's more than 1000 chunks away from its expected position in either direction, it's safe to assume it's invalid
+        if (diffX > 1000 || diffZ > 1000) {
+            double dist = diffX + diffZ;
             logger.log(
                     Level.INFO,
                     "[Hodgepodge] Removed invalid Entity " + entity
