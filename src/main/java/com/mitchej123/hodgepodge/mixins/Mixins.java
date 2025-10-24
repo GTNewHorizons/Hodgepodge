@@ -275,7 +275,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixDimensionChangeAttributes)
             .setPhase(Phase.EARLY)),
     CONFIGURABLE_PORTAL_RATIO(new MixinBuilder("Make Nether portal travel ratio configurable")
-            .addCommonMixins("minecraft.MixinWorldProvider")
+            .addCommonMixins("minecraft.MixinWorldProviderHell")
             .setPhase(Phase.EARLY)),
     FIX_EATING_STACKED_STEW(new MixinBuilder("Stacked Mushroom Stew Eating Fix")
             .addCommonMixins("minecraft.MixinItemSoup")
