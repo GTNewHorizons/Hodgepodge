@@ -408,4 +408,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean hungerGameRule;
 
+    @Config.Comment("Nether portal coordinate conversion ratio (Vanilla: 8.0). Controls how Overworld and Nether coordinates are scaled when traveling through portals")
+    @Config.RangeDouble(min = 0.125, max = 64.0)
+    @Config.DefaultDouble(8.0)
+    @Config.RequiresMcRestart
+    public static double netherPortalRatio;
+
 }
