@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.rwtema.extrautils.block.BlockSpike;
 
-@SuppressWarnings("UnusedMixin")
 @Mixin(BlockSpike.class)
 public abstract class MixinBlockSpike_PreserveNBT {
 

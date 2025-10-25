@@ -14,7 +14,6 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.rwtema.extrautils.tileentity.TileEntityEnchantedSpike;
 
-@SuppressWarnings("UnusedMixin")
 @Mixin(TileEntityEnchantedSpike.class)
 public abstract class MixinTileEntityEnchantedSpike_PreserveNBT {
 
