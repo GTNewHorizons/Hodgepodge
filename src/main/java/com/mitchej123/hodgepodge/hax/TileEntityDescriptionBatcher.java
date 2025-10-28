@@ -100,8 +100,11 @@ public class TileEntityDescriptionBatcher {
 
         pendingPackets.forEach((player, data) -> {
             if (data.readableBytes() > 0) {
-                send(player, data);
+                ByteBuf temp = Unpooled.buffer(data.readableBytes());
+                temp.writeBytes(data);
                 data.clear();
+
+                send(player, temp);
             }
         });
     }
