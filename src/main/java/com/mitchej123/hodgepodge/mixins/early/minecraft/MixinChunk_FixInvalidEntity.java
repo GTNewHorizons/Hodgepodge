@@ -3,7 +3,6 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.chunk.Chunk;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -37,7 +36,11 @@ public class MixinChunk_FixInvalidEntity {
                 || Double.isInfinite(entity.posX)
                 || Double.isInfinite(entity.posY)
                 || Double.isInfinite(entity.posZ)) {
-            logger.info("[Hodgepodge] Removed invalid Entity {} from chunk ({},{}).", entity, this.xPosition, this.zPosition);
+            logger.info(
+                    "[Hodgepodge] Removed invalid Entity {} from chunk ({},{}).",
+                    entity,
+                    this.xPosition,
+                    this.zPosition);
             ci.cancel();
             return;
         }
@@ -50,7 +53,12 @@ public class MixinChunk_FixInvalidEntity {
         // If it's more than 1000 chunks away from its expected position in either direction, it's safe to assume it's
         // invalid
         if (diffX > 1000 || diffZ > 1000) {
-            logger.info("[Hodgepodge] Removed invalid Entity {} from chunk ({},{}) because it was {} chunks away from its expected position.", entity, this.xPosition, this.zPosition, diffX + diffZ);
+            logger.info(
+                    "[Hodgepodge] Removed invalid Entity {} from chunk ({},{}) because it was {} chunks away from its expected position.",
+                    entity,
+                    this.xPosition,
+                    this.zPosition,
+                    diffX + diffZ);
             ci.cancel();
         }
     }
