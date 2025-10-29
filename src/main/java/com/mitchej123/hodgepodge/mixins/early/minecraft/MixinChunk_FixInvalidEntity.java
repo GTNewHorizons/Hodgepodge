@@ -37,14 +37,7 @@ public class MixinChunk_FixInvalidEntity {
                 || Double.isInfinite(entity.posX)
                 || Double.isInfinite(entity.posY)
                 || Double.isInfinite(entity.posZ)) {
-            logger.log(
-                    Level.INFO,
-                    "[Hodgepodge] Removed invalid Entity " + entity
-                            + " from chunk ("
-                            + this.xPosition
-                            + ","
-                            + this.zPosition
-                            + ").");
+            logger.info("[Hodgepodge] Removed invalid Entity {} from chunk ({},{}).", entity, this.xPosition, this.zPosition);
             ci.cancel();
             return;
         }
