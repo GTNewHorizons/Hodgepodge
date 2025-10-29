@@ -747,6 +747,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.removeInvalidChunkEntites)
             .setPhase(Phase.EARLY)
     ),
+    SPEEDUP_TILE_DESCRIPTION_PACKETS(new MixinBuilder("Batch S35PacketUpdateTileEntity Packets")
+        .addCommonMixins("minecraft.tiledescriptions.MixinEntityPlayerMP", "minecraft.tiledescriptions.MixinPlayerInstance", "forge.tiledescriptions.MixinForgeHooks")
+        .setApplyIf(() -> SpeedupsConfig.batchDescriptionPacketsMixins)
+        .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
@@ -1233,6 +1237,13 @@ public enum Mixins implements IMixins {
     FIX_EXTRA_UTILITIES_UNENCHANTING(new MixinBuilder("Fix Exu Unenchanting")
             .addCommonMixins("extrautilities.MixinRecipeUnEnchanting")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesUnEnchanting)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
+    FIX_EXTRA_UTILITIES_REPAIR_COST(new MixinBuilder("Fix Exu spikes losing NBT tags (other than enchantments) when being placed on the ground" )
+            .addCommonMixins(
+                    "extrautilities.MixinBlockSpike_PreserveNBT",
+                    "extrautilities.MixinTileEntityEnchantedSpike_PreserveNBT")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesPreserveSpikeNBT)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
     DISABLE_AID_SPAWN_XU_SPIKES(new MixinBuilder("Fixes the vanilla zombie aid spawn triggering when killed by Extra Utilities Spikes")

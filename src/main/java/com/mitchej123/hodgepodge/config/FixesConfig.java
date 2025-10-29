@@ -493,6 +493,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesUnEnchanting;
 
+    @Config.Comment("Fix Extra Utilities spikes losing NBT tags (other than enchantments) when being placed on the ground")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesPreserveSpikeNBT;
+
     @Config.Comment("Remove rain from the Last Millenium (Extra Utilities)")
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesLastMilleniumRain;
