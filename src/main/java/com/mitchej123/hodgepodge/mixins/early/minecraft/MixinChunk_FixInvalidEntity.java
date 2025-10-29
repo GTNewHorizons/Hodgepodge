@@ -50,17 +50,7 @@ public class MixinChunk_FixInvalidEntity {
         // If it's more than 1000 chunks away from its expected position in either direction, it's safe to assume it's
         // invalid
         if (diffX > 1000 || diffZ > 1000) {
-            double dist = diffX + diffZ;
-            logger.log(
-                    Level.INFO,
-                    "[Hodgepodge] Removed invalid Entity " + entity
-                            + " from chunk ("
-                            + this.xPosition
-                            + ","
-                            + this.zPosition
-                            + ") because it was "
-                            + dist
-                            + " chunks away from its expected position.");
+            logger.info("[Hodgepodge] Removed invalid Entity {} from chunk ({},{}) because it was {} chunks away from its expected position.", entity, this.xPosition, this.zPosition, diffX + diffZ);
             ci.cancel();
         }
     }
