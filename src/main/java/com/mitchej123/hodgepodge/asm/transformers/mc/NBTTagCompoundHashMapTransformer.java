@@ -23,7 +23,7 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer {
     public static final String INIT = "<init>";
     public static final String EMPTY_DESC = "()V";
     public static final String HASHMAP = "java/util/HashMap";
-    public static final String FASTUTIL_HASHMAP = "it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap";
+    public static final String FASTUTIL_HASHMAP = "com/mitchej123/hodgepodge/LoggingNBTTagMap";
     public static final String NBT_TAG_COMPOUND = "net.minecraft.nbt.NBTTagCompound";
 
     @Override
