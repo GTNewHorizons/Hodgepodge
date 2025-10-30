@@ -742,6 +742,11 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinCraftingManager")
             .setApplyIf(() -> SpeedupsConfig.cacheLastMatchingRecipe)
             .setPhase(Phase.EARLY)),
+    REMOVE_INVALID_ENTITES(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinChunk_FixInvalidEntity")
+            .setApplyIf(() -> FixesConfig.removeInvalidChunkEntites)
+            .setPhase(Phase.EARLY)
+    ),
     SPEEDUP_TILE_DESCRIPTION_PACKETS(new MixinBuilder("Batch S35PacketUpdateTileEntity Packets")
         .addCommonMixins("minecraft.tiledescriptions.MixinEntityPlayerMP", "minecraft.tiledescriptions.MixinPlayerInstance", "forge.tiledescriptions.MixinForgeHooks")
         .setApplyIf(() -> SpeedupsConfig.batchDescriptionPacketsMixins)
