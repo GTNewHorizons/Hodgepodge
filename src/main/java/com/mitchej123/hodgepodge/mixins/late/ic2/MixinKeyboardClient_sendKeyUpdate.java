@@ -17,7 +17,8 @@ public class MixinKeyboardClient_sendKeyUpdate {
             at = @At(
                     opcode = Opcodes.GETFIELD,
                     target = "Lnet/minecraft/client/gui/GuiScreen;allowUserInput:Z",
-                    value = "FIELD"), require = 1)
+                    value = "FIELD"),
+            require = 1)
     private boolean hodgepodge$allowUserInput(GuiScreen gui) {
         return false;
     }
