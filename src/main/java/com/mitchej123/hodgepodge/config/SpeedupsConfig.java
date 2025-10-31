@@ -101,6 +101,20 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static int recipeCacheSize;
 
+    // I split these in two so that you can disable batching at runtime to diagnose problems
+    @Config.Comment("Batch Tile Entity Description S35PacketUpdateTileEntity Packets (Enables Mixins, Requires Restart)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean batchDescriptionPacketsMixins;
+
+    @Config.Comment("Batch Tile Entity Description S35PacketUpdateTileEntity Packets (Enables Code, Does not require restart)")
+    @Config.DefaultBoolean(true)
+    public static boolean batchDescriptionPacketsCode;
+
+    @Config.Comment("Tile Entity Packet Batching Blacklist (Fully Qualified Class Names, Does not require restart)")
+    @Config.DefaultStringList({})
+    public static String[] batchDescriptionBlacklist;
+
     // Biomes O' Plenty
 
     @Config.Comment("Speedup biome fog rendering in BiomesOPlenty")

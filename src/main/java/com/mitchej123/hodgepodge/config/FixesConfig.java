@@ -385,6 +385,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixHouseCharRendering;
 
+    @Config.Comment("Remove invalid Entites in chunks.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean removeInvalidChunkEntites;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -487,6 +492,10 @@ public class FixesConfig {
     @Config.Comment("Fix dupe bug with Division Sigil removing enchantment")
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesUnEnchanting;
+
+    @Config.Comment("Fix Extra Utilities spikes losing NBT tags (other than enchantments) when being placed on the ground")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesPreserveSpikeNBT;
 
     @Config.Comment("Remove rain from the Last Millenium (Extra Utilities)")
     @Config.DefaultBoolean(true)
