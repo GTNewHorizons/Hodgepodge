@@ -389,7 +389,7 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean preventChunkLoadingFromBlockUpdates;
-    
+
     @Config.Comment("Remove invalid Entites in chunks.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
