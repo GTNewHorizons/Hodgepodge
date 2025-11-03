@@ -30,7 +30,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.mitchej123.hodgepodge.ISimulationDistanceWorld;
 import com.mitchej123.hodgepodge.SimulationDistanceHelper;
 
@@ -51,6 +50,11 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
 
     @Unique
     private boolean hodgepodge$processCurrentChunk;
+
+    @Override
+    public void hodgepodge$SetProcessCurrentChunk(boolean value) {
+        hodgepodge$processCurrentChunk = value;
+    }
 
     @Unique
     private ExtendedBlockStorage[] hodgepodge$emptyBlockStorage = new ExtendedBlockStorage[0];
@@ -127,9 +131,9 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
     @Redirect(
             method = "tickUpdates",
             at = @At(value = "INVOKE", target = "Ljava/util/TreeSet;first()Ljava/lang/Object;"))
-    private Object hodgepodge$redirectFirst(TreeSet<NextTickListEntry> instance, @Local(ordinal = 1) int index) {
+    private Object hodgepodge$redirectFirst(TreeSet<NextTickListEntry> instance) {
         SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
-        return helper.getTicksToRemove().get(index);
+        return helper.getTicksToRemove().pop();
     }
 
     /**
