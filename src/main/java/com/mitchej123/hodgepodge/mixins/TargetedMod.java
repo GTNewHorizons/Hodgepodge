@@ -41,7 +41,7 @@ public enum TargetedMod implements ITargetMod {
     HUNGER_OVERHAUL("HungerOverhaul"),
     // Target only IC2, not IC2 Classic. Both have the same mod id.
     IC2(new TargetModBuilder().setTargetClass("ic2.core.IC2")
-            .testModAnnotation(null, name -> !name.contains("Classic"), null)),
+            .testModAnnotation(modId -> modId.equals("IC2"), name -> !name.contains("Classic"), null)),
     IMMERSIVE_ENGINENEERING("ImmersiveEngineering"),
     JOURNEYMAP("journeymap"),
     LOTR("lotr.common.coremod.LOTRLoadingPlugin", "lotr"),
