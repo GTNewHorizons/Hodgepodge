@@ -1,7 +1,5 @@
 package com.mitchej123.hodgepodge.mixins;
 
-import java.util.function.Consumer;
-
 import javax.annotation.Nonnull;
 
 import com.gtnewhorizon.gtnhmixins.builders.ITargetMod;
@@ -41,10 +39,9 @@ public enum TargetedMod implements ITargetMod {
     HARVESTCRAFT("harvestcraft"),
     HARVESTTHENETHER("harvestthenether"),
     HUNGER_OVERHAUL("HungerOverhaul"),
-    IC2("ic2.core.coremod.IC2core", null, null, builder -> {
-        builder.setTargetClass("ic2.core.IC2");
-        builder.testModAnnotation(null, name -> !name.contains("Classic"), null);
-    }),
+    // Target only IC2, not IC2 Classic. Both have the same mod id.
+    IC2(new TargetModBuilder().setTargetClass("ic2.core.IC2")
+            .testModAnnotation(null, name -> !name.contains("Classic"), null)),
     IMMERSIVE_ENGINENEERING("ImmersiveEngineering"),
     JOURNEYMAP("journeymap"),
     LOTR("lotr.common.coremod.LOTRLoadingPlugin", "lotr"),
@@ -74,6 +71,10 @@ public enum TargetedMod implements ITargetMod {
 
     private final TargetModBuilder builder;
 
+    TargetedMod(TargetModBuilder builder) {
+        this.builder = builder;
+    }
+
     TargetedMod(String modId) {
         this(null, modId, null);
     }
@@ -83,14 +84,7 @@ public enum TargetedMod implements ITargetMod {
     }
 
     TargetedMod(String coreModClass, String modId, String targetClass) {
-        this(coreModClass, modId, targetClass, null);
-    }
-
-    TargetedMod(String coreModClass, String modId, String targetClass, Consumer<TargetModBuilder> additionalConfig) {
         this.builder = new TargetModBuilder().setCoreModClass(coreModClass).setModId(modId).setTargetClass(targetClass);
-        if (additionalConfig != null) {
-            additionalConfig.accept(builder);
-        }
     }
 
     @Nonnull
