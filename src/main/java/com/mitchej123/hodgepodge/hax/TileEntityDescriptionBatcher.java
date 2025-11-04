@@ -85,7 +85,6 @@ public class TileEntityDescriptionBatcher {
 
         if (backingBuffer.writerIndex() + forPlayer.writerIndex() > MAX_BYTES_PER_PACKET) {
             send(player, forPlayer);
-            forPlayer.clear();
         }
 
         forPlayer.writeInt(backingBuffer.writerIndex());
@@ -100,18 +99,18 @@ public class TileEntityDescriptionBatcher {
 
         pendingPackets.forEach((player, data) -> {
             if (data.readableBytes() > 0) {
-                ByteBuf temp = Unpooled.buffer(data.readableBytes());
-                temp.writeBytes(data);
-                data.clear();
-
-                send(player, temp);
+                send(player, data);
             }
         });
     }
 
     private static void send(EntityPlayerMP player, ByteBuf data) {
+        ByteBuf temp = Unpooled.buffer(data.readableBytes());
+        temp.writeBytes(data);
+        data.clear();
+
         BatchedDescriptionPacket packet = new BatchedDescriptionPacket();
-        packet.data = data;
+        packet.data = temp;
 
         NetworkHandler.instance.sendTo(packet, player);
     }
