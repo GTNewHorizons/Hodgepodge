@@ -60,9 +60,16 @@ public abstract class MixinEntityPlayerMP extends EntityPlayer {
     /**
      * This injects just before where vanilla handles chunk sending and returns before then. This will mess up any
      * mixins that target the tail of this function, but other solutions are similarly invasive.
+     * 
+     * In case Player-API is present the onUpdate method is modified to forward to localOnUpdate, which in turn contains
+     * the logic of the original onUpdate method. To support both cases we have to attempt to inject into both methods.
+     * In the case there is only onUpdate the injection into localOnUpdate will fail because it doesn't exist. In the
+     * case there is onUpdate and localOnUpdate with the actual logic the injection to onUpdate will fail because it
+     * won't be able to find the injection point. In the end this means that exactly one of the injections will succeed,
+     * and the failure of the other one is ignored.
      */
     @Inject(
-            method = "onUpdate",
+            method = { "onUpdate", "localOnUpdate" },
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/entity/player/EntityPlayerMP;loadedChunks:Ljava/util/List;",
