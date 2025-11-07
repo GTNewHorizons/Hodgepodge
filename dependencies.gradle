@@ -12,22 +12,22 @@ configurations {
 }
 
 dependencies {
-    api("com.github.GTNewHorizons:GTNHLib:0.7.0:dev")
+    api("com.github.GTNewHorizons:GTNHLib:0.7.7:dev")
 
     compileOnly("com.gtnewhorizons.retrofuturabootstrap:RetroFuturaBootstrap:1.0.2") { transitive = false }
 
-    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.8.6-GTNH:dev") // force a more up-to-date NEI version
-    transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-702-GTNH")
+    transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.8.26-GTNH:dev") // force a more up-to-date NEI version
+    transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-729-GTNH")
     transformedModCompileOnly("com.github.GTNewHorizons:Baubles:1.0.4:dev")
     // Transitive updates to make runClient17 work
     transformedModCompileOnly("com.github.GTNewHorizons:Steve-s-Factory-Manager:1.3.4-GTNH:dev")
-    transformedModCompileOnly("com.github.GTNewHorizons:ForgeMultipart:1.6.8:dev")
-    transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.10:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:ForgeMultipart:1.7.0:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.95:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:harvestcraft:1.3.2-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:HungerOverhaul:1.1.0-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:MrTJPCore:1.3.4:dev") // Do not update, fixed afterwards
-    transformedModCompileOnly("com.github.GTNewHorizons:Railcraft:9.17.0:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
-    transformedModCompileOnly("com.github.GTNewHorizons:TinkersConstruct:1.14.2-GTNH:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:Railcraft:9.17.6:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
+    transformedModCompileOnly("com.github.GTNewHorizons:TinkersConstruct:1.14.6-GTNH:dev")
     transformedModCompileOnly(rfg.deobf("curse.maven:bibliocraft-228027:2423369"))
     transformedModCompileOnly(rfg.deobf("curse.maven:biomes-o-plenty-220318:2499612"))
     transformedModCompileOnly("curse.maven:cofh-core-69162:2388751")
@@ -47,7 +47,7 @@ dependencies {
     transformedModCompileOnly(rfg.deobf("curse.maven:glibys-voice-chat-225110:2301492"))
 
     transformedModCompileOnly(rfg.deobf("curse.maven:automagy-222153:2285272"))
-    transformedModCompileOnly("com.github.GTNewHorizons:Galacticraft:3.4.0-GTNH:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:Galacticraft:3.4.7-GTNH:dev")
     transformedModCompileOnly("curse.maven:minechem-368422:2905830")
     transformedModCompileOnly("curse.maven:thermal-dynamics-227443:2388756")
     transformedModCompileOnly("curse.maven:thermal-expansion-69163:2388759")
@@ -68,8 +68,8 @@ dependencies {
     // For testing - HP and AF are liable to mixin the same targets
     runtimeOnlyNonPublishable("maven.modrinth:archaicfix:0.7.7:dev")
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:ArchaicFix:99.0.0:dev") // mavenLocal location
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:ServerUtilities:2.1.61:dev") // for the pregenerator
-    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta57:dev") // for TPS graph
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:ServerUtilities:2.2.2:dev") // for the pregenerator
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta64:dev") // for TPS graph
 
     testImplementation(platform('org.junit:junit-bom:5.9.2'))
     testImplementation('org.junit.jupiter:junit-jupiter')

@@ -4,12 +4,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.function.BiPredicate;
@@ -45,7 +45,7 @@ public class SimulationDistanceHelper {
      * Mark a chunk as no to be simulated, or reset that state. Not thread safe!
      */
     public static void preventChunkSimulation(World world, long packedChunkPos, boolean prevent) {
-        if (!FixesConfig.addSimulationDistance) {
+        if (!FixesConfig.addSimulationDistance_WIP) {
             return;
         }
         ISimulationDistanceWorld mixin = (ISimulationDistanceWorld) world;
@@ -60,12 +60,14 @@ public class SimulationDistanceHelper {
         TweaksConfig.simulationDistance = distance;
     }
 
-    private Thread thread;
+    private final Thread thread;
+    private final Exception originalStackTraceException;
 
     public SimulationDistanceHelper(World world) {
         this.worldRef = new WeakReference<>(world);
         isServer = world instanceof WorldServer;
         thread = Thread.currentThread();
+        originalStackTraceException = new RuntimeException();
     }
 
     /**
@@ -135,14 +137,14 @@ public class SimulationDistanceHelper {
     /**
      * Ticks to be removed, for compatibility
      */
-    private List<NextTickListEntry> tickToRemove = new ArrayList<>();
+    private final Stack<NextTickListEntry> ticksToRemove = new Stack<>();
 
     public void preventChunkSimulation(long packedChunkPos, boolean prevent) {
         noTickChunksChanges.add(packedChunkPos, prevent);
     }
 
-    public List<NextTickListEntry> getTicksToRemove() {
-        return tickToRemove;
+    public Stack<NextTickListEntry> getTicksToRemove() {
+        return ticksToRemove;
     }
 
     private boolean closeToPlayer(long packedChunkPos) {
@@ -325,10 +327,16 @@ public class SimulationDistanceHelper {
         writeCustomLog("pendingTickListEntriesHashSet", logHash.toString());
     }
 
-    public void chunkUnloaded(long chunk) {
+    private void checkThread() {
         if (thread != null && thread != Thread.currentThread()) {
+            FMLLog.getLogger().error("Original stacktrace:");
+            originalStackTraceException.printStackTrace();
             throw new RuntimeException("Called from different thread!");
         }
+    }
+
+    public void chunkUnloaded(long chunk) {
+        checkThread();
         World world = worldRef.get();
         if (world == null) {
             return;
@@ -349,7 +357,7 @@ public class SimulationDistanceHelper {
                 dumpTickLists(entry);
                 throw new IllegalStateException("Failed to remove tick! See logs for more.");
             }
-            tickToRemove.add(entry);
+            ticksToRemove.add(entry);
 
             /*
              * Entries would get removed in tickUpdates eventually, but we risk reloading a chunk and having an
@@ -380,13 +388,11 @@ public class SimulationDistanceHelper {
         if (entries != null) {
             entries.remove(entry);
         }
-        tickToRemove.add(entry);
+        ticksToRemove.add(entry);
     }
 
     public void addTick(NextTickListEntry entry, Operation<Boolean> originalTreeAdd) {
-        if (thread != null && thread != Thread.currentThread()) {
-            throw new RuntimeException("Called from different thread!");
-        }
+        checkThread();
         pendingTickCandidates.add(entry);
         long key = ChunkCoordIntPair.chunkXZ2Int(entry.xCoord >> 4, entry.zCoord >> 4);
         HashSet<NextTickListEntry> entries = chunkTickMap.get(key);
@@ -407,9 +413,7 @@ public class SimulationDistanceHelper {
     }
 
     public void tickUpdates(boolean processAll, List<NextTickListEntry> pendingTickListEntriesThisTick) {
-        if (thread != null && thread != Thread.currentThread()) {
-            throw new RuntimeException("Called from different thread!");
-        }
+        checkThread();
         World world = worldRef.get();
         if (world == null) {
             return;
@@ -418,8 +422,6 @@ public class SimulationDistanceHelper {
         if (pendingTickListEntriesTreeSet.size() != pendingTickListEntriesHashSet.size()) {
             throw new IllegalStateException("TickNextTick list out of sync");
         }
-
-        tickToRemove.clear();
 
         Iterator<NextTickListEntry> iterator = pendingTickCandidates.iterator();
         while (iterator.hasNext()) {

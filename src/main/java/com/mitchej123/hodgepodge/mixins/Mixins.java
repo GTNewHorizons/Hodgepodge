@@ -42,7 +42,7 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinWorld_SimulationDistance",
                     "minecraft.MixinWorldServer_SimulationDistance",
                     "minecraft.MixinChunk_SimulationDistance")
-            .setApplyIf(() -> FixesConfig.addSimulationDistance)
+            .setApplyIf(() -> FixesConfig.addSimulationDistance_WIP)
             .setPhase(Phase.EARLY)),
     FIX_RCON_THREADING(new MixinBuilder("Fix RCON Threading by forcing it to run on the main thread")
             .addServerMixins("minecraft.MixinMinecraftServer_RconThreadingFix")
@@ -53,7 +53,7 @@ public enum Mixins implements IMixins {
             .addExcludedMod(TargetedMod.OPTIFINE)
             .addExcludedMod(TargetedMod.ULTRAMINE)
             .addCommonMixins("minecraft.MixinWorldServer_SimulationDistanceThermosFix")
-            .setApplyIf(() -> FixesConfig.addSimulationDistance)
+            .setApplyIf(() -> FixesConfig.addSimulationDistance_WIP)
             .setPhase(Phase.EARLY)),
     FIX_RESOURCEPACK_FOLDER_OPENING(new MixinBuilder("Fix resource pack folder sometimes not opening on windows")
             .addClientMixins("minecraft.MixinGuiScreenResourcePacks")
@@ -273,6 +273,9 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinServerConfigurationManager",
                     "minecraft.MixinEntityPlayerMP")
             .setApplyIf(() -> FixesConfig.fixDimensionChangeAttributes)
+            .setPhase(Phase.EARLY)),
+    CONFIGURABLE_PORTAL_RATIO(new MixinBuilder("Make Nether portal travel ratio configurable")
+            .addCommonMixins("minecraft.MixinWorldProviderHell")
             .setPhase(Phase.EARLY)),
     FIX_EATING_STACKED_STEW(new MixinBuilder("Stacked Mushroom Stew Eating Fix")
             .addCommonMixins("minecraft.MixinItemSoup")
@@ -739,6 +742,15 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinCraftingManager")
             .setApplyIf(() -> SpeedupsConfig.cacheLastMatchingRecipe)
             .setPhase(Phase.EARLY)),
+    REMOVE_INVALID_ENTITES(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinChunk_FixInvalidEntity")
+            .setApplyIf(() -> FixesConfig.removeInvalidChunkEntites)
+            .setPhase(Phase.EARLY)
+    ),
+    SPEEDUP_TILE_DESCRIPTION_PACKETS(new MixinBuilder("Batch S35PacketUpdateTileEntity Packets")
+        .addCommonMixins("minecraft.tiledescriptions.MixinEntityPlayerMP", "minecraft.tiledescriptions.MixinPlayerInstance", "forge.tiledescriptions.MixinForgeHooks")
+        .setApplyIf(() -> SpeedupsConfig.batchDescriptionPacketsMixins)
+        .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
@@ -1225,6 +1237,13 @@ public enum Mixins implements IMixins {
     FIX_EXTRA_UTILITIES_UNENCHANTING(new MixinBuilder("Fix Exu Unenchanting")
             .addCommonMixins("extrautilities.MixinRecipeUnEnchanting")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesUnEnchanting)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
+    FIX_EXTRA_UTILITIES_REPAIR_COST(new MixinBuilder("Fix Exu spikes losing NBT tags (other than enchantments) when being placed on the ground" )
+            .addCommonMixins(
+                    "extrautilities.MixinBlockSpike_PreserveNBT",
+                    "extrautilities.MixinTileEntityEnchantedSpike_PreserveNBT")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesPreserveSpikeNBT)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
     DISABLE_AID_SPAWN_XU_SPIKES(new MixinBuilder("Fixes the vanilla zombie aid spawn triggering when killed by Extra Utilities Spikes")

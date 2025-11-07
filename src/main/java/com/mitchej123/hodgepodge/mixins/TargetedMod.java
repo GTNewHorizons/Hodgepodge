@@ -39,7 +39,9 @@ public enum TargetedMod implements ITargetMod {
     HARVESTCRAFT("harvestcraft"),
     HARVESTTHENETHER("harvestthenether"),
     HUNGER_OVERHAUL("HungerOverhaul"),
-    IC2("ic2.core.coremod.IC2core", "IC2"),
+    // Target only IC2, not IC2 Classic. Both have the same mod id.
+    IC2(new TargetModBuilder().setTargetClass("ic2.core.IC2")
+            .testModAnnotation(modId -> modId.equals("IC2"), name -> !name.contains("Classic"), null)),
     IMMERSIVE_ENGINENEERING("ImmersiveEngineering"),
     JOURNEYMAP("journeymap"),
     LOTR("lotr.common.coremod.LOTRLoadingPlugin", "lotr"),
@@ -68,6 +70,10 @@ public enum TargetedMod implements ITargetMod {
     ZTONES("Ztones");
 
     private final TargetModBuilder builder;
+
+    TargetedMod(TargetModBuilder builder) {
+        this.builder = builder;
+    }
 
     TargetedMod(String modId) {
         this(null, modId, null);

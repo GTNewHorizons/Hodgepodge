@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 import ic2.core.util.KeyboardClient;
 
-@Mixin(value = KeyboardClient.class, remap = false)
+@Mixin(value = KeyboardClient.class)
 public class MixinKeyboardClient_sendKeyUpdate {
 
     @Redirect(
@@ -17,7 +17,8 @@ public class MixinKeyboardClient_sendKeyUpdate {
             at = @At(
                     opcode = Opcodes.GETFIELD,
                     target = "Lnet/minecraft/client/gui/GuiScreen;allowUserInput:Z",
-                    value = "FIELD"))
+                    value = "FIELD"),
+            require = 1)
     private boolean hodgepodge$allowUserInput(GuiScreen gui) {
         return false;
     }
