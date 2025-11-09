@@ -611,6 +611,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixIc2CropTrampling;
 
+    @Config.Comment({ "Misc IC2 crop breeding quality of life changes", "Better propagation odds",
+            "Lower growth weeding behavior odds", "Lower stat drop amount" })
+    @Config.DefaultBoolean(true)
+    public static boolean ic2CropBreedingQol;
+
     @Config.Comment("Fix IC2 Keybinds activating in GUIs")
     @Config.DefaultBoolean(true)
     public static boolean fixIc2KeybindsInGuis;
