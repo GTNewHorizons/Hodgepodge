@@ -22,6 +22,7 @@ public final class EarlyConfig {
 
     public static final boolean noNukeBaseMod;
     public static final boolean noLeanerForgeConfiguration;
+    public static final boolean debugLogConfigParsingTimes;
     public static final boolean dumpASMClass;
 
     static {
@@ -39,6 +40,7 @@ public final class EarlyConfig {
         config.setProperty("noNukeBaseMod", String.valueOf(noNukeBaseMod));
         noLeanerForgeConfiguration = Boolean.parseBoolean(config.getProperty("noLeanerForgeConfiguration"));
         config.setProperty("noLeanerForgeConfiguration", String.valueOf(noLeanerForgeConfiguration));
+        debugLogConfigParsingTimes = Boolean.getBoolean("hodgepodge.logConfigTimes");
         dumpASMClass = Boolean.getBoolean("hodgepodge.dumpClass");
         // ==========================================
         try (Writer r = new BufferedWriter(new FileWriter(configLocation))) {

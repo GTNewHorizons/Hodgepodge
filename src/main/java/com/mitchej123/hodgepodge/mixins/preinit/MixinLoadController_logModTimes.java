@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mitchej123.hodgepodge.core.shared.FileLogger;
 import com.mitchej123.hodgepodge.mixins.hooks.ModProfileResult;
-import com.mitchej123.hodgepodge.util.FileLogger;
 
 import cpw.mods.fml.common.LoadController;
 import cpw.mods.fml.common.LoaderState;
@@ -55,7 +55,7 @@ public class MixinLoadController_logModTimes {
                 results.sort(null);
                 results.forEach(result -> {
                     final String modid = result.mod.getModId();
-                    logger.log(type + ";" + modid + ";" + result.mod.getName() + ";" + result.time / 1000000);
+                    logger.log(type + ";" + modid + ";" + result.mod.getName() + ";" + result.time / 1_000_000);
                 });
             });
         }
