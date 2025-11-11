@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import com.mitchej123.hodgepodge.core.HodgepodgeCore;
+import com.mitchej123.hodgepodge.mixins.hooks.WorldDataSaverHook;
 
 import thaumcraft.common.lib.world.dim.MazeHandler;
 
@@ -41,7 +41,7 @@ public class MixinMazeHandler_threadedIO {
 
         final File file = new File(world.getSaveHandler().getWorldDirectory(), filename);
 
-        HodgepodgeCore.saveWorldDataBackup(file, parentTag);
+        WorldDataSaverHook.saveWorldDataBackup(file, parentTag);
 
     }
 }
