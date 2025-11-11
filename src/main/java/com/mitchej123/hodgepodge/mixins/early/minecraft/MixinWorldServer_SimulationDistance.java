@@ -16,12 +16,14 @@ import net.minecraft.world.WorldSettings;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.storage.ISaveHandler;
+import net.minecraft.world.storage.WorldInfo;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -34,7 +36,7 @@ import com.mitchej123.hodgepodge.SimulationDistanceHelper;
 /**
  * Must run after MixinWorldClient_FixAllocations
  */
-@Mixin(value = WorldServer.class, priority = 1001)
+@Mixin(value = WorldServer.class, priority = 1010)
 public abstract class MixinWorldServer_SimulationDistance extends World implements ISimulationDistanceWorld {
 
     @Shadow
@@ -48,6 +50,11 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
 
     @Unique
     private boolean hodgepodge$processCurrentChunk;
+
+    @Override
+    public void hodgepodge$SetProcessCurrentChunk(boolean value) {
+        hodgepodge$processCurrentChunk = value;
+    }
 
     @Unique
     private ExtendedBlockStorage[] hodgepodge$emptyBlockStorage = new ExtendedBlockStorage[0];
@@ -64,11 +71,40 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
     }
 
     /**
+     * Disable the add to the pendingTickListCandidate
+     */
+    @Redirect(method = "tickUpdates", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"))
+    private boolean hodgepodge$disablePendingAdd(List<NextTickListEntry> instance, Object e) {
+        return true;
+    }
+
+    /**
+     * Disable limit in tickUpdates
+     */
+    @ModifyVariable(method = "tickUpdates", at = @At(value = "STORE", ordinal = 1))
+    private int hodgepodge$disableLimit(int i) {
+        SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
+        return helper.getTicksToRemove().size();
+    }
+
+    /**
+     * Disable early exit in tickUpdates
+     */
+
+    @Redirect(
+            method = "tickUpdates",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/storage/WorldInfo;getWorldTotalTime()J"))
+    private long hodgepodge$disableBreak(WorldInfo instance) {
+        return Long.MAX_VALUE;
+    }
+
+    /**
      * Fake HashSet size so the original MC code doesn't process any ticks
      */
     @Redirect(method = "tickUpdates", at = @At(value = "INVOKE", target = "Ljava/util/TreeSet;size()I"))
     private int hodgepodge$fakeTreeSetSize(TreeSet<NextTickListEntry> instance) {
-        return 0;
+        SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
+        return helper.getTicksToRemove().size();
     }
 
     /**
@@ -76,22 +112,28 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
      */
     @Redirect(method = "tickUpdates", at = @At(value = "INVOKE", target = "Ljava/util/Set;size()I"))
     private int hodgepodge$fakeHashSetSize(Set<NextTickListEntry> instance) {
-        return 0;
+        SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
+        return helper.getTicksToRemove().size();
     }
 
     /**
      * Skip ticks that are outside of simulation distance, and delete ticks for unloaded chunks
      */
-    @Inject(
-            method = "tickUpdates",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/profiler/Profiler;startSection(Ljava/lang/String;)V",
-                    ordinal = 0,
-                    shift = At.Shift.AFTER))
+    @Inject(method = "tickUpdates", at = @At(value = "HEAD"))
     private void hodgepodge$tickUpdates(boolean p_72955_1_, CallbackInfoReturnable<Boolean> cir) {
         SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
         helper.tickUpdates(p_72955_1_, pendingTickListEntriesThisTick);
+    }
+
+    /**
+     * Redirect first to get the ticks we want to remove
+     */
+    @Redirect(
+            method = "tickUpdates",
+            at = @At(value = "INVOKE", target = "Ljava/util/TreeSet;first()Ljava/lang/Object;"))
+    private Object hodgepodge$redirectFirst(TreeSet<NextTickListEntry> instance) {
+        SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
+        return helper.getTicksToRemove().pop();
     }
 
     /**
@@ -163,11 +205,43 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
      */
     @WrapOperation(
             method = "scheduleBlockUpdateWithPriority",
-            at = @At(value = "INVOKE", target = "Ljava/util/TreeSet;add(Ljava/lang/Object;)Z"))
-    private boolean hodgepodge$addTick1(TreeSet<NextTickListEntry> instance, Object e, Operation<Boolean> original) {
+            at = @At(value = "INVOKE", target = "Ljava/util/Set;add(Ljava/lang/Object;)Z"))
+    private boolean hodgepodge$addTick1Set(Set<NextTickListEntry> instance, Object e, Operation<Boolean> original) {
         SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
-        helper.addTick((NextTickListEntry) e);
-        return original.call(instance, e);
+        if (!helper.isReadyToAdd()) {
+            return original.call(instance, e);
+        }
+        return true; // Fake success for hashset, we will add that later ourselves
+    }
+
+    /**
+     * Handle adding ticks
+     */
+    @WrapOperation(
+            method = "scheduleBlockUpdateWithPriority",
+            at = @At(value = "INVOKE", target = "Ljava/util/TreeSet;add(Ljava/lang/Object;)Z"))
+    private boolean hodgepodge$addTick1Tree(TreeSet<NextTickListEntry> instance, Object e,
+            Operation<Boolean> original) {
+        SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
+        if (!helper.isReadyToAdd()) {
+            return original.call(instance, e);
+        }
+        helper.addTick((NextTickListEntry) e, original);
+        return true;
+    }
+
+    /**
+     * Handle adding ticks
+     */
+    @WrapOperation(
+            method = "func_147446_b",
+            at = @At(value = "INVOKE", target = "Ljava/util/Set;add(Ljava/lang/Object;)Z"))
+    private boolean hodgepodge$addTick2Set(Set<NextTickListEntry> instance, Object e, Operation<Boolean> original) {
+        SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
+        if (!helper.isReadyToAdd()) {
+            return original.call(instance, e);
+        }
+        return true; // Fake success for hashset, we will add that later ourselves
     }
 
     /**
@@ -176,10 +250,14 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
     @WrapOperation(
             method = "func_147446_b",
             at = @At(value = "INVOKE", target = "Ljava/util/TreeSet;add(Ljava/lang/Object;)Z"))
-    private boolean hodgepodge$addTick2(TreeSet<NextTickListEntry> instance, Object e, Operation<Boolean> original) {
+    private boolean hodgepodge$addTick2Tree(TreeSet<NextTickListEntry> instance, Object e,
+            Operation<Boolean> original) {
         SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
-        helper.addTick((NextTickListEntry) e);
-        return original.call(instance, e);
+        if (!helper.isReadyToAdd()) {
+            return original.call(instance, e);
+        }
+        helper.addTick((NextTickListEntry) e, original);
+        return true;
     }
 
 }

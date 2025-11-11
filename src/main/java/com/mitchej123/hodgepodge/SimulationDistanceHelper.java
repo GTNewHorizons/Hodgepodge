@@ -1,15 +1,20 @@
 package com.mitchej123.hodgepodge;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.function.BiPredicate;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.NextTickListEntry;
@@ -17,10 +22,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeChunkManager;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
@@ -38,7 +45,7 @@ public class SimulationDistanceHelper {
      * Mark a chunk as no to be simulated, or reset that state. Not thread safe!
      */
     public static void preventChunkSimulation(World world, long packedChunkPos, boolean prevent) {
-        if (!FixesConfig.addSimulationDistance) {
+        if (!FixesConfig.addSimulationDistance_WIP) {
             return;
         }
         ISimulationDistanceWorld mixin = (ISimulationDistanceWorld) world;
@@ -53,9 +60,14 @@ public class SimulationDistanceHelper {
         TweaksConfig.simulationDistance = distance;
     }
 
+    private final Thread thread;
+    private final Exception originalStackTraceException;
+
     public SimulationDistanceHelper(World world) {
         this.worldRef = new WeakReference<>(world);
         isServer = world instanceof WorldServer;
+        thread = Thread.currentThread();
+        originalStackTraceException = new RuntimeException();
     }
 
     /**
@@ -122,8 +134,17 @@ public class SimulationDistanceHelper {
      */
     private int simulationDistanceOld;
 
+    /**
+     * Ticks to be removed, for compatibility
+     */
+    private final Stack<NextTickListEntry> ticksToRemove = new Stack<>();
+
     public void preventChunkSimulation(long packedChunkPos, boolean prevent) {
         noTickChunksChanges.add(packedChunkPos, prevent);
+    }
+
+    public Stack<NextTickListEntry> getTicksToRemove() {
+        return ticksToRemove;
     }
 
     private boolean closeToPlayer(long packedChunkPos) {
@@ -272,15 +293,50 @@ public class SimulationDistanceHelper {
         }
     }
 
-    private void dumpTickList(NextTickListEntry removingEntry) {
-        FMLLog.info("Trying to remove entry: " + removingEntry);
-        FMLLog.info("pendingTickListEntriesTreeSet:");
+    private void writeCustomLog(String filename, String content) {
+        try {
+            File mcDir;
+
+            if (FMLCommonHandler.instance().getSide().isClient()) {
+                mcDir = Minecraft.getMinecraft().mcDataDir;
+            } else {
+                mcDir = new File("."); // server root
+            }
+
+            File logsFolder = new File(mcDir, "logs");
+            File outFile = new File(logsFolder, filename);
+            try (FileWriter writer = new FileWriter(outFile, true)) {
+                writer.write(content);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void dumpTickLists(NextTickListEntry currentEntry) {
+        FMLLog.info("Trying to process entry: " + currentEntry);
+        StringBuilder logTree = new StringBuilder();
+        StringBuilder logHash = new StringBuilder();
         for (NextTickListEntry entry : pendingTickListEntriesTreeSet) {
-            FMLLog.info("    " + entry);
+            logTree.append(entry).append("\n");
+        }
+        for (NextTickListEntry entry : pendingTickListEntriesHashSet) {
+            logHash.append(entry).append("\n");
+        }
+        writeCustomLog("pendingTickListEntriesTreeSet", logTree.toString());
+        writeCustomLog("pendingTickListEntriesHashSet", logHash.toString());
+    }
+
+    private void checkThread() {
+        if (thread != null && thread != Thread.currentThread()) {
+            FMLLog.getLogger().error("Original stacktrace:");
+            originalStackTraceException.printStackTrace();
+            throw new RuntimeException("Called from different thread!");
         }
     }
 
     public void chunkUnloaded(long chunk) {
+        checkThread();
         World world = worldRef.get();
         if (world == null) {
             return;
@@ -294,13 +350,15 @@ public class SimulationDistanceHelper {
         chunkTickMap.remove(chunk);
         for (NextTickListEntry entry : entries) {
             if (!pendingTickListEntriesTreeSet.remove(entry)) {
-                dumpTickList(entry);
+                dumpTickLists(entry);
                 throw new IllegalStateException("Failed to remove tick! See logs for more.");
             }
-            pendingTickListEntriesHashSet.remove(entry);
-            if (Compat.isCoreTweaksPresent()) {
-                CoreTweaksCompat.removeTickEntry(world, entry);
+            if (!pendingTickListEntriesHashSet.remove(entry)) {
+                dumpTickLists(entry);
+                throw new IllegalStateException("Failed to remove tick! See logs for more.");
             }
+            ticksToRemove.add(entry);
+
             /*
              * Entries would get removed in tickUpdates eventually, but we risk reloading a chunk and having an
              * incompatible, similar entry in pendingTickListEntriesTreeSet/pendingTickListEntriesHashSet that can be
@@ -318,21 +376,23 @@ public class SimulationDistanceHelper {
         }
 
         if (!pendingTickListEntriesTreeSet.remove(entry)) {
-            dumpTickList(entry);
+            dumpTickLists(entry);
             throw new IllegalStateException("Failed to remove tick! See logs for more.");
         }
-        pendingTickListEntriesHashSet.remove(entry);
-        if (Compat.isCoreTweaksPresent()) {
-            CoreTweaksCompat.removeTickEntry(world, entry);
+        if (!pendingTickListEntriesHashSet.remove(entry)) {
+            dumpTickLists(entry);
+            throw new IllegalStateException("Failed to remove tick! See logs for more.");
         }
         long key = ChunkCoordIntPair.chunkXZ2Int(entry.xCoord >> 4, entry.zCoord >> 4);
         HashSet<NextTickListEntry> entries = chunkTickMap.get(key);
         if (entries != null) {
             entries.remove(entry);
         }
+        ticksToRemove.add(entry);
     }
 
-    public void addTick(NextTickListEntry entry) {
+    public void addTick(NextTickListEntry entry, Operation<Boolean> originalTreeAdd) {
+        checkThread();
         pendingTickCandidates.add(entry);
         long key = ChunkCoordIntPair.chunkXZ2Int(entry.xCoord >> 4, entry.zCoord >> 4);
         HashSet<NextTickListEntry> entries = chunkTickMap.get(key);
@@ -342,16 +402,25 @@ public class SimulationDistanceHelper {
         }
         entries.add(entry);
 
+        if (!originalTreeAdd.call(pendingTickListEntriesTreeSet, entry)) {
+            dumpTickLists(entry);
+            throw new IllegalStateException("Failed to add tick! See logs for more.");
+        }
+        if (!pendingTickListEntriesHashSet.add(entry)) {
+            dumpTickLists(entry);
+            throw new IllegalStateException("Failed to add tick! See logs for more.");
+        }
     }
 
     public void tickUpdates(boolean processAll, List<NextTickListEntry> pendingTickListEntriesThisTick) {
+        checkThread();
         World world = worldRef.get();
         if (world == null) {
             return;
         }
 
         if (pendingTickListEntriesTreeSet.size() != pendingTickListEntriesHashSet.size()) {
-            throw new IllegalStateException("TickNextTick list out of synch");
+            throw new IllegalStateException("TickNextTick list out of sync");
         }
 
         Iterator<NextTickListEntry> iterator = pendingTickCandidates.iterator();
@@ -379,6 +448,11 @@ public class SimulationDistanceHelper {
         this.pendingTickListEntriesTreeSet = pendingTickListEntriesTreeSet;
         this.pendingTickListEntriesHashSet = pendingTickListEntriesHashSet;
         this.chunkExists = chunkExists;
+    }
+
+    public boolean isReadyToAdd() {
+        // Only need to check one set
+        return pendingTickListEntriesTreeSet != null;
     }
 
     static class LongBooleanArrayList {

@@ -73,6 +73,7 @@ public class Hodgepodge {
     @EventHandler
     public void init(FMLInitializationEvent event) {
         FMLCommonHandler.instance().bus().register(ANCHOR_ALARM);
+        Common.init();
         NetworkHandler.init();
     }
 
