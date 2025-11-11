@@ -19,7 +19,6 @@ import org.objectweb.asm.tree.VarInsnNode;
 import com.gtnewhorizons.retrofuturabootstrap.api.ClassNodeHandle;
 import com.gtnewhorizons.retrofuturabootstrap.api.ExtensibleClassLoader;
 import com.gtnewhorizons.retrofuturabootstrap.api.RfbClassTransformer;
-import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
 import com.mitchej123.hodgepodge.core.shared.HodgepodgeClassDump;
 
 public class ConfigParsingTimeTransformer implements RfbClassTransformer, Opcodes {
@@ -44,9 +43,7 @@ public class ConfigParsingTimeTransformer implements RfbClassTransformer, Opcode
             return;
         }
         transformClassNode(cn);
-        if (EarlyConfig.dumpASMClass) {
-            HodgepodgeClassDump.dumpRFBClass(className, classNode, this);
-        }
+        HodgepodgeClassDump.dumpRFBClass(className, classNode, this);
     }
 
     private static final String THIS = "net/minecraftforge/common/config/Configuration";

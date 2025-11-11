@@ -7,15 +7,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-import com.mitchej123.hodgepodge.config.TweaksConfig;
-
-import ic2.core.Ic2Items;
-import ic2.core.block.EntityItnt;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
+
+import com.mitchej123.hodgepodge.config.TweaksConfig;
+
+import ic2.core.Ic2Items;
+import ic2.core.block.EntityItnt;
 
 public class Common {
 
@@ -53,6 +53,3 @@ public class Common {
         }
     }
 }
-
-
-
