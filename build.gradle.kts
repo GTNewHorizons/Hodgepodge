@@ -5,6 +5,7 @@ plugins {
 }
 
 minecraft {
+    extraRunJvmArguments.add("-Dhodgepodge.logModTimes=true")
     extraRunJvmArguments.add("-Dhodgepodge.dumpClass=true")
     //extraRunJvmArguments.add("-Dhodgepodge.logModTimes=true")
     //extraRunJvmArguments.add("-Dhodgepodge.logEventTimes=true")
