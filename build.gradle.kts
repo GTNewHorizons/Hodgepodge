@@ -5,8 +5,10 @@ plugins {
 }
 
 minecraft {
-    extraRunJvmArguments.add("-Dhodgepodge.logModTimes=true")
     extraRunJvmArguments.add("-Dhodgepodge.dumpClass=true")
+    extraRunJvmArguments.add("-Dhodgepodge.logModTimes=true")
+    //extraRunJvmArguments.add("-Dhodgepodge.logEventTimes=true")
+    //extraRunJvmArguments.add("-Dhodgepodge.logConfigTimes=true")
     /*extraRunJvmArguments.addAll(
         "-Dlegacy.debugClassLoading=true",
         "-Dlegacy.debugClassLoadingFiner=true",

@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.util;
+package com.mitchej123.hodgepodge.core.shared;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 
 import net.minecraft.launchwrapper.Launch;
 
-public class FileLogger implements AutoCloseable {
+public final class FileLogger implements AutoCloseable {
 
     private final SimpleDateFormat dateFormat;
     private PrintStream printStream = null;
@@ -37,7 +37,7 @@ public class FileLogger implements AutoCloseable {
         }
         // noinspection ResultOfMethodCallIgnored
         logFolder.mkdirs();
-        final File logFile = new File(logFolder, filename);
+        final File logFile = new File(logFolder, getFilename(filename));
         if (logFile.exists()) {
             // noinspection ResultOfMethodCallIgnored
             logFile.delete();
@@ -55,6 +55,27 @@ public class FileLogger implements AutoCloseable {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Returns a class loader dependent file name
+     */
+    private static String getFilename(String filename) {
+        String clName = stripClassName(FileLogger.class.getClassLoader().getClass().getName());
+        if ("LaunchClassLoader".equals(clName)) {
+            return filename;
+        }
+        final int dotIndex = filename.lastIndexOf('.');
+        if (dotIndex >= 0) {
+            return filename.substring(0, dotIndex) + '_' + clName + filename.substring(dotIndex);
+        } else {
+            return filename;
+        }
+    }
+
+    private static String stripClassName(String classname) {
+        final String[] split = classname.split("\\.");
+        return split[split.length - 1];
     }
 
     public void log(String message) {

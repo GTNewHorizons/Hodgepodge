@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mitchej123.hodgepodge.util.FileLogger;
+import com.mitchej123.hodgepodge.core.shared.FileLogger;
 
 import cpw.mods.fml.common.eventhandler.EventBus;
 
