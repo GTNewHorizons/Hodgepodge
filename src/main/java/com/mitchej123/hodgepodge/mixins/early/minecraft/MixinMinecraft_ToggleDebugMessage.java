@@ -136,7 +136,7 @@ public class MixinMinecraft_ToggleDebugMessage {
                 GTNHLib.proxy.addMessageToChat(
                         new ChatComponentText(StatCollector.translateToLocal("hodgepodge.debug.help.angelica")));
             }
-            for (int i = 2; i < 8; i++) {
+            for (int i = 2; i < 9; i++) {
                 GTNHLib.proxy.addMessageToChat(
                         new ChatComponentText(StatCollector.translateToLocal("hodgepodge.debug.help." + i)));
             }
