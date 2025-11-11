@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.rfb.transformers;
+package com.mitchej123.hodgepodge.core.rfb.transformers;
 
 import java.util.ListIterator;
 import java.util.jar.Manifest;
@@ -120,7 +120,7 @@ public class ConfigParsingTimeTransformer implements RfbClassTransformer, Opcode
             mv.visitInsn(LSUB);
             mv.visitMethodInsn(
                     INVOKESTATIC,
-                    "com/mitchej123/hodgepodge/rfb/hooks/ConfigParsingTimeHook",
+                    "com/mitchej123/hodgepodge/core/rfb/hooks/ConfigParsingTimeHook",
                     "onEnd",
                     "(Ljava/io/File;J)V",
                     false);

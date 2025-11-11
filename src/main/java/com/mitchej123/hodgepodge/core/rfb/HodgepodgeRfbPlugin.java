@@ -10,9 +10,9 @@ import org.jetbrains.annotations.Nullable;
 import com.gtnewhorizons.retrofuturabootstrap.api.PluginContext;
 import com.gtnewhorizons.retrofuturabootstrap.api.RfbClassTransformer;
 import com.gtnewhorizons.retrofuturabootstrap.api.RfbPlugin;
+import com.mitchej123.hodgepodge.core.rfb.transformers.ConfigParsingTimeTransformer;
 import com.mitchej123.hodgepodge.core.rfb.transformers.ForgeConfigurationTransformer;
 import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
-import com.mitchej123.hodgepodge.rfb.transformers.ConfigParsingTimeTransformer;
 
 public class HodgepodgeRfbPlugin implements RfbPlugin {
 
