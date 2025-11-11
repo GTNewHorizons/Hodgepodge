@@ -99,10 +99,9 @@ public class MixinMinecraft_ToggleDebugMessage {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/Minecraft;refreshResources()V",
-                    shift = At.Shift.AFTER))
+                    shift = At.Shift.BEFORE))
     public void hodgepodge$printDebugChatMsgRefreshResourceStart(CallbackInfo ci) {
         refreshStartTime = Minecraft.getSystemTime();
-        GTNHLib.proxy.addDebugToChat(StatCollector.translateToLocal("hodgepodge.debug.reload_pack.start"));
     }
 
     @Inject(
@@ -114,7 +113,7 @@ public class MixinMinecraft_ToggleDebugMessage {
     public void hodgepodge$printDebugChatMsgRefreshResourceEnd(CallbackInfo ci) {
         GTNHLib.proxy.addDebugToChat(
                 new ChatComponentTranslation(
-                        "hodgepodge.debug.reload_pack.end",
+                        "hodgepodge.debug.reload_pack.message",
                         (double) (Minecraft.getSystemTime() - refreshStartTime) / 1000d));
     }
 
