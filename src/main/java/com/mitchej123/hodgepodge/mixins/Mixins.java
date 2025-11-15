@@ -382,15 +382,13 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixPotionIterating)
             .setPhase(Phase.EARLY)),
     ENHANCE_NIGHT_VISION(new MixinBuilder("Remove the blueish sky tint from night vision")
+            .addClientMixins("minecraft.MixinEntityRenderer_EnhanceNightVision")
             .setApplyIf(() -> TweaksConfig.enhanceNightVision)
-            .addClientMixins(
-                    "minecraft.MixinEntityRenderer_EnhanceNightVision")
             .setPhase(Phase.EARLY)),
     NIGHT_VISION_FADE(new MixinBuilder()
-        .setApplyIf(() -> TweaksConfig.fadeNightVision)
-        .addClientMixins(
-            "minecraft.MixinEntityRenderer_NightVisionFade")
-        .setPhase(Phase.EARLY)),
+            .addClientMixins("minecraft.MixinEntityRenderer_NightVisionFade")
+            .setApplyIf(() -> TweaksConfig.fadeNightVision)
+            .setPhase(Phase.EARLY)),
     OPTIMIZE_ASMDATATABLE_INDEX(new MixinBuilder("Optimize ASM DataTable Index")
             .addCommonMixins("fml.MixinASMDataTable")
             .setApplyIf(() -> SpeedupsConfig.optimizeASMDataTable)
@@ -752,9 +750,12 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)
     ),
     SPEEDUP_TILE_DESCRIPTION_PACKETS(new MixinBuilder("Batch S35PacketUpdateTileEntity Packets")
-        .addCommonMixins("minecraft.tiledescriptions.MixinEntityPlayerMP", "minecraft.tiledescriptions.MixinPlayerInstance", "forge.tiledescriptions.MixinForgeHooks")
-        .setApplyIf(() -> SpeedupsConfig.batchDescriptionPacketsMixins)
-        .setPhase(Phase.EARLY)),
+            .addCommonMixins(
+                    "minecraft.tiledescriptions.MixinEntityPlayerMP",
+                    "minecraft.tiledescriptions.MixinPlayerInstance",
+                    "forge.tiledescriptions.MixinForgeHooks")
+            .setApplyIf(() -> SpeedupsConfig.batchDescriptionPacketsMixins)
+            .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
@@ -1243,7 +1244,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesUnEnchanting)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
-    FIX_EXTRA_UTILITIES_REPAIR_COST(new MixinBuilder("Fix Exu spikes losing NBT tags (other than enchantments) when being placed on the ground" )
+    FIX_EXTRA_UTILITIES_REPAIR_COST(new MixinBuilder("Fix Exu spikes losing NBT tags (other than enchantments) when being placed on the ground")
             .addCommonMixins(
                     "extrautilities.MixinBlockSpike_PreserveNBT",
                     "extrautilities.MixinTileEntityEnchantedSpike_PreserveNBT")
