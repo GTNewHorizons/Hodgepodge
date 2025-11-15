@@ -1,6 +1,8 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiIngame;
+import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.settings.GameSettings;
@@ -41,6 +43,9 @@ public class MixinMinecraft_ToggleDebugMessage {
 
     @Shadow
     private long field_83002_am;
+
+    @Shadow
+    public GuiIngame ingameGUI;
 
     @Inject(
             method = "runTick",
@@ -124,28 +129,36 @@ public class MixinMinecraft_ToggleDebugMessage {
                     target = "Lnet/minecraft/client/Minecraft;func_152348_aa()V",
                     shift = At.Shift.AFTER))
     public void hodgepodge$addNewF3Logic(CallbackInfo ci) {
-        if (Keyboard.getEventKeyState() && currentScreen == null
-                && Keyboard.getEventKey() == Keyboard.KEY_Q
-                && Keyboard.isKeyDown(Keyboard.KEY_F3)) {
-            GTNHLib.proxy.addDebugToChat(StatCollector.translateToLocal("hodgepodge.debug.help.message"));
-            GTNHLib.proxy.addMessageToChat(
-                    new ChatComponentText(StatCollector.translateToLocal("hodgepodge.debug.help." + 0)));
-            GTNHLib.proxy.addMessageToChat(
-                    new ChatComponentText(StatCollector.translateToLocal("hodgepodge.debug.help." + 1)));
-            if (Loader.isModLoaded("angelica")) {
-                GTNHLib.proxy.addMessageToChat(
-                        new ChatComponentText(StatCollector.translateToLocal("hodgepodge.debug.help.angelica")));
-            }
-            for (int i = 2; i < 9; i++) {
-                GTNHLib.proxy.addMessageToChat(
-                        new ChatComponentText(StatCollector.translateToLocal("hodgepodge.debug.help." + i)));
-            }
-            if (Loader.isModLoaded("etfuturum")) {
-                GTNHLib.proxy.addMessageToChat(
-                        new ChatComponentText(StatCollector.translateToLocal("hodgepodge.debug.help.etfuturum")));
-            }
-            if (Loader.isModLoaded("NotEnoughItems")) {
-                sendNEIHelp();
+        if (Keyboard.getEventKeyState() && currentScreen == null && Keyboard.isKeyDown(Keyboard.KEY_F3)) {
+            switch (Keyboard.getEventKey()) {
+                case Keyboard.KEY_Q:
+                    GTNHLib.proxy.addDebugToChat(StatCollector.translateToLocal("hodgepodge.debug.help.message"));
+                    GTNHLib.proxy.addMessageToChat(
+                            new ChatComponentText(StatCollector.translateToLocal("hodgepodge.debug.help." + 0)));
+                    GTNHLib.proxy.addMessageToChat(
+                            new ChatComponentText(StatCollector.translateToLocal("hodgepodge.debug.help." + 1)));
+                    if (Loader.isModLoaded("angelica")) {
+                        GTNHLib.proxy.addMessageToChat(
+                                new ChatComponentText(
+                                        StatCollector.translateToLocal("hodgepodge.debug.help.angelica")));
+                    }
+                    for (int i = 2; i < 10; i++) {
+                        GTNHLib.proxy.addMessageToChat(
+                                new ChatComponentText(StatCollector.translateToLocal("hodgepodge.debug.help." + i)));
+                    }
+                    if (Loader.isModLoaded("etfuturum")) {
+                        GTNHLib.proxy.addMessageToChat(
+                                new ChatComponentText(
+                                        StatCollector.translateToLocal("hodgepodge.debug.help.etfuturum")));
+                    }
+                    if (Loader.isModLoaded("NotEnoughItems")) {
+                        sendNEIHelp();
+                    }
+                    break;
+                case Keyboard.KEY_D:
+                    GuiNewChat chat = this.ingameGUI.getChatGUI();
+                    chat.clearChatMessages();
+                    break;
             }
         }
     }
