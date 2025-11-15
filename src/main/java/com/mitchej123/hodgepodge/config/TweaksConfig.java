@@ -310,6 +310,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean ic2DispenserITNT;
 
+    @Config.Comment({ "Misc IC2 crop breeding quality of life changes", "Better propagation odds",
+            "Lower growth weeding behavior odds", "Lower stat drop amount" })
+    @Config.DefaultBoolean(true)
+    public static boolean ic2CropBreedingQol;
+
     // Minechem
 
     @Config.Comment("Minechem Atropine High (Delirium) effect ID")
