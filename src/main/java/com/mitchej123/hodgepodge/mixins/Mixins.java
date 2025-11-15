@@ -402,6 +402,7 @@ public enum Mixins implements IMixins {
     CHUNK_SAVE_CME_DEBUG(new MixinBuilder("Add debugging code to Chunk Save CME")
             .addCommonMixins("minecraft.nbt.MixinNBTTagCompound_CheckCME")
             .setApplyIf(() -> DebugConfig.chunkSaveCMEDebug)
+            .addExcludedMod(TargetedMod.DRAGONAPI)
             .setPhase(Phase.EARLY)),
     SPEEDUP_NBT_COPY(new MixinBuilder("Speed up NBT copy")
             .addCommonMixins(
@@ -409,15 +410,18 @@ public enum Mixins implements IMixins {
                     "minecraft.nbt.MixinNBTTagList_FastCopy")
             .setApplyIf(() -> ASMConfig.speedupNBTTagCompoundCopy)
             .addExcludedMod(TargetedMod.BUKKIT)
+            .addExcludedMod(TargetedMod.DRAGONAPI)
             .addExcludedMod(TargetedMod.FASTCRAFT)
             .setPhase(Phase.EARLY)),
     STRING_POOLER_NBT_TAG(new MixinBuilder("Pool NBT Strings")
             .addCommonMixins("minecraft.nbt.MixinNBTTagCompound_StringPooler")
             .setApplyIf(() -> TweaksConfig.enableTagCompoundStringPooling)
+            .addExcludedMod(TargetedMod.DRAGONAPI)
             .setPhase(Phase.EARLY)),
     STRING_POOLER_NBT_STRING(new MixinBuilder("Pool NBT Strings")
             .addCommonMixins("minecraft.nbt.MixinNBTTagString_StringPooler")
             .setApplyIf(() -> TweaksConfig.enableNBTStringPooling)
+            .addExcludedMod(TargetedMod.DRAGONAPI)
             .setPhase(Phase.EARLY)),
     THREADED_WORLDDATA_SAVING(new MixinBuilder()
             .addCommonMixins(
