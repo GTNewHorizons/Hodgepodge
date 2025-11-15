@@ -31,7 +31,7 @@ public class ASMConfig {
     public static boolean speedupPlayerManager;
 
     @Config.Comment("Remove various vararg method calls, to make profiling easier.")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     public static boolean dissectVarargs;
 
     @Config.Comment("Speedup OreDictionary")
