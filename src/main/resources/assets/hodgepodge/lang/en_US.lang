@@ -57,10 +57,11 @@ hodgepodge.debug.help.angelica=Alt + F3 = [Angelica] Open Debug Screen and show 
 hodgepodge.debug.help.2=F3 + A = Reload chunks
 hodgepodge.debug.help.3=F3 + B = Show hitboxes
 hodgepodge.debug.help.4=F3 + C = Hold for 6 seconds to crash the game
-hodgepodge.debug.help.5=F3 + H = Advanced tooltips
-hodgepodge.debug.help.6=F3 + P = Pause on lost focus
-hodgepodge.debug.help.7=F3 + Q = [Hodgepodge] Show this list
-hodgepodge.debug.help.8=F3 + S/T = Reload resource packs
+hodgepodge.debug.help.5=F3 + D = [Hodgepodge] Clear chat
+hodgepodge.debug.help.6=F3 + H = Advanced tooltips
+hodgepodge.debug.help.7=F3 + P = Pause on lost focus
+hodgepodge.debug.help.8=F3 + Q = [Hodgepodge] Show this list
+hodgepodge.debug.help.9=F3 + S/T = Reload resource packs
 hodgepodge.debug.help.etfuturum=F3 + F4 = [Et-Futurum-Requiem] Open game mode switcher
 hodgepodge.debug.help.nei.1=%s = [NEI] Open Mob Spawning Overlay
 hodgepodge.debug.help.nei.2=%s = [NEI] Open Chunk Overlay
