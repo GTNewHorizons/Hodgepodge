@@ -187,7 +187,7 @@ public enum Mixins implements IMixins {
     // config handled in mixin due to server->client config sync
     LONGER_MESSAGES(new MixinBuilder()
             .addClientMixins("minecraft.MixinGuiChat_LongerMessages")
-            .addCommonMixins("minecraft.MixinC01PacketChatMessage_LongerMessages")
+            .addCommonMixins("minecraft.packets.MixinC01PacketChatMessage_LongerMessages")
             .setPhase(Phase.EARLY)),
     SPEEDUP_REMOVE_FORMATTING_CODES(new MixinBuilder("Speed up the vanilla method to remove formatting codes")
             .addClientMixins("minecraft.MixinEnumChatFormatting_FastFormat")
@@ -298,7 +298,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixHopperVoidingItems)
             .setPhase(Phase.EARLY)),
     FIX_HUGE_CHAT_KICK(new MixinBuilder()
-            .addCommonMixins("minecraft.MixinS02PacketChat")
+            .addCommonMixins("minecraft.packets.MixinS02PacketChat_FixHugeChatKick")
             .setApplyIf(() -> FixesConfig.fixHugeChatKick)
             .setPhase(Phase.EARLY)),
     FIX_BOGUS_INTEGRATED_SERVER_NPE(new MixinBuilder("Fix bogus FMLProxyPacket NPEs on integrated server crashes")
