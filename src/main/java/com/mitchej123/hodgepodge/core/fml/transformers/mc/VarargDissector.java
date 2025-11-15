@@ -65,16 +65,18 @@ public class VarargDissector implements IClassTransformer, Opcodes {
 
     private static boolean transformMethod(String transformedName, MethodNode method) {
         final String className = transformedName.replace('.', '/');
-        final String TARGET_MNAME = HodgepodgeCore.isObf() ? "a" : "selectRandom";
-        final String TARGET_MDESC = "([I)I";
+        final String selectRandom_MNAME = HodgepodgeCore.isObf() ? "a" : "selectRandom";
+        final String selectRandom_MDESC = "([I)I";
+        final String nextInt_MNAME = HodgepodgeCore.isObf() ? "func_75902_a" : "nextInt";
+        final String nextInt_MDESC = "(I)I";
         boolean changed = false;
 
         // Loop until we find a call
         int lastCall = -1;
         for (int i = 0; i < method.instructions.size(); i++) {
             final var insn = method.instructions.get(i);
-            if (!(insn instanceof MethodInsnNode mInsn) || insn.getOpcode() != Opcodes.INVOKEVIRTUAL) continue;
-            if (!mInsn.name.equals(TARGET_MNAME) || !mInsn.desc.equals(TARGET_MDESC)) continue;
+            if (!(insn instanceof MethodInsnNode mInsn) || insn.getOpcode() != INVOKEVIRTUAL) continue;
+            if (!mInsn.name.equals(selectRandom_MNAME) || !mInsn.desc.equals(selectRandom_MDESC)) continue;
 
             // At this point, we have a `INVOKEVIRTUAL something/selectRandom(int...)int`, good enough for me.
             // Look back through the list to find the first array instantiation - assume that's the one being passed
@@ -82,7 +84,7 @@ public class VarargDissector implements IClassTransformer, Opcodes {
             int X = -1;
             for (ii = i; ii > lastCall; ii--) {
                 final var insn2 = method.instructions.get(ii);
-                if (!(insn2 instanceof IntInsnNode intInsn) || intInsn.getOpcode() != Opcodes.NEWARRAY
+                if (!(insn2 instanceof IntInsnNode intInsn) || intInsn.getOpcode() != NEWARRAY
                         || intInsn.operand != T_INT)
                     continue;
 
@@ -112,8 +114,7 @@ public class VarargDissector implements IClassTransformer, Opcodes {
 
             // Insn count validated, now record and validate the argument loading
             final var thisInsn = method.instructions.get(ii - 2);
-            if (!(thisInsn instanceof VarInsnNode varInsn) || varInsn.getOpcode() != Opcodes.ALOAD
-                    || varInsn.var != 0) {
+            if (!(thisInsn instanceof VarInsnNode varInsn) || varInsn.getOpcode() != ALOAD || varInsn.var != 0) {
                 lastCall = i;
                 continue;
             }
@@ -140,7 +141,7 @@ public class VarargDissector implements IClassTransformer, Opcodes {
                 }
 
                 final var astoreInsn = method.instructions.get(base + 4);
-                if (astoreInsn.getOpcode() != Opcodes.IASTORE) {
+                if (astoreInsn.getOpcode() != IASTORE) {
                     bail = true;
                     break;
                 }
@@ -161,7 +162,7 @@ public class VarargDissector implements IClassTransformer, Opcodes {
             // Insert the GenLayer#nextInt(X). (ii - 2), (ii - 1) is already the ALOAD 0; ICONST that we need
             method.instructions.insert(
                     method.instructions.get(ii - 1),
-                    new MethodInsnNode(INVOKEVIRTUAL, className, "nextInt", "(I)I", false));
+                    new MethodInsnNode(INVOKEVIRTUAL, className, nextInt_MNAME, nextInt_MDESC, false));
 
             // Remove the DUP, ICONST, and IASTORE for each instruction
             // At this stage, (ii) is the nextInt call. Each time this runs through, one extra insn is left behind
