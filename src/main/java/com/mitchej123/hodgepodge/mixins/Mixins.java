@@ -400,23 +400,23 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.squashBedErrorMessage)
             .setPhase(Phase.EARLY)),
     CHUNK_SAVE_CME_DEBUG(new MixinBuilder("Add debugging code to Chunk Save CME")
-            .addCommonMixins("minecraft.MixinNBTTagCompound")
+            .addCommonMixins("minecraft.nbt.MixinNBTTagCompound_CheckCME")
             .setApplyIf(() -> DebugConfig.chunkSaveCMEDebug)
             .setPhase(Phase.EARLY)),
     SPEEDUP_NBT_COPY(new MixinBuilder("Speed up NBT copy")
             .addCommonMixins(
-                    "minecraft.MixinNBTTagCompound_speedup",
-                    "minecraft.MixinNBTTagList_speedup")
+                    "minecraft.nbt.MixinNBTTagCompound_FastCopy",
+                    "minecraft.nbt.MixinNBTTagList_FastCopy")
             .setApplyIf(() -> ASMConfig.speedupNBTTagCompoundCopy)
             .addExcludedMod(TargetedMod.BUKKIT)
             .addExcludedMod(TargetedMod.FASTCRAFT)
             .setPhase(Phase.EARLY)),
     STRING_POOLER_NBT_TAG(new MixinBuilder("Pool NBT Strings")
-            .addCommonMixins("minecraft.MixinNBTTagCompound_stringPooler")
+            .addCommonMixins("minecraft.nbt.MixinNBTTagCompound_StringPooler")
             .setApplyIf(() -> TweaksConfig.enableTagCompoundStringPooling)
             .setPhase(Phase.EARLY)),
     STRING_POOLER_NBT_STRING(new MixinBuilder("Pool NBT Strings")
-            .addCommonMixins("minecraft.MixinNBTTagString_stringPooler")
+            .addCommonMixins("minecraft.nbt.MixinNBTTagString_StringPooler")
             .setApplyIf(() -> TweaksConfig.enableNBTStringPooling)
             .setPhase(Phase.EARLY)),
     THREADED_WORLDDATA_SAVING(new MixinBuilder()
