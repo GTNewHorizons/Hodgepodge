@@ -18,11 +18,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.gtnewhorizon.gtnhlib.GTNHLib;
+import com.mitchej123.hodgepodge.util.NEIKeyHelper;
 
-import codechicken.nei.NEIClientConfig;
-import codechicken.nei.util.NEIKeyboardUtils;
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Optional;
 
 @Mixin(Minecraft.class)
 public class MixinMinecraft_ToggleDebugMessage {
@@ -145,24 +143,9 @@ public class MixinMinecraft_ToggleDebugMessage {
                         new ChatComponentText(StatCollector.translateToLocal("hodgepodge.debug.help.etfuturum")));
             }
             if (Loader.isModLoaded("NotEnoughItems")) {
-                sendNEIHelp();
+                NEIKeyHelper.sendNEIHelp();
             }
         }
-    }
-
-    @Unique
-    @Optional.Method(modid = "NotEnoughItems")
-    private static void sendNEIHelp() {
-        GTNHLib.proxy.addMessageToChat(
-                new ChatComponentTranslation(
-                        "hodgepodge.debug.help.nei.1",
-                        NEIKeyboardUtils.getKeyName(
-                                NEIKeyboardUtils.unhash(NEIClientConfig.getKeyBinding("world.moboverlay")))));
-        GTNHLib.proxy.addMessageToChat(
-                new ChatComponentTranslation(
-                        "hodgepodge.debug.help.nei.2",
-                        NEIKeyboardUtils.getKeyName(
-                                NEIKeyboardUtils.unhash(NEIClientConfig.getKeyBinding("world.chunkoverlay")))));
     }
 
     @Inject(
