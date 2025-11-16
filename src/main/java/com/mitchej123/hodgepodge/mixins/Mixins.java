@@ -394,7 +394,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.optimizeASMDataTable)
             .setPhase(Phase.EARLY)),
     SQUASH_BED_ERROR_MESSAGE(new MixinBuilder()
-            .addClientMixins("minecraft.MixinNetHandlerPlayClient")
+            .addClientMixins("minecraft.MixinNetHandlerPlayClient_SquashBedMessages")
             .setApplyIf(() -> FixesConfig.squashBedErrorMessage)
             .setPhase(Phase.EARLY)),
     CHUNK_SAVE_CME_DEBUG(new MixinBuilder("Add debugging code to Chunk Save CME")
