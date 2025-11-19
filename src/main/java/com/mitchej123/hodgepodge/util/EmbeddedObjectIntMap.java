@@ -14,19 +14,13 @@ import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 
 public class EmbeddedObjectIntMap<K> extends IdentityHashMap<K, Integer> {
 
-    private static final long serialVersionUID = 7695726922765252503L;
     private final Reference2IntMap<K> forwardMap;
     private Class<?> type = null;
-    private boolean useEmbed = true;
 
     public EmbeddedObjectIntMap(int expectedMaxSize) {
         super(0); // Don't allocate in parent
         this.forwardMap = new Reference2IntOpenHashMap<>(expectedMaxSize);
         this.forwardMap.defaultReturnValue(-1);
-    }
-
-    public void setEmbed(boolean useEmbed) {
-        this.useEmbed = useEmbed;
     }
 
     public void setType(Class<?> type) {
@@ -61,7 +55,7 @@ public class EmbeddedObjectIntMap<K> extends IdentityHashMap<K, Integer> {
 
         final Class<?> keyClass = key.getClass();
         if (type != null && !type.isAssignableFrom(keyClass)) return -1;
-        if (useEmbed && key instanceof HasID idHaver) return idHaver.hodgepodge$getID();
+        if (key instanceof HasID idHaver) return idHaver.hodgepodge$getID();
 
         return forwardMap.getInt(key);
     }

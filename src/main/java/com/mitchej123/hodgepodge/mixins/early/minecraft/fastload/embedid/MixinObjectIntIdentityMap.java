@@ -1,10 +1,11 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload.embedid;
 
+import com.mitchej123.hodgepodge.mixins.interfaces.TypeSettable;
+import com.mitchej123.hodgepodge.util.EmbeddedObjectIntMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
-
 import net.minecraft.util.ObjectIntIdentityMap;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,14 +14,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mitchej123.hodgepodge.mixins.interfaces.EmbedToggle;
-import com.mitchej123.hodgepodge.mixins.interfaces.TypeSettable;
-import com.mitchej123.hodgepodge.util.EmbeddedObjectIntMap;
-
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
 @Mixin(ObjectIntIdentityMap.class)
-public abstract class MixinObjectIntIdentityMap implements TypeSettable, EmbedToggle {
+public abstract class MixinObjectIntIdentityMap implements TypeSettable {
 
     @Shadow
     protected IdentityHashMap<Object, Integer> field_148749_a;
@@ -32,11 +27,6 @@ public abstract class MixinObjectIntIdentityMap implements TypeSettable, EmbedTo
     private EmbeddedObjectIntMap<Object> hodgepodge$objectMap;
     @Unique
     private ObjectArrayList<Object> hodgepodge$objectList;
-
-    @Override
-    public void hodgepodge$setUseEmbed(boolean useEmbed) {
-        hodgepodge$objectMap.setEmbed(useEmbed);
-    }
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void hodgepodge$replaceCollections(CallbackInfo ci) {

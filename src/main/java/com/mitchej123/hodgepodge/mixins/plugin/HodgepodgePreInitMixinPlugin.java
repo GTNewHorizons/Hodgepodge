@@ -3,12 +3,9 @@ package com.mitchej123.hodgepodge.mixins.plugin;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import org.spongepowered.asm.lib.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
-
-import com.mitchej123.hodgepodge.config.ASMConfig;
 
 public class HodgepodgePreInitMixinPlugin implements IMixinConfigPlugin {
 
@@ -37,10 +34,6 @@ public class HodgepodgePreInitMixinPlugin implements IMixinConfigPlugin {
         List<String> mixins = new ArrayList<>();
         if (Boolean.getBoolean("hodgepodge.logModTimes")) {
             mixins.add("MixinLoadController_logModTimes");
-        }
-
-        if (ASMConfig.embedID_experimental) {
-            mixins.add("embedid.MixinGameData");
         }
         return mixins;
     }
