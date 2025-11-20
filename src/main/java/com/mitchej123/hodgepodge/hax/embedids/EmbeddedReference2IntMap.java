@@ -1,8 +1,10 @@
 package com.mitchej123.hodgepodge.hax.embedids;
 
-import com.mitchej123.hodgepodge.util.EmbeddedObjectIntMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.util.ObjectIntIdentityMap;
+
+import com.mitchej123.hodgepodge.util.EmbeddedObjectIntMap;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 /// This has less allocation spam compared to the original, and delegates the actual storage to a direct "map". Writes
 /// still pass through to an actual map, but reads are simply a field get on the global Block/Item object itself.
@@ -36,7 +38,6 @@ public class EmbeddedReference2IntMap extends ObjectIntIdentityMap {
     public int func_148747_b(Object key) {
         return objectMap.getInt(key);
     }
-
 
     @Override
     public Object func_148745_a(int val) {
