@@ -30,3 +30,7 @@ tasks.applyJST.configure {
     // Interfaces should only be added to src/injectedInterfaces/java, if they are added to main, mixin, test, etc then MC will not compile
     interfaceInjectionConfigs.setFrom("src/injectedInterfaces/injected_interfaces.json")
 }
+
+tasks.jar {
+    from(sourceSets.injectedInterfaces.get().output)
+}

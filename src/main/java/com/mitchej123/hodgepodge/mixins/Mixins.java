@@ -668,9 +668,7 @@ public enum Mixins implements IMixins {
             .addExcludedMod(TargetedMod.FASTCRAFT)
             .addExcludedMod(TargetedMod.BUKKIT)
             .addCommonMixins(
-                    "minecraft.fastload.embedid.MixinEmbedIDs",
-                    "minecraft.fastload.embedid.MixinFMLControlledNamespacedRegistry",
-                    "minecraft.fastload.embedid.MixinObjectIntIdentityMap")
+                    "minecraft.fastload.embedid.MixinEmbedIDs")
             .setApplyIf(() -> ASMConfig.embedID_experimental)
             .setPhase(Phase.EARLY)),
     FAST_CHUNK_LOADING(new MixinBuilder("Invasively accelerates chunk handling")
