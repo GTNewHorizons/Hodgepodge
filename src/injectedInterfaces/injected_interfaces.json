@@ -1,0 +1,4 @@
+{
+  "net/minecraft/block/Block": ["com/mitchej123/hodgepodge/mixins/interfaces/HasID"],
+  "net/minecraft/item/Item": ["com/mitchej123/hodgepodge/mixins/interfaces/HasID"]
+}
