@@ -68,8 +68,8 @@ dependencies {
     // For testing - HP and AF are liable to mixin the same targets
     runtimeOnlyNonPublishable("maven.modrinth:archaicfix:0.7.7:dev")
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:ArchaicFix:99.0.0:dev") // mavenLocal location
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:ServerUtilities:2.2.2:dev") // for the pregenerator
-    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta64:dev") // for TPS graph
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:ServerUtilities:2.2.5:dev") // for the pregenerator
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta68:dev") // for TPS graph
 
     testImplementation(platform('org.junit:junit-bom:5.9.2'))
     testImplementation('org.junit.jupiter:junit-jupiter')

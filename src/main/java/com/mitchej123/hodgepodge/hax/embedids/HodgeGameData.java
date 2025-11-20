@@ -10,12 +10,24 @@ public class HodgeGameData extends GameData {
     public HodgeGameData() {
         super();
 
-        iBlockRegistry = new HodgeNamespacedRegistry<>(
-                "minecraft:air",
-                MAX_BLOCK_ID,
-                MIN_BLOCK_ID,
-                Block.class,
-                '\u0001');
-        iItemRegistry = new HodgeNamespacedRegistry<>(null, MAX_ITEM_ID, MIN_ITEM_ID, Item.class, '\u0002');
+        try {
+            // We grab these fields with reflection to avoid javac from inlining them.
+            // NEIDs and EIDs may want to increase them at runtime!
+            iBlockRegistry = new HodgeNamespacedRegistry<>(
+                    "minecraft:air",
+                    GameData.class.getDeclaredField("MAX_BLOCK_ID").getInt(null),
+                    GameData.class.getDeclaredField("MIN_BLOCK_ID").getInt(null),
+                    Block.class,
+                    '\u0001');
+            iItemRegistry = new HodgeNamespacedRegistry<>(
+                    null,
+                    GameData.class.getDeclaredField("MAX_ITEM_ID").getInt(null),
+                    GameData.class.getDeclaredField("MIN_ITEM_ID").getInt(null),
+                    Item.class,
+                    '\u0002');
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            // If this fails, you have *much* bigger issues.
+            throw new RuntimeException(e);
+        }
     }
 }
