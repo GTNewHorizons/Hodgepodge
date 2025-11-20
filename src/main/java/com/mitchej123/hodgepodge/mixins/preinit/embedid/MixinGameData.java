@@ -9,7 +9,7 @@ import com.mitchej123.hodgepodge.hax.embedids.HodgeGameData;
 
 import cpw.mods.fml.common.registry.GameData;
 
-@Mixin(GameData.class)
+@Mixin(value = GameData.class, remap = false)
 public class MixinGameData {
 
     @Unique
