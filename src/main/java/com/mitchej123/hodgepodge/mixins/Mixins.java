@@ -734,6 +734,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> Boolean.getBoolean("hodgepodge.logEventTimes"))
             .addCommonMixins("fml.MixinEventBus_DebugRegistration")
             .setPhase(Phase.EARLY)),
+    DEBUG_DUMP_TEXTURES_SIZES(new MixinBuilder()
+            .addClientMixins("minecraft.debug.MixinDynamicTexture", "minecraft.debug.MixinTextureAtlasSprite")
+            .setApplyIf(() -> Boolean.getBoolean("hodgepodge.debugtextures"))
+            .setPhase(Phase.EARLY)),
     FIX_HOUSE_CHAR_RENDERING(new MixinBuilder()
             .addClientMixins("minecraft.MixinFontRenderer_House")
             .setApplyIf(() -> FixesConfig.fixHouseCharRendering)
