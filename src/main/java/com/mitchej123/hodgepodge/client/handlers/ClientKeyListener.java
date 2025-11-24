@@ -5,6 +5,7 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.input.Keyboard;
 
+import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 import com.gtnewhorizon.gtnhlib.util.AboveHotbarHUD;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 
@@ -34,6 +35,7 @@ public class ClientKeyListener {
     public void keyPressed(InputEvent.KeyInputEvent event) {
         if (TweaksConfig.fastBlockPlacingServerSide && fastBlockPlacingKey.isPressed()) {
             TweaksConfig.fastBlockPlacing = !TweaksConfig.fastBlockPlacing;
+            ConfigurationManager.save(TweaksConfig.class);
             AboveHotbarHUD.renderTextAboveHotbar(
                     (TweaksConfig.fastBlockPlacing ? fastBlockPlacingEnabled : fastBlockPlacingDisabled),
                     40,
