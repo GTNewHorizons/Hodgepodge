@@ -38,8 +38,8 @@ public class ASMConfig {
     @Config.DefaultBoolean(true)
     public static boolean speedupOreDictionary;
 
-    @Config.Comment("Embeds the block ID into Block itself, massively accelerating block ID lookups. [EXPERIMENTAL]")
-    @Config.DefaultBoolean(false)
+    @Config.Comment("Embeds the block ID into Block itself, massively accelerating block ID lookups. EXPERIMENTAL, disable if you run into unexpected block/item ID issues.")
+    @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean embedID_experimental;
 
