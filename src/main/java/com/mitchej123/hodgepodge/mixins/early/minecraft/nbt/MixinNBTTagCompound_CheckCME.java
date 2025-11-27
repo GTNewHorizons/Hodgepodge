@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft;
+package com.mitchej123.hodgepodge.mixins.early.minecraft.nbt;
 
 import java.io.DataOutput;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import com.mitchej123.hodgepodge.util.NBTTagCompoundConcurrentModificationException;
 
 @Mixin(NBTTagCompound.class)
-public abstract class MixinNBTTagCompound {
+public abstract class MixinNBTTagCompound_CheckCME {
 
     @Shadow
     protected static void func_150298_a(String name, NBTBase data, DataOutput output) throws IOException {}

@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(value = NetHandlerPlayClient.class)
-public class MixinNetHandlerPlayClient {
+public class MixinNetHandlerPlayClient_SquashBedMessages {
 
     @Unique
     private static final int RANDOM_CHANNEL = 43284;
@@ -29,20 +29,21 @@ public class MixinNetHandlerPlayClient {
      * @reason Stop "You can only sleep at night" message filling the chat
      */
     @Inject(
+            method = "handleChat",
             at = @At(
                     opcode = Opcodes.GETFIELD,
                     target = "Lnet/minecraft/client/network/NetHandlerPlayClient;gameController:Lnet/minecraft/client/Minecraft;",
                     value = "FIELD"),
             cancellable = true,
-            locals = LocalCapture.CAPTURE_FAILSOFT,
-            method = "handleChat")
+            locals = LocalCapture.CAPTURE_FAILSOFT)
     private void hodgepodge$handleBedMessage(S02PacketChat packetIn, CallbackInfo ci, ClientChatReceivedEvent event) {
-        if (event.message.equals(new ChatComponentTranslation("tile.bed.noSleep"))
-                || event.message.equals(new ChatComponentTranslation("tile.bed.notSafe"))
-                || event.message.equals(new ChatComponentTranslation("tile.bed.occupied"))) {
-            this.gameController.ingameGUI.getChatGUI()
-                    .printChatMessageWithOptionalDeletion(event.message, RANDOM_CHANNEL);
-            ci.cancel();
+        if (event.message instanceof ChatComponentTranslation translation) {
+            final String key = translation.getKey();
+            if (key.equals("tile.bed.noSleep") || key.equals("tile.bed.notSafe") || key.equals("tile.bed.occupied")) {
+                this.gameController.ingameGUI.getChatGUI()
+                        .printChatMessageWithOptionalDeletion(event.message, RANDOM_CHANNEL);
+                ci.cancel();
+            }
         }
     }
 }

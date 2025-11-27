@@ -191,7 +191,7 @@ public enum Mixins implements IMixins {
     // config handled in mixin due to server->client config sync
     LONGER_MESSAGES(new MixinBuilder()
             .addClientMixins("minecraft.MixinGuiChat_LongerMessages")
-            .addCommonMixins("minecraft.MixinC01PacketChatMessage_LongerMessages")
+            .addCommonMixins("minecraft.packets.MixinC01PacketChatMessage_LongerMessages")
             .setPhase(Phase.EARLY)),
     SPEEDUP_REMOVE_FORMATTING_CODES(new MixinBuilder("Speed up the vanilla method to remove formatting codes")
             .addClientMixins("minecraft.MixinEnumChatFormatting_FastFormat")
@@ -302,7 +302,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixHopperVoidingItems)
             .setPhase(Phase.EARLY)),
     FIX_HUGE_CHAT_KICK(new MixinBuilder()
-            .addCommonMixins("minecraft.MixinS02PacketChat")
+            .addCommonMixins("minecraft.packets.MixinS02PacketChat_FixHugeChatKick")
             .setApplyIf(() -> FixesConfig.fixHugeChatKick)
             .setPhase(Phase.EARLY)),
     FIX_BOGUS_INTEGRATED_SERVER_NPE(new MixinBuilder("Fix bogus FMLProxyPacket NPEs on integrated server crashes")
@@ -386,42 +386,44 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixPotionIterating)
             .setPhase(Phase.EARLY)),
     ENHANCE_NIGHT_VISION(new MixinBuilder("Remove the blueish sky tint from night vision")
+            .addClientMixins("minecraft.MixinEntityRenderer_EnhanceNightVision")
             .setApplyIf(() -> TweaksConfig.enhanceNightVision)
-            .addClientMixins(
-                    "minecraft.MixinEntityRenderer_EnhanceNightVision")
             .setPhase(Phase.EARLY)),
     NIGHT_VISION_FADE(new MixinBuilder()
-        .setApplyIf(() -> TweaksConfig.fadeNightVision)
-        .addClientMixins(
-            "minecraft.MixinEntityRenderer_NightVisionFade")
-        .setPhase(Phase.EARLY)),
+            .addClientMixins("minecraft.MixinEntityRenderer_NightVisionFade")
+            .setApplyIf(() -> TweaksConfig.fadeNightVision)
+            .setPhase(Phase.EARLY)),
     OPTIMIZE_ASMDATATABLE_INDEX(new MixinBuilder("Optimize ASM DataTable Index")
             .addCommonMixins("fml.MixinASMDataTable")
             .setApplyIf(() -> SpeedupsConfig.optimizeASMDataTable)
             .setPhase(Phase.EARLY)),
     SQUASH_BED_ERROR_MESSAGE(new MixinBuilder()
-            .addClientMixins("minecraft.MixinNetHandlerPlayClient")
+            .addClientMixins("minecraft.MixinNetHandlerPlayClient_SquashBedMessages")
             .setApplyIf(() -> FixesConfig.squashBedErrorMessage)
             .setPhase(Phase.EARLY)),
     CHUNK_SAVE_CME_DEBUG(new MixinBuilder("Add debugging code to Chunk Save CME")
-            .addCommonMixins("minecraft.MixinNBTTagCompound")
+            .addCommonMixins("minecraft.nbt.MixinNBTTagCompound_CheckCME")
             .setApplyIf(() -> DebugConfig.chunkSaveCMEDebug)
+            .addExcludedMod(TargetedMod.DRAGONAPI)
             .setPhase(Phase.EARLY)),
     SPEEDUP_NBT_COPY(new MixinBuilder("Speed up NBT copy")
             .addCommonMixins(
-                    "minecraft.MixinNBTTagCompound_speedup",
-                    "minecraft.MixinNBTTagList_speedup")
+                    "minecraft.nbt.MixinNBTTagCompound_FastCopy",
+                    "minecraft.nbt.MixinNBTTagList_FastCopy")
             .setApplyIf(() -> ASMConfig.speedupNBTTagCompoundCopy)
             .addExcludedMod(TargetedMod.BUKKIT)
+            .addExcludedMod(TargetedMod.DRAGONAPI)
             .addExcludedMod(TargetedMod.FASTCRAFT)
             .setPhase(Phase.EARLY)),
     STRING_POOLER_NBT_TAG(new MixinBuilder("Pool NBT Strings")
-            .addCommonMixins("minecraft.MixinNBTTagCompound_stringPooler")
+            .addCommonMixins("minecraft.nbt.MixinNBTTagCompound_StringPooler")
             .setApplyIf(() -> TweaksConfig.enableTagCompoundStringPooling)
+            .addExcludedMod(TargetedMod.DRAGONAPI)
             .setPhase(Phase.EARLY)),
     STRING_POOLER_NBT_STRING(new MixinBuilder("Pool NBT Strings")
-            .addCommonMixins("minecraft.MixinNBTTagString_stringPooler")
+            .addCommonMixins("minecraft.nbt.MixinNBTTagString_StringPooler")
             .setApplyIf(() -> TweaksConfig.enableNBTStringPooling)
+            .addExcludedMod(TargetedMod.DRAGONAPI)
             .setPhase(Phase.EARLY)),
     THREADED_WORLDDATA_SAVING(new MixinBuilder()
             .addCommonMixins(
@@ -736,7 +738,10 @@ public enum Mixins implements IMixins {
     DEBUG_EVENT_REGISTRATION(new MixinBuilder()
             .addCommonMixins("fml.MixinEventBus_DebugRegistration")
             .setApplyIf(() -> Boolean.getBoolean("hodgepodge.logEventTimes"))
-            .addCommonMixins("fml.MixinEventBus_DebugRegistration")
+            .setPhase(Phase.EARLY)),
+    DEBUG_DUMP_TEXTURES_SIZES(new MixinBuilder()
+            .addClientMixins("minecraft.debug.MixinDynamicTexture", "minecraft.debug.MixinTextureAtlasSprite")
+            .setApplyIf(() -> Boolean.getBoolean("hodgepodge.debugtextures"))
             .setPhase(Phase.EARLY)),
     FIX_HOUSE_CHAR_RENDERING(new MixinBuilder()
             .addClientMixins("minecraft.MixinFontRenderer_House")
@@ -752,9 +757,12 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)
     ),
     SPEEDUP_TILE_DESCRIPTION_PACKETS(new MixinBuilder("Batch S35PacketUpdateTileEntity Packets")
-        .addCommonMixins("minecraft.tiledescriptions.MixinEntityPlayerMP", "minecraft.tiledescriptions.MixinPlayerInstance", "forge.tiledescriptions.MixinForgeHooks")
-        .setApplyIf(() -> SpeedupsConfig.batchDescriptionPacketsMixins)
-        .setPhase(Phase.EARLY)),
+            .addCommonMixins(
+                    "minecraft.tiledescriptions.MixinEntityPlayerMP",
+                    "minecraft.tiledescriptions.MixinPlayerInstance",
+                    "forge.tiledescriptions.MixinForgeHooks")
+            .setApplyIf(() -> SpeedupsConfig.batchDescriptionPacketsMixins)
+            .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
@@ -1243,7 +1251,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesUnEnchanting)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
-    FIX_EXTRA_UTILITIES_REPAIR_COST(new MixinBuilder("Fix Exu spikes losing NBT tags (other than enchantments) when being placed on the ground" )
+    FIX_EXTRA_UTILITIES_REPAIR_COST(new MixinBuilder("Fix Exu spikes losing NBT tags (other than enchantments) when being placed on the ground")
             .addCommonMixins(
                     "extrautilities.MixinBlockSpike_PreserveNBT",
                     "extrautilities.MixinTileEntityEnchantedSpike_PreserveNBT")

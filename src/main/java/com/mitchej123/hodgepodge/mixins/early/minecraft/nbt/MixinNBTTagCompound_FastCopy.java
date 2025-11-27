@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft;
+package com.mitchej123.hodgepodge.mixins.early.minecraft.nbt;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 
 @Mixin(NBTTagCompound.class)
-public class MixinNBTTagCompound_speedup {
+public class MixinNBTTagCompound_FastCopy {
 
     @Shadow
     private Map<String, NBTBase> tagMap; // = new Object2ObjectOpenHashMap<>(); via ASM

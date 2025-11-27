@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft;
+package com.mitchej123.hodgepodge.mixins.early.minecraft.packets;
 
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ThreadLocalRandom;
@@ -14,14 +14,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import com.mitchej123.hodgepodge.config.FixesConfig;
 
 @Mixin(S02PacketChat.class)
-public abstract class MixinS02PacketChat {
+public abstract class MixinS02PacketChat_FixHugeChatKick {
 
+    @Unique
     private static final Logger LOGGER = LogManager.getLogger("ChatOverflowFix");
 
     /**
