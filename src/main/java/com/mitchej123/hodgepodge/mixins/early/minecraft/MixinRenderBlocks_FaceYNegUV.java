@@ -9,9 +9,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 /**
  * Patched {@link RenderBlocks} to fix {@link #renderFaceYNeg} texture UV
  * <dl>
@@ -21,8 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * </dl>
  */
 @SuppressWarnings({ "ClassWithTooManyFields", "UnusedMixin" })
-@SideOnly(Side.CLIENT)
-@Mixin(RenderBlocks.class)
+@Mixin(value = RenderBlocks.class, priority = 100)
 public abstract class MixinRenderBlocks_FaceYNegUV {
 
     @Shadow
