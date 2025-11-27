@@ -98,6 +98,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean fastBlockPlacingServerSide;
 
+    @Config.Comment("Do not flip bottom face textures (1.8+ behavior, see MC-47811)")
+    @Config.DefaultBoolean(false)
+    public static boolean fixBottomFaceUV;
+
     @Config.Comment("Prevents the inventory from shifting when the player has active potion effects")
     @Config.DefaultBoolean(true)
     public static boolean fixPotionRenderOffset;
