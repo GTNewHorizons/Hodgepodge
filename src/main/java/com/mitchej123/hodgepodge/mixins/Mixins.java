@@ -777,6 +777,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinTileEntityPiston", "minecraft.MixinBlockPistonBase")
             .setApplyIf(() -> FixesConfig.fixInvalidPistonCrashes)
             .setPhase(Phase.EARLY)),
+    SEND_DIFFICULTY_CHANGE_TO_CLIENT(new MixinBuilder("When difficulty updates on the server, inform all clients")
+            .addCommonMixins("minecraft.MixinMinecraftServer_UpdateClientDifficulty")
+            .setApplyIf(() -> FixesConfig.updateClientDifficultyOnServer)
+            .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")

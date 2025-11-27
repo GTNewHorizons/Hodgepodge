@@ -395,6 +395,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixInvalidPistonCrashes;
 
+    @Config.Comment("Updates the difficulty on every connected client when the difficulty of the server changes & changes the setting button to reflect the difficulty of the server.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean updateClientDifficultyOnServer;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
