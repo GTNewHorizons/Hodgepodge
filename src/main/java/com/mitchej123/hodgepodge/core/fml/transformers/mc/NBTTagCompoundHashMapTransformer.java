@@ -9,7 +9,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
@@ -18,19 +18,18 @@ import com.mitchej123.hodgepodge.core.HodgepodgeCore;
 import com.mitchej123.hodgepodge.core.shared.HodgepodgeClassDump;
 
 @SuppressWarnings("unused")
-public class NBTTagCompoundHashMapTransformer implements IClassTransformer {
+public class NBTTagCompoundHashMapTransformer implements IClassTransformer, Opcodes {
 
     private static final Logger LOGGER = LogManager.getLogger("NBTTagCompoundHashMapTransformer");
     private static final String INIT = "<init>";
     private static final String EMPTY_DESC = "()V";
     private static final String HASHMAP = "java/util/HashMap";
     private static final String FASTUTIL_HASHMAP = "it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap";
-    private static final String NBT_TAG_COMPOUND = "net.minecraft.nbt.NBTTagCompound";
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null) return null;
-        if (NBT_TAG_COMPOUND.equals(transformedName)) {
+        if ("net.minecraft.nbt.NBTTagCompound".equals(transformedName)) {
             final byte[] transformedBytes = transformBytes(basicClass);
             HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
             return transformedBytes;
@@ -51,42 +50,42 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer {
         return basicClass;
     }
 
-    /** @return Was the class changed? */
     private static boolean transformClassNode(ClassNode cn) {
         boolean changed = false;
         for (MethodNode mn : cn.methods) {
             if (mn.name.equals(INIT) && mn.desc.equals(EMPTY_DESC)) {
-                for (AbstractInsnNode node : mn.instructions.toArray()) {
-                    if (node.getOpcode() == Opcodes.NEW && node instanceof TypeInsnNode tNode) {
-                        if (tNode.desc.equals(HASHMAP)) {
-                            HodgepodgeCore.logASM(LOGGER, "Found HashMap instantiation in NBTTagCompound.<init>");
-                            mn.instructions.insertBefore(tNode, new TypeInsnNode(Opcodes.NEW, FASTUTIL_HASHMAP));
-                            mn.instructions.remove(tNode);
-                            changed = true;
-                        }
-                    } else if (node.getOpcode() == Opcodes.INVOKESPECIAL && node instanceof MethodInsnNode mNode) {
-                        if (mNode.name.equals(INIT) && mNode.desc.equals(EMPTY_DESC) && mNode.owner.equals(HASHMAP)) {
-                            HodgepodgeCore.logASM(LOGGER, "Found HashMap constructor call in NBTTagCompound.<init>");
-                            // Due to loadFactor being 0.75, the actual initialCapacity is 6, not 4.
-                            mn.instructions.insertBefore(mNode, new LdcInsnNode(4));
-                            // spotless:off (this became unreadable)
-                            mn.instructions.insertBefore(
-                                    mNode,
-                                    new MethodInsnNode(
-                                            Opcodes.INVOKESPECIAL,
-                                            FASTUTIL_HASHMAP,
-                                            INIT,
-                                            "(I)V",
-                                            false));
-                            //spotless:on
-                            mn.instructions.remove(mNode);
-                            changed = true;
-                        }
+                changed = transformConstructor(mn);
+            }
+        }
+        return changed;
+    }
+
+    /**
+     * Replaces in the constructor : this.tagMap = new HashMap(); with : this.tagMap = new Object2ObjectOpenHashMap(4);
+     */
+    private static boolean transformConstructor(MethodNode mn) {
+        boolean changed = false;
+        for (AbstractInsnNode node : mn.instructions.toArray()) {
+            if (node.getOpcode() == NEW && node instanceof TypeInsnNode tNode && tNode.desc.equals(HASHMAP)) {
+                AbstractInsnNode secondNode = node.getNext();
+                if (secondNode.getOpcode() == DUP) {
+                    AbstractInsnNode thirdNode = secondNode.getNext();
+                    if (thirdNode.getOpcode() == INVOKESPECIAL && thirdNode instanceof MethodInsnNode mNode
+                            && mNode.name.equals(INIT)
+                            && mNode.desc.equals(EMPTY_DESC)
+                            && mNode.owner.equals(HASHMAP)) {
+                        HodgepodgeCore.logASM(
+                                LOGGER,
+                                "Replaced HashMap instantiation in NBTTagCompound.<init> with " + FASTUTIL_HASHMAP);
+                        tNode.desc = FASTUTIL_HASHMAP;
+                        mn.instructions.insertBefore(mNode, new InsnNode(ICONST_4));
+                        mNode.owner = FASTUTIL_HASHMAP;
+                        mNode.desc = "(I)V";
+                        changed = true;
                     }
                 }
             }
         }
-
         return changed;
     }
 }
