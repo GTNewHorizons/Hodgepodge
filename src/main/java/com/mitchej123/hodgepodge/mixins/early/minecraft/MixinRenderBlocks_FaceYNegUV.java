@@ -59,8 +59,8 @@ public abstract class MixinRenderBlocks_FaceYNegUV {
             icon = this.overrideBlockTexture;
         }
 
-        double uMinX = icon.getInterpolatedU(16 - this.renderMinX * 16.0D);
-        double uMaxX = icon.getInterpolatedU(16 - this.renderMaxX * 16.0D);
+        double uMinX = icon.getInterpolatedU(16.0D - this.renderMinX * 16.0D);
+        double uMaxX = icon.getInterpolatedU(16.0D - this.renderMaxX * 16.0D);
         double vMinZ = icon.getInterpolatedV(this.renderMinZ * 16.0D);
         double vMaxZ = icon.getInterpolatedV(this.renderMaxZ * 16.0D);
 
@@ -80,9 +80,9 @@ public abstract class MixinRenderBlocks_FaceYNegUV {
         double vMaxZCopy = vMaxZ;
 
         if (this.uvRotateBottom == 2) {
-            uMinX = icon.getInterpolatedU(this.renderMaxZ * 16.0D);
+            uMinX = icon.getInterpolatedU(16.0D - this.renderMinZ * 16.0D);
             vMinZ = icon.getInterpolatedV(16.0D - this.renderMaxX * 16.0D);
-            uMaxX = icon.getInterpolatedU(this.renderMinZ * 16.0D);
+            uMaxX = icon.getInterpolatedU(16.0D - this.renderMaxZ * 16.0D);
             vMaxZ = icon.getInterpolatedV(16.0D - this.renderMinX * 16.0D);
             vMinZCopy = vMinZ;
             vMaxZCopy = vMaxZ;
@@ -91,9 +91,9 @@ public abstract class MixinRenderBlocks_FaceYNegUV {
             vMinZ = vMaxZ;
             vMaxZ = vMinZCopy;
         } else if (this.uvRotateBottom == 1) {
-            uMinX = icon.getInterpolatedU(16.0D - this.renderMinZ * 16.0D);
+            uMinX = icon.getInterpolatedU(this.renderMaxZ * 16.0D);
             vMinZ = icon.getInterpolatedV(this.renderMinX * 16.0D);
-            uMaxX = icon.getInterpolatedU(16.0D - this.renderMaxZ * 16.0D);
+            uMaxX = icon.getInterpolatedU(this.renderMinZ * 16.0D);
             vMaxZ = icon.getInterpolatedV(this.renderMaxX * 16.0D);
             uMaxXCopy = uMaxX;
             uMinXCopy = uMinX;
@@ -102,8 +102,8 @@ public abstract class MixinRenderBlocks_FaceYNegUV {
             vMinZCopy = vMaxZ;
             vMaxZCopy = vMinZ;
         } else if (this.uvRotateBottom == 3) {
-            uMinX = icon.getInterpolatedU(16.0D - this.renderMaxX * 16.0D);
-            uMaxX = icon.getInterpolatedU(16.0D - this.renderMinX * 16.0D);
+            uMinX = icon.getInterpolatedU(this.renderMinX * 16.0D);
+            uMaxX = icon.getInterpolatedU(this.renderMaxX * 16.0D);
             vMinZ = icon.getInterpolatedV(16.0D - this.renderMinZ * 16.0D);
             vMaxZ = icon.getInterpolatedV(16.0D - this.renderMaxZ * 16.0D);
             uMaxXCopy = uMaxX;
