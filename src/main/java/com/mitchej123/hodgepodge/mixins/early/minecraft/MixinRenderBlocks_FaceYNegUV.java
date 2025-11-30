@@ -59,8 +59,8 @@ public abstract class MixinRenderBlocks_FaceYNegUV {
             icon = this.overrideBlockTexture;
         }
 
-        double uMinX = icon.getInterpolatedU(this.renderMaxX * 16.0D);
-        double uMaxX = icon.getInterpolatedU(this.renderMinX * 16.0D);
+        double uMinX = icon.getInterpolatedU(16 - this.renderMinX * 16.0D);
+        double uMaxX = icon.getInterpolatedU(16 - this.renderMaxX * 16.0D);
         double vMinZ = icon.getInterpolatedV(this.renderMinZ * 16.0D);
         double vMaxZ = icon.getInterpolatedV(this.renderMaxZ * 16.0D);
 
