@@ -53,7 +53,7 @@ public class MixinFMLClientHandler {
         Logger logger = LogManager.getLogger("TEXTURE ERRORS");
         logger.error(Strings.repeat("+=", 25));
         logger.error(
-                "{} missing textures and {} broken textures were found. Enable TweaksConfig.hideTextureErrors in the Hodgepodge config for more info.",
+                "{} missing textures and {} broken textures were found. Change TweaksConfig.hideTextureErrors in the Hodgepodge config for more info.",
                 missingCount,
                 brokenCount);
         logger.error(Strings.repeat("+=", 25));
