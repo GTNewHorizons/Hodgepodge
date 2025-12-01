@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.fml;
+package com.mitchej123.hodgepodge.mixins.early.debug;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
