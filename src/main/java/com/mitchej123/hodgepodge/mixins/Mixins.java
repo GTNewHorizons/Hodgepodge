@@ -762,6 +762,11 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinWorldType_VoidParticles")
             .setApplyIf(() -> TweaksConfig.disableVoidFog != 0)
             .setPhase(Phase.EARLY)),
+    ANVIL_MAX_LEVE(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinContainerRepair_MaxAnvilCost")
+            .addClientMixins("minecraft.MixinGuiRepair_MaxAnvilCost")
+            .setApplyIf(() -> TweaksConfig.anvilMaxLevel != 40)
+            .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
