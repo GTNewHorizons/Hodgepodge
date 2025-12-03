@@ -750,14 +750,17 @@ public enum Mixins implements IMixins {
     REMOVE_INVALID_ENTITES(new MixinBuilder()
             .addCommonMixins("minecraft.MixinChunk_FixInvalidEntity")
             .setApplyIf(() -> FixesConfig.removeInvalidChunkEntites)
-            .setPhase(Phase.EARLY)
-    ),
+            .setPhase(Phase.EARLY)),
     SPEEDUP_TILE_DESCRIPTION_PACKETS(new MixinBuilder("Batch S35PacketUpdateTileEntity Packets")
             .addCommonMixins(
                     "minecraft.tiledescriptions.MixinEntityPlayerMP",
                     "minecraft.tiledescriptions.MixinPlayerInstance",
                     "forge.tiledescriptions.MixinForgeHooks")
             .setApplyIf(() -> SpeedupsConfig.batchDescriptionPacketsMixins)
+            .setPhase(Phase.EARLY)),
+    HIDE_VOID_FOG(new MixinBuilder()
+            .addClientMixins("minecraft.MixinWorldType_VoidParticles")
+            .setApplyIf(() -> TweaksConfig.disableVoidFog != 0)
             .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
