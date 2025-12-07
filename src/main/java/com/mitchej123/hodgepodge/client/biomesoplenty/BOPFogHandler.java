@@ -9,6 +9,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 
+import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.mixins.late.biomesoplenty.AccessorFogHandler;
 
 import biomesoplenty.client.fog.FogHandler;
@@ -22,6 +23,8 @@ public class BOPFogHandler {
     private static float farPlaneDistanceM;
 
     public static void onRenderFog(EntityViewRenderEvent.RenderFogEvent event, FogHandler fogHandler) {
+        if (ASMConfig.bopFogDisable) return;
+
         EntityLivingBase entity = event.entity;
         int playerX = MathHelper.floor_double(entity.posX);
         int playerZ = MathHelper.floor_double(entity.posZ);

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.mitchej123.hodgepodge.core.HodgepodgeCore;
+import com.mitchej123.hodgepodge.mixins.hooks.WorldDataSaverHook;
 
 @Mixin(ForgeChunkManager.class)
 public class MixinForgeChunkManager_threadedIO {
@@ -21,6 +21,6 @@ public class MixinForgeChunkManager_threadedIO {
                     value = "INVOKE",
                     target = "Lnet/minecraft/nbt/CompressedStreamTools;write(Lnet/minecraft/nbt/NBTTagCompound;Ljava/io/File;)V"))
     private static void redirectWrite(NBTTagCompound forcedChunkNBTData, File chunkLoaderFile) throws IOException {
-        HodgepodgeCore.saveWorldDataUncompressed(chunkLoaderFile, forcedChunkNBTData);
+        WorldDataSaverHook.saveWorldDataUncompressed(chunkLoaderFile, forcedChunkNBTData);
     }
 }

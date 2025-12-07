@@ -16,7 +16,9 @@ public abstract class MixinTEReactorChamber extends TileEntity {
             at = @At(
                     value = "FIELD",
                     target = "Lic2/core/block/reactor/tileentity/TileEntityReactorChamberElectric;ticker:S",
-                    ordinal = 0))
+                    ordinal = 0,
+                    remap = false),
+            remap = true)
     private short hodgepodge$synchronizeReactors(TileEntityReactorChamberElectric instance) {
         // May cause one short cycle, but afterwards will always be synced to world time
         return (short) (instance.getWorldObj().getTotalWorldTime() % 20);
