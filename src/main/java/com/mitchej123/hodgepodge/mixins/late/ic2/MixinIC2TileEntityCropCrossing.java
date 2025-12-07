@@ -84,8 +84,7 @@ public class MixinIC2TileEntityCropCrossing extends TileEntity {
         if (x % 1 != 0)
             // if there are 3 parents randomly choose between (-1 to 3) and (-2 to 3)
             y = (int) (Math.floor(x) + IC2.random.nextInt(2));
-        else
-            y = (int) x;
+        else y = (int) x;
         return IC2.random.nextInt(count + y + 1) - y + count;
     }
 }
