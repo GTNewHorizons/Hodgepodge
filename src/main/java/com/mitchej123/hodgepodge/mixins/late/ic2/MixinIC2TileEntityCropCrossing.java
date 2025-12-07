@@ -57,7 +57,7 @@ public class MixinIC2TileEntityCropCrossing extends TileEntity {
         }
     }
 
-    // Give 50% chance that if growth is 24 and larger (which causes weeding behavior)
+    // Give 25% chance that if growth is 24 and larger (which causes weeding behavior)
     // then it will be lowered back to 23
     @Inject(method = "attemptCrossing", at = @At(value = "TAIL"), remap = false)
     public void hodgepodge$attemptCrossing(CallbackInfoReturnable<Boolean> cir) {
@@ -67,7 +67,7 @@ public class MixinIC2TileEntityCropCrossing extends TileEntity {
         }
     }
 
-    // Make it so stats can only drop by parent count - 1, instead of the parent count
+    // Make it so stats can only drop by parent count / 2, instead of the parent count
     @Redirect(
             method = "attemptCrossing",
             at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"),
