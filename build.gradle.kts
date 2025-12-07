@@ -1,10 +1,9 @@
-//version: 1707058017
-
 plugins {
     id("com.gtnewhorizons.gtnhconvention")
 }
 
 minecraft {
+    //extraRunJvmArguments.add("-Dhodgepodge.debugtextures=true")
     extraRunJvmArguments.add("-Dhodgepodge.dumpClass=true")
     extraRunJvmArguments.add("-Dhodgepodge.logModTimes=true")
     //extraRunJvmArguments.add("-Dhodgepodge.logEventTimes=true")

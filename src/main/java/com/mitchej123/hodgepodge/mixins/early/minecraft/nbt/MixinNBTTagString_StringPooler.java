@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft;
+package com.mitchej123.hodgepodge.mixins.early.minecraft.nbt;
 
 import net.minecraft.nbt.NBTTagString;
 
@@ -12,7 +12,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mitchej123.hodgepodge.util.StringPooler;
 
 @Mixin(NBTTagString.class)
-public class MixinNBTTagString_stringPooler {
+public class MixinNBTTagString_StringPooler {
 
     @Shadow
     private String data;

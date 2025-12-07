@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft;
+package com.mitchej123.hodgepodge.mixins.early.minecraft.packets;
 
 import net.minecraft.network.play.client.C01PacketChatMessage;
 

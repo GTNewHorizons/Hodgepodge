@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft;
+package com.mitchej123.hodgepodge.mixins.early.minecraft.nbt;
 
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -9,7 +9,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mitchej123.hodgepodge.util.StringPooler;
 
 @Mixin(NBTTagCompound.class)
-public class MixinNBTTagCompound_stringPooler {
+public class MixinNBTTagCompound_StringPooler {
 
     @ModifyExpressionValue(
             method = "func_152448_b",

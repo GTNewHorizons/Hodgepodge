@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft;
+package com.mitchej123.hodgepodge.mixins.early.minecraft.nbt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.llamalad7.mixinextras.sugar.Local;
 
 @Mixin(NBTTagList.class)
-public class MixinNBTTagList_speedup {
+public class MixinNBTTagList_FastCopy {
 
     @Shadow
     private List<NBTBase> tagList;
@@ -29,7 +29,7 @@ public class MixinNBTTagList_speedup {
     public void copyEnsureCapacity(CallbackInfoReturnable<NBTBase> cir, @Local NBTTagList newTagList) {
         // Ensure the capacity of the new tag list is the same as the old one,
         // so we don't need to resize (multiple times) during the copy
-        if (((MixinNBTTagList_speedup) (Object) (newTagList)).tagList instanceof ArrayList list) {
+        if (((MixinNBTTagList_FastCopy) (Object) (newTagList)).tagList instanceof ArrayList list) {
             list.ensureCapacity(tagList.size());
         }
     }
