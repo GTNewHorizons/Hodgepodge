@@ -908,6 +908,12 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> ASMConfig.cofhWorldTransformer)
             .setPhase(Phase.LATE)),
 
+    COFH_COMMAND_TPX_FIX(new MixinBuilder("Fix logic of /cofh tpx")
+            .addCommonMixins("cofhcore.MixinCoFHCommandTpxFix")
+            .setApplyIf(() -> FixesConfig.fixCofhTpxCommand)
+            .addRequiredMod(TargetedMod.COFH_CORE)
+            .setPhase(Phase.EARLY)),
+
     // Various Exploits/Fixes
     GC_TIME_COMMAND_FIX(new MixinBuilder("GC Time Fix")
             .addCommonMixins("minecraft.MixinTimeCommandGalacticraftFix")
