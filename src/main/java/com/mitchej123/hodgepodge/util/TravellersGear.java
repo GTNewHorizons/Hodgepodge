@@ -1,7 +1,9 @@
 package com.mitchej123.hodgepodge.util;
 
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -81,8 +83,24 @@ public class TravellersGear {
             return;
         }
 
-        try (FileInputStream in = new FileInputStream(dataFile)) {
-            cachedRoot = CompressedStreamTools.readCompressed(in);
+        try {
+            boolean isCompressed;
+            // Detect gzip signature
+            try (DataInputStream din = new DataInputStream(new FileInputStream(dataFile))) {
+                int b0 = din.readUnsignedByte();
+                int b1 = din.readUnsignedByte();
+                isCompressed = (b0 == 0x1F && b1 == 0x8B);
+            }
+            // Should solve problems caused by versions of Hodgepodge between 2.6.96 and 2.7.16. Sorry!
+            if (isCompressed) {
+                try (FileInputStream in = new FileInputStream(dataFile)) {
+                    cachedRoot = CompressedStreamTools.readCompressed(in);
+                    Common.log.info("[TG Recovery] Loaded compressed TG-SaveData.dat");
+                }
+            } else {
+                cachedRoot = CompressedStreamTools.read(dataFile);
+                Common.log.warn("[TG Recovery] Loaded uncompressed TG-SaveData.dat (fallback)");
+            }
             cachedData = cachedRoot.getCompoundTag("data");
             cachedPlayerList = cachedData.getTagList("playerList", 10);
             Common.log.info("[TG Recovery] Loaded TG-SaveData.dat with {} entries.", cachedPlayerList.tagCount());
@@ -100,8 +118,8 @@ public class TravellersGear {
             return;
         }
 
-        try {
-            CompressedStreamTools.write(cachedRoot, dataFile);
+        try (FileOutputStream out = new FileOutputStream(dataFile)) {
+            CompressedStreamTools.writeCompressed(cachedRoot, out);
             dirty = false;
             Common.log.info("[TG Recovery] Saved updated TG-SaveData.dat.");
         } catch (IOException e) {

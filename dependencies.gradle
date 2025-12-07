@@ -31,6 +31,7 @@ dependencies {
     transformedModCompileOnly(rfg.deobf("curse.maven:bibliocraft-228027:2423369"))
     transformedModCompileOnly(rfg.deobf("curse.maven:biomes-o-plenty-220318:2499612"))
     transformedModCompileOnly("curse.maven:cofh-core-69162:2388751")
+    //transformedModCompileOnly('curse.maven:dragon-api-235591:3574508')
     transformedModCompileOnly("curse.maven:minefactory-reloaded-66672:2277486")
     transformedModCompileOnly(rfg.deobf('curse.maven:damage-indicators-mod-59489:2692129'))
     transformedModCompileOnly("curse.maven:extra-utilities-225561:2264384")
@@ -71,8 +72,9 @@ dependencies {
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:ServerUtilities:2.2.2:dev") // for the pregenerator
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta64:dev") // for TPS graph
 
-    testImplementation(platform('org.junit:junit-bom:5.9.2'))
-    testImplementation('org.junit.jupiter:junit-jupiter')
+    testImplementation(platform("org.junit:junit-bom:5.14.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.mockito:mockito-core:5.+")
 }
 

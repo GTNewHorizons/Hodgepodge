@@ -42,4 +42,8 @@ public class ASMConfig {
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean embedID_experimental;
+
+    @Config.Comment("Disable BoP fog modifications")
+    @Config.DefaultBoolean(false)
+    public static boolean bopFogDisable;
 }
