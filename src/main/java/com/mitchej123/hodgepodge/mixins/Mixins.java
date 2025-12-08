@@ -691,7 +691,11 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)),
     CANCEL_NONE_SOUNDS(new MixinBuilder("Skips playing empty sounds.")
             .addCommonMixins("minecraft.shutup.MixinWorld")
-            .setApplyIf(() -> FixesConfig.skipEmptySounds)
+            .setApplyIf(() -> TweaksConfig.skipEmptySounds)
+            .setPhase(Phase.EARLY)),
+    HIDE_TEXTURE_ERRORS(new MixinBuilder()
+            .addClientMixins("minecraft.shutup.MixinFMLClientHandler")
+            .setApplyIf(() -> TweaksConfig.hideTextureErrors)
             .setPhase(Phase.EARLY)),
     FIX_PLAYER_BLOCK_PLACEMENT_DISTANCE_CHECK(new MixinBuilder("Fix wrong block placement distance check")
             .addCommonMixins("minecraft.MixinNetHandlePlayServer_FixWrongBlockPlacementCheck")
