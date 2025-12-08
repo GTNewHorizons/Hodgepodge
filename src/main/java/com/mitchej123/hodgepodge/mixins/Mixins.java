@@ -1081,6 +1081,14 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.removeBOPDonatorEffect)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
+    ADD_BOP_FENCES(new MixinBuilder()
+        .addCommonMixins(
+            "biomesoplenty.MixinBOPBlocks",
+            "biomesoplenty.MixinBOPCrafting")
+        .setApplyIf(() -> TweaksConfig.addBOPFences)
+        .addRequiredMod(TargetedMod.BOP)
+        .setPhase(Phase.LATE)),
+
 
     // Minefactory Reloaded
     DISARM_SACRED_TREE(new MixinBuilder("Prevents Sacred Rubber Tree Generation")
