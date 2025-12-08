@@ -14,6 +14,10 @@ public enum Mixins implements IMixins {
 
     // spotless:off
     // Vanilla Fixes
+    FIX_MINECRAFT_SERVER_LEAK(new MixinBuilder()
+            .addCommonMixins("minecraft.server.MixinMinecraftServer_ClearServerRef")
+            .setApplyIf(() -> FixesConfig.fixMinecraftServerLeak)
+            .setPhase(Phase.EARLY)),
     ONLY_LOAD_LANGUAGES_ONCE_PER_FILE(new MixinBuilder()
             .addCommonMixins("minecraft.MixinLanguageRegistry")
             .setApplyIf(() -> FixesConfig.onlyLoadLanguagesOnce)
