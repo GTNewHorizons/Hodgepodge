@@ -13,10 +13,10 @@ public class MixinItemRenderer_FixInstantItemSwitch {
 
     /**
      * @author danyadev
-     * @reason When a player switches an item in their hand, there's an animation that hides the previous item and
-     *         shows the new item. The problem is that when the items have the same id and meta but different NBT,
-     *         this animation breaks: at the beginning of the hiding animation the item is already new. For example,
-     *         this happens when you switch from a normal sword to an enchanted sword
+     * @reason When a player switches an item in their hand, there's an animation that hides the previous item and shows
+     *         the new item. The problem is that when the items have the same id and meta but different NBT, this
+     *         animation breaks: at the beginning of the hiding animation the item is already new. For example, this
+     *         happens when you switch from a normal sword to an enchanted sword
      * @see <a href="https://github.com/GTNewHorizons/Hodgepodge/pull/666">PR with a demo</a>
      */
     @ModifyExpressionValue(
