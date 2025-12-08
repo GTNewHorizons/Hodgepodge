@@ -134,4 +134,11 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean speedupIC2ReactorSize;
 
+    // Thaumcraft
+
+    @Config.Comment("Speedup ThaumcraftApi#getInfusionRecipes")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupThaumGetInfusionRecipes;
+
 }

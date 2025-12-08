@@ -993,6 +993,11 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.LATE)),
 
     // Thaumcraft
+    SPEEDUP_GET_INFUSION_RECIPES(new MixinBuilder()
+            .addCommonMixins("thaumcraft.MixinThaumcraftApi_SpeedupGetInfusionRecipe")
+            .setApplyIf(() -> SpeedupsConfig.speedupThaumGetInfusionRecipes)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
     THREADED_THAUMCRAFT_MAZE_SAVING(new MixinBuilder()
             .addCommonMixins("thaumcraft.MixinMazeHandler_threadedIO")
             .setApplyIf(() -> TweaksConfig.threadedWorldDataSaving)
