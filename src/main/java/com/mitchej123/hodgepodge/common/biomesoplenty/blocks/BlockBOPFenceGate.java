@@ -1,12 +1,15 @@
 package com.mitchej123.hodgepodge.common.biomesoplenty.blocks;
 
-import biomesoplenty.BiomesOPlenty;
-import biomesoplenty.api.content.BOPCBlocks;
 import net.minecraft.block.BlockFenceGate;
 import net.minecraft.util.IIcon;
 
+import biomesoplenty.BiomesOPlenty;
+import biomesoplenty.api.content.BOPCBlocks;
+
 public class BlockBOPFenceGate extends BlockFenceGate {
-    private static final String[] woodTypes = new String[] {"sacredoak", "cherry", "dark", "fir", "ethereal", "magic", "mangrove", "palm", "redwood", "willow", "bamboothatching", "pine", "hell_bark", "jacaranda", "mahogany"};
+
+    private static final String[] woodTypes = new String[] { "sacredoak", "cherry", "dark", "fir", "ethereal", "magic",
+            "mangrove", "palm", "redwood", "willow", "bamboothatching", "pine", "hell_bark", "jacaranda", "mahogany" };
     private int typeIndex = 0;
 
     public BlockBOPFenceGate(String type) {
