@@ -765,6 +765,10 @@ public enum Mixins implements IMixins {
                     "forge.tiledescriptions.MixinForgeHooks")
             .setApplyIf(() -> SpeedupsConfig.batchDescriptionPacketsMixins)
             .setPhase(Phase.EARLY)),
+    FIX_INSTANT_HAND_ITEM_TEXTURE_SWITCH(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinItemRenderer_FixInstantItemSwitch")
+            .setApplyIf(() -> FixesConfig.fixInstantHandItemTextureSwitch)
+            .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
