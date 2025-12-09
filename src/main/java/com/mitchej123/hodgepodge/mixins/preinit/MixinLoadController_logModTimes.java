@@ -65,7 +65,7 @@ public class MixinLoadController_logModTimes {
                     logger.log(type + ";" + modid + ";" + result.mod.getName() + ";" + result.time / 1_000_000);
                 });
             });
-        }
+        } catch (Throwable ignored) {}
     }
 
 }
