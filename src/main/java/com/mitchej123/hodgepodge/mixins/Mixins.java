@@ -407,9 +407,7 @@ public enum Mixins implements IMixins {
             .addExcludedMod(TargetedMod.DRAGONAPI)
             .setPhase(Phase.EARLY)),
     SPEEDUP_NBT_COPY(new MixinBuilder("Speed up NBT copy")
-            .addCommonMixins(
-                    "minecraft.nbt.MixinNBTTagCompound_FastCopy",
-                    "minecraft.nbt.MixinNBTTagList_FastCopy")
+            .addCommonMixins("minecraft.nbt.MixinNBTTagList_FastCopy")
             .setApplyIf(() -> ASMConfig.speedupNBTTagCompoundCopy)
             .addExcludedMod(TargetedMod.BUKKIT)
             .addExcludedMod(TargetedMod.DRAGONAPI)
@@ -911,6 +909,12 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.THERMALEXPANSION)
             .setApplyIf(() -> ASMConfig.cofhWorldTransformer)
             .setPhase(Phase.LATE)),
+
+    COFH_COMMAND_TPX_FIX(new MixinBuilder("Fix logic of /cofh tpx")
+            .addCommonMixins("cofhcore.MixinCoFHCommandTpxFix")
+            .setApplyIf(() -> FixesConfig.fixCofhTpxCommand)
+            .addRequiredMod(TargetedMod.COFH_CORE)
+            .setPhase(Phase.EARLY)),
 
     // Various Exploits/Fixes
     GC_TIME_COMMAND_FIX(new MixinBuilder("GC Time Fix")

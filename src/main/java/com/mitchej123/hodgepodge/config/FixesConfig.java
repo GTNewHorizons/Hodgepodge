@@ -474,6 +474,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixCofhOreDictCME;
 
+    @Config.Comment("Fix logic of /cofh tpx")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCofhTpxCommand;
+
     // Extra TiC
 
     @Config.Comment("Disable ExtraTic's Integration with Metallurgy 3 Precious Materials Module: (Brass, Silver, Electrum & Platinum)")
