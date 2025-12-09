@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.GuiScreen;
@@ -20,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.gtnewhorizon.gtnhlib.GTNHLib;
+import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.util.NEIKeyHelper;
 
 import cpw.mods.fml.common.Loader;
@@ -33,8 +35,9 @@ public class MixinMinecraft_ToggleDebugMessage {
     @Shadow
     public GuiScreen currentScreen;
 
+    // -3->Crashed, -2-> Default, -1->Copy?
     @Unique
-    private static int secondsBeforeCrash = 0;
+    private static int secondsBeforeCrash = -2;
 
     @Unique
     private static long refreshStartTime = -1;
@@ -44,6 +47,9 @@ public class MixinMinecraft_ToggleDebugMessage {
 
     @Shadow
     public GuiIngame ingameGUI;
+
+    @Shadow
+    public EntityClientPlayerMP thePlayer;
 
     @Inject(
             method = "runTick",
@@ -169,16 +175,29 @@ public class MixinMinecraft_ToggleDebugMessage {
                     shift = At.Shift.AFTER,
                     ordinal = 1))
     public void hodgepodge$countBeforeCrash(CallbackInfo ci) {
-        if (field_83002_am > 0 && Minecraft.getSystemTime() - field_83002_am > secondsBeforeCrash * 1000L
-                && secondsBeforeCrash > -1) {
-            GTNHLib.proxy.addDebugToChat(
-                    StatCollector.translateToLocal("hodgepodge.debug.crash.count." + secondsBeforeCrash));
-            if (secondsBeforeCrash == 6) secondsBeforeCrash = -1;
-            else secondsBeforeCrash++;
-        } else if (field_83002_am < 0 && secondsBeforeCrash != 0) {
-            if (secondsBeforeCrash > 0)
+        final long time = Minecraft.getSystemTime();
+        if (field_83002_am > 0 && time - field_83002_am > secondsBeforeCrash * 1000L && secondsBeforeCrash != -3) {
+            if (secondsBeforeCrash > -1) {
+                GTNHLib.proxy.addDebugToChat(
+                        StatCollector.translateToLocal("hodgepodge.debug.crash.count." + secondsBeforeCrash));
+            }
+            if (secondsBeforeCrash == 6) secondsBeforeCrash = -3;
+            else if (secondsBeforeCrash == -2 || time - field_83002_am > TweaksConfig.maxHoldF3CForCopy)
+                secondsBeforeCrash++;
+        } else if (field_83002_am < 0 && secondsBeforeCrash != -2) {
+            if (secondsBeforeCrash > -1)
                 GTNHLib.proxy.addDebugToChat(StatCollector.translateToLocal("hodgepodge.debug.crash.cancel"));
-            secondsBeforeCrash = 0;
+            else if (secondsBeforeCrash == -1) {
+                GuiScreen.setClipboardString(
+                        String.format(
+                                "/cofh tpx %s %s %s %s",
+                                thePlayer.posX,
+                                thePlayer.posY,
+                                thePlayer.posZ,
+                                thePlayer.dimension));
+                GTNHLib.proxy.addDebugToChat(StatCollector.translateToLocal("hodgepodge.debug.copy_location.message"));
+            }
+            secondsBeforeCrash = -2;
         }
     }
 }
