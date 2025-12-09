@@ -28,15 +28,35 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer, Opco
     private static final String HASHMAP = "java/util/HashMap";
     private static final String FASTUTIL_HASHMAP = "it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap";
 
+    private static String copy_name;
+    private static String copy_desc;
+    private static String nbtbase_name;
+    private static String nbttagcompound_name;
+    private static String tagMap_name;
+    private static String setTag_name;
+    private static String setTag_desc;
+
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null) return null;
         if ("net.minecraft.nbt.NBTTagCompound".equals(transformedName)) {
+            initNames();
             final byte[] transformedBytes = transformBytes(basicClass);
             HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
             return transformedBytes;
         }
         return basicClass;
+    }
+
+    private static void initNames() {
+        copy_name = HodgepodgeCore.isObf() ? "b" : "copy";
+        copy_desc = HodgepodgeCore.isObf() ? "()Ldy;" : "()Lnet/minecraft/nbt/NBTBase;";
+        nbtbase_name = HodgepodgeCore.isObf() ? "dy" : "net/minecraft/nbt/NBTBase";
+        nbttagcompound_name = HodgepodgeCore.isObf() ? "dh" : "net/minecraft/nbt/NBTTagCompound";
+        tagMap_name = HodgepodgeCore.isObf() ? "c" : "tagMap";
+        setTag_name = HodgepodgeCore.isObf() ? "a" : "setTag";
+        setTag_desc = HodgepodgeCore.isObf() ? "(Ljava/lang/String;Ldy;)V"
+                : "(Ljava/lang/String;Lnet/minecraft/nbt/NBTBase;)V";
     }
 
     private static byte[] transformBytes(byte[] basicClass) {
@@ -54,7 +74,7 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer, Opco
         for (MethodNode mn : cn.methods) {
             if (mn.name.equals(INIT) && mn.desc.equals(EMPTY_DESC)) {
                 transformConstructor(mn);
-            } else if (mn.name.equals("copy") && mn.desc.equals("()Lnet/minecraft/nbt/NBTBase;")) {
+            } else if (mn.name.equals(copy_name) && mn.desc.equals(copy_desc)) {
                 overwriteCopy(mn);
             }
         }
@@ -77,7 +97,7 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer, Opco
         Label label0 = new Label();
         mv.visitLabel(label0);
         mv.visitVarInsn(ALOAD, 0);
-        mv.visitMethodInsn(INVOKESPECIAL, "net/minecraft/nbt/NBTBase", "<init>", "()V", false);
+        mv.visitMethodInsn(INVOKESPECIAL, nbtbase_name, "<init>", "()V", false);
         Label label1 = new Label();
         mv.visitLabel(label1);
         mv.visitVarInsn(ALOAD, 0);
@@ -85,13 +105,13 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer, Opco
         mv.visitInsn(DUP);
         mv.visitVarInsn(ILOAD, 1);
         mv.visitMethodInsn(INVOKESPECIAL, FASTUTIL_HASHMAP, "<init>", "(I)V", false);
-        mv.visitFieldInsn(PUTFIELD, "net/minecraft/nbt/NBTTagCompound", "tagMap", "Ljava/util/Map;");
+        mv.visitFieldInsn(PUTFIELD, nbttagcompound_name, tagMap_name, "Ljava/util/Map;");
         Label label2 = new Label();
         mv.visitLabel(label2);
         mv.visitInsn(RETURN);
         Label label3 = new Label();
         mv.visitLabel(label3);
-        mv.visitLocalVariable("this", "Lnet/minecraft/nbt/NBTTagCompound;", null, label0, label3, 0);
+        mv.visitLocalVariable("this", "L" + nbttagcompound_name + ";", null, label0, label3, 0);
         mv.visitLocalVariable("capacity", "I", null, label0, label3, 1);
         mv.visitMaxs(4, 2);
         mv.visitEnd();
@@ -149,17 +169,17 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer, Opco
         mn.visitCode();
         Label label0 = new Label();
         mn.visitLabel(label0);
-        mn.visitTypeInsn(NEW, "net/minecraft/nbt/NBTTagCompound");
+        mn.visitTypeInsn(NEW, nbttagcompound_name);
         mn.visitInsn(DUP);
         mn.visitVarInsn(ALOAD, 0);
-        mn.visitFieldInsn(GETFIELD, "net/minecraft/nbt/NBTTagCompound", "tagMap", "Ljava/util/Map;");
+        mn.visitFieldInsn(GETFIELD, nbttagcompound_name, tagMap_name, "Ljava/util/Map;");
         mn.visitMethodInsn(INVOKEINTERFACE, "java/util/Map", "size", "()I", true);
-        mn.visitMethodInsn(INVOKESPECIAL, "net/minecraft/nbt/NBTTagCompound", "<init>", "(I)V", false);
+        mn.visitMethodInsn(INVOKESPECIAL, nbttagcompound_name, "<init>", "(I)V", false);
         mn.visitVarInsn(ASTORE, 1);
         Label label1 = new Label();
         mn.visitLabel(label1);
         mn.visitVarInsn(ALOAD, 0);
-        mn.visitFieldInsn(GETFIELD, "net/minecraft/nbt/NBTTagCompound", "tagMap", "Ljava/util/Map;");
+        mn.visitFieldInsn(GETFIELD, nbttagcompound_name, tagMap_name, "Ljava/util/Map;");
         mn.visitTypeInsn(CHECKCAST, FASTUTIL_HASHMAP);
         Label label2 = new Label();
         mn.visitLabel(label2);
@@ -183,10 +203,9 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer, Opco
         Label label4 = new Label();
         mn.visitLabel(label4);
         mn.visitFrame(
-                Opcodes.F_APPEND,
+                F_APPEND,
                 3,
-                new Object[] { "net/minecraft/nbt/NBTTagCompound",
-                        "it/unimi/dsi/fastutil/objects/Object2ObjectMap$FastEntrySet",
+                new Object[] { nbttagcompound_name, "it/unimi/dsi/fastutil/objects/Object2ObjectMap$FastEntrySet",
                         "it/unimi/dsi/fastutil/objects/ObjectIterator" },
                 0,
                 null);
@@ -223,19 +242,14 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer, Opco
                 "getValue",
                 "()Ljava/lang/Object;",
                 true);
-        mn.visitTypeInsn(CHECKCAST, "net/minecraft/nbt/NBTBase");
-        mn.visitMethodInsn(INVOKEVIRTUAL, "net/minecraft/nbt/NBTBase", "copy", "()Lnet/minecraft/nbt/NBTBase;", false);
-        mn.visitMethodInsn(
-                INVOKEVIRTUAL,
-                "net/minecraft/nbt/NBTTagCompound",
-                "setTag",
-                "(Ljava/lang/String;Lnet/minecraft/nbt/NBTBase;)V",
-                false);
+        mn.visitTypeInsn(CHECKCAST, nbtbase_name);
+        mn.visitMethodInsn(INVOKEVIRTUAL, nbtbase_name, copy_name, copy_desc, false);
+        mn.visitMethodInsn(INVOKEVIRTUAL, nbttagcompound_name, setTag_name, setTag_desc, false);
         Label label8 = new Label();
         mn.visitLabel(label8);
         mn.visitJumpInsn(GOTO, label4);
         mn.visitLabel(label5);
-        mn.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+        mn.visitFrame(F_SAME, 0, null, 0, null);
         mn.visitVarInsn(ALOAD, 1);
         mn.visitInsn(ARETURN);
         Label label9 = new Label();
@@ -243,23 +257,26 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer, Opco
         mn.visitLocalVariable(
                 "entry",
                 "Lit/unimi/dsi/fastutil/objects/Object2ObjectMap$Entry;",
-                "Lit/unimi/dsi/fastutil/objects/Object2ObjectMap$Entry<Ljava/lang/String;Lnet/minecraft/nbt/NBTBase;>;",
+                "Lit/unimi/dsi/fastutil/objects/Object2ObjectMap$Entry<Ljava/lang/String;L" + nbtbase_name + ";>;",
                 label7,
                 label8,
                 4);
-        mn.visitLocalVariable("this", "Lnet/minecraft/nbt/NBTTagCompound;", null, label0, label9, 0);
-        mn.visitLocalVariable("nbt", "Lnet/minecraft/nbt/NBTTagCompound;", null, label1, label9, 1);
+        mn.visitLocalVariable("this", "L" + nbttagcompound_name + ";", null, label0, label9, 0);
+        mn.visitLocalVariable("nbt", "L" + nbttagcompound_name + ";", null, label1, label9, 1);
         mn.visitLocalVariable(
                 "entries",
                 "Lit/unimi/dsi/fastutil/objects/Object2ObjectMap$FastEntrySet;",
-                "Lit/unimi/dsi/fastutil/objects/Object2ObjectMap$FastEntrySet<Ljava/lang/String;Lnet/minecraft/nbt/NBTBase;>;",
+                "Lit/unimi/dsi/fastutil/objects/Object2ObjectMap$FastEntrySet<Ljava/lang/String;L" + nbtbase_name
+                        + ";>;",
                 label3,
                 label9,
                 2);
         mn.visitLocalVariable(
                 "fastIterator",
                 "Lit/unimi/dsi/fastutil/objects/ObjectIterator;",
-                "Lit/unimi/dsi/fastutil/objects/ObjectIterator<Lit/unimi/dsi/fastutil/objects/Object2ObjectMap$Entry<Ljava/lang/String;Lnet/minecraft/nbt/NBTBase;>;>;",
+                "Lit/unimi/dsi/fastutil/objects/ObjectIterator<Lit/unimi/dsi/fastutil/objects/Object2ObjectMap$Entry<Ljava/lang/String;L"
+                        + nbtbase_name
+                        + ";>;>;",
                 label4,
                 label9,
                 3);
