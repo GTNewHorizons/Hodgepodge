@@ -411,9 +411,7 @@ public enum Mixins implements IMixins {
             .addExcludedMod(TargetedMod.DRAGONAPI)
             .setPhase(Phase.EARLY)),
     SPEEDUP_NBT_COPY(new MixinBuilder("Speed up NBT copy")
-            .addCommonMixins(
-                    "minecraft.nbt.MixinNBTTagCompound_FastCopy",
-                    "minecraft.nbt.MixinNBTTagList_FastCopy")
+            .addCommonMixins("minecraft.nbt.MixinNBTTagList_FastCopy")
             .setApplyIf(() -> ASMConfig.speedupNBTTagCompoundCopy)
             .addExcludedMod(TargetedMod.BUKKIT)
             .addExcludedMod(TargetedMod.DRAGONAPI)
