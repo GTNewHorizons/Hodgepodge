@@ -375,11 +375,6 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixEventBusMemoryLeak;
 
-    @Config.Comment("Skips playing empty sounds.")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean skipEmptySounds;
-
     @Config.Comment("Render the house character (\u2302 - Unicode index 2302) in the Minecraft font.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
