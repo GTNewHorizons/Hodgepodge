@@ -28,7 +28,6 @@ public enum AsmTransformers implements ITransformers {
     SPEEDUP_NBT_TAG_COMPOUND_COPY(new TransformerBuilder()
             .setApplyIf(() -> ASMConfig.speedupNBTTagCompoundCopy)
             .addExcludedMod(TargetedMod.FASTCRAFT)
-            .addExcludedMod(TargetedMod.DRAGONAPI)
             .addExcludedMod(TargetedMod.BUKKIT)
             .addCommonTransformers("com.mitchej123.hodgepodge.core.fml.transformers.mc.NBTTagCompoundHashMapTransformer")),
     SPEEDUP_PLAYER_MANAGER(new TransformerBuilder()
