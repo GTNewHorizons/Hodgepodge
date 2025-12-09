@@ -3,7 +3,6 @@ package com.mitchej123.hodgepodge.mixins.early.fml;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.logging.log4j.Level;
@@ -53,8 +52,7 @@ public abstract class MixinEventBus_FastRegistration {
             activeModContainer = Loader.instance().getMinecraftModContainer();
         }
         listenerOwners.put(target, activeModContainer);
-        // TODO make a method that's faster and returns an array ofr the super types?
-        Set<? extends Class<?>> supers = TypeToken.of(target.getClass()).getTypes().rawTypes();
+        Class<?>[] supers = TypeToken.of(target.getClass()).getTypes().rawTypes().toArray(new Class<?>[0]);
         for (Method method : target.getClass().getMethods()) {
             if (method.getDeclaringClass() == Object.class) {
                 continue;
