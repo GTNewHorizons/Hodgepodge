@@ -15,9 +15,10 @@ import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 
+@SuppressWarnings("deprecation")
 public class LongChunkCoordIntPairSet implements Set<ChunkCoordIntPair> {
 
-    private LongSet longSet = new LongOpenHashSet();
+    private final LongSet longSet = new LongOpenHashSet();
 
     @Override
     public int size() {
