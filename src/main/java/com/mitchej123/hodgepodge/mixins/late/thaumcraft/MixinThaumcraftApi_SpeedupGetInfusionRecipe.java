@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.crafting.InfusionRecipe;
 
-@Mixin(ThaumcraftApi.class)
+@Mixin(value = ThaumcraftApi.class, priority = 100)
 public abstract class MixinThaumcraftApi_SpeedupGetInfusionRecipe {
 
     /**
