@@ -390,6 +390,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean removeInvalidChunkEntites;
 
+    @Config.Comment("Clears the reference to the minecraft server once it has stopped")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixMinecraftServerLeak;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
