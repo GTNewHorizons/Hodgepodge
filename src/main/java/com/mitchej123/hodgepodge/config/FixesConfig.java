@@ -385,6 +385,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean removeInvalidChunkEntites;
 
+    @Config.Comment("Clears the reference to the minecraft server once it has stopped")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixMinecraftServerLeak;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -463,6 +468,10 @@ public class FixesConfig {
     @Config.Comment("Fix race condition in COFH's oredict")
     @Config.DefaultBoolean(true)
     public static boolean fixCofhOreDictCME;
+
+    @Config.Comment("Fix logic of /cofh tpx")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCofhTpxCommand;
 
     // Extra TiC
 

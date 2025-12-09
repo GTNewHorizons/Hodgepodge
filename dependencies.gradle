@@ -72,8 +72,9 @@ dependencies {
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:ServerUtilities:2.2.2:dev") // for the pregenerator
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta64:dev") // for TPS graph
 
-    testImplementation(platform('org.junit:junit-bom:5.9.2'))
-    testImplementation('org.junit.jupiter:junit-jupiter')
+    testImplementation(platform("org.junit:junit-bom:5.14.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.mockito:mockito-core:5.+")
 }
 

@@ -18,7 +18,7 @@ import com.mitchej123.hodgepodge.core.HodgepodgeCore;
 import com.mitchej123.hodgepodge.core.shared.HodgepodgeClassDump;
 
 @SuppressWarnings("unused")
-public class SpeedupLongIntHashMapTransformer implements IClassTransformer {
+public class SpeedupLongIntHashMapTransformer implements IClassTransformer, Opcodes {
 
     private static final String LONG_HASH_MAP = "net/minecraft/util/LongHashMap";
     private static final String LONG_HASH_MAP_OBF = "qd";
@@ -61,76 +61,60 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer {
         return basicClass;
     }
 
-    /** @return Was the class changed? */
     private static boolean transformClassNode(String transformedName, ClassNode cn) {
         boolean changed = false;
-        boolean longHashMapInit = false, intHashMapInit = false;
         for (MethodNode mn : cn.methods) {
             for (AbstractInsnNode node : mn.instructions.toArray()) {
-                if (node.getOpcode() == Opcodes.NEW && node instanceof TypeInsnNode tNode) {
-                    if (!longHashMapInit
-                            && (tNode.desc.equals(LONG_HASH_MAP) || tNode.desc.equals(LONG_HASH_MAP_OBF))) {
-                        longHashMapInit = true;
-                        HodgepodgeCore.logASM(
-                                LOGGER,
-                                "Found LongHashMap instantiation in " + transformedName + "." + mn.name);
-                        mn.instructions.insertBefore(tNode, new TypeInsnNode(Opcodes.NEW, FAST_UTIL_LONG_HASH_MAP));
-                        mn.instructions.remove(tNode);
-                        changed = true;
-                    } else if (!intHashMapInit
-                            && (tNode.desc.equals(INT_HASH_MAP) || tNode.desc.equals(INT_HASH_MAP_OBF))) {
-                                intHashMapInit = true;
-                                HodgepodgeCore.logASM(
-                                        LOGGER,
-                                        "Found IntHashMap instantiation in " + transformedName + "." + mn.name);
-                                mn.instructions
-                                        .insertBefore(tNode, new TypeInsnNode(Opcodes.NEW, FAST_UTIL_INT_HASH_MAP));
-                                mn.instructions.remove(tNode);
+                if (node.getOpcode() == NEW && node instanceof TypeInsnNode tNode && isTargetDesc(tNode.desc)) {
+                    AbstractInsnNode secondNode = node.getNext();
+                    if (secondNode.getOpcode() == DUP) {
+                        AbstractInsnNode thirdNode = secondNode.getNext();
+                        if (thirdNode.getOpcode() == INVOKESPECIAL && thirdNode instanceof MethodInsnNode mNode
+                                && mNode.name.equals(INIT)
+                                && mNode.desc.equals(EMPTY_DESC)
+                                && isTargetDesc(mNode.owner)) {
+                            if (tNode.desc.equals(mNode.owner)) {
+                                // spotless:off
+                                HodgepodgeCore.logASM(LOGGER, "Replaced " + getDeobfName(tNode.desc) + " instantiation in " + transformedName + "." + mn.name);
+                                final String replacement = getReplacement(tNode.desc);
+                                tNode.desc = replacement;
+                                mNode.owner = replacement;
                                 changed = true;
+                                // spotless:on
                             }
-                } else if (node.getOpcode() == Opcodes.INVOKESPECIAL && node instanceof MethodInsnNode mNode) {
-                    if (mNode.name.equals(INIT) && mNode.desc.equals(EMPTY_DESC)) {
-                        if (longHashMapInit
-                                && (mNode.owner.equals(LONG_HASH_MAP) || mNode.owner.equals(LONG_HASH_MAP_OBF))) {
-                            longHashMapInit = false;
-                            HodgepodgeCore.logASM(
-                                    LOGGER,
-                                    "Found LongHashMap constructor call in " + transformedName + "." + mn.name);
-                            mn.instructions.insertBefore(
-                                    mNode,
-                                    new MethodInsnNode(
-                                            Opcodes.INVOKESPECIAL,
-                                            FAST_UTIL_LONG_HASH_MAP,
-                                            INIT,
-                                            EMPTY_DESC,
-                                            false));
-                            mn.instructions.remove(mNode);
-                        } else if (intHashMapInit
-                                && (mNode.owner.equals(INT_HASH_MAP) || mNode.owner.equals(INT_HASH_MAP_OBF))) {
-                                    intHashMapInit = false;
-                                    HodgepodgeCore.logASM(
-                                            LOGGER,
-                                            "Found IntHashMap constructor call in " + transformedName + "." + mn.name);
-                                    mn.instructions.insertBefore(
-                                            mNode,
-                                            new MethodInsnNode(
-                                                    Opcodes.INVOKESPECIAL,
-                                                    FAST_UTIL_INT_HASH_MAP,
-                                                    INIT,
-                                                    EMPTY_DESC,
-                                                    false));
-                                    mn.instructions.remove(mNode);
-                                }
+                        }
                     }
                 }
             }
         }
-
-        if (longHashMapInit || intHashMapInit) {
-            throw new IllegalStateException(
-                    "Failed to transform " + transformedName + " due to missing constructor call");
-        }
-
         return changed;
+    }
+
+    private static boolean isTargetDesc(String desc) {
+        if (HodgepodgeCore.isObf()) {
+            return desc.equals(INT_HASH_MAP_OBF) || desc.equals(LONG_HASH_MAP_OBF);
+        } else {
+            return desc.equals(INT_HASH_MAP) || desc.equals(LONG_HASH_MAP);
+        }
+    }
+
+    private static String getReplacement(String desc) {
+        if (desc.equals(INT_HASH_MAP_OBF) || desc.equals(INT_HASH_MAP)) {
+            return FAST_UTIL_INT_HASH_MAP;
+        }
+        if (desc.equals(LONG_HASH_MAP_OBF) || desc.equals(LONG_HASH_MAP)) {
+            return FAST_UTIL_LONG_HASH_MAP;
+        }
+        throw new IllegalArgumentException();
+    }
+
+    private static String getDeobfName(String desc) {
+        if (desc.equals(INT_HASH_MAP_OBF) || desc.equals(INT_HASH_MAP)) {
+            return "IntHashMap";
+        }
+        if (desc.equals(LONG_HASH_MAP_OBF) || desc.equals(LONG_HASH_MAP)) {
+            return "LongHashMap";
+        }
+        throw new IllegalArgumentException();
     }
 }
