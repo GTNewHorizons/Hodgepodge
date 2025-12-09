@@ -375,11 +375,6 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixEventBusMemoryLeak;
 
-    @Config.Comment("Skips playing empty sounds.")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean skipEmptySounds;
-
     @Config.Comment("Render the house character (\u2302 - Unicode index 2302) in the Minecraft font.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -389,6 +384,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean removeInvalidChunkEntites;
+
+    @Config.Comment("Clears the reference to the minecraft server once it has stopped")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixMinecraftServerLeak;
 
     /* ====== Minecraft fixes end ===== */
 

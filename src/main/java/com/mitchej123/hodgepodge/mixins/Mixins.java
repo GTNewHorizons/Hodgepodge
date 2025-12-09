@@ -14,6 +14,10 @@ public enum Mixins implements IMixins {
 
     // spotless:off
     // Vanilla Fixes
+    FIX_MINECRAFT_SERVER_LEAK(new MixinBuilder()
+            .addCommonMixins("minecraft.server.MixinMinecraftServer_ClearServerRef")
+            .setApplyIf(() -> FixesConfig.fixMinecraftServerLeak)
+            .setPhase(Phase.EARLY)),
     ONLY_LOAD_LANGUAGES_ONCE_PER_FILE(new MixinBuilder()
             .addCommonMixins("minecraft.MixinLanguageRegistry")
             .setApplyIf(() -> FixesConfig.onlyLoadLanguagesOnce)
@@ -403,9 +407,7 @@ public enum Mixins implements IMixins {
             .addExcludedMod(TargetedMod.DRAGONAPI)
             .setPhase(Phase.EARLY)),
     SPEEDUP_NBT_COPY(new MixinBuilder("Speed up NBT copy")
-            .addCommonMixins(
-                    "minecraft.nbt.MixinNBTTagCompound_FastCopy",
-                    "minecraft.nbt.MixinNBTTagList_FastCopy")
+            .addCommonMixins("minecraft.nbt.MixinNBTTagList_FastCopy")
             .setApplyIf(() -> ASMConfig.speedupNBTTagCompoundCopy)
             .addExcludedMod(TargetedMod.BUKKIT)
             .addExcludedMod(TargetedMod.DRAGONAPI)
@@ -683,7 +685,11 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)),
     CANCEL_NONE_SOUNDS(new MixinBuilder("Skips playing empty sounds.")
             .addCommonMixins("minecraft.shutup.MixinWorld")
-            .setApplyIf(() -> FixesConfig.skipEmptySounds)
+            .setApplyIf(() -> TweaksConfig.skipEmptySounds)
+            .setPhase(Phase.EARLY)),
+    HIDE_TEXTURE_ERRORS(new MixinBuilder()
+            .addClientMixins("minecraft.shutup.MixinFMLClientHandler")
+            .setApplyIf(() -> TweaksConfig.hideTextureErrors)
             .setPhase(Phase.EARLY)),
     FIX_PLAYER_BLOCK_PLACEMENT_DISTANCE_CHECK(new MixinBuilder("Fix wrong block placement distance check")
             .addCommonMixins("minecraft.MixinNetHandlePlayServer_FixWrongBlockPlacementCheck")
@@ -974,6 +980,11 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.LATE)),
 
     // Thaumcraft
+    SPEEDUP_GET_INFUSION_RECIPES(new MixinBuilder()
+            .addCommonMixins("thaumcraft.MixinThaumcraftApi_SpeedupGetInfusionRecipe")
+            .setApplyIf(() -> SpeedupsConfig.speedupThaumGetInfusionRecipes)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
     THREADED_THAUMCRAFT_MAZE_SAVING(new MixinBuilder()
             .addCommonMixins("thaumcraft.MixinMazeHandler_threadedIO")
             .setApplyIf(() -> TweaksConfig.threadedWorldDataSaving)
