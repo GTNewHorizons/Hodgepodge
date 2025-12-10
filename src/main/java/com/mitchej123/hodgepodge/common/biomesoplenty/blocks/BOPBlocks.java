@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.common.biomesoplenty.blocks;
 import net.minecraft.block.Block;
 
 public class BOPBlocks {
+
     public static Block sacredoakFence;
     public static Block cherryFence;
     public static Block darkFence;
