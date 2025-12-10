@@ -144,6 +144,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinBlockFence")
             .setApplyIf(() -> FixesConfig.fixFenceConnections)
             .setPhase(Phase.EARLY)),
+    FIX_BOTTOM_FACE_UV(new MixinBuilder()
+            .addClientMixins("minecraft.MixinRenderBlocks_FaceYNegUV")
+            .setApplyIf(() -> FixesConfig.fixBottomFaceUV)
+            .setPhase(Phase.EARLY)),
     FIX_INVENTORY_OFFSET_WITH_POTIONS(new MixinBuilder()
             .addClientMixins("minecraft.MixinInventoryEffectRenderer_PotionOffset")
             .setApplyIf(() -> TweaksConfig.fixPotionRenderOffset)
