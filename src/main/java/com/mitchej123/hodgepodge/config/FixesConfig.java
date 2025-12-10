@@ -390,6 +390,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean removeInvalidChunkEntites;
 
+    @Config.Comment("Fix instant item texture switch when switching an item in hand with different NBT")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixInstantHandItemTextureSwitch;
+
     @Config.Comment("Clears the reference to the minecraft server once it has stopped")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
