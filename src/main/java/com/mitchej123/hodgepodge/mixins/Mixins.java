@@ -712,6 +712,11 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinGameSettings_ReduceRenderDistance")
             .setApplyIf(() -> FixesConfig.fixVanillaIOOBERenderDistance)
             .setPhase(Phase.EARLY)),
+    FIX_ITEM_PHYSICS_LAG(new MixinBuilder("Fix item physics lag when many items are dropped")
+            .addCommonMixins("minecraft.MixinWorld_FastItemPhysics")
+            .setApplyIf(() -> SpeedupsConfig.fastItemEntityPhysics)
+            .addExcludedMod(TargetedMod.FALSETWEAKS)
+            .setPhase(Phase.EARLY)),
     BETTER_MOD_LIST(new MixinBuilder()
             .addClientMixins(
                     "fml.MixinGuiModList",
