@@ -473,6 +473,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixCofhTpxCommand;
 
+    @Config.Comment("Fix CoFH WorldServer leak in main mod class")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCoFHWorldLeak;
+
     // Extra TiC
 
     @Config.Comment("Disable ExtraTic's Integration with Metallurgy 3 Precious Materials Module: (Brass, Silver, Electrum & Platinum)")
