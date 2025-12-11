@@ -29,6 +29,7 @@ dependencies {
     transformedModCompileOnly("com.github.GTNewHorizons:Railcraft:9.17.6:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
     transformedModCompileOnly("com.github.GTNewHorizons:TinkersConstruct:1.14.6-GTNH:dev")
     transformedModCompileOnly(rfg.deobf("curse.maven:bibliocraft-228027:2423369"))
+    transformedModCompileOnly(rfg.deobf("curse.maven:bibliocraft-bibliowoods-forestry-edition-228363:2229574"))
     transformedModCompileOnly(rfg.deobf("curse.maven:biomes-o-plenty-220318:2499612"))
     transformedModCompileOnly("curse.maven:cofh-core-69162:2388751")
     //transformedModCompileOnly('curse.maven:dragon-api-235591:3574508')
