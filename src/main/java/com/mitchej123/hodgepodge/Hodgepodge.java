@@ -11,16 +11,20 @@ import com.mitchej123.hodgepodge.util.AnchorAlarm;
 import com.mitchej123.hodgepodge.util.StatHandler;
 import com.mitchej123.hodgepodge.util.TravellersGear;
 
+import cofh.CoFHCore;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ICrashCallable;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLModIdMappingEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
 import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
@@ -102,6 +106,18 @@ public class Hodgepodge {
         if (FixesConfig.returnTravellersGearItems && !Compat.isTravellersGearPresent()) {
             TravellersGear.initialize();
         }
+    }
+
+    @EventHandler
+    public void onServerStopped(FMLServerStoppedEvent event) {
+        if (FixesConfig.fixCoFHWorldLeak && Loader.isModLoaded("CoFHCore")) {
+            clearCoFhServerInstance();
+        }
+    }
+
+    @Optional.Method(modid = "CoFHCore")
+    private static void clearCoFhServerInstance() {
+        CoFHCore.server = null;
     }
 
     @EventHandler
