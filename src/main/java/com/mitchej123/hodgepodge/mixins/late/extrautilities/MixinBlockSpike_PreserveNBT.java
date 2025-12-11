@@ -20,8 +20,7 @@ public abstract class MixinBlockSpike_PreserveNBT {
             name = "enchantments",
             at = @At(
                     value = "INVOKE",
-                    target = "Lcom/rwtema/extrautils/tileentity/TileEntityEnchantedSpike;setEnchantmentTagList(Lnet/minecraft/nbt/NBTTagList;)V",
-                    remap = false))
+                    target = "Lcom/rwtema/extrautils/tileentity/TileEntityEnchantedSpike;setEnchantmentTagList(Lnet/minecraft/nbt/NBTTagList;)V"))
     private NBTTagList hodgepodge$injectNBTCompoundIntoTagList(NBTTagList enchantments, World world, int x, int y,
             int z, EntityLivingBase entity, ItemStack stack) {
         if (enchantments == null || enchantments.tagCount() == 0

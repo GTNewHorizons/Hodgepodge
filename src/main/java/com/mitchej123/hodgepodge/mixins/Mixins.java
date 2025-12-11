@@ -793,6 +793,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixInstantHandItemTextureSwitch)
             .setPhase(Phase.EARLY)),
 
+    REMOVE_INVALID_ENTITES(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinChunk_FixInvalidEntity")
+            .setApplyIf(() -> FixesConfig.removeInvalidChunkEntites)
+            .setPhase(Phase.EARLY)
+    ),
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
             .addCommonMixins("ic2.MixinIc2WaterKinetic")
@@ -1305,6 +1310,13 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
     FIX_EXTRA_UTILITIES_REPAIR_COST(new MixinBuilder("Fix Exu spikes losing NBT tags (other than enchantments) when being placed on the ground")
+            .addCommonMixins(
+                    "extrautilities.MixinBlockSpike_PreserveNBT",
+                    "extrautilities.MixinTileEntityEnchantedSpike_PreserveNBT")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesPreserveSpikeNBT)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
+    FIX_EXTRA_UTILITIES_REPAIR_COST(new MixinBuilder("Fix Exu spikes losing NBT tags (other than enchantments) when being placed on the ground" )
             .addCommonMixins(
                     "extrautilities.MixinBlockSpike_PreserveNBT",
                     "extrautilities.MixinTileEntityEnchantedSpike_PreserveNBT")

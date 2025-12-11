@@ -404,6 +404,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixMinecraftServerLeak;
 
+    @Config.Comment("Remove invalid Entites in chunks.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean removeInvalidChunkEntites;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
