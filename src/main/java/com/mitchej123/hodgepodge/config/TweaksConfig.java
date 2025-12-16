@@ -186,6 +186,16 @@ public class TweaksConfig {
     @Config.RangeInt(min = 0, max = 2)
     public static int defaultModSort = 1;
 
+    @Config.Comment("Skips playing empty sounds.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean skipEmptySounds;
+
+    @Config.Comment("Hides the texture errors in the log.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean hideTextureErrors;
+
     // NBT String Pooling
 
     @Config.Comment("Enable string pooling for NBT TagCompound Keys")
@@ -424,4 +434,7 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static double netherPortalRatio;
 
+    @Config.Comment("Remove the notice about numeric ID deprecation that appears when a command uses them")
+    @Config.DefaultBoolean(true)
+    public static boolean hideDeprecatedIdNotice;
 }

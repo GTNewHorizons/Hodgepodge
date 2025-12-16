@@ -26,7 +26,7 @@ public class MixinNBTTagList_FastCopy {
                     value = "INVOKE",
                     target = "Ljava/util/List;iterator()Ljava/util/Iterator;",
                     shift = At.Shift.AFTER))
-    public void copyEnsureCapacity(CallbackInfoReturnable<NBTBase> cir, @Local NBTTagList newTagList) {
+    private void copyEnsureCapacity(CallbackInfoReturnable<NBTBase> cir, @Local NBTTagList newTagList) {
         // Ensure the capacity of the new tag list is the same as the old one,
         // so we don't need to resize (multiple times) during the copy
         if (((MixinNBTTagList_FastCopy) (Object) (newTagList)).tagList instanceof ArrayList list) {
