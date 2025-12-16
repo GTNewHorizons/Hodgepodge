@@ -390,6 +390,10 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixMinecraftServerLeak;
 
+    @Config.Comment("Fire a keyboard event when mouse buttons are pressed (makes mouse button bindings work across all mods that only check for keyboard input)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixMouseButtonBindings;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
