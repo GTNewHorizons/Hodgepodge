@@ -429,4 +429,7 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static double netherPortalRatio;
 
+    @Config.Comment("Remove the notice about numeric ID deprecation that appears when a command uses them")
+    @Config.DefaultBoolean(true)
+    public static boolean hideDeprecatedIdNotice;
 }
