@@ -1122,6 +1122,13 @@ public enum Mixins implements IMixins {
         .setPhase(Phase.LATE)),
 
 
+    // Bibliowood Recipe Fix
+    BIBLIOWOODS_RECIPE_FIX(new MixinBuilder("Fixes Bibliowoods Forestry recipes")
+            .addCommonMixins("bibliowood.forestry.MixinTabRegistry")
+            .setApplyIf(() -> FixesConfig.fixBibliowoodsForestryRecipes)
+            .addRequiredMod(TargetedMod.BIBLIOWOODSFORESTRY)
+            .setPhase(Phase.LATE)),
+
     // Minefactory Reloaded
     DISARM_SACRED_TREE(new MixinBuilder("Prevents Sacred Rubber Tree Generation")
             .addCommonMixins("minefactoryreloaded.MixinBlockRubberSapling")
