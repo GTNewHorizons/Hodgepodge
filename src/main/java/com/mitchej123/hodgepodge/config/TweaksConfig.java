@@ -196,6 +196,16 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean hideTextureErrors;
 
+    @Config.Comment({ "Removes all void fog.", "0 = keep void fog", "1 = disable for DEFAULT worldtype only",
+            "2 = disable for all world types" })
+    @Config.DefaultInt(1)
+    @Config.RangeInt(min = 0, max = 2)
+    public static int disableVoidFog = 1;
+
+    @Config.Comment("The max amount of XP levels an anvil recipe can use.")
+    @Config.DefaultInt(40)
+    public static int anvilMaxLevel = 40;
+
     // NBT String Pooling
 
     @Config.Comment("Enable string pooling for NBT TagCompound Keys")
