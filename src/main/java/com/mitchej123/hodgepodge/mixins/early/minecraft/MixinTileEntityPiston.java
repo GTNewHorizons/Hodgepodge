@@ -4,18 +4,14 @@ import net.minecraft.tileentity.TileEntityPiston;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 
 @Mixin(TileEntityPiston.class)
 public class MixinTileEntityPiston {
 
-    @Inject(method = "getPistonOrientation", at = @At("RETURN"), cancellable = true)
-    private void hodgepodge$clampOrientation(CallbackInfoReturnable<Integer> cir) {
-        int orientation = cir.getReturnValue();
-
-        if (orientation < 0 || orientation >= 6) {
-            cir.setReturnValue(Math.floorMod(orientation, 6));
-        }
+    @ModifyReturnValue(method = "getPistonOrientation", at = @At("RETURN"))
+    private int hodgepodge$clampOrientation(int orientation) {
+        return Math.floorMod(orientation, 6);
     }
 }

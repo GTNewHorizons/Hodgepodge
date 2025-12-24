@@ -15,6 +15,6 @@ public class MixinBlockPistonBase {
             ordinal = 0,
             argsOnly = true)
     private int clampPistonOrientation(int orientation) {
-        return (orientation >= 0 && orientation < 6) ? orientation : Math.floorMod(orientation, 6);
+        return Math.floorMod(orientation, 6);
     }
 }
