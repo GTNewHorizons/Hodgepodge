@@ -15,7 +15,7 @@ public class MixinTileEntityPiston {
         int orientation = cir.getReturnValue();
 
         if (orientation < 0 || orientation >= 6) {
-            cir.setReturnValue(orientation % 6);
+            cir.setReturnValue(Math.floorMod(orientation, 6));
         }
     }
 }
