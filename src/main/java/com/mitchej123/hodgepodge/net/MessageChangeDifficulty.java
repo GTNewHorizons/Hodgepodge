@@ -1,13 +1,15 @@
 package com.mitchej123.hodgepodge.net;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.EnumDifficulty;
+
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.world.EnumDifficulty;
 
 public class MessageChangeDifficulty implements IMessage, IMessageHandler<MessageChangeDifficulty, IMessage> {
+
     public EnumDifficulty difficulty;
 
     public MessageChangeDifficulty(EnumDifficulty difficulty) {
@@ -15,7 +17,6 @@ public class MessageChangeDifficulty implements IMessage, IMessageHandler<Messag
     }
 
     public MessageChangeDifficulty() {}
-
 
     @Override
     public void fromBytes(ByteBuf buf) {
