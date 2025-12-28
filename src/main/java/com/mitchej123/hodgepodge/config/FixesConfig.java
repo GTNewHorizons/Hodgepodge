@@ -409,6 +409,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixInvalidPistonCrashes;
 
+    @Config.Comment("Fix instant item texture switch when switching an item in hand with different NBT")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixInstantHandItemTextureSwitch;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
