@@ -395,7 +395,7 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixInvalidPistonCrashes;
 
-    @Config.Comment("Updates the difficulty on every connected client when the difficulty of the server changes & changes the setting button to reflect the difficulty of the server.")
+    @Config.Comment("Updates the difficulty on every connected client when the difficulty of the server changes via /difficulty or the difficulty button.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean updateClientDifficultyOnServer;
