@@ -17,7 +17,7 @@ public class MixinTabRegistry {
      * @reason Bibliowoods references multiple Forestry ID planks that no longer exists due to them all being unified
      *         into 1 block.
      */
-    @ModifyVariable(method = "initRecipes", at = @At(value = "STORE", ordinal = 0), remap = false)
+    @ModifyVariable(method = "initRecipes", at = @At(value = "STORE"), ordinal = 0, remap = false)
     private static Block[] hodgepodge$fixPlankID(Block[] metas) {
         final Block id = GameRegistry.findBlock("Forestry", "planks");
         return new Block[] { id, id, id, id, id, id, id, id, id, id, id, id, id, id, id, id, id, id, id, id, id, id, id,
