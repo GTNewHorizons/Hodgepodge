@@ -395,6 +395,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixInvalidPistonCrashes;
 
+    @Config.Comment("Fix instant item texture switch when switching an item in hand with different NBT")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixInstantHandItemTextureSwitch;
+
     @Config.Comment("Updates the difficulty on every connected client when the difficulty of the server changes via /difficulty or the difficulty button.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart

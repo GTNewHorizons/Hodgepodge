@@ -777,6 +777,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinTileEntityPiston", "minecraft.MixinBlockPistonBase")
             .setApplyIf(() -> FixesConfig.fixInvalidPistonCrashes)
             .setPhase(Phase.EARLY)),
+    FIX_INSTANT_HAND_ITEM_TEXTURE_SWITCH(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinItemRenderer_FixInstantItemSwitch")
+            .setApplyIf(() -> FixesConfig.fixInstantHandItemTextureSwitch)
+            .setPhase(Phase.EARLY)),
     SEND_DIFFICULTY_CHANGE_TO_CLIENT(new MixinBuilder("When difficulty updates on the server, inform all clients")
             .addCommonMixins("minecraft.MixinMinecraftServer_UpdateClientDifficulty")
             .setApplyIf(() -> FixesConfig.updateClientDifficultyOnServer)
