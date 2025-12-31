@@ -449,6 +449,12 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixBibliocraftPathSanitization;
 
+    // Bibliowoods Forestry
+
+    @Config.Comment("Fix Bibliowoods Forestry recipes")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBibliowoodsForestryRecipes;
+
     // Biomes O' Plenty
 
     @Config.Comment("Removes duplicate Fermenter and Squeezer recipes and flower registration")
