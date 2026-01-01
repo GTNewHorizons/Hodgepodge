@@ -785,6 +785,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinMinecraftServer_UpdateClientDifficulty")
             .setApplyIf(() -> FixesConfig.updateClientDifficultyOnServer)
             .setPhase(Phase.EARLY)),
+    MAINTAIN_SLIME_HEALTH(new MixinBuilder("Prevent slimes from resetting to max health when loaded from NBT")
+            .setApplyIf(() -> FixesConfig.maintainSlimeHealth)
+            .addCommonMixins("minecraft.MixinEntitySlime_MaintainHealth")
+            .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
