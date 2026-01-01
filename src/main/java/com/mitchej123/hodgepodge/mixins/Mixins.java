@@ -785,6 +785,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinMinecraftServer_UpdateClientDifficulty")
             .setApplyIf(() -> FixesConfig.updateClientDifficultyOnServer)
             .setPhase(Phase.EARLY)),
+    EAT_FOOD_IN_CREATIVE(new MixinBuilder("Allow players to eat food in Creative")
+            .addCommonMixins("minecraft.MixinEntityPlayer_EatInCreative", "minecraft.MixinItemFood_DontConsumeCreative")
+            .setApplyIf(() -> TweaksConfig.allowEatingFoodInCreative)
+            .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
