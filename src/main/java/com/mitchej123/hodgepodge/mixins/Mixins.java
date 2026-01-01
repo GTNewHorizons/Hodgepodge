@@ -788,6 +788,9 @@ public enum Mixins implements IMixins {
     MAINTAIN_SLIME_HEALTH(new MixinBuilder("Prevent slimes from resetting to max health when loaded from NBT")
             .setApplyIf(() -> FixesConfig.maintainSlimeHealth)
             .addCommonMixins("minecraft.MixinEntitySlime_MaintainHealth")
+    EAT_FOOD_IN_CREATIVE(new MixinBuilder("Allow players to eat food in Creative")
+            .addCommonMixins("minecraft.MixinEntityPlayer_EatInCreative", "minecraft.MixinItemFood_DontConsumeCreative")
+            .setApplyIf(() -> TweaksConfig.allowEatingFoodInCreative)
             .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
