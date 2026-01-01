@@ -196,6 +196,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean hideTextureErrors;
 
+    @Config.Comment("Allows players in Creative to eat food.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean allowEatingFoodInCreative;
+
     // NBT String Pooling
 
     @Config.Comment("Enable string pooling for NBT TagCompound Keys")
