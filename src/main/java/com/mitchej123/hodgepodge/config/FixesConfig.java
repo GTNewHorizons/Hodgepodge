@@ -414,6 +414,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean updateClientDifficultyOnServer;
 
+    @Config.Comment("Fix slimes resetting their health to maximum when being loaded from NBT (world reload, dimension change, etc.)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean maintainSlimeHealth;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
