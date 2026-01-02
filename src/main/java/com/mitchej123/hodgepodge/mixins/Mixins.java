@@ -1112,6 +1112,12 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.removeBOPDonatorEffect)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
+    ADD_BOP_FENCES(new MixinBuilder()
+        .addCommonMixins("biomesoplenty.MixinBOPBlocks")
+        .setApplyIf(() -> TweaksConfig.addBOPFences)
+        .addRequiredMod(TargetedMod.BOP)
+        .setPhase(Phase.LATE)),
+
 
     // Bibliowood Recipe Fix
     BIBLIOWOODS_RECIPE_FIX(new MixinBuilder("Fixes Bibliowoods Forestry recipes")
