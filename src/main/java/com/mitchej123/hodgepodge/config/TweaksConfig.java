@@ -284,6 +284,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean removeBOPDonatorEffect;
 
+    @Config.Comment("Add fences and fence gates for the BOP woods")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean addBOPFences;
+
     // Cofh
 
     @Config.Comment("Improve CoFH's breakBlock method")
