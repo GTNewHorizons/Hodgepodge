@@ -24,7 +24,11 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 public class MixinLoadController_logModTimes {
 
     @Unique
-    private static Map<String, ArrayList<ModProfileResult>> hodgepodge$results = new Object2ObjectOpenHashMap<>();
+    private static final Map<String, ArrayList<ModProfileResult>> hodgepodge$results = new Object2ObjectOpenHashMap<>();
+
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> hp$printResults("modtimes_shutdown.csv")));
+    }
 
     @WrapOperation(
             method = "propogateStateMessage",
@@ -35,21 +39,24 @@ public class MixinLoadController_logModTimes {
             Operation<Void> original) {
 
         final long start = System.nanoTime();
-
         original.call(instance, event, modContainer);
-        if (hodgepodge$results == null) return;
-
         final long timeTaken = System.nanoTime() - start;
+
         hodgepodge$results.computeIfAbsent(event.getEventType(), k -> new ArrayList<>())
                 .add(new ModProfileResult(timeTaken, modContainer));
     }
 
     @Inject(
-            method = "Lcpw/mods/fml/common/LoadController;distributeStateMessage(Lcpw/mods/fml/common/LoaderState;[Ljava/lang/Object;)V",
+            method = "distributeStateMessage(Lcpw/mods/fml/common/LoaderState;[Ljava/lang/Object;)V",
             at = @At(value = "TAIL"))
-    public void printResults(LoaderState state, Object[] eventData, CallbackInfo ci) {
-        if (hodgepodge$results == null || state != LoaderState.AVAILABLE) return;
-        try (FileLogger logger = new FileLogger("modtimes.csv")) {
+    private void printResults(LoaderState state, Object[] eventData, CallbackInfo ci) {
+        if (state != LoaderState.AVAILABLE) return;
+        hp$printResults("modtimes_startup.csv");
+    }
+
+    @Unique
+    private static void hp$printResults(String filename) {
+        try (FileLogger logger = new FileLogger(filename)) {
             logger.log("event;modid;modname;time");
             hodgepodge$results.forEach((type, results) -> {
                 results.sort(null);
@@ -58,8 +65,7 @@ public class MixinLoadController_logModTimes {
                     logger.log(type + ";" + modid + ";" + result.mod.getName() + ";" + result.time / 1_000_000);
                 });
             });
-        }
-        hodgepodge$results = null;
+        } catch (Throwable ignored) {}
     }
 
 }

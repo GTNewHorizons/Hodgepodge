@@ -24,6 +24,11 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean addToggleDebugMessage;
 
+    @Config.Comment("Max hold time for F3+C to copy player location instead of causing a crash. Set to 0 to disable this.")
+    @Config.RangeInt(min = 0, max = 1000)
+    @Config.DefaultInt(500)
+    public static int maxHoldF3CForCopy;
+
     @Config.Comment("Uses arabic numbers for enchantment levels and potion amplifier levels instead of roman numbers")
     @Config.DefaultBoolean(false)
     public static boolean arabicNumbersForEnchantsPotions;
@@ -180,6 +185,21 @@ public class TweaksConfig {
             "1 - A to Z sort", "2 - Z to A sort" })
     @Config.RangeInt(min = 0, max = 2)
     public static int defaultModSort = 1;
+
+    @Config.Comment("Skips playing empty sounds.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean skipEmptySounds;
+
+    @Config.Comment("Hides the texture errors in the log.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean hideTextureErrors;
+
+    @Config.Comment("Allows players in Creative to eat food.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean allowEatingFoodInCreative;
 
     // NBT String Pooling
 
@@ -414,4 +434,7 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static double netherPortalRatio;
 
+    @Config.Comment("Remove the notice about numeric ID deprecation that appears when a command uses them")
+    @Config.DefaultBoolean(true)
+    public static boolean hideDeprecatedIdNotice;
 }

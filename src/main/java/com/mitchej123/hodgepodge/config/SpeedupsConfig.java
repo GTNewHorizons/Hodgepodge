@@ -8,6 +8,12 @@ public class SpeedupsConfig {
 
     // Minecraft
 
+    @Config.Comment({
+            "Improves the performance of items significantly by not checking collisions against other entities for them. (Adapted from FalseTweaks)" })
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fastItemEntityPhysics;
+
     @Config.Comment("Optimize ASMDataTable getAnnotationsFor for faster startup")
     @Config.DefaultBoolean(true)
     public static boolean optimizeASMDataTable;
@@ -133,5 +139,12 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean speedupIC2ReactorSize;
+
+    // Thaumcraft
+
+    @Config.Comment("Speedup ThaumcraftApi#getInfusionRecipes")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupThaumGetInfusionRecipes;
 
 }

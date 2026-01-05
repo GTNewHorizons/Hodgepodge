@@ -379,11 +379,6 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixEventBusMemoryLeak;
 
-    @Config.Comment("Skips playing empty sounds.")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean skipEmptySounds;
-
     @Config.Comment("Render the house character (\u2302 - Unicode index 2302) in the Minecraft font.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -393,6 +388,31 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean removeInvalidChunkEntites;
+
+    @Config.Comment("Clears the reference to the minecraft server once it has stopped")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixMinecraftServerLeak;
+
+    @Config.Comment("Fixes pistons with metadata over 5 from crashing worlds when powered.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixInvalidPistonCrashes;
+
+    @Config.Comment("Fix instant item texture switch when switching an item in hand with different NBT")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixInstantHandItemTextureSwitch;
+
+    @Config.Comment("Updates the difficulty on every connected client when the difficulty of the server changes via /difficulty or the difficulty button.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean updateClientDifficultyOnServer;
+
+    @Config.Comment("Fix slimes resetting their health to maximum when being loaded from NBT (world reload, dimension change, etc.)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean maintainSlimeHealth;
 
     /* ====== Minecraft fixes end ===== */
 
@@ -443,6 +463,12 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixBibliocraftPathSanitization;
 
+    // Bibliowoods Forestry
+
+    @Config.Comment("Fix Bibliowoods Forestry recipes")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBibliowoodsForestryRecipes;
+
     // Biomes O' Plenty
 
     @Config.Comment("Removes duplicate Fermenter and Squeezer recipes and flower registration")
@@ -472,6 +498,14 @@ public class FixesConfig {
     @Config.Comment("Fix race condition in COFH's oredict")
     @Config.DefaultBoolean(true)
     public static boolean fixCofhOreDictCME;
+
+    @Config.Comment("Fix logic of /cofh tpx")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCofhTpxCommand;
+
+    @Config.Comment("Fix CoFH WorldServer leak in main mod class")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCoFHWorldLeak;
 
     // Extra TiC
 
