@@ -1,26 +1,31 @@
-package com.mitchej123.hodgepodge.common.biomesoplenty.crafting;
+package com.mitchej123.hodgepodge.mixins.late.biomesoplenty;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-import com.mitchej123.hodgepodge.Compat;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import com.mitchej123.hodgepodge.common.biomesoplenty.blocks.BOPBlocks;
 
 import biomesoplenty.api.content.BOPCBlocks;
+import biomesoplenty.common.core.BOPCrafting;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class BOPCrafting {
+@Mixin(value = BOPCrafting.class, remap = false)
+public class MixinBOPCrafting {
 
-    public static void addRecipes() {
+    @Inject(method = "addCraftingRecipes", at = @At("RETURN"))
+    private static void addCraftingRecipes(CallbackInfo ci) {
         for (BOPBlocks.WoodTypes woodType : BOPBlocks.WoodTypes.values()) {
             // Fences
             GameRegistry.addRecipe(
                     new ShapedOreRecipe(
-                            new ItemStack(BOPBlocks.fences.get(woodType), 1),
-                            "SRS",
-                            "SRS",
-                            "SRS",
+                            new ItemStack(BOPBlocks.fences.get(woodType), 3),
+                            "RSR",
+                            "RSR",
                             'R',
                             new ItemStack(BOPCBlocks.planks, 1, woodType.ordinal()),
                             'S',
@@ -30,17 +35,12 @@ public class BOPCrafting {
             GameRegistry.addRecipe(
                     new ShapedOreRecipe(
                             new ItemStack(BOPBlocks.fence_gates.get(woodType), 1),
-                            "F F",
-                            "RSR",
-                            "RSR",
-                            'F',
-                            new ItemStack(Items.flint, 1),
+                            "SRS",
+                            "SRS",
                             'R',
                             new ItemStack(BOPCBlocks.planks, 1, woodType.ordinal()),
                             'S',
                             "stickWood"));
         }
-
-        if (Compat.isGT5Present()) BOPCraftingGT.addGTCraftingRecipes();
     }
 }

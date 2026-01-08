@@ -1087,6 +1087,7 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.LATE)),
     ADD_BOP_FENCES(new MixinBuilder()
         .addCommonMixins("biomesoplenty.MixinBOPBlocks")
+        .addCommonMixins("biomesoplenty.MixinBOPCrafting")
         .setApplyIf(() -> TweaksConfig.addBOPFences)
         .addRequiredMod(TargetedMod.BOP)
         .setPhase(Phase.LATE)),

@@ -8,7 +8,6 @@ import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.client.handlers.ClientKeyListener;
 import com.mitchej123.hodgepodge.client.handlers.ReloadSoundsGui;
-import com.mitchej123.hodgepodge.common.biomesoplenty.crafting.BOPCrafting;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
@@ -72,8 +71,6 @@ public class HodgepodgeClient {
             // removes the popup that BOP shows on first world gen
             MinecraftForge.EVENT_BUS.unregister(WorldTypeMessageEventHandler.instance);
         }
-
-        if (Compat.isBiomesOPlentyPresent()) BOPCrafting.addRecipes();
     }
 
     public enum AnimationMode {
