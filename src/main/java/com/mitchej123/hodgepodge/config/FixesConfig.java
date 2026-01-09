@@ -390,6 +390,26 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixMinecraftServerLeak;
 
+    @Config.Comment("Fixes pistons with metadata over 5 from crashing worlds when powered.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixInvalidPistonCrashes;
+
+    @Config.Comment("Fix instant item texture switch when switching an item in hand with different NBT")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixInstantHandItemTextureSwitch;
+
+    @Config.Comment("Updates the difficulty on every connected client when the difficulty of the server changes via /difficulty or the difficulty button.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean updateClientDifficultyOnServer;
+
+    @Config.Comment("Fix slimes resetting their health to maximum when being loaded from NBT (world reload, dimension change, etc.)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean maintainSlimeHealth;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -438,6 +458,12 @@ public class FixesConfig {
     @Config.Comment("Fix Bibliocraft path sanitization")
     @Config.DefaultBoolean(true)
     public static boolean fixBibliocraftPathSanitization;
+
+    // Bibliowoods Forestry
+
+    @Config.Comment("Fix Bibliowoods Forestry recipes")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBibliowoodsForestryRecipes;
 
     // Biomes O' Plenty
 

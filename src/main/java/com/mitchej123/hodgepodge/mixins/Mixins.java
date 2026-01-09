@@ -378,7 +378,6 @@ public enum Mixins implements IMixins {
     OPTIMIZE_TILEENTITY_REMOVAL(new MixinBuilder()
             .addCommonMixins("minecraft.MixinWorldUpdateEntities")
             .setApplyIf(() -> SpeedupsConfig.optimizeTileentityRemoval)
-            .addExcludedMod(TargetedMod.FASTCRAFT)
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
     FIX_POTION_ITERATING(new MixinBuilder()
@@ -410,8 +409,6 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.nbt.MixinNBTTagList_FastCopy")
             .setApplyIf(() -> ASMConfig.speedupNBTTagCompoundCopy)
             .addExcludedMod(TargetedMod.BUKKIT)
-            .addExcludedMod(TargetedMod.DRAGONAPI)
-            .addExcludedMod(TargetedMod.FASTCRAFT)
             .setPhase(Phase.EARLY)),
     STRING_POOLER_NBT_TAG(new MixinBuilder("Pool NBT Strings")
             .addCommonMixins("minecraft.nbt.MixinNBTTagCompound_StringPooler")
@@ -421,7 +418,6 @@ public enum Mixins implements IMixins {
     STRING_POOLER_NBT_STRING(new MixinBuilder("Pool NBT Strings")
             .addCommonMixins("minecraft.nbt.MixinNBTTagString_StringPooler")
             .setApplyIf(() -> TweaksConfig.enableNBTStringPooling)
-            .addExcludedMod(TargetedMod.DRAGONAPI)
             .setPhase(Phase.EARLY)),
     THREADED_WORLDDATA_SAVING(new MixinBuilder()
             .addCommonMixins(
@@ -669,7 +665,6 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.unboxMapGen)
             .setPhase(Phase.EARLY)),
     EMBED_BLOCKIDS(new MixinBuilder("Embed IDs directly in the objects, to accelerate lookups")
-            .addExcludedMod(TargetedMod.FASTCRAFT)
             .addExcludedMod(TargetedMod.BUKKIT)
             .addCommonMixins(
                     "minecraft.fastload.embedid.MixinEmbedIDs",
@@ -772,6 +767,26 @@ public enum Mixins implements IMixins {
     HIDE_DEPRECATED_ID_NOTICE(new MixinBuilder()
             .addClientMixins("minecraft.MixinHideDeprecatedIdNotice")
             .setApplyIf(() -> TweaksConfig.hideDeprecatedIdNotice)
+            .setPhase(Phase.EARLY)),
+    FIX_PISTON_OUT_OF_BOUNDS(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinTileEntityPiston", "minecraft.MixinBlockPistonBase")
+            .setApplyIf(() -> FixesConfig.fixInvalidPistonCrashes)
+            .setPhase(Phase.EARLY)),
+    FIX_INSTANT_HAND_ITEM_TEXTURE_SWITCH(new MixinBuilder()
+            .addClientMixins("minecraft.MixinItemRenderer_FixInstantItemSwitch")
+            .setApplyIf(() -> FixesConfig.fixInstantHandItemTextureSwitch)
+            .setPhase(Phase.EARLY)),
+    SEND_DIFFICULTY_CHANGE_TO_CLIENT(new MixinBuilder("When difficulty updates on the server, inform all clients")
+            .addCommonMixins("minecraft.MixinMinecraftServer_UpdateClientDifficulty")
+            .setApplyIf(() -> FixesConfig.updateClientDifficultyOnServer)
+            .setPhase(Phase.EARLY)),
+    MAINTAIN_SLIME_HEALTH(new MixinBuilder("Prevent slimes from resetting to max health when loaded from NBT")
+            .setApplyIf(() -> FixesConfig.maintainSlimeHealth)
+            .addCommonMixins("minecraft.MixinEntitySlime_MaintainHealth")
+            .setPhase(Phase.EARLY)),
+    EAT_FOOD_IN_CREATIVE(new MixinBuilder("Allow players to eat food in Creative")
+            .addCommonMixins("minecraft.MixinEntityPlayer_EatInCreative", "minecraft.MixinItemFood_DontConsumeCreative")
+            .setApplyIf(() -> TweaksConfig.allowEatingFoodInCreative)
             .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
@@ -1092,6 +1107,13 @@ public enum Mixins implements IMixins {
         .addRequiredMod(TargetedMod.BOP)
         .setPhase(Phase.LATE)),
 
+
+    // Bibliowood Recipe Fix
+    BIBLIOWOODS_RECIPE_FIX(new MixinBuilder("Fixes Bibliowoods Forestry recipes")
+            .addCommonMixins("bibliowood.forestry.MixinTabRegistry")
+            .setApplyIf(() -> FixesConfig.fixBibliowoodsForestryRecipes)
+            .addRequiredMod(TargetedMod.BIBLIOWOODSFORESTRY)
+            .setPhase(Phase.LATE)),
 
     // Minefactory Reloaded
     DISARM_SACRED_TREE(new MixinBuilder("Prevents Sacred Rubber Tree Generation")

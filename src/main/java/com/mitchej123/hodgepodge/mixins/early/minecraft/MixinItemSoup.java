@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mitchej123.hodgepodge.config.TweaksConfig;
 
 @Mixin(ItemSoup.class)
 public class MixinItemSoup extends ItemFood {
@@ -30,6 +31,8 @@ public class MixinItemSoup extends ItemFood {
     @Inject(at = @At("HEAD"), method = "onEaten")
     private void hodgepodge$fixStackDeletion(ItemStack p_77654_1_, World p_77654_2_, EntityPlayer p_77654_3_,
             CallbackInfoReturnable<ItemStack> cir) {
+        if (TweaksConfig.allowEatingFoodInCreative && p_77654_3_.capabilities.isCreativeMode) return;
+
         ItemStack emptyBowl = new ItemStack(Items.bowl);
 
         if (!p_77654_3_.inventory.addItemStackToInventory(emptyBowl)) {
