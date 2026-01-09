@@ -12,18 +12,18 @@ configurations {
 }
 
 dependencies {
-    api("com.github.GTNewHorizons:GTNHLib:0.8.44:dev")
+    api("com.github.GTNewHorizons:GTNHLib:0.9.0:dev")
 
     compileOnly("com.gtnewhorizons.retrofuturabootstrap:RetroFuturaBootstrap:1.0.2") { transitive = false }
 
     transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.8.48-GTNH:dev") // force a more up-to-date NEI version
-    transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-775-GTNH")
+    transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-777-GTNH")
     transformedModCompileOnly("com.github.GTNewHorizons:Baubles:1.0.4:dev")
     // Transitive updates to make runClient17 work
     transformedModCompileOnly("com.github.GTNewHorizons:Steve-s-Factory-Manager:1.3.4-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:ForgeMultipart:1.7.2:dev")
-    transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.190:dev")
-    transformedModCompileOnly("com.github.GTNewHorizons:harvestcraft:1.3.6-GTNH:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.197:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:harvestcraft:1.3.8-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:HungerOverhaul:1.1.0-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:MrTJPCore:1.3.4:dev") // Do not update, fixed afterwards
     transformedModCompileOnly("com.github.GTNewHorizons:Railcraft:9.17.12:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
@@ -71,7 +71,7 @@ dependencies {
     runtimeOnlyNonPublishable("maven.modrinth:archaicfix:0.7.7:dev")
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:ArchaicFix:99.0.0:dev") // mavenLocal location
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:ServerUtilities:2.2.11:dev") // for the pregenerator
-    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta68a:dev") // for TPS graph
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:2.0.0-alpha3:dev") // for TPS graph
 
     testImplementation(platform("org.junit:junit-bom:5.14.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
