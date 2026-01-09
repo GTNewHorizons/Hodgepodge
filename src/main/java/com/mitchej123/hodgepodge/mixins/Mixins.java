@@ -378,7 +378,6 @@ public enum Mixins implements IMixins {
     OPTIMIZE_TILEENTITY_REMOVAL(new MixinBuilder()
             .addCommonMixins("minecraft.MixinWorldUpdateEntities")
             .setApplyIf(() -> SpeedupsConfig.optimizeTileentityRemoval)
-            .addExcludedMod(TargetedMod.FASTCRAFT)
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
     FIX_POTION_ITERATING(new MixinBuilder()
@@ -410,8 +409,6 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.nbt.MixinNBTTagList_FastCopy")
             .setApplyIf(() -> ASMConfig.speedupNBTTagCompoundCopy)
             .addExcludedMod(TargetedMod.BUKKIT)
-            .addExcludedMod(TargetedMod.DRAGONAPI)
-            .addExcludedMod(TargetedMod.FASTCRAFT)
             .setPhase(Phase.EARLY)),
     STRING_POOLER_NBT_TAG(new MixinBuilder("Pool NBT Strings")
             .addCommonMixins("minecraft.nbt.MixinNBTTagCompound_StringPooler")
@@ -421,7 +418,6 @@ public enum Mixins implements IMixins {
     STRING_POOLER_NBT_STRING(new MixinBuilder("Pool NBT Strings")
             .addCommonMixins("minecraft.nbt.MixinNBTTagString_StringPooler")
             .setApplyIf(() -> TweaksConfig.enableNBTStringPooling)
-            .addExcludedMod(TargetedMod.DRAGONAPI)
             .setPhase(Phase.EARLY)),
     THREADED_WORLDDATA_SAVING(new MixinBuilder()
             .addCommonMixins(
@@ -669,7 +665,6 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.unboxMapGen)
             .setPhase(Phase.EARLY)),
     EMBED_BLOCKIDS(new MixinBuilder("Embed IDs directly in the objects, to accelerate lookups")
-            .addExcludedMod(TargetedMod.FASTCRAFT)
             .addExcludedMod(TargetedMod.BUKKIT)
             .addCommonMixins(
                     "minecraft.fastload.embedid.MixinEmbedIDs",
