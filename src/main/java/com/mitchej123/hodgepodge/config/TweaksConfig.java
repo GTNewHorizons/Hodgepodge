@@ -457,4 +457,8 @@ public class TweaksConfig {
     @Config.Comment("Remove the notice about numeric ID deprecation that appears when a command uses them")
     @Config.DefaultBoolean(true)
     public static boolean hideDeprecatedIdNotice;
+
+    @Config.Comment("Allow creative tab gui title color via localization key")
+    @Config.DefaultBoolean(true)
+    public static boolean creativeTabLocalizationOverrides;
 }
