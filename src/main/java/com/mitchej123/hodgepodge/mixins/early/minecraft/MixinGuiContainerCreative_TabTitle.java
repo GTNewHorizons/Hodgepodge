@@ -15,12 +15,9 @@ public class MixinGuiContainerCreative_TabTitle {
             method = "drawGuiContainerForegroundLayer",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/creativetab/CreativeTabs;getTranslatedTabLabel()Ljava/lang/String;"))
+                    target = "Lnet/minecraft/client/resources/I18n;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"))
     private String hodgepodge$colorTitle(String original) {
         String colorKey = "itemGroup.creative.gui.title";
-        if (StatCollector.canTranslate(original)) {
-            original = StatCollector.translateToLocal(original);
-        }
         if (StatCollector.canTranslate(colorKey)) {
             String color = StatCollector.translateToLocal(colorKey);
             if (!color.isEmpty()) {
