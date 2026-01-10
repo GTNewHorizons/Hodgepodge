@@ -17,7 +17,7 @@ public class MixinGuiContainerCreative_TabTitle {
                     value = "INVOKE",
                     target = "Lnet/minecraft/creativetab/CreativeTabs;getTranslatedTabLabel()Ljava/lang/String;"))
     private String hodgepodge$colorTitle(String original) {
-        String colorKey = "itemGroup.creative.gui.tooltip";
+        String colorKey = "itemGroup.creative.gui.title";
         if (StatCollector.canTranslate(colorKey)) {
             String color = StatCollector.translateToLocal(colorKey);
             if (!color.isEmpty()) {
