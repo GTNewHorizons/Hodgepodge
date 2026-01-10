@@ -531,6 +531,10 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.NOTENOUGHITEMS)
             .addExcludedMod(TargetedMod.ARCHAICFIX)
             .setPhase(Phase.EARLY)),
+    CREATIVE_TAB_TITLE_COLOR(new MixinBuilder("Allow creative tab gui title color via localization key")
+            .addClientMixins("minecraft.MixinGuiContainerCreative_TabTitle")
+            .setApplyIf(() -> TweaksConfig.creativeTabLocalizationOverrides)
+            .setPhase(Phase.EARLY)),
     FIX_CHAT_COLOR_WRAPPING(new MixinBuilder("Fix wrapped chat lines missing colors")
             .addClientMixins("minecraft.MixinGuiNewChat_FixColorWrapping")
             .setApplyIf(() -> FixesConfig.fixChatWrappedColors)
