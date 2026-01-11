@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(GuiScreen.class)
-public class MixinGuiScreen_preventDoubleMouseGrabbing {
+public class MixinGuiScreen_PreventDoubleMouseGrabbing {
 
     /**
      * @author danyadev
