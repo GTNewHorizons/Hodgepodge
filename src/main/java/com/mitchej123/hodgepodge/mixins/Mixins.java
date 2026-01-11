@@ -812,9 +812,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.anvilMaxLevel != 40)
             .setPhase(Phase.EARLY)),
     PREVENT_MOUSE_CENTERING_ON_ESC_IN_GUIS(new MixinBuilder("Prevent moving mouse cursor to the center when pressing Esc in GUIs")
-            .addClientMixins("minecraft.MixinGuiScreen_preventDoubleMouseGrabbing")
+            .addClientMixins("minecraft.MixinGuiScreen_PreventDoubleMouseGrabbing")
             .setApplyIf(() -> FixesConfig.preventMouseCenteringOnEscInGUIs)
             .setPhase(Phase.EARLY)),
+
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
             .addCommonMixins("ic2.MixinIc2WaterKinetic")
