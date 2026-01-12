@@ -121,8 +121,6 @@ def deobfNotch(String sourceURL) {
     }
 }
 
-
-
 def deobfNotch(String sourceURL, String rawFileName) {
     String bon2Version = "2.5.1"
     String fileName = URLDecoder.decode(rawFileName, "UTF-8")
@@ -169,7 +167,6 @@ def deobfNotch(String sourceURL, String rawFileName) {
 
     return files(deobfFile)
 }
-
 
 def zipMappings(String zipPath, String url, String bon2Dir) {
     File zipFile = new File(zipPath)
