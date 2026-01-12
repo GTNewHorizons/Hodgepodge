@@ -86,6 +86,12 @@ import java.nio.file.Paths
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
+// needed for deobfNotch exec
+interface InjectedExecOps {
+    @Inject //@javax.inject.Inject
+    ExecOperations getExecOps()
+}
+
 def deobfNotch(String sourceURL) {
     try {
         URL url = new URL(sourceURL)
@@ -114,6 +120,8 @@ def deobfNotch(String sourceURL) {
         return deobfNotch(sourceURL, "deobf/${sourceURL.hashCode()}")
     }
 }
+
+
 
 def deobfNotch(String sourceURL, String rawFileName) {
     String bon2Version = "2.5.1"
@@ -153,13 +161,15 @@ def deobfNotch(String sourceURL, String rawFileName) {
         overwrite false
     }
 
-    exec {
+    def injected = project.objects.newInstance(InjectedExecOps)
+    injected.execOps.exec {
         commandLine 'java', '-jar', bon2File, '--inputJar', obfFile, '--outputJar', deobfFile, '--mcVer', minecraftVersion, '--mappingsVer', mappingsVer, '--notch'
         workingDir bon2Dir
     }
 
     return files(deobfFile)
 }
+
 
 def zipMappings(String zipPath, String url, String bon2Dir) {
     File zipFile = new File(zipPath)
