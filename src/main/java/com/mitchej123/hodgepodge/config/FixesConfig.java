@@ -29,7 +29,7 @@ public class FixesConfig {
     public static boolean fixBogusIntegratedServerNPEs;
 
     @Config.Comment("Do not flip bottom face textures (1.8+ behavior, see MC-47811)")
-    @Config.DefaultBoolean(false)
+    @Config.DefaultBoolean(true)
     public static boolean fixBottomFaceUV;
 
     @Config.Comment("Fix wrapped chat lines missing colors")
