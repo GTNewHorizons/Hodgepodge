@@ -382,7 +382,6 @@ public enum Mixins implements IMixins {
     OPTIMIZE_TILEENTITY_REMOVAL(new MixinBuilder()
             .addCommonMixins("minecraft.MixinWorldUpdateEntities")
             .setApplyIf(() -> SpeedupsConfig.optimizeTileentityRemoval)
-            .addExcludedMod(TargetedMod.FASTCRAFT)
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
     FIX_POTION_ITERATING(new MixinBuilder()
@@ -414,8 +413,6 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.nbt.MixinNBTTagList_FastCopy")
             .setApplyIf(() -> ASMConfig.speedupNBTTagCompoundCopy)
             .addExcludedMod(TargetedMod.BUKKIT)
-            .addExcludedMod(TargetedMod.DRAGONAPI)
-            .addExcludedMod(TargetedMod.FASTCRAFT)
             .setPhase(Phase.EARLY)),
     STRING_POOLER_NBT_TAG(new MixinBuilder("Pool NBT Strings")
             .addCommonMixins("minecraft.nbt.MixinNBTTagCompound_StringPooler")
@@ -425,7 +422,6 @@ public enum Mixins implements IMixins {
     STRING_POOLER_NBT_STRING(new MixinBuilder("Pool NBT Strings")
             .addCommonMixins("minecraft.nbt.MixinNBTTagString_StringPooler")
             .setApplyIf(() -> TweaksConfig.enableNBTStringPooling)
-            .addExcludedMod(TargetedMod.DRAGONAPI)
             .setPhase(Phase.EARLY)),
     THREADED_WORLDDATA_SAVING(new MixinBuilder()
             .addCommonMixins(
@@ -538,6 +534,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.removeCreativeSearchTab)
             .addRequiredMod(TargetedMod.NOTENOUGHITEMS)
             .addExcludedMod(TargetedMod.ARCHAICFIX)
+            .setPhase(Phase.EARLY)),
+    CREATIVE_TAB_TITLE_COLOR(new MixinBuilder("Allow creative tab gui title color via localization key")
+            .addClientMixins("minecraft.MixinGuiContainerCreative_TabTitle")
+            .setApplyIf(() -> TweaksConfig.creativeTabLocalizationOverrides)
             .setPhase(Phase.EARLY)),
     FIX_CHAT_COLOR_WRAPPING(new MixinBuilder("Fix wrapped chat lines missing colors")
             .addClientMixins("minecraft.MixinGuiNewChat_FixColorWrapping")
@@ -673,7 +673,6 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.unboxMapGen)
             .setPhase(Phase.EARLY)),
     EMBED_BLOCKIDS(new MixinBuilder("Embed IDs directly in the objects, to accelerate lookups")
-            .addExcludedMod(TargetedMod.FASTCRAFT)
             .addExcludedMod(TargetedMod.BUKKIT)
             .addCommonMixins(
                     "minecraft.fastload.embedid.MixinEmbedIDs",
@@ -796,6 +795,19 @@ public enum Mixins implements IMixins {
     EAT_FOOD_IN_CREATIVE(new MixinBuilder("Allow players to eat food in Creative")
             .addCommonMixins("minecraft.MixinEntityPlayer_EatInCreative", "minecraft.MixinItemFood_DontConsumeCreative")
             .setApplyIf(() -> TweaksConfig.allowEatingFoodInCreative)
+            .setPhase(Phase.EARLY)),
+    HIDE_VOID_FOG(new MixinBuilder()
+            .addClientMixins("minecraft.MixinWorldType_VoidParticles")
+            .setApplyIf(() -> TweaksConfig.disableVoidFog != 0)
+            .setPhase(Phase.EARLY)),
+    ANVIL_MAX_LEVEL(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinContainerRepair_MaxAnvilCost")
+            .addClientMixins("minecraft.MixinGuiRepair_MaxAnvilCost")
+            .setApplyIf(() -> TweaksConfig.anvilMaxLevel != 40)
+            .setPhase(Phase.EARLY)),
+    PREVENT_MOUSE_CENTERING_ON_ESC_IN_GUIS(new MixinBuilder("Prevent moving mouse cursor to the center when pressing Esc in GUIs")
+            .addClientMixins("minecraft.MixinGuiScreen_PreventDoubleMouseGrabbing")
+            .setApplyIf(() -> FixesConfig.preventMouseCenteringOnEscInGUIs)
             .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments

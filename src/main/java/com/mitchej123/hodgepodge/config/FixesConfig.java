@@ -414,6 +414,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean maintainSlimeHealth;
 
+    @Config.Comment("Prevent moving mouse cursor to the center when pressing Esc in GUIs")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean preventMouseCenteringOnEscInGUIs;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
