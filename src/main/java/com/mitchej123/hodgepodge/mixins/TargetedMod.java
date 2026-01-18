@@ -5,6 +5,8 @@ import javax.annotation.Nonnull;
 import com.gtnewhorizon.gtnhmixins.builders.ITargetMod;
 import com.gtnewhorizon.gtnhmixins.builders.TargetModBuilder;
 
+import cpw.mods.fml.common.versioning.ComparableVersion;
+
 public enum TargetedMod implements ITargetMod {
 
     ADVANCED_SOLAR_PANELS("AdvancedSolarPanel"),
@@ -31,6 +33,9 @@ public enum TargetedMod implements ITargetMod {
     EXTRATIC("ExtraTiC"),
     EXTRA_UTILITIES("ExtraUtilities"),
     FALSETWEAKS("com.falsepattern.falsetweaks.asm.CoreLoadingPlugin", "falsetweaks"),
+    // FalseTweaks versions before 4.3.3 don't handle Tesselator.instance calls in mixins
+    FALSETWEAKS_LT_433(new TargetModBuilder().setTargetClass("com.falsepattern.falsetweaks.FalseTweaks")
+            .testModVersion("falsetweaks", version -> isVersionLessThan(version, "4.3.3"))),
     FASTCRAFT(null, null, "fastcraft.Tweaker"),
     GALACTICRAFT_CORE("micdoodle8.mods.galacticraft.core.asm.GCLoadingPlugin", "GalacticraftCore"),
     GLIBYS_VOICE_CHAT("gvc"),
@@ -93,5 +98,9 @@ public enum TargetedMod implements ITargetMod {
     @Override
     public TargetModBuilder getBuilder() {
         return builder;
+    }
+
+    private static boolean isVersionLessThan(String version, String target) {
+        return new ComparableVersion(version).compareTo(new ComparableVersion(target)) < 0;
     }
 }
