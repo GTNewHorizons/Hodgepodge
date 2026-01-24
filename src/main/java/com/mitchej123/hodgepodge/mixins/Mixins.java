@@ -1230,6 +1230,12 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.java12LotrCompat)
             .addRequiredMod(TargetedMod.LOTR)
             .setPhase(Phase.LATE)),
+    DISABLE_LOTR_LANG_HELPER_BY_DEFAULT(new MixinBuilder("Set lotr language helper to false by default")
+            .addCommonMixins("lotr.MixinLOTRConfig")
+            .setApplyIf(() -> FixesConfig.lotrLanguageHelperDefault)
+            .addRequiredMod(TargetedMod.LOTR)
+            .setPhase(Phase.LATE)
+    ),
 
     // Journeymap
     FIX_JOURNEYMAP_KEYBINDS(new MixinBuilder()

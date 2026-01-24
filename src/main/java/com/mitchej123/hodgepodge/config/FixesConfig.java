@@ -678,6 +678,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean java12LotrCompat;
 
+    @Config.Comment("Set lotr updateLangFiles to false by default, as it is incompatible with the Gradle cache (breaking dev environments) and very rarely needed")
+    @Config.DefaultBoolean(true)
+    public static boolean lotrLanguageHelperDefault;
+
     // Minechem
 
     @Config.Comment("Minechem Java 12 compatibility patch")
