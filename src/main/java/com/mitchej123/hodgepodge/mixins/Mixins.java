@@ -146,6 +146,7 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)),
     FIX_BOTTOM_FACE_UV(new MixinBuilder()
             .addClientMixins("minecraft.MixinRenderBlocks_FaceYNegUV")
+            .addExcludedMod(TargetedMod.FALSETWEAKS_LT_433)
             .setApplyIf(() -> FixesConfig.fixBottomFaceUV)
             .setPhase(Phase.EARLY)),
     FIX_INVENTORY_OFFSET_WITH_POTIONS(new MixinBuilder()
