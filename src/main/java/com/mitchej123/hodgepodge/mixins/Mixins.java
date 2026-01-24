@@ -889,6 +889,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixIc2CropTrampling)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
+    IC2_CROP_BREEDING_QOL(new MixinBuilder()
+            .addCommonMixins("ic2.MixinIC2TileEntityCropCrossing")
+            .setApplyIf(() -> TweaksConfig.ic2CropBreedingQol)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
     IC2_SYNC_REACTORS(new MixinBuilder("Synchronize IC2 reactors for more consistent operation")
             .addCommonMixins(
                     "ic2.sync.MixinTEReactorChamber",
