@@ -700,6 +700,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixWrongBlockPlacementDistanceCheck)
             .setPhase(Phase.EARLY)),
     PREVENT_LAVA_CHUNK_LOADING(new MixinBuilder("Prevent lava blocks from loading chunks")
+            .addExcludedMod(TargetedMod.LOTR)
             .addCommonMixins("minecraft.MixinBlockStaticLiquid")
             .setApplyIf(() -> SpeedupsConfig.lavaChunkLoading)
             .setPhase(Phase.EARLY)),
