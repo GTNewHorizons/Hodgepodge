@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Properties;
 
 import net.minecraft.launchwrapper.Launch;
@@ -48,7 +49,7 @@ public final class EarlyConfig {
         // ==========================================
 
         // create config folder if it doesn't exist to prevent printed exception on first boot
-        var configDir = configLocation.toPath().getParent();
+        Path configDir = configLocation.toPath().getParent();
         if (!Files.exists(configDir)) {
             try {
                 Files.createDirectory(configDir);
