@@ -700,6 +700,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixWrongBlockPlacementDistanceCheck)
             .setPhase(Phase.EARLY)),
     PREVENT_LAVA_CHUNK_LOADING(new MixinBuilder("Prevent lava blocks from loading chunks")
+            .addExcludedMod(TargetedMod.LOTR)
             .addCommonMixins("minecraft.MixinBlockStaticLiquid")
             .setApplyIf(() -> SpeedupsConfig.lavaChunkLoading)
             .setPhase(Phase.EARLY)),
@@ -1247,6 +1248,12 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.java12LotrCompat)
             .addRequiredMod(TargetedMod.LOTR)
             .setPhase(Phase.LATE)),
+    DISABLE_LOTR_LANG_HELPER_BY_DEFAULT(new MixinBuilder("Set lotr language helper to false by default")
+            .addCommonMixins("lotr.MixinLOTRConfig")
+            .setApplyIf(() -> FixesConfig.lotrLanguageHelperDefault)
+            .addRequiredMod(TargetedMod.LOTR)
+            .setPhase(Phase.LATE)
+    ),
 
     // Journeymap
     FIX_JOURNEYMAP_KEYBINDS(new MixinBuilder()
