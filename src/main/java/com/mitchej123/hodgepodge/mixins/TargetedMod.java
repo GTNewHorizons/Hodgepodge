@@ -2,6 +2,8 @@ package com.mitchej123.hodgepodge.mixins;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.launchwrapper.Launch;
+
 import com.gtnewhorizon.gtnhmixins.builders.ITargetMod;
 import com.gtnewhorizon.gtnhmixins.builders.TargetModBuilder;
 
@@ -35,7 +37,11 @@ public enum TargetedMod implements ITargetMod {
     FALSETWEAKS("com.falsepattern.falsetweaks.asm.CoreLoadingPlugin", "falsetweaks"),
     // FalseTweaks versions before 4.3.3 don't handle Tesselator.instance calls in mixins
     FALSETWEAKS_LT_433(new TargetModBuilder().setTargetClass("com.falsepattern.falsetweaks.FalseTweaks")
-            .testModVersion("falsetweaks", version -> isVersionLessThan(version, "4.3.3"))),
+            .testModVersion("falsetweaks", version -> {
+                boolean flag = isVersionLessThan(version, "4.3.3");
+                if (flag) Launch.blackboard.remove("hodgepodge.FixesConfig.fixBottomFaceUV");
+                return flag;
+            })),
     FASTCRAFT(null, null, "fastcraft.Tweaker"),
     GALACTICRAFT_CORE("micdoodle8.mods.galacticraft.core.asm.GCLoadingPlugin", "GalacticraftCore"),
     GLIBYS_VOICE_CHAT("gvc"),
