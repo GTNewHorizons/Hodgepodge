@@ -419,6 +419,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean preventMouseCenteringOnEscInGUIs;
 
+    @Config.Comment("Fix printed errors about json files when running a server for the first time")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixFileNotFoundExceptionsServerFirstBoot;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes

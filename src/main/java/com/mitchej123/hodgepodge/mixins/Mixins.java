@@ -560,6 +560,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinTessellator")
             .setApplyIf(() -> FixesConfig.fixPreserveQuadOrder)
             .setPhase(Phase.EARLY)),
+    FIX_FNFE_SERVER_BOOT(new MixinBuilder("Fix printed errors about json files when running a server for the first time")
+            .addServerMixins("minecraft.server.MixinUserList")
+            .setApplyIf(() -> FixesConfig.fixFileNotFoundExceptionsServerFirstBoot)
+            .setPhase(Phase.EARLY)),
     // Always apply, config handled in mixin
     FAST_BLOCK_PLACING(new MixinBuilder("Allows blocks to be placed faster")
             .addClientMixins("minecraft.MixinMinecraft_FastBlockPlacing")
