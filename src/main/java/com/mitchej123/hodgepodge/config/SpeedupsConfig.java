@@ -123,6 +123,16 @@ public class SpeedupsConfig {
 
     // Biomes O' Plenty
 
+    @Config.Comment("Pool Inflater instances for NBT decompression to reduce native cleanup overhead")
+    @Config.DefaultBoolean(true)
+    public static boolean poolInflaterInstances;
+
+    @Config.Comment("Parse batched tile entity NBT asynchronously on the client")
+    @Config.DefaultBoolean(true)
+    public static boolean asyncBatchedNBTParsing;
+
+    // Biomes O' Plenty
+
     @Config.Comment("Speedup biome fog rendering in BiomesOPlenty")
     @Config.DefaultBoolean(true)
     public static boolean speedupBOPFogHandling;
