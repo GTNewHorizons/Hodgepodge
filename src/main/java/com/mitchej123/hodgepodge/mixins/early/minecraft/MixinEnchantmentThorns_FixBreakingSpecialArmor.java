@@ -22,7 +22,6 @@ public class MixinEnchantmentThorns_FixBreakingSpecialArmor {
      *      similar fix in 1.12.2 Forge</a>
      */
     @Redirect(
-
             method = "func_151367_b(Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/entity/Entity;I)V",
             at = @At(
                     value = "INVOKE",

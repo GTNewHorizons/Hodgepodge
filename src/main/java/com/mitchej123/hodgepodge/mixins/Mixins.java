@@ -816,8 +816,12 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.preventMouseCenteringOnEscInGUIs)
             .setPhase(Phase.EARLY)),
     FIX_BREAKING_SPECIAL_ARMOR_WITH_THORNS_ENCHANTMENT(new MixinBuilder("Fix breaking electric and other special armor when Thorns enchantment is applied")
-            .addClientMixins("minecraft.MixinEnchantmentThorns_FixBreakingSpecialArmor")
+            .addCommonMixins("minecraft.MixinEnchantmentThorns_FixBreakingSpecialArmor")
             .setApplyIf(() -> FixesConfig.fixBreakingSpecialArmorWithThornsEnchantment)
+            .setPhase(Phase.EARLY)),
+    FIX_BREAKING_SPECIAL_ARMOR_ON_BLOCK_FALL(new MixinBuilder("Fix breaking electric and other special armor helmet when a block falls on your head")
+            .addCommonMixins("minecraft.MixinEntityLivingBase_FixBreakingSpecialArmor")
+            .setApplyIf(() -> FixesConfig.fixBreakingSpecialArmorHelmetOnBlockFall)
             .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
