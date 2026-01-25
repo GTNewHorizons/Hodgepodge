@@ -815,6 +815,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiScreen_PreventDoubleMouseGrabbing")
             .setApplyIf(() -> FixesConfig.preventMouseCenteringOnEscInGUIs)
             .setPhase(Phase.EARLY)),
+    FIX_BREAKING_SPECIAL_ARMOR_WITH_THORNS_ENCHANTMENT(new MixinBuilder("Fix breaking electric and other special armor when Thorns enchantment is applied")
+            .addClientMixins("minecraft.MixinEnchantmentThorns_FixBreakingSpecialArmor")
+            .setApplyIf(() -> FixesConfig.fixBreakingSpecialArmorWithThornsEnchantment)
+            .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
