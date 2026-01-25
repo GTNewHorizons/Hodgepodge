@@ -4,6 +4,7 @@ import java.util.Collections;
 
 import net.minecraftforge.common.MinecraftForge;
 
+import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.client.handlers.ClientKeyListener;
@@ -17,7 +18,10 @@ import biomesoplenty.common.eventhandler.client.gui.WorldTypeMessageEventHandler
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
 
+@EventBusSubscriber
 public class HodgepodgeClient {
 
     public static final ManagedEnum<AnimationMode> animationsMode = new ManagedEnum<>(AnimationMode.VISIBLE_ONLY);
@@ -83,5 +87,10 @@ public class HodgepodgeClient {
         OFF,
         REDUCED,
         FULL
+    }
+
+    @SubscribeEvent
+    public static void onClientDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+        AsyncNBTParser.shutdown();
     }
 }

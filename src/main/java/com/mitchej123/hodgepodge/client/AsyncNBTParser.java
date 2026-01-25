@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.client;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -22,14 +23,19 @@ public class AsyncNBTParser {
     };
 
     public static void submit(Runnable task) {
-        if (executor == null) {
+        ExecutorService exec = executor;
+        if (exec == null) {
             synchronized (AsyncNBTParser.class) {
-                if (executor == null) {
-                    executor = Executors.newSingleThreadExecutor(THREAD_FACTORY);
+                exec = executor;
+                if (exec == null) {
+                    exec = Executors.newSingleThreadExecutor(THREAD_FACTORY);
+                    executor = exec;
                 }
             }
         }
-        executor.submit(task);
+        try {
+            exec.submit(task);
+        } catch (RejectedExecutionException ignored) {}
     }
 
     public static void shutdown() {
