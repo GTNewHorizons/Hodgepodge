@@ -12,6 +12,8 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 
 import com.mitchej123.hodgepodge.config.FixesConfig;
+import com.mitchej123.hodgepodge.config.SpeedupsConfig;
+import com.mitchej123.hodgepodge.util.PooledGzipInputStream;
 
 @Mixin(PacketBuffer.class)
 public class MixinPacketBuffer {
@@ -39,7 +41,11 @@ public class MixinPacketBuffer {
         }
         byte[] buffer = new byte[realLength];
         self.readBytes(buffer);
-        return CompressedStreamTools.func_152457_a(buffer, new NBTSizeTracker(FixesConfig.maxNetworkNbtSizeLimit));
+        NBTSizeTracker sizeTracker = new NBTSizeTracker(FixesConfig.maxNetworkNbtSizeLimit);
+        if (SpeedupsConfig.poolInflaterInstances) {
+            return PooledGzipInputStream.readNBT(buffer, sizeTracker);
+        }
+        return CompressedStreamTools.func_152457_a(buffer, sizeTracker);
     }
 
     /**
