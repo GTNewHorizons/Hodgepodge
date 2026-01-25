@@ -121,7 +121,6 @@ public class SpeedupsConfig {
     @Config.DefaultStringList({})
     public static String[] batchDescriptionBlacklist;
 
-
     @Config.Comment("Pool Inflater instances for NBT decompression to reduce native cleanup overhead")
     @Config.DefaultBoolean(true)
     public static boolean poolInflaterInstances;
