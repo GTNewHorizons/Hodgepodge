@@ -121,9 +121,9 @@ public class SpeedupsConfig {
     @Config.DefaultStringList({})
     public static String[] batchDescriptionBlacklist;
 
-    @Config.Comment("Pool Inflater instances for NBT decompression to reduce native cleanup overhead")
+    @Config.Comment("Pool Inflater/Deflater instances for NBT compression to reduce native cleanup overhead")
     @Config.DefaultBoolean(true)
-    public static boolean poolInflaterInstances;
+    public static boolean poolZlibInstances;
 
     @Config.Comment("Parse batched tile entity NBT asynchronously on the client")
     @Config.DefaultBoolean(true)
