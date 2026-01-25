@@ -41,7 +41,7 @@ public class PooledGzipOutputStream extends DeflaterOutputStream {
 
         try (PooledGzipOutputStream gzos = new PooledGzipOutputStream(baos, deflater);
                 DataOutputStream dos = new DataOutputStream(gzos)) {
-            CompressedStreamTools.func_150663_a/*writeTag*/(nbt, dos);
+            CompressedStreamTools.func_150663_a/* writeTag */(nbt, dos);
         }
 
         return baos.toByteArray();
