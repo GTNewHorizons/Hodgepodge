@@ -56,6 +56,9 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
             if (TweaksConfig.enableTagCompoundStringPooling || TweaksConfig.enableNBTStringPooling) {
                 StringPooler.setupPooler();
             }
+            if (FixesConfig.fixBottomFaceUV) {
+                Launch.blackboard.put("hodgepodge.FixesConfig.fixBottomFaceUV", Boolean.TRUE);
+            }
         } catch (ConfigException e) {
             throw new RuntimeException(e);
         }

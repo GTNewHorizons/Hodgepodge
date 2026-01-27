@@ -28,6 +28,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixBogusIntegratedServerNPEs;
 
+    @Config.Comment("Do not flip bottom face textures (1.8+ behavior, see MC-47811)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBottomFaceUV;
+
     @Config.Comment("Fix wrapped chat lines missing colors")
     @Config.DefaultBoolean(true)
     public static boolean fixChatWrappedColors;
@@ -410,6 +414,16 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean maintainSlimeHealth;
 
+    @Config.Comment("Prevent moving mouse cursor to the center when pressing Esc in GUIs")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean preventMouseCenteringOnEscInGUIs;
+
+    @Config.Comment("Fix printed errors about json files when running a server for the first time")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixFileNotFoundExceptionsServerFirstBoot;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -668,6 +682,10 @@ public class FixesConfig {
     @Config.Comment("Lotr Java 12 compatibility patch")
     @Config.DefaultBoolean(true)
     public static boolean java12LotrCompat;
+
+    @Config.Comment("Set lotr updateLangFiles to false by default, as it is incompatible with the Gradle cache (breaking dev environments) and very rarely needed")
+    @Config.DefaultBoolean(true)
+    public static boolean lotrLanguageHelperDefault;
 
     // Minechem
 

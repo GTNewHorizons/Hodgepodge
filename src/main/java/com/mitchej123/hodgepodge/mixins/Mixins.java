@@ -144,6 +144,11 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinBlockFence")
             .setApplyIf(() -> FixesConfig.fixFenceConnections)
             .setPhase(Phase.EARLY)),
+    FIX_BOTTOM_FACE_UV(new MixinBuilder()
+            .addClientMixins("minecraft.MixinRenderBlocks_FaceYNegUV")
+            .addExcludedMod(TargetedMod.FALSETWEAKS_LT_433)
+            .setApplyIf(() -> FixesConfig.fixBottomFaceUV)
+            .setPhase(Phase.EARLY)),
     FIX_INVENTORY_OFFSET_WITH_POTIONS(new MixinBuilder()
             .addClientMixins("minecraft.MixinInventoryEffectRenderer_PotionOffset")
             .setApplyIf(() -> TweaksConfig.fixPotionRenderOffset)
@@ -531,6 +536,10 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.NOTENOUGHITEMS)
             .addExcludedMod(TargetedMod.ARCHAICFIX)
             .setPhase(Phase.EARLY)),
+    CREATIVE_TAB_TITLE_COLOR(new MixinBuilder("Allow creative tab gui title color via localization key")
+            .addClientMixins("minecraft.MixinGuiContainerCreative_TabTitle")
+            .setApplyIf(() -> TweaksConfig.creativeTabLocalizationOverrides)
+            .setPhase(Phase.EARLY)),
     FIX_CHAT_COLOR_WRAPPING(new MixinBuilder("Fix wrapped chat lines missing colors")
             .addClientMixins("minecraft.MixinGuiNewChat_FixColorWrapping")
             .setApplyIf(() -> FixesConfig.fixChatWrappedColors)
@@ -550,6 +559,10 @@ public enum Mixins implements IMixins {
     TESSELATOR_PRESERVE_QUAD_ORDER(new MixinBuilder("Preserve the rendering order of layered quads on terrain pass 1")
             .addClientMixins("minecraft.MixinTessellator")
             .setApplyIf(() -> FixesConfig.fixPreserveQuadOrder)
+            .setPhase(Phase.EARLY)),
+    FIX_FNFE_SERVER_BOOT(new MixinBuilder("Fix printed errors about json files when running a server for the first time")
+            .addServerMixins("minecraft.server.MixinUserList")
+            .setApplyIf(() -> FixesConfig.fixFileNotFoundExceptionsServerFirstBoot)
             .setPhase(Phase.EARLY)),
     // Always apply, config handled in mixin
     FAST_BLOCK_PLACING(new MixinBuilder("Allows blocks to be placed faster")
@@ -691,6 +704,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixWrongBlockPlacementDistanceCheck)
             .setPhase(Phase.EARLY)),
     PREVENT_LAVA_CHUNK_LOADING(new MixinBuilder("Prevent lava blocks from loading chunks")
+            .addExcludedMod(TargetedMod.LOTR)
             .addCommonMixins("minecraft.MixinBlockStaticLiquid")
             .setApplyIf(() -> SpeedupsConfig.lavaChunkLoading)
             .setPhase(Phase.EARLY)),
@@ -787,6 +801,19 @@ public enum Mixins implements IMixins {
     EAT_FOOD_IN_CREATIVE(new MixinBuilder("Allow players to eat food in Creative")
             .addCommonMixins("minecraft.MixinEntityPlayer_EatInCreative", "minecraft.MixinItemFood_DontConsumeCreative")
             .setApplyIf(() -> TweaksConfig.allowEatingFoodInCreative)
+            .setPhase(Phase.EARLY)),
+    HIDE_VOID_FOG(new MixinBuilder()
+            .addClientMixins("minecraft.MixinWorldType_VoidParticles")
+            .setApplyIf(() -> TweaksConfig.disableVoidFog != 0)
+            .setPhase(Phase.EARLY)),
+    ANVIL_MAX_LEVEL(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinContainerRepair_MaxAnvilCost")
+            .addClientMixins("minecraft.MixinGuiRepair_MaxAnvilCost")
+            .setApplyIf(() -> TweaksConfig.anvilMaxLevel != 40)
+            .setPhase(Phase.EARLY)),
+    PREVENT_MOUSE_CENTERING_ON_ESC_IN_GUIS(new MixinBuilder("Prevent moving mouse cursor to the center when pressing Esc in GUIs")
+            .addClientMixins("minecraft.MixinGuiScreen_PreventDoubleMouseGrabbing")
+            .setApplyIf(() -> FixesConfig.preventMouseCenteringOnEscInGUIs)
             .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
@@ -1214,6 +1241,12 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.java12LotrCompat)
             .addRequiredMod(TargetedMod.LOTR)
             .setPhase(Phase.LATE)),
+    DISABLE_LOTR_LANG_HELPER_BY_DEFAULT(new MixinBuilder("Set lotr language helper to false by default")
+            .addCommonMixins("lotr.MixinLOTRConfig")
+            .setApplyIf(() -> FixesConfig.lotrLanguageHelperDefault)
+            .addRequiredMod(TargetedMod.LOTR)
+            .setPhase(Phase.LATE)
+    ),
 
     // Journeymap
     FIX_JOURNEYMAP_KEYBINDS(new MixinBuilder()
