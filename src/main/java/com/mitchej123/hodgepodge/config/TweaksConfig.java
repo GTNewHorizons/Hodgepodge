@@ -317,7 +317,7 @@ public class TweaksConfig {
     public static boolean hideIc2ReactorSlots;
 
     @Config.Comment("Give IC2 cells containers like GregTech cells do")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     public static boolean ic2CellWithContainer;
 
     @Config.Comment("IC2 seed max stack size")
