@@ -1,14 +1,14 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.item.Item;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ItemRenderer.class)
@@ -16,6 +16,8 @@ public class MixinItemRenderer_FixInstantItemSwitch {
 
     @Shadow
     private ItemStack itemToRender;
+    @Shadow
+    private int equippedItemSlot;
 
     /**
      * @author danyadev
@@ -34,6 +36,11 @@ public class MixinItemRenderer_FixInstantItemSwitch {
     private Item hodgepodge$compareNBT(ItemStack newItemToRender) {
         // This is the only part of the condition we can change to control the results, because ItemStack.getItem()
         // under normal circumstances is not null, so returning null here should prevent the condition from passing.
+
+        // If slot hasn't changed, do not compare NBT: for example, TinkersConstruct's tools use NBT extensively
+        if (this.equippedItemSlot == Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
+            return newItemToRender.getItem();
+        }
 
         // Copy the original checks here because it's cheaper to run them twice than to compare NBTs for nothing
         if (itemToRender.getItem() != newItemToRender.getItem()) {
