@@ -63,6 +63,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean disableRealmsButton;
 
+    @Config.Comment("Translate Forge's Mod Options button in the pause menu")
+    @Config.DefaultBoolean(true)
+    public static boolean localizeForgeModOptionsButton;
+
     @Config.Comment("Stop inverting colors of crosshair")
     @Config.DefaultBoolean(false)
     public static boolean dontInvertCrosshairColor;

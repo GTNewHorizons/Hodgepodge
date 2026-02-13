@@ -97,6 +97,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiMainMenu_DisableRealmsButton")
             .setApplyIf(() -> TweaksConfig.disableRealmsButton)
             .setPhase(Phase.EARLY)),
+    LOCALIZE_FORGE_MOD_OPTIONS_BUTTON(new MixinBuilder("Allow translating Forge's Mod Options button in pause menu")
+            .addClientMixins("minecraft.MixinGuiIngameMenu_LocalizeModOptionsButton")
+            .setApplyIf(() -> TweaksConfig.localizeForgeModOptionsButton)
+            .setPhase(Phase.EARLY)),
     ADD_TIME_GET(new MixinBuilder("Add /time get command")
             .addCommonMixins("minecraft.MixinCommandTime")
             .setApplyIf(() -> TweaksConfig.addTimeGet)
