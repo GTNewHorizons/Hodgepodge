@@ -1,0 +1,69 @@
+key.hodgepodge.category=Hodgepodge
+key.fastBlockPlacing.desc=Быстрое размещение блоков
+key.fastBlockPlacing.enabled=§fБыстрое размещение блоков §aВключено
+key.fastBlockPlacing.disabled=§fБыстрое размещение блоков §cОтключено
+
+tile.dirt.name=Земля
+tile.sapling.name=Саженец
+tile.sand.name=Песок
+tile.flower1.name=Цветок
+tile.flower2.name=Цветок
+tile.stoneSlab.name=Плита
+tile.monsterStoneEgg.name=Яйцо каменного монстра
+tile.woodSlab.name=Плита
+tile.cobbleWall.name=Стена
+tile.quartzBlock.name=Кварцевый блок
+tile.clayHardenedStained.name=Цветная глина
+tile.woolCarpet.name=Ковёр
+tile.doublePlant.name=Большое растение
+
+item.dyePowder.name=Краситель
+item.skull.name=Череп
+item.fish.name=Рыба
+
+commands.time.get=Текущее мировое время составляет %s (время суток: %s)
+commands.time.usageWithGet=/time <set|add> <value> ИЛИ /time get
+
+hodgepodge.soundsmenu.refreshsounds=Обновить звуки
+hodgepodge.bed_respawn.msg=Установить точку респауна
+hodgepodge.menu.mod_options=Настройки модов...
+
+bettermodlist.sort.normal=Обычный
+bettermodlist.sort.a_to_z=A-Z
+bettermodlist.sort.z_to_a=Z-A
+bettermodlist.gui.modlistinfo1=ОМГ, всё изменилось!
+bettermodlist.gui.modlistinfo2=Новое расположение предоставлено:
+
+hodgepodge.debug.advanced_tooltips.enabled=Продвинутый предметный тултип: §aВкл.
+hodgepodge.debug.advanced_tooltips.disabled=Продвинутый предметный тултип: §cОткл.
+hodgepodge.debug.hitboxes.enabled=Хитбоксы: §aВкл.
+hodgepodge.debug.hitboxes.disabled=Хитбоксы: §cОткл.
+hodgepodge.debug.pause_focus.enabled=Пауза при потере фокуса: §aВкл.
+hodgepodge.debug.pause_focus.disabled=Пауза при потере фокуса: §cОткл.
+hodgepodge.debug.reload_chunks.message=Перезагрузить все чанки.
+hodgepodge.debug.reload_pack.message=Перезагрузка набора ресурсов за %s секунд.
+hodgepodge.debug.crash.count.0=Удерживайте клавиши F3 + C. Если не отпустить, игра через 6 секунд вылетит.
+hodgepodge.debug.crash.count.1=Сбой через 5...
+hodgepodge.debug.crash.count.2=Сбой через 4...
+hodgepodge.debug.crash.count.3=Сбой через 3...
+hodgepodge.debug.crash.count.4=Сбой через 2...
+hodgepodge.debug.crash.count.5=Сбой через 1...
+hodgepodge.debug.crash.count.6=Время истекло, игра вылетит при отпускании ЛЮБОЙ клавиши.
+hodgepodge.debug.crash.cancel=Сбой отменён.
+hodgepodge.debug.copy_location.message=Скопировано местоположение в буфер обмена.
+
+hodgepodge.debug.help.message=Сочетания клавиш:
+hodgepodge.debug.help.0=F3 = Открыть экран отладки
+hodgepodge.debug.help.1=Shift + F3 = Откройте экран отладки и покажите график профиля
+hodgepodge.debug.help.angelica=Alt + F3 = [Angelica] Откройте экран отладки и показать график FPS/TPS
+hodgepodge.debug.help.2=F3 + A = Перезагрузить чанки
+hodgepodge.debug.help.3=F3 + B = Показать хитбоксы
+hodgepodge.debug.help.4=F3 + C = Копировать местоположение как команду /cofh tpx или удерживайте в течение 6 секунд, чтобы вызвать сбой игры
+hodgepodge.debug.help.5=F3 + D = [Hodgepodge] Очистить чат
+hodgepodge.debug.help.6=F3 + H = Продвинутый тултип
+hodgepodge.debug.help.7=F3 + P = Пауза при потере фокуса
+hodgepodge.debug.help.8=F3 + Q = [Hodgepodge] Показать этот список
+hodgepodge.debug.help.9=F3 + S/T = Перезагрузить набор ресурсов
+hodgepodge.debug.help.etfuturum=F3 + F4 = [Et-Futurum-Requiem] Открыть переключатель игрового режима
+hodgepodge.debug.help.nei.1=%s = [NEI] Открыть оверлей появления мобов
+hodgepodge.debug.help.nei.2=%s = [NEI] Открыть оверлей чанка
