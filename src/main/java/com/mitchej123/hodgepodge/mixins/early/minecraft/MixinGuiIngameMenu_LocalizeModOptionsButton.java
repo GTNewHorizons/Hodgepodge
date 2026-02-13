@@ -12,9 +12,6 @@ public class MixinGuiIngameMenu_LocalizeModOptionsButton {
 
     @ModifyConstant(method = "initGui", constant = @Constant(stringValue = "Mod Options..."), require = 0)
     private String hodgepodge$localizeForgeModOptionsButton(String original) {
-        if (StatCollector.canTranslate("hodgepodge.menu.mod_options")) {
-            return StatCollector.translateToLocal("hodgepodge.menu.mod_options");
-        }
-        return original;
+        return StatCollector.translateToLocal("hodgepodge.menu.mod_options");
     }
 }
