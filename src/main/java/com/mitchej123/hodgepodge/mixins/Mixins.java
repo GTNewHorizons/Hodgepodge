@@ -688,7 +688,8 @@ public enum Mixins implements IMixins {
     FAST_CHUNK_LOADING(new MixinBuilder("Invasively accelerates chunk handling")
             .addCommonMixins(
                     "minecraft.fastload.MixinEntityPlayerMP",
-                    "minecraft.fastload.MixinChunkProviderServer")
+                    "minecraft.fastload.MixinChunkProviderServer_FastUnload",
+                    "minecraft.MixinWorldServer_PendingTickIndex")
             .setApplyIf(() -> SpeedupsConfig.fastChunkHandling)
             .setPhase(Phase.EARLY)),
     CANCEL_NONE_SOUNDS(new MixinBuilder("Skips playing empty sounds.")
