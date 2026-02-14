@@ -439,6 +439,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixBreakingSpecialArmorHelmetOnBlockFall;
 
+    @Config.Comment("Clear stale clicks made on the loading screen and prevent them from firing in the main menu")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean clearStaleLoadingScreenInput;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes

@@ -847,6 +847,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinEntityLivingBase_FixBreakingSpecialArmor")
             .setApplyIf(() -> FixesConfig.fixBreakingSpecialArmorHelmetOnBlockFall)
             .setPhase(Phase.EARLY)),
+    CLEAR_STALE_LOADING_SCREEN_INPUT(new MixinBuilder("Clear stale clicks made on the loading screen and prevent them from firing in the main menu")
+            .addClientMixins("minecraft.MixinMinecraft_ClearStaleLoadingScreenInput")
+            .setApplyIf(() -> FixesConfig.clearStaleLoadingScreenInput)
+            .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
