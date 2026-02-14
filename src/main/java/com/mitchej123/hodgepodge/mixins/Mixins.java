@@ -637,6 +637,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinWorldServer_LimitUpdateRecursion")
             .setApplyIf(() -> FixesConfig.limitRecursiveBlockUpdateDepth >= 0)
             .setPhase(Phase.EARLY)),
+    FIX_WORLDGEN_LIQUIDS_RECURSION(new MixinBuilder("Prevent recursive spring generation updates")
+            .addCommonMixins("minecraft.MixinWorldGenLiquids_NoImmediateUpdates")
+            .setApplyIf(() -> FixesConfig.fixWorldGenLiquidsRecursion)
+            .setPhase(Phase.EARLY)),
     ADD_MOD_CONFIG_SEARCHBAR(new MixinBuilder("Adds a search bar to the mod config GUI")
             .addClientMixins("fml.MixinGuiConfig")
             .setApplyIf(() -> TweaksConfig.addModConfigSearchBar)

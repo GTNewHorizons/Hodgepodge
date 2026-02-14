@@ -174,6 +174,10 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean speedupBOPFogHandling;
 
+    @Config.Comment("Use fast atan2 approximation for BOP Pixie entity yaw calculation")
+    @Config.DefaultBoolean(true)
+    public static boolean speedupBOPEntityPixie;
+
     // VoxelMap
 
     @Config.Comment("Replace reflection in VoxelMap to directly access the fields instead.")
