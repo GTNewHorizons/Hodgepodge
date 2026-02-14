@@ -819,6 +819,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiScreen_PreventDoubleMouseGrabbing")
             .setApplyIf(() -> FixesConfig.preventMouseCenteringOnEscInGUIs)
             .setPhase(Phase.EARLY)),
+    CLEAR_STALE_LOADING_SCREEN_INPUT(new MixinBuilder("Clear stale clicks made on the loading screen and prevent them from firing in the main menu")
+            .addClientMixins("minecraft.MixinGameSettings_FixArrayOutOfBounds")
+            .setApplyIf(() -> FixesConfig.clearStaleLoadingScreenInput)
+            .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
