@@ -696,6 +696,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.fastload.MixinBlock_FastLookup")
             .setApplyIf(() -> SpeedupsConfig.fastBlockLookup)
             .setPhase(Phase.EARLY)),
+    SPEEDUP_FALLING_BLOCK_TICK(new MixinBuilder("Skip useless falling block tick scheduling")
+            .addCommonMixins("minecraft.MixinBlockFalling_SkipUselessTick")
+            .setApplyIf(() -> SpeedupsConfig.skipUselessFallingBlockTicks)
+            .setPhase(Phase.EARLY)),
     SPEEDUP_PENDING_TICK_LOOKUP(new MixinBuilder("Spatial index for pending block updates")
             .addCommonMixins("minecraft.MixinWorldServer_PendingTickIndex")
             .setApplyIf(() -> SpeedupsConfig.speedupPendingTickLookup)
