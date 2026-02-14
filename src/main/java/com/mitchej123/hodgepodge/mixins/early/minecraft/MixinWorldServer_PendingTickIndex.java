@@ -16,16 +16,16 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mitchej123.hodgepodge.mixins.interfaces.PendingBlockUpdateIndex;
 import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
-// Conflicts with CoreTweaks, but this implementation should be strictly better - so give it a higher priority
+// Overrides CoreTweaks' equivalent @Redirect + @Overwrite via higher priority
+// Our implementation should be strictly better
 @Mixin(value = WorldServer.class, priority = 1100)
 public class MixinWorldServer_PendingTickIndex implements PendingBlockUpdateIndex {
 
@@ -56,21 +56,20 @@ public class MixinWorldServer_PendingTickIndex implements PendingBlockUpdateInde
         hodgepodge$tickIndex.remove(chunkKey);
     }
 
-    @WrapOperation(
+    @Redirect(
             method = { "scheduleBlockUpdateWithPriority", "func_147446_b" },
             at = @At(value = "INVOKE", target = "Ljava/util/TreeSet;add(Ljava/lang/Object;)Z"))
-    private boolean hodgepodge$onTickAdded(TreeSet<NextTickListEntry> instance, Object e, Operation<Boolean> original) {
+    private boolean hodgepodge$onTickAdded(TreeSet<NextTickListEntry> instance, Object e) {
         final NextTickListEntry entry = (NextTickListEntry) e;
         final long key = ChunkPosUtil.toLong(entry.xCoord >> 4, entry.zCoord >> 4);
         hodgepodge$tickIndex.computeIfAbsent(key, k -> new ObjectOpenHashSet<>()).add(entry);
-        return original.call(instance, e);
+        return instance.add(entry);
     }
 
-    @WrapOperation(
+    @Redirect(
             method = "tickUpdates",
             at = @At(value = "INVOKE", target = "Ljava/util/TreeSet;remove(Ljava/lang/Object;)Z"))
-    private boolean hodgepodge$onTickRemoved(TreeSet<NextTickListEntry> instance, Object e,
-            Operation<Boolean> original) {
+    private boolean hodgepodge$onTickRemoved(TreeSet<NextTickListEntry> instance, Object e) {
         final NextTickListEntry entry = (NextTickListEntry) e;
         final long key = ChunkPosUtil.toLong(entry.xCoord >> 4, entry.zCoord >> 4);
         final ObjectOpenHashSet<NextTickListEntry> bucket = hodgepodge$tickIndex.get(key);
@@ -78,7 +77,7 @@ public class MixinWorldServer_PendingTickIndex implements PendingBlockUpdateInde
             bucket.remove(entry);
             if (bucket.isEmpty()) hodgepodge$tickIndex.remove(key);
         }
-        return original.call(instance, e);
+        return instance.remove(entry);
     }
 
     /**
