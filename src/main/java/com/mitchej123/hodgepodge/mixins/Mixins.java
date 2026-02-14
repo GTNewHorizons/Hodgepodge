@@ -577,6 +577,12 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinRegionFile")
             .setApplyIf(() -> FixesConfig.remove2MBChunkLimit)
             .setPhase(Phase.EARLY)),
+    SPEEDUP_CHUNK_COMPRESSION(new MixinBuilder("Pooled deflater and batched writes for chunk saving")
+            .addCommonMixins(
+                    "minecraft.MixinRegionFile_FastChunkCompression",
+                    "minecraft.MixinAnvilChunkLoader_FastChunkWrite")
+            .setApplyIf(() -> SpeedupsConfig.speedupChunkCompression)
+            .setPhase(Phase.EARLY)),
     AUTOSAVE_INTERVAL(new MixinBuilder("Sets the auto save interval in ticks")
             .addCommonMixins("minecraft.server.MixinMinecraftServer_AutoSaveInterval")
             .setApplyIf(() -> TweaksConfig.autoSaveInterval != 900)
