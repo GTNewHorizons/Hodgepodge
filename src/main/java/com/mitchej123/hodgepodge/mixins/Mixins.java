@@ -695,10 +695,18 @@ public enum Mixins implements IMixins {
                     "minecraft.fastload.embedid.MixinObjectIntIdentityMap")
             .setApplyIf(() -> ASMConfig.embedID_experimental)
             .setPhase(Phase.EARLY)),
-    FAST_CHUNK_LOADING(new MixinBuilder("Invasively accelerates chunk handling")
-            .addCommonMixins(
-                    "minecraft.fastload.MixinEntityPlayerMP",
-                    "minecraft.fastload.MixinChunkProviderServer")
+    SPEEDUP_PENDING_TICK_LOOKUP(new MixinBuilder("Spatial index for pending block updates")
+            .addCommonMixins("minecraft.MixinWorldServer_PendingTickIndex")
+            .setApplyIf(() -> SpeedupsConfig.speedupPendingTickLookup)
+            .addExcludedMod(TargetedMod.BUKKIT)
+            .setPhase(Phase.EARLY)),
+    SPEEDUP_CHUNK_UNLOAD(new MixinBuilder("Optimized chunk unloading with fastutil collections")
+            .addCommonMixins("minecraft.fastload.MixinChunkProviderServer_FastUnload")
+            .setApplyIf(() -> SpeedupsConfig.speedupChunkUnload)
+            .addExcludedMod(TargetedMod.BUKKIT)
+            .setPhase(Phase.EARLY)),
+    FAST_CHUNK_SENDING(new MixinBuilder("Removes hard caps on chunk sending speed")
+            .addCommonMixins("minecraft.fastload.MixinEntityPlayerMP")
             .setApplyIf(() -> SpeedupsConfig.fastChunkHandling)
             .setPhase(Phase.EARLY)),
     CANCEL_NONE_SOUNDS(new MixinBuilder("Skips playing empty sounds.")
