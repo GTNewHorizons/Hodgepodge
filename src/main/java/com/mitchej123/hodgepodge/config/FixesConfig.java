@@ -429,6 +429,16 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixFileNotFoundExceptionsServerFirstBoot;
 
+    @Config.Comment("Fix breaking electric and other special armor when Thorns enchantment is applied")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBreakingSpecialArmorWithThornsEnchantment;
+
+    @Config.Comment("Fix breaking electric and other special armor helmet when a block falls on your head")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBreakingSpecialArmorHelmetOnBlockFall;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
