@@ -61,7 +61,17 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean unboxMapGen;
 
-    @Config.Comment("Removes hard caps on chunk handling speed. Experimental and probably incompatible with hybrid servers!")
+    @Config.Comment("Spatial index for pending block updates, accelerates chunk saving and unloading")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupPendingTickLookup;
+
+    @Config.Comment("Optimized chunk unloading with fastutil collections and batched removal")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupChunkUnload;
+
+    @Config.Comment("Removes hard caps on chunk sending and unloading speed. Experimental and probably incompatible with hybrid servers!")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean fastChunkHandling;

@@ -74,7 +74,7 @@ public class MixinChunkProviderServer_FastUnload {
                 }
             }
 
-            final int limit = SpeedupsConfig.maxUnloadSpeed;
+            final int limit = SpeedupsConfig.fastChunkHandling ? SpeedupsConfig.maxUnloadSpeed : 100;
 
             if (!unloadSet.isEmpty()) {
                 final LongIterator iter = unloadSet.iterator();
