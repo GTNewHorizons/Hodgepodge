@@ -1,5 +1,7 @@
 package com.mitchej123.hodgepodge.config;
 
+import java.util.zip.Deflater;
+
 import com.gtnewhorizon.gtnhlib.config.Config;
 
 @Config(modid = "hodgepodge", category = "speedups")
@@ -134,6 +136,23 @@ public class SpeedupsConfig {
     @Config.Comment("Pool Inflater/Deflater instances for NBT compression to reduce native cleanup overhead")
     @Config.DefaultBoolean(true)
     public static boolean poolZlibInstances;
+
+    @Config.Comment("Optimize chunk compression with reused deflater and batched writes")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupChunkCompression;
+
+    @Config.Comment("Compression level for chunk saving. " + Deflater.DEFAULT_COMPRESSION
+            + "=default, "
+            + Deflater.NO_COMPRESSION
+            + "=none, "
+            + Deflater.BEST_SPEED
+            + "=fastest, "
+            + Deflater.BEST_COMPRESSION
+            + "=smallest.")
+    @Config.DefaultInt(Deflater.DEFAULT_COMPRESSION)
+    @Config.RangeInt(min = Deflater.DEFAULT_COMPRESSION, max = Deflater.BEST_COMPRESSION)
+    public static int chunkCompressionLevel;
 
     @Config.Comment("Parse batched tile entity NBT asynchronously on the client")
     @Config.DefaultBoolean(true)
