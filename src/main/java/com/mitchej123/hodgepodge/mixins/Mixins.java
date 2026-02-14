@@ -820,7 +820,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.preventMouseCenteringOnEscInGUIs)
             .setPhase(Phase.EARLY)),
     CLEAR_STALE_LOADING_SCREEN_INPUT(new MixinBuilder("Clear stale clicks made on the loading screen and prevent them from firing in the main menu")
-            .addClientMixins("minecraft.MixinGameSettings_FixArrayOutOfBounds")
+            .addClientMixins("minecraft.MixinMinecraft_ClearStaleLoadingScreenInput")
             .setApplyIf(() -> FixesConfig.clearStaleLoadingScreenInput)
             .setPhase(Phase.EARLY)),
 
