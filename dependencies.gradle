@@ -14,6 +14,8 @@ configurations {
 dependencies {
     api("com.github.GTNewHorizons:GTNHLib:0.8.44:dev")
 
+    shadowImplementation("org.jctools:jctools-core:4.0.5") // Apache 2.0
+
     compileOnly("com.gtnewhorizons.retrofuturabootstrap:RetroFuturaBootstrap:1.0.2") { transitive = false }
 
     transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.8.48-GTNH:dev") // force a more up-to-date NEI version
