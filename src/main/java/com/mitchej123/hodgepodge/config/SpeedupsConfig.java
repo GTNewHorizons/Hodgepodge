@@ -63,6 +63,11 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean unboxMapGen;
 
+    @Config.Comment("Skip scheduling falling block ticks when the block below is solid")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean skipUselessFallingBlockTicks;
+
     @Config.Comment("Spatial index for pending block updates, accelerates chunk saving and unloading")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
