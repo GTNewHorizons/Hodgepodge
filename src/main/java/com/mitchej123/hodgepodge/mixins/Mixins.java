@@ -723,6 +723,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.speedupChunkUnload)
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
+    THROTTLE_CHUNK_GENERATION(new MixinBuilder("Spread chunk generation across ticks to prevent lag spikes")
+            .addCommonMixins("minecraft.fastload.MixinPlayerManager_ThrottleChunkGen")
+            .setApplyIf(() -> SpeedupsConfig.throttleChunkGeneration)
+            .addExcludedMod(TargetedMod.BUKKIT)
+            .setPhase(Phase.EARLY)),
     FAST_CHUNK_SENDING(new MixinBuilder("Removes hard caps on chunk sending speed")
             .addCommonMixins("minecraft.fastload.MixinEntityPlayerMP")
             .setApplyIf(() -> SpeedupsConfig.fastChunkHandling)
