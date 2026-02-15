@@ -97,6 +97,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiMainMenu_DisableRealmsButton")
             .setApplyIf(() -> TweaksConfig.disableRealmsButton)
             .setPhase(Phase.EARLY)),
+    LOCALIZE_FORGE_MOD_OPTIONS_BUTTON(new MixinBuilder("Allow translating Forge's Mod Options button in pause menu")
+            .addClientMixins("minecraft.MixinGuiIngameMenu_LocalizeModOptionsButton")
+            .setApplyIf(() -> TweaksConfig.localizeForgeModOptionsButton)
+            .setPhase(Phase.EARLY)),
     ADD_TIME_GET(new MixinBuilder("Add /time get command")
             .addCommonMixins("minecraft.MixinCommandTime")
             .setApplyIf(() -> TweaksConfig.addTimeGet)
@@ -577,6 +581,12 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinRegionFile")
             .setApplyIf(() -> FixesConfig.remove2MBChunkLimit)
             .setPhase(Phase.EARLY)),
+    SPEEDUP_CHUNK_COMPRESSION(new MixinBuilder("Pooled deflater and batched writes for chunk saving")
+            .addCommonMixins(
+                    "minecraft.MixinRegionFile_FastChunkCompression",
+                    "minecraft.MixinAnvilChunkLoader_FastChunkWrite")
+            .setApplyIf(() -> SpeedupsConfig.speedupChunkCompression)
+            .setPhase(Phase.EARLY)),
     AUTOSAVE_INTERVAL(new MixinBuilder("Sets the auto save interval in ticks")
             .addCommonMixins("minecraft.server.MixinMinecraftServer_AutoSaveInterval")
             .setApplyIf(() -> TweaksConfig.autoSaveInterval != 900)
@@ -685,10 +695,18 @@ public enum Mixins implements IMixins {
                     "minecraft.fastload.embedid.MixinObjectIntIdentityMap")
             .setApplyIf(() -> ASMConfig.embedID_experimental)
             .setPhase(Phase.EARLY)),
-    FAST_CHUNK_LOADING(new MixinBuilder("Invasively accelerates chunk handling")
-            .addCommonMixins(
-                    "minecraft.fastload.MixinEntityPlayerMP",
-                    "minecraft.fastload.MixinChunkProviderServer")
+    SPEEDUP_PENDING_TICK_LOOKUP(new MixinBuilder("Spatial index for pending block updates")
+            .addCommonMixins("minecraft.MixinWorldServer_PendingTickIndex")
+            .setApplyIf(() -> SpeedupsConfig.speedupPendingTickLookup)
+            .addExcludedMod(TargetedMod.BUKKIT)
+            .setPhase(Phase.EARLY)),
+    SPEEDUP_CHUNK_UNLOAD(new MixinBuilder("Optimized chunk unloading with fastutil collections")
+            .addCommonMixins("minecraft.fastload.MixinChunkProviderServer_FastUnload")
+            .setApplyIf(() -> SpeedupsConfig.speedupChunkUnload)
+            .addExcludedMod(TargetedMod.BUKKIT)
+            .setPhase(Phase.EARLY)),
+    FAST_CHUNK_SENDING(new MixinBuilder("Removes hard caps on chunk sending speed")
+            .addCommonMixins("minecraft.fastload.MixinEntityPlayerMP")
             .setApplyIf(() -> SpeedupsConfig.fastChunkHandling)
             .setPhase(Phase.EARLY)),
     CANCEL_NONE_SOUNDS(new MixinBuilder("Skips playing empty sounds.")
@@ -707,6 +725,10 @@ public enum Mixins implements IMixins {
             .addExcludedMod(TargetedMod.LOTR)
             .addCommonMixins("minecraft.MixinBlockStaticLiquid")
             .setApplyIf(() -> SpeedupsConfig.lavaChunkLoading)
+            .setPhase(Phase.EARLY)),
+    FIX_ITEM_BOUNCING(new MixinBuilder("Fixes items bouncing on stairs and other blocks with odd hitboxes")
+            .addCommonMixins("minecraft.MixinEntityItem_BouncingFix")
+            .setApplyIf(() -> FixesConfig.fixEntityBouncing)
             .setPhase(Phase.EARLY)),
     FIX_GLASS_BOTTLE_NON_WATER_BLOCKS(new MixinBuilder("Fix Glass Bottles filling with Water from some other Fluid blocks")
             .addCommonMixins("minecraft.MixinItemGlassBottle")
@@ -785,6 +807,10 @@ public enum Mixins implements IMixins {
     FIX_PISTON_OUT_OF_BOUNDS(new MixinBuilder()
             .addCommonMixins("minecraft.MixinTileEntityPiston", "minecraft.MixinBlockPistonBase")
             .setApplyIf(() -> FixesConfig.fixInvalidPistonCrashes)
+            .setPhase(Phase.EARLY)),
+    IMPROVE_REDSTONE_HITBOX(new MixinBuilder("Add a accurate hitbox to the redstone wire")
+            .addClientMixins("minecraft.MixinBlockRedstoneWire_Hitbox")
+            .setApplyIf(() -> TweaksConfig.improvedRedstoneWireHitbox)
             .setPhase(Phase.EARLY)),
     FIX_INSTANT_HAND_ITEM_TEXTURE_SWITCH(new MixinBuilder()
             .addClientMixins("minecraft.MixinItemRenderer_FixInstantItemSwitch")

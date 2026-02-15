@@ -63,6 +63,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean disableRealmsButton;
 
+    @Config.Comment("Translate Forge's Mod Options button in the pause menu")
+    @Config.DefaultBoolean(true)
+    public static boolean localizeForgeModOptionsButton;
+
     @Config.Comment("Stop inverting colors of crosshair")
     @Config.DefaultBoolean(false)
     public static boolean dontInvertCrosshairColor;
@@ -98,6 +102,10 @@ public class TweaksConfig {
     @Config.Comment("Allows blocks to be placed at a faster rate (toggleable via keybind)")
     @Config.DefaultBoolean(false)
     public static boolean fastBlockPlacing;
+
+    @Config.Comment("Add a accurate hitbox to the redstone wire")
+    @Config.DefaultBoolean(true)
+    public static boolean improvedRedstoneWireHitbox;
 
     @Config.Comment("Allow players on your server to use fast block placement")
     @Config.DefaultBoolean(true)
@@ -317,7 +325,7 @@ public class TweaksConfig {
     public static boolean hideIc2ReactorSlots;
 
     @Config.Comment("Give IC2 cells containers like GregTech cells do")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     public static boolean ic2CellWithContainer;
 
     @Config.Comment("IC2 seed max stack size")

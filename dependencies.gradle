@@ -18,13 +18,13 @@ dependencies {
 
     transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.8.48-GTNH:dev") // force a more up-to-date NEI version
     transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-775-GTNH")
-    transformedModCompileOnly("com.github.GTNewHorizons:Baubles:1.0.4:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:Baubles-Expanded:2.2.6-GTNH:dev")
     // Transitive updates to make runClient17 work
     transformedModCompileOnly("com.github.GTNewHorizons:Steve-s-Factory-Manager:1.3.4-GTNH:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:ForgeMultipart:1.7.2:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.190:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:harvestcraft:1.3.6-GTNH:dev")
-    transformedModCompileOnly("com.github.GTNewHorizons:HungerOverhaul:1.1.0-GTNH:dev")
+    transformedModCompileOnly(rfg.deobf("curse.maven:hunger-overhaul-224476:2332505"))
     transformedModCompileOnly("com.github.GTNewHorizons:MrTJPCore:1.3.4:dev") // Do not update, fixed afterwards
     transformedModCompileOnly("com.github.GTNewHorizons:Railcraft:9.17.12:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
     transformedModCompileOnly("com.github.GTNewHorizons:TinkersConstruct:1.14.17-GTNH:dev")
@@ -65,7 +65,7 @@ dependencies {
     transformedModCompileOnly(deobf("https://forum.industrial-craft.net/core/attachment/4316-advancedsolarpanel-1-7-10-3-5-1-jar/"))
     transformedModCompileOnly(rfg.deobf("curse.maven:candycraft-251118:2330488"))
 
-    devOnlyNonPublishable(deobf("https://github.com/makamys/CoreTweaks/releases/download/0.3.3.2/CoreTweaks-1.7.10-0.3.3.2+nomixin.jar"))
+    devOnlyNonPublishable("com.github.GTNewHorizons:CoreTweaks:0.3.4.0-GTNH:dev")
 
     // For testing - HP and AF are liable to mixin the same targets
     runtimeOnlyNonPublishable("maven.modrinth:archaicfix:0.7.7:dev")
