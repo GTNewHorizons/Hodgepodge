@@ -63,6 +63,11 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean unboxMapGen;
 
+    @Config.Comment("Skip scheduling falling block ticks when the block below is solid")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean skipUselessFallingBlockTicks;
+
     @Config.Comment("Spatial index for pending block updates, accelerates chunk saving and unloading")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -163,6 +168,10 @@ public class SpeedupsConfig {
     @Config.Comment("Speedup biome fog rendering in BiomesOPlenty")
     @Config.DefaultBoolean(true)
     public static boolean speedupBOPFogHandling;
+
+    @Config.Comment("Use fast atan2 approximation for BOP Pixie entity yaw calculation")
+    @Config.DefaultBoolean(true)
+    public static boolean speedupBOPEntityPixie;
 
     // VoxelMap
 

@@ -633,6 +633,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinWorldServer_LimitUpdateRecursion")
             .setApplyIf(() -> FixesConfig.limitRecursiveBlockUpdateDepth >= 0)
             .setPhase(Phase.EARLY)),
+    FIX_WORLDGEN_LIQUIDS_RECURSION(new MixinBuilder("Prevent recursive spring generation updates")
+            .addCommonMixins("minecraft.MixinWorldGenLiquids_NoImmediateUpdates")
+            .setApplyIf(() -> FixesConfig.fixWorldGenLiquidsRecursion)
+            .setPhase(Phase.EARLY)),
     ADD_MOD_CONFIG_SEARCHBAR(new MixinBuilder("Adds a search bar to the mod config GUI")
             .addClientMixins("fml.MixinGuiConfig")
             .setApplyIf(() -> TweaksConfig.addModConfigSearchBar)
@@ -694,6 +698,10 @@ public enum Mixins implements IMixins {
                     "minecraft.fastload.embedid.MixinFMLControlledNamespacedRegistry",
                     "minecraft.fastload.embedid.MixinObjectIntIdentityMap")
             .setApplyIf(() -> ASMConfig.embedID_experimental)
+            .setPhase(Phase.EARLY)),
+    SPEEDUP_FALLING_BLOCK_TICK(new MixinBuilder("Skip useless falling block tick scheduling")
+            .addCommonMixins("minecraft.MixinBlockFalling_SkipUselessTick")
+            .setApplyIf(() -> SpeedupsConfig.skipUselessFallingBlockTicks)
             .setPhase(Phase.EARLY)),
     SPEEDUP_PENDING_TICK_LOOKUP(new MixinBuilder("Spatial index for pending block updates")
             .addCommonMixins("minecraft.MixinWorldServer_PendingTickIndex")
@@ -1147,6 +1155,11 @@ public enum Mixins implements IMixins {
                     "biomesoplenty.MixinBOPEventHandler",
                     "biomesoplenty.MixinTrailManager")
             .setApplyIf(() -> TweaksConfig.removeBOPDonatorEffect)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_BOP_ENTITY_PIXIE(new MixinBuilder("Use fast atan2 for Pixie yaw calculation")
+            .addCommonMixins("biomesoplenty.MixinEntityPixie_FastAtan2")
+            .setApplyIf(() -> SpeedupsConfig.speedupBOPEntityPixie)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
 
