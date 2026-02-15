@@ -88,6 +88,28 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean speedupChunkUnload;
 
+    @Config.Comment("Spread chunk generation across ticks to reduce server stalls when players move through ungenerated terrain. ")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean throttleChunkGeneration;
+
+    @Config.Comment("Maximum deferred chunk generations per player per tick. "
+            + "Higher values fill terrain faster but increase per-tick lag from worldgen. [Requires throttleChunkGeneration]")
+    @Config.DefaultInt(4)
+    @Config.RangeInt(min = 1, max = 20)
+    public static int maxChunkGenPerPlayerPerTick;
+
+    @Config.Comment("Maximum time in milliseconds to spend on deferred chunk generation per tick, divided equally among active players. "
+            + "0 = no time limit (count-based only). [Requires throttleChunkGeneration]")
+    @Config.DefaultInt(15)
+    @Config.RangeInt(min = 0, max = 50)
+    public static int maxChunkGenTimePerTick;
+
+    @Config.Comment("Amortize chunk generation overruns by tracking time debt and skipping generation until the debt is paid down. "
+            + "Smooths out server tick times when single chunks exceed the time budget. [Requires throttleChunkGeneration]")
+    @Config.DefaultBoolean(true)
+    public static boolean amortizeChunkGenOverruns;
+
     @Config.Comment("Removes hard caps on chunk sending and unloading speed. Experimental and probably incompatible with hybrid servers!")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
