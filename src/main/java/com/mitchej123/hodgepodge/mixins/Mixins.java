@@ -804,6 +804,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinTileEntityPiston", "minecraft.MixinBlockPistonBase")
             .setApplyIf(() -> FixesConfig.fixInvalidPistonCrashes)
             .setPhase(Phase.EARLY)),
+    IMPROVE_REDSTONE_HITBOX(new MixinBuilder("Add a accurate hitbox to the redstone wire")
+            .addCommonMixins("minecraft.MixinBlockRedstoneWire_Hitbox")
+            .setApplyIf(() -> TweaksConfig.improvedRedstoneWireHitbox)
+            .setPhase(Phase.EARLY)),
     FIX_INSTANT_HAND_ITEM_TEXTURE_SWITCH(new MixinBuilder()
             .addClientMixins("minecraft.MixinItemRenderer_FixInstantItemSwitch")
             .setApplyIf(() -> FixesConfig.fixInstantHandItemTextureSwitch)
