@@ -364,6 +364,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixEntityAttributesRange;
 
+    @Config.Comment("Fixes items bouncing on stairs and other blocks with odd hitboxes")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixEntityBouncing;
+
     @Config.Comment("Fix Glass Bottles filling with Water from some other Fluid blocks")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart

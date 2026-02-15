@@ -726,6 +726,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinBlockStaticLiquid")
             .setApplyIf(() -> SpeedupsConfig.lavaChunkLoading)
             .setPhase(Phase.EARLY)),
+    FIX_ITEM_BOUNCING(new MixinBuilder("Fixes items bouncing on stairs and other blocks with odd hitboxes")
+            .addCommonMixins("minecraft.MixinEntityItem_BouncingFix")
+            .setApplyIf(() -> FixesConfig.fixEntityBouncing)
+            .setPhase(Phase.EARLY)),
     FIX_GLASS_BOTTLE_NON_WATER_BLOCKS(new MixinBuilder("Fix Glass Bottles filling with Water from some other Fluid blocks")
             .addCommonMixins("minecraft.MixinItemGlassBottle")
             .setApplyIf(() -> FixesConfig.fixGlassBottleWaterFilling)
