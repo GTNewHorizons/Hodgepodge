@@ -384,6 +384,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixEggParticles;
 
+    @Config.Comment("Fixes entity having buggy gravity")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixEntityGravity;
+
     @Config.Comment("Fix EventBus keeping object references after unregistering event handlers.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -399,7 +404,7 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean preventChunkLoadingFromBlockUpdates;
 
-    @Config.Comment("Remove invalid Entites in chunks.")
+    @Config.Comment("Remove invalid Entities in chunks.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean removeInvalidChunkEntites;
