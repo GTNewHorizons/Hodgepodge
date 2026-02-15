@@ -39,21 +39,30 @@ public class MixinWorldServer_PendingTickIndex implements PendingBlockUpdateInde
     private List<NextTickListEntry> pendingTickListEntriesThisTick;
 
     @Unique
-    private final Long2ObjectOpenHashMap<ObjectOpenHashSet<NextTickListEntry>> hodgepodge$tickIndex = new Long2ObjectOpenHashMap<>();
+    private Long2ObjectOpenHashMap<ObjectOpenHashSet<NextTickListEntry>> hodgepodge$tickIndex;
+
+    @Unique
+    private Long2ObjectOpenHashMap<ObjectOpenHashSet<NextTickListEntry>> hodgepodge$getTickIndex() {
+        if (hodgepodge$tickIndex == null) {
+            hodgepodge$tickIndex = new Long2ObjectOpenHashMap<>();
+        }
+        return hodgepodge$tickIndex;
+    }
 
     @Override
     public void hodgepodge$removeTickFromIndex(NextTickListEntry entry) {
+        final var tickIndex = hodgepodge$getTickIndex();
         final long key = ChunkPosUtil.toLong(entry.xCoord >> 4, entry.zCoord >> 4);
-        final ObjectOpenHashSet<NextTickListEntry> bucket = hodgepodge$tickIndex.get(key);
+        final ObjectOpenHashSet<NextTickListEntry> bucket = tickIndex.get(key);
         if (bucket != null) {
             bucket.remove(entry);
-            if (bucket.isEmpty()) hodgepodge$tickIndex.remove(key);
+            if (bucket.isEmpty()) tickIndex.remove(key);
         }
     }
 
     @Override
     public void hodgepodge$removeChunkFromIndex(long chunkKey) {
-        hodgepodge$tickIndex.remove(chunkKey);
+        hodgepodge$getTickIndex().remove(chunkKey);
     }
 
     @Redirect(
@@ -62,7 +71,7 @@ public class MixinWorldServer_PendingTickIndex implements PendingBlockUpdateInde
     private boolean hodgepodge$onTickAdded(TreeSet<NextTickListEntry> instance, Object e) {
         final NextTickListEntry entry = (NextTickListEntry) e;
         final long key = ChunkPosUtil.toLong(entry.xCoord >> 4, entry.zCoord >> 4);
-        hodgepodge$tickIndex.computeIfAbsent(key, k -> new ObjectOpenHashSet<>()).add(entry);
+        hodgepodge$getTickIndex().computeIfAbsent(key, k -> new ObjectOpenHashSet<>()).add(entry);
         return instance.add(entry);
     }
 
@@ -70,12 +79,13 @@ public class MixinWorldServer_PendingTickIndex implements PendingBlockUpdateInde
             method = "tickUpdates",
             at = @At(value = "INVOKE", target = "Ljava/util/TreeSet;remove(Ljava/lang/Object;)Z"))
     private boolean hodgepodge$onTickRemoved(TreeSet<NextTickListEntry> instance, Object e) {
+        final var tickIndex = hodgepodge$getTickIndex();
         final NextTickListEntry entry = (NextTickListEntry) e;
         final long key = ChunkPosUtil.toLong(entry.xCoord >> 4, entry.zCoord >> 4);
-        final ObjectOpenHashSet<NextTickListEntry> bucket = hodgepodge$tickIndex.get(key);
+        final ObjectOpenHashSet<NextTickListEntry> bucket = tickIndex.get(key);
         if (bucket != null) {
             bucket.remove(entry);
-            if (bucket.isEmpty()) hodgepodge$tickIndex.remove(key);
+            if (bucket.isEmpty()) tickIndex.remove(key);
         }
         return instance.remove(entry);
     }
@@ -86,18 +96,19 @@ public class MixinWorldServer_PendingTickIndex implements PendingBlockUpdateInde
      */
     @Overwrite
     public List<NextTickListEntry> getPendingBlockUpdates(Chunk chunk, boolean remove) {
+        final var tickIndex = hodgepodge$getTickIndex();
         ArrayList<NextTickListEntry> result = null;
-        int chunkX = chunk.xPosition;
-        int chunkZ = chunk.zPosition;
-        int minX = (chunkX << 4) - 2;
-        int maxX = minX + 18;
-        int minZ = (chunkZ << 4) - 2;
-        int maxZ = minZ + 18;
+        final int chunkX = chunk.xPosition;
+        final int chunkZ = chunk.zPosition;
+        final int minX = (chunkX << 4) - 2;
+        final int maxX = minX + 18;
+        final int minZ = (chunkZ << 4) - 2;
+        final int maxZ = minZ + 18;
 
         for (int dx = -1; dx <= 0; dx++) {
             for (int dz = -1; dz <= 0; dz++) {
                 final long key = ChunkPosUtil.toLong(chunkX + dx, chunkZ + dz);
-                final ObjectOpenHashSet<NextTickListEntry> bucket = hodgepodge$tickIndex.get(key);
+                final ObjectOpenHashSet<NextTickListEntry> bucket = tickIndex.get(key);
                 if (bucket == null) continue;
 
                 final Iterator<NextTickListEntry> it = bucket.iterator();
@@ -119,7 +130,7 @@ public class MixinWorldServer_PendingTickIndex implements PendingBlockUpdateInde
                         result.add(entry);
                     }
                 }
-                if (bucket.isEmpty()) hodgepodge$tickIndex.remove(key);
+                if (bucket.isEmpty()) tickIndex.remove(key);
             }
         }
 
