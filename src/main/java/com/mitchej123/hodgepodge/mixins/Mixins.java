@@ -744,6 +744,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.fastItemEntityPhysics)
             .addExcludedMod(TargetedMod.FALSETWEAKS)
             .setPhase(Phase.EARLY)),
+    FIX_ENTITY_GRAVITY(new MixinBuilder("Fixes entity having buggy gravity")
+            .addCommonMixins("minecraft.MixinEntity_GravityFix")
+            .setApplyIf(() -> FixesConfig.fixEntityGravity)
+            .setPhase(Phase.EARLY)),
     BETTER_MOD_LIST(new MixinBuilder()
             .addClientMixins(
                     "fml.MixinGuiModList",
