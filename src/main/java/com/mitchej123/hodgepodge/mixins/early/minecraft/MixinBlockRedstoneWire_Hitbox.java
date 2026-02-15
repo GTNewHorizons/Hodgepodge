@@ -18,6 +18,7 @@ public abstract class MixinBlockRedstoneWire_Hitbox extends Block {
      * @author John
      * @reason Make Block Bounds of Redstone more accurate depending on state.
      */
+    @Override
     public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z) {
         boolean flag = BlockRedstoneWire.isPowerProviderOrWire(blockAccess, x - 1, y, z, 1)
                 || !blockAccess.getBlock(x - 1, y, z).isBlockNormalCube()
