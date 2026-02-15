@@ -700,6 +700,15 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.fastload.MixinBlock_FastLookup")
             .setApplyIf(() -> SpeedupsConfig.fastBlockLookup)
             .setPhase(Phase.EARLY)),
+    SPEEDUP_LEAF_DECAY(new MixinBuilder("BFS leaf decay with early exit on nearby logs")
+            .addCommonMixins("minecraft.MixinBlockLeaves_BFSDecay")
+            .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
+            .setPhase(Phase.EARLY)),
+    SPEEDUP_BOP_LEAF_DECAY(new MixinBuilder("BFS leaf decay for BOP leaves")
+            .addCommonMixins("biomesoplenty.MixinBlockBOPLeaves_BFSDecay")
+            .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
     SPEEDUP_FALLING_BLOCK_TICK(new MixinBuilder("Skip useless falling block tick scheduling")
             .addCommonMixins("minecraft.MixinBlockFalling_SkipUselessTick")
             .setApplyIf(() -> SpeedupsConfig.skipUselessFallingBlockTicks)
@@ -1180,6 +1189,16 @@ public enum Mixins implements IMixins {
     SPEEDUP_BOP_ENTITY_PIXIE(new MixinBuilder("Use fast atan2 for Pixie yaw calculation")
             .addCommonMixins("biomesoplenty.MixinEntityPixie_FastAtan2")
             .setApplyIf(() -> SpeedupsConfig.speedupBOPEntityPixie)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_BOP_BIOME_DECORATION(new MixinBuilder("Cache allocations in BOP biome decoration")
+            .addCommonMixins(
+                    "biomesoplenty.MixinRandomForcedPositiveOwned_Reusable",
+                    "biomesoplenty.MixinBOPBiomeDecorator_CacheRandom",
+                    "biomesoplenty.MixinWorldGenBOPFlora_CacheItemStack",
+                    "biomesoplenty.MixinWorldGenBOPTallGrass_CacheItemStack",
+                    "biomesoplenty.MixinBiomeFeatures_CacheFields")
+            .setApplyIf(() -> SpeedupsConfig.speedupBOPBiomeDecoration)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
 

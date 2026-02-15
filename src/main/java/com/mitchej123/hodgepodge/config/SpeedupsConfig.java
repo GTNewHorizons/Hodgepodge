@@ -63,6 +63,16 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean unboxMapGen;
 
+    @Config.Comment("BFS leaf decay with early exit on nearby logs, replacing vanilla's full scan")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupLeafDecay;
+
+    @Config.Comment("Max distance a leaf can be from a log and remain sustained. 4 = vanilla, 7 = BugTorch (supports larger trees) [Only used with speedupLeafDecay]")
+    @Config.DefaultInt(7)
+    @Config.RangeInt(min = 4, max = 7)
+    public static int leafDecayRange;
+
     @Config.Comment("Skip scheduling falling block ticks when the block below is solid")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -177,6 +187,11 @@ public class SpeedupsConfig {
     @Config.Comment("Use fast atan2 approximation for BOP Pixie entity yaw calculation")
     @Config.DefaultBoolean(true)
     public static boolean speedupBOPEntityPixie;
+
+    @Config.Comment("Cache allocations in BOP biome decoration to avoid per-chunk object creation and reflection")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupBOPBiomeDecoration;
 
     // VoxelMap
 
