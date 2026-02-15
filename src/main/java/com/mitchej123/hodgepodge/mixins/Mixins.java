@@ -744,6 +744,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.fastItemEntityPhysics)
             .addExcludedMod(TargetedMod.FALSETWEAKS)
             .setPhase(Phase.EARLY)),
+    FIX_FENCE_CLICK(new MixinBuilder("Fix the player triggering right click animation on the fence")
+            .addCommonMixins("minecraft.MixinBlockFence_RightClick")
+            .setApplyIf(() -> FixesConfig.fixFenceClick)
+            .setPhase(Phase.EARLY)),
     BETTER_MOD_LIST(new MixinBuilder()
             .addClientMixins(
                     "fml.MixinGuiModList",
