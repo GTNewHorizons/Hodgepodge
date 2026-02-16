@@ -74,10 +74,14 @@ public abstract class MixinPlayerManager_ThrottleChunkGen {
             final LongArrayList chunksToLoad = new LongArrayList(side * 2);
 
             if (deltaX != 0 || deltaZ != 0) {
-                // Build list of new chunks and remove player from old chunks — same as vanilla
+                // Build list of new chunks and remove player from old chunks — same as vanilla,
+                // plus recover chunks in the overlap that were deferred but never loaded
                 for (int x = newCX - viewRadius; x <= newCX + viewRadius; ++x) {
                     for (int z = newCZ - viewRadius; z <= newCZ + viewRadius; ++z) {
                         if (!this.overlaps(x, z, oldCX, oldCZ, viewRadius)) {
+                            chunksToLoad.add(ChunkPosUtil.toLong(x, z));
+                        } else if (this.getOrCreateChunkWatcher(x, z, false) == null) {
+                            // In overlap but no PlayerInstance — was deferred and pruned
                             chunksToLoad.add(ChunkPosUtil.toLong(x, z));
                         }
 
