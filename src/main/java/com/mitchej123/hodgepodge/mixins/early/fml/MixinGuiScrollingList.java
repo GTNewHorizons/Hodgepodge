@@ -1,43 +1,25 @@
 package com.mitchej123.hodgepodge.mixins.early.fml;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.imageio.ImageIO;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
+import com.mitchej123.hodgepodge.client.bettermodlist.ScrollbarColorHelper;
 import com.mitchej123.hodgepodge.mixins.interfaces.IGuiScrollingList;
 
 import cpw.mods.fml.client.GuiScrollingList;
 
 @Mixin(GuiScrollingList.class)
 public class MixinGuiScrollingList implements IGuiScrollingList {
-
-    @Unique
-    private static final ResourceLocation hodgepodge$SCROLLBAR_TEXTURE = new ResourceLocation(
-            "hodgepodge",
-            "textures/gui/fml_scrollbar.png");
-    @Unique
-    private static final int hodgepodge$SCROLLBAR_TRACK = 0x000000;
-    @Unique
-    private static final int hodgepodge$SCROLLBAR_THUMB = 0x808080;
-    @Unique
-    private static final int hodgepodge$SCROLLBAR_THUMB_HL = 0xC0C0C0;
 
     @Shadow(remap = false)
     @Final
@@ -66,15 +48,6 @@ public class MixinGuiScrollingList implements IGuiScrollingList {
     @Shadow(remap = false)
     private int selectedIndex;
 
-    @Unique
-    private boolean hodgepodge$checkedScrollbarTexture;
-    @Unique
-    private int hodgepodge$scrollbarTrackColor = hodgepodge$SCROLLBAR_TRACK;
-    @Unique
-    private int hodgepodge$scrollbarThumbColor = hodgepodge$SCROLLBAR_THUMB;
-    @Unique
-    private int hodgepodge$scrollbarThumbHighlightColor = hodgepodge$SCROLLBAR_THUMB_HL;
-
     @Inject(
             method = "drawScreen",
             at = @At(value = "INVOKE", target = "cpw/mods/fml/client/GuiScrollingList.applyScrollLimits()V"),
@@ -99,8 +72,7 @@ public class MixinGuiScrollingList implements IGuiScrollingList {
                     ordinal = 4),
             remap = false)
     private void hodgepodge$recolorScrollbarTrack(Args args) {
-        hodgepodge$loadScrollbarColors();
-        args.set(0, hodgepodge$scrollbarTrackColor);
+        args.set(0, ScrollbarColorHelper.getTrackColor(client));
     }
 
     @ModifyArgs(
@@ -111,8 +83,7 @@ public class MixinGuiScrollingList implements IGuiScrollingList {
                     ordinal = 5),
             remap = false)
     private void hodgepodge$recolorScrollbarThumb(Args args) {
-        hodgepodge$loadScrollbarColors();
-        args.set(0, hodgepodge$scrollbarThumbColor);
+        args.set(0, ScrollbarColorHelper.getThumbColor(client));
     }
 
     @ModifyArgs(
@@ -123,49 +94,13 @@ public class MixinGuiScrollingList implements IGuiScrollingList {
                     ordinal = 6),
             remap = false)
     private void hodgepodge$recolorScrollbarThumbHighlight(Args args) {
-        hodgepodge$loadScrollbarColors();
-        args.set(0, hodgepodge$scrollbarThumbHighlightColor);
+        args.set(0, ScrollbarColorHelper.getThumbHighlightColor(client));
     }
 
     @Inject(method = "drawScreen", at = @At("TAIL"), remap = false)
     private void hodgepodge$glDisableScissor(CallbackInfo ci) {
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
-    }
-
-    @Unique
-    private void hodgepodge$loadScrollbarColors() {
-        if (!hodgepodge$checkedScrollbarTexture) {
-            hodgepodge$checkedScrollbarTexture = true;
-            try (InputStream in = client.getResourceManager().getResource(hodgepodge$SCROLLBAR_TEXTURE)
-                    .getInputStream()) {
-                BufferedImage image = ImageIO.read(in);
-                if (image != null && image.getWidth() > 0 && image.getHeight() >= 3) {
-                    int segmentHeight = image.getHeight() / 3;
-                    if (segmentHeight > 0) {
-                        int sampleX = image.getWidth() / 2;
-                        hodgepodge$scrollbarTrackColor = hodgepodge$getPixelColor(image, sampleX, segmentHeight / 2);
-                        hodgepodge$scrollbarThumbColor = hodgepodge$getPixelColor(
-                                image,
-                                sampleX,
-                                segmentHeight + (segmentHeight / 2));
-                        hodgepodge$scrollbarThumbHighlightColor = hodgepodge$getPixelColor(
-                                image,
-                                sampleX,
-                                (2 * segmentHeight) + (segmentHeight / 2));
-                    }
-                }
-            } catch (IOException ignored) {
-                // Keep vanilla colors when the texture is absent or unreadable.
-            }
-        }
-    }
-
-    @Unique
-    private int hodgepodge$getPixelColor(BufferedImage image, int x, int y) {
-        int clampedX = Math.max(0, Math.min(image.getWidth() - 1, x));
-        int clampedY = Math.max(0, Math.min(image.getHeight() - 1, y));
-        return image.getRGB(clampedX, clampedY) & 0xFFFFFF;
     }
 
     @Override
