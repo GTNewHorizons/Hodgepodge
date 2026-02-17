@@ -687,13 +687,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.fastload.MixinMapGenStructure")
             .setApplyIf(() -> SpeedupsConfig.unboxMapGen)
             .setPhase(Phase.EARLY)),
-    EMBED_BLOCKIDS(new MixinBuilder("Embed IDs directly in the objects, to accelerate lookups")
+    FAST_BLOCK_LOOKUP(new MixinBuilder("Flat array for Block.getBlockById, bypassing registry dispatch chain")
             .addExcludedMod(TargetedMod.BUKKIT)
-            .addCommonMixins(
-                    "minecraft.fastload.embedid.MixinEmbedIDs",
-                    "minecraft.fastload.embedid.MixinFMLControlledNamespacedRegistry",
-                    "minecraft.fastload.embedid.MixinObjectIntIdentityMap")
-            .setApplyIf(() -> ASMConfig.embedID_experimental)
+            .addCommonMixins("minecraft.fastload.MixinBlock_FastLookup")
+            .setApplyIf(() -> SpeedupsConfig.fastBlockLookup)
             .setPhase(Phase.EARLY)),
     SPEEDUP_PENDING_TICK_LOOKUP(new MixinBuilder("Spatial index for pending block updates")
             .addCommonMixins("minecraft.MixinWorldServer_PendingTickIndex")
