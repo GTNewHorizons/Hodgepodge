@@ -105,10 +105,18 @@ public class SpeedupsConfig {
     @Config.RangeInt(min = 0, max = 50)
     public static int maxChunkGenTimePerTick;
 
-    @Config.Comment("Amortize chunk generation overruns by tracking time debt and skipping generation until the debt is paid down. "
-            + "Smooths out server tick times when single chunks exceed the time budget. [Requires throttleChunkGeneration]")
-    @Config.DefaultBoolean(true)
-    public static boolean amortizeChunkGenOverruns;
+    @Config.Comment("When to amortize chunk generation overruns by tracking time debt and skipping generation until the debt is paid down. "
+            + "Smooths out server tick times when single chunks exceed the time budget. "
+            + "DedicatedServerOnly enables on multiplayer servers but not singleplayer/LAN. [Requires throttleChunkGeneration]")
+    @Config.DefaultEnum("DedicatedServerOnly")
+    public static AmortizeMode amortizeChunkGenOverruns;
+
+    public enum AmortizeMode {
+
+        Always,
+        DedicatedServerOnly,
+        Never
+    }
 
     @Config.Comment("Removes hard caps on chunk sending and unloading speed. Experimental and probably incompatible with hybrid servers!")
     @Config.DefaultBoolean(false)
