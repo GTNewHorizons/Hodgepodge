@@ -4,6 +4,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PlayerManager;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.WorldServer;
@@ -51,6 +52,18 @@ public abstract class MixinPlayerManager_ThrottleChunkGen {
     /** Accumulated nanoseconds of chunk-gen overspend, paid down by the per-tick budget. */
     @Unique
     private long hodgepodge$genTimeDebtNanos = 0;
+
+    @Unique
+    private boolean hodgepodge$amortizeOverruns;
+
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void hodgepodge$resolveAmortize(CallbackInfo ci) {
+        hodgepodge$amortizeOverruns = switch (SpeedupsConfig.amortizeChunkGenOverruns) {
+            case Always -> true;
+            case Never -> false;
+            case DedicatedServerOnly -> MinecraftServer.getServer().isDedicatedServer();
+        };
+    }
 
     /**
      * @author mitchej123
@@ -164,9 +177,8 @@ public abstract class MixinPlayerManager_ThrottleChunkGen {
         final long maxTimeNanos = timeBudgetMs * 1_000_000L;
 
         // Pay down debt from previous overruns.
-        final boolean amortize = SpeedupsConfig.amortizeChunkGenOverruns;
         final boolean inDebt;
-        if (amortize && maxTimeNanos > 0 && hodgepodge$genTimeDebtNanos > 0) {
+        if (hodgepodge$amortizeOverruns && maxTimeNanos > 0 && hodgepodge$genTimeDebtNanos > 0) {
             hodgepodge$genTimeDebtNanos -= maxTimeNanos;
             inDebt = true;
         } else {
@@ -263,7 +275,7 @@ public abstract class MixinPlayerManager_ThrottleChunkGen {
         }
 
         // Record overrun as debt to be paid down on future ticks
-        if (amortize && !inDebt && maxTimeNanos > 0 && globalStartTime > 0) {
+        if (hodgepodge$amortizeOverruns && !inDebt && maxTimeNanos > 0 && globalStartTime > 0) {
             final long elapsed = System.nanoTime() - globalStartTime;
             if (elapsed > maxTimeNanos) {
                 // Cap debt at 40x budget (~2s at default 15ms) to bound maximum generation pause
