@@ -691,13 +691,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.fastload.MixinMapGenStructure")
             .setApplyIf(() -> SpeedupsConfig.unboxMapGen)
             .setPhase(Phase.EARLY)),
-    EMBED_BLOCKIDS(new MixinBuilder("Embed IDs directly in the objects, to accelerate lookups")
+    FAST_BLOCK_LOOKUP(new MixinBuilder("Flat array for Block.getBlockById, bypassing registry dispatch chain")
             .addExcludedMod(TargetedMod.BUKKIT)
-            .addCommonMixins(
-                    "minecraft.fastload.embedid.MixinEmbedIDs",
-                    "minecraft.fastload.embedid.MixinFMLControlledNamespacedRegistry",
-                    "minecraft.fastload.embedid.MixinObjectIntIdentityMap")
-            .setApplyIf(() -> ASMConfig.embedID_experimental)
+            .addCommonMixins("minecraft.fastload.MixinBlock_FastLookup")
+            .setApplyIf(() -> SpeedupsConfig.fastBlockLookup)
             .setPhase(Phase.EARLY)),
     SPEEDUP_LEAF_DECAY(new MixinBuilder("BFS leaf decay with early exit on nearby logs")
             .addCommonMixins("minecraft.MixinBlockLeaves_BFSDecay")
@@ -862,6 +859,14 @@ public enum Mixins implements IMixins {
     PREVENT_MOUSE_CENTERING_ON_ESC_IN_GUIS(new MixinBuilder("Prevent moving mouse cursor to the center when pressing Esc in GUIs")
             .addClientMixins("minecraft.MixinGuiScreen_PreventDoubleMouseGrabbing")
             .setApplyIf(() -> FixesConfig.preventMouseCenteringOnEscInGUIs)
+            .setPhase(Phase.EARLY)),
+    FIX_BREAKING_SPECIAL_ARMOR_WITH_THORNS_ENCHANTMENT(new MixinBuilder("Fix breaking electric and other special armor when Thorns enchantment is applied")
+            .addCommonMixins("minecraft.MixinEnchantmentThorns_FixBreakingSpecialArmor")
+            .setApplyIf(() -> FixesConfig.fixBreakingSpecialArmorWithThornsEnchantment)
+            .setPhase(Phase.EARLY)),
+    FIX_BREAKING_SPECIAL_ARMOR_ON_BLOCK_FALL(new MixinBuilder("Fix breaking electric and other special armor helmet when a block falls on your head")
+            .addCommonMixins("minecraft.MixinEntityLivingBase_FixBreakingSpecialArmor")
+            .setApplyIf(() -> FixesConfig.fixBreakingSpecialArmorHelmetOnBlockFall)
             .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments

@@ -38,11 +38,6 @@ public class ASMConfig {
     @Config.DefaultBoolean(true)
     public static boolean speedupOreDictionary;
 
-    @Config.Comment("Embeds the block ID into Block itself, massively accelerating block ID lookups. [EXPERIMENTAL]")
-    @Config.DefaultBoolean(false)
-    @Config.RequiresMcRestart
-    public static boolean embedID_experimental;
-
     @Config.Comment("Disable BoP fog modifications")
     @Config.DefaultBoolean(false)
     public static boolean bopFogDisable;
