@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.fml;
+package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -7,26 +7,19 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.util.ResourceLocation;
 
-import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-import com.mitchej123.hodgepodge.mixins.interfaces.IGuiScrollingList;
-
-import cpw.mods.fml.client.GuiScrollingList;
-
-@Mixin(GuiScrollingList.class)
-public class MixinGuiScrollingList implements IGuiScrollingList {
+@Mixin(GuiSlot.class)
+public class MixinGuiSlot_Scrollbar {
 
     @Unique
     private static final ResourceLocation hodgepodge$SCROLLBAR_TEXTURE = new ResourceLocation(
@@ -39,32 +32,9 @@ public class MixinGuiScrollingList implements IGuiScrollingList {
     @Unique
     private static final int hodgepodge$SCROLLBAR_THUMB_HL = 0xC0C0C0;
 
-    @Shadow(remap = false)
+    @Shadow
     @Final
-    private Minecraft client;
-
-    @Shadow(remap = false)
-    @Final
-    protected int listWidth;
-
-    @Shadow(remap = false)
-    @Final
-    protected int bottom;
-
-    @Shadow(remap = false)
-    @Final
-    protected int top;
-
-    @Shadow(remap = false)
-    @Final
-    protected int left;
-
-    @Shadow(remap = false)
-    @Final
-    private int right;
-
-    @Shadow(remap = false)
-    private int selectedIndex;
+    private Minecraft mc;
 
     @Unique
     private boolean hodgepodge$checkedScrollbarTexture;
@@ -75,29 +45,12 @@ public class MixinGuiScrollingList implements IGuiScrollingList {
     @Unique
     private int hodgepodge$scrollbarThumbHighlightColor = hodgepodge$SCROLLBAR_THUMB_HL;
 
-    @Inject(
-            method = "drawScreen",
-            at = @At(value = "INVOKE", target = "cpw/mods/fml/client/GuiScrollingList.applyScrollLimits()V"),
-            remap = false)
-    private void hodgepodge$glEnableScissor(CallbackInfo ci) {
-        ScaledResolution res = new ScaledResolution(client, client.displayWidth, client.displayHeight);
-        double scaleW = client.displayWidth / res.getScaledWidth_double();
-        double scaleH = client.displayHeight / res.getScaledHeight_double();
-        GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor(
-                (int) (left * scaleW),
-                (int) (client.displayHeight - (bottom * scaleH)),
-                (int) (listWidth * scaleW),
-                (int) ((this.bottom - this.top) * scaleH));
-    }
-
     @ModifyArgs(
             method = "drawScreen",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/Tessellator;func_78384_a(II)V",
-                    ordinal = 4),
-            remap = false)
+                    target = "Lnet/minecraft/client/renderer/Tessellator;setColorRGBA_I(II)V",
+                    ordinal = 4))
     private void hodgepodge$recolorScrollbarTrack(Args args) {
         hodgepodge$loadScrollbarColors();
         args.set(0, hodgepodge$scrollbarTrackColor);
@@ -107,9 +60,8 @@ public class MixinGuiScrollingList implements IGuiScrollingList {
             method = "drawScreen",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/Tessellator;func_78384_a(II)V",
-                    ordinal = 5),
-            remap = false)
+                    target = "Lnet/minecraft/client/renderer/Tessellator;setColorRGBA_I(II)V",
+                    ordinal = 5))
     private void hodgepodge$recolorScrollbarThumb(Args args) {
         hodgepodge$loadScrollbarColors();
         args.set(0, hodgepodge$scrollbarThumbColor);
@@ -119,26 +71,18 @@ public class MixinGuiScrollingList implements IGuiScrollingList {
             method = "drawScreen",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/Tessellator;func_78384_a(II)V",
-                    ordinal = 6),
-            remap = false)
+                    target = "Lnet/minecraft/client/renderer/Tessellator;setColorRGBA_I(II)V",
+                    ordinal = 6))
     private void hodgepodge$recolorScrollbarThumbHighlight(Args args) {
         hodgepodge$loadScrollbarColors();
         args.set(0, hodgepodge$scrollbarThumbHighlightColor);
-    }
-
-    @Inject(method = "drawScreen", at = @At("TAIL"), remap = false)
-    private void hodgepodge$glDisableScissor(CallbackInfo ci) {
-        GL11.glDisable(GL11.GL_SCISSOR_TEST);
-
     }
 
     @Unique
     private void hodgepodge$loadScrollbarColors() {
         if (!hodgepodge$checkedScrollbarTexture) {
             hodgepodge$checkedScrollbarTexture = true;
-            try (InputStream in = client.getResourceManager().getResource(hodgepodge$SCROLLBAR_TEXTURE)
-                    .getInputStream()) {
+            try (InputStream in = mc.getResourceManager().getResource(hodgepodge$SCROLLBAR_TEXTURE).getInputStream()) {
                 BufferedImage image = ImageIO.read(in);
                 if (image != null && image.getWidth() > 0 && image.getHeight() >= 3) {
                     int segmentHeight = image.getHeight() / 3;
@@ -166,20 +110,5 @@ public class MixinGuiScrollingList implements IGuiScrollingList {
         int clampedX = Math.max(0, Math.min(image.getWidth() - 1, x));
         int clampedY = Math.max(0, Math.min(image.getHeight() - 1, y));
         return image.getRGB(clampedX, clampedY) & 0xFFFFFF;
-    }
-
-    @Override
-    public int hodgepodge$setSelectedIndex(int index) {
-        return selectedIndex = index;
-    }
-
-    @Override
-    public int hodgepodge$getBottom() {
-        return bottom;
-    }
-
-    @Override
-    public int hodgepodge$getRight() {
-        return right;
     }
 }
