@@ -18,9 +18,9 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
 @Mixin(EntityLivingBase.class)
-public abstract class MixinEntity_GravityFix extends Entity {
+public abstract class MixinEntityLivingBase_GravityFix extends Entity {
 
-    public MixinEntity_GravityFix(World worldIn) {
+    public MixinEntityLivingBase_GravityFix(World worldIn) {
         super(worldIn);
     }
 
