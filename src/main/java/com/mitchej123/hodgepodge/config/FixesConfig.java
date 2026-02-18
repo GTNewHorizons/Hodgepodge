@@ -429,6 +429,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixFileNotFoundExceptionsServerFirstBoot;
 
+    @Config.Comment("Clear stale clicks made on the loading screen and prevent them from firing in the main menu")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean clearStaleLoadingScreenInput;
+
     @Config.Comment("Fix breaking electric and other special armor when Thorns enchantment is applied")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
