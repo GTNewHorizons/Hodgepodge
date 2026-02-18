@@ -103,6 +103,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(false)
     public static boolean fastBlockPlacing;
 
+    @Config.Comment("Add a accurate hitbox to the redstone wire")
+    @Config.DefaultBoolean(true)
+    public static boolean improvedRedstoneWireHitbox;
+
     @Config.Comment("Allow players on your server to use fast block placement")
     @Config.DefaultBoolean(true)
     public static boolean fastBlockPlacingServerSide;
