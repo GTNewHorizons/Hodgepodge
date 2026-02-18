@@ -839,6 +839,9 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiScreen_PreventDoubleMouseGrabbing")
             .setApplyIf(() -> FixesConfig.preventMouseCenteringOnEscInGUIs)
             .setPhase(Phase.EARLY)),
+    CLEAR_STALE_LOADING_SCREEN_INPUT(new MixinBuilder("Clear stale clicks made on the loading screen and prevent them from firing in the main menu")
+            .addClientMixins("minecraft.MixinMinecraft_ClearStaleLoadingScreenInput")
+            .setApplyIf(() -> FixesConfig.clearStaleLoadingScreenInput).setPhase(Phase.EARLY)),
     FIX_BREAKING_SPECIAL_ARMOR_WITH_THORNS_ENCHANTMENT(new MixinBuilder("Fix breaking electric and other special armor when Thorns enchantment is applied")
             .addCommonMixins("minecraft.MixinEnchantmentThorns_FixBreakingSpecialArmor")
             .setApplyIf(() -> FixesConfig.fixBreakingSpecialArmorWithThornsEnchantment)
