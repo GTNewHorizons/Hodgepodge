@@ -90,6 +90,11 @@ public class SpeedupsConfig {
     @Config.RangeInt(min = 100)
     public static int maxUnloadSpeed;
 
+    @Config.Comment("Accelerate Block.getBlockById() and Block.getIdFromBlock().")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fastBlockLookup;
+
     @Config.Comment("Optimize mob spawning")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart

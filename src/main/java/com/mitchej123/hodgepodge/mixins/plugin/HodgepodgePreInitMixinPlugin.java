@@ -8,7 +8,7 @@ import org.spongepowered.asm.lib.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
-import com.mitchej123.hodgepodge.config.ASMConfig;
+import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 
 public class HodgepodgePreInitMixinPlugin implements IMixinConfigPlugin {
 
@@ -39,9 +39,10 @@ public class HodgepodgePreInitMixinPlugin implements IMixinConfigPlugin {
             mixins.add("MixinLoadController_logModTimes");
         }
 
-        if (ASMConfig.embedID_experimental) {
-            mixins.add("embedid.MixinGameData");
+        if (SpeedupsConfig.fastBlockLookup) {
+            mixins.add("MixinGameData_BlockArraySync");
         }
+
         return mixins;
     }
 
