@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinMinecraft_ClearStaleLoadingScreenInput {
 
     @Inject(method = "startGame", at = @At("TAIL"))
-    private void startGame(CallbackInfo info) {
+    private void hodgepodge$clearStaleInput(CallbackInfo info) {
         while (Mouse.next()) {
             while (Mouse.next()) {}
             Mouse.poll();
