@@ -177,6 +177,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiNewChat_TransparentChat")
             .setApplyIf(() -> TweaksConfig.transparentChat)
             .setPhase(Phase.EARLY)),
+    CLEAN_CHAT_LOGS(new MixinBuilder()
+            .addClientMixins("minecraft.MixinGuiNewChat_CleanChatLogs")
+            .setApplyIf(() -> TweaksConfig.cleanChatLogs)
+            .setPhase(Phase.EARLY)),
     FIX_ENTITY_ATTRIBUTES_RANGE(new MixinBuilder()
             .addClientMixins("minecraft.MixinNetHandlerPlayClient_FixEntityAttributesRange")
             .setApplyIf(() -> FixesConfig.fixEntityAttributesRange)
