@@ -12,7 +12,10 @@ public class MixinGuiNewChat_CleanChatLogs {
 
     @ModifyArg(
             method = "printChatMessageWithOptionalDeletion",
-            at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;info(Ljava/lang/String;)V"))
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lorg/apache/logging/log4j/Logger;info(Ljava/lang/String;)V",
+                    remap = false))
     private String stripColorCodes(String msg) {
         return EnumChatFormatting.getTextWithoutFormattingCodes(msg);
     }
