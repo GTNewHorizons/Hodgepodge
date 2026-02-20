@@ -14,9 +14,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-
 @Mixin(EntityLivingBase.class)
 public abstract class MixinEntityLivingBase_GravityFix extends Entity {
 
@@ -34,8 +31,7 @@ public abstract class MixinEntityLivingBase_GravityFix extends Entity {
     // Original patch by KAIIIAK in ASM, ported over to mixins by JohnButlerThird
     @Inject(method = "moveEntityWithHeading", at = @At("HEAD"), cancellable = true)
     public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_, CallbackInfo ci) {
-        if (!(((EntityLivingBase) (Object) this) instanceof EntityPlayer)
-                && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+        if (!(((EntityLivingBase) (Object) this) instanceof EntityPlayer) && this.worldObj.isRemote) {
             double y = -0.0784000015258789D;
             double d7 = y;
             List list = this.worldObj
