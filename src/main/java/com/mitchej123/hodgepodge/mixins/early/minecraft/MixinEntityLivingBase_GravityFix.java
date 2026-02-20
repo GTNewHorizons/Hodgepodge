@@ -30,7 +30,7 @@ public abstract class MixinEntityLivingBase_GravityFix extends Entity {
     public float limbSwingAmount;
     @Shadow
     public float limbSwing;
-
+    // Original patch by KAIIIAK in ASM, ported over to mixins by JohnButlerThird
     @Inject(method = "moveEntityWithHeading", at = @At("HEAD"), cancellable = true)
     public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_, CallbackInfo ci) {
         if (!(((EntityLivingBase) (Object) this) instanceof EntityPlayer)
