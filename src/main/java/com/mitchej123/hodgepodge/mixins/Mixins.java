@@ -810,7 +810,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.hideDeprecatedIdNotice)
             .setPhase(Phase.EARLY)),
     FIX_PISTON_OUT_OF_BOUNDS(new MixinBuilder()
-            .addCommonMixins("minecraft.MixinTileEntityPiston", "minecraft.MixinBlockPistonBase")
+            .addCommonMixins("minecraft.MixinTileEntityPiston", "minecraft.MixinBlockPistonBase", "minecraft.MixinItemPiston")
             .setApplyIf(() -> FixesConfig.fixInvalidPistonCrashes)
             .setPhase(Phase.EARLY)),
     IMPROVE_REDSTONE_HITBOX(new MixinBuilder("Add a accurate hitbox to the redstone wire")
