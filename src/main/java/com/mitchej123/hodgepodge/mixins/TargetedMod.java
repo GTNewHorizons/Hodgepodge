@@ -24,6 +24,7 @@ public enum TargetedMod implements ITargetMod {
     BUKKIT(null, null, "org.bukkit.World"),
     CANDYCRAFT("candycraftmod"),
     COFH_CORE("cofh.asm.LoadingPlugin", "CoFHCore"),
+    CONTROLLING("controlling"),
     DAMAGE_INDICATORS("DamageIndicatorsMod"),
     DRAGONAPI("Reika.DragonAPI.Auxiliary.DragonAPIASMHandler", "DragonAPI"),
     DREAMCRAFT("com.dreammaster.coremod.DreamCoreMod", "dreamcraft"),

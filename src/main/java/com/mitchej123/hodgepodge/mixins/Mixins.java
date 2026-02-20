@@ -480,6 +480,7 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinMinecraft_UpdateKeys")
             .setApplyIf(() -> FixesConfig.triggerAllConflictingKeybindings)
             .addExcludedMod(TargetedMod.MODERNKEYBINDING)
+            .addExcludedMod(TargetedMod.CONTROLLING)
             .setPhase(Phase.EARLY)),
     REMOVE_SPAWN_MINECART_SOUND(new MixinBuilder("Remove sound when spawning a minecart")
             .addClientMixins("minecraft.MixinWorldClient")
