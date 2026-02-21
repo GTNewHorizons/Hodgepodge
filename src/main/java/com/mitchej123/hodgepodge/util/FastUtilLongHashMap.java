@@ -2,9 +2,7 @@ package com.mitchej123.hodgepodge.util;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.StampedLock;
 
 import net.minecraft.util.LongHashMap;
 
@@ -13,67 +11,98 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 
 public class FastUtilLongHashMap extends LongHashMap {
 
-    private final Long2ObjectMap<Object> map = new Long2ObjectOpenHashMap<>();
-    private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
-    private final Lock readLock = rwLock.readLock();
-    private final Lock writeLock = rwLock.writeLock();
+    private final transient StampedLock lock = new StampedLock();
+    private final Long2ObjectMap<Object> map = new Long2ObjectOpenHashMap<>(32);
 
     @Override
     public int getNumHashElements() {
-        readLock.lock();
-        try {
-            return map.size();
-        } finally {
-            readLock.unlock();
+        long stamp = lock.tryOptimisticRead();
+        int value = map.size();
+        if (!lock.validate(stamp)) {
+            stamp = lock.readLock();
+            try {
+                value = map.size();
+            } finally {
+                lock.unlockRead(stamp);
+            }
         }
+        return value;
     }
 
     @Override
     public Object getValueByKey(long key) {
-        readLock.lock();
+        boolean crash = false;
+        Object value = null;
+        long stamp = lock.tryOptimisticRead();
+        // Because reading data while writing can potentially cause exceptions (although I haven't
+        // actually seen exceptions thrown in the real game), we catch any exceptions here and then
+        // force a re-read under a lock if an exception occurs.
         try {
-            return map.get(key);
-        } finally {
-            readLock.unlock();
+            value = map.get(key);
+        } catch (Exception e) {
+            crash = true;
         }
+        if (crash || !lock.validate(stamp)) {
+            stamp = lock.readLock();
+            try {
+                value = map.get(key);
+            } finally {
+                lock.unlockRead(stamp);
+            }
+        }
+        return value;
     }
 
     @Override
     public boolean containsItem(long key) {
-        readLock.lock();
+        boolean crash = false;
+        boolean value = false;
+        long stamp = lock.tryOptimisticRead();
+        // Because reading data while writing can potentially cause exceptions (although I haven't
+        // actually seen exceptions thrown in the real game), we catch any exceptions here and then
+        // force a re-read under a lock if an exception occurs.
         try {
-            return map.containsKey(key);
-        } finally {
-            readLock.unlock();
+            value = map.containsKey(key);
+        } catch (Exception e) {
+            crash = true;
         }
+        if (crash || !lock.validate(stamp)) {
+            stamp = lock.readLock();
+            try {
+                value = map.containsKey(key);
+            } finally {
+                lock.unlockRead(stamp);
+            }
+        }
+        return value;
     }
 
     @Override
     public void add(long key, Object value) {
-        writeLock.lock();
+        long stamp = lock.writeLock();
         try {
             map.put(key, value);
         } finally {
-            writeLock.unlock();
+            lock.unlockWrite(stamp);
         }
     }
 
     @Override
     public Object remove(long key) {
-        writeLock.lock();
+        long stamp = lock.writeLock();
         try {
             return map.remove(key);
         } finally {
-            writeLock.unlock();
+            lock.unlockWrite(stamp);
         }
     }
 
     public Iterator<Object> valuesIterator() {
-        readLock.lock();
+        long stamp = lock.readLock();
         try {
             return new ArrayList<>(map.values()).iterator();
         } finally {
-            readLock.unlock();
+            lock.unlockRead(stamp);
         }
     }
 }
