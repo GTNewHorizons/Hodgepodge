@@ -7,9 +7,29 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 
-public final class ScrollbarColorHelper {
+/**
+ * Resource location for the scrollbar color definition texture.
+ * <p>
+ * This texture is expected to be provided by the {@code hodgepodge} mod assets or by a resource pack at:
+ * 
+ * <pre>
+ * assets / hodgepodge / textures / gui / fml_scrollbar.png
+ * </pre>
+ * 
+ * The image is sampled vertically in three equal segments:
+ * <ul>
+ * <li>Top third: scrollbar track color</li>
+ * <li>Middle third: scrollbar thumb color</li>
+ * <li>Bottom third: scrollbar thumb highlight color</li>
+ * </ul>
+ * If this texture is missing or unreadable, the helper falls back to the hard-coded default colors defined below.
+ */
+public final class ScrollbarColorHelper implements IResourceManagerReloadListener {
 
     private static final ResourceLocation SCROLLBAR_TEXTURE = new ResourceLocation(
             "hodgepodge",
@@ -19,7 +39,9 @@ public final class ScrollbarColorHelper {
     private static final int DEFAULT_THUMB = 0x808080;
     private static final int DEFAULT_THUMB_HL = 0xC0C0C0;
 
-    private static boolean loaded;
+    private static final ScrollbarColorHelper INSTANCE = new ScrollbarColorHelper();
+
+    private static boolean initialized;
     private static int trackColor = DEFAULT_TRACK;
     private static int thumbColor = DEFAULT_THUMB;
     private static int thumbHighlightColor = DEFAULT_THUMB_HL;
@@ -27,27 +49,41 @@ public final class ScrollbarColorHelper {
     private ScrollbarColorHelper() {}
 
     public static int getTrackColor(Minecraft mc) {
-        ensureLoaded(mc);
+        ensureInitialized(mc);
         return trackColor;
     }
 
     public static int getThumbColor(Minecraft mc) {
-        ensureLoaded(mc);
+        ensureInitialized(mc);
         return thumbColor;
     }
 
     public static int getThumbHighlightColor(Minecraft mc) {
-        ensureLoaded(mc);
+        ensureInitialized(mc);
         return thumbHighlightColor;
     }
 
-    private static synchronized void ensureLoaded(Minecraft mc) {
-        if (loaded) {
+    private static synchronized void ensureInitialized(Minecraft mc) {
+        if (initialized) {
             return;
         }
-        loaded = true;
+        initialized = true;
 
-        try (InputStream in = mc.getResourceManager().getResource(SCROLLBAR_TEXTURE).getInputStream()) {
+        IResourceManager resourceManager = mc.getResourceManager();
+        if (resourceManager instanceof IReloadableResourceManager) {
+            ((IReloadableResourceManager) resourceManager).registerReloadListener(INSTANCE);
+        }
+
+        INSTANCE.onResourceManagerReload(resourceManager);
+    }
+
+    @Override
+    public void onResourceManagerReload(IResourceManager resourceManager) {
+        trackColor = DEFAULT_TRACK;
+        thumbColor = DEFAULT_THUMB;
+        thumbHighlightColor = DEFAULT_THUMB_HL;
+
+        try (InputStream in = resourceManager.getResource(SCROLLBAR_TEXTURE).getInputStream()) {
             BufferedImage image = ImageIO.read(in);
             if (image == null || image.getWidth() <= 0 || image.getHeight() < 3) {
                 return;
@@ -63,7 +99,7 @@ public final class ScrollbarColorHelper {
             thumbColor = sample(image, sampleX, segmentHeight + (segmentHeight / 2));
             thumbHighlightColor = sample(image, sampleX, (2 * segmentHeight) + (segmentHeight / 2));
         } catch (IOException ignored) {
-            // Keep vanilla colors if the texture is missing or unreadable.
+            // Keep defaults if the texture is missing or unreadable.
         }
     }
 
