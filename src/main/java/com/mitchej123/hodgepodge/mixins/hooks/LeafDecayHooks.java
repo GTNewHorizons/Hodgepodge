@@ -7,45 +7,33 @@ import net.minecraft.world.World;
 
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mitchej123.hodgepodge.config.SpeedupsConfig;
-
 /**
  * BFS-based leaf decay check. Searches outward from the leaf position through connected leaves, returning true as soon
- * as a sustaining log is found within the configured range.
+ * as a sustaining log is found within range.
  */
 public class LeafDecayHooks {
 
-    private static final int range = SpeedupsConfig.leafDecayRange;
-    private static final int maxDepth = range - 1;
-    private static final int side = 2 * range + 1;
-    private static final int sideSquared = side * side;
-    private static final boolean[] visited = new boolean[side * side * side];
-    private static final int[] queue = new int[side * side * side];
+    private static final int MAX_RANGE = 7;
+    private static final int MAX_SIDE = 2 * MAX_RANGE + 1;
+    private static final int MAX_VOLUME = MAX_SIDE * MAX_SIDE * MAX_SIDE;
+    private static final boolean[] visited = new boolean[MAX_VOLUME];
+    private static final int[] queue = new int[MAX_VOLUME];
     private static final int[] DX = { -1, 1, 0, 0, 0, 0 };
     private static final int[] DY = { 0, 0, -1, 1, 0, 0 };
     private static final int[] DZ = { 0, 0, 0, 0, -1, 1 };
 
-    private static int toIndex(int dx, int dy, int dz) {
-        return (dx + range) * sideSquared + (dy + range) * side + (dz + range);
-    }
-
     /**
-     * Shared updateTick replacement for vanilla and BOP leaves. Checks connectivity via BFS, then either clears the
-     * decay flag or drops + removes the block.
+     * BFS decay check, called after isRemote and meta-bit checks have already passed.
      */
-    public static void handleDecayTick(Block block, World world, int x, int y, int z, CallbackInfo ci) {
-        final int meta = world.getBlockMetadata(x, y, z);
-
-        // Only process leaves that need a decay check: bit 8 set (needs check) and bit 4 clear (not player-placed)
-        if ((meta & 8) == 0 || (meta & 4) != 0) return;
-
+    public static void handleDecayChecked(Block block, World world, int x, int y, int z, int meta, int range,
+            CallbackInfo ci) {
         final int r = range + 1;
         if (!world.checkChunksExist(x - r, y - r, z - r, x + r, y + r, z + r)) {
             ci.cancel();
             return;
         }
 
-        if (isConnectedToLog(world, x, y, z)) {
+        if (isConnectedToLog(world, x, y, z, range)) {
             world.setBlockMetadataWithNotify(x, y, z, meta & -9, 4);
         } else {
             block.dropBlockAsItem(world, x, y, z, meta, 0);
@@ -56,15 +44,20 @@ public class LeafDecayHooks {
     }
 
     /**
-     * Returns true if the leaf at (x,y,z) is connected to a log within the configured range.
+     * Returns true if the leaf at (x,y,z) is connected to a log within the given range.
      */
-    public static boolean isConnectedToLog(World world, int x, int y, int z) {
-        Arrays.fill(visited, false);
+    public static boolean isConnectedToLog(World world, int x, int y, int z, int range) {
+        final int side = 2 * range + 1;
+        final int sideSquared = side * side;
+        final int volume = sideSquared * side;
+        final int maxDepth = range - 1;
+
+        Arrays.fill(visited, 0, volume, false);
 
         int head = 0;
         int tail = 0;
 
-        final int startIdx = toIndex(0, 0, 0);
+        final int startIdx = range * sideSquared + range * side + range;
         visited[startIdx] = true;
         queue[tail++] = startIdx;
 
@@ -84,7 +77,7 @@ public class LeafDecayHooks {
 
                 if (nx < -range || nx > range || ny < -range || ny > range || nz < -range || nz > range) continue;
 
-                final int nIdx = toIndex(nx, ny, nz);
+                final int nIdx = (nx + range) * sideSquared + (ny + range) * side + (nz + range);
                 if (visited[nIdx]) continue;
                 visited[nIdx] = true;
 
