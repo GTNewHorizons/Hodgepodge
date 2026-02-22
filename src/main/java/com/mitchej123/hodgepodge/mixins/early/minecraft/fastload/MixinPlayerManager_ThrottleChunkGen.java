@@ -22,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
+import com.mitchej123.hodgepodge.mixins.hooks.DeferredChunkQueue;
 import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
 import it.unimi.dsi.fastutil.longs.LongArrayList;
@@ -47,7 +48,7 @@ public abstract class MixinPlayerManager_ThrottleChunkGen {
     }
 
     @Unique
-    private final Map<EntityPlayerMP, LongArrayList> hodgepodge$deferredChunks = new IdentityHashMap<>();
+    private final Map<EntityPlayerMP, DeferredChunkQueue> hodgepodge$deferredChunks = new IdentityHashMap<>();
 
     /** Accumulated nanoseconds of chunk-gen overspend, paid down by the per-tick budget. */
     @Unique
@@ -133,7 +134,7 @@ public abstract class MixinPlayerManager_ThrottleChunkGen {
                         ? (AnvilChunkLoader) cps.currentChunkLoader
                         : null;
 
-                LongArrayList deferred = null;
+                DeferredChunkQueue dq = null;
 
                 for (int i = 0; i < chunksToLoad.size(); i++) {
                     final long packed = chunksToLoad.getLong(i);
@@ -144,11 +145,12 @@ public abstract class MixinPlayerManager_ThrottleChunkGen {
                         this.getOrCreateChunkWatcher(x, z, true).addPlayer(player);
                     } else {
                         // Needs worldgen — defer to per-tick processing
-                        if (deferred == null) {
-                            deferred = hodgepodge$deferredChunks.computeIfAbsent(player, k -> new LongArrayList());
+                        if (dq == null) {
+                            dq = hodgepodge$deferredChunks.computeIfAbsent(player, k -> new DeferredChunkQueue());
                         }
-                        if (!deferred.contains(packed)) {
-                            deferred.add(packed);
+                        if (!dq.chunks.contains(packed)) {
+                            dq.chunks.add(packed);
+                            dq.dirty = true;
                         }
                     }
                 }
@@ -198,7 +200,8 @@ public abstract class MixinPlayerManager_ThrottleChunkGen {
         while (iterator.hasNext()) {
             final var entry = iterator.next();
             final EntityPlayerMP player = entry.getKey();
-            final LongArrayList queue = entry.getValue();
+            final DeferredChunkQueue dq = entry.getValue();
+            final LongArrayList queue = dq.chunks;
 
             if (queue.isEmpty()) {
                 iterator.remove();
@@ -228,8 +231,9 @@ public abstract class MixinPlayerManager_ThrottleChunkGen {
             // Skip generation while paying off debt or after global budget exceeded
             if (inDebt || globalBudgetExceeded) continue;
 
-            // Sort descending: nearest/forward-biased chunks last
-            if (player.posX != player.prevPosX || player.posZ != player.prevPosZ) {
+            // Sort descending: nearest/forward-biased chunks last so tail-processing picks them first
+            final boolean playerMoved = player.posX != player.prevPosX || player.posZ != player.prevPosZ;
+            if (playerMoved || dq.dirty) {
                 final double motionX = player.posX - player.prevPosX;
                 final double motionZ = player.posZ - player.prevPosZ;
                 queue.sort((a, b) -> {
@@ -241,6 +245,7 @@ public abstract class MixinPlayerManager_ThrottleChunkGen {
                     final double bScore = bdx * bdx + bdz * bdz - (bdx * motionX + bdz * motionZ) * 2.0;
                     return Double.compare(bScore, aScore);
                 });
+                dq.dirty = false;
             }
 
             // Process from tail (nearest chunks)
