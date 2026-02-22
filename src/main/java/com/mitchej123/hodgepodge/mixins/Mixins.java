@@ -177,6 +177,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiNewChat_TransparentChat")
             .setApplyIf(() -> TweaksConfig.transparentChat)
             .setPhase(Phase.EARLY)),
+    CLEAN_CHAT_LOGS(new MixinBuilder()
+            .addClientMixins("minecraft.MixinGuiNewChat_CleanChatLogs")
+            .setApplyIf(() -> TweaksConfig.cleanChatLogs)
+            .setPhase(Phase.EARLY)),
     FIX_ENTITY_ATTRIBUTES_RANGE(new MixinBuilder()
             .addClientMixins("minecraft.MixinNetHandlerPlayClient_FixEntityAttributesRange")
             .setApplyIf(() -> FixesConfig.fixEntityAttributesRange)
@@ -745,6 +749,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.fastItemEntityPhysics)
             .addExcludedMod(TargetedMod.FALSETWEAKS)
             .setPhase(Phase.EARLY)),
+    FIX_ENTITY_GRAVITY(new MixinBuilder("Fixes entity having buggy gravity")
+            .addClientMixins("minecraft.MixinEntityLivingBase_GravityFix")
+            .setApplyIf(() -> FixesConfig.fixEntityGravity)
+            .setPhase(Phase.EARLY)),
     BETTER_MOD_LIST(new MixinBuilder()
             .addClientMixins(
                     "fml.MixinGuiModList",
@@ -803,7 +811,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.hideDeprecatedIdNotice)
             .setPhase(Phase.EARLY)),
     FIX_PISTON_OUT_OF_BOUNDS(new MixinBuilder()
-            .addCommonMixins("minecraft.MixinTileEntityPiston", "minecraft.MixinBlockPistonBase")
+            .addCommonMixins("minecraft.MixinTileEntityPiston", "minecraft.MixinBlockPistonBase", "minecraft.MixinItemPiston")
             .setApplyIf(() -> FixesConfig.fixInvalidPistonCrashes)
             .setPhase(Phase.EARLY)),
     IMPROVE_REDSTONE_HITBOX(new MixinBuilder("Add a accurate hitbox to the redstone wire")
