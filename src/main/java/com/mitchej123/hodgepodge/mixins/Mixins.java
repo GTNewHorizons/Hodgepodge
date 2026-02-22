@@ -753,6 +753,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinEntityLivingBase_GravityFix")
             .setApplyIf(() -> FixesConfig.fixEntityGravity)
             .setPhase(Phase.EARLY)),
+    FIX_FENCE_CLICK(new MixinBuilder("Fix the player triggering right click animation on the fence")
+            .addCommonMixins("minecraft.MixinBlockFence_RightClick")
+            .setApplyIf(() -> FixesConfig.fixFenceClick)
+            .setPhase(Phase.EARLY)),
     BETTER_MOD_LIST(new MixinBuilder()
             .addClientMixins(
                     "fml.MixinGuiModList",
