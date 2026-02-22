@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Unique;
 import com.mitchej123.hodgepodge.mixins.hooks.BlockLookupHooks;
 import com.mitchej123.hodgepodge.mixins.interfaces.BlockExt_FastLookup;
 
-@Mixin(Block.class)
+@Mixin(value = Block.class, priority = 1100)
 public class MixinBlock_FastLookup implements BlockExt_FastLookup {
 
     @Unique
