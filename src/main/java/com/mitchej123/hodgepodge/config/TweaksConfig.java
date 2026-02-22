@@ -63,6 +63,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean disableRealmsButton;
 
+    @Config.Comment("Translate Forge's Mod Options button in the pause menu")
+    @Config.DefaultBoolean(true)
+    public static boolean localizeForgeModOptionsButton;
+
     @Config.Comment("Stop inverting colors of crosshair")
     @Config.DefaultBoolean(false)
     public static boolean dontInvertCrosshairColor;
@@ -98,6 +102,10 @@ public class TweaksConfig {
     @Config.Comment("Allows blocks to be placed at a faster rate (toggleable via keybind)")
     @Config.DefaultBoolean(false)
     public static boolean fastBlockPlacing;
+
+    @Config.Comment("Add a accurate hitbox to the redstone wire")
+    @Config.DefaultBoolean(true)
+    public static boolean improvedRedstoneWireHitbox;
 
     @Config.Comment("Allow players on your server to use fast block placement")
     @Config.DefaultBoolean(true)
@@ -195,6 +203,26 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean hideTextureErrors;
+
+    @Config.Comment("Allows players in Creative to eat food.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean allowEatingFoodInCreative;
+
+    @Config.Comment({ "Removes all void fog.", "0 = keep void fog", "1 = disable for DEFAULT worldtype only",
+            "2 = disable for all world types" })
+    @Config.DefaultInt(1)
+    @Config.RangeInt(min = 0, max = 2)
+    public static int disableVoidFog = 1;
+
+    @Config.Comment("The max amount of XP levels an anvil recipe can use.")
+    @Config.DefaultInt(40)
+    public static int anvilMaxLevel = 40;
+
+    @Config.Comment("Removes the color codes from the chat logs")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean cleanChatLogs = true;
 
     // NBT String Pooling
 
@@ -302,7 +330,7 @@ public class TweaksConfig {
     public static boolean hideIc2ReactorSlots;
 
     @Config.Comment("Give IC2 cells containers like GregTech cells do")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     public static boolean ic2CellWithContainer;
 
     @Config.Comment("IC2 seed max stack size")
@@ -432,4 +460,8 @@ public class TweaksConfig {
     @Config.Comment("Remove the notice about numeric ID deprecation that appears when a command uses them")
     @Config.DefaultBoolean(true)
     public static boolean hideDeprecatedIdNotice;
+
+    @Config.Comment("Allow creative tab gui title color via localization key")
+    @Config.DefaultBoolean(true)
+    public static boolean creativeTabLocalizationOverrides;
 }

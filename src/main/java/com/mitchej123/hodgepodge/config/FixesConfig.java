@@ -28,6 +28,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixBogusIntegratedServerNPEs;
 
+    @Config.Comment("Do not flip bottom face textures (1.8+ behavior, see MC-47811)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBottomFaceUV;
+
     @Config.Comment("Fix wrapped chat lines missing colors")
     @Config.DefaultBoolean(true)
     public static boolean fixChatWrappedColors;
@@ -360,6 +364,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixEntityAttributesRange;
 
+    @Config.Comment("Fixes items bouncing on stairs and other blocks with odd hitboxes")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixEntityBouncing;
+
     @Config.Comment("Fix Glass Bottles filling with Water from some other Fluid blocks")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -369,6 +378,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixEggParticles;
+
+    @Config.Comment("Fixes entity having buggy gravity")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixEntityGravity;
 
     @Config.Comment("Fix EventBus keeping object references after unregistering event handlers.")
     @Config.DefaultBoolean(true)
@@ -385,7 +399,7 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean preventChunkLoadingFromBlockUpdates;
 
-    @Config.Comment("Remove invalid Entites in chunks.")
+    @Config.Comment("Remove invalid Entities in chunks.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean removeInvalidChunkEntites;
@@ -394,6 +408,51 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixMinecraftServerLeak;
+
+    @Config.Comment("Fixes pistons with metadata over 5 from crashing worlds when powered.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixInvalidPistonCrashes;
+
+    @Config.Comment("Fix instant item texture switch when switching an item in hand with different NBT")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixInstantHandItemTextureSwitch;
+
+    @Config.Comment("Updates the difficulty on every connected client when the difficulty of the server changes via /difficulty or the difficulty button.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean updateClientDifficultyOnServer;
+
+    @Config.Comment("Fix slimes resetting their health to maximum when being loaded from NBT (world reload, dimension change, etc.)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean maintainSlimeHealth;
+
+    @Config.Comment("Prevent moving mouse cursor to the center when pressing Esc in GUIs")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean preventMouseCenteringOnEscInGUIs;
+
+    @Config.Comment("Fix printed errors about json files when running a server for the first time")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixFileNotFoundExceptionsServerFirstBoot;
+
+    @Config.Comment("Clear stale clicks made on the loading screen and prevent them from firing in the main menu")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean clearStaleLoadingScreenInput;
+
+    @Config.Comment("Fix breaking electric and other special armor when Thorns enchantment is applied")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBreakingSpecialArmorWithThornsEnchantment;
+
+    @Config.Comment("Fix breaking electric and other special armor helmet when a block falls on your head")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBreakingSpecialArmorHelmetOnBlockFall;
 
     /* ====== Minecraft fixes end ===== */
 
@@ -443,6 +502,12 @@ public class FixesConfig {
     @Config.Comment("Fix Bibliocraft path sanitization")
     @Config.DefaultBoolean(true)
     public static boolean fixBibliocraftPathSanitization;
+
+    // Bibliowoods Forestry
+
+    @Config.Comment("Fix Bibliowoods Forestry recipes")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBibliowoodsForestryRecipes;
 
     // Biomes O' Plenty
 
@@ -647,6 +712,10 @@ public class FixesConfig {
     @Config.Comment("Lotr Java 12 compatibility patch")
     @Config.DefaultBoolean(true)
     public static boolean java12LotrCompat;
+
+    @Config.Comment("Set lotr updateLangFiles to false by default, as it is incompatible with the Gradle cache (breaking dev environments) and very rarely needed")
+    @Config.DefaultBoolean(true)
+    public static boolean lotrLanguageHelperDefault;
 
     // Minechem
 

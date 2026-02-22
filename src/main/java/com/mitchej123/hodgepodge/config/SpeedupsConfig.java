@@ -1,5 +1,7 @@
 package com.mitchej123.hodgepodge.config;
 
+import java.util.zip.Deflater;
+
 import com.gtnewhorizon.gtnhlib.config.Config;
 
 @Config(modid = "hodgepodge", category = "speedups")
@@ -61,7 +63,17 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean unboxMapGen;
 
-    @Config.Comment("Removes hard caps on chunk handling speed. Experimental and probably incompatible with hybrid servers!")
+    @Config.Comment("Spatial index for pending block updates, accelerates chunk saving and unloading")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupPendingTickLookup;
+
+    @Config.Comment("Optimized chunk unloading with fastutil collections and batched removal")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupChunkUnload;
+
+    @Config.Comment("Removes hard caps on chunk sending and unloading speed. Experimental and probably incompatible with hybrid servers!")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean fastChunkHandling;
@@ -77,6 +89,11 @@ public class SpeedupsConfig {
     @Config.DefaultInt(220)
     @Config.RangeInt(min = 100)
     public static int maxUnloadSpeed;
+
+    @Config.Comment("Accelerate Block.getBlockById() and Block.getIdFromBlock().")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fastBlockLookup;
 
     @Config.Comment("Optimize mob spawning")
     @Config.DefaultBoolean(true)
@@ -120,6 +137,31 @@ public class SpeedupsConfig {
     @Config.Comment("Tile Entity Packet Batching Blacklist (Fully Qualified Class Names, Does not require restart)")
     @Config.DefaultStringList({})
     public static String[] batchDescriptionBlacklist;
+
+    @Config.Comment("Pool Inflater/Deflater instances for NBT compression to reduce native cleanup overhead")
+    @Config.DefaultBoolean(true)
+    public static boolean poolZlibInstances;
+
+    @Config.Comment("Optimize chunk compression with reused deflater and batched writes")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupChunkCompression;
+
+    @Config.Comment("Compression level for chunk saving. " + Deflater.DEFAULT_COMPRESSION
+            + "=default, "
+            + Deflater.NO_COMPRESSION
+            + "=none, "
+            + Deflater.BEST_SPEED
+            + "=fastest, "
+            + Deflater.BEST_COMPRESSION
+            + "=smallest.")
+    @Config.DefaultInt(Deflater.DEFAULT_COMPRESSION)
+    @Config.RangeInt(min = Deflater.DEFAULT_COMPRESSION, max = Deflater.BEST_COMPRESSION)
+    public static int chunkCompressionLevel;
+
+    @Config.Comment("Parse batched tile entity NBT asynchronously on the client")
+    @Config.DefaultBoolean(true)
+    public static boolean asyncBatchedNBTParsing;
 
     // Biomes O' Plenty
 

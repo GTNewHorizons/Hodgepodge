@@ -25,6 +25,7 @@ import net.minecraftforge.common.ForgeChunkManager;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
+import com.mitchej123.hodgepodge.mixins.interfaces.PendingBlockUpdateIndex;
 import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -367,6 +368,10 @@ public class SimulationDistanceHelper {
 
             pendingTickCandidates.remove(entry);
         }
+
+        if (world instanceof PendingBlockUpdateIndex index) {
+            index.hodgepodge$removeChunkFromIndex(chunk);
+        }
     }
 
     private void removeTick(NextTickListEntry entry) {
@@ -387,6 +392,9 @@ public class SimulationDistanceHelper {
         HashSet<NextTickListEntry> entries = chunkTickMap.get(key);
         if (entries != null) {
             entries.remove(entry);
+        }
+        if (world instanceof PendingBlockUpdateIndex index) {
+            index.hodgepodge$removeTickFromIndex(entry);
         }
         ticksToRemove.add(entry);
     }

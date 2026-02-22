@@ -1,10 +1,13 @@
 package com.mitchej123.hodgepodge.hax;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.INetHandlerPlayClient;
@@ -16,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.MapMaker;
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
+import com.mitchej123.hodgepodge.client.AsyncNBTParser;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
 
@@ -136,14 +140,76 @@ public class TileEntityDescriptionBatcher {
 
         @Override
         public IMessage onMessage(BatchedDescriptionPacket message, MessageContext ctx) {
+            if (!(ctx.netHandler instanceof INetHandlerPlayClient client)) {
+                LOGGER.error(
+                        "Received BatchedDescriptionPacket while not playing: ignoring it (ctx: {})",
+                        ctx.netHandler);
+                return null;
+            }
+
+            if (SpeedupsConfig.asyncBatchedNBTParsing) {
+                // Copy bytes for async processing - the original buffer may be reused
+                byte[] rawData = new byte[message.data.readableBytes()];
+                message.data.readBytes(rawData);
+
+                AsyncNBTParser.submit(() -> {
+                    List<S35PacketUpdateTileEntity> packets = parsePackets(rawData);
+                    if (!packets.isEmpty()) {
+                        Minecraft.getMinecraft().func_152344_a(() -> {
+                            for (S35PacketUpdateTileEntity packet : packets) {
+                                client.handleUpdateTileEntity(packet);
+                            }
+                        });
+                    }
+                });
+            } else {
+                parseAndHandle(message.data, client);
+            }
+
+            return null;
+        }
+
+        private static List<S35PacketUpdateTileEntity> parsePackets(byte[] rawData) {
+            List<S35PacketUpdateTileEntity> packets = new ArrayList<>();
+            ByteBuf dataBuf = Unpooled.wrappedBuffer(rawData);
             ByteBuf temp = Unpooled.buffer(512);
             PacketBuffer buffer = new PacketBuffer(temp);
 
-            while (message.data.isReadable()) {
+            while (dataBuf.isReadable()) {
                 temp.clear();
 
-                int byteCount = message.data.readInt();
-                temp.writeBytes(message.data, byteCount);
+                int byteCount = dataBuf.readInt();
+                temp.writeBytes(dataBuf, byteCount);
+
+                S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity();
+
+                try {
+                    packet.readPacketData(buffer);
+                    packets.add(packet);
+                } catch (IOException e) {
+                    LOGGER.error(
+                            "Could not deserialize description packet, it will be ignored. Best effort data (may be incomplete): {},{},{},{}\n{}",
+                            packet.func_148856_c(),
+                            packet.func_148855_d(),
+                            packet.func_148854_e(),
+                            packet.func_148853_f(),
+                            packet.func_148857_g(),
+                            e);
+                }
+            }
+
+            return packets;
+        }
+
+        private static void parseAndHandle(ByteBuf data, INetHandlerPlayClient client) {
+            ByteBuf temp = Unpooled.buffer(512);
+            PacketBuffer buffer = new PacketBuffer(temp);
+
+            while (data.isReadable()) {
+                temp.clear();
+
+                int byteCount = data.readInt();
+                temp.writeBytes(data, byteCount);
 
                 S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity();
 
@@ -162,16 +228,8 @@ public class TileEntityDescriptionBatcher {
                     continue;
                 }
 
-                if (ctx.netHandler instanceof INetHandlerPlayClient client) {
-                    client.handleUpdateTileEntity(packet);
-                } else {
-                    LOGGER.error(
-                            "Received BatchedDescriptionPacket while not playing: ignoreing it (ctx: {})",
-                            ctx.netHandler);
-                }
+                client.handleUpdateTileEntity(packet);
             }
-
-            return null;
         }
     }
 }

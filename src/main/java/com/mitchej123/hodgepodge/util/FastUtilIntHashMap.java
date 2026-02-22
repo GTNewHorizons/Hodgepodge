@@ -1,5 +1,9 @@
 package com.mitchej123.hodgepodge.util;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import net.minecraft.util.IntHashMap;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -7,34 +11,58 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 public class FastUtilIntHashMap extends IntHashMap {
 
-    private final Int2ObjectMap<Object> map;
-
-    public FastUtilIntHashMap() {
-        map = new Int2ObjectOpenHashMap<>();
-    }
+    private final Int2ObjectMap<Object> map = new Int2ObjectOpenHashMap<>();
+    private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
+    private final Lock readLock = rwLock.readLock();
+    private final Lock writeLock = rwLock.writeLock();
 
     @Override
     public Object lookup(int key) {
-        return map.get(key);
+        readLock.lock();
+        try {
+            return map.get(key);
+        } finally {
+            readLock.unlock();
+        }
     }
 
     @Override
     public boolean containsItem(int key) {
-        return map.containsKey(key);
+        readLock.lock();
+        try {
+            return map.containsKey(key);
+        } finally {
+            readLock.unlock();
+        }
     }
 
     @Override
     public void addKey(int key, Object value) {
-        map.put(key, value);
+        writeLock.lock();
+        try {
+            map.put(key, value);
+        } finally {
+            writeLock.unlock();
+        }
     }
 
     @Override
     public void clearMap() {
-        map.clear();
+        writeLock.lock();
+        try {
+            map.clear();
+        } finally {
+            writeLock.unlock();
+        }
     }
 
     @Override
     public Object removeObject(int key) {
-        return map.remove(key);
+        writeLock.lock();
+        try {
+            return map.remove(key);
+        } finally {
+            writeLock.unlock();
+        }
     }
 }

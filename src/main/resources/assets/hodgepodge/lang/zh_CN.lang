@@ -26,6 +26,7 @@ commands.time.usageWithGet=/time <set|add> <数值> 或 /time get
 
 hodgepodge.soundsmenu.refreshsounds=声音重载
 hodgepodge.bed_respawn.msg=已设置重生点
+hodgepodge.menu.mod_options=模组选项...
 
 bettermodlist.sort.normal=默认
 bettermodlist.sort.a_to_z=A-Z
