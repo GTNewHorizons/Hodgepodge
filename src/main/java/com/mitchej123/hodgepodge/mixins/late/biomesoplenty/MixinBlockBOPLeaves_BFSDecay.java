@@ -24,7 +24,7 @@ public class MixinBlockBOPLeaves_BFSDecay {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;checkChunksExist(IIIIII)Z"),
             cancellable = true)
     private void hodgepodge$bfsDecay(World world, int x, int y, int z, Random random, CallbackInfo ci,
-            @Local(ordinal = 0) int meta, @Local(ordinal = 0) byte b0) {
+            @Local(name = "meta") int meta, @Local(name = "b0") byte b0) {
         LeafDecayHooks.handleDecayChecked((Block) (Object) this, world, x, y, z, meta, b0, ci);
     }
 }
