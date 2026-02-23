@@ -718,6 +718,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
             .addRequiredMod(TargetedMod.HARVESTTHENETHER)
             .setPhase(Phase.LATE)),
+    SPEEDUP_THAUMCRAFT_LEAF_DECAY(new MixinBuilder()
+            .addCommonMixins("bfsleafdecay.MixinBlockMagicalLeaves")
+            .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
     SPEEDUP_FALLING_BLOCK_TICK(new MixinBuilder("Skip useless falling block tick scheduling")
             .addCommonMixins("minecraft.MixinBlockFalling_SkipUselessTick")
             .setApplyIf(() -> SpeedupsConfig.skipUselessFallingBlockTicks)
