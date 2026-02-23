@@ -63,6 +63,16 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean unboxMapGen;
 
+    @Config.Comment("BFS leaf decay with early exit on nearby logs, replacing vanilla's full scan")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupLeafDecay;
+
+    @Config.Comment("Skip scheduling falling block ticks when the block below is solid")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean skipUselessFallingBlockTicks;
+
     @Config.Comment("Spatial index for pending block updates, accelerates chunk saving and unloading")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -72,6 +82,36 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean speedupChunkUnload;
+
+    @Config.Comment("Spread chunk generation across ticks to reduce server stalls when players move through ungenerated terrain. ")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean throttleChunkGeneration;
+
+    @Config.Comment("Maximum deferred chunk generations per player per tick. "
+            + "Higher values fill terrain faster but increase per-tick lag from worldgen. [Requires throttleChunkGeneration]")
+    @Config.DefaultInt(4)
+    @Config.RangeInt(min = 1, max = 20)
+    public static int maxChunkGenPerPlayerPerTick;
+
+    @Config.Comment("Maximum time in milliseconds to spend on deferred chunk generation per tick, divided equally among active players. "
+            + "0 = no time limit (count-based only). [Requires throttleChunkGeneration]")
+    @Config.DefaultInt(15)
+    @Config.RangeInt(min = 0, max = 50)
+    public static int maxChunkGenTimePerTick;
+
+    @Config.Comment("When to amortize chunk generation overruns by tracking time debt and skipping generation until the debt is paid down. "
+            + "Smooths out server tick times when single chunks exceed the time budget. "
+            + "DedicatedServerOnly enables on multiplayer servers but not singleplayer/LAN. [Requires throttleChunkGeneration]")
+    @Config.DefaultEnum("DedicatedServerOnly")
+    public static AmortizeMode amortizeChunkGenOverruns;
+
+    public enum AmortizeMode {
+
+        Always,
+        DedicatedServerOnly,
+        Never
+    }
 
     @Config.Comment("Removes hard caps on chunk sending and unloading speed. Experimental and probably incompatible with hybrid servers!")
     @Config.DefaultBoolean(false)
@@ -168,6 +208,15 @@ public class SpeedupsConfig {
     @Config.Comment("Speedup biome fog rendering in BiomesOPlenty")
     @Config.DefaultBoolean(true)
     public static boolean speedupBOPFogHandling;
+
+    @Config.Comment("Use fast atan2 approximation for BOP Pixie entity yaw calculation")
+    @Config.DefaultBoolean(true)
+    public static boolean speedupBOPEntityPixie;
+
+    @Config.Comment("Cache allocations in BOP biome decoration to avoid per-chunk object creation and reflection")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupBOPBiomeDecoration;
 
     // VoxelMap
 
