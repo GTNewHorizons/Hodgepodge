@@ -46,7 +46,7 @@ public class LeafDecayHooks {
     /**
      * Returns true if the leaf at (x,y,z) is connected to a log within the given range.
      */
-    public static boolean isConnectedToLog(World world, int x, int y, int z, int range) {
+    private static boolean isConnectedToLog(World world, int x, int y, int z, int range) {
         final int side = 2 * range + 1;
         final int sideSquared = side * side;
         final int volume = sideSquared * side;
