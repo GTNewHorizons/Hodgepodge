@@ -705,7 +705,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
             .setPhase(Phase.EARLY)),
     SPEEDUP_BOP_LEAF_DECAY(new MixinBuilder("BFS leaf decay for BOP leaves")
-            .addCommonMixins("biomesoplenty.MixinBlockBOPLeaves_BFSDecay")
+            .addCommonMixins(
+                    "bfsleafdecay.MixinBlockBOPAppleLeaves",
+                    "bfsleafdecay.MixinBlockBOPColorizedLeaves",
+                    "bfsleafdecay.MixinBlockBOPLeaves",
+                    "bfsleafdecay.MixinBlockBOPPermsimmonLeaves")
             .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
