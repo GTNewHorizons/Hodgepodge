@@ -700,11 +700,11 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.fastload.MixinBlock_FastLookup")
             .setApplyIf(() -> SpeedupsConfig.fastBlockLookup)
             .setPhase(Phase.EARLY)),
-    SPEEDUP_LEAF_DECAY(new MixinBuilder("BFS leaf decay with early exit on nearby logs")
+    SPEEDUP_LEAF_DECAY(new MixinBuilder()
             .addCommonMixins("minecraft.MixinBlockLeaves_BFSDecay")
             .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
             .setPhase(Phase.EARLY)),
-    SPEEDUP_BOP_LEAF_DECAY(new MixinBuilder("BFS leaf decay for BOP leaves")
+    SPEEDUP_BOP_LEAF_DECAY(new MixinBuilder()
             .addCommonMixins(
                     "bfsleafdecay.MixinBlockBOPAppleLeaves",
                     "bfsleafdecay.MixinBlockBOPColorizedLeaves",
@@ -712,6 +712,11 @@ public enum Mixins implements IMixins {
                     "bfsleafdecay.MixinBlockBOPPermsimmonLeaves")
             .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
             .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_PAM_NETHER_LEAF_DECAY(new MixinBuilder()
+            .addCommonMixins("bfsleafdecay.MixinBlockNetherLeaves")
+            .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
+            .addRequiredMod(TargetedMod.HARVESTTHENETHER)
             .setPhase(Phase.LATE)),
     SPEEDUP_FALLING_BLOCK_TICK(new MixinBuilder("Skip useless falling block tick scheduling")
             .addCommonMixins("minecraft.MixinBlockFalling_SkipUselessTick")
