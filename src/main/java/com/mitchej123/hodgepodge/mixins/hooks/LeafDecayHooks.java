@@ -28,18 +28,14 @@ public class LeafDecayHooks {
     public static void handleDecayChecked(Block block, World world, int x, int y, int z, int meta, int range,
             CallbackInfo ci) {
         final int r = range + 1;
-        if (!world.checkChunksExist(x - r, y - r, z - r, x + r, y + r, z + r)) {
-            ci.cancel();
-            return;
+        if (world.checkChunksExist(x - r, y - r, z - r, x + r, y + r, z + r)) {
+            if (isConnectedToLog(world, x, y, z, range)) {
+                world.setBlockMetadataWithNotify(x, y, z, meta & -9, 4);
+            } else {
+                block.dropBlockAsItem(world, x, y, z, meta, 0);
+                world.setBlockToAir(x, y, z);
+            }
         }
-
-        if (isConnectedToLog(world, x, y, z, range)) {
-            world.setBlockMetadataWithNotify(x, y, z, meta & -9, 4);
-        } else {
-            block.dropBlockAsItem(world, x, y, z, meta, 0);
-            world.setBlockToAir(x, y, z);
-        }
-
         ci.cancel();
     }
 
