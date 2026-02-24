@@ -9,16 +9,17 @@ import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 
 public class ReusableChunkDeflaterOutputStream extends DeflaterOutputStream {
 
-    private static final Deflater DEFLATER = new Deflater();
+    private static final ThreadLocal<Deflater> DEFLATER = ThreadLocal.withInitial(Deflater::new);
 
     private ReusableChunkDeflaterOutputStream(OutputStream out, Deflater def) {
         super(out, def, 8192);
     }
 
     public static ReusableChunkDeflaterOutputStream create(OutputStream out) {
-        DEFLATER.reset();
-        DEFLATER.setLevel(SpeedupsConfig.chunkCompressionLevel);
-        return new ReusableChunkDeflaterOutputStream(out, DEFLATER);
+        final Deflater def = DEFLATER.get();
+        def.reset();
+        def.setLevel(SpeedupsConfig.chunkCompressionLevel);
+        return new ReusableChunkDeflaterOutputStream(out, def);
     }
 
     @Override
