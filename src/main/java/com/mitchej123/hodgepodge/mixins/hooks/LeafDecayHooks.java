@@ -35,6 +35,8 @@ public class LeafDecayHooks {
                 block.dropBlockAsItem(world, x, y, z, meta, 0);
                 world.setBlockToAir(x, y, z);
             }
+        } else {
+            world.setBlockMetadataWithNotify(x, y, z, meta & -9, 4);
         }
         ci.cancel();
     }
