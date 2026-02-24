@@ -52,7 +52,7 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer, Opco
         cr.accept(cn, 0);
         final boolean changed = transformClassNode(transformedName, cn);
         if (changed) {
-            ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+            ClassWriter cw = new ClassWriter(0);
             cn.accept(cw);
             final byte[] transformedBytes = cw.toByteArray();
             HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
@@ -64,7 +64,7 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer, Opco
     private static boolean transformClassNode(String transformedName, ClassNode cn) {
         boolean changed = false;
         for (MethodNode mn : cn.methods) {
-            for (AbstractInsnNode node : mn.instructions.toArray()) {
+            for (AbstractInsnNode node = mn.instructions.getFirst(); node != null; node = node.getNext()) {
                 if (node.getOpcode() == NEW && node instanceof TypeInsnNode tNode && isTargetDesc(tNode.desc)) {
                     AbstractInsnNode secondNode = node.getNext();
                     if (secondNode.getOpcode() == DUP) {

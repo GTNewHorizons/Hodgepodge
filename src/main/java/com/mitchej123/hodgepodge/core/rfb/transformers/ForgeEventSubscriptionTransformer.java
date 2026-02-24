@@ -50,10 +50,18 @@ public class ForgeEventSubscriptionTransformer implements RfbClassTransformer, O
     @Override
     public void transformClass(@NotNull ExtensibleClassLoader classLoader, @NotNull RfbClassTransformer.Context context,
             @Nullable Manifest manifest, @NotNull String className, @NotNull ClassNodeHandle classNodeHandle) {
+        transformClassIfNeeded(classLoader, context, manifest, className, classNodeHandle);
+    }
+
+    @Override
+    public boolean transformClassIfNeeded(@NotNull ExtensibleClassLoader classLoader,
+            @NotNull RfbClassTransformer.Context context, @Nullable Manifest manifest, @NotNull String className,
+            @NotNull ClassNodeHandle classNodeHandle) {
         final ClassNode classNode = classNodeHandle.getNode();
         if (classNode == null) {
-            return;
+            return false;
         }
+
         boolean changed = false;
         for (MethodNode method : classNode.methods) {
             if (method.name.equals("transform") && method.desc.equals("(Ljava/lang/String;Ljava/lang/String;[B)[B")) {
@@ -70,6 +78,7 @@ public class ForgeEventSubscriptionTransformer implements RfbClassTransformer, O
         } else {
             FMLRelaunchLog.severe("[ForgeEventSubscriptionTransformer] Failed to transform {}", classNode.name);
         }
+        return changed;
     }
 
     private static boolean transformTransformMethod(MethodNode method) {
