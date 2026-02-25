@@ -154,16 +154,6 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean speedupRemoveFormatting;
 
-    @Config.Comment("Cache last matching recipes in crafting manager")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean cacheLastMatchingRecipe;
-
-    @Config.Comment("Cache size for the last matching recipes in crafting manager")
-    @Config.DefaultInt(64)
-    @Config.RequiresMcRestart
-    public static int recipeCacheSize;
-
     // I split these in two so that you can disable batching at runtime to diagnose problems
     @Config.Comment("Batch Tile Entity Description S35PacketUpdateTileEntity Packets (Enables Mixins, Requires Restart)")
     @Config.DefaultBoolean(true)

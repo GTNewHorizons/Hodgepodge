@@ -831,10 +831,6 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinFontRenderer_House")
             .setApplyIf(() -> FixesConfig.fixHouseCharRendering)
             .setPhase(Phase.EARLY)),
-    CACHE_LAST_MATCHING_RECIPES(new MixinBuilder()
-            .addCommonMixins("minecraft.MixinCraftingManager")
-            .setApplyIf(() -> SpeedupsConfig.cacheLastMatchingRecipe)
-            .setPhase(Phase.EARLY)),
     REMOVE_INVALID_ENTITES(new MixinBuilder()
             .addCommonMixins("minecraft.MixinChunk_FixInvalidEntity")
             .setApplyIf(() -> FixesConfig.removeInvalidChunkEntites)
