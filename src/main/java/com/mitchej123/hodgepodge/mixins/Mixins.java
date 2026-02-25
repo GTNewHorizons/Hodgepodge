@@ -798,7 +798,8 @@ public enum Mixins implements IMixins {
             .addClientMixins(
                     "fml.MixinGuiModList",
                     "fml.MixinGuiSlotModList",
-                    "fml.MixinGuiScrollingList")
+                    "fml.MixinGuiScrollingList",
+                    "minecraft.MixinGuiSlot_Scrollbar")
             .setApplyIf(() -> TweaksConfig.betterModList)
             .addExcludedMod(TargetedMod.ENDERCORE_WITH_MODLIST)
             .setPhase(Phase.EARLY)),
