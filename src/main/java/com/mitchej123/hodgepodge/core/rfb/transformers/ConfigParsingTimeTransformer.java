@@ -36,7 +36,7 @@ public class ConfigParsingTimeTransformer implements RfbClassTransformer, Opcode
     }
 
     @Override
-    public boolean transformClass(@NotNull ExtensibleClassLoader classLoader, @NotNull Context context,
+    public boolean transformClassIfNeeded(@NotNull ExtensibleClassLoader classLoader, @NotNull Context context,
             @Nullable Manifest manifest, @NotNull String className, @NotNull ClassNodeHandle classNode) {
         final ClassNode cn = classNode.getNode();
         if (cn == null) {
@@ -45,6 +45,12 @@ public class ConfigParsingTimeTransformer implements RfbClassTransformer, Opcode
         transformClassNode(cn);
         HodgepodgeClassDump.dumpRFBClass(className, classNode, this);
         return true;
+    }
+
+    @Override
+    public void transformClass(@NotNull ExtensibleClassLoader classLoader, @NotNull RfbClassTransformer.Context context,
+            @Nullable Manifest manifest, @NotNull String className, @NotNull ClassNodeHandle classNode) {
+        transformClassIfNeeded(classLoader, context, manifest, className, classNode);
     }
 
     private static final String THIS = "net/minecraftforge/common/config/Configuration";

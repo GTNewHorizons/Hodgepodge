@@ -16,7 +16,7 @@ dependencies {
 
     shadowImplementation("org.jctools:jctools-core:4.0.5") // Apache 2.0
 
-    compileOnly("com.gtnewhorizons.retrofuturabootstrap:RetroFuturaBootstrap:1.0.14-test.18") { transitive = false }
+    compileOnly("com.gtnewhorizons.retrofuturabootstrap:RetroFuturaBootstrap:1.0.15-test.1") { transitive = false }
 
     transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.8.48-GTNH:dev") // force a more up-to-date NEI version
     transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-775-GTNH")

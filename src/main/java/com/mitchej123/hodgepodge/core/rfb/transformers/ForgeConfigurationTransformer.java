@@ -45,7 +45,7 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
     }
 
     @Override
-    public boolean transformClass(@NotNull ExtensibleClassLoader classLoader,
+    public boolean transformClassIfNeeded(@NotNull ExtensibleClassLoader classLoader,
             @NotNull RfbClassTransformer.Context context, @Nullable Manifest manifest, @NotNull String className,
             @NotNull ClassNodeHandle classNode) {
         final ClassNode cn = classNode.getNode();
@@ -61,6 +61,12 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
             HodgepodgeClassDump.dumpRFBClass(className, classNode, this);
         }
         return true;
+    }
+
+    @Override
+    public void transformClass(@NotNull ExtensibleClassLoader classLoader, @NotNull RfbClassTransformer.Context context,
+            @Nullable Manifest manifest, @NotNull String className, @NotNull ClassNodeHandle classNode) {
+        transformClassIfNeeded(classLoader, context, manifest, className, classNode);
     }
 
     private static void transformProperty(ClassNode cn) {
