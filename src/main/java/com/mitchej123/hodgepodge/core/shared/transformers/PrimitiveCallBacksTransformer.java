@@ -45,17 +45,15 @@ public final class PrimitiveCallBacksTransformer implements Opcodes {
         if (!found) {
             return false;
         }
-        boolean changed = false;
         for (Handler handler : candidateHandlers.values()) {
             if (handler.callSites != null) {
                 handler.transform();
                 for (HandlerCallSite callSite : handler.callSites) {
                     callSite.transform(handler.type);
                 }
-                changed = true;
             }
         }
-        return changed;
+        return true;
     }
 
     private static class Handler {
@@ -129,7 +127,7 @@ public final class PrimitiveCallBacksTransformer implements Opcodes {
                 if (insn instanceof MethodInsnNode mNode && mNode.owner.equals(CIR_NAME)) {
                     mNode.owner = newCirName;
                     if (mNode.name.equals("getReturnValue") && mNode.desc.equals("()Ljava/lang/Object;")) { // TODO add support in case someone uses the primitive accessors
-                        mNode.name = "getReturnValue" + typeDesc;// TODO rename les methodes pour pas avoir a append le type
+                        mNode.name = "getReturnValue" + typeDesc;
                         mNode.desc = "()" + typeDesc;
                         final AbstractInsnNode nextNode = it.next();
                         if (nextNode.getOpcode() == CHECKCAST && nextNode instanceof TypeInsnNode typeNode && typeNode.desc.equals(boxedTypeName)) {
@@ -186,24 +184,66 @@ public final class PrimitiveCallBacksTransformer implements Opcodes {
          */
         private final MethodInsnNode handlerCall;
 
-        private HandlerCallSite(MethodNode methodNode, MethodInsnNode handlerCall) {
+        public HandlerCallSite(MethodNode methodNode, MethodInsnNode handlerCall) {
             this.methodNode = methodNode;
             this.handlerCall = handlerCall;
         }
 
         public void transform(Type type) {
-            // TODO
-            // for loop vers le haut
-            // transformer le type NEW opcode
-            // transformer le <init> methonode
-            // si il est directement suivi d'un ASTORE {
-            //      changer le type dans la local variable table
-            // }
-            // changer le desc de this.handlerCall
-            // for loop dans les instructions ensuite
-            // changer tous les method call qui ont pour owner CIR_NAME
-            // stop quand on trouver un nouvelle type node NEW CIR_NAME
+            // loop instructions in reverse from the handler Call
+            // transform the NEW opcode
+            // transform the CallbackInfoReturnable<init> constructor call
+            // if the CallbackInfoReturnable<init> call is directly followed by ASTORE
+            //      if the local var table is present, change the local var desc + signature
+            // change the desc of the handler call
+            // loop instructions after the handler call
+            // change all methods that have owner CIR_NAME
+            // break if we find type node NEW CIR_NAME
 
+            final String newCirName = getCIRNameForType(type);
+            final String newCirDesc = "L" + newCirName + ";";
+
+            boolean foundCstInsn = false;
+            int cirIndex = -1;
+            AbstractInsnNode node = handlerCall;
+            while (node.getPrevious() != null) {
+                node = node.getPrevious();
+                if (node instanceof MethodInsnNode mNode && mNode.owner.equals(CIR_NAME) && mNode.name.equals("<init>")) {
+                    mNode.owner = newCirName;
+                    foundCstInsn = true;
+                    final AbstractInsnNode nextNode = node.getNext();
+                    if (nextNode instanceof VarInsnNode varNode && nextNode.getOpcode() == ASTORE) {
+                        cirIndex = varNode.var;
+                    }
+                } else if (node instanceof TypeInsnNode typeNode && node.getOpcode() == NEW && typeNode.desc.equals(CIR_NAME)) {
+                    if (!foundCstInsn) throw new IllegalStateException();
+                    typeNode.desc = newCirName;
+                    break;
+                }
+            }
+
+            if (cirIndex != -1 && methodNode.localVariables != null) {
+                for (LocalVariableNode local : methodNode.localVariables) {
+                    if (local.index == cirIndex) {
+                        local.desc = newCirDesc;
+                        if (local.signature != null) {
+                            local.signature = newCirDesc;
+                        }
+                    }
+                }
+            }
+
+            handlerCall.desc = handlerCall.desc.replace(CIR_DESC, newCirDesc);
+
+            node = handlerCall;
+            while (node.getNext() != null) {
+                node = node.getNext();
+                if (node instanceof TypeInsnNode typeNode && node.getOpcode() == NEW && typeNode.desc.equals(CIR_NAME)) {
+                    break;
+                } else if (node instanceof MethodInsnNode mNode && mNode.owner.equals(CIR_NAME)) {
+                    mNode.owner = newCirName;
+                }
+            }
         }
     }
 
@@ -286,8 +326,6 @@ public final class PrimitiveCallBacksTransformer implements Opcodes {
     }
 
     private static boolean isPrimitiveType(Type type) {
-        // todo opti don't create return type object,
-        //  directly look at the string last character
         final int sort = type.getSort();
         return Type.BOOLEAN <= sort && sort <= Type.DOUBLE;
     }
@@ -302,20 +340,6 @@ public final class PrimitiveCallBacksTransformer implements Opcodes {
             case Type.FLOAT -> "com/mitchej123/hodgepodge/mixins/callback/CallbackInfoReturnableF";
             case Type.LONG -> "com/mitchej123/hodgepodge/mixins/callback/CallbackInfoReturnableJ";
             case Type.DOUBLE -> "com/mitchej123/hodgepodge/mixins/callback/CallbackInfoReturnableD";
-            default -> throw new IllegalArgumentException();
-        };
-    }
-
-    private static String getCIRDescForType(Type type) {
-        return switch (type.getSort()) {
-            case Type.BOOLEAN -> "Lcom/mitchej123/hodgepodge/mixins/callback/CallbackInfoReturnableZ;";
-            case Type.CHAR -> "Lcom/mitchej123/hodgepodge/mixins/callback/CallbackInfoReturnableC;";
-            case Type.BYTE -> "Lcom/mitchej123/hodgepodge/mixins/callback/CallbackInfoReturnableB;";
-            case Type.SHORT -> "Lcom/mitchej123/hodgepodge/mixins/callback/CallbackInfoReturnableS;";
-            case Type.INT -> "Lcom/mitchej123/hodgepodge/mixins/callback/CallbackInfoReturnableI;";
-            case Type.FLOAT -> "Lcom/mitchej123/hodgepodge/mixins/callback/CallbackInfoReturnableF;";
-            case Type.LONG -> "Lcom/mitchej123/hodgepodge/mixins/callback/CallbackInfoReturnableJ;";
-            case Type.DOUBLE -> "Lcom/mitchej123/hodgepodge/mixins/callback/CallbackInfoReturnableD;";
             default -> throw new IllegalArgumentException();
         };
     }
