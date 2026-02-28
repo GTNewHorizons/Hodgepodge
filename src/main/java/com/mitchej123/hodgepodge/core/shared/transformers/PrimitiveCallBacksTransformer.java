@@ -163,7 +163,7 @@ public final class PrimitiveCallBacksTransformer implements Opcodes {
                                     INVOKEVIRTUAL,
                                     boxedTypeName,
                                     valueGetterNameForType(type),
-                                    "(L" + boxedTypeName + ";)" + typeDesc,
+                                    "()" + typeDesc,
                                     false
                             ));
                         }
