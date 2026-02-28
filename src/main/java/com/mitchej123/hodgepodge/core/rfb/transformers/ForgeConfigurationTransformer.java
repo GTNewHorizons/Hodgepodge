@@ -45,11 +45,12 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
     }
 
     @Override
-    public void transformClass(@NotNull ExtensibleClassLoader classLoader, @NotNull RfbClassTransformer.Context context,
-            @Nullable Manifest manifest, @NotNull String className, @NotNull ClassNodeHandle classNode) {
+    public boolean transformClassIfNeeded(@NotNull ExtensibleClassLoader classLoader,
+            @NotNull RfbClassTransformer.Context context, @Nullable Manifest manifest, @NotNull String className,
+            @NotNull ClassNodeHandle classNode) {
         final ClassNode cn = classNode.getNode();
         if (cn == null) {
-            return;
+            return false;
         }
         if (className.equals("net.minecraftforge.common.config.Property")) {
             transformProperty(cn);
@@ -59,6 +60,13 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
         if (EarlyConfig.dumpASMClass) {
             HodgepodgeClassDump.dumpRFBClass(className, classNode, this);
         }
+        return true;
+    }
+
+    @Override
+    public void transformClass(@NotNull ExtensibleClassLoader classLoader, @NotNull RfbClassTransformer.Context context,
+            @Nullable Manifest manifest, @NotNull String className, @NotNull ClassNodeHandle classNode) {
+        transformClassIfNeeded(classLoader, context, manifest, className, classNode);
     }
 
     private static void transformProperty(ClassNode cn) {
