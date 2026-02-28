@@ -8,8 +8,10 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import java.util.ArrayList;
@@ -19,7 +21,9 @@ import java.util.ListIterator;
 import java.util.Map;
 
 public final class PrimitiveCallBacksTransformer implements Opcodes {
-    // TODO could this be a post transform in a mixin plugin?
+
+    // TODO boolean LOG_SPAM
+
     private static final String CIR_NAME = "org/spongepowered/asm/mixin/injection/callback/CallbackInfoReturnable";
     private static final String CIR_DESC = "L" + CIR_NAME + ";";
     private final ClassConstantPoolParser cstPoolParser = new ClassConstantPoolParser(CIR_NAME);
@@ -81,24 +85,93 @@ public final class PrimitiveCallBacksTransformer implements Opcodes {
         }
 
         public void transform() {
-            // TODO transform the handler method
             // change the descriptor
             // if signature not null change the signature
-            // if localvariabletable exists change the type of the
-            // changer toutes les method nodze qui ont pour owner CIR_NAME
+            // if localVariables exists change the desc & signature of the local var
+            // change all method insn where owner is CIR_NAME
 
             // if we have
-            // CallbackInfoReturnable.getReturnValue ()Ljava/lang/Object; // faut changer owner + descriptor + method name
-            // ensuite ya CHECKCAST java/lang/Integer // il faut le remove
-            // si ensuite ya il y a INVOKEVIRTUAL java/lang/Integer.intValue ()I, on le remove
-            //      si ya pas il faut rajouer a la main : INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
-            //      ajouter log output si on rajoute du boxing
+            // CallbackInfoReturnable.getReturnValue ()Ljava/lang/Object; // change owner + descriptor + method name
+            // followed by CHECKCAST java/lang/Integer // remove insn
+            // if followed by unboxing INVOKEVIRTUAL java/lang/Integer.intValue ()I // remove
+            //      if not we need to add boxing : INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
 
             // if we have
-            // CallbackInfoReturnable.setReturnValue (Ljava/lang/Object;)V // faut changer owner + descriptor + method name
-            // si la node précédente est INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
-            //      si ya pas faut rajouter a la main INVOKEVIRTUAL java/lang/Integer.intValue ()I
-            //      ajouter log output si on rajoute du unboxing
+            // CallbackInfoReturnable.setReturnValue (Ljava/lang/Object;)V // change owner + descriptor
+            // if previous insn is boxing INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer; // remove
+            //      if not we need to add unboxing INVOKEVIRTUAL java/lang/Integer.intValue ()I
+
+            final String newCirName = getCIRNameForType(type);
+            final String newCirDesc = "L" + newCirName + ";";
+            final String boxedTypeName = getBoxedNameForType(type);
+            final String typeDesc = type.getDescriptor();
+            final int cirIndex = getCIRIndex(methodNode);
+
+            methodNode.desc = methodNode.desc.replace(CIR_DESC, newCirDesc);
+            if (methodNode.signature != null) {
+                final String cirSignature = "L" + CIR_NAME + "<L" + boxedTypeName + ";>;";
+                methodNode.signature = methodNode.signature.replace(cirSignature, newCirDesc);
+            }
+            if (methodNode.localVariables != null) {
+                for (LocalVariableNode local : methodNode.localVariables) {
+                    if (local.index == cirIndex) {
+                        local.desc = newCirDesc;
+                        if (local.signature != null) {
+                            local.signature = newCirDesc;
+                        }
+                    }
+                }
+            }
+
+            final ListIterator<AbstractInsnNode> it = methodNode.instructions.iterator();
+            while (it.hasNext()) {
+                final AbstractInsnNode insn = it.next();
+                if (insn instanceof MethodInsnNode mNode && mNode.owner.equals(CIR_NAME)) {
+                    mNode.owner = newCirName;
+                    if (mNode.name.equals("getReturnValue") && mNode.desc.equals("()Ljava/lang/Object;")) { // TODO add support in case someone uses the primitive accessors
+                        mNode.name = "getReturnValue" + typeDesc;// TODO rename les methodes pour pas avoir a append le type
+                        mNode.desc = "()" + typeDesc;
+                        final AbstractInsnNode nextNode = it.next();
+                        if (nextNode.getOpcode() == CHECKCAST && nextNode instanceof TypeInsnNode typeNode && typeNode.desc.equals(boxedTypeName)) {
+                            it.remove();
+                            final AbstractInsnNode next2 = it.next();
+                            if (next2 instanceof MethodInsnNode mNode2 && next2.getOpcode() == INVOKEVIRTUAL
+                                && mNode2.owner.equals(boxedTypeName)
+                                && mNode2.name.contains("Value")
+                                && mNode2.desc.equals("()" + typeDesc)) {
+                                it.remove();
+                            } else {
+                                // TODO log that we added boxing
+                                it.add(new MethodInsnNode(
+                                        INVOKESTATIC,
+                                        boxedTypeName,
+                                        "valueOf",
+                                        "(" + typeDesc + ")L" + boxedTypeName + ";",
+                                        false
+                                ));
+                            }
+                        } else throw new IllegalStateException();
+                    } else if (mNode.name.equals("setReturnValue") && mNode.desc.equals("(Ljava/lang/Object;)V")) {
+                        mNode.desc = "(" + typeDesc + ")V";
+                        final AbstractInsnNode prev = mNode.getPrevious();
+                        if (prev instanceof MethodInsnNode mNode2 && prev.getOpcode() == INVOKESTATIC
+                            && mNode2.owner.equals(boxedTypeName)
+                            && mNode2.name.equals("valueOf")
+                            && mNode2.desc.equals("(" + typeDesc + ")L" + boxedTypeName + ";")) {
+                            methodNode.instructions.remove(mNode2);
+                        } else {
+                            // TODO log that we added boxing
+                            it.add(new MethodInsnNode(
+                                    INVOKEVIRTUAL,
+                                    boxedTypeName,
+                                    valueGetterNameForType(type),
+                                    "(L" + boxedTypeName + ";)" + typeDesc,
+                                    false
+                            ));
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -212,48 +285,6 @@ public final class PrimitiveCallBacksTransformer implements Opcodes {
         return (mn.access & ACC_STATIC) == ACC_STATIC;
     }
 
-    //public boolean transformClassNode(@NotNull String className, ClassNode classNode) {
-    //    boolean changed = false;
-    //    for (MethodNode mn : classNode.methods) {
-    //        final Type returnType = Type.getReturnType(mn.desc);
-    //        if (isPrimitiveType(returnType)) {
-    //            boolean mnChanged = false;
-    //            for (AbstractInsnNode insnNode : mn.instructions.toArray()) {
-    //                if (insnNode.getOpcode() == NEW && insnNode instanceof TypeInsnNode typeNode && typeNode.desc.equals(CIR_NAME)) {
-    //                    typeNode.desc = getCIRNameForType(returnType);
-    //                    mnChanged = true;
-    //                } else if (insnNode instanceof MethodInsnNode mNode) {
-    //                    if (mNode.owner.equals(CIR_NAME)) {
-    //                        mNode.owner = getCIRNameForType(returnType);
-    //                        mnChanged = true;
-    //                    } else if (mNode.desc.contains(CIR_DESC)) {
-    //                        methodCIRTypes.put(mNode.name + "#" + mNode.desc, returnType);
-    //                        mNode.desc = mNode.desc.replace(CIR_DESC, getCIRDescForType(returnType));
-    //                        mnChanged = true;
-    //                    }
-    //                }
-    //            }
-    //            if (mnChanged) {
-    //                changed = true;
-    //                if (mn.localVariables != null) {
-    //                    for (LocalVariableNode local : mn.localVariables) {
-    //                        if (local.desc.equals(CIR_DESC)) {
-    //                            local.desc = getCIRDescForType(returnType);
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //
-    //        final Type type = methodCIRTypes.get(mn.name + "#" + mn.desc);
-    //        if (type != null) {
-    //            mn.desc =
-    //        }
-    //
-    //    }
-    //    return changed;
-    //}
-
     private static boolean isPrimitiveType(Type type) {
         // todo opti don't create return type object,
         //  directly look at the string last character
@@ -285,6 +316,34 @@ public final class PrimitiveCallBacksTransformer implements Opcodes {
             case Type.FLOAT -> "Lcom/mitchej123/hodgepodge/mixins/callback/CallbackInfoReturnableF;";
             case Type.LONG -> "Lcom/mitchej123/hodgepodge/mixins/callback/CallbackInfoReturnableJ;";
             case Type.DOUBLE -> "Lcom/mitchej123/hodgepodge/mixins/callback/CallbackInfoReturnableD;";
+            default -> throw new IllegalArgumentException();
+        };
+    }
+
+    private static String getBoxedNameForType(Type type) {
+        return switch (type.getSort()) {
+            case Type.BOOLEAN -> "java/lang/Boolean";
+            case Type.CHAR -> "java/lang/Character";
+            case Type.BYTE -> "java/lang/Byte";
+            case Type.SHORT -> "java/lang/Short";
+            case Type.INT -> "java/lang/Integer";
+            case Type.FLOAT -> "java/lang/Float";
+            case Type.LONG -> "java/lang/Long";
+            case Type.DOUBLE -> "java/lang/Double";
+            default -> throw new IllegalArgumentException();
+        };
+    }
+
+    private static String valueGetterNameForType(Type type) {
+        return switch (type.getSort()) {
+            case Type.BOOLEAN -> "booleanValue";
+            case Type.CHAR -> "charValue";
+            case Type.BYTE -> "byteValue";
+            case Type.SHORT -> "shortValue";
+            case Type.INT -> "intValue";
+            case Type.FLOAT -> "floatValue";
+            case Type.LONG -> "longValue";
+            case Type.DOUBLE -> "doubleValue";
             default -> throw new IllegalArgumentException();
         };
     }
