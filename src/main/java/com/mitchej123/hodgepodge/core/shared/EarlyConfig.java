@@ -23,6 +23,7 @@ public final class EarlyConfig {
 
     public static final boolean noNukeBaseMod;
     public static final boolean noLeanerForgeConfiguration;
+    public static final boolean noPrimitiveCallbackinfo;
     public static final boolean debugLogConfigParsingTimes;
     public static final boolean dumpASMClass;
 
@@ -44,6 +45,8 @@ public final class EarlyConfig {
         config.setProperty("noNukeBaseMod", String.valueOf(noNukeBaseMod));
         noLeanerForgeConfiguration = Boolean.parseBoolean(config.getProperty("noLeanerForgeConfiguration"));
         config.setProperty("noLeanerForgeConfiguration", String.valueOf(noLeanerForgeConfiguration));
+        noPrimitiveCallbackinfo = Boolean.parseBoolean(config.getProperty("noPrimitiveCallbackinfo"));
+        config.setProperty("noPrimitiveCallbackinfo", String.valueOf(noPrimitiveCallbackinfo));
         debugLogConfigParsingTimes = Boolean.getBoolean("hodgepodge.logConfigTimes");
         dumpASMClass = Boolean.getBoolean("hodgepodge.dumpClass");
         // ==========================================
