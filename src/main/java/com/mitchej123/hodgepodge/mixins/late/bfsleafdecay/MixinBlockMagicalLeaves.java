@@ -30,6 +30,7 @@ public class MixinBlockMagicalLeaves {
             cancellable = true)
     private void hodgepodge$bfsDecay(World world, int x, int y, int z, Random random, CallbackInfo ci,
             @Local(name = "var6") int meta, @Local(name = "var7") byte range) {
-        LeafDecayHooks.handleDecayChecked((Block) (Object) this, world, x, y, z, meta, range, ci);
+        LeafDecayHooks.handleDecayChecked((Block) (Object) this, world, x, y, z, meta, range);
+        ci.cancel();
     }
 }

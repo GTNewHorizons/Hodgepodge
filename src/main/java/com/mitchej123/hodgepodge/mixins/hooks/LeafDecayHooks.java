@@ -5,8 +5,6 @@ import java.util.Arrays;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 /**
  * BFS-based leaf decay check. Searches outward from the leaf position through connected leaves, returning true as soon
  * as a sustaining log is found within range.
@@ -25,8 +23,7 @@ public class LeafDecayHooks {
     /**
      * BFS decay check, called after isRemote and meta-bit checks have already passed.
      */
-    public static void handleDecayChecked(Block block, World world, int x, int y, int z, int meta, int range,
-            CallbackInfo ci) {
+    public static void handleDecayChecked(Block block, World world, int x, int y, int z, int meta, int range) {
         final int r = range + 1;
         if (world.checkChunksExist(x - r, y - r, z - r, x + r, y + r, z + r)) {
             if (isConnectedToLog(world, x, y, z, range)) {
@@ -38,7 +35,6 @@ public class LeafDecayHooks {
         } else {
             world.setBlockMetadataWithNotify(x, y, z, meta & -9, 4);
         }
-        ci.cancel();
     }
 
     /**
