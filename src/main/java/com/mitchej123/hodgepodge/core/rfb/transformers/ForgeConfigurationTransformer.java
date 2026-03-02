@@ -16,7 +16,6 @@ import org.objectweb.asm.tree.TypeInsnNode;
 import com.gtnewhorizons.retrofuturabootstrap.api.ClassNodeHandle;
 import com.gtnewhorizons.retrofuturabootstrap.api.ExtensibleClassLoader;
 import com.gtnewhorizons.retrofuturabootstrap.api.RfbClassTransformer;
-import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
 import com.mitchej123.hodgepodge.core.shared.HodgepodgeClassDump;
 
 /**
@@ -41,7 +40,8 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
             @NotNull RfbClassTransformer.Context context, @Nullable Manifest manifest, @NotNull String className,
             @NotNull ClassNodeHandle classNode) {
         return classNode.isPresent() && (className.equals("net.minecraftforge.common.config.Property")
-                || className.equals("net.minecraftforge.common.config.ConfigCategory"));
+                || className.equals("net.minecraftforge.common.config.ConfigCategory")
+                || className.equals("net.minecraftforge.common.config.Property$Type"));
     }
 
     @Override
@@ -51,14 +51,12 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
         if (cn == null) {
             return;
         }
-        if (className.equals("net.minecraftforge.common.config.Property")) {
-            transformProperty(cn);
-        } else if (className.equals("net.minecraftforge.common.config.ConfigCategory")) {
-            transformConfigCategory(cn);
+        switch (className) {
+            case "net.minecraftforge.common.config.Property" -> transformProperty(cn);
+            case "net.minecraftforge.common.config.Property$Type" -> transformPropertyType(cn);
+            case "net.minecraftforge.common.config.ConfigCategory" -> transformConfigCategory(cn);
         }
-        if (EarlyConfig.dumpASMClass) {
-            HodgepodgeClassDump.dumpRFBClass(className, classNode, this);
-        }
+        HodgepodgeClassDump.dumpRFBClass(className, classNode, this);
     }
 
     private static void transformProperty(ClassNode cn) {
@@ -150,6 +148,43 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
         return node.getOpcode() == INVOKESPECIAL && node.owner.equals("java/util/TreeMap")
                 && node.name.equals("<init>")
                 && node.desc.equals("()V");
+    }
+
+    /**
+     * Replaces the values() call with direct array access
+     * in the method Property$Type.tryParse
+     */
+    private static void transformPropertyType(ClassNode cn) {
+
+        final MethodNode valuesMethod = EnumASMHelper.findValuesMethod(cn);
+
+        if (valuesMethod == null) {
+            return;
+        }
+
+        final String arrayName = EnumASMHelper.findInternalArrayName(cn.name, valuesMethod);
+        if (arrayName == null) {
+            return;
+        }
+
+        for (MethodNode mn : cn.methods) {
+            if (mn.name.equals("tryParse") && mn.desc.equals("(C)Lnet/minecraftforge/common/config/Property$Type;")) {
+                for (AbstractInsnNode node : mn.instructions.toArray()) {
+                    if (node instanceof MethodInsnNode mNode && node.getOpcode() == INVOKESTATIC
+                            && mNode.owner.equals("net/minecraftforge/common/config/Property$Type")
+                            && mNode.name.equals("values")
+                            && mNode.desc.equals("()[Lnet/minecraftforge/common/config/Property$Type;")) {
+                        mn.instructions.set(
+                                node,
+                                new FieldInsnNode(
+                                        GETSTATIC,
+                                        "net/minecraftforge/common/config/Property$Type",
+                                        arrayName,
+                                        "[Lnet/minecraftforge/common/config/Property$Type;"));
+                    }
+                }
+            }
+        }
     }
 
     private static boolean isDouble$toString(MethodInsnNode mInsn) {
