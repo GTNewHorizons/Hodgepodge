@@ -151,8 +151,7 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
     }
 
     /**
-     * Replaces the values() call with direct array access
-     * in the method Property$Type.tryParse
+     * Replaces the values() call with direct array access in the method Property$Type.tryParse
      */
     private static void transformPropertyType(ClassNode cn) {
 
