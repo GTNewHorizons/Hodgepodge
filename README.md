@@ -89,3 +89,13 @@ Hodgepodge is LGPL-3.
 ## Other changes
 
 Various speedups and crash fixes are implemented, such as preventing "chunk bans" by increasing the packet size limits.
+
+## Debug JVM args
+
+A list of JVM args used to activate debugging tools
+
+- `-Dhodgepodge.dumpClass=true` dumps the class transformed by the various ASM class transformers of this mod
+- `-Dhodgepodge.debugtextures=true` creates `TexturesDebug.csv` and `DynamicTextures.txt` files containing the size of all textures
+- `-Dhodgepodge.logModTimes=true` creates two `modtimes_.csv` files containing the times taken by each mod loading step
+- `-Dhodgepodge.logEventTimes=true` creates a `EventRegistrationTime.txt` file containing the time taken to register each event handler to the Event Bus
+- `-Dhodgepodge.logConfigTimes=true` creates a `ConfigParsingTimes.csv` file containing the time taken to parse each config file
