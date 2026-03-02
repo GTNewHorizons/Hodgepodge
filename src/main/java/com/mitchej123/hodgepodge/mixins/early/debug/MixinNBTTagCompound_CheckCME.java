@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft.nbt;
+package com.mitchej123.hodgepodge.mixins.early.debug;
 
 import java.io.DataOutput;
 import java.io.IOException;

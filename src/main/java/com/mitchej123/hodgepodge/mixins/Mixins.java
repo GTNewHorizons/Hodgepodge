@@ -385,7 +385,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.hidePotionParticlesFromSelf)
             .setPhase(Phase.EARLY)),
     DIMENSION_MANAGER_DEBUG(new MixinBuilder()
-            .addCommonMixins("minecraft.MixinDimensionManager")
+            .addCommonMixins("debug.MixinDimensionManager")
             .setApplyIf(() -> DebugConfig.dimensionManagerDebug)
             .setPhase(Phase.EARLY)),
     OPTIMIZE_TILEENTITY_REMOVAL(new MixinBuilder()
@@ -414,7 +414,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.squashBedErrorMessage)
             .setPhase(Phase.EARLY)),
     CHUNK_SAVE_CME_DEBUG(new MixinBuilder("Add debugging code to Chunk Save CME")
-            .addCommonMixins("minecraft.nbt.MixinNBTTagCompound_CheckCME")
+            .addCommonMixins("debug.MixinNBTTagCompound_CheckCME")
             .setApplyIf(() -> DebugConfig.chunkSaveCMEDebug)
             .addExcludedMod(TargetedMod.DRAGONAPI)
             .setPhase(Phase.EARLY)),
@@ -454,7 +454,7 @@ public enum Mixins implements IMixins {
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
     RENDER_DEBUG(new MixinBuilder()
-            .addClientMixins("minecraft.MixinRenderGlobal")
+            .addClientMixins("debug.MixinRenderGlobal")
             .setApplyIf(() -> DebugConfig.renderDebug)
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
@@ -820,11 +820,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.hungerGameRule)
             .setPhase(Phase.EARLY)),
     DEBUG_EVENT_REGISTRATION(new MixinBuilder()
-            .addCommonMixins("fml.MixinEventBus_DebugRegistration")
+            .addCommonMixins("debug.MixinEventBus_DebugRegistration")
             .setApplyIf(() -> Boolean.getBoolean("hodgepodge.logEventTimes"))
             .setPhase(Phase.EARLY)),
     DEBUG_DUMP_TEXTURES_SIZES(new MixinBuilder()
-            .addClientMixins("minecraft.debug.MixinDynamicTexture", "minecraft.debug.MixinTextureAtlasSprite")
+            .addClientMixins("debug.MixinDynamicTexture", "debug.MixinTextureAtlasSprite")
             .setApplyIf(() -> Boolean.getBoolean("hodgepodge.debugtextures"))
             .setPhase(Phase.EARLY)),
     FIX_HOUSE_CHAR_RENDERING(new MixinBuilder()
