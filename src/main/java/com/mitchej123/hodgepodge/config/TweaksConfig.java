@@ -219,6 +219,11 @@ public class TweaksConfig {
     @Config.DefaultInt(40)
     public static int anvilMaxLevel = 40;
 
+    @Config.Comment("Removes the color codes from the chat logs")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean cleanChatLogs = true;
+
     // NBT String Pooling
 
     @Config.Comment("Enable string pooling for NBT TagCompound Keys")

@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft.debug;
+package com.mitchej123.hodgepodge.mixins.early.debug;
 
 import java.awt.image.BufferedImage;
 import java.util.List;

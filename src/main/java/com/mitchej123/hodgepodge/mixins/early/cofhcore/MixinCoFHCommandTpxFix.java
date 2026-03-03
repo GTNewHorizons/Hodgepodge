@@ -22,6 +22,10 @@ import cofh.lib.util.helpers.EntityHelper;
 @Mixin(value = CommandTPX.class, remap = false)
 public abstract class MixinCoFHCommandTpxFix implements ISubCommand {
 
+    /**
+     * @author SST-03
+     * @reason change command behavior
+     */
     @Overwrite
     public void handleCommand(ICommandSender sender, String[] arguments) {
         final EntityPlayerMP playerSender = CommandBase.getCommandSenderAsPlayer(sender);

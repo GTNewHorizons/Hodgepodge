@@ -22,44 +22,43 @@ import cpw.mods.fml.common.FMLCommonHandler;
 
 public class TravellersGear {
 
-    private static NBTTagCompound cachedRoot;
-    private static NBTTagCompound cachedData;
-    private static NBTTagList cachedPlayerList;
     private static File dataFile;
-    private static boolean dirty;
+    private static NBTTagCompound nbtSaveData;
 
     public static void returnTGItems(EntityPlayer player) {
-        if (cachedPlayerList == null) {
+        if (nbtSaveData == null) {
             Common.log.info("[TG Recovery] No player data loaded.");
             return;
         }
 
+        NBTTagCompound data = nbtSaveData.getCompoundTag("data");
+        NBTTagList playerList = data.getTagList("playerList", 10);
         UUID playerUUID = player.getUniqueID();
-        boolean found = false;
-        NBTTagList updatedList = new NBTTagList();
 
-        for (int i = 0; i < cachedPlayerList.tagCount(); i++) {
-            NBTTagCompound playerTag = cachedPlayerList.getCompoundTagAt(i);
-            UUID tagUUID = new UUID(playerTag.getLong("UUIDMost"), playerTag.getLong("UUIDLeast"));
-
-            if (playerUUID.equals(tagUUID)) {
-                restoreInventory(player, playerTag);
-                found = true;
-            } else {
-                updatedList.appendTag(playerTag);
+        boolean changed = false;
+        for (int i = playerList.tagCount() - 1; i >= 0; i--) {
+            NBTTagCompound playerTag = playerList.getCompoundTagAt(i);
+            if (playerTag.hasKey("UUIDMost") && playerTag.hasKey("UUIDLeast")) {
+                UUID tagUUID = new UUID(playerTag.getLong("UUIDMost"), playerTag.getLong("UUIDLeast"));
+                if (playerUUID.equals(tagUUID)) {
+                    restoreInventory(player, playerTag);
+                    playerList.removeTag(i);
+                    changed = true;
+                }
             }
         }
 
-        if (found) {
-            cachedPlayerList = updatedList;
-            dirty = true;
-            saveIfDirty();
+        if (changed) {
+            if (playerList.tagCount() == 0) {
+                deleteFile();
+            } else {
+                saveDataToFile();
+            }
         }
     }
 
     private static void restoreInventory(EntityPlayer player, NBTTagCompound playerTag) {
         if (!playerTag.hasKey("Inventory", 9)) return;
-
         NBTTagList inventory = playerTag.getTagList("Inventory", 10);
         for (int j = 0; j < inventory.tagCount(); j++) {
             ItemStack stack = ItemStack.loadItemStackFromNBT(inventory.getCompoundTagAt(j));
@@ -79,7 +78,6 @@ public class TravellersGear {
 
         if (!dataFile.exists() || dataFile.length() == 0) {
             Common.log.info("[TG Recovery] No TG-SaveData.dat file found.");
-            clearCache();
             return;
         }
 
@@ -94,33 +92,24 @@ public class TravellersGear {
             // Should solve problems caused by versions of Hodgepodge between 2.6.96 and 2.7.16. Sorry!
             if (isCompressed) {
                 try (FileInputStream in = new FileInputStream(dataFile)) {
-                    cachedRoot = CompressedStreamTools.readCompressed(in);
+                    nbtSaveData = CompressedStreamTools.readCompressed(in);
                     Common.log.info("[TG Recovery] Loaded compressed TG-SaveData.dat");
                 }
             } else {
-                cachedRoot = CompressedStreamTools.read(dataFile);
+                nbtSaveData = CompressedStreamTools.read(dataFile);
                 Common.log.warn("[TG Recovery] Loaded uncompressed TG-SaveData.dat (fallback)");
             }
-            cachedData = cachedRoot.getCompoundTag("data");
-            cachedPlayerList = cachedData.getTagList("playerList", 10);
-            Common.log.info("[TG Recovery] Loaded TG-SaveData.dat with {} entries.", cachedPlayerList.tagCount());
+            NBTTagCompound data = nbtSaveData.getCompoundTag("data");
+            NBTTagList playerList = data.getTagList("playerList", 10);
+            Common.log.info("[TG Recovery] Loaded TG-SaveData.dat with {} entries.", playerList.tagCount());
         } catch (Exception e) {
             Common.log.error("[TG Recovery] Failed to load TG-SaveData.dat.", e);
-            clearCache();
         }
     }
 
-    private static void saveIfDirty() {
-        if (!dirty || dataFile == null) return;
-
-        if (cachedPlayerList.tagCount() == 0) {
-            deleteFile();
-            return;
-        }
-
+    private static void saveDataToFile() {
         try (FileOutputStream out = new FileOutputStream(dataFile)) {
-            CompressedStreamTools.writeCompressed(cachedRoot, out);
-            dirty = false;
+            CompressedStreamTools.writeCompressed(nbtSaveData, out);
             Common.log.info("[TG Recovery] Saved updated TG-SaveData.dat.");
         } catch (IOException e) {
             Common.log.error("[TG Recovery] Failed to save TG-SaveData.dat.", e);
@@ -130,22 +119,13 @@ public class TravellersGear {
     private static void deleteFile() {
         if (dataFile.delete()) {
             Common.log.info("[TG Recovery] TG-SaveData.dat is empty, file deleted.");
+            nbtSaveData = null;
         } else {
             Common.log.warn("[TG Recovery] Failed to delete empty TG-SaveData.dat.");
         }
-
-        clearCache();
-
         if (FMLCommonHandler.instance().getSide().isServer()) {
             FixesConfig.returnTravellersGearItems = false;
             Common.log.info("[TG Recovery] Automatically disabled recovery config on server with no TG-SaveData.dat.");
         }
-    }
-
-    private static void clearCache() {
-        cachedRoot = new NBTTagCompound();
-        cachedData = new NBTTagCompound();
-        cachedPlayerList = new NBTTagList();
-        dirty = false;
     }
 }

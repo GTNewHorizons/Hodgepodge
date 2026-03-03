@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft;
+package com.mitchej123.hodgepodge.mixins.early.debug;
 
 import java.util.Collections;
 import java.util.Set;

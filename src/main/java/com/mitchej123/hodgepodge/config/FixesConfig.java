@@ -325,6 +325,11 @@ public class FixesConfig {
                             // settings
     public static int limitRecursiveBlockUpdateDepth;
 
+    @Config.Comment("Prevent recursive immediate block updates during WorldGenLiquids spring generation")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixWorldGenLiquidsRecursion;
+
     @Config.Comment("Fix the buttons not being centered in the GuiConfirmOpenLink")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -384,6 +389,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixEggParticles;
 
+    @Config.Comment("Fixes entity having buggy gravity")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixEntityGravity;
+
     @Config.Comment("Fix EventBus keeping object references after unregistering event handlers.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -394,7 +404,7 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixHouseCharRendering;
 
-    @Config.Comment("Remove invalid Entites in chunks.")
+    @Config.Comment("Remove invalid Entities in chunks.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean removeInvalidChunkEntites;
