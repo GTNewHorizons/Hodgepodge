@@ -385,7 +385,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.hidePotionParticlesFromSelf)
             .setPhase(Phase.EARLY)),
     DIMENSION_MANAGER_DEBUG(new MixinBuilder()
-            .addCommonMixins("minecraft.MixinDimensionManager")
+            .addCommonMixins("debug.MixinDimensionManager")
             .setApplyIf(() -> DebugConfig.dimensionManagerDebug)
             .setPhase(Phase.EARLY)),
     OPTIMIZE_TILEENTITY_REMOVAL(new MixinBuilder()
@@ -414,7 +414,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.squashBedErrorMessage)
             .setPhase(Phase.EARLY)),
     CHUNK_SAVE_CME_DEBUG(new MixinBuilder("Add debugging code to Chunk Save CME")
-            .addCommonMixins("minecraft.nbt.MixinNBTTagCompound_CheckCME")
+            .addCommonMixins("debug.MixinNBTTagCompound_CheckCME")
             .setApplyIf(() -> DebugConfig.chunkSaveCMEDebug)
             .addExcludedMod(TargetedMod.DRAGONAPI)
             .setPhase(Phase.EARLY)),
@@ -454,7 +454,7 @@ public enum Mixins implements IMixins {
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
     RENDER_DEBUG(new MixinBuilder()
-            .addClientMixins("minecraft.MixinRenderGlobal")
+            .addClientMixins("debug.MixinRenderGlobal")
             .setApplyIf(() -> DebugConfig.renderDebug)
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
@@ -637,6 +637,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinWorldServer_LimitUpdateRecursion")
             .setApplyIf(() -> FixesConfig.limitRecursiveBlockUpdateDepth >= 0)
             .setPhase(Phase.EARLY)),
+    FIX_WORLDGEN_LIQUIDS_RECURSION(new MixinBuilder("Prevent recursive spring generation updates")
+            .addCommonMixins("minecraft.MixinWorldGenLiquids_NoImmediateUpdates")
+            .setApplyIf(() -> FixesConfig.fixWorldGenLiquidsRecursion)
+            .setPhase(Phase.EARLY)),
     ADD_MOD_CONFIG_SEARCHBAR(new MixinBuilder("Adds a search bar to the mod config GUI")
             .addClientMixins("fml.MixinGuiConfig")
             .setApplyIf(() -> TweaksConfig.addModConfigSearchBar)
@@ -696,6 +700,38 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.fastload.MixinBlock_FastLookup")
             .setApplyIf(() -> SpeedupsConfig.fastBlockLookup)
             .setPhase(Phase.EARLY)),
+    SPEEDUP_LEAF_DECAY(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinBlockLeaves_BFSDecay")
+            .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
+            .setPhase(Phase.EARLY)),
+    SPEEDUP_BOP_LEAF_DECAY(new MixinBuilder()
+            .addCommonMixins(
+                    "bfsleafdecay.MixinBlockBOPAppleLeaves",
+                    "bfsleafdecay.MixinBlockBOPColorizedLeaves",
+                    "bfsleafdecay.MixinBlockBOPLeaves",
+                    "bfsleafdecay.MixinBlockBOPPermsimmonLeaves")
+            .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_PAM_NETHER_LEAF_DECAY(new MixinBuilder()
+            .addCommonMixins("bfsleafdecay.MixinBlockNetherLeaves")
+            .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
+            .addRequiredMod(TargetedMod.HARVESTTHENETHER)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_THAUMCRAFT_LEAF_DECAY(new MixinBuilder()
+            .addCommonMixins("bfsleafdecay.MixinBlockMagicalLeaves")
+            .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_WITCHERY_LEAF_DECAY(new MixinBuilder()
+            .addCommonMixins("bfsleafdecay.MixinBlockWitchLeaves")
+            .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
+            .addRequiredMod(TargetedMod.WITCHERY)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_FALLING_BLOCK_TICK(new MixinBuilder("Skip useless falling block tick scheduling")
+            .addCommonMixins("minecraft.MixinBlockFalling_SkipUselessTick")
+            .setApplyIf(() -> SpeedupsConfig.skipUselessFallingBlockTicks)
+            .setPhase(Phase.EARLY)),
     SPEEDUP_PENDING_TICK_LOOKUP(new MixinBuilder("Spatial index for pending block updates")
             .addCommonMixins("minecraft.MixinWorldServer_PendingTickIndex")
             .setApplyIf(() -> SpeedupsConfig.speedupPendingTickLookup)
@@ -704,6 +740,11 @@ public enum Mixins implements IMixins {
     SPEEDUP_CHUNK_UNLOAD(new MixinBuilder("Optimized chunk unloading with fastutil collections")
             .addCommonMixins("minecraft.fastload.MixinChunkProviderServer_FastUnload")
             .setApplyIf(() -> SpeedupsConfig.speedupChunkUnload)
+            .addExcludedMod(TargetedMod.BUKKIT)
+            .setPhase(Phase.EARLY)),
+    THROTTLE_CHUNK_GENERATION(new MixinBuilder("Spread chunk generation across ticks to prevent lag spikes")
+            .addCommonMixins("minecraft.fastload.MixinPlayerManager_ThrottleChunkGen")
+            .setApplyIf(() -> SpeedupsConfig.throttleChunkGeneration)
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
     FAST_CHUNK_SENDING(new MixinBuilder("Removes hard caps on chunk sending speed")
@@ -779,11 +820,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.hungerGameRule)
             .setPhase(Phase.EARLY)),
     DEBUG_EVENT_REGISTRATION(new MixinBuilder()
-            .addCommonMixins("fml.MixinEventBus_DebugRegistration")
+            .addCommonMixins("debug.MixinEventBus_DebugRegistration")
             .setApplyIf(() -> Boolean.getBoolean("hodgepodge.logEventTimes"))
             .setPhase(Phase.EARLY)),
     DEBUG_DUMP_TEXTURES_SIZES(new MixinBuilder()
-            .addClientMixins("minecraft.debug.MixinDynamicTexture", "minecraft.debug.MixinTextureAtlasSprite")
+            .addClientMixins("debug.MixinDynamicTexture", "debug.MixinTextureAtlasSprite")
             .setApplyIf(() -> Boolean.getBoolean("hodgepodge.debugtextures"))
             .setPhase(Phase.EARLY)),
     FIX_HOUSE_CHAR_RENDERING(new MixinBuilder()
@@ -1173,6 +1214,21 @@ public enum Mixins implements IMixins {
                     "biomesoplenty.MixinBOPEventHandler",
                     "biomesoplenty.MixinTrailManager")
             .setApplyIf(() -> TweaksConfig.removeBOPDonatorEffect)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_BOP_ENTITY_PIXIE(new MixinBuilder("Use fast atan2 for Pixie yaw calculation")
+            .addCommonMixins("biomesoplenty.MixinEntityPixie_FastAtan2")
+            .setApplyIf(() -> SpeedupsConfig.speedupBOPEntityPixie)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_BOP_BIOME_DECORATION(new MixinBuilder("Cache allocations in BOP biome decoration")
+            .addCommonMixins(
+                    "biomesoplenty.MixinRandomForcedPositiveOwned_Reusable",
+                    "biomesoplenty.MixinBOPBiomeDecorator_CacheRandom",
+                    "biomesoplenty.MixinWorldGenBOPFlora_CacheItemStack",
+                    "biomesoplenty.MixinWorldGenBOPTallGrass_CacheItemStack",
+                    "biomesoplenty.MixinBiomeFeatures_CacheFields")
+            .setApplyIf(() -> SpeedupsConfig.speedupBOPBiomeDecoration)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
 

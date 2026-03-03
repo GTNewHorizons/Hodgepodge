@@ -325,6 +325,11 @@ public class FixesConfig {
                             // settings
     public static int limitRecursiveBlockUpdateDepth;
 
+    @Config.Comment("Prevent recursive immediate block updates during WorldGenLiquids spring generation")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixWorldGenLiquidsRecursion;
+
     @Config.Comment("Fix the buttons not being centered in the GuiConfirmOpenLink")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
