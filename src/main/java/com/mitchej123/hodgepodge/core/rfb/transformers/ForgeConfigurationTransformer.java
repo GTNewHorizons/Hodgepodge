@@ -1,5 +1,6 @@
 package com.mitchej123.hodgepodge.core.rfb.transformers;
 
+import java.util.ListIterator;
 import java.util.jar.Manifest;
 
 import org.intellij.lang.annotations.Pattern;
@@ -168,13 +169,14 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
 
         for (MethodNode mn : cn.methods) {
             if (mn.name.equals("tryParse") && mn.desc.equals("(C)Lnet/minecraftforge/common/config/Property$Type;")) {
-                for (AbstractInsnNode node : mn.instructions.toArray()) {
+                final ListIterator<AbstractInsnNode> it = mn.instructions.iterator();
+                while (it.hasNext()) {
+                    final AbstractInsnNode node = it.next();
                     if (node instanceof MethodInsnNode mNode && node.getOpcode() == INVOKESTATIC
                             && mNode.owner.equals("net/minecraftforge/common/config/Property$Type")
                             && mNode.name.equals("values")
                             && mNode.desc.equals("()[Lnet/minecraftforge/common/config/Property$Type;")) {
-                        mn.instructions.set(
-                                node,
+                        it.set(
                                 new FieldInsnNode(
                                         GETSTATIC,
                                         "net/minecraftforge/common/config/Property$Type",
@@ -182,6 +184,7 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
                                         "[Lnet/minecraftforge/common/config/Property$Type;"));
                     }
                 }
+                return;
             }
         }
     }

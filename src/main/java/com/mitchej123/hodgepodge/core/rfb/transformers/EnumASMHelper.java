@@ -1,5 +1,7 @@
 package com.mitchej123.hodgepodge.core.rfb.transformers;
 
+import java.util.ListIterator;
+
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -19,7 +21,9 @@ public class EnumASMHelper implements Opcodes {
     }
 
     public static String findInternalArrayName(String classname, MethodNode valuesMethod) {
-        for (AbstractInsnNode node : valuesMethod.instructions.toArray()) {
+        final ListIterator<AbstractInsnNode> it = valuesMethod.instructions.iterator();
+        while (it.hasNext()) {
+            final AbstractInsnNode node = it.next();
             if (node.getOpcode() == INVOKEVIRTUAL && node instanceof MethodInsnNode mNode
             // && mNode.owner.equals("[L" + classname + ";") // in kotlin the owner is Object
                     && mNode.name.equals("clone")
