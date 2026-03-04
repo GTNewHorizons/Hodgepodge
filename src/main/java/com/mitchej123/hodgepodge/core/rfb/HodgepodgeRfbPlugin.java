@@ -29,7 +29,7 @@ public class HodgepodgeRfbPlugin implements RfbPlugin {
         if (!EarlyConfig.noLeanerForgeConfiguration) {
             list.add(new ForgeConfigurationTransformer());
         }
-        if (!EarlyConfig.noFasterForgeEventSubscriptionTransformer) {
+        if (!EarlyConfig.noFasterEventSubscriptionTransformer) {
             list.add(new ForgeEventSubscriptionTransformer());
         }
         if (EarlyConfig.debugLogConfigParsingTimes) {

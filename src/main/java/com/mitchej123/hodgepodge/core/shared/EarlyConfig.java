@@ -23,7 +23,7 @@ public final class EarlyConfig {
 
     public static final boolean noNukeBaseMod;
     public static final boolean noLeanerForgeConfiguration;
-    public static final boolean noFasterForgeEventSubscriptionTransformer;
+    public static final boolean noFasterEventSubscriptionTransformer;
     public static final boolean debugLogConfigParsingTimes;
     public static final boolean dumpASMClass;
 
@@ -43,13 +43,16 @@ public final class EarlyConfig {
         // =========== Config Definitions ===========
         noNukeBaseMod = Boolean.parseBoolean(config.getProperty("noNukeBaseMod"));
         config.setProperty("noNukeBaseMod", String.valueOf(noNukeBaseMod));
+
         noLeanerForgeConfiguration = Boolean.parseBoolean(config.getProperty("noLeanerForgeConfiguration"));
         config.setProperty("noLeanerForgeConfiguration", String.valueOf(noLeanerForgeConfiguration));
-        noFasterForgeEventSubscriptionTransformer = Boolean
-                .parseBoolean(config.getProperty("noFasterForgeEventSubscriptionTransformer"));
+
+        noFasterEventSubscriptionTransformer = Boolean
+                .parseBoolean(config.getProperty("noFasterEventSubscriptionTransformer"));
         config.setProperty(
-                "noFasterForgeEventSubscriptionTransformer",
-                String.valueOf(noFasterForgeEventSubscriptionTransformer));
+                "noFasterEventSubscriptionTransformer",
+                String.valueOf(noFasterEventSubscriptionTransformer));
+
         debugLogConfigParsingTimes = Boolean.getBoolean("hodgepodge.logConfigTimes");
         dumpASMClass = Boolean.getBoolean("hodgepodge.dumpClass");
         // ==========================================

@@ -5,7 +5,6 @@ import java.util.jar.Manifest;
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -13,6 +12,7 @@ import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
@@ -21,6 +21,9 @@ import org.objectweb.asm.tree.VarInsnNode;
 import com.gtnewhorizons.retrofuturabootstrap.api.ClassNodeHandle;
 import com.gtnewhorizons.retrofuturabootstrap.api.ExtensibleClassLoader;
 import com.gtnewhorizons.retrofuturabootstrap.api.RfbClassTransformer;
+import com.mitchej123.hodgepodge.core.shared.HodgepodgeClassDump;
+
+import cpw.mods.fml.relauncher.FMLRelaunchLog;
 
 /**
  * Reduces Forge's EventSubscriptionTransformer transforming time in the full pack from 31% to 6%
@@ -47,24 +50,37 @@ public class ForgeEventSubscriptionTransformer implements RfbClassTransformer {
     @Override
     public void transformClass(@NotNull ExtensibleClassLoader classLoader, @NotNull RfbClassTransformer.Context context,
             @Nullable Manifest manifest, @NotNull String className, @NotNull ClassNodeHandle classNodeHandle) {
-        ClassNode classNode = classNodeHandle.getNode();
+        final ClassNode classNode = classNodeHandle.getNode();
+        boolean transformedTransformMethod = false;
+        boolean transformedBuildEventsMethod = false;
         if (classNode == null) {
             return;
         }
 
         for (MethodNode method : classNode.methods) {
             if (method.name.equals("transform") && method.desc.equals("(Ljava/lang/String;Ljava/lang/String;[B)[B")) {
-                transformTransformMethod(method);
+                transformedTransformMethod = transformTransformMethod(method);
+                if (!transformedTransformMethod) break;
             }
             if (method.name.equals("buildEvents") && method.desc.equals("(Lorg/objectweb/asm/tree/ClassNode;)Z")) {
-                transformBuildEventsMethod(method);
+                transformedBuildEventsMethod = transformBuildEventsMethod(method);
+                if (!transformedBuildEventsMethod) break;
             }
         }
 
-        classNodeHandle.setWriterFlags(ClassWriter.COMPUTE_FRAMES);
+        if (transformedTransformMethod || transformedBuildEventsMethod) {
+            classNodeHandle.computeFrames();
+            HodgepodgeClassDump.dumpRFBClass(className, classNodeHandle, this);
+        }
+        if (!transformedTransformMethod || !transformedBuildEventsMethod) {
+            FMLRelaunchLog.severe(
+                    "[ForgeEventSubscriptionTransformer] Something went wrong while transforming class: {} | {}",
+                    transformedTransformMethod,
+                    transformedBuildEventsMethod);
+        }
     }
 
-    private void transformTransformMethod(MethodNode method) {
+    private boolean transformTransformMethod(MethodNode method) {
         // spotless:off
         // public byte[] transform(String name, String transformedName, byte[] bytes) {
         //     if (...) return bytes;
@@ -84,7 +100,7 @@ public class ForgeEventSubscriptionTransformer implements RfbClassTransformer {
         }
 
         if (anchor == null) {
-            throw new IllegalStateException("Could not find ClassReader instantiation in transform()");
+            return false;
         }
 
         // We want to insert this code:
@@ -117,52 +133,51 @@ public class ForgeEventSubscriptionTransformer implements RfbClassTransformer {
         instructions.add(continueLabel);
 
         method.instructions.insertBefore(anchor, instructions);
+        return true;
     }
 
-    private void transformBuildEventsMethod(MethodNode method) {
+    private boolean transformBuildEventsMethod(MethodNode method) {
         // spotless:off
         // private boolean buildEvents(ClassNode classNode) throws Exception {
-        //     <we want jump from here ...>
         //     Class<?> parent = this.getClass().getClassLoader().loadClass(classNode.superName.replace('/', '.'));
         //     if (!Event.class.isAssignableFrom(parent)) return false;
-        //     <continueLabel> <-- ...straight here
+        //     // we want to delete all the code above
+        //     Type tList = Type.getType("Lcpw/mods/fml/common/eventhandler/ListenerList;");
         //     ...
         // }
         // spotless:on
         AbstractInsnNode firstInstruction = null;
-        LabelNode continueLabel = null;
+        AbstractInsnNode ldcInstruction = null;
         AbstractInsnNode node = method.instructions.getFirst();
 
-        // 1. Find any first real instruction and then Class.isAssignableFrom(Class) method
         while (node != null) {
+            // 1. Find any first real instruction
             if (firstInstruction == null && node.getOpcode() != -1) {
                 firstInstruction = node;
             }
-            if (node instanceof MethodInsnNode methodNode && methodNode.owner.equals("java/lang/Class")
-                    && methodNode.name.equals("isAssignableFrom")
-                    && methodNode.desc.equals("(Ljava/lang/Class;)Z")) {
+
+            // 2. Find the LDC instruction with the desired constant
+            if (node instanceof LdcInsnNode ldcNode
+                    && ldcNode.cst.equals("Lcpw/mods/fml/common/eventhandler/ListenerList;")) {
+                ldcInstruction = ldcNode;
                 break;
             }
+
             node = node.getNext();
         }
 
-        // 2. Find IFNE jump instruction with continueLabel after isAssignableFrom method call.
-        // This label points at the position right outside the if condition
-        while (node != null) {
-            if (node instanceof JumpInsnNode jumpNode && jumpNode.getOpcode() == Opcodes.IFNE) {
-                continueLabel = jumpNode.label;
-                break;
-            }
-            node = node.getNext();
+        if (firstInstruction == null || ldcInstruction == null) {
+            return false;
         }
 
-        if (continueLabel == null) {
-            throw new IllegalStateException("Could not find jump node after isAssignableFrom method");
+        // 3. Delete every instruction from firstInstruction to ldcInstruction
+        node = firstInstruction;
+        while (node != ldcInstruction) {
+            AbstractInsnNode next = node.getNext();
+            method.instructions.remove(node);
+            node = next;
         }
 
-        // 3. Insert the jump at the beginning of the method
-        InsnList instructions = new InsnList();
-        instructions.add(new JumpInsnNode(Opcodes.GOTO, continueLabel));
-        method.instructions.insertBefore(firstInstruction, instructions);
+        return true;
     }
 }
