@@ -8,8 +8,10 @@ import java.util.Set;
 import net.minecraft.launchwrapper.Launch;
 
 import org.apache.logging.log4j.Logger;
+import org.spongepowered.asm.launch.GlobalProperties;
 import org.spongepowered.asm.lib.tree.ClassNode;
 import org.spongepowered.asm.service.MixinService;
+import org.spongepowered.asm.service.mojang.MixinServiceLaunchWrapper;
 
 import com.gtnewhorizon.gtnhlib.config.ConfigException;
 import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
@@ -38,6 +40,7 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     private static Boolean isObf = null;
     private String[] transformerClasses;
+    private boolean replaceCoFHCoreAT = false;
 
     public HodgepodgeCore() {
         EarlyConfig.ensureLoaded();
@@ -73,6 +76,13 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
             }
         } catch (Exception ignored) {}
         // spotless:on
+
+        try {
+            if (!EarlyConfig.noCoFHCoreATReplacement) {
+                Class.forName("cofh.CoFHCore", false, HodgepodgeCore.class.getClassLoader());
+                replaceCoFHCoreAT = true;
+            }
+        } catch (ClassNotFoundException ignored) {}
     }
 
     @Override
@@ -107,6 +117,11 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     public void injectData(Map<String, Object> data) {
         isObf = (Boolean) data.get("runtimeDeobfuscationEnabled");
         VoxelMapCacheMover.changeFileExtensions((File) data.get("mcLocation"));
+
+        final List<String> tweaks = GlobalProperties.get(MixinServiceLaunchWrapper.BLACKBOARD_KEY_TWEAKCLASSES);
+        if (tweaks != null && replaceCoFHCoreAT) {
+            tweaks.add("com.mitchej123.hodgepodge.core.fml.tweakers.CoFHCoreATDisablerTweaker");
+        }
     }
 
     @Override
@@ -118,8 +133,13 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
                         .info("[HodgepodgeCoreCompat] Disabled CoreTweaks conflicting mixin: enhanceMapStorageErrors");
                 makamys.coretweaks.Config.enhanceMapStorageErrors.disable();
             }
-        } catch (ClassNotFoundException e) {}
-        return null;
+        } catch (ClassNotFoundException ignored) {}
+
+        if (!replaceCoFHCoreAT) {
+            return null;
+        }
+
+        return "com.mitchej123.hodgepodge.core.CoFHCoreAccessTransformer";
     }
 
     public static boolean isObf() {
