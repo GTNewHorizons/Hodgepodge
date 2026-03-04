@@ -75,8 +75,10 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
         try {
             if (ASMConfig.disableCoFHAccessTransformer) {
-                Launch.classLoader.getClassBytes("cofh.CoFHCore");
-                replaceCoFHCoreAT = true;
+                final byte[] classBytes = Launch.classLoader.getClassBytes("cofh.CoFHCore");
+                if (classBytes != null) {
+                    replaceCoFHCoreAT = true;
+                }
             }
         } catch (Exception ignored) {}
     }
