@@ -29,7 +29,7 @@ public class CoFHCoreATDisablerTweaker implements ITweaker {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            FMLRelaunchLog.severe("[CoFHCoreATDisablerTweaker] Failed to disable transformer:", e);
         }
     }
 
