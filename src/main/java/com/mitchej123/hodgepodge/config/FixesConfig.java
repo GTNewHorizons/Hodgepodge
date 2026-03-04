@@ -454,6 +454,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixBreakingSpecialArmorHelmetOnBlockFall;
 
+    @Config.Comment("Fix Minecraft write saves into a non-save folder but already contains data")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixSaveFileWrittenToExistingDirectory;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
