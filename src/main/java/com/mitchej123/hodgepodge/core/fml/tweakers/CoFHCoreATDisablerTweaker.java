@@ -26,6 +26,7 @@ public class CoFHCoreATDisablerTweaker implements ITweaker {
                 if (name.equals("cofh.asm.CoFHAccessTransformer")) {
                     FMLRelaunchLog.info("[CoFHCoreATDisablerTweaker] Transformer successfully disabled");
                     xformers.remove(idx);
+                    break;
                 }
             }
         } catch (Exception e) {
