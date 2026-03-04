@@ -51,32 +51,24 @@ public class ForgeEventSubscriptionTransformer implements RfbClassTransformer {
     public void transformClass(@NotNull ExtensibleClassLoader classLoader, @NotNull RfbClassTransformer.Context context,
             @Nullable Manifest manifest, @NotNull String className, @NotNull ClassNodeHandle classNodeHandle) {
         final ClassNode classNode = classNodeHandle.getNode();
-        boolean transformedTransformMethod = false;
-        boolean transformedBuildEventsMethod = false;
         if (classNode == null) {
             return;
         }
-
+        boolean changed = false;
         for (MethodNode method : classNode.methods) {
             if (method.name.equals("transform") && method.desc.equals("(Ljava/lang/String;Ljava/lang/String;[B)[B")) {
-                transformedTransformMethod = transformTransformMethod(method);
-                if (!transformedTransformMethod) break;
+                changed |= transformTransformMethod(method);
             }
             if (method.name.equals("buildEvents") && method.desc.equals("(Lorg/objectweb/asm/tree/ClassNode;)Z")) {
-                transformedBuildEventsMethod = transformBuildEventsMethod(method);
-                if (!transformedBuildEventsMethod) break;
+                changed |= transformBuildEventsMethod(method);
             }
         }
 
-        if (transformedTransformMethod || transformedBuildEventsMethod) {
+        if (changed) {
             classNodeHandle.computeFrames();
             HodgepodgeClassDump.dumpRFBClass(className, classNodeHandle, this);
-        }
-        if (!transformedTransformMethod || !transformedBuildEventsMethod) {
-            FMLRelaunchLog.severe(
-                    "[ForgeEventSubscriptionTransformer] Something went wrong while transforming class: {} | {}",
-                    transformedTransformMethod,
-                    transformedBuildEventsMethod);
+        } else {
+            FMLRelaunchLog.severe("[ForgeEventSubscriptionTransformer] Failed to transform {}", classNode.name);
         }
     }
 
