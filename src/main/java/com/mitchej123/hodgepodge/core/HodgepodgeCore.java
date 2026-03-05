@@ -8,8 +8,6 @@ import java.util.Set;
 import net.minecraft.launchwrapper.Launch;
 
 import org.apache.logging.log4j.Logger;
-import org.spongepowered.asm.lib.tree.ClassNode;
-import org.spongepowered.asm.service.MixinService;
 
 import com.gtnewhorizon.gtnhlib.config.ConfigException;
 import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
@@ -38,6 +36,7 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     private static Boolean isObf = null;
     private String[] transformerClasses;
+    private boolean replaceCoFHCoreAT = false;
 
     public HodgepodgeCore() {
         EarlyConfig.ensureLoaded();
@@ -64,8 +63,8 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
         }
         // spotless:off
         try {
-            ClassNode classNode = MixinService.getService().getBytecodeProvider().getClassNode("org.bukkit.World", false);
-            if (classNode != null) {
+            byte[] classBytes = Launch.classLoader.getClassBytes("org.bukkit.World");
+            if (classBytes != null) {
                 Common.log.warn("==================================================================================================");
                 Common.log.warn("Thermos/Bukkit detected; This is an unsupported configuration -- Things may not function properly.");
                 Common.log.warn("Using `{}` for CraftServer Package. If this is not correct, please update your config file!", ASMConfig.thermosCraftServerClass);
@@ -73,6 +72,15 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
             }
         } catch (Exception ignored) {}
         // spotless:on
+
+        try {
+            if (ASMConfig.disableCoFHAccessTransformer) {
+                final byte[] classBytes = Launch.classLoader.getClassBytes("cofh.CoFHCore");
+                if (classBytes != null) {
+                    replaceCoFHCoreAT = true;
+                }
+            }
+        } catch (Exception ignored) {}
     }
 
     @Override
@@ -107,6 +115,11 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     public void injectData(Map<String, Object> data) {
         isObf = (Boolean) data.get("runtimeDeobfuscationEnabled");
         VoxelMapCacheMover.changeFileExtensions((File) data.get("mcLocation"));
+
+        final List<String> tweaks = (List<String>) Launch.blackboard.get("TweakClasses");
+        if (tweaks != null && replaceCoFHCoreAT) {
+            tweaks.add("com.mitchej123.hodgepodge.core.fml.tweakers.CoFHCoreATDisablerTweaker");
+        }
     }
 
     @Override
@@ -118,7 +131,12 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
                         .info("[HodgepodgeCoreCompat] Disabled CoreTweaks conflicting mixin: enhanceMapStorageErrors");
                 makamys.coretweaks.Config.enhanceMapStorageErrors.disable();
             }
-        } catch (ClassNotFoundException e) {}
+        } catch (ClassNotFoundException ignored) {}
+
+        if (replaceCoFHCoreAT) {
+            return "com.mitchej123.hodgepodge.core.CoFHCoreAccessTransformer";
+        }
+
         return null;
     }
 
