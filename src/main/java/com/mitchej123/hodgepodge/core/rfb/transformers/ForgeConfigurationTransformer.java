@@ -10,6 +10,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
@@ -75,13 +76,15 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
                     }
                 } else if (aInsn.getOpcode() == PUTFIELD && aInsn instanceof FieldInsnNode fInsn && PROPERTY_INTERNAL.equals(fInsn.owner)) {
                     if ("Ljava/lang/String;".equals(fInsn.desc) && ("value".equals(fInsn.name) || "defaultValue".equals(fInsn.name))) {
-                        mn.instructions.insertBefore(fInsn,
-                                new MethodInsnNode(
-                                        INVOKEVIRTUAL,
-                                        "java/lang/String",
-                                        "intern",
-                                        "()Ljava/lang/String;",
-                                        false));
+                        if (!(aInsn.getPrevious() instanceof LdcInsnNode)) {
+                            mn.instructions.insertBefore(fInsn,
+                                    new MethodInsnNode(
+                                            INVOKEVIRTUAL,
+                                            "java/lang/String",
+                                            "intern",
+                                            "()Ljava/lang/String;",
+                                            false));
+                        }
                         i++;
                     } else if ("[Ljava/lang/String;".equals(fInsn.desc) && ("values".equals(fInsn.name) || "defaultValues".equals(fInsn.name) || "validValues".equals(fInsn.name))) {
                         mn.instructions.insertBefore(fInsn,
