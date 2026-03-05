@@ -850,6 +850,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixWitcheryDemonShiftClick;
 
+    @Config.Comment("Stops witchery from spamming Enum#values()")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixWitcheryEnumValuesSpam;
+
     // Xaero's Minimap
     @Config.Comment("Fixes the player entity dot rendering when arrow is chosen")
     @Config.DefaultBoolean(true)

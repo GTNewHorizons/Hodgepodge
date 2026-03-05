@@ -1598,6 +1598,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixWitcheryDemonShiftClick)
             .addRequiredMod(TargetedMod.WITCHERY)
             .setPhase(Phase.LATE)),
+    FIX_WITCHERY_ENUM_VALUES_SPAM(new MixinBuilder()
+            .addCommonMixins("witchery.MixinExtendedPlayer_EnumValuesSpam")
+            .setApplyIf(() -> FixesConfig.fixWitcheryEnumValuesSpam)
+            .addRequiredMod(TargetedMod.WITCHERY)
+            .setPhase(Phase.LATE)),
 
     // Various Exploits/Fixes
     BIBLIOCRAFT_PACKET_FIX(new MixinBuilder("Packet Fix")
