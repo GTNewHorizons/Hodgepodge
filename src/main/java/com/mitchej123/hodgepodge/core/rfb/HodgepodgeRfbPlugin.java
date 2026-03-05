@@ -12,7 +12,6 @@ import com.gtnewhorizons.retrofuturabootstrap.api.RfbClassTransformer;
 import com.gtnewhorizons.retrofuturabootstrap.api.RfbPlugin;
 import com.mitchej123.hodgepodge.core.rfb.transformers.ConfigParsingTimeTransformer;
 import com.mitchej123.hodgepodge.core.rfb.transformers.ForgeConfigurationTransformer;
-import com.mitchej123.hodgepodge.core.rfb.transformers.ForgeEventSubscriptionTransformer;
 import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
 
 public class HodgepodgeRfbPlugin implements RfbPlugin {
@@ -29,9 +28,12 @@ public class HodgepodgeRfbPlugin implements RfbPlugin {
         if (!EarlyConfig.noLeanerForgeConfiguration) {
             list.add(new ForgeConfigurationTransformer());
         }
-        if (!EarlyConfig.noFasterForgeEventTransformer) {
-            list.add(new ForgeEventSubscriptionTransformer());
-        }
+        // disabled for now because it removed the cascading
+        // super class loading that accidentally made angelica
+        // block transformer work without issues
+        // if (!EarlyConfig.noFasterForgeEventTransformer) {
+        // list.add(new ForgeEventSubscriptionTransformer());
+        // }
         if (EarlyConfig.debugLogConfigParsingTimes) {
             list.add(new ConfigParsingTimeTransformer());
         }
