@@ -831,10 +831,6 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinFontRenderer_House")
             .setApplyIf(() -> FixesConfig.fixHouseCharRendering)
             .setPhase(Phase.EARLY)),
-    CACHE_LAST_MATCHING_RECIPES(new MixinBuilder()
-            .addCommonMixins("minecraft.MixinCraftingManager")
-            .setApplyIf(() -> SpeedupsConfig.cacheLastMatchingRecipe)
-            .setPhase(Phase.EARLY)),
     FIX_CHUNK_LOADING_FROM_BLOCK_UPDATES(new MixinBuilder("Prevent block and entity updates from loading unloaded chunks")
             .setPhase(Phase.EARLY)
             .setApplyIf(() -> FixesConfig.preventChunkLoadingFromBlockUpdates)
