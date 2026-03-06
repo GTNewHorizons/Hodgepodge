@@ -12,8 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 // need our code to be injected before
 // squeek.applecore.mixins.early.minecraft.BlockSaplingMixin
-// so we set priority to run after
-@Mixin(value = BlockSapling.class, priority = 1100)
+@Mixin(value = BlockSapling.class, priority = 900)
 public class MixinBlockSapling {
 
     @Inject(
