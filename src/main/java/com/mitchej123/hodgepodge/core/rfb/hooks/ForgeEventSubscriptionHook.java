@@ -1,35 +1,21 @@
 package com.mitchej123.hodgepodge.core.rfb.hooks;
 
-import java.io.IOException;
-
-import net.minecraft.launchwrapper.Launch;
-
 import org.objectweb.asm.ClassReader;
+
+import cpw.mods.fml.common.asm.transformers.EventSubscriptionTransformer;
+import cpw.mods.fml.common.eventhandler.Event;
 
 public class ForgeEventSubscriptionHook {
 
-    private static final String JAVA_OBJECT = "java/lang/Object";
-    private static final String FML_EVENT = "cpw/mods/fml/common/eventhandler/Event";
-
-    public static boolean shouldTransformClass(byte[] classBytes) {
-        while (classBytes != null) {
-            String superName = new ClassReader(classBytes).getSuperName();
-
-            if (superName == null || superName.equals(JAVA_OBJECT)) {
-                return false;
-            }
-
-            if (superName.equals(FML_EVENT)) {
-                return true;
-            }
-
-            try {
-                classBytes = Launch.classLoader.getClassBytes(superName.replace('/', '.'));
-            } catch (IOException e) {
-                return false;
-            }
+    public static boolean shouldTransformClass(ClassReader cr) {
+        final String superName = cr.getSuperName();
+        if (superName == null || superName.startsWith("java/lang/")) return false;
+        final Class<?> parent;
+        try {
+            parent = EventSubscriptionTransformer.class.getClassLoader().loadClass(superName.replace('/', '.'));
+        } catch (ClassNotFoundException e) {
+            return false;
         }
-
-        return false;
+        return Event.class.isAssignableFrom(parent);
     }
 }
