@@ -210,8 +210,8 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinEnumChatFormatting_FastFormat")
             .setApplyIf(() -> SpeedupsConfig.speedupRemoveFormatting)
             .setPhase(Phase.EARLY)),
-    SPEEDUP_GRASS_BLOCK_RANDOM_TICKING(new MixinBuilder("Speed up grass block random ticking")
-            .addCommonMixins("minecraft.MixinBlockGrass")
+    PREVENT_GRASS_BLOCK_TICK_CHUNK_LOADING(new MixinBuilder()
+            .addCommonMixins("minecraft.chunkloading.MixinBlockGrass")
             .setApplyIf(() -> SpeedupsConfig.speedupGrassBlockRandomTicking)
             .setPhase(Phase.EARLY)),
     SPEEDUP_CHUNK_PROVIDER_CLIENT(new MixinBuilder("Speed up ChunkProviderClient")
