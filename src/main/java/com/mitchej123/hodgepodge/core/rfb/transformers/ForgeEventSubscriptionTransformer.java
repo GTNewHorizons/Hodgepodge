@@ -107,15 +107,11 @@ public class ForgeEventSubscriptionTransformer implements RfbClassTransformer, O
     }
 
     private static boolean transformBuildEventsMethod(MethodNode method) {
-        // spotless:off
-        // private boolean buildEvents(ClassNode classNode) throws Exception {
         // Class<?> parent = this.getClass().getClassLoader().loadClass(classNode.superName.replace('/', '.'));
         // if (!Event.class.isAssignableFrom(parent)) return false;
         // we want to delete all the code above
         // Type tList = Type.getType("Lcpw/mods/fml/common/eventhandler/ListenerList;");
         // ...
-        // }
-        // spotless:on
         AbstractInsnNode firstInstruction = null;
         AbstractInsnNode ldcInstruction = null;
         AbstractInsnNode node = method.instructions.getFirst();
