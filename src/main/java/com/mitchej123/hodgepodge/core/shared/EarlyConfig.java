@@ -23,6 +23,7 @@ public final class EarlyConfig {
 
     public static final boolean noNukeBaseMod;
     public static final boolean noLeanerForgeConfiguration;
+    public static final boolean noFasterForgeEventTransformer;
     public static final boolean debugLogConfigParsingTimes = Boolean.getBoolean("hodgepodge.logConfigTimes");
     public static final boolean debugEnumValuesSpam = Boolean.getBoolean("hodgepodge.logEnumValues");
     public static final boolean dumpASMClass = Boolean.getBoolean("hodgepodge.dumpClass");
@@ -43,8 +44,12 @@ public final class EarlyConfig {
         // =========== Config Definitions ===========
         noNukeBaseMod = Boolean.parseBoolean(config.getProperty("noNukeBaseMod"));
         config.setProperty("noNukeBaseMod", String.valueOf(noNukeBaseMod));
+
         noLeanerForgeConfiguration = Boolean.parseBoolean(config.getProperty("noLeanerForgeConfiguration"));
         config.setProperty("noLeanerForgeConfiguration", String.valueOf(noLeanerForgeConfiguration));
+
+        noFasterForgeEventTransformer = Boolean.parseBoolean(config.getProperty("noFasterForgeEventTransformer"));
+        config.setProperty("noFasterForgeEventTransformer", String.valueOf(noFasterForgeEventTransformer));
         // ==========================================
 
         // create config folder if it doesn't exist to prevent printed exception on first boot
