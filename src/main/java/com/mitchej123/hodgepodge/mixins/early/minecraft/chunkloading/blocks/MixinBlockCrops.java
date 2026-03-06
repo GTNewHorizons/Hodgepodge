@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 // "squeek.applecore.mixins.early.minecraft.BlockCocoaMixin"
 // which overwrites the method
 @Mixin(value = BlockCrops.class, priority = 1100)
-public class MixinBlockCrop {
+public class MixinBlockCrops {
 
     @Inject(
             method = "updateTick",

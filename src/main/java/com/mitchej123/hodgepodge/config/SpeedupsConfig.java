@@ -32,9 +32,10 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean speedupChunkCoordinatesHashCode;
 
-    @Config.Comment("Speed up grass block random ticking")
+    @Config.Comment("Prevents Vanilla blocks from loading chunks when ticking\n"
+            + "Cocoa, Crop, Fire, Grass, Vine, Farmland, Mushroom, Mycelium, Sapling, Stem, Torch")
     @Config.DefaultBoolean(true)
-    public static boolean speedupGrassBlockRandomTicking;
+    public static boolean preventLoadingChunksWhenTickingBlocks;
 
     @Config.Comment("Speedup Vanilla Furnace recipe lookup")
     @Config.DefaultBoolean(true)

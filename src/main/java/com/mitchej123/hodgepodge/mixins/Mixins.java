@@ -210,9 +210,21 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinEnumChatFormatting_FastFormat")
             .setApplyIf(() -> SpeedupsConfig.speedupRemoveFormatting)
             .setPhase(Phase.EARLY)),
-    PREVENT_GRASS_BLOCK_TICK_CHUNK_LOADING(new MixinBuilder()
-            .addCommonMixins("minecraft.chunkloading.MixinBlockGrass")
-            .setApplyIf(() -> SpeedupsConfig.speedupGrassBlockRandomTicking)
+    PREVENT_LOADING_CHUNKS_WHEN_TICKING_BLOCKS(new MixinBuilder()
+            .addCommonMixins(
+                    "minecraft.chunkloading.blocks.MixinBlockCocoa",
+                    "minecraft.chunkloading.blocks.MixinBlockCrops",
+                    "minecraft.chunkloading.blocks.MixinBlockFire",
+                    "minecraft.chunkloading.blocks.MixinBlockGrass",
+                    "minecraft.chunkloading.blocks.MixinBlockFarmland",
+                    "minecraft.chunkloading.blocks.MixinBlockMushroom",
+                    "minecraft.chunkloading.blocks.MixinBlockMycelium",
+                    "minecraft.chunkloading.blocks.MixinBlockSapling",
+                    "minecraft.chunkloading.blocks.MixinBlockStaticLiquid",
+                    "minecraft.chunkloading.blocks.MixinBlockStem",
+                    "minecraft.chunkloading.blocks.MixinBlockTorch",
+                    "minecraft.chunkloading.blocks.MixinBlockVine")
+            .setApplyIf(() -> SpeedupsConfig.preventLoadingChunksWhenTickingBlocks)
             .setPhase(Phase.EARLY)),
     SPEEDUP_CHUNK_PROVIDER_CLIENT(new MixinBuilder("Speed up ChunkProviderClient")
             .addClientMixins("minecraft.MixinChunkProviderClient_RemoveChunkListing")
