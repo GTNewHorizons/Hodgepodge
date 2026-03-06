@@ -99,3 +99,6 @@ A list of JVM args used to activate debugging tools
 - `-Dhodgepodge.logModTimes=true` creates two `modtimes_.csv` files containing the times taken by each mod loading step
 - `-Dhodgepodge.logEventTimes=true` creates a `EventRegistrationTime.txt` file containing the time taken to register each event handler to the Event Bus
 - `-Dhodgepodge.logConfigTimes=true` creates a `ConfigParsingTimes.csv` file containing the time taken to parse each config file
+- `-Dhodgepodge.logEnumValues=true` logs when `Enum#values()` is called a lot, creates a `EnumValuesDebug.csv` file with results
+- `-Dhodgepodge.logIntervalEnumValues=500` used with `logEnumValues`, defines the threshold at which it prints a log message
+- `-Dhodgepodge.logStacktraceEnumValues=true` used with `logEnumValues`, prints the stacktrace of where `Enum#values()` is called

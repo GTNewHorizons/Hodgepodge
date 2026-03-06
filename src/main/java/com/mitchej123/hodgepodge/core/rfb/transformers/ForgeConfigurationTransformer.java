@@ -3,6 +3,8 @@ package com.mitchej123.hodgepodge.core.rfb.transformers;
 import java.util.ListIterator;
 import java.util.jar.Manifest;
 
+import net.minecraftforge.common.config.Property;
+
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,9 +12,12 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 import com.gtnewhorizons.retrofuturabootstrap.api.ClassNodeHandle;
 import com.gtnewhorizons.retrofuturabootstrap.api.ExtensibleClassLoader;
@@ -53,11 +58,15 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
             return;
         }
         switch (className) {
-            case "net.minecraftforge.common.config.Property" -> transformProperty(cn);
+            case "net.minecraftforge.common.config.Property" -> {
+                fixStringConcatenationInLoop(cn);
+                transformProperty(cn);
+                classNode.computeMaxs();
+            }
             case "net.minecraftforge.common.config.Property$Type" -> transformPropertyType(cn);
             case "net.minecraftforge.common.config.ConfigCategory" -> transformConfigCategory(cn);
         }
-        HodgepodgeClassDump.dumpRFBClass(className, classNode, this);
+        HodgepodgeClassDump.dumpClass(className, classNode, this);
     }
 
     private static void transformProperty(ClassNode cn) {
@@ -75,13 +84,15 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
                     }
                 } else if (aInsn.getOpcode() == PUTFIELD && aInsn instanceof FieldInsnNode fInsn && PROPERTY_INTERNAL.equals(fInsn.owner)) {
                     if ("Ljava/lang/String;".equals(fInsn.desc) && ("value".equals(fInsn.name) || "defaultValue".equals(fInsn.name))) {
-                        mn.instructions.insertBefore(fInsn,
-                                new MethodInsnNode(
-                                        INVOKEVIRTUAL,
-                                        "java/lang/String",
-                                        "intern",
-                                        "()Ljava/lang/String;",
-                                        false));
+                        if (!(aInsn.getPrevious() instanceof LdcInsnNode)) {
+                            mn.instructions.insertBefore(fInsn,
+                                    new MethodInsnNode(
+                                            INVOKEVIRTUAL,
+                                            "java/lang/String",
+                                            "intern",
+                                            "()Ljava/lang/String;",
+                                            false));
+                        }
                         i++;
                     } else if ("[Ljava/lang/String;".equals(fInsn.desc) && ("values".equals(fInsn.name) || "defaultValues".equals(fInsn.name) || "validValues".equals(fInsn.name))) {
                         mn.instructions.insertBefore(fInsn,
@@ -111,6 +122,96 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
             }
         }
         // spotless:on
+    }
+
+    /**
+     * In the methods
+     * {@link net.minecraftforge.common.config.Property#Property(String, String[], Property.Type, boolean, String[], String)}
+     * and {@link net.minecraftforge.common.config.Property#setDefaultValues(String[])} we want to replace string
+     * concatenation in a loop with a single StringBuilder.
+     *
+     * <pre>
+     * {@code
+     *  // we want to replace this
+     *  this.defaultValue = "";
+     *  for (String s : values) {
+     *      this.defaultValue += ", [" + s + "]";
+     *  }
+     *  this.defaultValue = this.defaultValue.replaceFirst(", ", "");
+     *  // with
+     *  this.defaultValue = ForgeConfigurationHook.getDefaultValues(defaultValues);
+     * </pre>
+     *
+     */
+    private static void fixStringConcatenationInLoop(ClassNode cn) {
+        // we search at the start for : this.defaultValue = "";
+        // and at the end for : this.defaultValue = this.defaultValue.replaceFirst(", ", "");
+        // ALOAD 0 <- we keep (startNode)
+        // LDC "" <- delete everything from here
+        // PUTFIELD defaultValue
+        // ...
+        // ...
+        // INVOKEVIRTUAL java/lang/String.replaceFirst <- delete up to here
+        // PUTFIELD defaultValue <- we keep and inject our hook right before (endNode)
+
+        for (MethodNode mn : cn.methods) {
+            final boolean isConstructor = mn.name.equals("<init>") && mn.desc.equals(
+                    "(Ljava/lang/String;[Ljava/lang/String;Lnet/minecraftforge/common/config/Property$Type;Z[Ljava/lang/String;Ljava/lang/String;)V");
+            final boolean isSetDefault = mn.name.equals("setDefaultValues")
+                    && mn.desc.equals("([Ljava/lang/String;)Lnet/minecraftforge/common/config/Property;");
+            if (isConstructor || isSetDefault) {
+                AbstractInsnNode startNode = null;
+                AbstractInsnNode endNode = null;
+                final ListIterator<AbstractInsnNode> it = mn.instructions.iterator();
+                while (it.hasNext()) {
+                    final AbstractInsnNode node = it.next();
+                    if (node instanceof VarInsnNode varNode && node.getOpcode() == ALOAD && varNode.var == 0) {
+                        if (node.getNext() instanceof LdcInsnNode ldcNode && "".equals(ldcNode.cst)) {
+                            if (isPutDefaultValueFieldNode(ldcNode.getNext())) {
+                                startNode = node;
+                            }
+                        }
+                    } else if (startNode != null && isReplaceFirstMethodNode(node)) {
+                        if (isPutDefaultValueFieldNode(node.getNext())) {
+                            endNode = node.getNext();
+                            break;
+                        }
+                    }
+                }
+                if (startNode != null && endNode != null) {
+                    AbstractInsnNode node = startNode.getNext();
+                    while (node != endNode) {
+                        AbstractInsnNode next = node.getNext();
+                        mn.instructions.remove(node);
+                        node = next;
+                    }
+                    final InsnList list = new InsnList();
+                    list.add(new VarInsnNode(ALOAD, isConstructor ? 2 : 1));
+                    list.add(
+                            new MethodInsnNode(
+                                    INVOKESTATIC,
+                                    HOOK_CLASS_INTERNAL,
+                                    "getDefaultValues",
+                                    "([Ljava/lang/String;)Ljava/lang/String;",
+                                    false));
+                    mn.instructions.insertBefore(endNode, list);
+                }
+            }
+        }
+    }
+
+    private static boolean isPutDefaultValueFieldNode(AbstractInsnNode node) {
+        return node instanceof FieldInsnNode fNode && fNode.getOpcode() == PUTFIELD
+                && fNode.owner.equals(PROPERTY_INTERNAL)
+                && fNode.name.equals("defaultValue")
+                && fNode.desc.equals("Ljava/lang/String;");
+    }
+
+    private static boolean isReplaceFirstMethodNode(AbstractInsnNode node) {
+        return node instanceof MethodInsnNode mNode && mNode.getOpcode() == INVOKEVIRTUAL
+                && mNode.owner.equals("java/lang/String")
+                && mNode.name.equals("replaceFirst")
+                && mNode.desc.equals("(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;");
     }
 
     private static void transformConfigCategory(ClassNode cn) {

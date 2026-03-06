@@ -8,6 +8,9 @@ minecraft {
     extraRunJvmArguments.add("-Dhodgepodge.logModTimes=true")
     //extraRunJvmArguments.add("-Dhodgepodge.logEventTimes=true")
     //extraRunJvmArguments.add("-Dhodgepodge.logConfigTimes=true")
+    //extraRunJvmArguments.add("-Dhodgepodge.logEnumValues=true")
+    //extraRunJvmArguments.add("-Dhodgepodge.logIntervalEnumValues=500")
+    //extraRunJvmArguments.add("-Dhodgepodge.logStacktraceEnumValues=true")
     /*extraRunJvmArguments.addAll(
         "-Dlegacy.debugClassLoading=true",
         "-Dlegacy.debugClassLoadingFiner=true",

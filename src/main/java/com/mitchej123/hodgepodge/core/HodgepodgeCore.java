@@ -39,7 +39,6 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     private boolean replaceCoFHCoreAT = false;
 
     public HodgepodgeCore() {
-        EarlyConfig.ensureLoaded();
         if (!EarlyConfig.noNukeBaseMod) {
             String transformer = "com.mitchej123.hodgepodge.core.fml.transformers.early.ModContainerFactoryTransformer";
             FMLRelaunchLog.finer("Registering transformer %s", transformer);
