@@ -86,13 +86,14 @@ public class ForgeEventSubscriptionTransformer implements RfbClassTransformer, O
                     && typeNode.desc.equals("org/objectweb/asm/tree/ClassNode")) {
                 InsnList list = new InsnList();
                 LabelNode label = new LabelNode();
+                list.add(new VarInsnNode(ALOAD, 0));
                 list.add(new VarInsnNode(ALOAD, 4));
                 list.add(
                         new MethodInsnNode(
                                 INVOKESTATIC,
                                 "com/mitchej123/hodgepodge/core/rfb/hooks/ForgeEventSubscriptionHook",
                                 "shouldTransformClass",
-                                "(Lorg/objectweb/asm/ClassReader;)Z",
+                                "(Ljava/lang/Object;Lorg/objectweb/asm/ClassReader;)Z",
                                 false));
                 list.add(new JumpInsnNode(IFNE, label));
                 list.add(new VarInsnNode(ALOAD, 3));
