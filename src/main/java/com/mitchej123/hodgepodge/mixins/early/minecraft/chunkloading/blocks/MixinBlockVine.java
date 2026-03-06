@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft.chunkloading;
+package com.mitchej123.hodgepodge.mixins.early.minecraft.chunkloading.blocks;
 
 import net.minecraft.block.BlockVine;
 import net.minecraft.world.World;
