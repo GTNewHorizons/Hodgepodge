@@ -12,7 +12,7 @@ public class HodgepodgeClassDump {
         }
     }
 
-    public static void dumpClass(String className, ClassNodeHandle classNode, Object transformer) {
+    public static void dumpRFBClass(String className, ClassNodeHandle classNode, Object transformer) {
         if (EarlyConfig.dumpASMClass) {
             final byte[] originalBytes = classNode.getOriginalBytes();
             final byte[] transformedBytes = classNode.computeBytes();

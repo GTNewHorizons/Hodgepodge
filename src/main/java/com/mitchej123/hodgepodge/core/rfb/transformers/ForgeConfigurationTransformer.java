@@ -57,7 +57,7 @@ public class ForgeConfigurationTransformer implements RfbClassTransformer, Opcod
             case "net.minecraftforge.common.config.Property$Type" -> transformPropertyType(cn);
             case "net.minecraftforge.common.config.ConfigCategory" -> transformConfigCategory(cn);
         }
-        HodgepodgeClassDump.dumpClass(className, classNode, this);
+        HodgepodgeClassDump.dumpRFBClass(className, classNode, this);
     }
 
     private static void transformProperty(ClassNode cn) {
