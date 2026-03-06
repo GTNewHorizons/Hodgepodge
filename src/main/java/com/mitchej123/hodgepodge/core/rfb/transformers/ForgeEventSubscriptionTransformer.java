@@ -66,7 +66,7 @@ public class ForgeEventSubscriptionTransformer implements RfbClassTransformer, O
 
         if (changed) {
             classNodeHandle.computeFrames();
-            HodgepodgeClassDump.dumpRFBClass(className, classNodeHandle, this);
+            HodgepodgeClassDump.dumpClass(className, classNodeHandle, this);
         } else {
             FMLRelaunchLog.severe("[ForgeEventSubscriptionTransformer] Failed to transform {}", classNode.name);
         }
