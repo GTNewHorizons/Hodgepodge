@@ -50,8 +50,6 @@ public class MixinBlockGrass {
 
     @Unique
     private static boolean hodgepodge$canGetBlockLightSafely(World worldIn, int x, int z) {
-        return worldIn.blockExists(x + 1, 0, z) && worldIn.blockExists(x, 0, z + 1)
-                && worldIn.blockExists(x - 1, 0, z)
-                && worldIn.blockExists(x, 0, z - 1);
+        return worldIn.checkChunksExist(x - 1, 0, z - 1, x + 1, 0, z + 1);
     }
 }
