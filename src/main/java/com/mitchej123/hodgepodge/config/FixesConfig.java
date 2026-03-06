@@ -405,7 +405,8 @@ public class FixesConfig {
             This is intended for server owners facing TPS issues. If you play singleplayer just be
             sure all your infrastructure is properly chunk loaded. If you are still facing TPS issues
             make a CPU profile and we'll try to patch the mod causing it.
-            DO NOT report any bugs if you have this enabled.""")
+            DO NOT report any bugs if you have this enabled.
+            Disable the setting and see if the bug still happens before reporting anything""")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean preventChunkLoadingFromBlockUpdates;
