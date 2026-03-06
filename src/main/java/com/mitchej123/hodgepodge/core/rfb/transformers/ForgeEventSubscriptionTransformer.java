@@ -31,7 +31,7 @@ import cpw.mods.fml.relauncher.FMLRelaunchLog;
  * It prevents the transformer from creating a ClassNode and recursively loading all classes in a superclass chain most
  * of the time
  */
-public class ForgeEventSubscriptionTransformer implements RfbClassTransformer {
+public class ForgeEventSubscriptionTransformer implements RfbClassTransformer, Opcodes {
 
     @Pattern("[a-z0-9-]+")
     @Override
@@ -66,78 +66,52 @@ public class ForgeEventSubscriptionTransformer implements RfbClassTransformer {
 
         if (changed) {
             classNodeHandle.computeFrames();
-            HodgepodgeClassDump.dumpRFBClass(className, classNodeHandle, this);
+            HodgepodgeClassDump.dumpClass(className, classNodeHandle, this);
         } else {
             FMLRelaunchLog.severe("[ForgeEventSubscriptionTransformer] Failed to transform {}", classNode.name);
         }
     }
 
-    private boolean transformTransformMethod(MethodNode method) {
-        // spotless:off
-        // public byte[] transform(String name, String transformedName, byte[] bytes) {
-        //     if (...) return bytes;
-        //     <we want to inject instructions here>
-        //     ClassReader cr = new ClassReader(bytes); // <-- this is the anchor
-        //     ...
+    private static boolean transformTransformMethod(MethodNode method) {
+        // inject our hook right in between the ClassReader and ClassNode instantiation
+        // ClassReader cr = new ClassReader(bytes);
+        // if (!ForgeEventSubscriptionHook.shouldTransformClass(cr)) {
+        // return bytes;
         // }
-        // spotless:on
-        AbstractInsnNode anchor = null;
+        // ClassNode classNode = new ClassNode();
+        // cr.accept(classNode, 0);
 
-        for (AbstractInsnNode insn = method.instructions.getFirst(); insn != null; insn = insn.getNext()) {
-            if (insn.getOpcode() == Opcodes.NEW && insn instanceof TypeInsnNode typeNode
-                    && typeNode.desc.equals("org/objectweb/asm/ClassReader")) {
-                anchor = insn;
-                break;
+        for (AbstractInsnNode node = method.instructions.getFirst(); node != null; node = node.getNext()) {
+            if (node.getOpcode() == NEW && node instanceof TypeInsnNode typeNode
+                    && typeNode.desc.equals("org/objectweb/asm/tree/ClassNode")) {
+                InsnList list = new InsnList();
+                LabelNode label = new LabelNode();
+                list.add(new VarInsnNode(ALOAD, 0));
+                list.add(new VarInsnNode(ALOAD, 4));
+                list.add(
+                        new MethodInsnNode(
+                                INVOKESTATIC,
+                                "com/mitchej123/hodgepodge/core/rfb/hooks/ForgeEventSubscriptionHook",
+                                "shouldTransformClass",
+                                "(Ljava/lang/Object;Lorg/objectweb/asm/ClassReader;)Z",
+                                false));
+                list.add(new JumpInsnNode(IFNE, label));
+                list.add(new VarInsnNode(ALOAD, 3));
+                list.add(new InsnNode(ARETURN));
+                list.add(label);
+                method.instructions.insertBefore(node, list);
+                return true;
             }
         }
-
-        if (anchor == null) {
-            return false;
-        }
-
-        // We want to insert this code:
-        // spotless:off
-        // if (!ForgeEventSubscriptionHook.shouldTransformClass(bytes)) {
-        //     return bytes;
-        // }
-        // spotless:on
-        InsnList instructions = new InsnList();
-        LabelNode continueLabel = new LabelNode();
-
-        // Load local variable 'bytes' (#3) onto the operand stack.
-        // Local variables so far (counting from #0): this, name, transformedName, bytes
-        instructions.add(new VarInsnNode(Opcodes.ALOAD, 3));
-        // Call ForgeEventSubscriptionHook.shouldTransformClass(bytes) using the loaded 'bytes' variable
-        instructions.add(
-                new MethodInsnNode(
-                        Opcodes.INVOKESTATIC,
-                        "com/mitchej123/hodgepodge/core/rfb/hooks/ForgeEventSubscriptionHook",
-                        "shouldTransformClass",
-                        "([B)Z",
-                        false));
-        // Take returned boolean, if it's != 0 jump to continueLabel, otherwise fall through to the next instruction
-        instructions.add(new JumpInsnNode(Opcodes.IFNE, continueLabel));
-        // Load local variable 'bytes' (#3)
-        instructions.add(new VarInsnNode(Opcodes.ALOAD, 3));
-        // return bytes;
-        instructions.add(new InsnNode(Opcodes.ARETURN));
-        // the label right after the condition, we jump here if we should transform class
-        instructions.add(continueLabel);
-
-        method.instructions.insertBefore(anchor, instructions);
-        return true;
+        return false;
     }
 
-    private boolean transformBuildEventsMethod(MethodNode method) {
-        // spotless:off
-        // private boolean buildEvents(ClassNode classNode) throws Exception {
-        //     Class<?> parent = this.getClass().getClassLoader().loadClass(classNode.superName.replace('/', '.'));
-        //     if (!Event.class.isAssignableFrom(parent)) return false;
-        //     // we want to delete all the code above
-        //     Type tList = Type.getType("Lcpw/mods/fml/common/eventhandler/ListenerList;");
-        //     ...
-        // }
-        // spotless:on
+    private static boolean transformBuildEventsMethod(MethodNode method) {
+        // Class<?> parent = this.getClass().getClassLoader().loadClass(classNode.superName.replace('/', '.'));
+        // if (!Event.class.isAssignableFrom(parent)) return false;
+        // we want to delete all the code above
+        // Type tList = Type.getType("Lcpw/mods/fml/common/eventhandler/ListenerList;");
+        // ...
         AbstractInsnNode firstInstruction = null;
         AbstractInsnNode ldcInstruction = null;
         AbstractInsnNode node = method.instructions.getFirst();
