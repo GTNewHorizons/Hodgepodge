@@ -226,6 +226,10 @@ public enum Mixins implements IMixins {
                     "minecraft.chunkloading.blocks.MixinBlockVine")
             .setApplyIf(() -> SpeedupsConfig.preventLoadingChunksWhenTickingBlocks)
             .setPhase(Phase.EARLY)),
+    PREVENT_LOADING_CHUNKS_WHEN_PATH_FINDING(new MixinBuilder()
+            .addCommonMixins("minecraft.chunkloading.pathfinding.MixinPathNavigate")
+            .setApplyIf(() -> SpeedupsConfig.preventLoadingChunksWhenPathfinding)
+            .setPhase(Phase.EARLY)),
     SPEEDUP_CHUNK_PROVIDER_CLIENT(new MixinBuilder("Speed up ChunkProviderClient")
             .addClientMixins("minecraft.MixinChunkProviderClient_RemoveChunkListing")
             .addExcludedMod(TargetedMod.FASTCRAFT)

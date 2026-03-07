@@ -37,6 +37,10 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean preventLoadingChunksWhenTickingBlocks;
 
+    @Config.Comment("Prevents Vanilla entities from loading chunks when pathfinding")
+    @Config.DefaultBoolean(true)
+    public static boolean preventLoadingChunksWhenPathfinding;
+
     @Config.Comment("Speedup Vanilla Furnace recipe lookup")
     @Config.DefaultBoolean(true)
     public static boolean speedupVanillaFurnace;
