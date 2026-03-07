@@ -34,7 +34,7 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 @IFMLLoadingPlugin.TransformerExclusions({ "com.mitchej123.hodgepodge.core", "optifine" })
 public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
-    private static Boolean isObf = null;
+    private static boolean isObf = true;
     private String[] transformerClasses;
     private boolean replaceCoFHCoreAT = false;
 
@@ -80,6 +80,12 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
                 }
             }
         } catch (Exception ignored) {}
+
+        try {
+            isObf = Launch.classLoader.getClassBytes("net.minecraft.world.World") == null;
+        } catch (Exception ignored) {
+            isObf = true;
+        }
     }
 
     @Override
@@ -112,7 +118,6 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     @Override
     public void injectData(Map<String, Object> data) {
-        isObf = (Boolean) data.get("runtimeDeobfuscationEnabled");
         VoxelMapCacheMover.changeFileExtensions((File) data.get("mcLocation"));
 
         final List<String> tweaks = (List<String>) Launch.blackboard.get("TweakClasses");
@@ -140,14 +145,11 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     }
 
     public static boolean isObf() {
-        if (isObf == null) {
-            throw new IllegalStateException("Obfuscation state has been accessed too early!");
-        }
         return isObf;
     }
 
     public static void logASM(Logger log, String message) {
-        if (isObf == null || isObf) {
+        if (isObf()) {
             log.debug(message);
         } else {
             log.info(message);

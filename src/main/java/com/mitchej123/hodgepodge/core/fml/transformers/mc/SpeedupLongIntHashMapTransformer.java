@@ -31,9 +31,9 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer, Opco
     private static final String INIT = "<init>";
     private static final String EMPTY_DESC = "()V";
 
-    private ClassConstantPoolParser cstPoolParser;
+    private final ClassConstantPoolParser cstPoolParser;
 
-    private void initCstPoolParser() {
+    public SpeedupLongIntHashMapTransformer() {
         if (HodgepodgeCore.isObf()) {
             cstPoolParser = new ClassConstantPoolParser(INT_HASH_MAP_OBF, LONG_HASH_MAP_OBF);
         } else {
@@ -44,7 +44,6 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer, Opco
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null) return null;
-        if (cstPoolParser == null) initCstPoolParser();
         if (cstPoolParser.find(basicClass) && !transformedName.startsWith("com.mitchej123.hodgepodge.util")) {
             final byte[] transformedBytes = transformBytes(transformedName, basicClass);
             HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
