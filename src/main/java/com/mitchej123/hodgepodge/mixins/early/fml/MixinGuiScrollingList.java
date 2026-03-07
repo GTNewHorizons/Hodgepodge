@@ -9,8 +9,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
+import com.mitchej123.hodgepodge.client.bettermodlist.ScrollbarColorHelper;
 import com.mitchej123.hodgepodge.mixins.interfaces.IGuiScrollingList;
 
 import cpw.mods.fml.client.GuiScrollingList;
@@ -59,6 +62,39 @@ public class MixinGuiScrollingList implements IGuiScrollingList {
                 (int) (client.displayHeight - (bottom * scaleH)),
                 (int) (listWidth * scaleW),
                 (int) ((this.bottom - this.top) * scaleH));
+    }
+
+    @ModifyArgs(
+            method = "drawScreen",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/renderer/Tessellator;func_78384_a(II)V",
+                    ordinal = 4),
+            remap = false)
+    private void hodgepodge$recolorScrollbarTrack(Args args) {
+        args.set(0, ScrollbarColorHelper.getTrackColor(client));
+    }
+
+    @ModifyArgs(
+            method = "drawScreen",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/renderer/Tessellator;func_78384_a(II)V",
+                    ordinal = 5),
+            remap = false)
+    private void hodgepodge$recolorScrollbarThumb(Args args) {
+        args.set(0, ScrollbarColorHelper.getThumbColor(client));
+    }
+
+    @ModifyArgs(
+            method = "drawScreen",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/renderer/Tessellator;func_78384_a(II)V",
+                    ordinal = 6),
+            remap = false)
+    private void hodgepodge$recolorScrollbarThumbHighlight(Args args) {
+        args.set(0, ScrollbarColorHelper.getThumbHighlightColor(client));
     }
 
     @Inject(method = "drawScreen", at = @At("TAIL"), remap = false)
