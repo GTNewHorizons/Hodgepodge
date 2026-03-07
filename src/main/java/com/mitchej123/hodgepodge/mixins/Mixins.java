@@ -900,6 +900,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinEntityLivingBase_FixBreakingSpecialArmor")
             .setApplyIf(() -> FixesConfig.fixBreakingSpecialArmorHelmetOnBlockFall)
             .setPhase(Phase.EARLY)),
+    FIX_SAVE_FILE_WRITTEN_TO_EXIST_DIRECTORY(new MixinBuilder("Fix Minecraft write saves into a non-save folder but already contains data")
+            .addCommonMixins("minecraft.MixinGuiCreateWorld_NotWriteToExistDir")
+            .setApplyIf(() -> FixesConfig.fixSaveFileWrittenToExistingDirectory)
+            .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
