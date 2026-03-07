@@ -34,7 +34,7 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 @IFMLLoadingPlugin.TransformerExclusions({ "com.mitchej123.hodgepodge.core", "optifine" })
 public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
-    private static boolean isObf = true;
+    private static Boolean isObf = null;
     private String[] transformerClasses;
     private boolean replaceCoFHCoreAT = false;
 
@@ -145,6 +145,9 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     }
 
     public static boolean isObf() {
+        if (isObf == null) {
+            throw new IllegalStateException("Obfuscation state has been accessed too early!");
+        }
         return isObf;
     }
 
