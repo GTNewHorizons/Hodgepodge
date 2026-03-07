@@ -152,7 +152,7 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     }
 
     public static void logASM(Logger log, String message) {
-        if (isObf()) {
+        if (isObf == null || isObf) {
             log.debug(message);
         } else {
             log.info(message);
