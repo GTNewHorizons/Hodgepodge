@@ -27,20 +27,25 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer, Opco
     private static final String FAST_UTIL_LONG_HASH_MAP = "com/mitchej123/hodgepodge/util/FastUtilLongHashMap";
     private static final String FAST_UTIL_INT_HASH_MAP = "com/mitchej123/hodgepodge/util/FastUtilIntHashMap";
 
-    private static final ClassConstantPoolParser cstPoolParser = new ClassConstantPoolParser(
-            INT_HASH_MAP,
-            INT_HASH_MAP_OBF,
-            LONG_HASH_MAP,
-            LONG_HASH_MAP_OBF);
-
     private static final Logger LOGGER = LogManager.getLogger("SpeedupLongIntHashMapTransformer");
     private static final String INIT = "<init>";
     private static final String EMPTY_DESC = "()V";
 
+    private ClassConstantPoolParser cstPoolParser;
+
+    private void initCstPoolParser() {
+        if (HodgepodgeCore.isObf()) {
+            cstPoolParser = new ClassConstantPoolParser(INT_HASH_MAP_OBF, LONG_HASH_MAP_OBF);
+        } else {
+            cstPoolParser = new ClassConstantPoolParser(INT_HASH_MAP, LONG_HASH_MAP);
+        }
+    }
+
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null) return null;
-        if (cstPoolParser.find(basicClass, true) && !transformedName.startsWith("com.mitchej123.hodgepodge.util")) {
+        if (cstPoolParser == null) initCstPoolParser();
+        if (cstPoolParser.find(basicClass) && !transformedName.startsWith("com.mitchej123.hodgepodge.util")) {
             final byte[] transformedBytes = transformBytes(transformedName, basicClass);
             HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
             return transformedBytes;
@@ -54,7 +59,7 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer, Opco
         cr.accept(cn, 0);
         final boolean changed = transformClassNode(transformedName, cn);
         if (changed) {
-            ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+            ClassWriter cw = new ClassWriter(0);
             cn.accept(cw);
             return cw.toByteArray();
         }
@@ -64,7 +69,7 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer, Opco
     private static boolean transformClassNode(String transformedName, ClassNode cn) {
         boolean changed = false;
         for (MethodNode mn : cn.methods) {
-            for (AbstractInsnNode node : mn.instructions.toArray()) {
+            for (AbstractInsnNode node = mn.instructions.getFirst(); node != null; node = node.getNext()) {
                 if (node.getOpcode() == NEW && node instanceof TypeInsnNode tNode && isTargetDesc(tNode.desc)) {
                     AbstractInsnNode secondNode = node.getNext();
                     if (secondNode.getOpcode() == DUP) {
