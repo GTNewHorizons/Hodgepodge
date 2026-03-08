@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-@Mixin(BlockGrass.class)
+@Mixin(value = BlockGrass.class, priority = 800)
 public class MixinBlockGrass {
 
     /**
