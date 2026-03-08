@@ -149,11 +149,6 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean limitMobSpawningToViewDistance;
 
-    @Config.Comment("Prevents chunk loads caused by lava blocks")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean lavaChunkLoading;
-
     @Config.Comment("Speed up the vanilla method to remove formatting codes")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart

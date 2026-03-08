@@ -779,11 +779,6 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinNetHandlePlayServer_FixWrongBlockPlacementCheck")
             .setApplyIf(() -> FixesConfig.fixWrongBlockPlacementDistanceCheck)
             .setPhase(Phase.EARLY)),
-    PREVENT_LAVA_CHUNK_LOADING(new MixinBuilder("Prevent lava blocks from loading chunks")
-            .addExcludedMod(TargetedMod.LOTR)
-            .addCommonMixins("minecraft.MixinBlockStaticLiquid")
-            .setApplyIf(() -> SpeedupsConfig.lavaChunkLoading)
-            .setPhase(Phase.EARLY)),
     FIX_ITEM_BOUNCING(new MixinBuilder("Fixes items bouncing on stairs and other blocks with odd hitboxes")
             .addCommonMixins("minecraft.MixinEntityItem_BouncingFix")
             .setApplyIf(() -> FixesConfig.fixEntityBouncing)
