@@ -29,7 +29,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
+import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
+import com.mitchej123.hodgepodge.mixins.hooks.BukkitSpawnHelper;
+import com.mitchej123.hodgepodge.mixins.hooks.SupernovaHelper;
 import com.mitchej123.hodgepodge.mixins.interfaces.SpawnListEntryExt;
 import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
@@ -82,9 +85,16 @@ public class MixinSpawnerAnimals_optimizeSpawning {
             return 0;
         }
         this.hodgepodge$eligibleChunks.clear();
-        final int spawnRange = SpeedupsConfig.limitMobSpawningToViewDistance
-                ? Math.min(8, MinecraftServer.getServer().getConfigurationManager().getViewDistance())
-                : 8;
+        int spawnRange;
+        final int spigotRange = BukkitSpawnHelper.getMobSpawnRange(world);
+        if (spigotRange >= 0) {
+            spawnRange = Math.min(spigotRange, MinecraftServer.getServer().getConfigurationManager().getViewDistance());
+            spawnRange = Math.min(spawnRange, 8);
+        } else {
+            spawnRange = SpeedupsConfig.limitMobSpawningToViewDistance
+                    ? Math.min(8, MinecraftServer.getServer().getConfigurationManager().getViewDistance())
+                    : 8;
+        }
 
         for (int playerIndex = 0; playerIndex < world.playerEntities.size(); ++playerIndex) {
             final EntityPlayer player = world.playerEntities.get(playerIndex);
@@ -93,7 +103,7 @@ public class MixinSpawnerAnimals_optimizeSpawning {
 
             for (int offsetX = -spawnRange; offsetX <= spawnRange; ++offsetX) {
                 for (int offsetZ = -spawnRange; offsetZ <= spawnRange; ++offsetZ) {
-                    boolean isEdge = Math.abs(offsetX) == spawnRange || Math.abs(offsetZ) == spawnRange;
+                    final boolean isEdge = Math.abs(offsetX) == spawnRange || Math.abs(offsetZ) == spawnRange;
                     final long packedPos = ChunkPosUtil.toLong(offsetX + playerChunkX, offsetZ + playerChunkZ);
 
                     if (!isEdge) {
@@ -116,13 +126,14 @@ public class MixinSpawnerAnimals_optimizeSpawning {
 
         // noinspection ForLoopReplaceableByForEach
         for (int creatureTypeIndex = 0; creatureTypeIndex < creatureTypeCount; ++creatureTypeIndex) {
-            EnumCreatureType creatureType = CREATURE_TYPE_VALUES[creatureTypeIndex];
+            final EnumCreatureType creatureType = CREATURE_TYPE_VALUES[creatureTypeIndex];
 
             if ((creatureType.getPeacefulCreature() && !spawnPeacefulMobs)
                     || (!creatureType.getPeacefulCreature() && !spawnHostileMobs)
                     || (creatureType.getAnimal() && !spawnOnSetTickRate)
-                    || world.countEntities(creatureType, true)
-                            > creatureType.getMaxNumberOfCreature() * this.hodgepodge$eligibleChunks.size() / 256) {
+                    || world.countEntities(creatureType, true) > BukkitSpawnHelper.getSpawnLimit(world, creatureType)
+                            * this.hodgepodge$eligibleChunks.size()
+                            / 256) {
 
                 continue;
             }
@@ -133,13 +144,20 @@ public class MixinSpawnerAnimals_optimizeSpawning {
             LongLists.shuffle(hodgepodge$shuffledChunks, world.rand);
 
             // We can't use a for-each loop here as java will use the boxed variant
-            LongListIterator iterator = hodgepodge$shuffledChunks.iterator();
+            final LongListIterator iterator = hodgepodge$shuffledChunks.iterator();
             while (iterator.hasNext()) {
                 final long chunkPos = iterator.nextLong();
 
                 if (this.hodgepodge$eligibleChunks.get(chunkPos)) continue;
                 final int chunkX = ChunkPosUtil.getPackedX(chunkPos);
                 final int chunkZ = ChunkPosUtil.getPackedZ(chunkPos);
+
+                if (SpeedupsConfig.skipSpawningWithPendingLight) {
+                    final Chunk lightChunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
+                    if (lightChunk == null || !lightChunk.isLightPopulated) continue;
+                    if (Compat.isSupernovaPresent() && SupernovaHelper.hasChunkPendingLight(world, chunkX, chunkZ))
+                        continue;
+                }
 
                 final BlockPos spawnPosition = hodgepodge$getRandomPosInChunk(world, chunkX, chunkZ);
                 final int spawnX = spawnPosition.x;
@@ -152,7 +170,6 @@ public class MixinSpawnerAnimals_optimizeSpawning {
 
                     for (int spawnAttempt = 0; spawnAttempt < 3; ++spawnAttempt) {
                         int attemptX = spawnX;
-                        int attemptY = spawnY;
                         int attemptZ = spawnZ;
                         BiomeGenBase.SpawnListEntry spawnListEntry = null;
                         IEntityLivingData entityLivingData = null;
@@ -161,30 +178,30 @@ public class MixinSpawnerAnimals_optimizeSpawning {
                             attemptX += world.rand.nextInt(spawnRangeOffset) - world.rand.nextInt(spawnRangeOffset);
                             attemptZ += world.rand.nextInt(spawnRangeOffset) - world.rand.nextInt(spawnRangeOffset);
 
-                            if (canCreatureTypeSpawnAtLocation(creatureType, world, attemptX, attemptY, attemptZ)) {
+                            if (canCreatureTypeSpawnAtLocation(creatureType, world, attemptX, spawnY, attemptZ)) {
                                 final float spawnPosX = (float) attemptX + 0.5F;
-                                final float spawnPosY = (float) attemptY;
+                                final float spawnPosY = (float) spawnY;
                                 final float spawnPosZ = (float) attemptZ + 0.5F;
 
                                 if (world.getClosestPlayer(spawnPosX, spawnPosY, spawnPosZ, playerDistanceCheck)
                                         == null) {
-                                    float distanceX = spawnPosX - (float) spawnPoint.posX;
-                                    float distanceY = spawnPosY - (float) spawnPoint.posY;
-                                    float distanceZ = spawnPosZ - (float) spawnPoint.posZ;
-                                    float distanceSquared = distanceX * distanceX + distanceY * distanceY
+                                    final float distanceX = spawnPosX - (float) spawnPoint.posX;
+                                    final float distanceY = spawnPosY - (float) spawnPoint.posY;
+                                    final float distanceZ = spawnPosZ - (float) spawnPoint.posZ;
+                                    final float distanceSquared = distanceX * distanceX + distanceY * distanceY
                                             + distanceZ * distanceZ;
 
                                     if (distanceSquared >= 576.0F) {
                                         if (spawnListEntry == null) {
                                             spawnListEntry = world
-                                                    .spawnRandomCreature(creatureType, attemptX, attemptY, attemptZ);
+                                                    .spawnRandomCreature(creatureType, attemptX, spawnY, attemptZ);
 
                                             if (spawnListEntry == null) {
                                                 break;
                                             }
                                         }
 
-                                        EntityLiving entityLiving;
+                                        final EntityLiving entityLiving;
 
                                         try {
                                             entityLiving = ((SpawnListEntryExt) spawnListEntry).constructEntity(world);
@@ -200,12 +217,12 @@ public class MixinSpawnerAnimals_optimizeSpawning {
                                                 world.rand.nextFloat() * 360.0F,
                                                 0.0F);
 
-                                        Event.Result canSpawn = ForgeEventFactory
+                                        final Event.Result canSpawn = ForgeEventFactory
                                                 .canEntitySpawn(entityLiving, world, spawnPosX, spawnPosY, spawnPosZ);
                                         if (canSpawn == Event.Result.ALLOW || (canSpawn == Event.Result.DEFAULT
                                                 && entityLiving.getCanSpawnHere())) {
                                             ++packSize;
-                                            world.spawnEntityInWorld(entityLiving);
+                                            BukkitSpawnHelper.spawnEntity(world, entityLiving, false);
                                             if (!ForgeEventFactory.doSpecialSpawn(
                                                     entityLiving,
                                                     world,
@@ -270,16 +287,16 @@ public class MixinSpawnerAnimals_optimizeSpawning {
     @Overwrite
     public static void performWorldGenSpawning(World world, BiomeGenBase biome, int startX, int startZ, int areaWidth,
             int areaHeight, Random random) {
-        List<BiomeGenBase.SpawnListEntry> spawnableList = biome.getSpawnableList(EnumCreatureType.creature);
+        final List<BiomeGenBase.SpawnListEntry> spawnableList = biome.getSpawnableList(EnumCreatureType.creature);
 
         if (spawnableList.isEmpty()) {
             return;
         }
         while (random.nextFloat() < biome.getSpawningChance()) {
-            BiomeGenBase.SpawnListEntry spawnListEntry = (BiomeGenBase.SpawnListEntry) WeightedRandom
+            final BiomeGenBase.SpawnListEntry spawnListEntry = (BiomeGenBase.SpawnListEntry) WeightedRandom
                     .getRandomItem(world.rand, spawnableList);
             IEntityLivingData entityLivingData = null;
-            int groupCount = spawnListEntry.minGroupCount
+            final int groupCount = spawnListEntry.minGroupCount
                     + random.nextInt(1 + spawnListEntry.maxGroupCount - spawnListEntry.minGroupCount);
             int posX = startX + random.nextInt(areaWidth);
             int posZ = startZ + random.nextInt(areaHeight);
@@ -290,13 +307,13 @@ public class MixinSpawnerAnimals_optimizeSpawning {
                 boolean spawned = false;
 
                 for (int j = 0; !spawned && j < 4; ++j) {
-                    int posY = world.getTopSolidOrLiquidBlock(posX, posZ);
+                    final int posY = world.getTopSolidOrLiquidBlock(posX, posZ);
 
                     if (canCreatureTypeSpawnAtLocation(EnumCreatureType.creature, world, posX, posY, posZ)) {
-                        float spawnPosX = (float) posX + 0.5F;
-                        float spawnPosY = (float) posY;
-                        float spawnPosZ = (float) posZ + 0.5F;
-                        EntityLiving entityLiving;
+                        final float spawnPosX = (float) posX + 0.5F;
+                        final float spawnPosY = (float) posY;
+                        final float spawnPosZ = (float) posZ + 0.5F;
+                        final EntityLiving entityLiving;
 
                         try {
                             entityLiving = ((SpawnListEntryExt) spawnListEntry).constructEntity(world);
@@ -311,7 +328,7 @@ public class MixinSpawnerAnimals_optimizeSpawning {
                                 spawnPosZ,
                                 random.nextFloat() * 360.0F,
                                 0.0F);
-                        world.spawnEntityInWorld(entityLiving);
+                        BukkitSpawnHelper.spawnEntity(world, entityLiving, true);
                         entityLivingData = entityLiving.onSpawnWithEgg(entityLivingData);
                         spawned = true;
                     }
