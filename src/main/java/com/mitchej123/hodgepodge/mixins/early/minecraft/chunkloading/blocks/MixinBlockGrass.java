@@ -14,7 +14,7 @@ public class MixinBlockGrass {
 
     /**
      * @author tth05, Alexdoru
-     * @reason 1. Prevent loading unloading chunks when calling getBlock 2. Cache identical block calls 3. Remove unused
+     * @reason 1. Prevent loading unloaded chunks when calling getBlock 2. Cache identical block calls 3. Remove unused
      *         getBlock call 4. Give more chance for grass to spread if it randomly selects this block 5. Skip useless
      *         getBlock calls
      */
