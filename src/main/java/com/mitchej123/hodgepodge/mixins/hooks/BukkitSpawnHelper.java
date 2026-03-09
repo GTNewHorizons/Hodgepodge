@@ -9,6 +9,7 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.World;
 
 public class BukkitSpawnHelper {
+
     private static final Object SPAWN_REASON_NATURAL;
     private static final Object SPAWN_REASON_CHUNK_GEN;
     private static final MethodHandle ADD_ENTITY;

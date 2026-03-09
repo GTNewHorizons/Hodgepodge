@@ -2,7 +2,7 @@ package com.mitchej123.hodgepodge.mixins.hooks;
 
 import net.minecraft.world.World;
 
-import com.mitchej123.supernova.world.ExtendedWorld;
+import com.mitchej123.supernova.api.ExtendedWorld;
 
 public class SupernovaHelper {
 
