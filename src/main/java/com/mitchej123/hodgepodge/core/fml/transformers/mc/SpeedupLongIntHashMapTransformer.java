@@ -40,15 +40,13 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer, Opco
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null) return null;
-        if (cstPoolParser.find(basicClass, true) && !transformedName.startsWith("com.mitchej123.hodgepodge.util")) {
-            final byte[] transformedBytes = transformBytes(transformedName, basicClass);
-            HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
-            return transformedBytes;
+        if (cstPoolParser.find(basicClass) && !transformedName.startsWith("com.mitchej123.hodgepodge.util")) {
+            return transformBytes(transformedName, basicClass);
         }
         return basicClass;
     }
 
-    private static byte[] transformBytes(String transformedName, byte[] basicClass) {
+    private byte[] transformBytes(String transformedName, byte[] basicClass) {
         final ClassReader cr = new ClassReader(basicClass);
         final ClassNode cn = new ClassNode();
         cr.accept(cn, 0);
@@ -56,7 +54,9 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer, Opco
         if (changed) {
             ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             cn.accept(cw);
-            return cw.toByteArray();
+            final byte[] transformedBytes = cw.toByteArray();
+            HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
+            return transformedBytes;
         }
         return basicClass;
     }
@@ -91,11 +91,9 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer, Opco
     }
 
     private static boolean isTargetDesc(String desc) {
-        if (HodgepodgeCore.isObf()) {
-            return desc.equals(INT_HASH_MAP_OBF) || desc.equals(LONG_HASH_MAP_OBF);
-        } else {
-            return desc.equals(INT_HASH_MAP) || desc.equals(LONG_HASH_MAP);
-        }
+        return desc.equals(INT_HASH_MAP_OBF) || desc.equals(LONG_HASH_MAP_OBF)
+                || desc.equals(INT_HASH_MAP)
+                || desc.equals(LONG_HASH_MAP);
     }
 
     private static String getReplacement(String desc) {
