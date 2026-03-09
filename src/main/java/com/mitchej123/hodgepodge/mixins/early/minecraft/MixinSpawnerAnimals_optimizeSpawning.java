@@ -33,6 +33,7 @@ import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.mixins.hooks.BukkitSpawnHelper;
 import com.mitchej123.hodgepodge.mixins.hooks.SupernovaHelper;
+import com.mitchej123.hodgepodge.mixins.interfaces.SpawnContextWorld;
 import com.mitchej123.hodgepodge.mixins.interfaces.SpawnListEntryExt;
 import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
@@ -222,7 +223,11 @@ public class MixinSpawnerAnimals_optimizeSpawning {
                                         if (canSpawn == Event.Result.ALLOW || (canSpawn == Event.Result.DEFAULT
                                                 && entityLiving.getCanSpawnHere())) {
                                             ++packSize;
-                                            BukkitSpawnHelper.spawnEntity(world, entityLiving, false);
+                                            ((SpawnContextWorld) world)
+                                                    .hodgepodge$setSpawnContext(SpawnContextWorld.CONTEXT_NATURAL);
+                                            world.spawnEntityInWorld(entityLiving);
+                                            ((SpawnContextWorld) world)
+                                                    .hodgepodge$setSpawnContext(SpawnContextWorld.CONTEXT_NONE);
                                             if (!ForgeEventFactory.doSpecialSpawn(
                                                     entityLiving,
                                                     world,
@@ -328,7 +333,9 @@ public class MixinSpawnerAnimals_optimizeSpawning {
                                 spawnPosZ,
                                 random.nextFloat() * 360.0F,
                                 0.0F);
-                        BukkitSpawnHelper.spawnEntity(world, entityLiving, true);
+                        ((SpawnContextWorld) world).hodgepodge$setSpawnContext(SpawnContextWorld.CONTEXT_CHUNK_GEN);
+                        world.spawnEntityInWorld(entityLiving);
+                        ((SpawnContextWorld) world).hodgepodge$setSpawnContext(SpawnContextWorld.CONTEXT_NONE);
                         entityLivingData = entityLiving.onSpawnWithEgg(entityLivingData);
                         spawned = true;
                     }
