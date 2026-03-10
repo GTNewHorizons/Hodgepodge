@@ -16,7 +16,7 @@ import com.mitchej123.hodgepodge.util.ChunkPosUtil;
  * Returns EmptyChunk for missing chunks while the scheduler has chunk loads blocked (most of the tick — everything
  * outside the scheduler's own generation window). Already-loaded chunks pass through normally.
  */
-@Mixin(ChunkProviderServer.class)
+@Mixin(value = ChunkProviderServer.class, priority = 500)
 public class MixinChunkProviderServer_EntityGuard {
 
     @Shadow
