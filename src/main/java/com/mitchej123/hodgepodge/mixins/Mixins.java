@@ -210,9 +210,25 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinEnumChatFormatting_FastFormat")
             .setApplyIf(() -> SpeedupsConfig.speedupRemoveFormatting)
             .setPhase(Phase.EARLY)),
-    SPEEDUP_GRASS_BLOCK_RANDOM_TICKING(new MixinBuilder("Speed up grass block random ticking")
-            .addCommonMixins("minecraft.MixinBlockGrass")
-            .setApplyIf(() -> SpeedupsConfig.speedupGrassBlockRandomTicking)
+    PREVENT_LOADING_CHUNKS_WHEN_TICKING_BLOCKS(new MixinBuilder()
+            .addCommonMixins(
+                    "minecraft.chunkloading.blocks.MixinBlockCocoa",
+                    "minecraft.chunkloading.blocks.MixinBlockCrops",
+                    "minecraft.chunkloading.blocks.MixinBlockFire",
+                    "minecraft.chunkloading.blocks.MixinBlockGrass",
+                    "minecraft.chunkloading.blocks.MixinBlockFarmland",
+                    "minecraft.chunkloading.blocks.MixinBlockMushroom",
+                    "minecraft.chunkloading.blocks.MixinBlockMycelium",
+                    "minecraft.chunkloading.blocks.MixinBlockSapling",
+                    "minecraft.chunkloading.blocks.MixinBlockStaticLiquid",
+                    "minecraft.chunkloading.blocks.MixinBlockStem",
+                    "minecraft.chunkloading.blocks.MixinBlockTorch",
+                    "minecraft.chunkloading.blocks.MixinBlockVine")
+            .setApplyIf(() -> SpeedupsConfig.preventLoadingChunksWhenTickingBlocks)
+            .setPhase(Phase.EARLY)),
+    PREVENT_LOADING_CHUNKS_WHEN_PATH_FINDING(new MixinBuilder()
+            .addCommonMixins("minecraft.chunkloading.pathfinding.MixinPathNavigate")
+            .setApplyIf(() -> SpeedupsConfig.preventLoadingChunksWhenPathfinding)
             .setPhase(Phase.EARLY)),
     SPEEDUP_CHUNK_PROVIDER_CLIENT(new MixinBuilder("Speed up ChunkProviderClient")
             .addClientMixins("minecraft.MixinChunkProviderClient_RemoveChunkListing")
@@ -831,6 +847,12 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinFontRenderer_House")
             .setApplyIf(() -> FixesConfig.fixHouseCharRendering)
             .setPhase(Phase.EARLY)),
+    FIX_CHUNK_LOADING_FROM_BLOCK_UPDATES(new MixinBuilder("Prevent block and entity updates from loading unloaded chunks")
+            .setPhase(Phase.EARLY)
+            .setApplyIf(() -> FixesConfig.preventChunkLoadingFromBlockUpdates)
+            .addCommonMixins(
+                    "minecraft.chunkloading.MixinWorldServer_PreventChunkLoading",
+                    "minecraft.chunkloading.MixinWorld_PreventChunkLoading")),
     REMOVE_INVALID_ENTITES(new MixinBuilder()
             .addCommonMixins("minecraft.MixinChunk_FixInvalidEntity")
             .setApplyIf(() -> FixesConfig.removeInvalidChunkEntites)
@@ -1597,6 +1619,11 @@ public enum Mixins implements IMixins {
     FIX_WITCHERY_DEMON_SHIFT_CLICK(new MixinBuilder("Prevent the Witchery Demon's trading menu from opening when shift-clicking")
             .addCommonMixins("witchery.MixinEntityDemon")
             .setApplyIf(() -> FixesConfig.fixWitcheryDemonShiftClick)
+            .addRequiredMod(TargetedMod.WITCHERY)
+            .setPhase(Phase.LATE)),
+    FIX_WITCHERY_ENUM_VALUES_SPAM(new MixinBuilder()
+            .addCommonMixins("witchery.MixinExtendedPlayer_EnumValuesSpam")
+            .setApplyIf(() -> FixesConfig.fixWitcheryEnumValuesSpam)
             .addRequiredMod(TargetedMod.WITCHERY)
             .setPhase(Phase.LATE)),
 

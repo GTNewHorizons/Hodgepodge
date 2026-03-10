@@ -319,10 +319,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixCaseCommands;
 
+    // A stack overflow with water updates happens somewhere above 300 updates with default Java settings
     @Config.Comment("Limit the number of recursive cascading block updates during world generation to prevent stack overflow crashes, set to -1 to disable the limit.")
     @Config.RangeInt(min = -1)
-    @Config.DefaultInt(256) // A stack overflow with water updates happens somewhere above 300 updates with default Java
-                            // settings
+    @Config.DefaultInt(256)
     public static int limitRecursiveBlockUpdateDepth;
 
     @Config.Comment("Prevent recursive immediate block updates during WorldGenLiquids spring generation")
@@ -398,6 +398,18 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixHouseCharRendering;
+
+    @Config.Comment("""
+            [Game Breaking Config] Prevents block and entity updates from loading unloaded chunks.
+            This is very likely to break some behaviors in game in favor of better TPS stability.
+            This is intended for server owners facing TPS issues. If you play singleplayer just be
+            sure all your infrastructure is properly chunk loaded. If you are still facing TPS issues
+            make a CPU profile and we'll try to patch the mod causing it.
+            DO NOT report any bugs if you have this enabled.
+            Disable the setting and see if the bug still happens before reporting anything""")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean preventChunkLoadingFromBlockUpdates;
 
     @Config.Comment("Remove invalid Entities in chunks.")
     @Config.DefaultBoolean(true)
@@ -849,6 +861,11 @@ public class FixesConfig {
             "such as capturing the Demon in an EnderIO Soul Vial." })
     @Config.DefaultBoolean(true)
     public static boolean fixWitcheryDemonShiftClick;
+
+    @Config.Comment("Stops witchery from spamming Enum#values()")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixWitcheryEnumValuesSpam;
 
     // Xaero's Minimap
     @Config.Comment("Fixes the player entity dot rendering when arrow is chosen")
