@@ -37,6 +37,10 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean preventLoadingChunksWhenTickingBlocks;
 
+    @Config.Comment("Prevents flowing liquids from loading chunks")
+    @Config.DefaultBoolean(true)
+    public static boolean preventLoadingChunksWhenLiquidsFlow;
+
     @Config.Comment("Prevents Vanilla entities from loading chunks when pathfinding")
     @Config.DefaultBoolean(true)
     public static boolean preventLoadingChunksWhenPathfinding;
@@ -148,11 +152,6 @@ public class SpeedupsConfig {
     @Config.Comment("Limit mob spawning to the view distance")
     @Config.DefaultBoolean(true)
     public static boolean limitMobSpawningToViewDistance;
-
-    @Config.Comment("Prevents chunk loads caused by lava blocks")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean lavaChunkLoading;
 
     @Config.Comment("Speed up the vanilla method to remove formatting codes")
     @Config.DefaultBoolean(true)

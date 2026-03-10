@@ -226,6 +226,13 @@ public enum Mixins implements IMixins {
                     "minecraft.chunkloading.blocks.MixinBlockVine")
             .setApplyIf(() -> SpeedupsConfig.preventLoadingChunksWhenTickingBlocks)
             .setPhase(Phase.EARLY)),
+    PREVENT_LOADING_CHUNKS_WHEN_LIQUIDS_FLOW(new MixinBuilder()
+            .addCommonMixins(
+                    "minecraft.chunkloading.blocks.MixinBlockDynamicLiquid",
+                    "minecraft.chunkloading.blocks.MixinBlockFluidClassic",
+                    "minecraft.chunkloading.blocks.MixinBlockFluidFinite")
+            .setApplyIf(() -> SpeedupsConfig.preventLoadingChunksWhenLiquidsFlow)
+            .setPhase(Phase.EARLY)),
     PREVENT_LOADING_CHUNKS_WHEN_PATH_FINDING(new MixinBuilder()
             .addCommonMixins("minecraft.chunkloading.pathfinding.MixinPathNavigate")
             .setApplyIf(() -> SpeedupsConfig.preventLoadingChunksWhenPathfinding)
@@ -778,11 +785,6 @@ public enum Mixins implements IMixins {
     FIX_PLAYER_BLOCK_PLACEMENT_DISTANCE_CHECK(new MixinBuilder("Fix wrong block placement distance check")
             .addCommonMixins("minecraft.MixinNetHandlePlayServer_FixWrongBlockPlacementCheck")
             .setApplyIf(() -> FixesConfig.fixWrongBlockPlacementDistanceCheck)
-            .setPhase(Phase.EARLY)),
-    PREVENT_LAVA_CHUNK_LOADING(new MixinBuilder("Prevent lava blocks from loading chunks")
-            .addExcludedMod(TargetedMod.LOTR)
-            .addCommonMixins("minecraft.MixinBlockStaticLiquid")
-            .setApplyIf(() -> SpeedupsConfig.lavaChunkLoading)
             .setPhase(Phase.EARLY)),
     FIX_ITEM_BOUNCING(new MixinBuilder("Fixes items bouncing on stairs and other blocks with odd hitboxes")
             .addCommonMixins("minecraft.MixinEntityItem_BouncingFix")
