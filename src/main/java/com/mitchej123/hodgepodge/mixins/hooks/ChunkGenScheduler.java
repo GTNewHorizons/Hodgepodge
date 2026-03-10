@@ -358,7 +358,7 @@ public class ChunkGenScheduler {
             }
 
             if (!isWithinChunkRange(world, cx, cz, viewDist + 1)) {
-                removeStatus(key);
+                populationQueue.set(write++, key);
                 continue;
             }
 
@@ -674,6 +674,11 @@ public class ChunkGenScheduler {
                 pendingGenSet.remove(packed);
                 chunkRefCount.remove(packed);
                 loadCallback.loadChunk(x, z, tempPlayers);
+                // Re-track orphaned chunks that were already loaded but not populated
+                final Chunk existingChunk = (Chunk) cps.loadedChunkHashMap.getValueByKey(packed);
+                if (existingChunk != null && !existingChunk.isTerrainPopulated) {
+                    trackIfUnpopulated(existingChunk, x, z);
+                }
             }
         }
 

@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.management.PlayerManager;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.AnvilChunkLoader;
 import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.common.util.ChunkCoordComparator;
@@ -105,6 +106,8 @@ public abstract class MixinPlayerManager_ThrottleChunkGen {
                         : null;
 
                 final LongArrayList needsGen = new LongArrayList();
+                final ChunkGenScheduler scheduler = ChunkGenScheduler
+                        .forDimension(this.theWorldServer.provider.dimensionId);
 
                 for (int i = 0; i < chunksToLoad.size(); i++) {
                     final long packed = chunksToLoad.getLong(i);
@@ -112,6 +115,11 @@ public abstract class MixinPlayerManager_ThrottleChunkGen {
                     final int z = ChunkPosUtil.getPackedZ(packed);
                     if (cps.chunkExists(x, z) || (acl != null && acl.chunkExists(this.theWorldServer, x, z))) {
                         this.getOrCreateChunkWatcher(x, z, true).addPlayer(player);
+                        // Re-track orphaned chunks: loaded in memory with terrain but never populated
+                        final Chunk chunk = cps.provideChunk(x, z);
+                        if (chunk != null && !chunk.isTerrainPopulated) {
+                            scheduler.trackIfUnpopulated(chunk, x, z);
+                        }
                     } else {
                         needsGen.add(packed);
                     }

@@ -7,6 +7,6 @@ import com.mitchej123.supernova.api.ExtendedWorld;
 public class SupernovaHelper {
 
     public static boolean hasChunkPendingLight(World world, int cx, int cz) {
-        return ((ExtendedWorld) world).hasChunkPendingLight(cx, cz);
+        return ((ExtendedWorld) world).supernova$hasChunkPendingLight(cx, cz);
     }
 }

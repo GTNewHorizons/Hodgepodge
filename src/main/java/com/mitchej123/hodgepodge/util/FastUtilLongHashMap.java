@@ -4,6 +4,8 @@ import java.util.Iterator;
 
 import net.minecraft.util.LongHashMap;
 
+import org.jetbrains.annotations.ApiStatus;
+
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 
 public class FastUtilLongHashMap extends LongHashMap {
@@ -22,30 +24,40 @@ public class FastUtilLongHashMap extends LongHashMap {
         }
     }
 
+    /** @deprecated Reobfuscated in prod. */
+    @ApiStatus.Internal
     @Override
     public int getNumHashElements() {
         checkOwner();
         return map.size();
     }
 
+    /** @deprecated Reobfuscated in prod. */
+    @ApiStatus.Internal
     @Override
     public Object getValueByKey(long key) {
         checkOwner();
         return map.get(key);
     }
 
+    /** @deprecated Reobfuscated in prod. */
+    @ApiStatus.Internal
     @Override
     public boolean containsItem(long key) {
         checkOwner();
         return map.containsKey(key);
     }
 
+    /** @deprecated Reobfuscated in prod. */
+    @ApiStatus.Internal
     @Override
     public void add(long key, Object value) {
         checkOwner();
         map.put(key, value);
     }
 
+    /** @deprecated Reobfuscated in prod. */
+    @ApiStatus.Internal
     @Override
     public Object remove(long key) {
         checkOwner();
