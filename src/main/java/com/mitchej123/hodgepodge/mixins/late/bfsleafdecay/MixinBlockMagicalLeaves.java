@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.gtnewhorizon.gtnhlib.blocks.util.BFSLeafDecay;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mitchej123.hodgepodge.mixins.hooks.LeafDecayHooks;
 
 import thaumcraft.common.blocks.BlockMagicalLeaves;
 
@@ -30,6 +30,7 @@ public class MixinBlockMagicalLeaves {
             cancellable = true)
     private void hodgepodge$bfsDecay(World world, int x, int y, int z, Random random, CallbackInfo ci,
             @Local(name = "var6") int meta, @Local(name = "var7") byte range) {
-        LeafDecayHooks.handleDecayChecked((Block) (Object) this, world, x, y, z, meta, range, ci);
+        BFSLeafDecay.handleDecayChecked((Block) (Object) this, world, x, y, z, meta, range);
+        ci.cancel();
     }
 }
