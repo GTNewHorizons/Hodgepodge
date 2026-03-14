@@ -26,8 +26,4 @@ public class DebugConfig {
     @Config.DefaultBoolean(false)
     public static boolean showChunkGenDebug;
 
-    @Config.Comment("Write chunk generation detail/summary logs to logs/hodgepodge-throttle-stats.log and logs/hodgepodge-chunkgen-summary.log.")
-    @Config.DefaultBoolean(true)
-    public static boolean chunkGenLogging;
-
 }

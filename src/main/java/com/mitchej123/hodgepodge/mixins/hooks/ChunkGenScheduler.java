@@ -144,11 +144,9 @@ public class ChunkGenScheduler {
 
     public void deferChunkPopulation(Chunk chunk, int x, int z) {
         trackTerrain(chunk, x, z);
-        stats.incrementDeferred();
     }
 
     public void trackIfUnpopulated(Chunk chunk, int x, int z) {
-        stats.incrementDirect();
         trackTerrain(chunk, x, z);
     }
 
@@ -610,7 +608,6 @@ public class ChunkGenScheduler {
 
         if (neighborsFilled > 2) {
             // Too many neighbors needed — defer population to next tick when they'll be loaded
-            ThrottleStats.logForceProcess(dimId, cx, cz, bestAge, neighborsFilled);
             return;
         }
 
@@ -623,8 +620,6 @@ public class ChunkGenScheduler {
 
         queueResend(world, cps, cx, cz, viewDist);
         removeStatus(bestKey);
-
-        ThrottleStats.logForceProcess(dimId, cx, cz, bestAge, neighborsFilled);
     }
 
     private void pruneAndSort(WorldServer world, ChunkProviderServer cps, AnvilChunkLoader acl, int viewRadius,
