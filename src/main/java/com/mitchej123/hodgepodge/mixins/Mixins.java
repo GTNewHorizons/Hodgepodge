@@ -476,6 +476,11 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinSpawnListEntry_optimizeSpawning")
             .setApplyIf(() -> SpeedupsConfig.optimizeMobSpawning)
             .setPhase(Phase.EARLY)),
+    OPTIMIZE_MOB_SPAWNING_NULL_VANILLA_MAP(new MixinBuilder("Null out vanilla eligibleChunksForSpawning HashMap")
+            .addCommonMixins("minecraft.MixinSpawnerAnimals_nullVanillaMap")
+            .setApplyIf(() -> SpeedupsConfig.optimizeMobSpawning)
+            .addExcludedMod(TargetedMod.BUKKIT)
+            .setPhase(Phase.EARLY)),
     SPAWN_CONTEXT(new MixinBuilder("Adds spawn context field to World for spawn reason routing")
             .addCommonMixins("minecraft.MixinWorld_SpawnContext")
             .setApplyIf(() -> SpeedupsConfig.optimizeMobSpawning)

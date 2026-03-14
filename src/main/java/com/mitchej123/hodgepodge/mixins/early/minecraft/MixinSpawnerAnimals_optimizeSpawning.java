@@ -1,6 +1,5 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -15,7 +14,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.WeightedRandom;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.SpawnerAnimals;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -25,7 +23,6 @@ import net.minecraftforge.event.ForgeEventFactory;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
@@ -47,10 +44,6 @@ import it.unimi.dsi.fastutil.longs.LongLists;
 
 @Mixin(value = SpawnerAnimals.class, priority = 900)
 public class MixinSpawnerAnimals_optimizeSpawning {
-
-    @SuppressWarnings("unused")
-    @Shadow
-    private final HashMap<ChunkCoordIntPair, Boolean> eligibleChunksForSpawning = null;
 
     @Unique
     private static final EnumCreatureType[] CREATURE_TYPE_VALUES = EnumCreatureType.values();
