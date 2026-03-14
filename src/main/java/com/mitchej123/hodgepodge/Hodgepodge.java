@@ -35,7 +35,7 @@ import cpw.mods.fml.relauncher.Side;
         version = Hodgepodge.VERSION,
         name = Hodgepodge.NAME,
         dependencies = "required-after:gtnhmixins@[2.0.1,);" + "required-after:unimixins@[0.0.20,);"
-                + "required-after:gtnhlib@[0.6.21,);",
+                + "required-after:gtnhlib@[0.9.41,);",
         guiFactory = "com.mitchej123.hodgepodge.config.gui.HodgepodgeGuiConfigFactory")
 public class Hodgepodge {
 
@@ -45,13 +45,9 @@ public class Hodgepodge {
     public static final String VERSION = Tags.VERSION;
     public static final String NAME = "Hodgepodge";
 
-    public static final boolean isGTNH;
+    public static final boolean isGTNH = true;
 
     private final ArtifactVersion minimumClientJoinVersion = new DefaultArtifactVersion("2.5.36");
-
-    static {
-        isGTNH = true;
-    }
 
     public Hodgepodge() {
         FMLCommonHandler.instance().registerCrashCallable(new ICrashCallable() {
