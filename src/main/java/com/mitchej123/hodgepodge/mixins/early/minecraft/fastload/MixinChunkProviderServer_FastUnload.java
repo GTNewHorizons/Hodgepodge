@@ -21,6 +21,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
+import com.mitchej123.hodgepodge.mixins.hooks.ChunkGenScheduler;
+import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
@@ -70,20 +72,24 @@ public class MixinChunkProviderServer_FastUnload {
             final LongOpenHashSet unloadSet = (LongOpenHashSet) this.chunksToUnload;
             if (!unloadSet.isEmpty() && !persistentChunks.isEmpty()) {
                 for (ChunkCoordIntPair forced : persistentChunks.keySet()) {
-                    unloadSet.remove(ChunkCoordIntPair.chunkXZ2Int(forced.chunkXPos, forced.chunkZPos));
+                    unloadSet.remove(ChunkPosUtil.toLong(forced.chunkXPos, forced.chunkZPos));
                 }
             }
 
             final int limit = SpeedupsConfig.fastChunkHandling ? SpeedupsConfig.maxUnloadSpeed : 100;
 
             if (!unloadSet.isEmpty()) {
+                final var scheduler = ChunkGenScheduler.forDimension(this.worldObj.provider.dimensionId);
                 final LongIterator iter = unloadSet.iterator();
                 ObjectOpenHashSet<Chunk> chunksToRemove = null;
                 boolean dimensionUnloaded = false;
                 int count = 0;
 
                 while (iter.hasNext() && count < limit) {
-                    long key = iter.nextLong();
+                    final long key = iter.nextLong();
+                    if (scheduler.shouldProtectFromUnload(key)) {
+                        continue;
+                    }
                     iter.remove();
                     count++;
 
@@ -93,6 +99,7 @@ public class MixinChunkProviderServer_FastUnload {
                         this.safeSaveChunk(chunk);
                         this.safeSaveExtraChunkData(chunk);
                         ForgeChunkManager.putDormantChunk(key, chunk);
+                        scheduler.onChunkUnload(key);
                         this.loadedChunkHashMap.remove(key);
                         if (chunksToRemove == null) chunksToRemove = new ObjectOpenHashSet<>();
                         chunksToRemove.add(chunk);

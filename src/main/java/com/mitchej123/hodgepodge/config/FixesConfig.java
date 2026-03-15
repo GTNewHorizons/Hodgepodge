@@ -471,6 +471,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixBreakingSpecialArmorHelmetOnBlockFall;
 
+    @Config.Comment("Fix Minecraft creating new world in folders that already exists")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixSaveFileWrittenToExistingDirectory;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes

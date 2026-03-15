@@ -109,6 +109,7 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinWorld_FixLightUpdateLag")
             .addExcludedMod(TargetedMod.ARCHAICFIX)
             .addExcludedMod(TargetedMod.ANGELICA)
+            .addExcludedMod(TargetedMod.SUPERNOVA)
             .setApplyIf(() -> FixesConfig.optimizeWorldUpdateLight)
             .setPhase(Phase.EARLY)),
     FIX_FRIENDLY_CREATURE_SOUNDS(new MixinBuilder()
@@ -210,9 +211,32 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinEnumChatFormatting_FastFormat")
             .setApplyIf(() -> SpeedupsConfig.speedupRemoveFormatting)
             .setPhase(Phase.EARLY)),
-    SPEEDUP_GRASS_BLOCK_RANDOM_TICKING(new MixinBuilder("Speed up grass block random ticking")
-            .addCommonMixins("minecraft.MixinBlockGrass")
-            .setApplyIf(() -> SpeedupsConfig.speedupGrassBlockRandomTicking)
+    PREVENT_LOADING_CHUNKS_WHEN_TICKING_BLOCKS(new MixinBuilder()
+            .addCommonMixins(
+                    "minecraft.chunkloading.blocks.MixinBlockCocoa",
+                    "minecraft.chunkloading.blocks.MixinBlockCrops",
+                    "minecraft.chunkloading.blocks.MixinBlockFire",
+                    "minecraft.chunkloading.blocks.MixinBlockGrass",
+                    "minecraft.chunkloading.blocks.MixinBlockFarmland",
+                    "minecraft.chunkloading.blocks.MixinBlockMushroom",
+                    "minecraft.chunkloading.blocks.MixinBlockMycelium",
+                    "minecraft.chunkloading.blocks.MixinBlockSapling",
+                    "minecraft.chunkloading.blocks.MixinBlockStaticLiquid",
+                    "minecraft.chunkloading.blocks.MixinBlockStem",
+                    "minecraft.chunkloading.blocks.MixinBlockTorch",
+                    "minecraft.chunkloading.blocks.MixinBlockVine")
+            .setApplyIf(() -> SpeedupsConfig.preventLoadingChunksWhenTickingBlocks)
+            .setPhase(Phase.EARLY)),
+    PREVENT_LOADING_CHUNKS_WHEN_LIQUIDS_FLOW(new MixinBuilder()
+            .addCommonMixins(
+                    "minecraft.chunkloading.blocks.MixinBlockDynamicLiquid",
+                    "minecraft.chunkloading.blocks.MixinBlockFluidClassic",
+                    "minecraft.chunkloading.blocks.MixinBlockFluidFinite")
+            .setApplyIf(() -> SpeedupsConfig.preventLoadingChunksWhenLiquidsFlow)
+            .setPhase(Phase.EARLY)),
+    PREVENT_LOADING_CHUNKS_WHEN_PATH_FINDING(new MixinBuilder()
+            .addCommonMixins("minecraft.chunkloading.pathfinding.MixinPathNavigate")
+            .setApplyIf(() -> SpeedupsConfig.preventLoadingChunksWhenPathfinding)
             .setPhase(Phase.EARLY)),
     SPEEDUP_CHUNK_PROVIDER_CLIENT(new MixinBuilder("Speed up ChunkProviderClient")
             .addClientMixins("minecraft.MixinChunkProviderClient_RemoveChunkListing")
@@ -451,7 +475,20 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinSpawnerAnimals_optimizeSpawning",
                     "minecraft.MixinSpawnListEntry_optimizeSpawning")
             .setApplyIf(() -> SpeedupsConfig.optimizeMobSpawning)
+            .setPhase(Phase.EARLY)),
+    OPTIMIZE_MOB_SPAWNING_NULL_VANILLA_MAP(new MixinBuilder("Null out vanilla eligibleChunksForSpawning HashMap")
+            .addCommonMixins("minecraft.MixinSpawnerAnimals_nullVanillaMap")
+            .setApplyIf(() -> SpeedupsConfig.optimizeMobSpawning)
             .addExcludedMod(TargetedMod.BUKKIT)
+            .setPhase(Phase.EARLY)),
+    SPAWN_CONTEXT(new MixinBuilder("Adds spawn context field to World for spawn reason routing")
+            .addCommonMixins("minecraft.MixinWorld_SpawnContext")
+            .setApplyIf(() -> SpeedupsConfig.optimizeMobSpawning)
+            .setPhase(Phase.EARLY)),
+    BUKKIT_SPAWN_REASON(new MixinBuilder("Routes spawnEntityInWorld through Bukkit addEntity with spawn reason")
+            .addCommonMixins("minecraft.MixinWorld_BukkitSpawnReason")
+            .setApplyIf(() -> SpeedupsConfig.optimizeMobSpawning)
+            .addRequiredMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
     RENDER_DEBUG(new MixinBuilder()
             .addClientMixins("debug.MixinRenderGlobal")
@@ -742,10 +779,23 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.speedupChunkUnload)
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
-    THROTTLE_CHUNK_GENERATION(new MixinBuilder("Spread chunk generation across ticks to prevent lag spikes")
-            .addCommonMixins("minecraft.fastload.MixinPlayerManager_ThrottleChunkGen")
-            .setApplyIf(() -> SpeedupsConfig.throttleChunkGeneration)
+    ENTITY_CHUNK_LOAD_GUARD(new MixinBuilder("Prevent entity ticks from triggering chunk generation")
+            .addCommonMixins("minecraft.fastload.MixinChunkProviderServer_EntityGuard")
+            .setApplyIf(() -> SpeedupsConfig.preventEntityChunkLoading)
             .addExcludedMod(TargetedMod.BUKKIT)
+            .setPhase(Phase.EARLY)),
+    ENTITY_CHUNK_LOAD_GUARD_BUKKIT(new MixinBuilder("Prevent entity ticks from triggering chunk generation (Bukkit)")
+            .addCommonMixins("minecraft.fastload.MixinChunkProviderServer_EntityGuard_Bukkit")
+            .setApplyIf(() -> SpeedupsConfig.preventEntityChunkLoading)
+            .addRequiredMod(TargetedMod.BUKKIT)
+            .setPhase(Phase.EARLY)),
+    THROTTLE_CHUNK_GENERATION(new MixinBuilder("Spread chunk generation across ticks to prevent lag spikes")
+            .addCommonMixins(
+                    "minecraft.fastload.MixinMinecraftServer_TickStart",
+                    "minecraft.fastload.MixinChunkProviderServer_DeferPopulation",
+                    "minecraft.fastload.MixinPlayerManager_ThrottleChunkGen",
+                    "minecraft.fastload.MixinChunk_SendWithoutPopulation")
+            .setApplyIf(() -> SpeedupsConfig.throttleChunkGeneration)
             .setPhase(Phase.EARLY)),
     FAST_CHUNK_SENDING(new MixinBuilder("Removes hard caps on chunk sending speed")
             .addCommonMixins("minecraft.fastload.MixinEntityPlayerMP")
@@ -762,11 +812,6 @@ public enum Mixins implements IMixins {
     FIX_PLAYER_BLOCK_PLACEMENT_DISTANCE_CHECK(new MixinBuilder("Fix wrong block placement distance check")
             .addCommonMixins("minecraft.MixinNetHandlePlayServer_FixWrongBlockPlacementCheck")
             .setApplyIf(() -> FixesConfig.fixWrongBlockPlacementDistanceCheck)
-            .setPhase(Phase.EARLY)),
-    PREVENT_LAVA_CHUNK_LOADING(new MixinBuilder("Prevent lava blocks from loading chunks")
-            .addExcludedMod(TargetedMod.LOTR)
-            .addCommonMixins("minecraft.MixinBlockStaticLiquid")
-            .setApplyIf(() -> SpeedupsConfig.lavaChunkLoading)
             .setPhase(Phase.EARLY)),
     FIX_ITEM_BOUNCING(new MixinBuilder("Fixes items bouncing on stairs and other blocks with odd hitboxes")
             .addCommonMixins("minecraft.MixinEntityItem_BouncingFix")
@@ -903,6 +948,10 @@ public enum Mixins implements IMixins {
     FIX_BREAKING_SPECIAL_ARMOR_ON_BLOCK_FALL(new MixinBuilder("Fix breaking electric and other special armor helmet when a block falls on your head")
             .addCommonMixins("minecraft.MixinEntityLivingBase_FixBreakingSpecialArmor")
             .setApplyIf(() -> FixesConfig.fixBreakingSpecialArmorHelmetOnBlockFall)
+            .setPhase(Phase.EARLY)),
+    FIX_SAVE_FILE_WRITTEN_TO_EXIST_DIRECTORY(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinGuiCreateWorld_NotWriteToExistDir")
+            .setApplyIf(() -> FixesConfig.fixSaveFileWrittenToExistingDirectory)
             .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
