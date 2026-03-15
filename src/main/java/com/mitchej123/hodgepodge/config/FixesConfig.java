@@ -379,10 +379,10 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixGlassBottleWaterFilling;
 
-    @Config.Comment("Fix the player triggering right click animation on the fence")
+    @Config.Comment("Fix the player arm swinging when right clicking a fence")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean fixFenceClick;
+    public static boolean fixFenceRightClick;
 
     @Config.Comment("Use correct egg particles instead of snowball ones (MC-7807)")
     @Config.DefaultBoolean(true)
