@@ -11,6 +11,7 @@ import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.net.MessageConfigSync;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
+import com.mitchej123.hodgepodge.util.ServerThreadLongHashMap;
 import com.mitchej123.hodgepodge.util.TravellersGear;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -67,9 +68,11 @@ public class HodgepodgeEventHandler {
 
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && TweaksConfig.avoidDroppingItemsWhenClosing
-                && !playersClosedContainers.isEmpty()) {
-            playersClosedContainers.clear();
+        if (event.phase == TickEvent.Phase.END) {
+            ServerThreadLongHashMap.refreshSnapshots();
+            if (TweaksConfig.avoidDroppingItemsWhenClosing && !playersClosedContainers.isEmpty()) {
+                playersClosedContainers.clear();
+            }
         }
     }
 
