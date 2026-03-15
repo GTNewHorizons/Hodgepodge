@@ -109,6 +109,7 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinWorld_FixLightUpdateLag")
             .addExcludedMod(TargetedMod.ARCHAICFIX)
             .addExcludedMod(TargetedMod.ANGELICA)
+            .addExcludedMod(TargetedMod.SUPERNOVA)
             .setApplyIf(() -> FixesConfig.optimizeWorldUpdateLight)
             .setPhase(Phase.EARLY)),
     FIX_FRIENDLY_CREATURE_SOUNDS(new MixinBuilder()
@@ -474,7 +475,20 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinSpawnerAnimals_optimizeSpawning",
                     "minecraft.MixinSpawnListEntry_optimizeSpawning")
             .setApplyIf(() -> SpeedupsConfig.optimizeMobSpawning)
+            .setPhase(Phase.EARLY)),
+    OPTIMIZE_MOB_SPAWNING_NULL_VANILLA_MAP(new MixinBuilder("Null out vanilla eligibleChunksForSpawning HashMap")
+            .addCommonMixins("minecraft.MixinSpawnerAnimals_nullVanillaMap")
+            .setApplyIf(() -> SpeedupsConfig.optimizeMobSpawning)
             .addExcludedMod(TargetedMod.BUKKIT)
+            .setPhase(Phase.EARLY)),
+    SPAWN_CONTEXT(new MixinBuilder("Adds spawn context field to World for spawn reason routing")
+            .addCommonMixins("minecraft.MixinWorld_SpawnContext")
+            .setApplyIf(() -> SpeedupsConfig.optimizeMobSpawning)
+            .setPhase(Phase.EARLY)),
+    BUKKIT_SPAWN_REASON(new MixinBuilder("Routes spawnEntityInWorld through Bukkit addEntity with spawn reason")
+            .addCommonMixins("minecraft.MixinWorld_BukkitSpawnReason")
+            .setApplyIf(() -> SpeedupsConfig.optimizeMobSpawning)
+            .addRequiredMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
     RENDER_DEBUG(new MixinBuilder()
             .addClientMixins("debug.MixinRenderGlobal")
@@ -765,10 +779,23 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.speedupChunkUnload)
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
-    THROTTLE_CHUNK_GENERATION(new MixinBuilder("Spread chunk generation across ticks to prevent lag spikes")
-            .addCommonMixins("minecraft.fastload.MixinPlayerManager_ThrottleChunkGen")
-            .setApplyIf(() -> SpeedupsConfig.throttleChunkGeneration)
+    ENTITY_CHUNK_LOAD_GUARD(new MixinBuilder("Prevent entity ticks from triggering chunk generation")
+            .addCommonMixins("minecraft.fastload.MixinChunkProviderServer_EntityGuard")
+            .setApplyIf(() -> SpeedupsConfig.preventEntityChunkLoading)
             .addExcludedMod(TargetedMod.BUKKIT)
+            .setPhase(Phase.EARLY)),
+    ENTITY_CHUNK_LOAD_GUARD_BUKKIT(new MixinBuilder("Prevent entity ticks from triggering chunk generation (Bukkit)")
+            .addCommonMixins("minecraft.fastload.MixinChunkProviderServer_EntityGuard_Bukkit")
+            .setApplyIf(() -> SpeedupsConfig.preventEntityChunkLoading)
+            .addRequiredMod(TargetedMod.BUKKIT)
+            .setPhase(Phase.EARLY)),
+    THROTTLE_CHUNK_GENERATION(new MixinBuilder("Spread chunk generation across ticks to prevent lag spikes")
+            .addCommonMixins(
+                    "minecraft.fastload.MixinMinecraftServer_TickStart",
+                    "minecraft.fastload.MixinChunkProviderServer_DeferPopulation",
+                    "minecraft.fastload.MixinPlayerManager_ThrottleChunkGen",
+                    "minecraft.fastload.MixinChunk_SendWithoutPopulation")
+            .setApplyIf(() -> SpeedupsConfig.throttleChunkGeneration)
             .setPhase(Phase.EARLY)),
     FAST_CHUNK_SENDING(new MixinBuilder("Removes hard caps on chunk sending speed")
             .addCommonMixins("minecraft.fastload.MixinEntityPlayerMP")
