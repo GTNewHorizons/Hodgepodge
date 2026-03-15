@@ -47,6 +47,7 @@ public class ServerThreadLongHashMap extends FastUtilLongHashMap {
     private int snapshotTick;
     private volatile int lastAccessTick;
     private boolean registeredForTicking;
+    private boolean dirty;
     private Long2ObjectOpenHashMap<Object> snapshot;
 
     public static void refreshSnapshots() {
@@ -89,7 +90,7 @@ public class ServerThreadLongHashMap extends FastUtilLongHashMap {
             registeredForTicking = false;
             return;
         }
-        if ((tick - snapshotTick) >= SNAPSHOT_INTERVAL_TICKS) {
+        if ((tick - snapshotTick) >= SNAPSHOT_INTERVAL_TICKS && dirty) {
             doSnapshot();
         }
     }
@@ -97,6 +98,19 @@ public class ServerThreadLongHashMap extends FastUtilLongHashMap {
     private void doSnapshot() {
         snapshot = new Long2ObjectOpenHashMap<>(map);
         snapshotTick = currentTick();
+        dirty = false;
+    }
+
+    @Override
+    public void add(long key, Object value) {
+        super.add(key, value);
+        dirty = true;
+    }
+
+    @Override
+    public Object remove(long key) {
+        dirty = true;
+        return super.remove(key);
     }
 
     private Long2ObjectOpenHashMap<Object> getSnapshot() {
