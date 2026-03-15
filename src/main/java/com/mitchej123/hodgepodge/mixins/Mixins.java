@@ -835,6 +835,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.fastItemEntityPhysics)
             .addExcludedMod(TargetedMod.FALSETWEAKS)
             .setPhase(Phase.EARLY)),
+    FIX_FENCE_RIGHT_CLICK(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinBlockFence_RightClick")
+            .setApplyIf(() -> FixesConfig.fixFenceRightClick)
+            .setPhase(Phase.EARLY)),
     FIX_ENTITY_GRAVITY(new MixinBuilder("Fixes entity having buggy gravity")
             .addClientMixins("minecraft.MixinEntityLivingBase_GravityFix")
             .setApplyIf(() -> FixesConfig.fixEntityGravity)
