@@ -103,11 +103,20 @@ public class SpeedupsConfig {
     @Config.RangeInt(min = 1, max = 20)
     public static int maxChunkGenPerPlayerPerTick;
 
-    @Config.Comment("Maximum time in milliseconds to spend on deferred chunk generation per tick, divided equally among active players. "
+    @Config.Comment("Time budget in milliseconds for chunk generation per tick. "
+            + "Actual budget is min(this, remaining tick time to 50ms). "
+            + "Generation is skipped when recent operations suggest the budget would be exceeded. "
             + "0 = no time limit (count-based only). [Requires throttleChunkGeneration]")
-    @Config.DefaultInt(15)
+    @Config.DefaultInt(20)
     @Config.RangeInt(min = 0, max = 50)
-    public static int maxChunkGenTimePerTick;
+    public static int chunkGenBudgetMs;
+
+    @Config.Comment("Prevent entity ticks and random ticks from triggering chunk generation. "
+            + "Missing chunks return empty air blocks during blocked phases; the scheduler loads them shortly after. "
+            + "[Requires throttleChunkGeneration]")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean preventEntityChunkLoading;
 
     @Config.Comment("When to amortize chunk generation overruns by tracking time debt and skipping generation until the debt is paid down. "
             + "Smooths out server tick times when single chunks exceed the time budget. "
@@ -121,6 +130,12 @@ public class SpeedupsConfig {
         DedicatedServerOnly,
         Never
     }
+
+    @Config.Comment("Ticks before a visible chunk hole is force-processed regardless of budget. "
+            + "Only applies to chunks within view distance of a player. 0 = disabled.")
+    @Config.DefaultInt(100)
+    @Config.RangeInt(min = 0, max = 1200)
+    public static int forcePopulateAgeTicks;
 
     @Config.Comment("Removes hard caps on chunk sending and unloading speed. Experimental and probably incompatible with hybrid servers!")
     @Config.DefaultBoolean(false)
@@ -152,6 +167,10 @@ public class SpeedupsConfig {
     @Config.Comment("Limit mob spawning to the view distance")
     @Config.DefaultBoolean(true)
     public static boolean limitMobSpawningToViewDistance;
+
+    @Config.Comment("Skip mob spawning in chunks with pending lighting updates (requires Supernova)")
+    @Config.DefaultBoolean(true)
+    public static boolean skipSpawningWithPendingLight;
 
     @Config.Comment("Speed up the vanilla method to remove formatting codes")
     @Config.DefaultBoolean(true)
