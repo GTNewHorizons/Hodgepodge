@@ -8,6 +8,7 @@ import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
 import com.mitchej123.hodgepodge.util.AnchorAlarm;
+import com.mitchej123.hodgepodge.util.ServerThreadLongHashMap;
 import com.mitchej123.hodgepodge.util.StatHandler;
 import com.mitchej123.hodgepodge.util.TravellersGear;
 
@@ -106,6 +107,7 @@ public class Hodgepodge {
 
     @EventHandler
     public void onServerStopped(FMLServerStoppedEvent event) {
+        ServerThreadLongHashMap.clearSnapshots();
         if (FixesConfig.fixCoFHWorldLeak && Loader.isModLoaded("CoFHCore")) {
             clearCoFhServerInstance();
         }
