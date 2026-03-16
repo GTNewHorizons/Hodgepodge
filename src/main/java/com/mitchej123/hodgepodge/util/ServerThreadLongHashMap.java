@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import net.minecraft.server.MinecraftServer;
 
@@ -24,11 +26,14 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
  * <p>
  * Snapshot lifecycle:
  * <ul>
- * <li>First off-thread read forces an immediate snapshot via {@code callFromMainThread} and blocks until ready.</li>
- * <li>Subsequent off-thread reads return the existing snapshot immediately.</li>
- * <li>{@link #refreshSnapshots()} (called from server tick END) refreshes stale snapshots every
+ * <li>First {@code add()} eagerly creates the initial snapshot (already on the server thread).</li>
+ * <li>Off-thread reads return the existing snapshot immediately in the common case.</li>
+ * <li>If no snapshot exists yet, off-thread reads fall back to {@code callFromMainThread} with a 250ms timeout,
+ * returning a stale snapshot if available or an empty map on timeout.</li>
+ * <li>{@link #refreshSnapshots()} (called from server tick END) refreshes snapshots every
  * {@link #SNAPSHOT_INTERVAL_TICKS} ticks while off-thread reads are active.</li>
- * <li>If no off-thread read occurs for {@link #IDLE_TIMEOUT_TICKS}, the snapshot is cleared.</li>
+ * <li>If no off-thread read occurs for {@link #IDLE_TIMEOUT_TICKS}, refreshing stops but the snapshot is retained as a
+ * stale fallback.</li>
  * </ul>
  */
 @SuppressWarnings("unused")
@@ -48,7 +53,7 @@ public class ServerThreadLongHashMap extends FastUtilLongHashMap {
     private volatile int lastAccessTick;
     private boolean registeredForTicking;
     private boolean dirty;
-    private Long2ObjectOpenHashMap<Object> snapshot;
+    private volatile Long2ObjectOpenHashMap<Object> snapshot;
 
     public static void refreshSnapshots() {
         synchronized (snapshottingInstances) {
@@ -56,7 +61,7 @@ public class ServerThreadLongHashMap extends FastUtilLongHashMap {
                 final ServerThreadLongHashMap instance = ref.get();
                 if (instance == null) return true;
                 instance.refreshSnapshot();
-                return instance.snapshot == null;
+                return !instance.registeredForTicking;
             });
         }
     }
@@ -74,6 +79,13 @@ public class ServerThreadLongHashMap extends FastUtilLongHashMap {
         return server != null ? server.getTickCounter() : 0;
     }
 
+    public static void clearSnapshots() {
+        synchronized (snapshottingInstances) {
+            snapshottingInstances.clear();
+        }
+        loggedThreadNames.clear();
+    }
+
     private void refreshSnapshot() {
         if (Thread.currentThread() != ownerThread) {
             throw new IllegalStateException(
@@ -86,7 +98,10 @@ public class ServerThreadLongHashMap extends FastUtilLongHashMap {
         }
         final int tick = currentTick();
         if ((tick - lastAccessTick) > IDLE_TIMEOUT_TICKS) {
-            snapshot = null;
+            if (dirty) {
+                // One final snapshot to release removed entries before going idle
+                doSnapshot();
+            }
             registeredForTicking = false;
             return;
         }
@@ -104,13 +119,23 @@ public class ServerThreadLongHashMap extends FastUtilLongHashMap {
     @Override
     public void add(long key, Object value) {
         super.add(key, value);
-        dirty = true;
+        if (snapshot == null) {
+            // Proactively make an initial snapshot, so we always have one
+            registerForTicking();
+            doSnapshot();
+        } else {
+            dirty = true;
+        }
     }
 
     @Override
     public Object remove(long key) {
-        dirty = true;
-        return super.remove(key);
+        final Object removed = super.remove(key);
+        if (removed != null && snapshot != null) {
+            dirty = true;
+            registerForTicking();
+        }
+        return removed;
     }
 
     private Long2ObjectOpenHashMap<Object> getSnapshot() {
@@ -131,11 +156,15 @@ public class ServerThreadLongHashMap extends FastUtilLongHashMap {
                 ServerThreadUtil.callFromMainThread(() -> {
                     doSnapshot();
                     return null;
-                }).get();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                LOGGER.warn("Interrupted while creating chunk map snapshot (server shutting down?)");
-                return new Long2ObjectOpenHashMap<>();
+                }).get(250, TimeUnit.MILLISECONDS);
+            } catch (TimeoutException | InterruptedException e) {
+                if (e instanceof InterruptedException) Thread.currentThread().interrupt();
+                snap = snapshot != null ? snapshot : new Long2ObjectOpenHashMap<>();
+                LOGGER.warn(
+                        "Snapshot creation timed out (server thread may be blocked) - serving {} map to {}",
+                        snapshot != null ? "stale" : "empty",
+                        Thread.currentThread().getName());
+                return snap;
             } catch (ExecutionException | IllegalStateException e) {
                 throw new RuntimeException("Failed to create chunk map snapshot", e);
             }
