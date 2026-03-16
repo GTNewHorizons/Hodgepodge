@@ -51,7 +51,7 @@ public class ServerThreadLongHashMap extends FastUtilLongHashMap {
 
     private int snapshotTick;
     private volatile int lastAccessTick;
-    private boolean registeredForTicking;
+    private volatile boolean registeredForTicking;
     private boolean dirty;
     private volatile Long2ObjectOpenHashMap<Object> snapshot;
 
@@ -141,16 +141,14 @@ public class ServerThreadLongHashMap extends FastUtilLongHashMap {
     private Long2ObjectOpenHashMap<Object> getSnapshot() {
         lastAccessTick = currentTick();
 
-        Long2ObjectOpenHashMap<Object> snap = snapshot;
-        if (snap != null) {
-            return snap;
-        }
-
-        synchronized (this) {
-            snap = snapshot;
+        if (registeredForTicking) {
+            final Long2ObjectOpenHashMap<Object> snap = snapshot;
             if (snap != null) {
                 return snap;
             }
+        }
+
+        synchronized (this) {
             registerForTicking();
             try {
                 ServerThreadUtil.callFromMainThread(() -> {
@@ -159,12 +157,13 @@ public class ServerThreadLongHashMap extends FastUtilLongHashMap {
                 }).get(250, TimeUnit.MILLISECONDS);
             } catch (TimeoutException | InterruptedException e) {
                 if (e instanceof InterruptedException) Thread.currentThread().interrupt();
-                snap = snapshot != null ? snapshot : new Long2ObjectOpenHashMap<>();
+                final Long2ObjectOpenHashMap<Object> fallback = snapshot != null ? snapshot
+                        : new Long2ObjectOpenHashMap<>();
                 LOGGER.warn(
                         "Snapshot creation timed out (server thread may be blocked) - serving {} map to {}",
                         snapshot != null ? "stale" : "empty",
                         Thread.currentThread().getName());
-                return snap;
+                return fallback;
             } catch (ExecutionException | IllegalStateException e) {
                 throw new RuntimeException("Failed to create chunk map snapshot", e);
             }
