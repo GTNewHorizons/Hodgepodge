@@ -2,6 +2,8 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload;
 
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.AnvilChunkLoader;
+import net.minecraft.world.chunk.storage.IChunkLoader;
 import net.minecraft.world.gen.ChunkProviderServer;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,6 +26,9 @@ public class MixinChunkProviderServer_EntityGuard_Bukkit {
     @Shadow
     public WorldServer worldObj;
 
+    @Shadow
+    public IChunkLoader currentChunkLoader;
+
     @Inject(method = "provideChunk(II)Lnet/minecraft/world/chunk/Chunk;", at = @At("HEAD"), cancellable = true)
     private void hodgepodge$blockDuringEntityTicks(int x, int z, CallbackInfoReturnable<Chunk> cir) {
         if (!ChunkGenScheduler.isBlocked() || this.worldObj.findingSpawnPoint) return;
@@ -32,7 +37,12 @@ public class MixinChunkProviderServer_EntityGuard_Bukkit {
         ChunkProviderServer self = (ChunkProviderServer) (Object) this;
         if (self.chunkExists(x, z)) return;
 
-        // Block: return empty chunk for unloaded chunks during entity ticks
+        // Allow disk loads (cheap), only block generation (expensive)
+        if (this.currentChunkLoader instanceof AnvilChunkLoader acl && acl.chunkExists(this.worldObj, x, z)) {
+            return;
+        }
+
+        // Not on disk -- block generation
         ChunkGenScheduler.incrementBlockedLoadCount();
         cir.setReturnValue(this.defaultEmptyChunk);
     }

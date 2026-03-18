@@ -59,7 +59,7 @@ public class ServerThreadLongHashMap extends FastUtilLongHashMap {
         synchronized (snapshottingInstances) {
             snapshottingInstances.removeIf(ref -> {
                 final ServerThreadLongHashMap instance = ref.get();
-                if (instance == null) return true;
+                if (instance == null || !instance.ownerThread.isAlive()) return true;
                 instance.refreshSnapshot();
                 return !instance.registeredForTicking;
             });
@@ -81,6 +81,13 @@ public class ServerThreadLongHashMap extends FastUtilLongHashMap {
 
     public static void clearSnapshots() {
         synchronized (snapshottingInstances) {
+            for (var ref : snapshottingInstances) {
+                final ServerThreadLongHashMap instance = ref.get();
+                if (instance != null) {
+                    instance.registeredForTicking = false;
+                    instance.snapshot = null;
+                }
+            }
             snapshottingInstances.clear();
         }
         loggedThreadNames.clear();
@@ -88,10 +95,9 @@ public class ServerThreadLongHashMap extends FastUtilLongHashMap {
 
     private void refreshSnapshot() {
         if (Thread.currentThread() != ownerThread) {
-            throw new IllegalStateException(
-                    "tickSnapshot called from " + Thread.currentThread().getName()
-                            + ", expected "
-                            + ownerThread.getName());
+            // Stale instance from a previous server lifecycle, ignore it and it should get evicted
+            registeredForTicking = false;
+            return;
         }
         if (snapshot == null) {
             return;
