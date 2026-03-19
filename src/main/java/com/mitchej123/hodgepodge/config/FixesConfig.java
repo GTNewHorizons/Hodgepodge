@@ -569,6 +569,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixCoFHWorldLeak;
 
+    @Config.Comment("Fix NBTTagSmartByteArray sending null to NBTTagByteArray causing NPE when saving chunks")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCofhNullByteArray;
+
     // Extra TiC
 
     @Config.Comment("Disable ExtraTic's Integration with Metallurgy 3 Precious Materials Module: (Brass, Silver, Electrum & Platinum)")
