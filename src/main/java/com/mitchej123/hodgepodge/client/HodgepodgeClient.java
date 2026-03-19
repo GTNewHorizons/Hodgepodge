@@ -58,6 +58,8 @@ public class HodgepodgeClient {
             MinecraftForge.EVENT_BUS.register(ChunkGenDebugHandler.INSTANCE);
         }
 
+        MinecraftForge.EVENT_BUS.register(new AllocationRateDebug());
+
         FMLCommonHandler.instance().bus().register(new ClientKeyListener());
 
         if (FixesConfig.fixModlistEntries) {
