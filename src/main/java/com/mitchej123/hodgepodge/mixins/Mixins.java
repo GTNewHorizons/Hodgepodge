@@ -1101,7 +1101,11 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.THERMALEXPANSION)
             .setApplyIf(() -> ASMConfig.cofhWorldTransformer)
             .setPhase(Phase.LATE)),
-
+    COFH_NULL_SMART_BYTE_ARRAY(new MixinBuilder("Fix NBTTagSmartByteArray sending null to NBTTagByteArray causing NPE when saving chunks")
+            .addCommonMixins("cofhcore.MixinNBTTagSmartByteArray")
+            .addRequiredMod(TargetedMod.COFH_CORE)
+            .setApplyIf(() -> FixesConfig.fixCofhNullByteArray)
+            .setPhase(Phase.EARLY)),
     COFH_COMMAND_TPX_FIX(new MixinBuilder("Fix logic of /cofh tpx")
             .addCommonMixins("cofhcore.MixinCoFHCommandTpxFix")
             .setApplyIf(() -> FixesConfig.fixCofhTpxCommand)
