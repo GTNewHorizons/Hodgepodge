@@ -2,8 +2,8 @@ package com.mitchej123.hodgepodge.client;
 
 import java.util.Collections;
 
-import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.classloading.FMLForgePlugin;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
