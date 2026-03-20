@@ -1663,6 +1663,20 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixWitcheryEnumValuesSpam)
             .addRequiredMod(TargetedMod.WITCHERY)
             .setPhase(Phase.LATE)),
+    WITCHERY_OFFSET_CAPTURE(new MixinBuilder("Captures Witchery shapeshift offset")
+            .addClientMixins("witchery.MixinRenderEntityViewer")
+            .setApplyIf(() -> FixesConfig.fixWailaWitcheryRaytrace)
+            .addRequiredMod(TargetedMod.WITCHERY)
+            .addRequiredMod(TargetedMod.WAILA)
+            .setPhase(Phase.LATE)),
+
+    // Waila
+    FIX_WAILA_WITCHERY_SHAPESHIFT_RAYTRACE(new MixinBuilder("Fixes Waila raytrace when Witchery shapeshifted")
+            .addClientMixins("waila.MixinRayTracingShapeshift")
+            .setApplyIf(() -> FixesConfig.fixWailaWitcheryRaytrace)
+            .addRequiredMod(TargetedMod.WITCHERY)
+            .addRequiredMod(TargetedMod.WAILA)
+            .setPhase(Phase.LATE)),
 
     // Various Exploits/Fixes
     BIBLIOCRAFT_PACKET_FIX(new MixinBuilder("Packet Fix")
