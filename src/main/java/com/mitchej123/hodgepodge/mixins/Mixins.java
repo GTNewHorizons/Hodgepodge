@@ -1675,6 +1675,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixBibliocraftPathSanitization)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
+    BIBLIOCRAFT_NO_PAUSE_GUI_CLIPBOARD(new MixinBuilder()
+            .addCommonMixins("bibliocraft.MixinGuiClipboard_NoPause")
+            .setApplyIf(() -> FixesConfig.noPauseGuiClipboard)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
+            .setPhase(Phase.LATE)),
     ZTONES_PACKET_FIX(new MixinBuilder("Packet Fix")
             .addCommonMixins("ztones.MixinZtonesPatchPacketExploits")
             .setApplyIf(() -> FixesConfig.fixZTonesPackets)

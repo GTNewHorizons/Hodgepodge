@@ -525,6 +525,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixBibliocraftPathSanitization;
 
+    @Config.Comment("Don't pause the game when using the Bibliocraft clipboard GUI")
+    @Config.DefaultBoolean(true)
+    public static boolean noPauseGuiClipboard;
+
     // Bibliowoods Forestry
 
     @Config.Comment("Fix Bibliowoods Forestry recipes")
