@@ -366,9 +366,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixSkinManagerLeakingClientWorld)
             .setPhase(Phase.EARLY)),
     FIX_ITEM_RENDERER_WORLD_LEAK(new MixinBuilder()
-            .addClientMixins(
-                    "minecraft.ItemRendererAccessor",
-                    "minecraft.MixinMinecraft_ClearEntityRendererItemRenderer")
+            .addClientMixins("minecraft.ItemRendererAccessor")
             .setApplyIf(() -> FixesConfig.fixEntityRendererItemRendererLeak)
             .setPhase(Phase.EARLY)),
     FIX_REDSTONE_TORCH_WORLD_LEAK(new MixinBuilder("Fix world leak in redstone torch")
