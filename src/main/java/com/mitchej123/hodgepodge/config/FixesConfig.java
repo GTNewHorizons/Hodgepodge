@@ -236,7 +236,7 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixSkinManagerLeakingClientWorld;
 
-    @Config.Comment("Fix leaking the last rendered item when unloading a world")
+    @Config.Comment("Fix ItemRenderer keeping a reference to the last rendered item when leaving a world")
     @Config.DefaultBoolean(true)
     public static boolean fixEntityRendererItemRendererLeak;
 

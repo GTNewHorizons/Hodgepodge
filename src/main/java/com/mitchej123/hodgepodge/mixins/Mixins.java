@@ -365,7 +365,7 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinSkinManager$2")
             .setApplyIf(() -> FixesConfig.fixSkinManagerLeakingClientWorld)
             .setPhase(Phase.EARLY)),
-    FIX_ITEM_RENDERER_WORLD_LEAK(new MixinBuilder()
+    FIX_ITEM_RENDERER_ITEM_LEAK(new MixinBuilder()
             .addClientMixins("minecraft.ItemRendererAccessor")
             .setApplyIf(() -> FixesConfig.fixEntityRendererItemRendererLeak)
             .setPhase(Phase.EARLY)),
