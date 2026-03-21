@@ -236,6 +236,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixSkinManagerLeakingClientWorld;
 
+    @Config.Comment("Fix leaking the last rendered item when unloading a world")
+    @Config.DefaultBoolean(true)
+    public static boolean fixEntityRendererItemRendererLeak;
+
     @Config.Comment("Increase the maximum network packet size from the default of 2MiB")
     @Config.DefaultBoolean(true)
     public static boolean increasePacketSizeLimit;
