@@ -251,4 +251,9 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean speedupThaumGetInfusionRecipes;
 
+    @Config.Comment("Optimize various slow Thaumcraft renderers")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean optimizeThaumcraftRendering;
+
 }

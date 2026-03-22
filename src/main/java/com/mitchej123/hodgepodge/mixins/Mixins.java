@@ -1231,6 +1231,25 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixThaumcraftEE3Check)
             .addRequiredMod(TargetedMod.THAUMCRAFT)
             .setPhase(Phase.LATE)),
+    OPTIMIZE_THAUMCRAFT_PERFORMANCE_ACCESSORS(new MixinBuilder()
+            .addClientMixins(
+                    "minecraft.AccessorGuiContainer",
+                    "minecraft.AccessorMinecraft"
+            )
+            .setApplyIf(() -> SpeedupsConfig.optimizeThaumcraftRendering)
+            .setPhase(Phase.EARLY)
+    ),
+    OPTIMIZE_THAUMCRAFT_PERFORMANCE(new MixinBuilder()
+            .addClientMixins(
+                    "thaumcraft.MixinClientTickEventsFML",
+                    "thaumcraft.MixinParticleEngine",
+                    "thaumcraft.MixinUtilsFX"
+            )
+            .setApplyIf(() -> SpeedupsConfig.optimizeThaumcraftRendering)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)
+    ),
+
 
     // BOP
     FIX_QUICKSAND_XRAY(new MixinBuilder()
