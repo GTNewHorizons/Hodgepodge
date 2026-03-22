@@ -1,7 +1,9 @@
 package com.mitchej123.hodgepodge.net;
 
+import com.mitchej123.hodgepodge.client.tab.TabChannelHandler;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -11,10 +13,14 @@ public class MessageConfigSync implements IMessage, IMessageHandler<MessageConfi
 
     private boolean longerSentMessages;
     private boolean fastBlockPlacingServerSide;
+    private String tabHeaderText = "";
+    private String tabFooterText = "";
 
     public MessageConfigSync() {
         longerSentMessages = TweaksConfig.longerSentMessages;
         fastBlockPlacingServerSide = TweaksConfig.fastBlockPlacingServerSide;
+        tabHeaderText = TweaksConfig.tabHeaderText != null ? TweaksConfig.tabHeaderText : "";
+        tabFooterText = TweaksConfig.tabFooterText != null ? TweaksConfig.tabFooterText : "";
     }
 
     @Override
@@ -27,12 +33,18 @@ public class MessageConfigSync implements IMessage, IMessageHandler<MessageConfi
         } else {
             fastBlockPlacingServerSide = buf.readBoolean();
         }
+        if (buf.readableBytes() > 0) {
+            tabHeaderText = ByteBufUtils.readUTF8String(buf);
+            tabFooterText = ByteBufUtils.readUTF8String(buf);
+        }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeBoolean(longerSentMessages);
         buf.writeBoolean(fastBlockPlacingServerSide);
+        ByteBufUtils.writeUTF8String(buf, tabHeaderText);
+        ByteBufUtils.writeUTF8String(buf, tabFooterText);
     }
 
     public boolean isFastBlockPlacingServerSide() {
@@ -51,6 +63,8 @@ public class MessageConfigSync implements IMessage, IMessageHandler<MessageConfi
             TweaksConfig.fastBlockPlacing = false;
             TweaksConfig.fastBlockPlacingServerSide = false;
         }
+
+        TabChannelHandler.INSTANCE.setServerData(message.tabHeaderText, message.tabFooterText);
 
         return null;
     }
