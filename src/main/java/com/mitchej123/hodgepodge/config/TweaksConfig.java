@@ -464,4 +464,21 @@ public class TweaksConfig {
     @Config.Comment("Allow creative tab gui title color via localization key")
     @Config.DefaultBoolean(true)
     public static boolean creativeTabLocalizationOverrides;
+
+    @Config.Comment("Replaces the vanilla player list (TAB overlay) with a modern-style tab list featuring player heads, dynamic columns, and header/footer support")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean modernTabOverlay;
+
+    @Config.Comment("Show player head icons in the modern tab overlay")
+    @Config.DefaultBoolean(true)
+    public static boolean tabShowPlayerHeads;
+
+    @Config.Comment("Static header text for the modern tab overlay. Use & for color/format codes (e.g. &b = aqua, &l = bold, &r = reset). Use \\n for line breaks. Overridden by server plugin channel data if present.")
+    @Config.DefaultString("&b&lHodgepodge Server\\n&7A modern tab list for 1.7.10")
+    public static String tabHeaderText;
+
+    @Config.Comment("Static footer text for the modern tab overlay. Use & for color/format codes (e.g. &e = yellow, &o = italic, &r = reset). Use \\n for line breaks. Overridden by server plugin channel data if present.")
+    @Config.DefaultString("&7Ping: &a< 150ms &e< 300ms &c< 600ms &4< 1000ms &8>= 1000ms\\n&8Powered by &dHodgepodge")
+    public static String tabFooterText;
 }

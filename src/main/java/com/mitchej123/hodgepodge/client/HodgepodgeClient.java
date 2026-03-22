@@ -13,6 +13,9 @@ import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.client.handlers.ClientKeyListener;
 import com.mitchej123.hodgepodge.client.handlers.ReloadSoundsGui;
+import com.mitchej123.hodgepodge.client.tab.ModernTabRenderer;
+import com.mitchej123.hodgepodge.client.tab.TabChannelHandler;
+import com.mitchej123.hodgepodge.client.tab.TabSkinCache;
 import com.mitchej123.hodgepodge.commands.AllocationsCommand;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
@@ -85,6 +88,11 @@ public class HodgepodgeClient {
             }
         }
 
+        if (TweaksConfig.modernTabOverlay) {
+            MinecraftForge.EVENT_BUS.register(ModernTabRenderer.INSTANCE);
+            TabChannelHandler.INSTANCE.registerChannel();
+        }
+
         if (Compat.isBiomesOPlentyPresent() && (Compat.isDreamcraftPresent() || FixesConfig.removeBOPWarning)) {
             // removes the popup that BOP shows on first world gen
             MinecraftForge.EVENT_BUS.unregister(WorldTypeMessageEventHandler.instance);
@@ -106,6 +114,8 @@ public class HodgepodgeClient {
     @SubscribeEvent
     public static void onClientDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         AsyncNBTParser.shutdown();
+        TabSkinCache.INSTANCE.clear();
+        TabChannelHandler.INSTANCE.clear();
         if (MemoryConfig.leaks.fixEntityRendererItemRendererLeak) {
             EntityRenderer entityRenderer = Minecraft.getMinecraft().entityRenderer;
             if (entityRenderer != null) {
