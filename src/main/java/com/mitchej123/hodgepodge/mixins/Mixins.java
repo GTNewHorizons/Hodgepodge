@@ -365,6 +365,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinSkinManager$2")
             .setApplyIf(() -> FixesConfig.fixSkinManagerLeakingClientWorld)
             .setPhase(Phase.EARLY)),
+    FIX_ITEM_RENDERER_ITEM_LEAK(new MixinBuilder()
+            .addClientMixins("minecraft.ItemRendererAccessor")
+            .setApplyIf(() -> FixesConfig.fixEntityRendererItemRendererLeak)
+            .setPhase(Phase.EARLY)),
     FIX_REDSTONE_TORCH_WORLD_LEAK(new MixinBuilder("Fix world leak in redstone torch")
             .addCommonMixins("minecraft.MixinBlockRedstoneTorch")
             .setApplyIf(() -> FixesConfig.fixRedstoneTorchWorldLeak)
@@ -1101,7 +1105,11 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.THERMALEXPANSION)
             .setApplyIf(() -> ASMConfig.cofhWorldTransformer)
             .setPhase(Phase.LATE)),
-
+    COFH_NULL_SMART_BYTE_ARRAY(new MixinBuilder("Fix NBTTagSmartByteArray sending null to NBTTagByteArray causing NPE when saving chunks")
+            .addCommonMixins("cofhcore.MixinNBTTagSmartByteArray")
+            .addRequiredMod(TargetedMod.COFH_CORE)
+            .setApplyIf(() -> FixesConfig.fixCofhNullByteArray)
+            .setPhase(Phase.EARLY)),
     COFH_COMMAND_TPX_FIX(new MixinBuilder("Fix logic of /cofh tpx")
             .addCommonMixins("cofhcore.MixinCoFHCommandTpxFix")
             .setApplyIf(() -> FixesConfig.fixCofhTpxCommand)

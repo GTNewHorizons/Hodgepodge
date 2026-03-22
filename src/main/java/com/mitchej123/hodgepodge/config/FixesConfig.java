@@ -236,6 +236,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixSkinManagerLeakingClientWorld;
 
+    @Config.Comment("Fix ItemRenderer keeping a reference to the last rendered item when leaving a world")
+    @Config.DefaultBoolean(true)
+    public static boolean fixEntityRendererItemRendererLeak;
+
     @Config.Comment("Increase the maximum network packet size from the default of 2MiB")
     @Config.DefaultBoolean(true)
     public static boolean increasePacketSizeLimit;
@@ -568,6 +572,10 @@ public class FixesConfig {
     @Config.Comment("Fix CoFH WorldServer leak in main mod class")
     @Config.DefaultBoolean(true)
     public static boolean fixCoFHWorldLeak;
+
+    @Config.Comment("Fix NBTTagSmartByteArray sending null to NBTTagByteArray causing NPE when saving chunks")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCofhNullByteArray;
 
     // Extra TiC
 
