@@ -5,6 +5,7 @@ import java.util.Collections;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraftforge.classloading.FMLForgePlugin;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
@@ -12,6 +13,7 @@ import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.client.handlers.ClientKeyListener;
 import com.mitchej123.hodgepodge.client.handlers.ReloadSoundsGui;
+import com.mitchej123.hodgepodge.commands.AllocationsCommand;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
@@ -60,6 +62,9 @@ public class HodgepodgeClient {
         if (DebugConfig.showChunkGenDebug || !FMLForgePlugin.RUNTIME_DEOBF) {
             MinecraftForge.EVENT_BUS.register(ChunkGenDebugHandler.INSTANCE);
         }
+
+        MinecraftForge.EVENT_BUS.register(new AllocationRateHUD(true));
+        ClientCommandHandler.instance.registerCommand(new AllocationsCommand());
 
         FMLCommonHandler.instance().bus().register(new ClientKeyListener());
 
