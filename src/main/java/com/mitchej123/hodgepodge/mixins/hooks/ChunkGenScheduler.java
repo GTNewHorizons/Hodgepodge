@@ -3,6 +3,8 @@ package com.mitchej123.hodgepodge.mixins.hooks;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,11 +22,16 @@ import net.minecraft.world.gen.ChunkProviderServer;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ByteMap;
 import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 
 public class ChunkGenScheduler {
 
@@ -33,25 +40,25 @@ public class ChunkGenScheduler {
     private static long serverTickStartNanos;
     private static int blockedLoadCount = 0;
 
-    private static final Int2ObjectOpenHashMap<ChunkGenScheduler> dimensions = new Int2ObjectOpenHashMap<>();
-    private final LongOpenHashSet pendingGenSet = new LongOpenHashSet();
-    private final Long2IntOpenHashMap chunkRefCount = new Long2IntOpenHashMap();
-    private final LongArrayList genWorkList = new LongArrayList();
-    private final IdentityHashMap<EntityPlayerMP, LongOpenHashSet> playerChunks = new IdentityHashMap<>();
+    private static final Int2ObjectMap<ChunkGenScheduler> dimensions = new Int2ObjectOpenHashMap<>();
+    private final LongSet pendingGenSet = new LongOpenHashSet();
+    private final Long2IntMap chunkRefCount = new Long2IntOpenHashMap();
+    private final LongList genWorkList = new LongArrayList();
+    private final Map<EntityPlayerMP, LongSet> playerChunks = new IdentityHashMap<>();
     private static final byte NONE = 0;
     private static final byte TERRAIN = 1;
     private static final byte POPULATED = 2;
     private static final int PROTECTION_TIMEOUT_TICKS = 600;
 
-    private final Long2ByteOpenHashMap statusMap = new Long2ByteOpenHashMap();
-    private final Long2IntOpenHashMap entryTickMap = new Long2IntOpenHashMap();
-    private final LongArrayList populationQueue = new LongArrayList();
+    private final Long2ByteMap statusMap = new Long2ByteOpenHashMap();
+    private final Long2IntMap entryTickMap = new Long2IntOpenHashMap();
+    private final LongList populationQueue = new LongArrayList();
     private int populationDepth = 0;
     private int terrainCount = 0;
     private final ChunkGenBudget budget = new ChunkGenBudget();
     private final ChunkGenStats stats;
-    private final ArrayList<EntityPlayerMP> tempPlayers = new ArrayList<>();
-    private final LongArrayList tempLoaded = new LongArrayList();
+    private final List<EntityPlayerMP> tempPlayers = new ArrayList<>();
+    private final LongList tempLoaded = new LongArrayList();
     private final int dimId;
     private Boolean amortizeOverruns;
 
@@ -105,9 +112,9 @@ public class ChunkGenScheduler {
         return stats;
     }
 
-    public void enqueueForPlayer(EntityPlayerMP player, LongArrayList chunksNeedingGen) {
+    public void enqueueForPlayer(EntityPlayerMP player, LongList chunksNeedingGen) {
         if (chunksNeedingGen.isEmpty()) return;
-        final LongOpenHashSet playerSet = playerChunks.computeIfAbsent(player, k -> new LongOpenHashSet());
+        final LongSet playerSet = playerChunks.computeIfAbsent(player, k -> new LongOpenHashSet());
         for (int i = 0; i < chunksNeedingGen.size(); i++) {
             final long packed = chunksNeedingGen.getLong(i);
             if (playerSet.add(packed)) {
@@ -119,7 +126,7 @@ public class ChunkGenScheduler {
 
     /** Removes player and any chunks no longer wanted by other players. */
     public void removePlayer(EntityPlayerMP player) {
-        final LongOpenHashSet removed = playerChunks.remove(player);
+        final LongSet removed = playerChunks.remove(player);
         if (removed == null || removed.isEmpty()) return;
         for (long packed : removed) {
             final int remaining = chunkRefCount.merge(packed, -1, Integer::sum);
@@ -319,7 +326,7 @@ public class ChunkGenScheduler {
             totalGen++;
         }
 
-        playerChunks.values().removeIf(LongOpenHashSet::isEmpty);
+        playerChunks.values().removeIf(LongSet::isEmpty);
 
         return totalGen;
     }
@@ -628,7 +635,7 @@ public class ChunkGenScheduler {
         while (playerIter.hasNext()) {
             final var entry = playerIter.next();
             final EntityPlayerMP player = entry.getKey();
-            final LongOpenHashSet chunks = entry.getValue();
+            final LongSet chunks = entry.getValue();
             final int cx = MathHelper.floor_double(player.posX) >> 4;
             final int cz = MathHelper.floor_double(player.posZ) >> 4;
             chunks.removeIf(
