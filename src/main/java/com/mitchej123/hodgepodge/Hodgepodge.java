@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge;
 
 import java.util.Map;
+import java.util.Set;
 
 import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
@@ -26,7 +27,11 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.network.FMLEmbeddedChannel;
+import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.handshake.NetworkDispatcher;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
 import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
 import cpw.mods.fml.relauncher.Side;
@@ -110,6 +115,21 @@ public class Hodgepodge {
         ServerThreadLongHashMap.clearSnapshots();
         if (FixesConfig.fixCoFHWorldLeak && Loader.isModLoaded("CoFHCore")) {
             clearCoFhServerInstance();
+        }
+        if (FixesConfig.fixNetworkChannelsMemoryLeak) {
+            cleanChannelsForSide(Side.CLIENT);
+            cleanChannelsForSide(Side.SERVER);
+        }
+    }
+
+    private static void cleanChannelsForSide(Side side) {
+        final Set<String> channels = NetworkRegistry.INSTANCE.channelNamesFor(side);
+        for (String name : channels) {
+            final FMLEmbeddedChannel channel = NetworkRegistry.INSTANCE.getChannel(name, side);
+            channel.attr(FMLOutboundHandler.FML_MESSAGETARGET).remove();
+            channel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).remove();
+            channel.attr(NetworkDispatcher.FML_DISPATCHER).remove();
+            channel.attr(NetworkRegistry.NET_HANDLER).remove();
         }
     }
 
