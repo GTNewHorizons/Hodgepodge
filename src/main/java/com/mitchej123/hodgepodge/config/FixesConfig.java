@@ -92,6 +92,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixForgeUpdateChecker;
 
+    @Config.Comment("Fix memory leak caused by FML network channels attributes")
+    @Config.DefaultBoolean(true)
+    public static boolean fixNetworkChannelsMemoryLeak;
+
     @Config.Comment("Fix vanilla issue where player sounds register as animal sounds")
     @Config.DefaultBoolean(true)
     public static boolean fixFriendlyCreatureSounds;
