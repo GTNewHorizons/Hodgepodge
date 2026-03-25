@@ -57,7 +57,7 @@ public class MixinFMLClientHandler {
                 missingCount,
                 brokenCount);
         logger.error(Strings.repeat("+=", 25));
-        if (FixesConfig.enableMemoryFixes) {
+        if (FixesConfig.clearFMLTextureErrors) {
             missingTextures = HashMultimap.create();
             badTextureDomains = Sets.newHashSet();
             brokenTextures = HashBasedTable.create();

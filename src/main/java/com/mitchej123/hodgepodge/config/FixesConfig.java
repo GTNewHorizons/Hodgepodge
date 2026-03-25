@@ -503,9 +503,9 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean removeUpdateChecks;
 
-    @Config.Comment("Enable multiple fixes to reduce RAM usage")
+    @Config.Comment("Clear FML Texture Errors to free memory")
     @Config.DefaultBoolean(true)
-    public static boolean enableMemoryFixes;
+    public static boolean clearFMLTextureErrors;
 
     @Config.Comment("Fix broken modlist entries due to wrong mcmod.info files")
     @Config.DefaultBoolean(true)

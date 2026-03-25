@@ -712,9 +712,9 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinBlockFireSpread")
             .setApplyIf(() -> FixesConfig.fixFireSpread)
             .setPhase(Phase.EARLY)),
-    MEMORY_FIXES_CLIENT(new MixinBuilder("Memory fixes")
+    MEMORY_FIXES_CLIENT(new MixinBuilder()
             .addClientMixins("memory.MixinFMLClientHandler")
-            .setApplyIf(() -> FixesConfig.enableMemoryFixes)
+            .setApplyIf(() -> FixesConfig.clearFMLTextureErrors)
             .setPhase(Phase.EARLY)),
     FAST_RANDOM(new MixinBuilder("Replaces uses of stdlib Random with a faster one")
             .addCommonMixins(
