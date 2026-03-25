@@ -92,14 +92,6 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixForgeUpdateChecker;
 
-    @Config.Comment("Fix memory leak caused by FML network channels attributes")
-    @Config.DefaultBoolean(true)
-    public static boolean fixNetworkChannelsMemoryLeak;
-
-    @Config.Comment("Fix memory leak caused by minecraft's commandBase keeping a static reference to the server command handler")
-    @Config.DefaultBoolean(true)
-    public static boolean fixServerCommandHandlerLeak;
-
     @Config.Comment("Fix vanilla issue where player sounds register as animal sounds")
     @Config.DefaultBoolean(true)
     public static boolean fixFriendlyCreatureSounds;
@@ -192,14 +184,6 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixPotionLimit;
 
-    @Config.Comment("Fix redstone torch leaking world")
-    @Config.DefaultBoolean(true)
-    public static boolean fixRedstoneTorchWorldLeak;
-
-    @Config.Comment("Fix EffectRenderer and RenderGlobal leaking world instance when leaving world")
-    @Config.DefaultBoolean(true)
-    public static boolean fixRenderersWorldLeak;
-
     @Config.Comment("Fix game window becoming not resizable after toggling fullscrean in any way")
     @Config.DefaultBoolean(true)
     public static boolean fixResizableFullscreen;
@@ -235,18 +219,6 @@ public class FixesConfig {
     @Config.Comment("Fixes village unchecked getBlock() calls")
     @Config.DefaultBoolean(true)
     public static boolean fixVillageUncheckedGetBlock;
-
-    @Config.Comment("Fix WorldServer leaking entities when no players are present in a dimension")
-    @Config.DefaultBoolean(true)
-    public static boolean fixWorldServerLeakingUnloadedEntities;
-
-    @Config.Comment("Fix skin manager leaking client world")
-    @Config.DefaultBoolean(true)
-    public static boolean fixSkinManagerLeakingClientWorld;
-
-    @Config.Comment("Fix ItemRenderer keeping a reference to the last rendered item when leaving a world")
-    @Config.DefaultBoolean(true)
-    public static boolean fixEntityRendererItemRendererLeak;
 
     @Config.Comment("Increase the maximum network packet size from the default of 2MiB")
     @Config.DefaultBoolean(true)
@@ -406,11 +378,6 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixEntityGravity;
 
-    @Config.Comment("Fix EventBus keeping object references after unregistering event handlers.")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean fixEventBusMemoryLeak;
-
     @Config.Comment("Render the house character (\u2302 - Unicode index 2302) in the Minecraft font.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -432,11 +399,6 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean removeInvalidChunkEntites;
-
-    @Config.Comment("Clears the reference to the minecraft server once it has stopped")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean fixMinecraftServerLeak;
 
     @Config.Comment("Fixes pistons with metadata over 5 from crashing worlds when powered.")
     @Config.DefaultBoolean(true)
@@ -502,10 +464,6 @@ public class FixesConfig {
     @Config.Comment("Remove old/stale/outdated update checks.")
     @Config.DefaultBoolean(true)
     public static boolean removeUpdateChecks;
-
-    @Config.Comment("Clear FML Texture Errors to free memory")
-    @Config.DefaultBoolean(true)
-    public static boolean clearFMLTextureErrors;
 
     @Config.Comment("Fix broken modlist entries due to wrong mcmod.info files")
     @Config.DefaultBoolean(true)
@@ -580,10 +538,6 @@ public class FixesConfig {
     @Config.Comment("Fix logic of /cofh tpx")
     @Config.DefaultBoolean(true)
     public static boolean fixCofhTpxCommand;
-
-    @Config.Comment("Fix CoFH WorldServer leak in main mod class")
-    @Config.DefaultBoolean(true)
-    public static boolean fixCoFHWorldLeak;
 
     @Config.Comment("Fix NBTTagSmartByteArray sending null to NBTTagByteArray causing NPE when saving chunks")
     @Config.DefaultBoolean(true)
@@ -886,11 +840,6 @@ public class FixesConfig {
             "such as capturing the Demon in an EnderIO Soul Vial." })
     @Config.DefaultBoolean(true)
     public static boolean fixWitcheryDemonShiftClick;
-
-    @Config.Comment("Stops witchery from spamming Enum#values()")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean fixWitcheryEnumValuesSpam;
 
     // Xaero's Minimap
     @Config.Comment("Fixes the player entity dot rendering when arrow is chosen")

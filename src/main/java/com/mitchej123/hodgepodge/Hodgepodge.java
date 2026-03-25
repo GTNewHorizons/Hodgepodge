@@ -8,6 +8,7 @@ import net.minecraft.command.CommandBase;
 import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
 import com.mitchej123.hodgepodge.config.FixesConfig;
+import com.mitchej123.hodgepodge.config.MemoryConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
 import com.mitchej123.hodgepodge.util.AnchorAlarm;
@@ -115,14 +116,14 @@ public class Hodgepodge {
     @EventHandler
     public void onServerStopped(FMLServerStoppedEvent event) {
         ServerThreadLongHashMap.clearSnapshots();
-        if (FixesConfig.fixCoFHWorldLeak && Loader.isModLoaded("CoFHCore")) {
+        if (MemoryConfig.leaks.fixCoFHWorldLeak && Loader.isModLoaded("CoFHCore")) {
             clearCoFhServerInstance();
         }
-        if (FixesConfig.fixNetworkChannelsMemoryLeak) {
+        if (MemoryConfig.leaks.fixNetworkChannelsMemoryLeak) {
             cleanChannelsForSide(Side.CLIENT);
             cleanChannelsForSide(Side.SERVER);
         }
-        if (FixesConfig.fixServerCommandHandlerLeak) {
+        if (MemoryConfig.leaks.fixServerCommandHandlerLeak) {
             CommandBase.setAdminCommander(null);
         }
     }

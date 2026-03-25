@@ -16,6 +16,7 @@ import com.mitchej123.hodgepodge.client.handlers.ReloadSoundsGui;
 import com.mitchej123.hodgepodge.commands.AllocationsCommand;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
+import com.mitchej123.hodgepodge.config.MemoryConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.mixins.early.minecraft.ItemRendererAccessor;
 import com.mitchej123.hodgepodge.util.ManagedEnum;
@@ -105,7 +106,7 @@ public class HodgepodgeClient {
     @SubscribeEvent
     public static void onClientDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         AsyncNBTParser.shutdown();
-        if (FixesConfig.fixEntityRendererItemRendererLeak) {
+        if (MemoryConfig.leaks.fixEntityRendererItemRendererLeak) {
             EntityRenderer entityRenderer = Minecraft.getMinecraft().entityRenderer;
             if (entityRenderer != null) {
                 ((ItemRendererAccessor) entityRenderer.itemRenderer).setItemToRender(null);

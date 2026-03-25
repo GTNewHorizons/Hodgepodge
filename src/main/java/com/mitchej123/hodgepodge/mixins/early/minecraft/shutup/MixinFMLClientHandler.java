@@ -19,7 +19,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
-import com.mitchej123.hodgepodge.config.FixesConfig;
+import com.mitchej123.hodgepodge.config.MemoryConfig;
 
 import cpw.mods.fml.client.FMLClientHandler;
 
@@ -57,7 +57,7 @@ public class MixinFMLClientHandler {
                 missingCount,
                 brokenCount);
         logger.error(Strings.repeat("+=", 25));
-        if (FixesConfig.clearFMLTextureErrors) {
+        if (MemoryConfig.allocs.clearFMLTextureErrors) {
             missingTextures = HashMultimap.create();
             badTextureDomains = Sets.newHashSet();
             brokenTextures = HashBasedTable.create();
