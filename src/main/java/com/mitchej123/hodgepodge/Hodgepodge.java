@@ -1,14 +1,10 @@
 package com.mitchej123.hodgepodge;
 
 import java.util.Map;
-import java.util.Set;
-
-import net.minecraft.command.CommandBase;
 
 import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
 import com.mitchej123.hodgepodge.config.FixesConfig;
-import com.mitchej123.hodgepodge.config.MemoryConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
 import com.mitchej123.hodgepodge.util.AnchorAlarm;
@@ -16,13 +12,10 @@ import com.mitchej123.hodgepodge.util.ServerThreadLongHashMap;
 import com.mitchej123.hodgepodge.util.StatHandler;
 import com.mitchej123.hodgepodge.util.TravellersGear;
 
-import cofh.CoFHCore;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ICrashCallable;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLModIdMappingEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -30,11 +23,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
-import cpw.mods.fml.common.network.FMLEmbeddedChannel;
-import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.handshake.NetworkDispatcher;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
 import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
 import cpw.mods.fml.relauncher.Side;
@@ -116,32 +105,7 @@ public class Hodgepodge {
     @EventHandler
     public void onServerStopped(FMLServerStoppedEvent event) {
         ServerThreadLongHashMap.clearSnapshots();
-        if (MemoryConfig.leaks.fixCoFHWorldLeak && Loader.isModLoaded("CoFHCore")) {
-            clearCoFhServerInstance();
-        }
-        if (MemoryConfig.leaks.fixNetworkChannelsMemoryLeak) {
-            cleanChannelsForSide(Side.CLIENT);
-            cleanChannelsForSide(Side.SERVER);
-        }
-        if (MemoryConfig.leaks.fixServerCommandHandlerLeak) {
-            CommandBase.setAdminCommander(null);
-        }
-    }
-
-    private static void cleanChannelsForSide(Side side) {
-        final Set<String> channels = NetworkRegistry.INSTANCE.channelNamesFor(side);
-        for (String name : channels) {
-            final FMLEmbeddedChannel channel = NetworkRegistry.INSTANCE.getChannel(name, side);
-            channel.attr(FMLOutboundHandler.FML_MESSAGETARGET).remove();
-            channel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).remove();
-            channel.attr(NetworkDispatcher.FML_DISPATCHER).remove();
-            channel.attr(NetworkRegistry.NET_HANDLER).remove();
-        }
-    }
-
-    @Optional.Method(modid = "CoFHCore")
-    private static void clearCoFhServerInstance() {
-        CoFHCore.server = null;
+        // run memory cleaning for other mods in AfterServerStoppedHook
     }
 
     @EventHandler

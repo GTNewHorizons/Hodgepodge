@@ -358,6 +358,9 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.packets.MixinS01PacketJoinGame_FixDimensionID")
             .setApplyIf(() -> FixesConfig.fixLoginDimensionIDOverflow)
             .setPhase(Phase.EARLY)),
+    ADD_AFTER_SERVER_STOPPED_HOOK(new MixinBuilder()
+            .addCommonMixins("memory.MixinMinecraftServer_ShutdownHook")
+            .setPhase(Phase.EARLY)),
     FIX_WORLD_SERVER_LEAKING_UNLOADED_ENTITIES(new MixinBuilder()
             .addCommonMixins("minecraft.MixinWorldServerUpdateEntities")
             .setApplyIf(() -> MemoryConfig.leaks.fixWorldServerLeakingUnloadedEntities)
