@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft;
+package com.mitchej123.hodgepodge.mixins.early.memory;
 
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.item.ItemStack;

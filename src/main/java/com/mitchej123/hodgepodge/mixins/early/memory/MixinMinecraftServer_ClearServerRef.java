@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft.server;
+package com.mitchej123.hodgepodge.mixins.early.memory;
 
 import net.minecraft.server.MinecraftServer;
 
