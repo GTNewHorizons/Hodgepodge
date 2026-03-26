@@ -3,7 +3,6 @@ package com.mitchej123.hodgepodge.config;
 import com.gtnewhorizon.gtnhlib.config.Config;
 
 @Config(modid = "hodgepodge", category = "memory")
-@Config.RequiresMcRestart
 public class MemoryConfig {
 
     @Config.Comment("Memory leak fixes")
@@ -16,6 +15,7 @@ public class MemoryConfig {
 
         @Config.Comment("Fix ItemRenderer keeping a reference to the last rendered item when leaving a world")
         @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
         public boolean fixEntityRendererItemRendererLeak;
 
         @Config.Comment("Fix EventBus keeping object references after unregistering event handlers.")
@@ -42,18 +42,22 @@ public class MemoryConfig {
 
         @Config.Comment("Fix redstone torch leaking world")
         @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
         public boolean fixRedstoneTorchWorldLeak;
 
         @Config.Comment("Fix EffectRenderer and RenderGlobal leaking world instance when leaving world")
         @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
         public boolean fixRenderersWorldLeak;
 
         @Config.Comment("Fix WorldServer leaking entities when no players are present in a dimension")
         @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
         public boolean fixWorldServerLeakingUnloadedEntities;
 
         @Config.Comment("Fix skin manager leaking client world")
         @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
         public boolean fixSkinManagerLeakingClientWorld;
     }
 
@@ -61,6 +65,7 @@ public class MemoryConfig {
 
         @Config.Comment("Clear FML Texture Errors to free memory")
         @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
         public boolean clearFMLTextureErrors;
 
         @Config.Comment("Stops witchery from spamming Enum#values()")
