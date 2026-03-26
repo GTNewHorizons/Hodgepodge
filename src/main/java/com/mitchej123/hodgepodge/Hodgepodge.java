@@ -9,6 +9,7 @@ import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
+import com.mitchej123.hodgepodge.mixins.hooks.ChunkGenScheduler;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
 import com.mitchej123.hodgepodge.util.AnchorAlarm;
 import com.mitchej123.hodgepodge.util.ServerThreadLongHashMap;
@@ -115,6 +116,7 @@ public class Hodgepodge {
     @EventHandler
     public void onServerStopped(FMLServerStoppedEvent event) {
         ServerThreadLongHashMap.clearSnapshots();
+        ChunkGenScheduler.clearDimensionData();
         if (FixesConfig.fixCoFHWorldLeak && Loader.isModLoaded("CoFHCore")) {
             clearCoFhServerInstance();
         }
