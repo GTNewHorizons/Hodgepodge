@@ -5,6 +5,7 @@ import java.util.Set;
 import net.minecraft.command.CommandBase;
 
 import com.mitchej123.hodgepodge.config.MemoryConfig;
+import com.mitchej123.hodgepodge.mixins.early.memory.WorldAccessor_ClearMapStorage;
 
 import cofh.CoFHCore;
 import cpw.mods.fml.common.Loader;
@@ -30,6 +31,10 @@ public final class AfterServerStoppedHook {
         }
         if (MemoryConfig.leaks.fixServerCommandHandlerLeak) {
             CommandBase.setAdminCommander(null);
+        }
+        if (MemoryConfig.leaks.fixWorldMapStorageLeak) {
+            WorldAccessor_ClearMapStorage.setMapStorage(null);
+            WorldAccessor_ClearMapStorage.setSaveHandler(null);
         }
     }
 
