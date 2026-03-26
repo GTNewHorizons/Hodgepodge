@@ -14,7 +14,7 @@ public class MixinExtendedPlayer_EnumValuesSpam {
     @Unique
     private static final TransformCreature[] hodgepodge$VALUES = TransformCreature.values();
 
-    @Shadow
+    @Shadow(remap = false)
     private int creatureType;
 
     /**

@@ -96,6 +96,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixNetworkChannelsMemoryLeak;
 
+    @Config.Comment("Fix memory leak caused by minecraft's commandBase keeping a static reference to the server command handler")
+    @Config.DefaultBoolean(true)
+    public static boolean fixServerCommandHandlerLeak;
+
     @Config.Comment("Fix vanilla issue where player sounds register as animal sounds")
     @Config.DefaultBoolean(true)
     public static boolean fixFriendlyCreatureSounds;

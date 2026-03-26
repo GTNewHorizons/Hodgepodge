@@ -3,6 +3,8 @@ package com.mitchej123.hodgepodge;
 import java.util.Map;
 import java.util.Set;
 
+import net.minecraft.command.CommandBase;
+
 import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
 import com.mitchej123.hodgepodge.config.FixesConfig;
@@ -119,6 +121,9 @@ public class Hodgepodge {
         if (FixesConfig.fixNetworkChannelsMemoryLeak) {
             cleanChannelsForSide(Side.CLIENT);
             cleanChannelsForSide(Side.SERVER);
+        }
+        if (FixesConfig.fixServerCommandHandlerLeak) {
+            CommandBase.setAdminCommander(null);
         }
     }
 
