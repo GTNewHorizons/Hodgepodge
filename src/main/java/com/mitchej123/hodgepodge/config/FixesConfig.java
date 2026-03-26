@@ -892,6 +892,12 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixWitcheryEnumValuesSpam;
 
+    // Waila
+    @Config.Comment("Fixes Waila raytrace when Witchery shapeshifted")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixWailaWitcheryRaytrace;
+
     // Xaero's Minimap
     @Config.Comment("Fixes the player entity dot rendering when arrow is chosen")
     @Config.DefaultBoolean(true)

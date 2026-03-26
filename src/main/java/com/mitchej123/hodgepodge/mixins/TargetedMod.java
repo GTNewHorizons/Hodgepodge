@@ -79,6 +79,7 @@ public enum TargetedMod implements ITargetMod {
     ULTRAMINE(null, null, "org.ultramine.server.UltraminePlugin"),
     VOXELMAP("com.thevoxelbox.voxelmap.litemod.VoxelMapTransformer", "voxelmap"),
     WITCHERY("witchery"),
+    WAILA("Waila"),
     XAEROMINIMAP("XaeroMinimap"),
     XAEROWORLDMAP("XaeroWorldMap"),
     ZTONES("Ztones");
