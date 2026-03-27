@@ -108,6 +108,10 @@ public class ChunkGenScheduler {
         return dimensions.get(dimId);
     }
 
+    public static void clearDimensionData() {
+        dimensions.clear();
+    }
+
     public ChunkGenStats getStats() {
         return stats;
     }
