@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft;
+package com.mitchej123.hodgepodge.mixins.early.memory;
 
 import net.minecraft.profiler.Profiler;
 import net.minecraft.world.World;

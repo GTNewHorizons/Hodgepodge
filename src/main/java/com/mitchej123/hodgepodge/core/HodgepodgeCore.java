@@ -19,6 +19,7 @@ import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.GeneralConfig;
+import com.mitchej123.hodgepodge.config.MemoryConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.core.fml.AsmTransformers;
@@ -49,6 +50,7 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
             ConfigurationManager.registerConfig(DebugConfig.class);
             ConfigurationManager.registerConfig(FixesConfig.class);
             ConfigurationManager.registerConfig(GeneralConfig.class);
+            ConfigurationManager.registerConfig(MemoryConfig.class);
             ConfigurationManager.registerConfig(SpeedupsConfig.class);
             ConfigurationManager.registerConfig(TweaksConfig.class);
             if (TweaksConfig.enableTagCompoundStringPooling || TweaksConfig.enableNBTStringPooling) {
