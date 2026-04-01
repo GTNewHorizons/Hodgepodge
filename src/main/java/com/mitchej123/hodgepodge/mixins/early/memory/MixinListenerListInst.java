@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.fml;
+package com.mitchej123.hodgepodge.mixins.early.memory;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.spongepowered.asm.mixin.Mixin;

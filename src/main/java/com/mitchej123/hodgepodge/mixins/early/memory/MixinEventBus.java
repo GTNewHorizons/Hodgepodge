@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.fml;
+package com.mitchej123.hodgepodge.mixins.early.memory;
 
 import java.util.Map;
 

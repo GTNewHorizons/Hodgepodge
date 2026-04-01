@@ -6,18 +6,17 @@ import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
+import com.mitchej123.hodgepodge.mixins.hooks.ChunkGenScheduler;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
 import com.mitchej123.hodgepodge.util.AnchorAlarm;
+import com.mitchej123.hodgepodge.util.ServerThreadLongHashMap;
 import com.mitchej123.hodgepodge.util.StatHandler;
 import com.mitchej123.hodgepodge.util.TravellersGear;
 
-import cofh.CoFHCore;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ICrashCallable;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLModIdMappingEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -106,14 +105,9 @@ public class Hodgepodge {
 
     @EventHandler
     public void onServerStopped(FMLServerStoppedEvent event) {
-        if (FixesConfig.fixCoFHWorldLeak && Loader.isModLoaded("CoFHCore")) {
-            clearCoFhServerInstance();
-        }
-    }
-
-    @Optional.Method(modid = "CoFHCore")
-    private static void clearCoFhServerInstance() {
-        CoFHCore.server = null;
+        ServerThreadLongHashMap.clearSnapshots();
+        ChunkGenScheduler.clearDimensionData();
+        // run memory cleaning for other mods in AfterServerStoppedHook
     }
 
     @EventHandler
