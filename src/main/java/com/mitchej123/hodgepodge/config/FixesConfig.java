@@ -450,6 +450,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixSaveFileWrittenToExistingDirectory;
 
+    @Config.Comment("Fix a crash caused when a mod tries to send a chat message to a FakePlayer")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixFakePlayerChatCrash;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
