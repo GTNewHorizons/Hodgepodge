@@ -62,6 +62,7 @@ public class MemoryConfig {
 
         @Config.Comment("Fix World static map storage leaking the server world")
         @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
         public boolean fixWorldMapStorageLeak;
     }
 
