@@ -31,7 +31,7 @@ public class MixinChunk {
 
     @Inject(method = "func_150812_a", at = @At("HEAD"), cancellable = true)
     void hodgepodge$validateTileInBounds(int inChunkX, int inChunkY, int inChunkZ, TileEntity tile, CallbackInfo ci) {
-        if (inChunkX < 0 || inChunkX >= 16 || inChunkY < 0 || inChunkY >= 256 || inChunkZ < 0 || inChunkZ >= 16) {
+        if (inChunkX < 0 || inChunkX >= 16 || inChunkY < 0 || inChunkY >= worldObj.provider.getHeight() || inChunkZ < 0 || inChunkZ >= 16) {
             int dimension = Integer.MIN_VALUE;
             try {
                 dimension = this.worldObj.provider.dimensionId;
