@@ -59,6 +59,11 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean fixSkinManagerLeakingClientWorld;
+
+        @Config.Comment("Fix World static map storage leaking the server world")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixWorldMapStorageLeak;
     }
 
     public static class AllocationFixes {
