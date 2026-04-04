@@ -36,9 +36,20 @@ public class MixinChunkProviderServer_DeferPopulation {
             scheduler.deferChunkPopulation(chunk, x, z);
         } else {
             scheduler.incrementPopulationDepth();
+            // World gen code (e.g. Thaumcraft maze generation) calls world.getTileEntity() on blocks it just placed,
+            // which goes through provideChunk(). If the scheduler is blocked, EntityGuard returns EmptyChunk for
+            // unloaded/ungenerated neighbors, causing getTileEntity() to return null and crash. Temporarily unblock
+            // so that world gen can access adjacent chunks. Cascading population is still deferred by the depth check.
+            final boolean wasBlocked = ChunkGenScheduler.isBlocked();
+            if (wasBlocked) {
+                ChunkGenScheduler.enableChunkLoads();
+            }
             try {
                 chunk.populateChunk(p1, p2, x, z);
             } finally {
+                if (wasBlocked) {
+                    ChunkGenScheduler.disableChunkLoads();
+                }
                 scheduler.decrementPopulationDepth();
             }
             scheduler.trackIfUnpopulated(chunk, x, z);
