@@ -50,7 +50,7 @@ public class MixinTeleporterThaumcraft_PortalFix {
     private boolean hodgepodge$wasChunkLoadBlocked;
 
     @Unique
-    private boolean hodgepodge$wasChunkProvideBlocked;
+    private boolean hodgepodge$wasLoadChunkOnProvideRequestDisabled;
 
     @Inject(method = "placeInPortal", at = @At("HEAD"))
     private void hodgepodge$unblockForPortalSearch(Entity entity, double x, double y, double z, float yaw,
@@ -65,8 +65,8 @@ public class MixinTeleporterThaumcraft_PortalFix {
         // which includes the tile-entity update that triggers this teleportation.  Without this, vanilla provideChunk
         // returns defaultEmptyChunk even when ChunkGenScheduler is not blocking, causing the portal scan to fail.
         final ChunkProviderServer cps = worldServerInstance.theChunkProviderServer;
-        hodgepodge$wasChunkProvideBlocked = !cps.loadChunkOnProvideRequest;
-        if (hodgepodge$wasChunkProvideBlocked) {
+        hodgepodge$wasLoadChunkOnProvideRequestDisabled = !cps.loadChunkOnProvideRequest;
+        if (hodgepodge$wasLoadChunkOnProvideRequestDisabled) {
             cps.loadChunkOnProvideRequest = true;
         }
     }
@@ -77,7 +77,7 @@ public class MixinTeleporterThaumcraft_PortalFix {
         if (hodgepodge$wasChunkLoadBlocked) {
             ChunkGenScheduler.disableChunkLoads();
         }
-        if (hodgepodge$wasChunkProvideBlocked) {
+        if (hodgepodge$wasLoadChunkOnProvideRequestDisabled) {
             worldServerInstance.theChunkProviderServer.loadChunkOnProvideRequest = false;
         }
     }
