@@ -39,6 +39,13 @@ import thaumcraft.common.lib.world.dim.TeleporterThaumcraft;
  * Fix: at the start of {@code placeInPortal}, temporarily restore both chunk-loading gates — unblock the
  * {@link ChunkGenScheduler} flag and re-enable {@code loadChunkOnProvideRequest} on the destination world's
  * {@link ChunkProviderServer}. Both are restored to their original values when {@code placeInPortal} returns.
+ *
+ * <p>
+ * Additionally, the entity's destination chunk is proactively force-loaded via {@code loadChunk()} before the portal
+ * scan begins. This ensures the eldritch portal room (including the portal block at Y=53) is fully generated and
+ * present before {@code placeInExistingPortal} sweeps the area. Without this step, the chunk may be loaded with raw
+ * terrain only (all air) in edge cases such as an async maze-data race or deferred-population timing, causing the scan
+ * to find no portal block and leaving the player at their (wrong) overworld Y inside the outer lands room.
  */
 @Mixin(value = TeleporterThaumcraft.class, remap = false)
 public class MixinTeleporterThaumcraft_PortalFix {
@@ -69,6 +76,14 @@ public class MixinTeleporterThaumcraft_PortalFix {
         if (hodgepodge$wasLoadChunkOnProvideRequestDisabled) {
             cps.loadChunkOnProvideRequest = true;
         }
+
+        // Proactively force-load the chunk at the entity's position so that the outer-lands portal room is generated
+        // (and the portal block placed at Y=53) before placeInExistingPortal scans for it. Using loadChunk() directly
+        // bypasses all provideChunk guards and ensures population runs synchronously via DeferPopulation (depth=0).
+        // If the chunk is already loaded this is a cheap no-op.
+        final int cx = ((int) Math.floor(entity.posX)) >> 4;
+        final int cz = ((int) Math.floor(entity.posZ)) >> 4;
+        cps.loadChunk(cx, cz);
     }
 
     @Inject(method = "placeInPortal", at = @At("RETURN"))
