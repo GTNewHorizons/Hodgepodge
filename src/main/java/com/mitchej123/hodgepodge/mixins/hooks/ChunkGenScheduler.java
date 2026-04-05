@@ -24,6 +24,8 @@ import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.longs.Long2ByteMap;
 import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
@@ -39,6 +41,16 @@ public class ChunkGenScheduler {
     private static volatile boolean tickingStarted = false;
     private static long serverTickStartNanos;
     private static int blockedLoadCount = 0;
+
+    /**
+     * Set of dimension IDs that are completely excluded from all chunk-load throttling and population deferral.
+     * For excluded dimensions, {@code provideChunk} always loads chunks normally, entity/block-update ticking does
+     * not suppress {@code loadChunkOnProvideRequest}, and {@link MixinChunkProviderServer_DeferPopulation} never
+     * defers population (even when {@code populationDepth > 0}). This prevents incomplete world-gen structures (e.g.
+     * the Thaumcraft outer-lands maze) that span chunk borders from having missing sections due to deferred
+     * population of neighbour chunks.
+     */
+    private static final IntSet chunkThrottleExcludedDims = new IntOpenHashSet();
 
     private static final Int2ObjectMap<ChunkGenScheduler> dimensions = new Int2ObjectOpenHashMap<>();
     private final LongSet pendingGenSet = new LongOpenHashSet();
@@ -110,6 +122,23 @@ public class ChunkGenScheduler {
 
     public static void clearDimensionData() {
         dimensions.clear();
+        chunkThrottleExcludedDims.clear();
+    }
+
+    /**
+     * Permanently exclude a dimension from all chunk-load throttling and population deferral. Call once per
+     * dimension ID, typically at the first time a teleporter for that dimension is instantiated.
+     */
+    public static void excludeDimFromChunkThrottle(int dimId) {
+        chunkThrottleExcludedDims.add(dimId);
+    }
+
+    /**
+     * Returns {@code true} if the dimension has been excluded from chunk-load throttling via
+     * {@link #excludeDimFromChunkThrottle(int)}.
+     */
+    public static boolean isDimExcludedFromChunkThrottle(int dimId) {
+        return chunkThrottleExcludedDims.contains(dimId);
     }
 
     public ChunkGenStats getStats() {

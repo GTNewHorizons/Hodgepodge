@@ -14,6 +14,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
+import com.mitchej123.hodgepodge.mixins.hooks.ChunkGenScheduler;
+
 /**
  * Prevent any random ticking blocks and entity ticking from loading chunks. Breaks vanilla behavior, but is generally
  * more desirable for performance and avoiding unintended chunkloads. Sibling mixin to
@@ -35,7 +37,8 @@ public abstract class MixinWorldServer_PreventChunkLoading {
                     target = "Lnet/minecraft/block/Block;updateTick(Lnet/minecraft/world/World;IIILjava/util/Random;)V"))
     private void hodgepodge$onUpdateTick(Block instance, World worldIn, int x, int y, int z, Random random,
             Operation<Void> original) {
-        if (!theChunkProviderServer.loadChunkOnProvideRequest) {
+        if (!theChunkProviderServer.loadChunkOnProvideRequest
+                || ChunkGenScheduler.isDimExcludedFromChunkThrottle(theChunkProviderServer.worldObj.provider.dimensionId)) {
             original.call(instance, worldIn, x, y, z, random);
             return;
         }
@@ -51,7 +54,8 @@ public abstract class MixinWorldServer_PreventChunkLoading {
             method = "updateEntities",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateEntities()V"))
     private void hodgepodge$onUpdateEntities(WorldServer instance, Operation<Void> original) {
-        if (!theChunkProviderServer.loadChunkOnProvideRequest) {
+        if (!theChunkProviderServer.loadChunkOnProvideRequest
+                || ChunkGenScheduler.isDimExcludedFromChunkThrottle(instance.provider.dimensionId)) {
             original.call(instance);
             return;
         }
