@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-
 import com.mitchej123.hodgepodge.mixins.hooks.ChunkGenScheduler;
 
 /**
@@ -37,8 +36,8 @@ public abstract class MixinWorldServer_PreventChunkLoading {
                     target = "Lnet/minecraft/block/Block;updateTick(Lnet/minecraft/world/World;IIILjava/util/Random;)V"))
     private void hodgepodge$onUpdateTick(Block instance, World worldIn, int x, int y, int z, Random random,
             Operation<Void> original) {
-        if (!theChunkProviderServer.loadChunkOnProvideRequest
-                || ChunkGenScheduler.isDimExcludedFromChunkThrottle(theChunkProviderServer.worldObj.provider.dimensionId)) {
+        if (!theChunkProviderServer.loadChunkOnProvideRequest || ChunkGenScheduler
+                .isDimExcludedFromChunkThrottle(theChunkProviderServer.worldObj.provider.dimensionId)) {
             original.call(instance, worldIn, x, y, z, random);
             return;
         }
