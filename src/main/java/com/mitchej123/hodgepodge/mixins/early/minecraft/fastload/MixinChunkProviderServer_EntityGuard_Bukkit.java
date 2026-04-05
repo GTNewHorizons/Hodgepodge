@@ -33,6 +33,9 @@ public class MixinChunkProviderServer_EntityGuard_Bukkit {
     private void hodgepodge$blockDuringEntityTicks(int x, int z, CallbackInfoReturnable<Chunk> cir) {
         if (!ChunkGenScheduler.isBlocked() || this.worldObj.findingSpawnPoint) return;
 
+        // Excluded dimensions bypass all throttle guards.
+        if (ChunkGenScheduler.isDimExcludedFromChunkThrottle(this.worldObj.provider.dimensionId)) return;
+
         // Let already-loaded chunks through to Thermos's full provideChunk logic
         ChunkProviderServer self = (ChunkProviderServer) (Object) this;
         if (self.chunkExists(x, z)) return;
