@@ -41,11 +41,13 @@ import thaumcraft.common.lib.world.dim.TeleporterThaumcraft;
  * {@link ChunkProviderServer}. Both are restored to their original values when {@code placeInPortal} returns.
  *
  * <p>
- * Additionally, the entity's destination chunk is proactively force-loaded via {@code loadChunk()} before the portal
- * scan begins. This ensures the eldritch portal room (including the portal block at Y=53) is fully generated and
- * present before {@code placeInExistingPortal} sweeps the area. Without this step, the chunk may be loaded with raw
- * terrain only (all air) in edge cases such as an async maze-data race or deferred-population timing, causing the scan
- * to find no portal block and leaving the player at their (wrong) overworld Y inside the outer lands room.
+ * Additionally, the entity's destination chunk is proactively force-loaded and force-populated before the scan.
+ * {@code cps.loadChunk(cx, cz)} ensures the chunk's terrain is generated. Then {@code cps.populate(cps, cx, cz)}
+ * — the same call {@link ChunkGenScheduler#processPopulationQueue} uses — forces synchronous population (which runs
+ * {@code ThaumcraftWorldGenerator} and places the eldritch portal block at Y=53). This bypasses
+ * {@link MixinChunkProviderServer_DeferPopulation}'s {@code @Redirect} (which only intercepts
+ * {@code chunk.populateChunk} inside {@code originalLoadChunk}), so population happens immediately regardless of
+ * {@code populationDepth}. If the chunk was already populated, {@code cps.populate} is a no-op.
  */
 @Mixin(value = TeleporterThaumcraft.class, remap = false)
 public class MixinTeleporterThaumcraft_PortalFix {
@@ -77,13 +79,23 @@ public class MixinTeleporterThaumcraft_PortalFix {
             cps.loadChunkOnProvideRequest = true;
         }
 
-        // Proactively force-load the chunk at the entity's position so that the outer-lands portal room is generated
-        // (and the portal block placed at Y=53) before placeInExistingPortal scans for it. Using loadChunk() directly
-        // bypasses all provideChunk guards and ensures population runs synchronously via DeferPopulation (depth=0).
-        // If the chunk is already loaded this is a cheap no-op.
+        // Proactively force-load and force-populate the chunk at the entity's position so that the outer-lands portal
+        // room (including blockEldritchPortal at Y=53) is fully in place before placeInExistingPortal scans for it.
+        //
+        // loadChunk() ensures the chunk's terrain is generated. However, when called during the entity-tick window,
+        // DeferPopulation's @Redirect fires inside originalLoadChunk and may defer the subsequent populateChunk call
+        // if populationDepth > 0 (i.e. the scheduler's processPopulationQueue is already running on this world).
+        // A deferred chunk contains only terrain (all air for the outer dimension) — no maze structure, no portal block.
+        //
+        // cps.populate(cps, cx, cz) is the same call ChunkGenScheduler.processPopulationQueue uses (line ~457). It
+        // calls ChunkProviderServer.populate directly, which is NOT intercepted by DeferPopulation's @Redirect on
+        // originalLoadChunk. This forces synchronous population (maze generation via ThaumcraftWorldGenerator) and
+        // sets chunk.isTerrainPopulated = true, so the scheduler's queue will skip it harmlessly later.
+        // If the chunk was already populated this is a no-op (isTerrainPopulated check inside ChunkProviderServer).
         final int cx = ((int) Math.floor(entity.posX)) >> 4;
         final int cz = ((int) Math.floor(entity.posZ)) >> 4;
         cps.loadChunk(cx, cz);
+        cps.populate(cps, cx, cz);
     }
 
     @Inject(method = "placeInPortal", at = @At("RETURN"))
