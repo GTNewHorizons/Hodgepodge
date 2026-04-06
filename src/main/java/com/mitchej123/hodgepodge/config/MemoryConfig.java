@@ -58,6 +58,11 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         public boolean fixRenderManagerWorldLeak;
 
+        @Config.Comment("Fix PointedEntity leaking world instance when leaving world")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixPointedEntityLeak;
+
         @Config.Comment("Fix PlayerController leaking world instance when leaving world")
         @Config.DefaultBoolean(true)
         public boolean fixPlayerControllerWorldLeak;

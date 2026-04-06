@@ -387,6 +387,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("memory.MixinNetHandlerPlayClient_ClearMapStorage")
             .setApplyIf(() -> MemoryConfig.leaks.fixNetHandlerClientWorldLeak)
             .setPhase(Phase.EARLY)),
+    FIX_ENTITY_RENDERER_POINTED_ENTITY_LEAK(new MixinBuilder()
+            .addClientMixins("memory.MixinEntityRenderer_ClearPointedEntity")
+            .setApplyIf(() -> MemoryConfig.leaks.fixPointedEntityLeak)
+            .setPhase(Phase.EARLY)),
     FIX_ARROW_WRONG_LIGHTING(new MixinBuilder()
             .addClientMixins("minecraft.MixinRendererLivingEntity")
             .setApplyIf(() -> FixesConfig.fixGlStateBugs)
