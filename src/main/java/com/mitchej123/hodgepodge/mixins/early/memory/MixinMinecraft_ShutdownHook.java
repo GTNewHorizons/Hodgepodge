@@ -1,12 +1,14 @@
 package com.mitchej123.hodgepodge.mixins.early.memory;
 
-import com.mitchej123.hodgepodge.mixins.hooks.AfterClientExitWorldHook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import com.mitchej123.hodgepodge.mixins.hooks.AfterClientExitWorldHook;
 
 @Mixin(Minecraft.class)
 public class MixinMinecraft_ShutdownHook {

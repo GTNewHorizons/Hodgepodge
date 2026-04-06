@@ -380,9 +380,7 @@ public enum Mixins implements IMixins {
             .addExcludedMod(TargetedMod.BUGTORCH)
             .setPhase(Phase.EARLY)),
     FIX_RENDERERS_WORLD_LEAK(new MixinBuilder()
-            .addClientMixins(
-                    "memory.MixinMinecraft_ClearRenderersWorldLeak",
-                    "memory.MixinRenderGlobal_FixWordLeak")
+            .addClientMixins("memory.MixinRenderGlobal_FixWordLeak")
             .setApplyIf(() -> MemoryConfig.leaks.fixRenderersWorldLeak)
             .setPhase(Phase.EARLY)),
     FIX_ARROW_WRONG_LIGHTING(new MixinBuilder()
