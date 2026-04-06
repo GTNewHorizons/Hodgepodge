@@ -15,10 +15,6 @@ public enum Mixins implements IMixins {
 
     // spotless:off
     // Vanilla Fixes
-    FIX_MINECRAFT_SERVER_LEAK(new MixinBuilder()
-            .addCommonMixins("memory.MixinMinecraftServer_ClearServerRef")
-            .setApplyIf(() -> MemoryConfig.leaks.fixMinecraftServerLeak)
-            .setPhase(Phase.EARLY)),
     ONLY_LOAD_LANGUAGES_ONCE_PER_FILE(new MixinBuilder()
             .addCommonMixins("minecraft.MixinLanguageRegistry")
             .setApplyIf(() -> FixesConfig.onlyLoadLanguagesOnce)
@@ -361,6 +357,10 @@ public enum Mixins implements IMixins {
     ADD_AFTER_SERVER_STOPPED_HOOK(new MixinBuilder()
             .addCommonMixins("memory.MixinMinecraftServer_ShutdownHook")
             .setPhase(Phase.EARLY)),
+    FIX_MINECRAFT_SERVER_LEAK(new MixinBuilder()
+            .addCommonMixins("memory.MixinMinecraftServer_ClearServerRef")
+            .setApplyIf(() -> MemoryConfig.leaks.fixMinecraftServerLeak)
+            .setPhase(Phase.EARLY)),
     FIX_WORLD_SERVER_LEAKING_UNLOADED_ENTITIES(new MixinBuilder()
             .addCommonMixins("memory.MixinWorldServerUpdateEntities")
             .setApplyIf(() -> MemoryConfig.leaks.fixWorldServerLeakingUnloadedEntities)
@@ -378,6 +378,12 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> MemoryConfig.leaks.fixRedstoneTorchWorldLeak)
             .addExcludedMod(TargetedMod.BUGTORCH)
             .setPhase(Phase.EARLY)),
+    FIX_RENDERERS_WORLD_LEAK(new MixinBuilder()
+            .addClientMixins(
+                    "memory.MixinMinecraft_ClearRenderersWorldLeak",
+                    "memory.MixinRenderGlobal_FixWordLeak")
+            .setApplyIf(() -> MemoryConfig.leaks.fixRenderersWorldLeak)
+            .setPhase(Phase.EARLY)),
     FIX_ARROW_WRONG_LIGHTING(new MixinBuilder()
             .addClientMixins("minecraft.MixinRendererLivingEntity")
             .setApplyIf(() -> FixesConfig.fixGlStateBugs)
@@ -390,12 +396,6 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinMinecraft_UnfocusedFullscreen")
             .setApplyIf(() -> FixesConfig.fixUnfocusedFullscreen)
             .addExcludedMod(TargetedMod.ARCHAICFIX)
-            .setPhase(Phase.EARLY)),
-    FIX_RENDERERS_WORLD_LEAK(new MixinBuilder()
-            .addClientMixins(
-                    "memory.MixinMinecraft_ClearRenderersWorldLeak",
-                    "memory.MixinRenderGlobal_FixWordLeak")
-            .setApplyIf(() -> MemoryConfig.leaks.fixRenderersWorldLeak)
             .setPhase(Phase.EARLY)),
     FIX_OPTIFINE_CHUNKLOADING_CRASH(new MixinBuilder()
             .setApplyIf(() -> FixesConfig.fixOptifineChunkLoadingCrash)
