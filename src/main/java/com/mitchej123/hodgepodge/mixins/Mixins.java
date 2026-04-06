@@ -383,6 +383,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("memory.MixinRenderGlobal_FixWordLeak")
             .setApplyIf(() -> MemoryConfig.leaks.fixRenderersWorldLeak)
             .setPhase(Phase.EARLY)),
+    FIX_NETHANDLER_MAPSTORAGE_LEAK(new MixinBuilder()
+            .addClientMixins("memory.MixinNetHandlerPlayClient_ClearMapStorage")
+            .setApplyIf(() -> MemoryConfig.leaks.fixNetHandlerClientWorldLeak)
+            .setPhase(Phase.EARLY)),
     FIX_ARROW_WRONG_LIGHTING(new MixinBuilder()
             .addClientMixins("minecraft.MixinRendererLivingEntity")
             .setApplyIf(() -> FixesConfig.fixGlStateBugs)
