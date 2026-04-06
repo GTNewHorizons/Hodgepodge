@@ -58,6 +58,15 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         public boolean fixRenderManagerWorldLeak;
 
+        @Config.Comment("Fix PlayerController leaking world instance when leaving world")
+        @Config.DefaultBoolean(true)
+        public boolean fixPlayerControllerWorldLeak;
+
+        @Config.Comment("Fix NetHandlerClient leaking world instance when leaving world")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixNetHandlerClientWorldLeak;
+
         @Config.Comment("Fix WorldServer leaking entities when no players are present in a dimension")
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
@@ -67,11 +76,6 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean fixSkinManagerLeakingClientWorld;
-
-        @Config.Comment("Fix NetHandlerClient leaking world when leaving world")
-        @Config.DefaultBoolean(true)
-        @Config.RequiresMcRestart
-        public boolean fixNetHandlerClientWorldLeak;
     }
 
     public static class AllocationFixes {

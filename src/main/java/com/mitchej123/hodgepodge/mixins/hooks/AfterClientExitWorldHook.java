@@ -39,5 +39,8 @@ public final class AfterClientExitWorldHook {
             RenderManager.instance.livingPlayer = null;
             RenderManager.instance.field_147941_i = null;
         }
+        if (MemoryConfig.leaks.fixPlayerControllerWorldLeak) {
+            mc.playerController = null;
+        }
     }
 }
