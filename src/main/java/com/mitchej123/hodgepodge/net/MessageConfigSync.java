@@ -1,7 +1,9 @@
 package com.mitchej123.hodgepodge.net;
 
+import com.mitchej123.hodgepodge.client.tab.TabChannelHandler;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -11,10 +13,20 @@ public class MessageConfigSync implements IMessage, IMessageHandler<MessageConfi
 
     private boolean longerSentMessages;
     private boolean fastBlockPlacingServerSide;
+    private String tabHeaderText = "";
+    private String tabFooterText = "";
+    private boolean tabShowPlayerHeads = true;
+    private boolean tabShowPingNumber = true;
+    private boolean tabShowPingBars = true;
 
     public MessageConfigSync() {
         longerSentMessages = TweaksConfig.longerSentMessages;
         fastBlockPlacingServerSide = TweaksConfig.fastBlockPlacingServerSide;
+        tabHeaderText = TweaksConfig.tabHeaderText != null ? TweaksConfig.tabHeaderText : "";
+        tabFooterText = TweaksConfig.tabFooterText != null ? TweaksConfig.tabFooterText : "";
+        tabShowPlayerHeads = TweaksConfig.tabShowPlayerHeads;
+        tabShowPingNumber = TweaksConfig.tabShowPingNumber;
+        tabShowPingBars = TweaksConfig.tabShowPingBars;
     }
 
     @Override
@@ -27,12 +39,28 @@ public class MessageConfigSync implements IMessage, IMessageHandler<MessageConfi
         } else {
             fastBlockPlacingServerSide = buf.readBoolean();
         }
+        if (buf.readableBytes() > 0) {
+            tabHeaderText = ByteBufUtils.readUTF8String(buf);
+            tabFooterText = ByteBufUtils.readUTF8String(buf);
+        }
+        if (buf.readableBytes() > 0) {
+            tabShowPlayerHeads = buf.readBoolean();
+            tabShowPingNumber = buf.readBoolean();
+        }
+        if (buf.readableBytes() > 0) {
+            tabShowPingBars = buf.readBoolean();
+        }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeBoolean(longerSentMessages);
         buf.writeBoolean(fastBlockPlacingServerSide);
+        ByteBufUtils.writeUTF8String(buf, tabHeaderText);
+        ByteBufUtils.writeUTF8String(buf, tabFooterText);
+        buf.writeBoolean(tabShowPlayerHeads);
+        buf.writeBoolean(tabShowPingNumber);
+        buf.writeBoolean(tabShowPingBars);
     }
 
     public boolean isFastBlockPlacingServerSide() {
@@ -51,6 +79,12 @@ public class MessageConfigSync implements IMessage, IMessageHandler<MessageConfi
             TweaksConfig.fastBlockPlacing = false;
             TweaksConfig.fastBlockPlacingServerSide = false;
         }
+
+        TabChannelHandler.INSTANCE.setServerData(message.tabHeaderText, message.tabFooterText);
+
+        TweaksConfig.tabShowPlayerHeads = message.tabShowPlayerHeads;
+        TweaksConfig.tabShowPingNumber = message.tabShowPingNumber;
+        TweaksConfig.tabShowPingBars = message.tabShowPingBars;
 
         return null;
     }
