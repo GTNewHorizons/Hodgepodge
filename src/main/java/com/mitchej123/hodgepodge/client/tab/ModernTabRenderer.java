@@ -3,12 +3,14 @@ package com.mitchej123.hodgepodge.client.tab;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiPlayerInfo;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.scoreboard.Score;
@@ -17,13 +19,10 @@ import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 import org.lwjgl.opengl.GL11;
 
 import com.mitchej123.hodgepodge.config.TweaksConfig;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Replaces the vanilla 1.7.10 tab list with a modern-style renderer matching the 1.12.2+ layout algorithm. Features
@@ -48,33 +47,54 @@ public class ModernTabRenderer {
 
     private ModernTabRenderer() {}
 
-    @SubscribeEvent
-    public void onRenderPlayerList(RenderGameOverlayEvent.Pre event) {
-        if (event.type != RenderGameOverlayEvent.ElementType.PLAYER_LIST) return;
-        if (event.isCanceled()) return;
-
-        event.setCanceled(true);
-
+    /**
+     * Renders the modern tab list. Called from the GuiIngameForge mixin, preserving the Pre/Post event lifecycle so
+     * other mods can interact with the player list overlay event normally.
+     */
+    public void render(ScaledResolution resolution) {
         Minecraft mc = Minecraft.getMinecraft();
         FontRenderer font = mc.fontRenderer;
         NetHandlerPlayClient handler = mc.thePlayer.sendQueue;
         Scoreboard scoreboard = mc.theWorld.getScoreboard();
         ScoreObjective objective = scoreboard.func_96539_a(0);
 
-        int screenWidth = event.resolution.getScaledWidth();
+        int screenWidth = resolution.getScaledWidth();
 
         @SuppressWarnings("unchecked")
         List<GuiPlayerInfo> allPlayers = (List<GuiPlayerInfo>) handler.playerInfoList;
         int playerCount = Math.min(allPlayers.size(), MAX_PLAYERS);
         if (playerCount == 0 && objective == null) return;
 
-        List<GuiPlayerInfo> players = allPlayers.subList(0, playerCount);
+        TabDisplayHandler displayHandler = TabDisplayHandler.INSTANCE;
+
+        // Apply custom sort order if provided by HP|TabUD
+        List<GuiPlayerInfo> players;
+        Map<String, Integer> sortMap = displayHandler.getSortIndexMap();
+        if (sortMap != null && !sortMap.isEmpty()) {
+            players = new ArrayList<>(allPlayers.subList(0, playerCount));
+            players.sort((a, b) -> {
+                Integer idxA = sortMap.get(a.name);
+                Integer idxB = sortMap.get(b.name);
+                if (idxA == null && idxB == null) return a.name.compareToIgnoreCase(b.name);
+                if (idxA == null) return 1;
+                if (idxB == null) return -1;
+                return Integer.compare(idxA, idxB);
+            });
+        } else {
+            players = allPlayers.subList(0, playerCount);
+        }
 
         // Measure widest display name
         int maxNameWidth = 0;
         for (GuiPlayerInfo player : players) {
-            ScorePlayerTeam team = scoreboard.getPlayersTeam(player.name);
-            String displayName = ScorePlayerTeam.formatPlayerName(team, player.name);
+            String customName = displayHandler.getDisplayName(player.name);
+            String displayName;
+            if (customName != null) {
+                displayName = customName;
+            } else {
+                ScorePlayerTeam team = scoreboard.getPlayersTeam(player.name);
+                displayName = ScorePlayerTeam.formatPlayerName(team, player.name);
+            }
             int w = font.getStringWidth(displayName);
             if (w > maxNameWidth) maxNameWidth = w;
         }
@@ -91,6 +111,30 @@ public class ModernTabRenderer {
             maxScoreWidth += 5; // padding between name and score
         }
 
+        // Measure widest ping text if enabled
+        boolean showPingNumber = TweaksConfig.tabShowPingNumber;
+        boolean showPingBars = TweaksConfig.tabShowPingBars;
+        int maxPingTextWidth = 0;
+        if (showPingNumber) {
+            for (GuiPlayerInfo player : players) {
+                String pingText = formatPing(player.responseTime);
+                int w = font.getStringWidth(pingText);
+                if (w > maxPingTextWidth) maxPingTextWidth = w;
+            }
+            maxPingTextWidth += 2; // padding between ping text and bars
+        }
+
+        // Measure widest suffix (from HP|TabUD)
+        int maxSuffixWidth = 0;
+        for (GuiPlayerInfo player : players) {
+            String suffix = displayHandler.getSuffix(player.name);
+            if (suffix != null) {
+                int w = font.getStringWidth(suffix);
+                if (w > maxSuffixWidth) maxSuffixWidth = w;
+            }
+        }
+        if (maxSuffixWidth > 0) maxSuffixWidth += 5; // padding (same as scoreboard score)
+
         // Calculate column layout
         int columns = 1;
         int rows = playerCount;
@@ -102,8 +146,10 @@ public class ModernTabRenderer {
         boolean showHeads = TweaksConfig.tabShowPlayerHeads;
         int headSpace = showHeads ? HEAD_PADDING : 0;
 
-        // Column width: name + head + score + ping icon + padding
-        int entryWidth = headSpace + maxNameWidth + maxScoreWidth + 13;
+        // Column width: name + head + score + ping text + ping icon + padding
+        int pingBarSpace = showPingBars ? PING_ICON_WIDTH + 1 : 0;
+        int entryWidth = headSpace + maxNameWidth + maxScoreWidth + maxSuffixWidth + maxPingTextWidth + pingBarSpace
+                + 3;
         int totalGridWidth = Math.min(columns * entryWidth, screenWidth - 50);
         int columnWidth = totalGridWidth / columns;
         int gridLeft = (screenWidth - (columnWidth * columns + (columns - 1) * 5)) / 2;
@@ -164,8 +210,14 @@ public class ModernTabRenderer {
             GuiPlayerInfo player = players.get(i);
             activeNames.add(player.name);
 
-            ScorePlayerTeam team = scoreboard.getPlayersTeam(player.name);
-            String displayName = ScorePlayerTeam.formatPlayerName(team, player.name);
+            String customName = displayHandler.getDisplayName(player.name);
+            String displayName;
+            if (customName != null) {
+                displayName = customName;
+            } else {
+                ScorePlayerTeam team = scoreboard.getPlayersTeam(player.name);
+                displayName = ScorePlayerTeam.formatPlayerName(team, player.name);
+            }
 
             // Entry background
             Gui.drawRect(x, y, x + columnWidth, y + 8, ENTRY_BG_COLOR);
@@ -194,7 +246,7 @@ public class ModernTabRenderer {
             // Scoreboard score
             if (objective != null) {
                 int nameEndX = textX + font.getStringWidth(displayName) + 5;
-                int scoreEndX = x + columnWidth - PING_ICON_WIDTH - 2 - 5;
+                int scoreEndX = x + columnWidth - pingBarSpace - 2 - 5;
                 if (scoreEndX - nameEndX > 5) {
                     Score score = objective.getScoreboard().func_96529_a(player.name, objective);
                     String scoreStr = EnumChatFormatting.YELLOW + "" + score.getScorePoints();
@@ -202,19 +254,36 @@ public class ModernTabRenderer {
                 }
             }
 
+            // Suffix (from HP|TabUD)
+            String suffix = displayHandler.getSuffix(player.name);
+            if (suffix != null) {
+                int suffixRight = x + columnWidth - pingBarSpace - maxPingTextWidth - 2;
+                font.drawStringWithShadow(suffix, suffixRight - font.getStringWidth(suffix), y, -1);
+            }
+
+            // Ping number
+            if (showPingNumber) {
+                String pingText = formatPing(player.responseTime);
+                int pingColor = getPingColor(player.responseTime);
+                int pingTextX = x + columnWidth - pingBarSpace - font.getStringWidth(pingText) - 2;
+                font.drawStringWithShadow(pingText, pingTextX, y, pingColor);
+            }
+
             // Ping bars
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.icons);
-            int pingLevel = getPingLevel(player.responseTime);
-            Gui.func_146110_a(
-                    x + columnWidth - PING_ICON_WIDTH - 1,
-                    y,
-                    0,
-                    176 + pingLevel * 8,
-                    PING_ICON_WIDTH,
-                    PING_ICON_HEIGHT,
-                    256,
-                    256);
+            if (showPingBars) {
+                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.icons);
+                int pingLevel = getPingLevel(player.responseTime);
+                Gui.func_146110_a(
+                        x + columnWidth - PING_ICON_WIDTH - 1,
+                        y,
+                        0,
+                        176 + pingLevel * 8,
+                        PING_ICON_WIDTH,
+                        PING_ICON_HEIGHT,
+                        256,
+                        256);
+            }
         }
 
         // Footer
@@ -258,7 +327,7 @@ public class ModernTabRenderer {
         List<String> lines = new ArrayList<>();
         if (text == null || text.isEmpty()) return lines;
 
-        for (String segment : text.split("\n")) {
+        for (String segment : text.split("\n", -1)) {
             if (segment.isEmpty()) {
                 lines.add("");
                 continue;
@@ -290,5 +359,18 @@ public class ModernTabRenderer {
         if (ping < 600) return 2;
         if (ping < 1000) return 3;
         return 4;
+    }
+
+    private static String formatPing(int ping) {
+        return ping < 0 ? "?" : ping + "ms";
+    }
+
+    private static int getPingColor(int ping) {
+        if (ping < 0) return 0xAAAAAA;
+        if (ping < 150) return 0x55FF55;
+        if (ping < 300) return 0xAAFF55;
+        if (ping < 600) return 0xFFFF55;
+        if (ping < 1000) return 0xFF5555;
+        return 0xAA0000;
     }
 }

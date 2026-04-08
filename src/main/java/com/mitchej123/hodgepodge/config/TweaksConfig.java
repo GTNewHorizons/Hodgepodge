@@ -474,6 +474,14 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean tabShowPlayerHeads;
 
+    @Config.Comment("Show numeric ping value (e.g. 42ms) next to the signal bars in the modern tab overlay")
+    @Config.DefaultBoolean(true)
+    public static boolean tabShowPingNumber;
+
+    @Config.Comment("Show signal bars in the modern tab overlay. Can be disabled independently of the numeric ping display.")
+    @Config.DefaultBoolean(true)
+    public static boolean tabShowPingBars;
+
     @Config.Comment("Static header text for the modern tab overlay. Use & for color/format codes (e.g. &b = aqua, &l = bold, &r = reset). Use \\n for line breaks. Overridden by server plugin channel data if present.")
     @Config.DefaultString("&b&lHodgepodge Server\\n&7A modern tab list for 1.7.10")
     public static String tabHeaderText;

@@ -515,6 +515,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("forge.MixinGuiIngameForge_CrosshairInvertColors")
             .setApplyIf(() -> TweaksConfig.dontInvertCrosshairColor)
             .setPhase(Phase.EARLY)),
+    MODERN_TAB_OVERLAY(new MixinBuilder("Modern tab overlay")
+            .addClientMixins("forge.MixinGuiIngameForge_ModernTab")
+            .setApplyIf(() -> TweaksConfig.modernTabOverlay)
+            .setPhase(Phase.EARLY)),
     FIX_OPENGUIHANDLER_WINDOWID(new MixinBuilder("Fix OpenGuiHandler")
             .addCommonMixins("fml.MixinOpenGuiHandler")
             .setApplyIf(() -> FixesConfig.fixForgeOpenGuiHandlerWindowId)
