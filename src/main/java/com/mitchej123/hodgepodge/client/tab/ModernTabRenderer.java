@@ -148,7 +148,11 @@ public class ModernTabRenderer {
 
         // Column width: name + head + score + ping text + ping icon + padding
         int pingBarSpace = showPingBars ? PING_ICON_WIDTH + 1 : 0;
-        int entryWidth = headSpace + maxNameWidth + maxScoreWidth + maxSuffixWidth + maxPingTextWidth + pingBarSpace
+        int entryWidth = headSpace + maxNameWidth
+                + maxScoreWidth
+                + maxSuffixWidth
+                + maxPingTextWidth
+                + pingBarSpace
                 + 3;
         int totalGridWidth = Math.min(columns * entryWidth, screenWidth - 50);
         int columnWidth = totalGridWidth / columns;
