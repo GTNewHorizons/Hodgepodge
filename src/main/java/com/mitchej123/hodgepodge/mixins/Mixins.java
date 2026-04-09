@@ -15,10 +15,6 @@ public enum Mixins implements IMixins {
 
     // spotless:off
     // Vanilla Fixes
-    FIX_MINECRAFT_SERVER_LEAK(new MixinBuilder()
-            .addCommonMixins("memory.MixinMinecraftServer_ClearServerRef")
-            .setApplyIf(() -> MemoryConfig.leaks.fixMinecraftServerLeak)
-            .setPhase(Phase.EARLY)),
     ONLY_LOAD_LANGUAGES_ONCE_PER_FILE(new MixinBuilder()
             .addCommonMixins("minecraft.MixinLanguageRegistry")
             .setApplyIf(() -> FixesConfig.onlyLoadLanguagesOnce)
@@ -358,8 +354,13 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.packets.MixinS01PacketJoinGame_FixDimensionID")
             .setApplyIf(() -> FixesConfig.fixLoginDimensionIDOverflow)
             .setPhase(Phase.EARLY)),
-    ADD_AFTER_SERVER_STOPPED_HOOK(new MixinBuilder()
+    ADD_MEMORY_CLEANING_SHUTDOWN_HOOKS(new MixinBuilder()
             .addCommonMixins("memory.MixinMinecraftServer_ShutdownHook")
+            .addClientMixins("memory.MixinMinecraft_ShutdownHook")
+            .setPhase(Phase.EARLY)),
+    FIX_MINECRAFT_SERVER_LEAK(new MixinBuilder()
+            .addCommonMixins("memory.MixinMinecraftServer_ClearServerRef")
+            .setApplyIf(() -> MemoryConfig.leaks.fixMinecraftServerLeak)
             .setPhase(Phase.EARLY)),
     FIX_WORLD_SERVER_LEAKING_UNLOADED_ENTITIES(new MixinBuilder()
             .addCommonMixins("memory.MixinWorldServerUpdateEntities")
@@ -382,6 +383,18 @@ public enum Mixins implements IMixins {
             .addCommonMixins("memory.WorldAccessor_ClearMapStorage")
             .setApplyIf(() -> MemoryConfig.leaks.fixWorldMapStorageLeak)
             .setPhase(Phase.EARLY)),
+    FIX_RENDERERS_WORLD_LEAK(new MixinBuilder()
+            .addClientMixins("memory.MixinRenderGlobal_FixWordLeak")
+            .setApplyIf(() -> MemoryConfig.leaks.fixRenderersWorldLeak)
+            .setPhase(Phase.EARLY)),
+    FIX_NETHANDLER_MAPSTORAGE_LEAK(new MixinBuilder()
+            .addClientMixins("memory.MixinNetHandlerPlayClient_ClearMapStorage")
+            .setApplyIf(() -> MemoryConfig.leaks.fixNetHandlerClientWorldLeak)
+            .setPhase(Phase.EARLY)),
+    FIX_ENTITY_RENDERER_POINTED_ENTITY_LEAK(new MixinBuilder()
+            .addClientMixins("memory.MixinEntityRenderer_ClearPointedEntity")
+            .setApplyIf(() -> MemoryConfig.leaks.fixPointedEntityLeak)
+            .setPhase(Phase.EARLY)),
     FIX_ARROW_WRONG_LIGHTING(new MixinBuilder()
             .addClientMixins("minecraft.MixinRendererLivingEntity")
             .setApplyIf(() -> FixesConfig.fixGlStateBugs)
@@ -394,12 +407,6 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinMinecraft_UnfocusedFullscreen")
             .setApplyIf(() -> FixesConfig.fixUnfocusedFullscreen)
             .addExcludedMod(TargetedMod.ARCHAICFIX)
-            .setPhase(Phase.EARLY)),
-    FIX_RENDERERS_WORLD_LEAK(new MixinBuilder()
-            .addClientMixins(
-                    "memory.MixinMinecraft_ClearRenderersWorldLeak",
-                    "memory.MixinRenderGlobal_FixWordLeak")
-            .setApplyIf(() -> MemoryConfig.leaks.fixRenderersWorldLeak)
             .setPhase(Phase.EARLY)),
     FIX_OPTIFINE_CHUNKLOADING_CRASH(new MixinBuilder()
             .setApplyIf(() -> FixesConfig.fixOptifineChunkLoadingCrash)
