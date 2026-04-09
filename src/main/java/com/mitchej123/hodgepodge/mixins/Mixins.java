@@ -379,6 +379,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> MemoryConfig.leaks.fixRedstoneTorchWorldLeak)
             .addExcludedMod(TargetedMod.BUGTORCH)
             .setPhase(Phase.EARLY)),
+    FIX_WORLD_MAP_STORAGE_LEAK(new MixinBuilder()
+            .addCommonMixins("memory.WorldAccessor_ClearMapStorage")
+            .setApplyIf(() -> MemoryConfig.leaks.fixWorldMapStorageLeak)
+            .setPhase(Phase.EARLY)),
     FIX_RENDERERS_WORLD_LEAK(new MixinBuilder()
             .addClientMixins("memory.MixinRenderGlobal_FixWordLeak")
             .setApplyIf(() -> MemoryConfig.leaks.fixRenderersWorldLeak)
