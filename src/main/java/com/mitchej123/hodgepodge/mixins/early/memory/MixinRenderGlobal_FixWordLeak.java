@@ -29,6 +29,9 @@ public abstract class MixinRenderGlobal_FixWordLeak {
     @Shadow
     private List glRenderLists;
 
+    @Shadow
+    private List worldRenderersToUpdate;
+
     @Inject(
             method = "setWorldAndLoadRenderers(Lnet/minecraft/client/multiplayer/WorldClient;)V",
             at = @At(
@@ -40,6 +43,7 @@ public abstract class MixinRenderGlobal_FixWordLeak {
         if (worldClient == null) {
             tileEntities.clear();
             glRenderLists.clear();
+            worldRenderersToUpdate.clear();
 
             if (worldRenderers != null) {
                 for (WorldRenderer worldRenderer : worldRenderers) {
