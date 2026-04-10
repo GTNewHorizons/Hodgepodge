@@ -1040,6 +1040,15 @@ public enum Mixins implements IMixins {
             .addCommonMixins("memory.MixinFakePlayerFactory_FixLeak")
             .setApplyIf(() -> MemoryConfig.leaks.fixForgePlayerFactoryLeak)
             .setPhase(Phase.EARLY)),
+    FIX_VILLAGER_TRADING_DESYNC(new MixinBuilder("Fix Villagers only updating out-of-stock state after reopening GUI")
+            .addCommonMixins(
+                    "minecraft.villager.AccessorMerchantRecipe",
+                    "minecraft.villager.MixinMerchantRecipeList_WritePacketData")
+            .addClientMixins(
+                    "minecraft.villager.MixinMerchantRecipeList_ReadPacketData",
+                    "minecraft.villager.MixinNpcMerchant")
+            .setApplyIf(() -> FixesConfig.fixVillagerTradingDesync)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments

@@ -469,6 +469,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean deepCopyDataWatcherInSP;
 
+    @Config.Comment("Fix Villagers only updating out-of-stock state after reopening GUI")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixVillagerTradingDesync;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
