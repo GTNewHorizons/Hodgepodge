@@ -3,7 +3,6 @@ package com.mitchej123.hodgepodge.mixins.early.fml;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Locale;
 
 import net.minecraft.client.gui.GuiButton;
@@ -148,7 +147,7 @@ public class MixinGuiModList extends GuiScreen {
         if (!hodgepodge$sorted) {
             hodgepodge$reloadMods();
             ArrayList<ModContainer> mods = hodgepodge$GuiSlotModList().hodgepodge$getMods();
-            Collections.sort(mods, hodgepodge$sortType.getComparator());
+            mods.sort(hodgepodge$sortType.getComparator());
             this.mods = mods;
 
             int index = mods.indexOf(selectedMod);

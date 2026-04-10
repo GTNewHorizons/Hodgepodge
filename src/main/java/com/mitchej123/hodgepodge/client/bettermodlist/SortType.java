@@ -16,7 +16,7 @@ public enum SortType {
     A_TO_Z(25, Comparator.comparing(SortType::sortKey)),
     Z_TO_A(26, Comparator.comparing(SortType::sortKey).reversed());
 
-    public static SortType[] VALUES = SortType.values();
+    public static final SortType[] VALUES = SortType.values();
 
     private static final Map<Integer, SortType> BY_BUTTON_ID = new HashMap<>();
     static {
