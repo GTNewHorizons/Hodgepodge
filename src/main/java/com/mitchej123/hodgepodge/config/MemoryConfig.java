@@ -50,6 +50,28 @@ public class MemoryConfig {
         @Config.RequiresMcRestart
         public boolean fixRenderersWorldLeak;
 
+        @Config.Comment("Fix TileEntityRenderer leaking world instance when leaving world")
+        @Config.DefaultBoolean(true)
+        public boolean fixTileEntityRendererWorldLeak;
+
+        @Config.Comment("Fix RenderManager leaking world instance when leaving world")
+        @Config.DefaultBoolean(true)
+        public boolean fixRenderManagerWorldLeak;
+
+        @Config.Comment("Fix PointedEntity leaking world instance when leaving world")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixPointedEntityLeak;
+
+        @Config.Comment("Fix PlayerController leaking world instance when leaving world")
+        @Config.DefaultBoolean(true)
+        public boolean fixPlayerControllerWorldLeak;
+
+        @Config.Comment("Fix NetHandlerClient leaking world instance when leaving world")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixNetHandlerClientWorldLeak;
+
         @Config.Comment("Fix WorldServer leaking entities when no players are present in a dimension")
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
@@ -59,6 +81,11 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean fixSkinManagerLeakingClientWorld;
+
+        @Config.Comment("Fix World static map storage leaking the server world")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixWorldMapStorageLeak;
     }
 
     public static class AllocationFixes {
