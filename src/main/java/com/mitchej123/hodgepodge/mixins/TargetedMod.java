@@ -7,6 +7,7 @@ import net.minecraft.launchwrapper.Launch;
 import com.gtnewhorizon.gtnhmixins.builders.ITargetMod;
 import com.gtnewhorizon.gtnhmixins.builders.TargetModBuilder;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.versioning.ComparableVersion;
 
 public enum TargetedMod implements ITargetMod {
@@ -24,6 +25,7 @@ public enum TargetedMod implements ITargetMod {
     BUKKIT(null, null, "org.bukkit.World"),
     CANDYCRAFT("candycraftmod"),
     COFH_CORE("cofh.asm.LoadingPlugin", "CoFHCore"),
+    CUBICCHUNKS("com.cardinalstar.cubicchunks.asm.coremod.CubicChunksCoreMod", "cubicchunks"),
     DAMAGE_INDICATORS("DamageIndicatorsMod"),
     DRAGONAPI("Reika.DragonAPI.Auxiliary.DragonAPIASMHandler", "DragonAPI"),
     DREAMCRAFT("com.dreammaster.coremod.DreamCoreMod", "dreamcraft"),
@@ -85,7 +87,12 @@ public enum TargetedMod implements ITargetMod {
 
     private final TargetModBuilder builder;
 
+    private final String modId;
+
+    private boolean checkedPresence, isLoaded;
+
     TargetedMod(TargetModBuilder builder) {
+        this.modId = null;
         this.builder = builder;
     }
 
@@ -99,12 +106,26 @@ public enum TargetedMod implements ITargetMod {
 
     TargetedMod(String coreModClass, String modId, String targetClass) {
         this.builder = new TargetModBuilder().setCoreModClass(coreModClass).setModId(modId).setTargetClass(targetClass);
+        this.modId = modId;
     }
 
     @Nonnull
     @Override
     public TargetModBuilder getBuilder() {
         return builder;
+    }
+
+    public boolean isModLoaded() {
+        if (!checkedPresence) {
+            if (this.modId == null) {
+                throw new IllegalStateException("Cannot check for the presence of " + name() + " because it does not have a modId");
+            }
+
+            isLoaded = Loader.isModLoaded(modId);
+            checkedPresence = true;
+        }
+
+        return isLoaded;
     }
 
     private static boolean isVersionLessThan(String version, String target) {

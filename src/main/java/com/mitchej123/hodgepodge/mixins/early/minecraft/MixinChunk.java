@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.config.FixesConfig;
+import com.mitchej123.hodgepodge.mixins.TargetedMod;
 
 @Mixin(Chunk.class)
 public class MixinChunk {
@@ -31,7 +32,10 @@ public class MixinChunk {
 
     @Inject(method = "func_150812_a", at = @At("HEAD"), cancellable = true)
     void hodgepodge$validateTileInBounds(int inChunkX, int inChunkY, int inChunkZ, TileEntity tile, CallbackInfo ci) {
-        if (inChunkX < 0 || inChunkX >= 16 || inChunkY < 0 || inChunkY >= 256 || inChunkZ < 0 || inChunkZ >= 16) {
+        int minY = TargetedMod.CUBICCHUNKS.isModLoaded() ? Integer.MIN_VALUE : 0;
+        int maxY = TargetedMod.CUBICCHUNKS.isModLoaded() ? Integer.MAX_VALUE : 256;
+
+        if (inChunkX < 0 || inChunkX >= 16 || inChunkY < minY || inChunkY >= maxY || inChunkZ < 0 || inChunkZ >= 16) {
             int dimension = Integer.MIN_VALUE;
             try {
                 dimension = this.worldObj.provider.dimensionId;
