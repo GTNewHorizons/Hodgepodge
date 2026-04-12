@@ -52,6 +52,11 @@ public class MixinChunkProviderServer_EntityGuard {
             return chunk;
         }
 
+        // Excluded dimensions bypass all throttle guards and always load chunks normally.
+        if (ChunkGenScheduler.isDimExcludedFromChunkThrottle(this.worldObj.provider.dimensionId)) {
+            return this.loadChunk(x, z);
+        }
+
         // Entity guard: when blocked, don't trigger chunk generation for missing chunks, but allow loading from disk
         if (ChunkGenScheduler.isBlocked() && !this.worldObj.findingSpawnPoint) {
             if (this.currentChunkLoader instanceof AnvilChunkLoader acl && acl.chunkExists(this.worldObj, x, z)) {
