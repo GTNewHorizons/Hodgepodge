@@ -3,6 +3,8 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload;
 import net.minecraft.util.LongHashMap;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.AnvilChunkLoader;
+import net.minecraft.world.chunk.storage.IChunkLoader;
 import net.minecraft.world.gen.ChunkProviderServer;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,6 +31,9 @@ public class MixinChunkProviderServer_EntityGuard {
     public WorldServer worldObj;
 
     @Shadow
+    public IChunkLoader currentChunkLoader;
+
+    @Shadow
     public boolean loadChunkOnProvideRequest;
 
     @Shadow
@@ -47,8 +52,11 @@ public class MixinChunkProviderServer_EntityGuard {
             return chunk;
         }
 
-        // Entity guard: when blocked, don't trigger chunk generation for missing chunks
+        // Entity guard: when blocked, don't trigger chunk generation for missing chunks, but allow loading from disk
         if (ChunkGenScheduler.isBlocked() && !this.worldObj.findingSpawnPoint) {
+            if (this.currentChunkLoader instanceof AnvilChunkLoader acl && acl.chunkExists(this.worldObj, x, z)) {
+                return this.loadChunk(x, z);
+            }
             ChunkGenScheduler.incrementBlockedLoadCount();
             return this.defaultEmptyChunk;
         }

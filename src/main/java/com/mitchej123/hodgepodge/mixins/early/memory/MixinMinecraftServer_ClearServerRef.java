@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft.server;
+package com.mitchej123.hodgepodge.mixins.early.memory;
 
 import net.minecraft.server.MinecraftServer;
 
@@ -17,11 +17,7 @@ public class MixinMinecraftServer_ClearServerRef {
     @Inject(
             method = "run",
             remap = false,
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/server/MinecraftServer;systemExitNow()V",
-                    shift = At.Shift.BEFORE,
-                    remap = true))
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;systemExitNow()V", remap = true))
     private void clearServerRef(CallbackInfo ci) {
         mcServer = null;
     }
