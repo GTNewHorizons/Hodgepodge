@@ -976,6 +976,15 @@ public enum Mixins implements IMixins {
             .addCommonMixins("forge.MixinFakePlayer")
             .setApplyIf(() -> FixesConfig.fixFakePlayerChatCrash)
             .setPhase(Phase.EARLY)),
+    FIX_VILLAGER_TRADING_DESYNC(new MixinBuilder("Fix Villagers only updating out-of-stock state after reopening GUI")
+            .addCommonMixins(
+                    "minecraft.villager.AccessorMerchantRecipe",
+                    "minecraft.villager.MixinMerchantRecipeList_WritePacketData")
+            .addClientMixins(
+                    "minecraft.villager.MixinMerchantRecipeList_ReadPacketData",
+                    "minecraft.villager.MixinNpcMerchant")
+            .setApplyIf(() -> FixesConfig.fixVillagerTradingDesync)
+            .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
