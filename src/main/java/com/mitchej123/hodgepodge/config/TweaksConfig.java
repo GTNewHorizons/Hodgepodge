@@ -111,6 +111,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean fastBlockPlacingServerSide;
 
+    @Config.Comment("Sync the server world seed to the client world in multiplayer")
+    @Config.DefaultBoolean(true)
+    public static boolean syncWorldSeedToClientWorld;
+
     @Config.Comment("Prevents the inventory from shifting when the player has active potion effects")
     @Config.DefaultBoolean(true)
     public static boolean fixPotionRenderOffset;
