@@ -118,7 +118,8 @@ public enum TargetedMod implements ITargetMod {
     public boolean isModLoaded() {
         if (!checkedPresence) {
             if (this.modId == null) {
-                throw new IllegalStateException("Cannot check for the presence of " + name() + " because it does not have a modId");
+                throw new IllegalStateException(
+                        "Cannot check for the presence of " + name() + " because it does not have a modId");
             }
 
             isLoaded = Loader.isModLoaded(modId);
