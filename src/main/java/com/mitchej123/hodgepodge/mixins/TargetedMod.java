@@ -6,6 +6,7 @@ import net.minecraft.launchwrapper.Launch;
 
 import com.gtnewhorizon.gtnhmixins.builders.ITargetMod;
 import com.gtnewhorizon.gtnhmixins.builders.TargetModBuilder;
+
 import cpw.mods.fml.common.versioning.ComparableVersion;
 
 public enum TargetedMod implements ITargetMod {
