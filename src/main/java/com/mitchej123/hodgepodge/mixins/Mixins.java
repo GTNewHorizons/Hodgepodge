@@ -23,6 +23,15 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGameSettings_SprintKey")
             .setApplyIf(() -> TweaksConfig.changeSprintCategory)
             .setPhase(Phase.EARLY)),
+    SIGN_INPUT_IGNORES_FORMAT_CODES(new MixinBuilder("Sign input counts visible chars only")
+            .addClientMixins("minecraft.MixinGuiEditSign")
+            .addCommonMixins("minecraft.MixinNetHandlerPlayServer_SignLimit")
+            .setApplyIf(() -> TweaksConfig.signInputIgnoresFormatCodes)
+            .setPhase(Phase.EARLY)),
+    ANVIL_INPUT_IGNORES_FORMAT_CODES(new MixinBuilder("Anvil rename counts visible chars only, format codes don't eat the 30-char limit")
+            .addCommonMixins("minecraft.MixinNetHandlerPlayServer_AnvilColorCodes")
+            .setApplyIf(() -> TweaksConfig.signInputIgnoresFormatCodes)
+            .setPhase(Phase.EARLY)),
     FIX_TOO_MANY_ALLOCATIONS_CHUNK_POSITION_INT_PAIR(new MixinBuilder("Stops MC from allocating too many ChunkPositionIntPair objects")
             .addCommonMixins(
                     "minecraft.MixinChunkCoordIntPair_FixAllocations",
@@ -605,7 +614,9 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.creativeTabLocalizationOverrides)
             .setPhase(Phase.EARLY)),
     FIX_CHAT_COLOR_WRAPPING(new MixinBuilder("Fix wrapped chat lines missing colors")
-            .addClientMixins("minecraft.MixinGuiNewChat_FixColorWrapping")
+            .addClientMixins(
+                    "minecraft.MixinGuiNewChat_FixColorWrapping",
+                    "minecraft.MixinGuiTextField_FixColorScroll")
             .setApplyIf(() -> FixesConfig.fixChatWrappedColors)
             .setPhase(Phase.EARLY)),
     COMPACT_CHAT(new MixinBuilder()
