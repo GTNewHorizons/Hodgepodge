@@ -58,6 +58,10 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         public boolean fixRenderManagerWorldLeak;
 
+        @Config.Comment("Fix RenderBlocks static singleton leaking world instance when leaving world")
+        @Config.DefaultBoolean(true)
+        public boolean fixRenderBlocksWorldLeak;
+
         @Config.Comment("Fix PointedEntity leaking world instance when leaving world")
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
