@@ -10,11 +10,12 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(NetHandlerPlayServer.class)
 public class MixinNetHandlerPlayServer_AnvilColorCodes {
 
-    private static final String HODGEPODGE$VALID_CODES = "0123456789abcdefklmnorywjg";
+    // Note: 'g' excluded — &g only valid as part of &g&#RRGGBB&#RRGGBB (handled separately below)
+    private static final String HODGEPODGE$VALID_CODES = "0123456789abcdefklmnorqzv";
 
     /**
      * Vanilla checks {@code s.length() <= 30} for anvil item names and silently drops the name if exceeded. With color
-     * codes like {@code &#FF0000} or {@code &w}, the raw string is longer than the visible text. Allow longer raw
+     * codes like {@code &#FF0000} or {@code &z}, the raw string is longer than the visible text. Allow longer raw
      * strings for format codes, but enforce:
      * <ul>
      * <li>visible chars &lt;= 30 (same as vanilla's intent)</li>
@@ -51,6 +52,24 @@ public class MixinNetHandlerPlayServer_AnvilColorCodes {
                 }
                 if (valid) {
                     i += 7;
+                    continue;
+                }
+            }
+            // &g&#RRGGBB&#RRGGBB gradient (18 chars)
+            if (ch == '&' && i + 1 < len && Character.toLowerCase(text.charAt(i + 1)) == 'g'
+                && i + 17 < len && text.charAt(i + 2) == '&' && text.charAt(i + 3) == '#'
+                && text.charAt(i + 10) == '&' && text.charAt(i + 11) == '#') {
+                boolean v1 = true, v2 = true;
+                for (int j = 4; j <= 9; j++) {
+                    if (Character.digit(text.charAt(i + j), 16) == -1) { v1 = false; break; }
+                }
+                if (v1) {
+                    for (int j = 12; j <= 17; j++) {
+                        if (Character.digit(text.charAt(i + j), 16) == -1) { v2 = false; break; }
+                    }
+                }
+                if (v1 && v2) {
+                    i += 17;
                     continue;
                 }
             }

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.gtnewhorizon.gtnhlib.util.font.FontRendering;
+import com.mitchej123.hodgepodge.util.FontRenderingCompat;
 
 /**
  * Fixes color codes being lost when the chat input field scrolls or splits text at the cursor.
@@ -51,22 +51,8 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
     private boolean hodgepodge$swapped;
 
     @Unique
-    private static boolean hodgepodge$preprocessChecked = false;
-    @Unique
-    private static boolean hodgepodge$preprocessAvailable = false;
-
-    @Unique
     private static String hodgepodge$safePreprocess(String s) {
-        if (!hodgepodge$preprocessChecked) {
-            hodgepodge$preprocessChecked = true;
-            try {
-                FontRendering.class.getMethod("preprocessText", String.class);
-                hodgepodge$preprocessAvailable = true;
-            } catch (NoSuchMethodException e) {
-                hodgepodge$preprocessAvailable = false;
-            }
-        }
-        return hodgepodge$preprocessAvailable ? FontRendering.preprocessText(s) : s;
+        return FontRenderingCompat.HAS_PREPROCESS_TEXT ? FontRenderingCompat.preprocessText(s) : s;
     }
 
     @Inject(method = "drawTextBox", at = @At("HEAD"))
@@ -235,7 +221,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
                 if (code == 'r' || (code >= '0' && code <= '9')
                         || (code >= 'a' && code <= 'f')
                         || code == 'x'
-                        || code == 'y'
+                        || code == 'q'
                         || code == 'g') {
                     sb.append(beforeCursor, i, beforeCursor.length());
                     return sb.toString();
@@ -274,12 +260,12 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
                 if (code == 'r' || (code >= '0' && code <= '9')
                         || (code >= 'a' && code <= 'f')
                         || code == 'x'
-                        || code == 'y'
+                        || code == 'q'
                         || code == 'g') {
                     sb.append(text, i, text.length());
                     return sb.toString();
                 }
-                // Non-terminating format code (§l, §o, §w, §j etc.): copy through
+                // Non-terminating format code (§l, §o, §z, §v etc.): copy through
                 sb.append(ch).append(text.charAt(i + 1));
                 i++;
             } else {
@@ -327,7 +313,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
                 if (code == 'r' || (code >= '0' && code <= '9')
                         || (code >= 'a' && code <= 'f')
                         || code == 'x'
-                        || code == 'y'
+                        || code == 'q'
                         || code == 'g') {
                     sb.append(afterCursor, i, afterCursor.length());
                     return sb.toString();
@@ -417,7 +403,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         return posMap[rawPos];
     }
 
-    /** Count visible chars from startIdx, stopping at gradient-terminating codes (§r, §0-f, §x, §y, §g). */
+    /** Count visible chars from startIdx, stopping at gradient-terminating codes (§r, §0-f, §x, §q, §g). */
     @Unique
     private static int hodgepodge$countVisibleInGradient(String text, int startIdx) {
         int count = 0;
@@ -427,7 +413,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
                 if (code == 'r' || (code >= '0' && code <= '9')
                         || (code >= 'a' && code <= 'f')
                         || code == 'x'
-                        || code == 'y'
+                        || code == 'q'
                         || code == 'g') {
                     break;
                 }
@@ -450,7 +436,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
                 if (code == 'r' || (code >= '0' && code <= '9')
                         || (code >= 'a' && code <= 'f')
                         || code == 'x'
-                        || code == 'y'
+                        || code == 'q'
                         || code == 'g') {
                     break;
                 }
