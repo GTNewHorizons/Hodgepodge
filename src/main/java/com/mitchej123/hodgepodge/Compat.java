@@ -33,6 +33,7 @@ public class Compat {
     private static boolean isIC2Present;
 
     private static boolean isSupernovaPresent;
+    private static boolean isCubicChunksPresent;
 
     static void init(Side side) {
         isClient = side == Side.CLIENT;
@@ -74,6 +75,8 @@ public class Compat {
         isIC2Present = Loader.isModLoaded("IC2");
 
         isSupernovaPresent = Loader.isModLoaded("supernova");
+
+        isCubicChunksPresent = Loader.isModLoaded("cubicchunks");
     }
 
     /**
@@ -175,5 +178,12 @@ public class Compat {
      */
     public static boolean isSupernovaPresent() {
         return isSupernovaPresent;
+    }
+
+    /**
+     * Cannot be used before pre-init phase.
+     */
+    public static boolean isCubicChunksPresent() {
+        return isCubicChunksPresent;
     }
 }
