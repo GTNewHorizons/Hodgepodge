@@ -10,7 +10,7 @@ public final class GLScissorHelper {
     public static void glScissorByGuiCoords(Minecraft mc, int left, int top, int width, int height) {
         ScaledResolution res = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         double scaleW = mc.displayWidth / res.getScaledWidth_double();
-        double scaleH = mc.displayWidth / res.getScaledHeight_double();
+        double scaleH = mc.displayHeight / res.getScaledHeight_double();
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor(
