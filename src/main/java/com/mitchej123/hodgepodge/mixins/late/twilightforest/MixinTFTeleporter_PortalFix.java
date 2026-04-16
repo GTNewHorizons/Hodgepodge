@@ -41,15 +41,18 @@ import twilightforest.TFTeleporter;
  * <h3>Fix</h3>
  *
  * <p>
- * The constructor injection permanently adds the Twilight Forest dimension ID to
- * {@link ChunkGenScheduler#excludeDimFromChunkThrottle(int)}, which bypasses EntityGuard,
- * {@code loadChunkOnProvideRequest} blocking, and population deferral for this dimension — ensuring that all chunk
- * accesses during portal placement and TF structure generation operate on real terrain.
- *
- * <p>
- * The {@code placeInPortal} HEAD/RETURN injections additionally unblock the global {@link ChunkGenScheduler} flag and
- * restore {@code loadChunkOnProvideRequest}, and proactively pre-load the entity's destination chunk before the scan
- * begins.
+ * Temporarily lift all chunk-load guards for the duration of {@code placeInPortal}, mirroring the vanilla
+ * {@link com.mitchej123.hodgepodge.mixins.early.minecraft.MixinTeleporter_PortalFix Nether portal fix}:
+ * <ul>
+ * <li>Unblock the global {@link ChunkGenScheduler} flag so EntityGuard's first check passes.</li>
+ * <li>Set {@code loadChunkOnProvideRequest = true} on the target world's chunk provider so that {@code provideChunk()}
+ * falls through to a real {@code loadChunk()} call.</li>
+ * <li>Pre-load the chunk at the entity's destination so that the very first {@code getBlock()} / {@code setBlock()}
+ * hits real terrain rather than the empty chunk.</li>
+ * </ul>
+ * Both flags are restored to their previous values on {@code RETURN}. A permanent per-dimension exclusion is
+ * intentionally avoided here: unlike the Thaumcraft outer-lands maze, TF portal placement does not require cascading
+ * synchronous population of neighbouring chunks, so a permanent bypass would only add unnecessary load.
  */
 @Mixin(value = TFTeleporter.class, remap = false)
 public class MixinTFTeleporter_PortalFix {
@@ -62,16 +65,6 @@ public class MixinTFTeleporter_PortalFix {
 
     @Unique
     private boolean hodgepodge$wasLoadChunkOnProvideRequestDisabled;
-
-    /**
-     * Register the Twilight Forest dimension as excluded from chunk-load throttling. This fires once per teleporter
-     * instance (i.e. when the TF world is first accessed), permanently adding the dimension ID to the exclusion set so
-     * that all subsequent chunk operations in that dimension bypass the throttle guards.
-     */
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void hodgepodge$registerTwilightForestDim(WorldServer worldServer, CallbackInfo ci) {
-        ChunkGenScheduler.excludeDimFromChunkThrottle(worldServer.provider.dimensionId);
-    }
 
     @Inject(method = "placeInPortal", at = @At("HEAD"))
     private void hodgepodge$unblockForPortalSearch(Entity entity, double x, double y, double z, float facing,
