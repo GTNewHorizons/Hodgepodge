@@ -44,12 +44,9 @@ public class ChunkGenScheduler {
     private static int blockedLoadCount = 0;
 
     /**
-     * Set of dimension IDs that are completely excluded from all chunk-load throttling and population deferral. For
-     * excluded dimensions, {@code provideChunk} always loads chunks normally, entity/block-update ticking does not
-     * suppress {@code loadChunkOnProvideRequest}, and {@link MixinChunkProviderServer_DeferPopulation} never defers
-     * population (even when {@code populationDepth > 0}). This prevents incomplete world-gen structures (e.g. the
-     * Thaumcraft outer-lands maze) that span chunk borders from having missing sections due to deferred population of
-     * neighbour chunks.
+     * Dims excluded from chunk-load throttling and population deferral: {@code provideChunk} always loads normally,
+     * {@code loadChunkOnProvideRequest} is never suppressed, and population is never deferred ({@code populationDepth}
+     * is ignored). Prevents incomplete multi-chunk structures (e.g. the outer-lands maze) from having missing sections.
      */
     private static final IntSet chunkThrottleExcludedDims = new IntOpenHashSet();
 
@@ -126,18 +123,12 @@ public class ChunkGenScheduler {
         chunkThrottleExcludedDims.clear();
     }
 
-    /**
-     * Permanently exclude a dimension from all chunk-load throttling and population deferral. Call once per dimension
-     * ID, typically at the first time a teleporter for that dimension is instantiated.
-     */
+    /** Exclude {@code dimId} from all chunk-load throttling and population deferral. */
     public static void excludeDimFromChunkThrottle(int dimId) {
         chunkThrottleExcludedDims.add(dimId);
     }
 
-    /**
-     * Returns {@code true} if the dimension has been excluded from chunk-load throttling via
-     * {@link #excludeDimFromChunkThrottle(int)}.
-     */
+    /** Returns {@code true} if {@code dimId} was registered via {@link #excludeDimFromChunkThrottle}. */
     public static boolean isDimExcludedFromChunkThrottle(int dimId) {
         return chunkThrottleExcludedDims.contains(dimId);
     }
