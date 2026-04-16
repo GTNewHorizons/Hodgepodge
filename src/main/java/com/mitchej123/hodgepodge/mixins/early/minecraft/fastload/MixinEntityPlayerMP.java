@@ -70,8 +70,9 @@ public abstract class MixinEntityPlayerMP extends EntityPlayer {
      * and the failure of the other one is ignored.
      */
     @Dynamic("localOnUpdate is added by Player-API")
+    @SuppressWarnings("target")
     @Inject(
-            method = { "onUpdate", "localOnUpdate" },
+            method = { "onUpdate()V", "localOnUpdate()V" },
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/entity/player/EntityPlayerMP;loadedChunks:Ljava/util/List;",

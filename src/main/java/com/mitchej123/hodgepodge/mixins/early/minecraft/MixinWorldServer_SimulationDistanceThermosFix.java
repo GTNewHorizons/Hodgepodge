@@ -34,6 +34,7 @@ public abstract class MixinWorldServer_SimulationDistanceThermosFix extends Worl
     }
 
     @Dynamic("Thermos/Bukkit-specific WorldServer constructor")
+    @SuppressWarnings("target")
     @Inject(
             method = "<init>(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/world/storage/ISaveHandler;Ljava/lang/String;ILnet/minecraft/world/WorldSettings;Lnet/minecraft/profiler/Profiler;Lorg/bukkit/World$Environment;Lorg/bukkit/generator/ChunkGenerator;)V",
             at = @At("TAIL"),
