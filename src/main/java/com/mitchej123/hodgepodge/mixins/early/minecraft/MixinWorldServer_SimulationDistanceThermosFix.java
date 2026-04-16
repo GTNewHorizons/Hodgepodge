@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
 
+import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,6 +33,7 @@ public abstract class MixinWorldServer_SimulationDistanceThermosFix extends Worl
         super(null, null, (WorldProvider) null, null, null);
     }
 
+    @Dynamic("Thermos/Bukkit-specific WorldServer constructor")
     @Inject(
             method = "<init>(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/world/storage/ISaveHandler;Ljava/lang/String;ILnet/minecraft/world/WorldSettings;Lnet/minecraft/profiler/Profiler;Lorg/bukkit/World$Environment;Lorg/bukkit/generator/ChunkGenerator;)V",
             at = @At("TAIL"),
