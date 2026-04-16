@@ -16,25 +16,11 @@ import com.mitchej123.hodgepodge.mixins.hooks.ChunkGenScheduler;
 import twilightforest.TFTeleporter;
 
 /**
- * Fixes sky-spawn on first TF portal entry when chunk throttling is active.
- *
- * <p>
- * Under throttle, {@code ChunkProviderServer.provideChunk()} returns {@code EmptyChunk}, so {@code placeInExistingPortal}'s
- * spiral scan finds nothing and {@code makePortal}'s terrain scan sees all-air. The fallback places the portal at
- * {@code overworldY * 0.5} via {@code setBlock()} calls that are silently discarded into empty chunks, leaving the
- * player at raw translated coordinates above the canopy.
- *
- * <p>
- * A temporary unblock is insufficient: TF multi-chunk structures (Hollow Hills, Lich Towers, etc.) trigger cascading
- * population across chunk borders, which {@link com.mitchej123.hodgepodge.mixins.early.minecraft.fastload.MixinChunkProviderServer_DeferPopulation}
- * defers, and {@link com.mitchej123.hodgepodge.mixins.early.minecraft.chunkloading.MixinWorldServer_PreventChunkLoading}
- * may re-suppress {@code loadChunkOnProvideRequest} mid-population.
- *
- * <p>
- * Fix: permanently exclude the TF dimension via {@link ChunkGenScheduler#excludeDimFromChunkThrottle(int)} in the
- * {@code <init>} injection, bypassing EntityGuard, chunk-load suppression, and deferred population for that dim.
- * The HEAD/RETURN injections on {@code placeInPortal} additionally unblock the global scheduler flag and
- * pre-load the destination chunk as a belt-and-suspenders measure.
+ * Fixes sky-spawn on first TF portal entry under chunk throttling. Under throttle, {@code provideChunk()} returns
+ * {@code EmptyChunk}, causing portal scans to fail and {@code setBlock()} calls to be discarded, leaving the player at
+ * raw translated coordinates. A temporary unblock is insufficient due to cascading cross-chunk population in TF
+ * structures. Fix: permanently exclude the TF dim via {@link ChunkGenScheduler#excludeDimFromChunkThrottle(int)};
+ * HEAD/RETURN hooks on {@code placeInPortal} additionally unblock the global flag and pre-load the destination chunk.
  */
 @Mixin(value = TFTeleporter.class, remap = false)
 public class MixinTFTeleporter_PortalFix {
@@ -67,8 +53,6 @@ public class MixinTFTeleporter_PortalFix {
             cps.loadChunkOnProvideRequest = true;
         }
 
-        // Proactively force-load the chunk at the destination position so that the portal scan
-        // and makePortalAt's setBlock() calls operate on real terrain from the start.
         final int cx = ((int) Math.floor(x)) >> 4;
         final int cz = ((int) Math.floor(z)) >> 4;
         cps.loadChunk(cx, cz);
