@@ -76,7 +76,6 @@ public enum TargetedMod implements ITargetMod {
     THERMALEXPANSION("ThermalExpansion"),
     TINKERSCONSTRUCT("TConstruct"),
     TRAVELLERSGEAR("TravellersGear"),
-    TWILIGHT_FOREST("TwilightForest"),
     ULTRAMINE(null, null, "org.ultramine.server.UltraminePlugin"),
     VOXELMAP("com.thevoxelbox.voxelmap.litemod.VoxelMapTransformer", "voxelmap"),
     WITCHERY("witchery"),
