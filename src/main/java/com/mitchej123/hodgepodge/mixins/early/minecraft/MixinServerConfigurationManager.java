@@ -24,13 +24,16 @@ import com.mitchej123.hodgepodge.mixins.hooks.ChunkGenScheduler;
 public class MixinServerConfigurationManager {
 
     @Unique
-    private boolean hodgepodge$wasChunkLoadBlocked;
+    private static final ThreadLocal<PortalPlacementState> hodgepodge$portalPlacementState = ThreadLocal
+            .withInitial(PortalPlacementState::new);
 
     @Unique
-    private boolean hodgepodge$wasLoadChunkOnProvideRequestDisabled;
+    private static final class PortalPlacementState {
 
-    @Unique
-    private ChunkProviderServer hodgepodge$portalTargetChunkProvider;
+        private boolean wasChunkLoadBlocked;
+        private boolean wasLoadChunkOnProvideRequestDisabled;
+        private ChunkProviderServer portalTargetChunkProvider;
+    }
 
     /*
      * Make sure extra hearts aren't lost on dimension change Backported fix from
@@ -59,15 +62,16 @@ public class MixinServerConfigurationManager {
             require = 0)
     private void hodgepodge$unblockChunkLoadsForPortalPlacement(Entity entityIn, int oldDimension,
             WorldServer fromWorld, WorldServer toWorld, Teleporter teleporter, CallbackInfo ci) {
-        hodgepodge$wasChunkLoadBlocked = ChunkGenScheduler.isBlocked();
-        if (hodgepodge$wasChunkLoadBlocked) {
+        PortalPlacementState state = hodgepodge$portalPlacementState.get();
+        state.wasChunkLoadBlocked = ChunkGenScheduler.isBlocked();
+        if (state.wasChunkLoadBlocked) {
             ChunkGenScheduler.enableChunkLoads();
         }
 
-        hodgepodge$portalTargetChunkProvider = toWorld.theChunkProviderServer;
-        hodgepodge$wasLoadChunkOnProvideRequestDisabled = !hodgepodge$portalTargetChunkProvider.loadChunkOnProvideRequest;
-        if (hodgepodge$wasLoadChunkOnProvideRequestDisabled) {
-            hodgepodge$portalTargetChunkProvider.loadChunkOnProvideRequest = true;
+        state.portalTargetChunkProvider = toWorld.theChunkProviderServer;
+        state.wasLoadChunkOnProvideRequestDisabled = !state.portalTargetChunkProvider.loadChunkOnProvideRequest;
+        if (state.wasLoadChunkOnProvideRequestDisabled) {
+            state.portalTargetChunkProvider.loadChunkOnProvideRequest = true;
         }
     }
 
@@ -80,13 +84,16 @@ public class MixinServerConfigurationManager {
             require = 0)
     private void hodgepodge$restoreChunkLoadStateAfterPortalPlacement(Entity entityIn, int oldDimension,
             WorldServer fromWorld, WorldServer toWorld, Teleporter teleporter, CallbackInfo ci) {
-        if (hodgepodge$wasLoadChunkOnProvideRequestDisabled && hodgepodge$portalTargetChunkProvider != null) {
-            hodgepodge$portalTargetChunkProvider.loadChunkOnProvideRequest = false;
+        PortalPlacementState state = hodgepodge$portalPlacementState.get();
+        if (state.wasLoadChunkOnProvideRequestDisabled && state.portalTargetChunkProvider != null) {
+            state.portalTargetChunkProvider.loadChunkOnProvideRequest = false;
         }
-        hodgepodge$portalTargetChunkProvider = null;
+        state.portalTargetChunkProvider = null;
+        state.wasLoadChunkOnProvideRequestDisabled = false;
 
-        if (hodgepodge$wasChunkLoadBlocked) {
+        if (state.wasChunkLoadBlocked) {
             ChunkGenScheduler.disableChunkLoads();
         }
+        state.wasChunkLoadBlocked = false;
     }
 }
