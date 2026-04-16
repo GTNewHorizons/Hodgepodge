@@ -18,7 +18,6 @@ dependencies {
     compileOnly("com.mitchej123:supernova:0.0.2:api") { transitive = false }
 
     transformedMod("com.github.GTNewHorizons:NotEnoughItems:2.8.84-GTNH:dev") // force a more up-to-date NEI version
-    transformedMod("com.github.GTNewHorizons:twilightforest:2.7.27:dev")
     transformedModCompileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-880-GTNH")
     transformedModCompileOnly("com.github.GTNewHorizons:Baubles-Expanded:2.2.11-GTNH:dev")
     // Transitive updates to make runClient17 work
