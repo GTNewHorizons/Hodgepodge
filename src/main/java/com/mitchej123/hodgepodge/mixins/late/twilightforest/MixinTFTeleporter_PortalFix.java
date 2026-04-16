@@ -87,10 +87,10 @@ public class MixinTFTeleporter_PortalFix {
             cps.loadChunkOnProvideRequest = true;
         }
 
-        // Proactively force-load the chunk at the entity's destination position so that the portal scan
+        // Proactively force-load the chunk at the destination position so that the portal scan
         // and makePortalAt's setBlock() calls operate on real terrain from the start.
-        final int cx = ((int) Math.floor(entity.posX)) >> 4;
-        final int cz = ((int) Math.floor(entity.posZ)) >> 4;
+        final int cx = ((int) Math.floor(x)) >> 4;
+        final int cz = ((int) Math.floor(z)) >> 4;
         cps.loadChunk(cx, cz);
     }
 
