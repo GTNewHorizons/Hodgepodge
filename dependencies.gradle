@@ -29,6 +29,7 @@ dependencies {
     transformedModCompileOnly("com.github.GTNewHorizons:MrTJPCore:1.3.5:dev") // Do not update, fixed afterwards
     transformedModCompileOnly("com.github.GTNewHorizons:Railcraft:9.17.25:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
     transformedModCompileOnly("com.github.GTNewHorizons:TinkersConstruct:1.14.46-GTNH:dev")
+    transformedModCompileOnly("com.github.GTNewHorizons:twilightforest:2.7.27:dev")
     transformedModCompileOnly(rfg.deobf("curse.maven:bibliocraft-228027:2423369"))
     transformedModCompileOnly(rfg.deobf("curse.maven:bibliocraft-bibliowoods-forestry-edition-228363:2229574"))
     transformedModCompileOnly(rfg.deobf("curse.maven:biomes-o-plenty-220318:2499612"))

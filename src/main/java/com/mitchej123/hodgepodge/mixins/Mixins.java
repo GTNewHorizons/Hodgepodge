@@ -1264,6 +1264,15 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.THAUMCRAFT)
             .setPhase(Phase.LATE)),
 
+    // Twilight Forest
+    FIX_TF_PORTAL_PLAYER_PLACEMENT(new MixinBuilder(
+            "Fix player spawning inside blocks when first entering a Twilight Forest portal under chunk throttle guards")
+            .addCommonMixins("twilightforest.MixinTFTeleporter_PortalFix")
+            .setApplyIf(() -> SpeedupsConfig.preventEntityChunkLoading || SpeedupsConfig.throttleChunkGeneration
+                    || FixesConfig.preventChunkLoadingFromBlockUpdates)
+            .addRequiredMod(TargetedMod.TWILIGHT_FOREST)
+            .setPhase(Phase.LATE)),
+
     // BOP
     FIX_QUICKSAND_XRAY(new MixinBuilder()
             .addCommonMixins("biomesoplenty.MixinBlockMud_FixXray")
