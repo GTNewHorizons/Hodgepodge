@@ -47,9 +47,9 @@ import twilightforest.TFTeleporter;
  * accesses during portal placement and TF structure generation operate on real terrain.
  *
  * <p>
- * The {@code placeInPortal} HEAD/RETURN injections additionally unblock the global
- * {@link ChunkGenScheduler} flag and restore {@code loadChunkOnProvideRequest}, and proactively pre-load the entity's
- * destination chunk before the scan begins.
+ * The {@code placeInPortal} HEAD/RETURN injections additionally unblock the global {@link ChunkGenScheduler} flag and
+ * restore {@code loadChunkOnProvideRequest}, and proactively pre-load the entity's destination chunk before the scan
+ * begins.
  */
 @Mixin(value = TFTeleporter.class, remap = false)
 public class MixinTFTeleporter_PortalFix {
@@ -65,8 +65,8 @@ public class MixinTFTeleporter_PortalFix {
 
     /**
      * Register the Twilight Forest dimension as excluded from chunk-load throttling. This fires once per teleporter
-     * instance (i.e. when the TF world is first accessed), permanently adding the dimension ID to the exclusion set
-     * so that all subsequent chunk operations in that dimension bypass the throttle guards.
+     * instance (i.e. when the TF world is first accessed), permanently adding the dimension ID to the exclusion set so
+     * that all subsequent chunk operations in that dimension bypass the throttle guards.
      */
     @Inject(method = "<init>", at = @At("RETURN"))
     private void hodgepodge$registerTwilightForestDim(WorldServer worldServer, CallbackInfo ci) {
