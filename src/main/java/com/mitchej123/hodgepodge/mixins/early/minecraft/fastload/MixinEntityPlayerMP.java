@@ -75,7 +75,8 @@ public abstract class MixinEntityPlayerMP extends EntityPlayer {
                     target = "Lnet/minecraft/entity/player/EntityPlayerMP;loadedChunks:Ljava/util/List;",
                     shift = At.Shift.BEFORE,
                     ordinal = 0),
-            cancellable = true)
+            cancellable = true,
+            require = 0)
     private void hodgepodge$replaceChunkSending(CallbackInfo ci) {
         if (loadedChunks.isEmpty()) {
             ci.cancel();

@@ -35,7 +35,8 @@ public abstract class MixinWorldServer_SimulationDistanceThermosFix extends Worl
     @Inject(
             method = "<init>(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/world/storage/ISaveHandler;Ljava/lang/String;ILnet/minecraft/world/WorldSettings;Lnet/minecraft/profiler/Profiler;Lorg/bukkit/World$Environment;Lorg/bukkit/generator/ChunkGenerator;)V",
             at = @At("TAIL"),
-            require = 1)
+            remap = false,
+            require = 0)
     private void hodgepodge$initSimulationHelperThermos(CallbackInfo ci) {
         SimulationDistanceHelper helper = hodgepodge$getSimulationDistanceHelper();
         helper.setServerVariables(pendingTickListEntriesTreeSet, pendingTickListEntriesHashSet, this::chunkExists);
