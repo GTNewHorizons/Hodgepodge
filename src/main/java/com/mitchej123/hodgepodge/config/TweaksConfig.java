@@ -8,6 +8,11 @@ public class TweaksConfig {
 
     // Minecraft
 
+    @Config.Comment("Enable title and subtitle overlay rendering (backported from 1.8+)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean enableTitleSubtitle;
+
     @Config.Comment("Adds a button in the sounds menu to reload the sound system without needing to press F3 + S")
     @Config.DefaultBoolean(true)
     public static boolean reloadSoundsButton;

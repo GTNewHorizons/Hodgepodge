@@ -63,6 +63,10 @@ public class HodgepodgeClient {
         MinecraftForge.EVENT_BUS.register(new AllocationRateHUD(true));
         ClientCommandHandler.instance.registerCommand(new AllocationsCommand());
 
+        if (TweaksConfig.enableTitleSubtitle) {
+            com.gtnewhorizon.gtnhlib.client.title.TitleAPI.registerRenderer();
+        }
+
         FMLCommonHandler.instance().bus().register(new ClientKeyListener());
 
         if (FixesConfig.fixModlistEntries) {

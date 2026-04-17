@@ -24,6 +24,12 @@ item.fish.name=Fish
 commands.time.get=The current world time is %s (time of day: %s)
 commands.time.usageWithGet=/time <set|add> <value> OR /time get
 
+commands.title.cleared.single=Cleared title for %s
+commands.title.reset.single=Reset title options for %s
+commands.title.show.title.single=Showed title to %s
+commands.title.show.subtitle.single=Showed subtitle to %s
+commands.title.times.single=Changed title display times for %s
+
 hodgepodge.soundsmenu.refreshsounds=Refresh Sounds
 hodgepodge.bed_respawn.msg=Respawn point set
 hodgepodge.menu.mod_options=Mod Options...

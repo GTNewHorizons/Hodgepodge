@@ -86,6 +86,9 @@ public class Hodgepodge {
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent aEvent) {
         aEvent.registerServerCommand(new DebugCommand());
+        if (TweaksConfig.enableTitleSubtitle) {
+            aEvent.registerServerCommand(new com.mitchej123.hodgepodge.commands.TitleCommand());
+        }
 
         // needed in case ExtraUtilities' Spike was crashed (and game was switched to a main menu), so it didn't update
         // the variable

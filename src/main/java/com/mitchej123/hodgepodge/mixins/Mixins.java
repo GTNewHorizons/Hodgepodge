@@ -608,6 +608,12 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiNewChat_FixColorWrapping")
             .setApplyIf(() -> FixesConfig.fixChatWrappedColors)
             .setPhase(Phase.EARLY)),
+    TITLE_SUBTITLE(new MixinBuilder("Title and subtitle overlay rendering")
+            .addClientMixins(
+                    "minecraft.MixinGuiIngame_TitleTick",
+                    "minecraft.MixinGuiIngameForge_TitleRender")
+            .setApplyIf(() -> TweaksConfig.enableTitleSubtitle)
+            .setPhase(Phase.EARLY)),
     COMPACT_CHAT(new MixinBuilder()
             .addClientMixins("minecraft.MixinGuiNewChat_CompactChat")
             .setApplyIf(() -> TweaksConfig.compactChat)
