@@ -67,6 +67,11 @@ public class MemoryConfig {
         @Config.RequiresMcRestart
         public boolean fixPointedEntityLeak;
 
+        @Config.Comment("Fix Enchantment Helper leaking world instance when leaving world")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixEnchantmentHelperLeak;
+
         @Config.Comment("Fix PlayerController leaking world instance when leaving world")
         @Config.DefaultBoolean(true)
         public boolean fixPlayerControllerWorldLeak;
