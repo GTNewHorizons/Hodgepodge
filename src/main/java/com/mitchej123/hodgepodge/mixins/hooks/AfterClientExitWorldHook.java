@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.mixins.hooks;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
@@ -38,6 +39,9 @@ public final class AfterClientExitWorldHook {
             RenderManager.instance.set(null);
             RenderManager.instance.livingPlayer = null;
             RenderManager.instance.field_147941_i = null;
+        }
+        if (MemoryConfig.leaks.fixRenderBlocksWorldLeak) {
+            RenderBlocks.getInstance().blockAccess = null;
         }
         if (MemoryConfig.leaks.fixPointedEntityLeak) {
             mc.pointedEntity = null;
