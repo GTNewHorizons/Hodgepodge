@@ -81,6 +81,11 @@ public class MemoryConfig {
         @Config.RequiresMcRestart
         public boolean fixNetHandlerClientWorldLeak;
 
+        @Config.Comment("Fix IC2 block reactor leaking world instance when leaving world")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixIC2BlockReactorLeak;
+
         @Config.Comment("Fix WorldServer leaking entities when no players are present in a dimension")
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
