@@ -39,10 +39,7 @@ public abstract class MixinGuiNewChat_FixChatNewlines {
         throw new AssertionError();
     }
 
-    @Inject(
-            method = "func_146237_a(Lnet/minecraft/util/IChatComponent;IIZ)V",
-            at = @At("HEAD"),
-            cancellable = true)
+    @Inject(method = "func_146237_a(Lnet/minecraft/util/IChatComponent;IIZ)V", at = @At("HEAD"), cancellable = true)
     private void hodgepodge$splitNewlines(IChatComponent original, int id, int updateCounter, boolean displayed,
             CallbackInfo ci) {
         if (original.getUnformattedText().indexOf('\n') < 0) return;

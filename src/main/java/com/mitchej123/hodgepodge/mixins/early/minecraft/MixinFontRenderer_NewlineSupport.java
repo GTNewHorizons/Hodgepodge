@@ -25,10 +25,7 @@ public abstract class MixinFontRenderer_NewlineSupport {
     @Shadow
     public abstract int drawString(String text, int x, int y, int color, boolean dropShadow);
 
-    @Inject(
-            method = "drawString(Ljava/lang/String;IIIZ)I",
-            at = @At("HEAD"),
-            cancellable = true)
+    @Inject(method = "drawString(Ljava/lang/String;IIIZ)I", at = @At("HEAD"), cancellable = true)
     private void hodgepodge$splitNewlines(String text, int x, int y, int color, boolean dropShadow,
             CallbackInfoReturnable<Integer> cir) {
         if (text == null || text.indexOf('\n') < 0) return;
@@ -41,10 +38,7 @@ public abstract class MixinFontRenderer_NewlineSupport {
         cir.setReturnValue(maxX);
     }
 
-    @Inject(
-            method = "getStringWidth",
-            at = @At("HEAD"),
-            cancellable = true)
+    @Inject(method = "getStringWidth", at = @At("HEAD"), cancellable = true)
     private void hodgepodge$measureNewlines(String text, CallbackInfoReturnable<Integer> cir) {
         if (text == null || text.indexOf('\n') < 0) return;
 
