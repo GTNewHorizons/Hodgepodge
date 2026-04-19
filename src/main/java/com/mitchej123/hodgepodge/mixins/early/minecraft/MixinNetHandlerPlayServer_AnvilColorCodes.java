@@ -56,16 +56,26 @@ public class MixinNetHandlerPlayServer_AnvilColorCodes {
                 }
             }
             // &g&#RRGGBB&#RRGGBB gradient (18 chars)
-            if (ch == '&' && i + 1 < len && Character.toLowerCase(text.charAt(i + 1)) == 'g'
-                && i + 17 < len && text.charAt(i + 2) == '&' && text.charAt(i + 3) == '#'
-                && text.charAt(i + 10) == '&' && text.charAt(i + 11) == '#') {
+            if (ch == '&' && i + 1 < len
+                    && Character.toLowerCase(text.charAt(i + 1)) == 'g'
+                    && i + 17 < len
+                    && text.charAt(i + 2) == '&'
+                    && text.charAt(i + 3) == '#'
+                    && text.charAt(i + 10) == '&'
+                    && text.charAt(i + 11) == '#') {
                 boolean v1 = true, v2 = true;
                 for (int j = 4; j <= 9; j++) {
-                    if (Character.digit(text.charAt(i + j), 16) == -1) { v1 = false; break; }
+                    if (Character.digit(text.charAt(i + j), 16) == -1) {
+                        v1 = false;
+                        break;
+                    }
                 }
                 if (v1) {
                     for (int j = 12; j <= 17; j++) {
-                        if (Character.digit(text.charAt(i + j), 16) == -1) { v2 = false; break; }
+                        if (Character.digit(text.charAt(i + j), 16) == -1) {
+                            v2 = false;
+                            break;
+                        }
                     }
                 }
                 if (v1 && v2) {

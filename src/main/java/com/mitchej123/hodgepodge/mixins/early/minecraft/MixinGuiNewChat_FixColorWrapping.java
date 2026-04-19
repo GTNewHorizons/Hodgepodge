@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mitchej123.hodgepodge.util.ColorFormatUtils;
 import com.mitchej123.hodgepodge.util.FontRenderingCompat;
 
 @Mixin(GuiNewChat.class)
@@ -50,13 +51,14 @@ public class MixinGuiNewChat_FixColorWrapping {
         while (gIdx != -1 && gIdx + 29 < text.length()) {
             // Validate §g followed by two §x§R§R§G§G§B§B sequences (30 chars total)
             if (text.charAt(gIdx + 2) != '\u00a7' || Character.toLowerCase(text.charAt(gIdx + 3)) != 'x'
-                || text.charAt(gIdx + 16) != '\u00a7' || Character.toLowerCase(text.charAt(gIdx + 17)) != 'x') {
+                    || text.charAt(gIdx + 16) != '\u00a7'
+                    || Character.toLowerCase(text.charAt(gIdx + 17)) != 'x') {
                 gIdx = text.indexOf("\u00a7g", gIdx + 2);
                 continue;
             }
 
-            int startRgb = hodgepodge$parseRgbFromSectionX(text, gIdx + 2);
-            int endRgb = hodgepodge$parseRgbFromSectionX(text, gIdx + 16);
+            int startRgb = ColorFormatUtils.parseRgbFromSectionX(text, gIdx + 2);
+            int endRgb = ColorFormatUtils.parseRgbFromSectionX(text, gIdx + 16);
             if (startRgb == -1 || endRgb == -1) {
                 gIdx = text.indexOf("\u00a7g", gIdx + 2);
                 continue;
@@ -80,8 +82,11 @@ public class MixinGuiNewChat_FixColorWrapping {
                 if (ch == '\u00a7' && i + 1 < text.length()) {
                     char code = Character.toLowerCase(text.charAt(i + 1));
                     // Gradient terminators: stop expanding
-                    if (code == 'r' || (code >= '0' && code <= '9') || (code >= 'a' && code <= 'f')
-                        || code == 'x' || code == 'q' || code == 'g') {
+                    if (code == 'r' || (code >= '0' && code <= '9')
+                            || (code >= 'a' && code <= 'f')
+                            || code == 'x'
+                            || code == 'q'
+                            || code == 'g') {
                         last = i;
                         break;
                     }
@@ -92,8 +97,8 @@ public class MixinGuiNewChat_FixColorWrapping {
                     // Visible char: emit interpolated §x color + the char
                     float t = totalVisible > 1 ? (float) visIdx / (totalVisible - 1) : 0f;
                     t = Math.min(t, 1f);
-                    int rgb = hodgepodge$lerpRgb(startRgb, endRgb, t);
-                    sb.append(hodgepodge$buildSectionX(rgb));
+                    int rgb = ColorFormatUtils.lerpRgb(startRgb, endRgb, t);
+                    sb.append(ColorFormatUtils.buildSectionX(rgb));
                     sb.append(ch);
                     visIdx++;
                     if (visIdx >= totalVisible) {
@@ -120,8 +125,11 @@ public class MixinGuiNewChat_FixColorWrapping {
             char ch = text.charAt(i);
             if (ch == '\u00a7' && i + 1 < text.length()) {
                 char code = Character.toLowerCase(text.charAt(i + 1));
-                if (code == 'r' || (code >= '0' && code <= '9') || (code >= 'a' && code <= 'f')
-                    || code == 'x' || code == 'q' || code == 'g') {
+                if (code == 'r' || (code >= '0' && code <= '9')
+                        || (code >= 'a' && code <= 'f')
+                        || code == 'x'
+                        || code == 'q'
+                        || code == 'g') {
                     break;
                 }
                 i++; // skip non-terminating format codes
@@ -143,42 +151,6 @@ public class MixinGuiNewChat_FixColorWrapping {
     private String hodgepodge$fixColorWrapping(String s2, @Local(name = "s1") String s1) {
         String format = FontRenderer.getFormatFromString(s1);
         return format + s2;
-    }
-
-    @Unique
-    private static int hodgepodge$lerpRgb(int from, int to, float t) {
-        int r = (int) (((from >> 16) & 0xFF) * (1 - t) + ((to >> 16) & 0xFF) * t);
-        int g = (int) (((from >> 8) & 0xFF) * (1 - t) + ((to >> 8) & 0xFF) * t);
-        int b = (int) ((from & 0xFF) * (1 - t) + (to & 0xFF) * t);
-        return (r << 16) | (g << 8) | b;
-    }
-
-    /** Parse RGB int from §x§R§R§G§G§B§B starting at offset in text. Returns -1 on failure. */
-    @Unique
-    private static int hodgepodge$parseRgbFromSectionX(String text, int offset) {
-        if (offset + 13 >= text.length()) return -1;
-        // §x at offset, then §R§R§G§G§B§B = 6 hex digit pairs at offset+2,+4,+6,+8,+10,+12
-        int val = 0;
-        for (int i = 0; i < 6; i++) {
-            int d = Character.digit(text.charAt(offset + 3 + i * 2), 16);
-            if (d == -1) return -1;
-            val = (val << 4) | d;
-        }
-        return val;
-    }
-
-    /** Build §x§R§R§G§G§B§B from an RGB int. */
-    @Unique
-    private static String hodgepodge$buildSectionX(int rgb) {
-        int r = (rgb >> 16) & 0xFF;
-        int g = (rgb >> 8) & 0xFF;
-        int b = rgb & 0xFF;
-        char S = '\u00a7';
-        return new StringBuilder(14).append(S).append('x').append(S).append(Character.forDigit((r >> 4) & 0xF, 16))
-                .append(S).append(Character.forDigit(r & 0xF, 16)).append(S)
-                .append(Character.forDigit((g >> 4) & 0xF, 16)).append(S).append(Character.forDigit(g & 0xF, 16))
-                .append(S).append(Character.forDigit((b >> 4) & 0xF, 16)).append(S)
-                .append(Character.forDigit(b & 0xF, 16)).toString();
     }
 
 }

@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.mitchej123.hodgepodge.util.ColorFormatUtils;
 import com.mitchej123.hodgepodge.util.FontRenderingCompat;
 
 /**
@@ -171,8 +172,8 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         int fullGradIdx = upToCursor.lastIndexOf("\u00a7g");
         if (fullGradIdx == -1 || fullGradIdx + 30 > this.text.length()) return beforeCursor;
 
-        int startRgb = hodgepodge$parseRgb(this.text, fullGradIdx + 2);
-        int endRgb = hodgepodge$parseRgb(this.text, fullGradIdx + 16);
+        int startRgb = ColorFormatUtils.parseRgbFromSectionX(this.text, fullGradIdx + 2);
+        int endRgb = ColorFormatUtils.parseRgbFromSectionX(this.text, fullGradIdx + 16);
         if (startRgb == -1 || endRgb == -1) return beforeCursor;
 
         int specEnd = fullGradIdx + 30;
@@ -193,8 +194,8 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
      */
     @Unique
     private String hodgepodge$expandScrolledGradientToPerChar(String activeFormat, String beforeCursor) {
-        int startRgb = hodgepodge$parseRgb(activeFormat, 2);
-        int endRgb = hodgepodge$parseRgb(activeFormat, 16);
+        int startRgb = ColorFormatUtils.parseRgbFromSectionX(activeFormat, 2);
+        int endRgb = ColorFormatUtils.parseRgbFromSectionX(activeFormat, 16);
         if (startRgb == -1 || endRgb == -1) return activeFormat + beforeCursor;
 
         String upToCursor = this.text.substring(0, Math.min(this.cursorPosition, this.text.length()));
@@ -231,7 +232,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
             } else {
                 float t = (float) gradCharIdx / (totalVisible - 1);
                 t = Math.min(t, 1f);
-                sb.append(hodgepodge$buildSectionX(hodgepodge$lerpRgb(startRgb, endRgb, t)));
+                sb.append(ColorFormatUtils.buildSectionX(ColorFormatUtils.lerpRgb(startRgb, endRgb, t)));
                 sb.append(ch);
                 gradCharIdx++;
             }
@@ -272,7 +273,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
                 // Visible char: emit its exact gradient color
                 float t = (float) gradCharIdx / (totalVisible - 1);
                 t = Math.min(t, 1f);
-                sb.append(hodgepodge$buildSectionX(hodgepodge$lerpRgb(startRgb, endRgb, t)));
+                sb.append(ColorFormatUtils.buildSectionX(ColorFormatUtils.lerpRgb(startRgb, endRgb, t)));
                 sb.append(ch);
                 gradCharIdx++;
             }
@@ -286,8 +287,8 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
      */
     @Unique
     private String hodgepodge$expandAfterCursorGradientToPerChar(String activeFormat, String afterCursor) {
-        int startRgb = hodgepodge$parseRgb(activeFormat, 2);
-        int endRgb = hodgepodge$parseRgb(activeFormat, 16);
+        int startRgb = ColorFormatUtils.parseRgbFromSectionX(activeFormat, 2);
+        int endRgb = ColorFormatUtils.parseRgbFromSectionX(activeFormat, 16);
         if (startRgb == -1 || endRgb == -1) return activeFormat + afterCursor;
 
         String upToCursor = this.text.substring(0, Math.min(this.cursorPosition, this.text.length()));
@@ -323,7 +324,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
             } else {
                 float t = (float) gradCharIdx / (totalVisible - 1);
                 t = Math.min(t, 1f);
-                sb.append(hodgepodge$buildSectionX(hodgepodge$lerpRgb(startRgb, endRgb, t)));
+                sb.append(ColorFormatUtils.buildSectionX(ColorFormatUtils.lerpRgb(startRgb, endRgb, t)));
                 sb.append(ch);
                 gradCharIdx++;
             }
@@ -448,35 +449,4 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         return count;
     }
 
-    /** Parse RGB int from §x§R§R§G§G§B§B starting at offset. Returns -1 on failure. */
-    @Unique
-    private static int hodgepodge$parseRgb(String text, int offset) {
-        if (offset + 13 >= text.length()) return -1;
-        int val = 0;
-        for (int i = 0; i < 6; i++) {
-            int d = Character.digit(text.charAt(offset + 3 + i * 2), 16);
-            if (d == -1) return -1;
-            val = (val << 4) | d;
-        }
-        return val;
-    }
-
-    @Unique
-    private static int hodgepodge$lerpRgb(int from, int to, float t) {
-        int r = (int) (((from >> 16) & 0xFF) * (1 - t) + ((to >> 16) & 0xFF) * t);
-        int g = (int) (((from >> 8) & 0xFF) * (1 - t) + ((to >> 8) & 0xFF) * t);
-        int b = (int) ((from & 0xFF) * (1 - t) + (to & 0xFF) * t);
-        return (r << 16) | (g << 8) | b;
-    }
-
-    @Unique
-    private static String hodgepodge$buildSectionX(int rgb) {
-        char S = '\u00a7';
-        int r = (rgb >> 16) & 0xFF, g = (rgb >> 8) & 0xFF, b = rgb & 0xFF;
-        return new StringBuilder(14).append(S).append('x').append(S).append(Character.forDigit((r >> 4) & 0xF, 16))
-                .append(S).append(Character.forDigit(r & 0xF, 16)).append(S)
-                .append(Character.forDigit((g >> 4) & 0xF, 16)).append(S).append(Character.forDigit(g & 0xF, 16))
-                .append(S).append(Character.forDigit((b >> 4) & 0xF, 16)).append(S)
-                .append(Character.forDigit(b & 0xF, 16)).toString();
-    }
 }
