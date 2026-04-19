@@ -48,7 +48,8 @@ public abstract class MixinFontRenderer {
             String newFormat = getFormatFromString(formatting.toString());
 
             // Handle gradient continuation: interpolate color at wrap point
-            if (newFormat.length() >= 30 && newFormat.charAt(0) == '\u00a7' && newFormat.charAt(1) == 'g') {
+            if (newFormat.length() >= ColorFormatUtils.GRADIENT_SEQ_LEN && newFormat.charAt(0) == '\u00a7'
+                    && newFormat.charAt(1) == 'g') {
                 String remainder = StringUtils.substring(
                         str,
                         lineWidth + (str.charAt(lineWidth) == ' ' || str.charAt(lineWidth) == '\n' ? 1 : 0));
@@ -67,12 +68,14 @@ public abstract class MixinFontRenderer {
 
     @Unique
     private static String hodgepodge$interpolateGradient(String gradientFormat, String rendered, String remaining) {
-        int startRgb = ColorFormatUtils.parseRgbFromSectionX(gradientFormat, 2);
-        int endRgb = ColorFormatUtils.parseRgbFromSectionX(gradientFormat, 16);
+        int startRgb = ColorFormatUtils
+                .parseRgbFromSectionX(gradientFormat, ColorFormatUtils.GRADIENT_FIRST_RGB_OFFSET);
+        int endRgb = ColorFormatUtils.parseRgbFromSectionX(gradientFormat, ColorFormatUtils.GRADIENT_SECOND_RGB_OFFSET);
         if (startRgb == -1 || endRgb == -1) return gradientFormat;
 
         int gradientIdx = rendered.indexOf("\u00a7g");
-        int visRendered = gradientIdx >= 0 ? hodgepodge$countVisible(rendered, gradientIdx + 30)
+        int visRendered = gradientIdx >= 0
+                ? hodgepodge$countVisible(rendered, gradientIdx + ColorFormatUtils.GRADIENT_SEQ_LEN)
                 : hodgepodge$countVisible(rendered, 0);
         int visRemaining = hodgepodge$countVisible(remaining, 0);
         int total = visRendered + visRemaining;
