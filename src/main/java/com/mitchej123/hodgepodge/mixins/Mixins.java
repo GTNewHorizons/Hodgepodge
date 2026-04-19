@@ -1220,6 +1220,19 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.threadedWorldDataSaving)
             .addRequiredMod(TargetedMod.THAUMCRAFT)
             .setPhase(Phase.LATE)),
+    FIX_VANILLA_PORTAL_PLACEMENT(new MixinBuilder(
+            "Fix player spawning inside blocks when first entering a vanilla Nether/End portal under chunk throttle guards")
+            .addCommonMixins("minecraft.MixinTeleporter_PortalFix")
+            .setApplyIf(() -> SpeedupsConfig.preventEntityChunkLoading || SpeedupsConfig.throttleChunkGeneration
+                    || FixesConfig.preventChunkLoadingFromBlockUpdates)
+            .setPhase(Phase.EARLY)),
+    FIX_TC_ELDRITCH_PORTAL_PLAYER_PLACEMENT(new MixinBuilder(
+            "Fix player spawning at wrong Y when first entering a new Thaumcraft eldritch portal")
+            .addCommonMixins("thaumcraft.MixinTeleporterThaumcraft_PortalFix")
+            .setApplyIf(() -> SpeedupsConfig.preventEntityChunkLoading || SpeedupsConfig.throttleChunkGeneration
+                    || FixesConfig.preventChunkLoadingFromBlockUpdates)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
     ADD_CV_SUPPORT_TO_WAND_PEDESTAL(new MixinBuilder("CV Support for Wand Pedestal")
             .addCommonMixins("thaumcraft.MixinTileWandPedestal")
             .setApplyIf(() -> TweaksConfig.addCVSupportToWandPedestal)

@@ -24,6 +24,8 @@ import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.longs.Long2ByteMap;
 import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
@@ -39,6 +41,13 @@ public class ChunkGenScheduler {
     private static volatile boolean tickingStarted = false;
     private static long serverTickStartNanos;
     private static int blockedLoadCount = 0;
+
+    /**
+     * Dims excluded from chunk-load throttling and population deferral: {@code provideChunk} always loads normally,
+     * {@code loadChunkOnProvideRequest} is never suppressed, and population is never deferred ({@code populationDepth}
+     * is ignored). Prevents incomplete multi-chunk structures (e.g. the outer-lands maze) from having missing sections.
+     */
+    private static final IntSet chunkThrottleExcludedDims = new IntOpenHashSet();
 
     private static final Int2ObjectMap<ChunkGenScheduler> dimensions = new Int2ObjectOpenHashMap<>();
     private final LongSet pendingGenSet = new LongOpenHashSet();
@@ -110,6 +119,17 @@ public class ChunkGenScheduler {
 
     public static void clearDimensionData() {
         dimensions.clear();
+        chunkThrottleExcludedDims.clear();
+    }
+
+    /** Exclude {@code dimId} from all chunk-load throttling and population deferral. */
+    public static void excludeDimFromChunkThrottle(int dimId) {
+        chunkThrottleExcludedDims.add(dimId);
+    }
+
+    /** Returns {@code true} if {@code dimId} was registered via {@link #excludeDimFromChunkThrottle}. */
+    public static boolean isDimExcludedFromChunkThrottle(int dimId) {
+        return chunkThrottleExcludedDims.contains(dimId);
     }
 
     public ChunkGenStats getStats() {
