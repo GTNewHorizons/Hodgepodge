@@ -216,6 +216,12 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiChat_LongerMessages")
             .addCommonMixins("minecraft.packets.MixinC01PacketChatMessage_LongerMessages")
             .setPhase(Phase.EARLY)),
+    SYNC_WORLD_SEED_TO_CLIENT_WORLD(new MixinBuilder()
+            .addClientMixins("minecraft.MixinNetHandlerPlayClient_WorldSeed")
+            .addCommonMixins(
+                    "minecraft.packets.MixinS01PacketJoinGame_WorldSeed",
+                    "minecraft.packets.MixinS07PacketRespawn_WorldSeed")
+            .setPhase(Phase.EARLY)),
     SPEEDUP_REMOVE_FORMATTING_CODES(new MixinBuilder("Speed up the vanilla method to remove formatting codes")
             .addClientMixins("minecraft.MixinEnumChatFormatting_FastFormat")
             .setApplyIf(() -> SpeedupsConfig.speedupRemoveFormatting)
