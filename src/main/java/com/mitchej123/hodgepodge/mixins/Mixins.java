@@ -400,6 +400,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> MemoryConfig.leaks.fixEnchantmentHelperLeak)
             .addExcludedMod(TargetedMod.ARCHAICFIX)
             .setPhase(Phase.EARLY)),
+    FIX_RENDER_FALLING_BLOCK_WORLD_LEAK(new MixinBuilder()
+            .addClientMixins("memory.MixinRenderFallingBlock")
+            .setApplyIf(() -> MemoryConfig.leaks.fixRenderFallingBlockLeak)
+            .setPhase(Phase.EARLY)),
     FIX_ARROW_WRONG_LIGHTING(new MixinBuilder()
             .addClientMixins("minecraft.MixinRendererLivingEntity")
             .setApplyIf(() -> FixesConfig.fixGlStateBugs)
