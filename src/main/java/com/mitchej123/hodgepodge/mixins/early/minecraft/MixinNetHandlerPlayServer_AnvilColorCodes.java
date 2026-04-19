@@ -42,7 +42,7 @@ public class MixinNetHandlerPlayServer_AnvilColorCodes {
         for (int i = 0; i < len; i++) {
             char ch = text.charAt(i);
             // &#RRGGBB (8 chars)
-            if (ch == '&' && i + 1 < len && text.charAt(i + 1) == '#' && i + 7 < len) {
+            if (ch == '&' && i + 7 < len && text.charAt(i + 1) == '#') {
                 boolean valid = true;
                 for (int j = 2; j <= 7; j++) {
                     if (Character.digit(text.charAt(i + j), 16) == -1) {
@@ -56,9 +56,8 @@ public class MixinNetHandlerPlayServer_AnvilColorCodes {
                 }
             }
             // &g&#RRGGBB&#RRGGBB gradient (18 chars)
-            if (ch == '&' && i + 1 < len
+            if (ch == '&' && i + 17 < len
                     && Character.toLowerCase(text.charAt(i + 1)) == 'g'
-                    && i + 17 < len
                     && text.charAt(i + 2) == '&'
                     && text.charAt(i + 3) == '#'
                     && text.charAt(i + 10) == '&'
