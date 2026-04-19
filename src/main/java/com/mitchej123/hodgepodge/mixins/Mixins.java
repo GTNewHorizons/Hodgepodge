@@ -25,7 +25,10 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)),
     SIGN_INPUT_IGNORES_FORMAT_CODES(new MixinBuilder("Sign input counts visible chars only")
             .addClientMixins("minecraft.MixinGuiEditSign")
-            .addCommonMixins("minecraft.MixinNetHandlerPlayServer_SignLimit")
+            .addCommonMixins(
+                    "minecraft.MixinNetHandlerPlayServer_SignLimit",
+                    "minecraft.MixinC12PacketUpdateSign_RaiseReadLimit",
+                    "minecraft.MixinTileEntitySign_RaiseNbtReadLimit")
             .setApplyIf(() -> TweaksConfig.signInputIgnoresFormatCodes)
             .setPhase(Phase.EARLY)),
     ANVIL_INPUT_IGNORES_FORMAT_CODES(new MixinBuilder("Anvil rename counts visible chars only, format codes don't eat the 30-char limit")
