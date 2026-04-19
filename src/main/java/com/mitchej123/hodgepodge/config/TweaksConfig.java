@@ -468,4 +468,12 @@ public class TweaksConfig {
     @Config.Comment("Allow creative tab gui title color via localization key")
     @Config.DefaultBoolean(true)
     public static boolean creativeTabLocalizationOverrides;
+
+    @Config.Comment("Enable transfer packet support (allows servers to redirect you to another server:port)")
+    @Config.DefaultBoolean(true)
+    public static boolean enableTransferPacket;
+
+    @Config.Comment("Whitelist of allowed transfer target hosts (empty = allow all). Format: host or host:port")
+    @Config.DefaultStringList({})
+    public static String[] transferWhitelist;
 }

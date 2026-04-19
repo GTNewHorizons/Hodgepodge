@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
+import com.mitchej123.hodgepodge.commands.TransferCommand;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.mixins.hooks.ChunkGenScheduler;
@@ -86,6 +87,7 @@ public class Hodgepodge {
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent aEvent) {
         aEvent.registerServerCommand(new DebugCommand());
+        aEvent.registerServerCommand(new TransferCommand());
 
         // needed in case ExtraUtilities' Spike was crashed (and game was switched to a main menu), so it didn't update
         // the variable
