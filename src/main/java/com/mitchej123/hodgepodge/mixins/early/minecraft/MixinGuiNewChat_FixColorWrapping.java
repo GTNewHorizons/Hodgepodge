@@ -48,24 +48,26 @@ public class MixinGuiNewChat_FixColorWrapping {
         StringBuilder sb = new StringBuilder(text.length() + 128);
         int last = 0;
 
-        while (gIdx != -1 && gIdx + 29 < text.length()) {
-            // Validate §g followed by two §x§R§R§G§G§B§B sequences (30 chars total)
-            if (text.charAt(gIdx + 2) != '\u00a7' || Character.toLowerCase(text.charAt(gIdx + 3)) != 'x'
-                    || text.charAt(gIdx + 16) != '\u00a7'
-                    || Character.toLowerCase(text.charAt(gIdx + 17)) != 'x') {
+        while (gIdx != -1 && gIdx + ColorFormatUtils.GRADIENT_SEQ_LEN - 1 < text.length()) {
+            // Validate §g followed by two §x§R§R§G§G§B§B sequences
+            final int firstRgbPos = gIdx + ColorFormatUtils.GRADIENT_FIRST_RGB_OFFSET;
+            final int secondRgbPos = gIdx + ColorFormatUtils.GRADIENT_SECOND_RGB_OFFSET;
+            if (text.charAt(firstRgbPos) != '\u00a7' || Character.toLowerCase(text.charAt(firstRgbPos + 1)) != 'x'
+                    || text.charAt(secondRgbPos) != '\u00a7'
+                    || Character.toLowerCase(text.charAt(secondRgbPos + 1)) != 'x') {
                 gIdx = text.indexOf("\u00a7g", gIdx + 2);
                 continue;
             }
 
-            int startRgb = ColorFormatUtils.parseRgbFromSectionX(text, gIdx + 2);
-            int endRgb = ColorFormatUtils.parseRgbFromSectionX(text, gIdx + 16);
+            int startRgb = ColorFormatUtils.parseRgbFromSectionX(text, firstRgbPos);
+            int endRgb = ColorFormatUtils.parseRgbFromSectionX(text, secondRgbPos);
             if (startRgb == -1 || endRgb == -1) {
                 gIdx = text.indexOf("\u00a7g", gIdx + 2);
                 continue;
             }
 
             // Count visible chars in the gradient span (until §r, color code, or another gradient/rainbow)
-            int textStart = gIdx + 30;
+            int textStart = gIdx + ColorFormatUtils.GRADIENT_SEQ_LEN;
             int totalVisible = hodgepodge$countGradientVisible(text, textStart);
             if (totalVisible <= 0) {
                 gIdx = text.indexOf("\u00a7g", gIdx + 2);
@@ -81,12 +83,7 @@ public class MixinGuiNewChat_FixColorWrapping {
                 char ch = text.charAt(i);
                 if (ch == '\u00a7' && i + 1 < text.length()) {
                     char code = Character.toLowerCase(text.charAt(i + 1));
-                    // Gradient terminators: stop expanding
-                    if (code == 'r' || (code >= '0' && code <= '9')
-                            || (code >= 'a' && code <= 'f')
-                            || code == 'x'
-                            || code == 'q'
-                            || code == 'g') {
+                    if (ColorFormatUtils.isGradientTerminator(code)) {
                         last = i;
                         break;
                     }
@@ -125,11 +122,7 @@ public class MixinGuiNewChat_FixColorWrapping {
             char ch = text.charAt(i);
             if (ch == '\u00a7' && i + 1 < text.length()) {
                 char code = Character.toLowerCase(text.charAt(i + 1));
-                if (code == 'r' || (code >= '0' && code <= '9')
-                        || (code >= 'a' && code <= 'f')
-                        || code == 'x'
-                        || code == 'q'
-                        || code == 'g') {
+                if (ColorFormatUtils.isGradientTerminator(code)) {
                     break;
                 }
                 i++; // skip non-terminating format codes
