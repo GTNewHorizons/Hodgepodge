@@ -1092,6 +1092,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixIc2KeybindsInGuis)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
+    IC2_FIX_REACTOR_BLOCK_WORLD_LEAK(new MixinBuilder()
+            .addCommonMixins("ic2.MixinBlockReactorChamber_FixLeak")
+            .setApplyIf(() -> MemoryConfig.leaks.fixIC2BlockReactorLeak)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
 
     // Disable update checkers
     COFH_CORE_UPDATE_CHECK(new MixinBuilder("Yeet COFH Core Update Check")
