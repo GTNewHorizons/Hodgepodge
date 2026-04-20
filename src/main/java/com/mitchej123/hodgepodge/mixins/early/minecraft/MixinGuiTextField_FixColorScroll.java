@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.mitchej123.hodgepodge.util.ColorFormatUtils;
 import com.mitchej123.hodgepodge.util.FontRenderingCompat;
@@ -36,9 +38,22 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
     private int selectionEnd;
     @Shadow
     private FontRenderer field_146211_a;
+    @Shadow
+    private boolean isFocused;
+    @Shadow
+    private boolean isEnabled;
 
     @Shadow
     public abstract void setSelectionPos(int p_146199_1_);
+
+    @Shadow
+    public abstract void setCursorPosition(int pos);
+
+    @Shadow
+    public abstract int getNthWordFromCursor(int n);
+
+    @Shadow
+    public abstract int getSelectionEnd();
 
     @Unique
     private String hodgepodge$originalText;
@@ -371,12 +386,12 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
 
             if (raw.charAt(ri) == '&' && preprocessed.charAt(pi) == '\u00a7') {
                 if (pi + 1 < preprocessed.length() && preprocessed.charAt(pi + 1) == 'x') {
-                    int rawEnd = Math.min(ri + 7, raw.length());
+                    int rawEnd = Math.min(ri + ColorFormatUtils.AMP_HEX_LEN, raw.length());
                     for (int sub = 1; sub < rawEnd - ri; sub++) {
                         map[ri + sub] = pi + sub * 2;
                     }
-                    ri += 7;
-                    pi += 14;
+                    ri += ColorFormatUtils.AMP_HEX_LEN;
+                    pi += ColorFormatUtils.SECTION_X_SEQ_LEN;
                 } else {
                     if (ri + 1 < raw.length()) {
                         map[ri + 1] = pi + 1;
@@ -437,6 +452,147 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
             }
         }
         return count;
+    }
+
+    // --- Format-code-aware cursor navigation ---
+
+    @Inject(method = "textboxKeyTyped", at = @At("HEAD"), cancellable = true)
+    private void hodgepodge$formatAwareCursorNav(char typedChar, int keyCode, CallbackInfoReturnable<Boolean> cir) {
+        if (!this.isFocused || !FontRenderingCompat.HAS_PREPROCESS_TEXT) return;
+        if (this.text == null || this.text.indexOf('&') == -1) return;
+
+        if (keyCode == 203) { // LEFT
+            int target;
+            if (GuiScreen.isShiftKeyDown()) {
+                if (GuiScreen.isCtrlKeyDown()) {
+                    target = this.getNthWordFromCursor(-1);
+                } else {
+                    target = this.getSelectionEnd() - 1;
+                }
+                target = hodgepodge$snapPastAmpCodes(this.text, target, false);
+                this.setSelectionPos(target);
+            } else if (GuiScreen.isCtrlKeyDown()) {
+                target = this.getNthWordFromCursor(-1);
+                target = hodgepodge$snapPastAmpCodes(this.text, target, false);
+                this.setCursorPosition(target);
+            } else {
+                target = hodgepodge$snapPastAmpCodes(this.text, this.selectionEnd - 1, false);
+                this.setCursorPosition(target);
+            }
+            cir.setReturnValue(true);
+        } else if (keyCode == 205) { // RIGHT
+            int target;
+            if (GuiScreen.isShiftKeyDown()) {
+                if (GuiScreen.isCtrlKeyDown()) {
+                    target = this.getNthWordFromCursor(1);
+                } else {
+                    target = this.getSelectionEnd() + 1;
+                }
+                target = hodgepodge$snapPastAmpCodes(this.text, target, true);
+                this.setSelectionPos(target);
+            } else if (GuiScreen.isCtrlKeyDown()) {
+                target = this.getNthWordFromCursor(1);
+                target = hodgepodge$snapPastAmpCodes(this.text, target, true);
+                this.setCursorPosition(target);
+            } else {
+                target = hodgepodge$snapPastAmpCodes(this.text, this.selectionEnd + 1, true);
+                this.setCursorPosition(target);
+            }
+            cir.setReturnValue(true);
+        } else if (this.isEnabled && this.selectionEnd == this.cursorPosition && !GuiScreen.isCtrlKeyDown()) {
+            if (keyCode == 14) { // BACKSPACE — delete format code as atomic unit
+                int deletePos = this.cursorPosition - 1;
+                if (deletePos >= 0) {
+                    int[] range = hodgepodge$findAmpCodeRange(this.text, deletePos);
+                    if (range != null) {
+                        this.text = this.text.substring(0, range[0]) + this.text.substring(range[1]);
+                        this.setCursorPosition(range[0]);
+                        cir.setReturnValue(true);
+                    }
+                }
+            } else if (keyCode == 211) { // DELETE — delete format code as atomic unit
+                if (this.cursorPosition < this.text.length()) {
+                    int[] range = hodgepodge$findAmpCodeRange(this.text, this.cursorPosition);
+                    if (range != null) {
+                        this.text = this.text.substring(0, range[0]) + this.text.substring(range[1]);
+                        this.setCursorPosition(range[0]);
+                        cir.setReturnValue(true);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * If {@code pos} is inside an {@code &}-based format code, snap it to the boundary: forward → end, backward →
+     * start. For forward movement, landing exactly on the {@code &} also snaps past the code.
+     */
+    @Unique
+    private static int hodgepodge$snapPastAmpCodes(String text, int pos, boolean forward) {
+        if (text == null || text.isEmpty()) return pos;
+        pos = Math.max(0, Math.min(pos, text.length()));
+
+        int i = 0;
+        while (i < text.length()) {
+            if (text.charAt(i) != '&' || i + 1 >= text.length()) {
+                i++;
+                continue;
+            }
+            char next = Character.toLowerCase(text.charAt(i + 1));
+            int codeEnd = -1;
+
+            if (next == 'g' && ColorFormatUtils.isAmpGradientAt(text, i)) {
+                codeEnd = i + ColorFormatUtils.AMP_GRADIENT_LEN;
+            } else if (next == '#' && ColorFormatUtils.isAmpHexAt(text, i)) {
+                codeEnd = i + ColorFormatUtils.AMP_HEX_LEN;
+            } else if (ColorFormatUtils.VALID_AMP_SINGLE_CODES.indexOf(next) != -1) {
+                codeEnd = i + 2;
+            }
+
+            if (codeEnd != -1) {
+                boolean inside = forward ? (pos >= i && pos < codeEnd) : (pos > i && pos < codeEnd);
+                if (inside) {
+                    return forward ? codeEnd : i;
+                }
+                i = codeEnd;
+            } else {
+                i++;
+            }
+        }
+        return pos;
+    }
+
+    /** Returns {@code [start, end)} if {@code pos} is inside an {@code &}-based format code, or {@code null}. */
+    @Unique
+    private static int[] hodgepodge$findAmpCodeRange(String text, int pos) {
+        if (text == null || pos < 0 || pos >= text.length()) return null;
+        int i = 0;
+        while (i < text.length()) {
+            if (text.charAt(i) != '&' || i + 1 >= text.length()) {
+                i++;
+                continue;
+            }
+            char next = Character.toLowerCase(text.charAt(i + 1));
+            int codeEnd = -1;
+
+            if (next == 'g' && ColorFormatUtils.isAmpGradientAt(text, i)) {
+                codeEnd = i + ColorFormatUtils.AMP_GRADIENT_LEN;
+            } else if (next == '#' && ColorFormatUtils.isAmpHexAt(text, i)) {
+                codeEnd = i + ColorFormatUtils.AMP_HEX_LEN;
+            } else if (ColorFormatUtils.VALID_AMP_SINGLE_CODES.indexOf(next) != -1) {
+                codeEnd = i + 2;
+            }
+
+            if (codeEnd != -1) {
+                if (pos >= i && pos < codeEnd) {
+                    return new int[] { i, codeEnd };
+                }
+                i = codeEnd;
+            } else {
+                i++;
+            }
+        }
+        return null;
     }
 
 }

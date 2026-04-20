@@ -23,6 +23,9 @@ public final class ColorFormatUtils {
     /** Length of a raw {@code &g&#RRGGBB&#RRGGBB} ampersand-gradient sequence. */
     public static final int AMP_GRADIENT_LEN = 2 + AMP_HEX_LEN + AMP_HEX_LEN;
 
+    /** Valid single {@code &} codes (excludes {@code g} which only converts as {@code &g&#RRGGBB&#RRGGBB}). */
+    public static final String VALID_AMP_SINGLE_CODES = "0123456789abcdefklmnorqzv";
+
     /**
      * Codes that terminate an active gradient: reset ({@code r}), legacy colors ({@code 0}-{@code 9}, {@code a}-{@code
      * f}), RGB ({@code x}), rainbow ({@code q}), new gradient ({@code g}). Style codes ({@code k}-{@code o}) and other
@@ -71,6 +74,29 @@ public final class ColorFormatUtils {
                 .append(S).append(Character.forDigit((g >> 4) & 0xF, 16)).append(S)
                 .append(Character.forDigit(g & 0xF, 16)).append(S).append(Character.forDigit((b >> 4) & 0xF, 16))
                 .append(S).append(Character.forDigit(b & 0xF, 16)).toString();
+    }
+
+    /** Check if all characters from {@code from} to {@code to} (inclusive) are hex digits. */
+    public static boolean allHex(String text, int from, int to) {
+        for (int j = from; j <= to; j++) {
+            if (Character.digit(text.charAt(j), 16) == -1) return false;
+        }
+        return true;
+    }
+
+    /** Check if a valid {@code &#RRGGBB} (8-char) ampersand-hex code starts at {@code idx}. */
+    public static boolean isAmpHexAt(String text, int idx) {
+        return idx + AMP_HEX_LEN <= text.length() && text.charAt(idx + 1) == '#' && allHex(text, idx + 2, idx + 7);
+    }
+
+    /** Check if a valid {@code &g&#RRGGBB&#RRGGBB} (18-char) ampersand-gradient starts at {@code idx}. */
+    public static boolean isAmpGradientAt(String text, int idx) {
+        return idx + AMP_GRADIENT_LEN <= text.length() && text.charAt(idx + 2) == '&'
+                && text.charAt(idx + 3) == '#'
+                && text.charAt(idx + 10) == '&'
+                && text.charAt(idx + 11) == '#'
+                && allHex(text, idx + 4, idx + 9)
+                && allHex(text, idx + 12, idx + 17);
     }
 
     /** Linearly interpolate between two RGB ints at parameter {@code t} in [0, 1]. */
