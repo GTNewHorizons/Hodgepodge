@@ -8,6 +8,10 @@ public class TweaksConfig {
 
     // Minecraft
 
+    @Config.Comment("Sign input counts visible characters only, ignoring color format codes like &RRGGBB")
+    @Config.DefaultBoolean(true)
+    public static boolean signInputIgnoresFormatCodes;
+
     @Config.Comment("Adds a button in the sounds menu to reload the sound system without needing to press F3 + S")
     @Config.DefaultBoolean(true)
     public static boolean reloadSoundsButton;
@@ -218,6 +222,11 @@ public class TweaksConfig {
     @Config.Comment("The max amount of XP levels an anvil recipe can use.")
     @Config.DefaultInt(40)
     public static int anvilMaxLevel = 40;
+
+    @Config.Comment("Removes the color codes from the chat logs")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean cleanChatLogs = true;
 
     // NBT String Pooling
 

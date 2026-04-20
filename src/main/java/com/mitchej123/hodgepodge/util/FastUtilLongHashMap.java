@@ -1,79 +1,71 @@
 package com.mitchej123.hodgepodge.util;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import net.minecraft.util.LongHashMap;
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import org.jetbrains.annotations.ApiStatus;
+
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 
 public class FastUtilLongHashMap extends LongHashMap {
 
-    private final Long2ObjectMap<Object> map = new Long2ObjectOpenHashMap<>();
-    private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
-    private final Lock readLock = rwLock.readLock();
-    private final Lock writeLock = rwLock.writeLock();
+    protected final Long2ObjectOpenHashMap<Object> map = new Long2ObjectOpenHashMap<>();
+    protected final Thread ownerThread = Thread.currentThread();
+    private static final boolean ASSERT_OWNER = Boolean
+            .parseBoolean(System.getProperty("hodgepodge.assertMapThreadOwner", "false"));
 
+    protected void checkOwner() {
+        if (ASSERT_OWNER && Thread.currentThread() != ownerThread) {
+            throw new IllegalStateException(
+                    "FastUtilLongHashMap accessed from " + Thread.currentThread().getName()
+                            + ", owner is "
+                            + ownerThread.getName());
+        }
+    }
+
+    /** @deprecated Reobfuscated in prod. */
+    @ApiStatus.Internal
     @Override
     public int getNumHashElements() {
-        readLock.lock();
-        try {
-            return map.size();
-        } finally {
-            readLock.unlock();
-        }
+        checkOwner();
+        return map.size();
     }
 
+    /** @deprecated Reobfuscated in prod. */
+    @ApiStatus.Internal
     @Override
     public Object getValueByKey(long key) {
-        readLock.lock();
-        try {
-            return map.get(key);
-        } finally {
-            readLock.unlock();
-        }
+        checkOwner();
+        return map.get(key);
     }
 
+    /** @deprecated Reobfuscated in prod. */
+    @ApiStatus.Internal
     @Override
     public boolean containsItem(long key) {
-        readLock.lock();
-        try {
-            return map.containsKey(key);
-        } finally {
-            readLock.unlock();
-        }
+        checkOwner();
+        return map.containsKey(key);
     }
 
+    /** @deprecated Reobfuscated in prod. */
+    @ApiStatus.Internal
     @Override
     public void add(long key, Object value) {
-        writeLock.lock();
-        try {
-            map.put(key, value);
-        } finally {
-            writeLock.unlock();
-        }
+        checkOwner();
+        map.put(key, value);
     }
 
+    /** @deprecated Reobfuscated in prod. */
+    @ApiStatus.Internal
     @Override
     public Object remove(long key) {
-        writeLock.lock();
-        try {
-            return map.remove(key);
-        } finally {
-            writeLock.unlock();
-        }
+        checkOwner();
+        return map.remove(key);
     }
 
     public Iterator<Object> valuesIterator() {
-        readLock.lock();
-        try {
-            return new ArrayList<>(map.values()).iterator();
-        } finally {
-            readLock.unlock();
-        }
+        checkOwner();
+        return map.values().iterator();
     }
 }

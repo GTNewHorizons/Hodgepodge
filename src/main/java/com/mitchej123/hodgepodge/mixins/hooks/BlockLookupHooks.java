@@ -1,12 +1,21 @@
 package com.mitchej123.hodgepodge.mixins.hooks;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Set;
 
 import net.minecraft.block.Block;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.mitchej123.hodgepodge.mixins.interfaces.BlockExt_FastLookup;
 
 public final class BlockLookupHooks {
+
+    private static final Logger LOGGER = LogManager.getLogger("BlockLookupHooks");
+    private static final Set<Block> loggedUncachedBlocks = Collections.newSetFromMap(new IdentityHashMap<>());
 
     private static volatile Block[] blockById = null;
 
@@ -22,7 +31,24 @@ public final class BlockLookupHooks {
         if (block == null) return -1;
         final Block[] arr = blockById;
         if (arr == null) return Block.blockRegistry.getIDForObject(block);
-        return ((BlockExt_FastLookup) block).hodgepodge$getBlockId();
+        final int id = ((BlockExt_FastLookup) block).hodgepodge$getBlockId();
+        if (id == -1) return getIdFromBlockFallback(block);
+        return id;
+    }
+
+    private static int getIdFromBlockFallback(final Block block) {
+        final int registryId = Block.blockRegistry.getIDForObject(block);
+        if (registryId >= 0) {
+            ((BlockExt_FastLookup) block).hodgepodge$setBlockId(registryId);
+            if (loggedUncachedBlocks.add(block)) {
+                LOGGER.warn(
+                        "Block {} ({}) has no cached ID but is in the registry with ID {}. ",
+                        Block.blockRegistry.getNameForObject(block),
+                        block.getClass().getName(),
+                        registryId);
+            }
+        }
+        return registryId;
     }
 
     public static void rebuild() {

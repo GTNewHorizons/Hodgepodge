@@ -10,6 +10,10 @@ public class ASMConfig {
     @Config.DefaultBoolean(true)
     public static boolean cofhWorldTransformer;
 
+    @Config.Comment("Disable CoFH Access Transformer and use Forge AT instead to improve transforming performance")
+    @Config.DefaultBoolean(true)
+    public static boolean disableCoFHAccessTransformer;
+
     @Config.Comment("Speedup progressbar")
     @Config.DefaultBoolean(true)
     public static boolean speedupProgressBar;

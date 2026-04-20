@@ -43,7 +43,7 @@ public class ConfigParsingTimeTransformer implements RfbClassTransformer, Opcode
             return;
         }
         transformClassNode(cn);
-        HodgepodgeClassDump.dumpRFBClass(className, classNode, this);
+        HodgepodgeClassDump.dumpClass(className, classNode, this);
     }
 
     private static final String THIS = "net/minecraftforge/common/config/Configuration";

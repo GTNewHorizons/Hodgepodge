@@ -32,9 +32,18 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean speedupChunkCoordinatesHashCode;
 
-    @Config.Comment("Speed up grass block random ticking")
+    @Config.Comment("Prevents Vanilla blocks from loading chunks when ticking\n"
+            + "Cocoa, Crop, Fire, Grass, Vine, Farmland, Mushroom, Mycelium, Sapling, Stem, Torch")
     @Config.DefaultBoolean(true)
-    public static boolean speedupGrassBlockRandomTicking;
+    public static boolean preventLoadingChunksWhenTickingBlocks;
+
+    @Config.Comment("Prevents flowing liquids from loading chunks")
+    @Config.DefaultBoolean(true)
+    public static boolean preventLoadingChunksWhenLiquidsFlow;
+
+    @Config.Comment("Prevents Vanilla entities from loading chunks when pathfinding")
+    @Config.DefaultBoolean(true)
+    public static boolean preventLoadingChunksWhenPathfinding;
 
     @Config.Comment("Speedup Vanilla Furnace recipe lookup")
     @Config.DefaultBoolean(true)
@@ -63,6 +72,16 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean unboxMapGen;
 
+    @Config.Comment("BFS leaf decay with early exit on nearby logs, replacing vanilla's full scan")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupLeafDecay;
+
+    @Config.Comment("Skip scheduling falling block ticks when the block below is solid")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean skipUselessFallingBlockTicks;
+
     @Config.Comment("Spatial index for pending block updates, accelerates chunk saving and unloading")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -72,6 +91,51 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean speedupChunkUnload;
+
+    @Config.Comment("Spread chunk generation across ticks to reduce server stalls when players move through ungenerated terrain. ")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean throttleChunkGeneration;
+
+    @Config.Comment("Maximum deferred chunk generations per player per tick. "
+            + "Higher values fill terrain faster but increase per-tick lag from worldgen. [Requires throttleChunkGeneration]")
+    @Config.DefaultInt(4)
+    @Config.RangeInt(min = 1, max = 20)
+    public static int maxChunkGenPerPlayerPerTick;
+
+    @Config.Comment("Time budget in milliseconds for chunk generation per tick. "
+            + "Actual budget is min(this, remaining tick time to 50ms). "
+            + "Generation is skipped when recent operations suggest the budget would be exceeded. "
+            + "0 = no time limit (count-based only). [Requires throttleChunkGeneration]")
+    @Config.DefaultInt(20)
+    @Config.RangeInt(min = 0, max = 50)
+    public static int chunkGenBudgetMs;
+
+    @Config.Comment("Prevent entity ticks and random ticks from triggering chunk generation. "
+            + "Missing chunks return empty air blocks during blocked phases; the scheduler loads them shortly after. "
+            + "[Requires throttleChunkGeneration]")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean preventEntityChunkLoading;
+
+    @Config.Comment("When to amortize chunk generation overruns by tracking time debt and skipping generation until the debt is paid down. "
+            + "Smooths out server tick times when single chunks exceed the time budget. "
+            + "DedicatedServerOnly enables on multiplayer servers but not singleplayer/LAN. [Requires throttleChunkGeneration]")
+    @Config.DefaultEnum("DedicatedServerOnly")
+    public static AmortizeMode amortizeChunkGenOverruns;
+
+    public enum AmortizeMode {
+
+        Always,
+        DedicatedServerOnly,
+        Never
+    }
+
+    @Config.Comment("Ticks before a visible chunk hole is force-processed regardless of budget. "
+            + "Only applies to chunks within view distance of a player. 0 = disabled.")
+    @Config.DefaultInt(100)
+    @Config.RangeInt(min = 0, max = 1200)
+    public static int forcePopulateAgeTicks;
 
     @Config.Comment("Removes hard caps on chunk sending and unloading speed. Experimental and probably incompatible with hybrid servers!")
     @Config.DefaultBoolean(false)
@@ -104,25 +168,14 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean limitMobSpawningToViewDistance;
 
-    @Config.Comment("Prevents chunk loads caused by lava blocks")
+    @Config.Comment("Skip mob spawning in chunks with pending lighting updates (requires Supernova)")
     @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean lavaChunkLoading;
+    public static boolean skipSpawningWithPendingLight;
 
     @Config.Comment("Speed up the vanilla method to remove formatting codes")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean speedupRemoveFormatting;
-
-    @Config.Comment("Cache last matching recipes in crafting manager")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean cacheLastMatchingRecipe;
-
-    @Config.Comment("Cache size for the last matching recipes in crafting manager")
-    @Config.DefaultInt(64)
-    @Config.RequiresMcRestart
-    public static int recipeCacheSize;
 
     // I split these in two so that you can disable batching at runtime to diagnose problems
     @Config.Comment("Batch Tile Entity Description S35PacketUpdateTileEntity Packets (Enables Mixins, Requires Restart)")
@@ -168,6 +221,15 @@ public class SpeedupsConfig {
     @Config.Comment("Speedup biome fog rendering in BiomesOPlenty")
     @Config.DefaultBoolean(true)
     public static boolean speedupBOPFogHandling;
+
+    @Config.Comment("Use fast atan2 approximation for BOP Pixie entity yaw calculation")
+    @Config.DefaultBoolean(true)
+    public static boolean speedupBOPEntityPixie;
+
+    @Config.Comment("Cache allocations in BOP biome decoration to avoid per-chunk object creation and reflection")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupBOPBiomeDecoration;
 
     // VoxelMap
 

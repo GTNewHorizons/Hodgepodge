@@ -7,6 +7,7 @@ import com.gtnewhorizon.gtnhmixins.builders.MixinBuilder;
 import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
+import com.mitchej123.hodgepodge.config.MemoryConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 
@@ -14,10 +15,6 @@ public enum Mixins implements IMixins {
 
     // spotless:off
     // Vanilla Fixes
-    FIX_MINECRAFT_SERVER_LEAK(new MixinBuilder()
-            .addCommonMixins("minecraft.server.MixinMinecraftServer_ClearServerRef")
-            .setApplyIf(() -> FixesConfig.fixMinecraftServerLeak)
-            .setPhase(Phase.EARLY)),
     ONLY_LOAD_LANGUAGES_ONCE_PER_FILE(new MixinBuilder()
             .addCommonMixins("minecraft.MixinLanguageRegistry")
             .setApplyIf(() -> FixesConfig.onlyLoadLanguagesOnce)
@@ -25,6 +22,18 @@ public enum Mixins implements IMixins {
     CHANGE_CATEGORY_SPRINT_KEY(new MixinBuilder()
             .addClientMixins("minecraft.MixinGameSettings_SprintKey")
             .setApplyIf(() -> TweaksConfig.changeSprintCategory)
+            .setPhase(Phase.EARLY)),
+    SIGN_INPUT_IGNORES_FORMAT_CODES(new MixinBuilder("Sign input counts visible chars only")
+            .addClientMixins("minecraft.MixinGuiEditSign")
+            .addCommonMixins(
+                    "minecraft.MixinNetHandlerPlayServer_SignLimit",
+                    "minecraft.MixinC12PacketUpdateSign_RaiseReadLimit",
+                    "minecraft.MixinTileEntitySign_RaiseNbtReadLimit")
+            .setApplyIf(() -> TweaksConfig.signInputIgnoresFormatCodes)
+            .setPhase(Phase.EARLY)),
+    ANVIL_INPUT_IGNORES_FORMAT_CODES(new MixinBuilder("Anvil rename counts visible chars only, format codes don't eat the 30-char limit")
+            .addCommonMixins("minecraft.MixinNetHandlerPlayServer_AnvilColorCodes")
+            .setApplyIf(() -> TweaksConfig.signInputIgnoresFormatCodes)
             .setPhase(Phase.EARLY)),
     FIX_TOO_MANY_ALLOCATIONS_CHUNK_POSITION_INT_PAIR(new MixinBuilder("Stops MC from allocating too many ChunkPositionIntPair objects")
             .addCommonMixins(
@@ -109,6 +118,7 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinWorld_FixLightUpdateLag")
             .addExcludedMod(TargetedMod.ARCHAICFIX)
             .addExcludedMod(TargetedMod.ANGELICA)
+            .addExcludedMod(TargetedMod.SUPERNOVA)
             .setApplyIf(() -> FixesConfig.optimizeWorldUpdateLight)
             .setPhase(Phase.EARLY)),
     FIX_FRIENDLY_CREATURE_SOUNDS(new MixinBuilder()
@@ -177,6 +187,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiNewChat_TransparentChat")
             .setApplyIf(() -> TweaksConfig.transparentChat)
             .setPhase(Phase.EARLY)),
+    CLEAN_CHAT_LOGS(new MixinBuilder()
+            .addClientMixins("minecraft.MixinGuiNewChat_CleanChatLogs")
+            .setApplyIf(() -> TweaksConfig.cleanChatLogs)
+            .setPhase(Phase.EARLY)),
     FIX_ENTITY_ATTRIBUTES_RANGE(new MixinBuilder()
             .addClientMixins("minecraft.MixinNetHandlerPlayClient_FixEntityAttributesRange")
             .setApplyIf(() -> FixesConfig.fixEntityAttributesRange)
@@ -206,9 +220,32 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinEnumChatFormatting_FastFormat")
             .setApplyIf(() -> SpeedupsConfig.speedupRemoveFormatting)
             .setPhase(Phase.EARLY)),
-    SPEEDUP_GRASS_BLOCK_RANDOM_TICKING(new MixinBuilder("Speed up grass block random ticking")
-            .addCommonMixins("minecraft.MixinBlockGrass")
-            .setApplyIf(() -> SpeedupsConfig.speedupGrassBlockRandomTicking)
+    PREVENT_LOADING_CHUNKS_WHEN_TICKING_BLOCKS(new MixinBuilder()
+            .addCommonMixins(
+                    "minecraft.chunkloading.blocks.MixinBlockCocoa",
+                    "minecraft.chunkloading.blocks.MixinBlockCrops",
+                    "minecraft.chunkloading.blocks.MixinBlockFire",
+                    "minecraft.chunkloading.blocks.MixinBlockGrass",
+                    "minecraft.chunkloading.blocks.MixinBlockFarmland",
+                    "minecraft.chunkloading.blocks.MixinBlockMushroom",
+                    "minecraft.chunkloading.blocks.MixinBlockMycelium",
+                    "minecraft.chunkloading.blocks.MixinBlockSapling",
+                    "minecraft.chunkloading.blocks.MixinBlockStaticLiquid",
+                    "minecraft.chunkloading.blocks.MixinBlockStem",
+                    "minecraft.chunkloading.blocks.MixinBlockTorch",
+                    "minecraft.chunkloading.blocks.MixinBlockVine")
+            .setApplyIf(() -> SpeedupsConfig.preventLoadingChunksWhenTickingBlocks)
+            .setPhase(Phase.EARLY)),
+    PREVENT_LOADING_CHUNKS_WHEN_LIQUIDS_FLOW(new MixinBuilder()
+            .addCommonMixins(
+                    "minecraft.chunkloading.blocks.MixinBlockDynamicLiquid",
+                    "minecraft.chunkloading.blocks.MixinBlockFluidClassic",
+                    "minecraft.chunkloading.blocks.MixinBlockFluidFinite")
+            .setApplyIf(() -> SpeedupsConfig.preventLoadingChunksWhenLiquidsFlow)
+            .setPhase(Phase.EARLY)),
+    PREVENT_LOADING_CHUNKS_WHEN_PATH_FINDING(new MixinBuilder()
+            .addCommonMixins("minecraft.chunkloading.pathfinding.MixinPathNavigate")
+            .setApplyIf(() -> SpeedupsConfig.preventLoadingChunksWhenPathfinding)
             .setPhase(Phase.EARLY)),
     SPEEDUP_CHUNK_PROVIDER_CLIENT(new MixinBuilder("Speed up ChunkProviderClient")
             .addClientMixins("minecraft.MixinChunkProviderClient_RemoveChunkListing")
@@ -329,18 +366,51 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.packets.MixinS01PacketJoinGame_FixDimensionID")
             .setApplyIf(() -> FixesConfig.fixLoginDimensionIDOverflow)
             .setPhase(Phase.EARLY)),
+    ADD_MEMORY_CLEANING_SHUTDOWN_HOOKS(new MixinBuilder()
+            .addCommonMixins("memory.MixinMinecraftServer_ShutdownHook")
+            .addClientMixins("memory.MixinMinecraft_ShutdownHook")
+            .setPhase(Phase.EARLY)),
+    FIX_MINECRAFT_SERVER_LEAK(new MixinBuilder()
+            .addCommonMixins("memory.MixinMinecraftServer_ClearServerRef")
+            .setApplyIf(() -> MemoryConfig.leaks.fixMinecraftServerLeak)
+            .setPhase(Phase.EARLY)),
     FIX_WORLD_SERVER_LEAKING_UNLOADED_ENTITIES(new MixinBuilder()
-            .addCommonMixins("minecraft.MixinWorldServerUpdateEntities")
-            .setApplyIf(() -> FixesConfig.fixWorldServerLeakingUnloadedEntities)
+            .addCommonMixins("memory.MixinWorldServerUpdateEntities")
+            .setApplyIf(() -> MemoryConfig.leaks.fixWorldServerLeakingUnloadedEntities)
             .setPhase(Phase.EARLY)),
     FIX_SKIN_MANAGER_CLIENT_WORLD_LEAK(new MixinBuilder()
-            .addClientMixins("minecraft.MixinSkinManager$2")
-            .setApplyIf(() -> FixesConfig.fixSkinManagerLeakingClientWorld)
+            .addClientMixins("memory.MixinSkinManager$2")
+            .setApplyIf(() -> MemoryConfig.leaks.fixSkinManagerLeakingClientWorld)
+            .setPhase(Phase.EARLY)),
+    FIX_ITEM_RENDERER_ITEM_LEAK(new MixinBuilder()
+            .addClientMixins("memory.ItemRendererAccessor")
+            .setApplyIf(() -> MemoryConfig.leaks.fixEntityRendererItemRendererLeak)
             .setPhase(Phase.EARLY)),
     FIX_REDSTONE_TORCH_WORLD_LEAK(new MixinBuilder("Fix world leak in redstone torch")
-            .addCommonMixins("minecraft.MixinBlockRedstoneTorch")
-            .setApplyIf(() -> FixesConfig.fixRedstoneTorchWorldLeak)
+            .addCommonMixins("memory.MixinBlockRedstoneTorch")
+            .setApplyIf(() -> MemoryConfig.leaks.fixRedstoneTorchWorldLeak)
             .addExcludedMod(TargetedMod.BUGTORCH)
+            .setPhase(Phase.EARLY)),
+    FIX_WORLD_MAP_STORAGE_LEAK(new MixinBuilder()
+            .addCommonMixins("memory.WorldAccessor_ClearMapStorage")
+            .setApplyIf(() -> MemoryConfig.leaks.fixWorldMapStorageLeak)
+            .setPhase(Phase.EARLY)),
+    FIX_RENDERERS_WORLD_LEAK(new MixinBuilder()
+            .addClientMixins("memory.MixinRenderGlobal_FixWordLeak")
+            .setApplyIf(() -> MemoryConfig.leaks.fixRenderersWorldLeak)
+            .setPhase(Phase.EARLY)),
+    FIX_NETHANDLER_MAPSTORAGE_LEAK(new MixinBuilder()
+            .addClientMixins("memory.MixinNetHandlerPlayClient_ClearMapStorage")
+            .setApplyIf(() -> MemoryConfig.leaks.fixNetHandlerClientWorldLeak)
+            .setPhase(Phase.EARLY)),
+    FIX_ENTITY_RENDERER_POINTED_ENTITY_LEAK(new MixinBuilder()
+            .addClientMixins("memory.MixinEntityRenderer_ClearPointedEntity")
+            .setApplyIf(() -> MemoryConfig.leaks.fixPointedEntityLeak)
+            .setPhase(Phase.EARLY)),
+    FIX_ENCHANTMENT_HELPER_WORLD_LEAK(new MixinBuilder()
+            .addCommonMixins("memory.MixinEnchantmentHelper_FixLeak")
+            .setApplyIf(() -> MemoryConfig.leaks.fixEnchantmentHelperLeak)
+            .addExcludedMod(TargetedMod.ARCHAICFIX)
             .setPhase(Phase.EARLY)),
     FIX_ARROW_WRONG_LIGHTING(new MixinBuilder()
             .addClientMixins("minecraft.MixinRendererLivingEntity")
@@ -354,12 +424,6 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinMinecraft_UnfocusedFullscreen")
             .setApplyIf(() -> FixesConfig.fixUnfocusedFullscreen)
             .addExcludedMod(TargetedMod.ARCHAICFIX)
-            .setPhase(Phase.EARLY)),
-    FIX_RENDERERS_WORLD_LEAK(new MixinBuilder()
-            .addClientMixins(
-                    "minecraft.MixinMinecraft_ClearRenderersWorldLeak",
-                    "minecraft.MixinRenderGlobal_FixWordLeak")
-            .setApplyIf(() -> FixesConfig.fixRenderersWorldLeak)
             .setPhase(Phase.EARLY)),
     FIX_OPTIFINE_CHUNKLOADING_CRASH(new MixinBuilder()
             .setApplyIf(() -> FixesConfig.fixOptifineChunkLoadingCrash)
@@ -381,7 +445,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.hidePotionParticlesFromSelf)
             .setPhase(Phase.EARLY)),
     DIMENSION_MANAGER_DEBUG(new MixinBuilder()
-            .addCommonMixins("minecraft.MixinDimensionManager")
+            .addCommonMixins("debug.MixinDimensionManager")
             .setApplyIf(() -> DebugConfig.dimensionManagerDebug)
             .setPhase(Phase.EARLY)),
     OPTIMIZE_TILEENTITY_REMOVAL(new MixinBuilder()
@@ -410,7 +474,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.squashBedErrorMessage)
             .setPhase(Phase.EARLY)),
     CHUNK_SAVE_CME_DEBUG(new MixinBuilder("Add debugging code to Chunk Save CME")
-            .addCommonMixins("minecraft.nbt.MixinNBTTagCompound_CheckCME")
+            .addCommonMixins("debug.MixinNBTTagCompound_CheckCME")
             .setApplyIf(() -> DebugConfig.chunkSaveCMEDebug)
             .addExcludedMod(TargetedMod.DRAGONAPI)
             .setPhase(Phase.EARLY)),
@@ -447,10 +511,23 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinSpawnerAnimals_optimizeSpawning",
                     "minecraft.MixinSpawnListEntry_optimizeSpawning")
             .setApplyIf(() -> SpeedupsConfig.optimizeMobSpawning)
+            .setPhase(Phase.EARLY)),
+    OPTIMIZE_MOB_SPAWNING_NULL_VANILLA_MAP(new MixinBuilder("Null out vanilla eligibleChunksForSpawning HashMap")
+            .addCommonMixins("minecraft.MixinSpawnerAnimals_nullVanillaMap")
+            .setApplyIf(() -> SpeedupsConfig.optimizeMobSpawning)
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
+    SPAWN_CONTEXT(new MixinBuilder("Adds spawn context field to World for spawn reason routing")
+            .addCommonMixins("minecraft.MixinWorld_SpawnContext")
+            .setApplyIf(() -> SpeedupsConfig.optimizeMobSpawning)
+            .setPhase(Phase.EARLY)),
+    BUKKIT_SPAWN_REASON(new MixinBuilder("Routes spawnEntityInWorld through Bukkit addEntity with spawn reason")
+            .addCommonMixins("minecraft.MixinWorld_BukkitSpawnReason")
+            .setApplyIf(() -> SpeedupsConfig.optimizeMobSpawning)
+            .addRequiredMod(TargetedMod.BUKKIT)
+            .setPhase(Phase.EARLY)),
     RENDER_DEBUG(new MixinBuilder()
-            .addClientMixins("minecraft.MixinRenderGlobal")
+            .addClientMixins("debug.MixinRenderGlobal")
             .setApplyIf(() -> DebugConfig.renderDebug)
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
@@ -545,7 +622,9 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.creativeTabLocalizationOverrides)
             .setPhase(Phase.EARLY)),
     FIX_CHAT_COLOR_WRAPPING(new MixinBuilder("Fix wrapped chat lines missing colors")
-            .addClientMixins("minecraft.MixinGuiNewChat_FixColorWrapping")
+            .addClientMixins(
+                    "minecraft.MixinGuiNewChat_FixColorWrapping",
+                    "minecraft.MixinGuiTextField_FixColorScroll")
             .setApplyIf(() -> FixesConfig.fixChatWrappedColors)
             .setPhase(Phase.EARLY)),
     COMPACT_CHAT(new MixinBuilder()
@@ -633,6 +712,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinWorldServer_LimitUpdateRecursion")
             .setApplyIf(() -> FixesConfig.limitRecursiveBlockUpdateDepth >= 0)
             .setPhase(Phase.EARLY)),
+    FIX_WORLDGEN_LIQUIDS_RECURSION(new MixinBuilder("Prevent recursive spring generation updates")
+            .addCommonMixins("minecraft.MixinWorldGenLiquids_NoImmediateUpdates")
+            .setApplyIf(() -> FixesConfig.fixWorldGenLiquidsRecursion)
+            .setPhase(Phase.EARLY)),
     ADD_MOD_CONFIG_SEARCHBAR(new MixinBuilder("Adds a search bar to the mod config GUI")
             .addClientMixins("fml.MixinGuiConfig")
             .setApplyIf(() -> TweaksConfig.addModConfigSearchBar)
@@ -663,9 +746,9 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinBlockFireSpread")
             .setApplyIf(() -> FixesConfig.fixFireSpread)
             .setPhase(Phase.EARLY)),
-    MEMORY_FIXES_CLIENT(new MixinBuilder("Memory fixes")
+    MEMORY_FIXES_CLIENT(new MixinBuilder()
             .addClientMixins("memory.MixinFMLClientHandler")
-            .setApplyIf(() -> FixesConfig.enableMemoryFixes)
+            .setApplyIf(() -> MemoryConfig.allocs.clearFMLTextureErrors)
             .setPhase(Phase.EARLY)),
     FAST_RANDOM(new MixinBuilder("Replaces uses of stdlib Random with a faster one")
             .addCommonMixins(
@@ -692,6 +775,38 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.fastload.MixinBlock_FastLookup")
             .setApplyIf(() -> SpeedupsConfig.fastBlockLookup)
             .setPhase(Phase.EARLY)),
+    SPEEDUP_LEAF_DECAY(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinBlockLeaves_BFSDecay")
+            .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
+            .setPhase(Phase.EARLY)),
+    SPEEDUP_BOP_LEAF_DECAY(new MixinBuilder()
+            .addCommonMixins(
+                    "bfsleafdecay.MixinBlockBOPAppleLeaves",
+                    "bfsleafdecay.MixinBlockBOPColorizedLeaves",
+                    "bfsleafdecay.MixinBlockBOPLeaves",
+                    "bfsleafdecay.MixinBlockBOPPermsimmonLeaves")
+            .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_PAM_NETHER_LEAF_DECAY(new MixinBuilder()
+            .addCommonMixins("bfsleafdecay.MixinBlockNetherLeaves")
+            .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
+            .addRequiredMod(TargetedMod.HARVESTTHENETHER)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_THAUMCRAFT_LEAF_DECAY(new MixinBuilder()
+            .addCommonMixins("bfsleafdecay.MixinBlockMagicalLeaves")
+            .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_WITCHERY_LEAF_DECAY(new MixinBuilder()
+            .addCommonMixins("bfsleafdecay.MixinBlockWitchLeaves")
+            .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
+            .addRequiredMod(TargetedMod.WITCHERY)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_FALLING_BLOCK_TICK(new MixinBuilder("Skip useless falling block tick scheduling")
+            .addCommonMixins("minecraft.MixinBlockFalling_SkipUselessTick")
+            .setApplyIf(() -> SpeedupsConfig.skipUselessFallingBlockTicks)
+            .setPhase(Phase.EARLY)),
     SPEEDUP_PENDING_TICK_LOOKUP(new MixinBuilder("Spatial index for pending block updates")
             .addCommonMixins("minecraft.MixinWorldServer_PendingTickIndex")
             .setApplyIf(() -> SpeedupsConfig.speedupPendingTickLookup)
@@ -701,6 +816,24 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.fastload.MixinChunkProviderServer_FastUnload")
             .setApplyIf(() -> SpeedupsConfig.speedupChunkUnload)
             .addExcludedMod(TargetedMod.BUKKIT)
+            .setPhase(Phase.EARLY)),
+    ENTITY_CHUNK_LOAD_GUARD(new MixinBuilder("Prevent entity ticks from triggering chunk generation")
+            .addCommonMixins("minecraft.fastload.MixinChunkProviderServer_EntityGuard")
+            .setApplyIf(() -> SpeedupsConfig.preventEntityChunkLoading)
+            .addExcludedMod(TargetedMod.BUKKIT)
+            .setPhase(Phase.EARLY)),
+    ENTITY_CHUNK_LOAD_GUARD_BUKKIT(new MixinBuilder("Prevent entity ticks from triggering chunk generation (Bukkit)")
+            .addCommonMixins("minecraft.fastload.MixinChunkProviderServer_EntityGuard_Bukkit")
+            .setApplyIf(() -> SpeedupsConfig.preventEntityChunkLoading)
+            .addRequiredMod(TargetedMod.BUKKIT)
+            .setPhase(Phase.EARLY)),
+    THROTTLE_CHUNK_GENERATION(new MixinBuilder("Spread chunk generation across ticks to prevent lag spikes")
+            .addCommonMixins(
+                    "minecraft.fastload.MixinMinecraftServer_TickStart",
+                    "minecraft.fastload.MixinChunkProviderServer_DeferPopulation",
+                    "minecraft.fastload.MixinPlayerManager_ThrottleChunkGen",
+                    "minecraft.fastload.MixinChunk_SendWithoutPopulation")
+            .setApplyIf(() -> SpeedupsConfig.throttleChunkGeneration)
             .setPhase(Phase.EARLY)),
     FAST_CHUNK_SENDING(new MixinBuilder("Removes hard caps on chunk sending speed")
             .addCommonMixins("minecraft.fastload.MixinEntityPlayerMP")
@@ -717,11 +850,6 @@ public enum Mixins implements IMixins {
     FIX_PLAYER_BLOCK_PLACEMENT_DISTANCE_CHECK(new MixinBuilder("Fix wrong block placement distance check")
             .addCommonMixins("minecraft.MixinNetHandlePlayServer_FixWrongBlockPlacementCheck")
             .setApplyIf(() -> FixesConfig.fixWrongBlockPlacementDistanceCheck)
-            .setPhase(Phase.EARLY)),
-    PREVENT_LAVA_CHUNK_LOADING(new MixinBuilder("Prevent lava blocks from loading chunks")
-            .addExcludedMod(TargetedMod.LOTR)
-            .addCommonMixins("minecraft.MixinBlockStaticLiquid")
-            .setApplyIf(() -> SpeedupsConfig.lavaChunkLoading)
             .setPhase(Phase.EARLY)),
     FIX_ITEM_BOUNCING(new MixinBuilder("Fixes items bouncing on stairs and other blocks with odd hitboxes")
             .addCommonMixins("minecraft.MixinEntityItem_BouncingFix")
@@ -745,6 +873,14 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.fastItemEntityPhysics)
             .addExcludedMod(TargetedMod.FALSETWEAKS)
             .setPhase(Phase.EARLY)),
+    FIX_FENCE_RIGHT_CLICK(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinBlockFence_RightClick")
+            .setApplyIf(() -> FixesConfig.fixFenceRightClick)
+            .setPhase(Phase.EARLY)),
+    FIX_ENTITY_GRAVITY(new MixinBuilder("Fixes entity having buggy gravity")
+            .addClientMixins("minecraft.MixinEntityLivingBase_GravityFix")
+            .setApplyIf(() -> FixesConfig.fixEntityGravity)
+            .setPhase(Phase.EARLY)),
     BETTER_MOD_LIST(new MixinBuilder()
             .addClientMixins(
                     "fml.MixinGuiModList",
@@ -759,9 +895,9 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)),
     FIX_EVENTBUS_MEMORY_LEAK(new MixinBuilder("Fix EventBus keeping object references after unregistering event handlers.")
             .addCommonMixins(
-                    "fml.MixinListenerListInst",
-                    "fml.MixinEventBus")
-            .setApplyIf(() -> FixesConfig.fixEventBusMemoryLeak)
+                    "memory.MixinListenerListInst",
+                    "memory.MixinEventBus")
+            .setApplyIf(() -> MemoryConfig.leaks.fixEventBusMemoryLeak)
             .setPhase(Phase.EARLY)),
     ADD_HUNGER_GAMERULE(new MixinBuilder()
             .addCommonMixins(
@@ -771,21 +907,23 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.hungerGameRule)
             .setPhase(Phase.EARLY)),
     DEBUG_EVENT_REGISTRATION(new MixinBuilder()
-            .addCommonMixins("fml.MixinEventBus_DebugRegistration")
+            .addCommonMixins("debug.MixinEventBus_DebugRegistration")
             .setApplyIf(() -> Boolean.getBoolean("hodgepodge.logEventTimes"))
             .setPhase(Phase.EARLY)),
     DEBUG_DUMP_TEXTURES_SIZES(new MixinBuilder()
-            .addClientMixins("minecraft.debug.MixinDynamicTexture", "minecraft.debug.MixinTextureAtlasSprite")
+            .addClientMixins("debug.MixinDynamicTexture", "debug.MixinTextureAtlasSprite")
             .setApplyIf(() -> Boolean.getBoolean("hodgepodge.debugtextures"))
             .setPhase(Phase.EARLY)),
     FIX_HOUSE_CHAR_RENDERING(new MixinBuilder()
             .addClientMixins("minecraft.MixinFontRenderer_House")
             .setApplyIf(() -> FixesConfig.fixHouseCharRendering)
             .setPhase(Phase.EARLY)),
-    CACHE_LAST_MATCHING_RECIPES(new MixinBuilder()
-            .addCommonMixins("minecraft.MixinCraftingManager")
-            .setApplyIf(() -> SpeedupsConfig.cacheLastMatchingRecipe)
-            .setPhase(Phase.EARLY)),
+    FIX_CHUNK_LOADING_FROM_BLOCK_UPDATES(new MixinBuilder("Prevent block and entity updates from loading unloaded chunks")
+            .setPhase(Phase.EARLY)
+            .setApplyIf(() -> FixesConfig.preventChunkLoadingFromBlockUpdates)
+            .addCommonMixins(
+                    "minecraft.chunkloading.MixinWorldServer_PreventChunkLoading",
+                    "minecraft.chunkloading.MixinWorld_PreventChunkLoading")),
     REMOVE_INVALID_ENTITES(new MixinBuilder()
             .addCommonMixins("minecraft.MixinChunk_FixInvalidEntity")
             .setApplyIf(() -> FixesConfig.removeInvalidChunkEntites)
@@ -802,7 +940,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.hideDeprecatedIdNotice)
             .setPhase(Phase.EARLY)),
     FIX_PISTON_OUT_OF_BOUNDS(new MixinBuilder()
-            .addCommonMixins("minecraft.MixinTileEntityPiston", "minecraft.MixinBlockPistonBase")
+            .addCommonMixins("minecraft.MixinTileEntityPiston", "minecraft.MixinBlockPistonBase", "minecraft.MixinItemPiston")
             .setApplyIf(() -> FixesConfig.fixInvalidPistonCrashes)
             .setPhase(Phase.EARLY)),
     IMPROVE_REDSTONE_HITBOX(new MixinBuilder("Add a accurate hitbox to the redstone wire")
@@ -848,6 +986,14 @@ public enum Mixins implements IMixins {
     FIX_BREAKING_SPECIAL_ARMOR_ON_BLOCK_FALL(new MixinBuilder("Fix breaking electric and other special armor helmet when a block falls on your head")
             .addCommonMixins("minecraft.MixinEntityLivingBase_FixBreakingSpecialArmor")
             .setApplyIf(() -> FixesConfig.fixBreakingSpecialArmorHelmetOnBlockFall)
+            .setPhase(Phase.EARLY)),
+    FIX_SAVE_FILE_WRITTEN_TO_EXIST_DIRECTORY(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinGuiCreateWorld_NotWriteToExistDir")
+            .setApplyIf(() -> FixesConfig.fixSaveFileWrittenToExistingDirectory)
+            .setPhase(Phase.EARLY)),
+    FIX_FAKE_PLAYER_CHAT_CRASH(new MixinBuilder()
+            .addCommonMixins("forge.MixinFakePlayer")
+            .setApplyIf(() -> FixesConfig.fixFakePlayerChatCrash)
             .setPhase(Phase.EARLY)),
 
     // Ic2 adjustments
@@ -997,7 +1143,11 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.THERMALEXPANSION)
             .setApplyIf(() -> ASMConfig.cofhWorldTransformer)
             .setPhase(Phase.LATE)),
-
+    COFH_NULL_SMART_BYTE_ARRAY(new MixinBuilder("Fix NBTTagSmartByteArray sending null to NBTTagByteArray causing NPE when saving chunks")
+            .addCommonMixins("cofhcore.MixinNBTTagSmartByteArray")
+            .addRequiredMod(TargetedMod.COFH_CORE)
+            .setApplyIf(() -> FixesConfig.fixCofhNullByteArray)
+            .setPhase(Phase.EARLY)),
     COFH_COMMAND_TPX_FIX(new MixinBuilder("Fix logic of /cofh tpx")
             .addCommonMixins("cofhcore.MixinCoFHCommandTpxFix")
             .setApplyIf(() -> FixesConfig.fixCofhTpxCommand)
@@ -1159,6 +1309,21 @@ public enum Mixins implements IMixins {
                     "biomesoplenty.MixinBOPEventHandler",
                     "biomesoplenty.MixinTrailManager")
             .setApplyIf(() -> TweaksConfig.removeBOPDonatorEffect)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_BOP_ENTITY_PIXIE(new MixinBuilder("Use fast atan2 for Pixie yaw calculation")
+            .addCommonMixins("biomesoplenty.MixinEntityPixie_FastAtan2")
+            .setApplyIf(() -> SpeedupsConfig.speedupBOPEntityPixie)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_BOP_BIOME_DECORATION(new MixinBuilder("Cache allocations in BOP biome decoration")
+            .addCommonMixins(
+                    "biomesoplenty.MixinRandomForcedPositiveOwned_Reusable",
+                    "biomesoplenty.MixinBOPBiomeDecorator_CacheRandom",
+                    "biomesoplenty.MixinWorldGenBOPFlora_CacheItemStack",
+                    "biomesoplenty.MixinWorldGenBOPTallGrass_CacheItemStack",
+                    "biomesoplenty.MixinBiomeFeatures_CacheFields")
+            .setApplyIf(() -> SpeedupsConfig.speedupBOPBiomeDecoration)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
 
@@ -1535,6 +1700,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixWitcheryDemonShiftClick)
             .addRequiredMod(TargetedMod.WITCHERY)
             .setPhase(Phase.LATE)),
+    FIX_WITCHERY_ENUM_VALUES_SPAM(new MixinBuilder()
+            .addCommonMixins("witchery.MixinExtendedPlayer_EnumValuesSpam")
+            .setApplyIf(() -> MemoryConfig.allocs.fixWitcheryEnumValuesSpam)
+            .addRequiredMod(TargetedMod.WITCHERY)
+            .setPhase(Phase.LATE)),
 
     // Various Exploits/Fixes
     BIBLIOCRAFT_PACKET_FIX(new MixinBuilder("Packet Fix")
@@ -1545,6 +1715,11 @@ public enum Mixins implements IMixins {
     BIBLIOCRAFT_PATH_SANITIZATION_FIX(new MixinBuilder("Path sanitization fix")
             .addCommonMixins("bibliocraft.MixinPathSanitization")
             .setApplyIf(() -> FixesConfig.fixBibliocraftPathSanitization)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
+            .setPhase(Phase.LATE)),
+    BIBLIOCRAFT_NO_PAUSE_GUI_CLIPBOARD(new MixinBuilder()
+            .addCommonMixins("bibliocraft.MixinGuiClipboard_NoPause")
+            .setApplyIf(() -> FixesConfig.noPauseGuiClipboard)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
     ZTONES_PACKET_FIX(new MixinBuilder("Packet Fix")

@@ -159,7 +159,7 @@ public class SimulationDistanceHelper {
 
         int simulationDistance = getSimulationDistance();
         for (EntityPlayer player : world.playerEntities) {
-            if (player.getEntityWorld() != world) {
+            if (player.getEntityWorld().provider.dimensionId != world.provider.dimensionId) {
                 continue;
             }
             int playerCX = (int) player.posX >> 4;
@@ -230,7 +230,7 @@ public class SimulationDistanceHelper {
 
         // New players, or moved players?
         for (EntityPlayer player : world.playerEntities) {
-            if (player.getEntityWorld() != world) {
+            if (player.getEntityWorld().provider.dimensionId != world.provider.dimensionId) {
                 continue;
             }
             ChunkCoordIntPair playerPos = new ChunkCoordIntPair((int) player.posX >> 4, (int) player.posZ >> 4);

@@ -70,6 +70,7 @@ public enum TargetedMod implements ITargetMod {
     PORTAL_GUN("PortalGun"),
     PROJECTE("ProjectE"),
     RAILCRAFT("Railcraft"),
+    SUPERNOVA("com.mitchej123.supernova.core.SupernovaCore", "supernova"),
     THAUMCRAFT("Thaumcraft"), // "thaumcraft.codechicken.core.launch.DepLoader"
     THERMALDYNAMICS("ThermalDynamics"),
     THERMALEXPANSION("ThermalExpansion"),

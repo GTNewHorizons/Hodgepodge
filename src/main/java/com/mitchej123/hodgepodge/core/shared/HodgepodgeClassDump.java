@@ -12,12 +12,21 @@ public class HodgepodgeClassDump {
         }
     }
 
-    public static void dumpRFBClass(String className, ClassNodeHandle classNode, Object transformer) {
+    public static void dumpClass(String className, ClassNodeHandle classNode, Object transformer) {
         if (EarlyConfig.dumpASMClass) {
             final byte[] originalBytes = classNode.getOriginalBytes();
             final byte[] transformedBytes = classNode.computeBytes();
             ASMUtil.saveAsRawClassFile(originalBytes, className + "_PRE", transformer);
             ASMUtil.saveAsRawClassFile(transformedBytes, className + "_POST", transformer);
+        }
+    }
+
+    public static void dumpBytecode(String className, ClassNodeHandle classNode, Object transformer) {
+        if (EarlyConfig.dumpASMClass) {
+            final byte[] originalBytes = classNode.getOriginalBytes();
+            final byte[] transformedBytes = classNode.computeBytes();
+            ASMUtil.saveAsBytecodeFile(originalBytes, className + "_PRE", transformer);
+            ASMUtil.saveAsBytecodeFile(transformedBytes, className + "_POST", transformer);
         }
     }
 }

@@ -1,0 +1,38 @@
+package com.mitchej123.hodgepodge.mixins.early.minecraft;
+
+import java.util.Random;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockLeaves;
+import net.minecraft.world.World;
+
+import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import com.gtnewhorizon.gtnhlib.blocks.util.BFSLeafDecay;
+import com.llamalad7.mixinextras.sugar.Local;
+
+@Mixin(BlockLeaves.class)
+public class MixinBlockLeaves_BFSDecay {
+
+    /*
+     * Replaces vanilla flood-fill based decay with a BFS early exit approach. Injects after vanilla's isRemote and
+     * meta-bit checks so CallbackInfo is only allocated when decay actually needs processing. Should work with BugTorch
+     */
+    @Inject(
+            method = "updateTick",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/block/BlockLeaves;field_150128_a:[I",
+                    ordinal = 0,
+                    opcode = Opcodes.GETFIELD),
+            cancellable = true)
+    private void hodgepodge$bfsDecay(World world, int x, int y, int z, Random random, CallbackInfo ci,
+            @Local(name = "l") int meta, @Local(name = "b0") byte range) {
+        BFSLeafDecay.handleDecayChecked((Block) (Object) this, world, x, y, z, meta, range);
+        ci.cancel();
+    }
+}

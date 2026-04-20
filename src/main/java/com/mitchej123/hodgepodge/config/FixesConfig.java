@@ -184,14 +184,6 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixPotionLimit;
 
-    @Config.Comment("Fix redstone torch leaking world")
-    @Config.DefaultBoolean(true)
-    public static boolean fixRedstoneTorchWorldLeak;
-
-    @Config.Comment("Fix EffectRenderer and RenderGlobal leaking world instance when leaving world")
-    @Config.DefaultBoolean(true)
-    public static boolean fixRenderersWorldLeak;
-
     @Config.Comment("Fix game window becoming not resizable after toggling fullscrean in any way")
     @Config.DefaultBoolean(true)
     public static boolean fixResizableFullscreen;
@@ -227,14 +219,6 @@ public class FixesConfig {
     @Config.Comment("Fixes village unchecked getBlock() calls")
     @Config.DefaultBoolean(true)
     public static boolean fixVillageUncheckedGetBlock;
-
-    @Config.Comment("Fix WorldServer leaking entities when no players are present in a dimension")
-    @Config.DefaultBoolean(true)
-    public static boolean fixWorldServerLeakingUnloadedEntities;
-
-    @Config.Comment("Fix skin manager leaking client world")
-    @Config.DefaultBoolean(true)
-    public static boolean fixSkinManagerLeakingClientWorld;
 
     @Config.Comment("Increase the maximum network packet size from the default of 2MiB")
     @Config.DefaultBoolean(true)
@@ -319,11 +303,16 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixCaseCommands;
 
+    // A stack overflow with water updates happens somewhere above 300 updates with default Java settings
     @Config.Comment("Limit the number of recursive cascading block updates during world generation to prevent stack overflow crashes, set to -1 to disable the limit.")
     @Config.RangeInt(min = -1)
-    @Config.DefaultInt(256) // A stack overflow with water updates happens somewhere above 300 updates with default Java
-                            // settings
+    @Config.DefaultInt(256)
     public static int limitRecursiveBlockUpdateDepth;
+
+    @Config.Comment("Prevent recursive immediate block updates during WorldGenLiquids spring generation")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixWorldGenLiquidsRecursion;
 
     @Config.Comment("Fix the buttons not being centered in the GuiConfirmOpenLink")
     @Config.DefaultBoolean(true)
@@ -374,30 +363,42 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixGlassBottleWaterFilling;
 
+    @Config.Comment("Fix the player arm swinging when right clicking a fence")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixFenceRightClick;
+
     @Config.Comment("Use correct egg particles instead of snowball ones (MC-7807)")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixEggParticles;
 
-    @Config.Comment("Fix EventBus keeping object references after unregistering event handlers.")
+    @Config.Comment("Fixes entity having buggy gravity")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean fixEventBusMemoryLeak;
+    public static boolean fixEntityGravity;
 
     @Config.Comment("Render the house character (\u2302 - Unicode index 2302) in the Minecraft font.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixHouseCharRendering;
 
-    @Config.Comment("Remove invalid Entites in chunks.")
+    @Config.Comment("""
+            [Game Breaking Config] Prevents block and entity updates from loading unloaded chunks.
+            This is very likely to break some behaviors in game in favor of better TPS stability.
+            This is intended for server owners facing TPS issues. If you play singleplayer just be
+            sure all your infrastructure is properly chunk loaded. If you are still facing TPS issues
+            make a CPU profile and we'll try to patch the mod causing it.
+            DO NOT report any bugs if you have this enabled.
+            Disable the setting and see if the bug still happens before reporting anything""")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean preventChunkLoadingFromBlockUpdates;
+
+    @Config.Comment("Remove invalid Entities in chunks.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean removeInvalidChunkEntites;
-
-    @Config.Comment("Clears the reference to the minecraft server once it has stopped")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean fixMinecraftServerLeak;
 
     @Config.Comment("Fixes pistons with metadata over 5 from crashing worlds when powered.")
     @Config.DefaultBoolean(true)
@@ -444,6 +445,16 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixBreakingSpecialArmorHelmetOnBlockFall;
 
+    @Config.Comment("Fix Minecraft creating new world in folders that already exists")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixSaveFileWrittenToExistingDirectory;
+
+    @Config.Comment("Fix a crash caused when a mod tries to send a chat message to a FakePlayer")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixFakePlayerChatCrash;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -458,10 +469,6 @@ public class FixesConfig {
     @Config.Comment("Remove old/stale/outdated update checks.")
     @Config.DefaultBoolean(true)
     public static boolean removeUpdateChecks;
-
-    @Config.Comment("Enable multiple fixes to reduce RAM usage")
-    @Config.DefaultBoolean(true)
-    public static boolean enableMemoryFixes;
 
     @Config.Comment("Fix broken modlist entries due to wrong mcmod.info files")
     @Config.DefaultBoolean(true)
@@ -492,6 +499,10 @@ public class FixesConfig {
     @Config.Comment("Fix Bibliocraft path sanitization")
     @Config.DefaultBoolean(true)
     public static boolean fixBibliocraftPathSanitization;
+
+    @Config.Comment("Don't pause the game when using the Bibliocraft clipboard GUI")
+    @Config.DefaultBoolean(true)
+    public static boolean noPauseGuiClipboard;
 
     // Bibliowoods Forestry
 
@@ -533,9 +544,9 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixCofhTpxCommand;
 
-    @Config.Comment("Fix CoFH WorldServer leak in main mod class")
+    @Config.Comment("Fix NBTTagSmartByteArray sending null to NBTTagByteArray causing NPE when saving chunks")
     @Config.DefaultBoolean(true)
-    public static boolean fixCoFHWorldLeak;
+    public static boolean fixCofhNullByteArray;
 
     // Extra TiC
 
