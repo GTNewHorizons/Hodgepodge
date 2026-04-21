@@ -15,6 +15,7 @@ import com.mitchej123.hodgepodge.commands.AllocationsCommand;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
+import com.mitchej123.hodgepodge.util.FontRenderingCompat;
 import com.mitchej123.hodgepodge.util.ManagedEnum;
 
 import biomesoplenty.common.eventhandler.client.gui.WorldTypeMessageEventHandler;
@@ -31,6 +32,7 @@ public class HodgepodgeClient {
     public static final ManagedEnum<RenderDebugMode> renderDebugMode = new ManagedEnum<>(RenderDebugMode.REDUCED);
 
     public static void postInit() {
+        FontRenderingCompat.registerFallbackIfNoAngelica();
 
         if (DebugConfig.renderDebug) {
             renderDebugMode.set(DebugConfig.renderDebugMode);
