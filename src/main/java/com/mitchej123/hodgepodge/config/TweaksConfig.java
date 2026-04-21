@@ -400,7 +400,7 @@ public class TweaksConfig {
     // ProjectRed
 
     @Config.Comment("Fix Project Red components popping off on unloaded chunks")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     public static boolean fixComponentsPoppingOff;
 
     @Config.Comment("Fix hotbars being dark when Project Red is installed")
