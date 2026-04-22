@@ -8,6 +8,10 @@ public class TweaksConfig {
 
     // Minecraft
 
+    @Config.Comment("Sign input counts visible characters only, ignoring color format codes like &RRGGBB")
+    @Config.DefaultBoolean(true)
+    public static boolean signInputIgnoresFormatCodes;
+
     @Config.Comment("Adds a button in the sounds menu to reload the sound system without needing to press F3 + S")
     @Config.DefaultBoolean(true)
     public static boolean reloadSoundsButton;
