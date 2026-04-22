@@ -818,12 +818,16 @@ public enum Mixins implements IMixins {
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
     ENTITY_CHUNK_LOAD_GUARD(new MixinBuilder("Prevent entity ticks from triggering chunk generation")
-            .addCommonMixins("minecraft.fastload.MixinChunkProviderServer_EntityGuard")
+            .addCommonMixins(
+                    "minecraft.fastload.MixinChunkProviderServer_EntityGuard",
+                    "minecraft.fastload.ServerConfigurationManager_FixTeleporter")
             .setApplyIf(() -> SpeedupsConfig.preventEntityChunkLoading)
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
     ENTITY_CHUNK_LOAD_GUARD_BUKKIT(new MixinBuilder("Prevent entity ticks from triggering chunk generation (Bukkit)")
-            .addCommonMixins("minecraft.fastload.MixinChunkProviderServer_EntityGuard_Bukkit")
+            .addCommonMixins(
+                    "minecraft.fastload.MixinChunkProviderServer_EntityGuard_Bukkit",
+                    "minecraft.fastload.ServerConfigurationManager_FixTeleporter")
             .setApplyIf(() -> SpeedupsConfig.preventEntityChunkLoading)
             .addRequiredMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
