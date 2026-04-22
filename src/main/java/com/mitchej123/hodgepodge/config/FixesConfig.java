@@ -694,6 +694,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixIc2KeybindsInGuis;
 
+    @Config.Comment("Fix IC2 keybinds using hardware key state instead of KeyBinding state, preventing other mods from suppressing keys")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2KeybindsIgnoreKeyState;
+
     // Journey Map
 
     @Config.Comment("Prevents journeymap from using illegal character in file paths")
