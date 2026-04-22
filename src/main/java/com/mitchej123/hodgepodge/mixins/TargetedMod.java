@@ -64,8 +64,8 @@ public enum TargetedMod implements ITargetMod {
     MODERNKEYBINDING(null, null, "committee.nova.mkb.ModernKeyBinding"),
     MODULARPOWERSUITS("powersuits"),
     MORPHEUS("Morpheus"),
-    MRTJPCORE(new TargetModBuilder().setTargetClass("mrtjp.core.handler.MrTJPCoreMod")
-            .testModVersion("MrTJPCoreMod", version -> isVersionLessThan(version, "1.1.2-pre"))),
+    MRTJPCORE_V_BEFORE_113(new TargetModBuilder().setTargetClass("mrtjp.core.handler.MrTJPCoreMod")
+            .testModVersion("MrTJPCoreMod", version -> isVersionLessThan(version, "1.1.3"))),
     NOTENOUGHITEMS("codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
     OPTIFINE("optifine.OptiFineForgeTweaker", "Optifine"),
     PORTAL_GUN("PortalGun"),

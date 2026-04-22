@@ -1389,12 +1389,12 @@ public enum Mixins implements IMixins {
     FIX_HUD_LIGHTING_GLITCH(new MixinBuilder("HUD Lighting glitch")
             .addCommonMixins("mrtjpcore.MixinFXEngine")
             .setApplyIf(() -> TweaksConfig.fixHudLightingGlitch)
-            .addRequiredMod(TargetedMod.MRTJPCORE)
+            .addRequiredMod(TargetedMod.MRTJPCORE_V_BEFORE_113)
             .setPhase(Phase.LATE)),
     FIX_POPPING_OFF(new MixinBuilder()
             .addCommonMixins("mrtjpcore.MixinPlacementLib")
             .setApplyIf(() -> TweaksConfig.fixComponentsPoppingOff)
-            .addRequiredMod(TargetedMod.MRTJPCORE)
+            .addRequiredMod(TargetedMod.MRTJPCORE_V_BEFORE_113)
             .setPhase(Phase.LATE)),
 
     // Automagy
