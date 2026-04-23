@@ -14,7 +14,7 @@ import com.mitchej123.hodgepodge.config.TweaksConfig;
 public enum Mixins implements IMixins {
 
     // spotless:off
-    // Vanilla Fixes
+    // region Vanilla Fixes
     ONLY_LOAD_LANGUAGES_ONCE_PER_FILE(new MixinBuilder()
             .addCommonMixins("minecraft.MixinLanguageRegistry")
             .setApplyIf(() -> FixesConfig.onlyLoadLanguagesOnce)
@@ -999,8 +999,13 @@ public enum Mixins implements IMixins {
             .addCommonMixins("forge.MixinFakePlayer")
             .setApplyIf(() -> FixesConfig.fixFakePlayerChatCrash)
             .setPhase(Phase.EARLY)),
+    OPTIMIZE_WAVEFRONT_OBJECT_MODEL_LOADING(new MixinBuilder("Reduce regex overhead when loading object models")
+            .addClientMixins("forge.MixinWavefrontObject_OptimizeModelLoading")
+            .setApplyIf(() -> SpeedupsConfig.optimizeWavefrontObjectModelLoading)
+            .setPhase(Phase.EARLY)),
+    // endregion
 
-    // Ic2 adjustments
+    // region Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
             .addCommonMixins("ic2.MixinIc2WaterKinetic")
             .setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
@@ -1101,6 +1106,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixIc2KeybindsIgnoreKeyState)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
+    // endregion
 
     // Disable update checkers
     COFH_CORE_UPDATE_CHECK(new MixinBuilder("Yeet COFH Core Update Check")
