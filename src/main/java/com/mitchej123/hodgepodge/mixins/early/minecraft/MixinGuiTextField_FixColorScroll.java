@@ -71,11 +71,156 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         return FontRenderingCompat.HAS_PREPROCESS_TEXT ? FontRenderingCompat.preprocessText(s) : s;
     }
 
+    @Unique
+    private static String hodgepodge$getActiveEffects(String text) {
+        boolean wave = false, dinnerbone = false, rainbow = false;
+        for (int i = 0; i < text.length() - 1; i++) {
+            if (text.charAt(i) == '§') {
+                char code = Character.toLowerCase(text.charAt(i + 1));
+                if (code == 'r') {
+                    wave = false;
+                    dinnerbone = false;
+                    rainbow = false;
+                } else if (code == 'z') {
+                    wave = true;
+                } else if (code == 'v') {
+                    dinnerbone = true;
+                } else if (code == 'q') {
+                    rainbow = true;
+                } else if (ColorFormatUtils.isGradientTerminator(code)) {
+                    rainbow = false;
+                }
+                i++;
+            }
+        }
+        if (!wave && !dinnerbone && !rainbow) return "";
+        StringBuilder sb = new StringBuilder(6);
+        if (rainbow) sb.append('§').append('q');
+        if (wave) sb.append('§').append('z');
+        if (dinnerbone) sb.append('§').append('v');
+        return sb.toString();
+    }
+
+    @Unique
+    private static String hodgepodge$stripEffectCodes(String format) {
+        if (format.indexOf('q') == -1 && format.indexOf('z') == -1 && format.indexOf('v') == -1) return format;
+        StringBuilder sb = new StringBuilder(format.length());
+        for (int i = 0; i < format.length() - 1; i++) {
+            if (format.charAt(i) == '§') {
+                char code = Character.toLowerCase(format.charAt(i + 1));
+                if (code != 'q' && code != 'z' && code != 'v') {
+                    sb.append(format, i, i + 2);
+                }
+                i++;
+            }
+        }
+        return sb.toString();
+    }
+
+    @Unique
+    private static int hodgepodge$hsvToRgb(float hue) {
+        int h = (int) (hue / 60f) % 6;
+        float f = hue / 60f - h;
+        float r, g, b;
+        switch (h) {
+            case 0:
+                r = 1;
+                g = f;
+                b = 0;
+                break;
+            case 1:
+                r = 1 - f;
+                g = 1;
+                b = 0;
+                break;
+            case 2:
+                r = 0;
+                g = 1;
+                b = f;
+                break;
+            case 3:
+                r = 0;
+                g = 1 - f;
+                b = 1;
+                break;
+            case 4:
+                r = f;
+                g = 0;
+                b = 1;
+                break;
+            default:
+                r = 1;
+                g = 0;
+                b = 1 - f;
+                break;
+        }
+        return ((int) (r * 255) << 16) | ((int) (g * 255) << 8) | (int) (b * 255);
+    }
+
+    @Unique
+    private int hodgepodge$getRainbowCharOffset(int endPos) {
+        String fullText = this.text;
+        int end = Math.min(endPos, fullText.length());
+        int rainbowStart = -1;
+        for (int i = 0; i < end - 1; i++) {
+            if (fullText.charAt(i) != '§') continue;
+            char code = Character.toLowerCase(fullText.charAt(i + 1));
+            if (code == 'q') {
+                rainbowStart = i + 2;
+            } else if (ColorFormatUtils.isGradientTerminator(code)) {
+                rainbowStart = -1;
+                if (code == 'x' && i + ColorFormatUtils.SECTION_X_SEQ_LEN <= fullText.length()) {
+                    i += ColorFormatUtils.SECTION_X_SEQ_LEN - 1;
+                    continue;
+                } else if (code == 'g' && i + ColorFormatUtils.GRADIENT_SEQ_LEN <= fullText.length()) {
+                    i += ColorFormatUtils.GRADIENT_SEQ_LEN - 1;
+                    continue;
+                }
+            }
+            i++;
+        }
+        if (rainbowStart == -1 || rainbowStart >= end) return 0;
+        int count = 0;
+        for (int i = rainbowStart; i < end; i++) {
+            if (fullText.charAt(i) == '§' && i + 1 < end) {
+                i++;
+            } else {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    @Unique
+    private static String hodgepodge$expandRainbowToPerChar(String text, int startCharIdx, String extraPrefix) {
+        StringBuilder sb = new StringBuilder(text.length() * 16);
+        if (!extraPrefix.isEmpty()) sb.append(extraPrefix);
+        int charIdx = startCharIdx;
+        for (int i = 0; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            if (ch == '§' && i + 1 < text.length()) {
+                char code = Character.toLowerCase(text.charAt(i + 1));
+                if (ColorFormatUtils.isGradientTerminator(code)) {
+                    sb.append(text, i, text.length());
+                    return sb.toString();
+                }
+                sb.append(ch).append(text.charAt(i + 1));
+                i++;
+            } else {
+                float hue = (charIdx * 15f) % 360f;
+                sb.append(ColorFormatUtils.buildSectionX(hodgepodge$hsvToRgb(hue)));
+                sb.append(ch);
+                charIdx++;
+            }
+        }
+        return sb.toString();
+    }
+
     @Inject(method = "drawTextBox", at = @At("HEAD"))
     private void hodgepodge$preprocessOnDrawHead(CallbackInfo ci) {
         hodgepodge$swapped = false;
         String preprocessed = hodgepodge$safePreprocess(this.text);
-        if (preprocessed.length() == this.text.length()) {
+        if (preprocessed.equals(this.text)) {
             return;
         }
 
@@ -140,15 +285,22 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         }
         String prefix = this.text.substring(0, Math.min(this.lineScrollOffset, this.text.length()));
         String activeFormat = FontRenderer.getFormatFromString(prefix);
-        if (activeFormat.isEmpty()) {
+        String activeEffects = hodgepodge$getActiveEffects(prefix);
+        String colorAndStyles = hodgepodge$stripEffectCodes(activeFormat);
+        if (colorAndStyles.isEmpty() && activeEffects.isEmpty()) {
             return beforeCursor;
         }
-        if (activeFormat.length() >= ColorFormatUtils.GRADIENT_SEQ_LEN && activeFormat.charAt(0) == '\u00a7'
-                && activeFormat.charAt(1) == 'g') {
-            // Gradient scrolled past: expand continuation as per-char colors
-            return hodgepodge$expandScrolledGradientToPerChar(activeFormat, beforeCursor);
+        if (activeEffects.length() >= 2 && activeEffects.charAt(1) == 'q') {
+            int scrolledChars = hodgepodge$getRainbowCharOffset(this.lineScrollOffset);
+            String otherEffects = activeEffects.length() > 2 ? activeEffects.substring(2) : "";
+            return hodgepodge$expandRainbowToPerChar(beforeCursor, scrolledChars, otherEffects + colorAndStyles);
         }
-        return activeFormat + beforeCursor;
+        if (colorAndStyles.length() >= ColorFormatUtils.GRADIENT_SEQ_LEN && colorAndStyles.charAt(0) == '\u00a7'
+                && colorAndStyles.charAt(1) == 'g') {
+            String expanded = hodgepodge$expandScrolledGradientToPerChar(colorAndStyles, beforeCursor);
+            return activeEffects.isEmpty() ? expanded : activeEffects + expanded;
+        }
+        return activeEffects + colorAndStyles + beforeCursor;
     }
 
     /**
@@ -164,16 +316,24 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
     private String hodgepodge$fixCursorSplitColorCodes(String afterCursor) {
         String prefix = this.text.substring(0, Math.min(this.cursorPosition, this.text.length()));
         String activeFormat = FontRenderer.getFormatFromString(prefix);
-        if (activeFormat.isEmpty()) {
+        String activeEffects = hodgepodge$getActiveEffects(prefix);
+        String colorAndStyles = hodgepodge$stripEffectCodes(activeFormat);
+        if (colorAndStyles.isEmpty() && activeEffects.isEmpty()) {
             return afterCursor;
         }
-        if (activeFormat.length() >= ColorFormatUtils.GRADIENT_SEQ_LEN && activeFormat.charAt(0) == '\u00a7'
-                && activeFormat.charAt(1) == 'g') {
+        if (activeEffects.length() >= 2 && activeEffects.charAt(1) == 'q') {
+            int rainbowOffset = hodgepodge$getRainbowCharOffset(this.cursorPosition);
+            String otherEffects = activeEffects.length() > 2 ? activeEffects.substring(2) : "";
+            return hodgepodge$expandRainbowToPerChar(afterCursor, rainbowOffset, otherEffects + colorAndStyles);
+        }
+        if (colorAndStyles.length() >= ColorFormatUtils.GRADIENT_SEQ_LEN && colorAndStyles.charAt(0) == '\u00a7'
+                && colorAndStyles.charAt(1) == 'g') {
             // Expand to per-char §x colors (same path as before-cursor) to avoid
             // float rounding differences between per-char and §g gradient rendering
-            return hodgepodge$expandAfterCursorGradientToPerChar(activeFormat, afterCursor);
+            String expanded = hodgepodge$expandAfterCursorGradientToPerChar(colorAndStyles, afterCursor);
+            return activeEffects.isEmpty() ? expanded : activeEffects + expanded;
         }
-        return activeFormat + afterCursor;
+        return activeEffects + colorAndStyles + afterCursor;
     }
 
     /**
@@ -381,25 +541,52 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         int ri = 0;
         int pi = 0;
 
-        while (ri < raw.length() && pi < preprocessed.length()) {
+        while (ri < raw.length()) {
             map[ri] = pi;
 
-            if (raw.charAt(ri) == '&' && preprocessed.charAt(pi) == '\u00a7') {
-                if (pi + 1 < preprocessed.length() && preprocessed.charAt(pi + 1) == 'x') {
-                    int rawEnd = Math.min(ri + ColorFormatUtils.AMP_HEX_LEN, raw.length());
-                    for (int sub = 1; sub < rawEnd - ri; sub++) {
-                        map[ri + sub] = pi + sub * 2;
+            if (raw.charAt(ri) == '&' && ri + 1 < raw.length()) {
+                char next = Character.toLowerCase(raw.charAt(ri + 1));
+                int rawLen = 0;
+                int prepLen = 0;
+
+                if (next == 'g' && ColorFormatUtils.isAmpGradientAt(raw, ri)) {
+                    rawLen = ColorFormatUtils.AMP_GRADIENT_LEN;
+                    if (pi + 1 < preprocessed.length() && preprocessed.charAt(pi) == '\u00a7'
+                            && Character.toLowerCase(preprocessed.charAt(pi + 1)) == 'g') {
+                        prepLen = ColorFormatUtils.GRADIENT_SEQ_LEN;
+                    } else if (pi < preprocessed.length() && preprocessed.charAt(pi) == '\u00a7') {
+                        prepLen = 2;
                     }
-                    ri += ColorFormatUtils.AMP_HEX_LEN;
-                    pi += ColorFormatUtils.SECTION_X_SEQ_LEN;
-                } else {
-                    if (ri + 1 < raw.length()) {
-                        map[ri + 1] = pi + 1;
+                } else if (next == '#' && ColorFormatUtils.isAmpHexAt(raw, ri)) {
+                    rawLen = ColorFormatUtils.AMP_HEX_LEN;
+                    if (pi + 1 < preprocessed.length() && preprocessed.charAt(pi) == '\u00a7'
+                            && Character.toLowerCase(preprocessed.charAt(pi + 1)) == 'x') {
+                        prepLen = ColorFormatUtils.SECTION_X_SEQ_LEN;
+                    } else if (pi < preprocessed.length() && preprocessed.charAt(pi) == '\u00a7') {
+                        prepLen = 2;
                     }
-                    ri += 2;
-                    pi += 2;
+                } else if (ColorFormatUtils.VALID_AMP_SINGLE_CODES.indexOf(next) != -1) {
+                    rawLen = 2;
+                    if (next == 'q' || next == 'z' || next == 'v') {
+                        if (pi + 1 < preprocessed.length() && preprocessed.charAt(pi) == '\u00a7'
+                                && Character.toLowerCase(preprocessed.charAt(pi + 1)) == next) {
+                            prepLen = 2;
+                        }
+                    } else {
+                        prepLen = 2;
+                    }
                 }
-                continue;
+
+                if (rawLen > 0) {
+                    for (int sub = 1; sub < rawLen; sub++) {
+                        if (ri + sub < raw.length()) {
+                            map[ri + sub] = pi;
+                        }
+                    }
+                    ri += rawLen;
+                    pi += prepLen;
+                    continue;
+                }
             }
 
             ri++;
@@ -461,41 +648,24 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         if (!this.isFocused || !FontRenderingCompat.HAS_PREPROCESS_TEXT) return;
         if (this.text == null || this.text.indexOf('&') == -1) return;
 
-        if (keyCode == 203) { // LEFT
+        if (keyCode == 203 || keyCode == 205) { // LEFT or RIGHT
+            int dir = keyCode == 205 ? 1 : -1;
+            boolean forward = dir > 0;
             int target;
             if (GuiScreen.isShiftKeyDown()) {
                 if (GuiScreen.isCtrlKeyDown()) {
-                    target = this.getNthWordFromCursor(-1);
+                    target = this.getNthWordFromCursor(dir);
                 } else {
-                    target = this.getSelectionEnd() - 1;
+                    target = this.getSelectionEnd() + dir;
                 }
-                target = hodgepodge$snapPastAmpCodes(this.text, target, false);
+                target = hodgepodge$snapPastAmpCodes(this.text, target, forward);
                 this.setSelectionPos(target);
             } else if (GuiScreen.isCtrlKeyDown()) {
-                target = this.getNthWordFromCursor(-1);
-                target = hodgepodge$snapPastAmpCodes(this.text, target, false);
+                target = this.getNthWordFromCursor(dir);
+                target = hodgepodge$snapPastAmpCodes(this.text, target, forward);
                 this.setCursorPosition(target);
             } else {
-                target = hodgepodge$snapPastAmpCodes(this.text, this.selectionEnd - 1, false);
-                this.setCursorPosition(target);
-            }
-            cir.setReturnValue(true);
-        } else if (keyCode == 205) { // RIGHT
-            int target;
-            if (GuiScreen.isShiftKeyDown()) {
-                if (GuiScreen.isCtrlKeyDown()) {
-                    target = this.getNthWordFromCursor(1);
-                } else {
-                    target = this.getSelectionEnd() + 1;
-                }
-                target = hodgepodge$snapPastAmpCodes(this.text, target, true);
-                this.setSelectionPos(target);
-            } else if (GuiScreen.isCtrlKeyDown()) {
-                target = this.getNthWordFromCursor(1);
-                target = hodgepodge$snapPastAmpCodes(this.text, target, true);
-                this.setCursorPosition(target);
-            } else {
-                target = hodgepodge$snapPastAmpCodes(this.text, this.selectionEnd + 1, true);
+                target = hodgepodge$snapPastAmpCodes(this.text, this.selectionEnd + dir, forward);
                 this.setCursorPosition(target);
             }
             cir.setReturnValue(true);

@@ -43,18 +43,18 @@ public class LegacyColorFallback implements FontRendering.TextPreprocessor {
             if (c == SECTION && i + 1 < len) {
                 char next = Character.toLowerCase(text.charAt(i + 1));
 
-                if (next == 'x' && i + 13 < len) {
+                if (next == 'x' && i + ColorFormatUtils.SECTION_X_SEQ_LEN <= len) {
                     int rgb = parseHexPairs(text, i + 2, 6);
                     if (rgb != -1) {
                         sb.append(SECTION).append(nearestVanilla(rgb));
-                        i += 13;
+                        i += ColorFormatUtils.SECTION_X_SEQ_LEN - 1;
                         continue;
                     }
-                } else if (next == 'g' && i + 29 < len) {
+                } else if (next == 'g' && i + ColorFormatUtils.GRADIENT_SEQ_LEN <= len) {
                     int startRgb = parseSectionX(text, i + 2);
                     if (startRgb != -1) {
                         sb.append(SECTION).append(nearestVanilla(startRgb));
-                        i += 29;
+                        i += ColorFormatUtils.GRADIENT_SEQ_LEN - 1;
                         continue;
                     }
                 } else if (next == 'q' || next == 'z' || next == 'v') {
@@ -64,28 +64,31 @@ public class LegacyColorFallback implements FontRendering.TextPreprocessor {
             } else if (c == '&' && i + 1 < len) {
                 char next = Character.toLowerCase(text.charAt(i + 1));
 
-                if (next == '#' && i + 7 < len) {
+                if (next == '#' && i + ColorFormatUtils.AMP_HEX_LEN <= len) {
                     int rgb = parseHex6(text, i + 2);
                     if (rgb != -1) {
                         sb.append(SECTION).append(nearestVanilla(rgb));
-                        i += 7;
+                        i += ColorFormatUtils.AMP_HEX_LEN - 1;
                         continue;
                     }
-                } else if (next == 'g' && i + 17 < len && text.charAt(i + 2) == '&' && text.charAt(i + 3) == '#') {
-                    int rgb = parseHex6(text, i + 4);
-                    if (rgb != -1) {
-                        sb.append(SECTION).append(nearestVanilla(rgb));
-                        i += 17;
+                } else if (next == 'g' && i + ColorFormatUtils.AMP_GRADIENT_LEN <= len
+                        && text.charAt(i + 2) == '&'
+                        && text.charAt(i + 3) == '#') {
+                            int rgb = parseHex6(text, i + 4);
+                            if (rgb != -1) {
+                                sb.append(SECTION).append(nearestVanilla(rgb));
+                                i += ColorFormatUtils.AMP_GRADIENT_LEN - 1;
+                                continue;
+                            }
+                        } else
+                    if (next == 'q' || next == 'z' || next == 'v') {
+                        i += 1;
+                        continue;
+                    } else if (isVanillaCode(next)) {
+                        sb.append(SECTION).append(next);
+                        i += 1;
                         continue;
                     }
-                } else if (next == 'q' || next == 'z' || next == 'v') {
-                    i += 1;
-                    continue;
-                } else if (isVanillaCode(next)) {
-                    sb.append(SECTION).append(next);
-                    i += 1;
-                    continue;
-                }
             }
 
             sb.append(c);
@@ -121,7 +124,7 @@ public class LegacyColorFallback implements FontRendering.TextPreprocessor {
     }
 
     private static int parseSectionX(String str, int start) {
-        if (start + 14 > str.length()) return -1;
+        if (start + ColorFormatUtils.SECTION_X_SEQ_LEN > str.length()) return -1;
         if (str.charAt(start) != SECTION || Character.toLowerCase(str.charAt(start + 1)) != 'x') return -1;
         return parseHexPairs(str, start + 2, 6);
     }
