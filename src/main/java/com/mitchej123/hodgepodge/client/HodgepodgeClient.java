@@ -5,6 +5,7 @@ import java.util.Collections;
 import net.minecraftforge.classloading.FMLForgePlugin;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 import com.mitchej123.hodgepodge.Common;
@@ -15,6 +16,7 @@ import com.mitchej123.hodgepodge.commands.AllocationsCommand;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
+import com.mitchej123.hodgepodge.mixins.hooks.ClientLeaksCleaningHook;
 import com.mitchej123.hodgepodge.util.ManagedEnum;
 
 import biomesoplenty.common.eventhandler.client.gui.WorldTypeMessageEventHandler;
@@ -102,5 +104,12 @@ public class HodgepodgeClient {
     @SubscribeEvent
     public static void onClientDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         AsyncNBTParser.shutdown();
+    }
+
+    @SubscribeEvent
+    public static void onWorldUnload(WorldEvent.Unload event) {
+        if (event.world.isRemote) {
+            ClientLeaksCleaningHook.onClientWorldUnload();
+        }
     }
 }
