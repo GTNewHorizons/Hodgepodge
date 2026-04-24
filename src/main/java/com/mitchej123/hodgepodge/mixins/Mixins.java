@@ -1101,6 +1101,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixIc2KeybindsIgnoreKeyState)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
+    IC2_TIN_CAN(new MixinBuilder("Fix IC2 filled tin cans not running logic on both client and server")
+            .addCommonMixins("ic2.MixinIc2TinCan")
+            .setApplyIf(() -> FixesConfig.fixIc2TinCan)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
 
     // Disable update checkers
     COFH_CORE_UPDATE_CHECK(new MixinBuilder("Yeet COFH Core Update Check")
