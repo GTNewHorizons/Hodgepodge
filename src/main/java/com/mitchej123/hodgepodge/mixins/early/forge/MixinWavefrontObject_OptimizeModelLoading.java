@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.libraries.com.google.common.base.CharMatcher;
 
 @Mixin(value = WavefrontObject.class, remap = false)
 public class MixinWavefrontObject_OptimizeModelLoading {
@@ -17,11 +16,32 @@ public class MixinWavefrontObject_OptimizeModelLoading {
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/lang/String;replaceAll(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"))
-    private String optimizedWhitespaceReplacement(String original, String regex, String replacement) {
-        return CharMatcher.whitespace().trimAndCollapseFrom(original, ' ');
+    private String optimizedCollapseWhitespace(String string, String regex, String replacement) {
+        final int length = string.length();
+        final StringBuilder normalized = new StringBuilder(length);
+        boolean pendingSpace = false;
+        boolean changed = false;
+
+        for (int i = 0; i < length; i++) {
+            final char c = string.charAt(i);
+
+            if (c == ' ' || c == '\t' || c == '\r') {
+                changed |= pendingSpace || c != ' ';
+                pendingSpace = true;
+                continue;
+            }
+
+            if (pendingSpace) {
+                normalized.append(' ');
+                pendingSpace = false;
+            }
+
+            normalized.append(c);
+        }
+
+        return changed ? normalized.toString() : string;
     }
 
-    // region regex replacements
     /**
      * Regex: Pattern.compile("v(?: -?\\d++(?:\\.\\d++)?){3,4}")
      * 
@@ -65,14 +85,15 @@ public class MixinWavefrontObject_OptimizeModelLoading {
     private static boolean isValidFace_V_VT_VN_Line(String str) {
         if (!str.startsWith("f ")) return false;
 
+        int length = str.length();
         int groupCount = 0;
         int i = 2;
 
-        while (i < str.length()) {
+        while (i < length) {
             int firstSlash = str.indexOf('/', i);
             int secondSlash = str.indexOf('/', firstSlash + 1);
             int space = str.indexOf(' ', i);
-            if (space == -1) space = str.length();
+            if (space == -1) space = length;
 
             if (firstSlash == -1 || secondSlash == -1) return false;
             if (firstSlash <= i || secondSlash <= firstSlash + 1 || secondSlash >= space - 1) return false;
@@ -98,13 +119,14 @@ public class MixinWavefrontObject_OptimizeModelLoading {
     private static boolean isValidFace_V_VT_Line(String str) {
         if (!str.startsWith("f ")) return false;
 
+        int length = str.length();
         int groupCount = 0;
         int i = 2;
 
-        while (i < str.length()) {
+        while (i < length) {
             int slash = str.indexOf('/', i);
             int space = str.indexOf(' ', i);
-            if (space == -1) space = str.length();
+            if (space == -1) space = length;
 
             if (slash <= i || slash >= space - 1) return false;
             if (!hodgepodge$isDigits(str, i, slash) || !hodgepodge$isDigits(str, slash + 1, space)) return false;
@@ -127,13 +149,14 @@ public class MixinWavefrontObject_OptimizeModelLoading {
     private static boolean isValidFace_V_VN_Line(String str) {
         if (!str.startsWith("f ")) return false;
 
+        int length = str.length();
         int groupCount = 0;
         int i = 2;
 
-        while (i < str.length()) {
+        while (i < length) {
             int slashes = str.indexOf("//", i);
             int space = str.indexOf(' ', i);
-            if (space == -1) space = str.length();
+            if (space == -1) space = length;
 
             if (slashes <= i || slashes >= space - 2) return false;
             if (!hodgepodge$isDigits(str, i, slashes) || !hodgepodge$isDigits(str, slashes + 2, space)) return false;
@@ -156,12 +179,13 @@ public class MixinWavefrontObject_OptimizeModelLoading {
     private static boolean isValidFace_V_Line(String str) {
         if (!str.startsWith("f ")) return false;
 
+        int length = str.length();
         int groupCount = 0;
         int i = 2;
 
-        while (i < str.length()) {
+        while (i < length) {
             int space = str.indexOf(' ', i);
-            if (space == -1) space = str.length();
+            if (space == -1) space = length;
 
             if (!hodgepodge$isDigits(str, i, space)) return false;
 
@@ -181,11 +205,13 @@ public class MixinWavefrontObject_OptimizeModelLoading {
      */
     @Overwrite
     private static boolean isValidGroupObjectLine(String str) {
-        if (str.length() < 3) return false;
+        int length = str.length();
+
+        if (length < 3) return false;
         if (str.charAt(0) != 'g' && str.charAt(0) != 'o') return false;
         if (str.charAt(1) != ' ') return false;
 
-        for (int i = 2; i < str.length(); i++) {
+        for (int i = 2; i < length; i++) {
             char c = str.charAt(i);
             if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_' || c == '.') {
                 continue;
@@ -213,22 +239,24 @@ public class MixinWavefrontObject_OptimizeModelLoading {
      */
     @Unique
     private static int hodgepodge$scanNumber(String str, int from) {
-        if (from >= str.length()) return -1;
+        int length = str.length();
+
+        if (from >= length) return -1;
         if (str.charAt(from) == '-') from++;
-        if (from >= str.length()) return -1;
+        if (from >= length) return -1;
 
         int intStart = from;
-        while (from < str.length()) {
+        while (from < length) {
             char c = str.charAt(from);
             if (c < '0' || c > '9') break;
             from++;
         }
         if (from == intStart) return -1;
 
-        if (from < str.length() && str.charAt(from) == '.') {
+        if (from < length && str.charAt(from) == '.') {
             from++;
             int fracStart = from;
-            while (from < str.length()) {
+            while (from < length) {
                 char c = str.charAt(from);
                 if (c < '0' || c > '9') break;
                 from++;
@@ -245,12 +273,13 @@ public class MixinWavefrontObject_OptimizeModelLoading {
     private static boolean hodgepodge$isNumericLine(String str, String prefix, int minGroups, int maxGroups) {
         if (!str.startsWith(prefix)) return false;
 
-        int groupCount = 0;
+        int length = str.length();
         int i = prefix.length();
+        int groupCount = 0;
 
-        while (i < str.length()) {
+        while (i < length) {
             int next = str.indexOf(' ', i);
-            if (next == -1) next = str.length();
+            if (next == -1) next = length;
 
             int end = hodgepodge$scanNumber(str, i);
             if (end != next) return false;
@@ -262,5 +291,4 @@ public class MixinWavefrontObject_OptimizeModelLoading {
 
         return groupCount >= minGroups;
     }
-    // endregion
 }
