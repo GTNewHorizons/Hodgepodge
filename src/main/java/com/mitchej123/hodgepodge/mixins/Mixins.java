@@ -14,7 +14,7 @@ import com.mitchej123.hodgepodge.config.TweaksConfig;
 public enum Mixins implements IMixins {
 
     // spotless:off
-    // Vanilla Fixes
+    // region Vanilla Fixes
     ONLY_LOAD_LANGUAGES_ONCE_PER_FILE(new MixinBuilder()
             .addCommonMixins("minecraft.MixinLanguageRegistry")
             .setApplyIf(() -> FixesConfig.onlyLoadLanguagesOnce)
@@ -22,6 +22,18 @@ public enum Mixins implements IMixins {
     CHANGE_CATEGORY_SPRINT_KEY(new MixinBuilder()
             .addClientMixins("minecraft.MixinGameSettings_SprintKey")
             .setApplyIf(() -> TweaksConfig.changeSprintCategory)
+            .setPhase(Phase.EARLY)),
+    SIGN_INPUT_IGNORES_FORMAT_CODES(new MixinBuilder("Sign input counts visible chars only")
+            .addClientMixins("minecraft.MixinGuiEditSign")
+            .addCommonMixins(
+                    "minecraft.MixinNetHandlerPlayServer_SignLimit",
+                    "minecraft.MixinC12PacketUpdateSign_RaiseReadLimit",
+                    "minecraft.MixinTileEntitySign_RaiseNbtReadLimit")
+            .setApplyIf(() -> TweaksConfig.signInputIgnoresFormatCodes)
+            .setPhase(Phase.EARLY)),
+    ANVIL_INPUT_IGNORES_FORMAT_CODES(new MixinBuilder("Anvil rename counts visible chars only, format codes don't eat the 30-char limit")
+            .addCommonMixins("minecraft.MixinNetHandlerPlayServer_AnvilColorCodes")
+            .setApplyIf(() -> TweaksConfig.signInputIgnoresFormatCodes)
             .setPhase(Phase.EARLY)),
     FIX_TOO_MANY_ALLOCATIONS_CHUNK_POSITION_INT_PAIR(new MixinBuilder("Stops MC from allocating too many ChunkPositionIntPair objects")
             .addCommonMixins(
@@ -400,6 +412,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> MemoryConfig.leaks.fixEnchantmentHelperLeak)
             .addExcludedMod(TargetedMod.ARCHAICFIX)
             .setPhase(Phase.EARLY)),
+    FIX_RENDER_FALLING_BLOCK_WORLD_LEAK(new MixinBuilder()
+            .addClientMixins("memory.MixinRenderFallingBlock")
+            .setApplyIf(() -> MemoryConfig.leaks.fixRenderFallingBlockLeak)
+            .setPhase(Phase.EARLY)),
     FIX_ARROW_WRONG_LIGHTING(new MixinBuilder()
             .addClientMixins("minecraft.MixinRendererLivingEntity")
             .setApplyIf(() -> FixesConfig.fixGlStateBugs)
@@ -610,7 +626,9 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.creativeTabLocalizationOverrides)
             .setPhase(Phase.EARLY)),
     FIX_CHAT_COLOR_WRAPPING(new MixinBuilder("Fix wrapped chat lines missing colors")
-            .addClientMixins("minecraft.MixinGuiNewChat_FixColorWrapping")
+            .addClientMixins(
+                    "minecraft.MixinGuiNewChat_FixColorWrapping",
+                    "minecraft.MixinGuiTextField_FixColorScroll")
             .setApplyIf(() -> FixesConfig.fixChatWrappedColors)
             .setPhase(Phase.EARLY)),
     COMPACT_CHAT(new MixinBuilder()
@@ -804,12 +822,16 @@ public enum Mixins implements IMixins {
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
     ENTITY_CHUNK_LOAD_GUARD(new MixinBuilder("Prevent entity ticks from triggering chunk generation")
-            .addCommonMixins("minecraft.fastload.MixinChunkProviderServer_EntityGuard")
+            .addCommonMixins(
+                    "minecraft.fastload.MixinChunkProviderServer_EntityGuard",
+                    "minecraft.fastload.ServerConfigurationManager_FixTeleporter")
             .setApplyIf(() -> SpeedupsConfig.preventEntityChunkLoading)
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
     ENTITY_CHUNK_LOAD_GUARD_BUKKIT(new MixinBuilder("Prevent entity ticks from triggering chunk generation (Bukkit)")
-            .addCommonMixins("minecraft.fastload.MixinChunkProviderServer_EntityGuard_Bukkit")
+            .addCommonMixins(
+                    "minecraft.fastload.MixinChunkProviderServer_EntityGuard_Bukkit",
+                    "minecraft.fastload.ServerConfigurationManager_FixTeleporter")
             .setApplyIf(() -> SpeedupsConfig.preventEntityChunkLoading)
             .addRequiredMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
@@ -981,8 +1003,17 @@ public enum Mixins implements IMixins {
             .addCommonMixins("forge.MixinFakePlayer")
             .setApplyIf(() -> FixesConfig.fixFakePlayerChatCrash)
             .setPhase(Phase.EARLY)),
+    OPTIMIZE_WAVEFRONT_OBJECT_MODEL_LOADING(new MixinBuilder("Reduce regex overhead when loading object models")
+            .addClientMixins("forge.MixinWavefrontObject_OptimizeModelLoading")
+            .setApplyIf(() -> SpeedupsConfig.optimizeWavefrontObjectModelLoading)
+            .setPhase(Phase.EARLY)),
+    CACHE_ADVANCED_MODEL_LOADER(new MixinBuilder()
+            .addClientMixins("forge.MixinAdvancedModelLoader_CacheModels")
+            .setApplyIf(() -> MemoryConfig.allocs.cacheAdvancedModels)
+            .setPhase(Phase.EARLY)),
+    // endregion
 
-    // Ic2 adjustments
+    // region Ic2 adjustments
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
             .addCommonMixins("ic2.MixinIc2WaterKinetic")
             .setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
@@ -1081,6 +1112,17 @@ public enum Mixins implements IMixins {
     IC2_FIX_REACTOR_BLOCK_WORLD_LEAK(new MixinBuilder()
             .addCommonMixins("ic2.MixinBlockReactorChamber_FixLeak")
             .setApplyIf(() -> MemoryConfig.leaks.fixIC2BlockReactorLeak)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
+    IC2_KEYBINDS_IGNORE_KEY_STATE(new MixinBuilder("Fix IC2 keybinds using hardware key state instead of KeyBinding state")
+            .addClientMixins("ic2.MixinKeyboardClient_sendKeyUpdate_isKeyDown")
+            .setApplyIf(() -> FixesConfig.fixIc2KeybindsIgnoreKeyState)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
+    // endregion
+    IC2_TIN_CAN(new MixinBuilder("Fix IC2 filled tin cans not running logic on both client and server")
+            .addCommonMixins("ic2.MixinIc2TinCan")
+            .setApplyIf(() -> FixesConfig.fixIc2TinCan)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
 
@@ -1375,12 +1417,12 @@ public enum Mixins implements IMixins {
     FIX_HUD_LIGHTING_GLITCH(new MixinBuilder("HUD Lighting glitch")
             .addCommonMixins("mrtjpcore.MixinFXEngine")
             .setApplyIf(() -> TweaksConfig.fixHudLightingGlitch)
-            .addRequiredMod(TargetedMod.MRTJPCORE)
+            .addRequiredMod(TargetedMod.MRTJPCORE_V_BEFORE_113)
             .setPhase(Phase.LATE)),
     FIX_POPPING_OFF(new MixinBuilder()
             .addCommonMixins("mrtjpcore.MixinPlacementLib")
             .setApplyIf(() -> TweaksConfig.fixComponentsPoppingOff)
-            .addRequiredMod(TargetedMod.MRTJPCORE)
+            .addRequiredMod(TargetedMod.MRTJPCORE_V_BEFORE_113)
             .setPhase(Phase.LATE)),
 
     // Automagy

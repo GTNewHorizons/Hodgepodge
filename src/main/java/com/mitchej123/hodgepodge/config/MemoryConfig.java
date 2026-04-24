@@ -72,6 +72,11 @@ public class MemoryConfig {
         @Config.RequiresMcRestart
         public boolean fixEnchantmentHelperLeak;
 
+        @Config.Comment("Fix Render Falling Block leaking world instance when leaving world")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixRenderFallingBlockLeak;
+
         @Config.Comment("Fix PlayerController leaking world instance when leaving world")
         @Config.DefaultBoolean(true)
         public boolean fixPlayerControllerWorldLeak;
@@ -113,5 +118,10 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean fixWitcheryEnumValuesSpam;
+
+        @Config.Comment("Caches the advanced Model renderers to speedup loading and avoid wasting memory with duplicate models")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean cacheAdvancedModels;
     }
 }
