@@ -1003,6 +1003,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("forge.MixinWavefrontObject_OptimizeModelLoading")
             .setApplyIf(() -> SpeedupsConfig.optimizeWavefrontObjectModelLoading)
             .setPhase(Phase.EARLY)),
+    CACHE_ADVANCED_MODEL_LOADER(new MixinBuilder()
+            .addClientMixins("forge.MixinAdvancedModelLoader_CacheModels")
+            .setApplyIf(() -> MemoryConfig.allocs.cacheAdvancedModels)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments

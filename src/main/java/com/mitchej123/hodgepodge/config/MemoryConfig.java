@@ -108,5 +108,10 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean fixWitcheryEnumValuesSpam;
+
+        @Config.Comment("Caches the advanced Model renderers to speedup loading and avoid wasting memory with duplicate models")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean cacheAdvancedModels;
     }
 }
