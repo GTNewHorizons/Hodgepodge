@@ -105,6 +105,11 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean fixWorldMapStorageLeak;
+
+        @Config.Comment("Fix memory leaks in bibliocraft's tile entity renderers")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixBibliocraftTESRWorldLeak;
     }
 
     public static class AllocationFixes {

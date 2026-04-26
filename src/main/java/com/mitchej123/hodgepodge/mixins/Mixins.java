@@ -1755,6 +1755,26 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.noPauseGuiClipboard)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
+    BIBLIOCRAFT_FIX_TESR_WORLD_LEAK(new MixinBuilder()
+            .addClientMixins(
+                    "bibliocraft.leaks.MixinTileEntityArmorStandRenderer",
+                    "bibliocraft.leaks.MixinTileEntityClipboardRenderer",
+                    "bibliocraft.leaks.MixinTileEntityClockRenderer",
+                    "bibliocraft.leaks.MixinTileEntityFancySignRenderer",
+                    "bibliocraft.leaks.MixinTileEntityFancyWorkbenchRenderer",
+                    "bibliocraft.leaks.MixinTileEntityFurniturePanelerRenderer",
+                    "bibliocraft.leaks.MixinTileEntityLampRenderer",
+                    "bibliocraft.leaks.MixinTileEntityLanternRenderer",
+                    "bibliocraft.leaks.MixinTileEntityPaintingRenderer",
+                    "bibliocraft.leaks.MixinTileEntityPaintPressRenderer",
+                    "bibliocraft.leaks.MixinTileEntityPotionShelfRenderer",
+                    "bibliocraft.leaks.MixinTileEntityPrintPressRenderer",
+                    "bibliocraft.leaks.MixinTileEntitySwordPedestalRenderer",
+                    "bibliocraft.leaks.MixinTileEntityTableRenderer",
+                    "bibliocraft.leaks.MixinTileEntityTypeSetRenderer",
+                    "bibliocraft.leaks.MixinTileEntityTypewriterRenderer")
+            .setApplyIf(() -> MemoryConfig.leaks.fixBibliocraftTESRWorldLeak)
+            .setPhase(Phase.LATE)),
     ZTONES_PACKET_FIX(new MixinBuilder("Packet Fix")
             .addCommonMixins("ztones.MixinZtonesPatchPacketExploits")
             .setApplyIf(() -> FixesConfig.fixZTonesPackets)
