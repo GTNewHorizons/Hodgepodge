@@ -12,7 +12,7 @@ import jds.bibliocraft.tileentities.TileEntitySwordPedestal;
 @Mixin(TileEntitySwordPedestalRenderer.class)
 public class MixinTileEntitySwordPedestalRenderer {
 
-    @Shadow
+    @Shadow(remap = false)
     private TileEntitySwordPedestal tile;
 
     @Inject(method = "renderTileEntityAt", at = @At("RETURN"))

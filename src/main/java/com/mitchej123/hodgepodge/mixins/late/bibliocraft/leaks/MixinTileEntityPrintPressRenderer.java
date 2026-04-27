@@ -12,7 +12,7 @@ import jds.bibliocraft.tileentities.TileEntityPrintPress;
 @Mixin(TileEntityPrintPressRenderer.class)
 public class MixinTileEntityPrintPressRenderer {
 
-    @Shadow
+    @Shadow(remap = false)
     private TileEntityPrintPress printTile;
 
     @Inject(method = "renderTileEntityAt", at = @At("RETURN"))

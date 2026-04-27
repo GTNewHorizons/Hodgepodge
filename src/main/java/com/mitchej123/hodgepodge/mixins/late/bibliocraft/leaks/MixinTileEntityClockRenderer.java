@@ -12,7 +12,7 @@ import jds.bibliocraft.tileentities.TileEntityClock;
 @Mixin(TileEntityClockRenderer.class)
 public class MixinTileEntityClockRenderer {
 
-    @Shadow
+    @Shadow(remap = false)
     private TileEntityClock tile;
 
     @Inject(method = "renderTileEntityAt", at = @At("RETURN"))

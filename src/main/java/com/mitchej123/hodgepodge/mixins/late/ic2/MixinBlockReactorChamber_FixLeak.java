@@ -12,7 +12,7 @@ import ic2.core.block.reactor.tileentity.TileEntityNuclearReactorElectric;
 @Mixin(BlockReactorChamber.class)
 public class MixinBlockReactorChamber_FixLeak {
 
-    @Shadow
+    @Shadow(remap = false)
     TileEntityNuclearReactorElectric reactor;
 
     @Inject(method = "randomDisplayTick", at = @At("RETURN"))

@@ -12,7 +12,7 @@ import jds.bibliocraft.tileentities.TileEntityTable;
 @Mixin(TileEntityTableRenderer.class)
 public class MixinTileEntityTableRenderer {
 
-    @Shadow
+    @Shadow(remap = false)
     private TileEntityTable tableTile;
 
     @Inject(method = "renderTileEntityAt", at = @At("RETURN"))

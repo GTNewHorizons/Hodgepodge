@@ -12,7 +12,7 @@ import jds.bibliocraft.tileentities.TileEntityPaintPress;
 @Mixin(TileEntityPaintPressRenderer.class)
 public class MixinTileEntityPaintPressRenderer {
 
-    @Shadow
+    @Shadow(remap = false)
     private TileEntityPaintPress tile;
 
     @Inject(method = "renderTileEntityAt", at = @At("RETURN"))

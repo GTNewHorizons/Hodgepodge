@@ -12,7 +12,7 @@ import jds.bibliocraft.tileentities.TileEntityFancyWorkbench;
 @Mixin(TileEntityFancyWorkbenchRenderer.class)
 public class MixinTileEntityFancyWorkbenchRenderer {
 
-    @Shadow
+    @Shadow(remap = false)
     private TileEntityFancyWorkbench tile;
 
     @Inject(method = "renderTileEntityAt", at = @At("RETURN"))

@@ -12,7 +12,7 @@ import jds.bibliocraft.tileentities.TileEntityFancySign;
 @Mixin(TileEntityFancySignRenderer.class)
 public class MixinTileEntityFancySignRenderer {
 
-    @Shadow
+    @Shadow(remap = false)
     private TileEntityFancySign tile;
 
     @Inject(method = "renderTileEntityAt", at = @At("RETURN"))

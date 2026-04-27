@@ -12,7 +12,7 @@ import jds.bibliocraft.tileentities.TileEntityClipboard;
 @Mixin(TileEntityClipboardRenderer.class)
 public class MixinTileEntityClipboardRenderer {
 
-    @Shadow
+    @Shadow(remap = false)
     private TileEntityClipboard tile;
 
     @Inject(method = "renderTileEntityAt", at = @At("RETURN"))
