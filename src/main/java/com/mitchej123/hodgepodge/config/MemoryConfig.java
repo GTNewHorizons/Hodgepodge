@@ -72,6 +72,11 @@ public class MemoryConfig {
         @Config.RequiresMcRestart
         public boolean fixEnchantmentHelperLeak;
 
+        @Config.Comment("Fix Render Falling Block leaking world instance when leaving world")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixRenderFallingBlockLeak;
+
         @Config.Comment("Fix PlayerController leaking world instance when leaving world")
         @Config.DefaultBoolean(true)
         public boolean fixPlayerControllerWorldLeak;
@@ -80,6 +85,11 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean fixNetHandlerClientWorldLeak;
+
+        @Config.Comment("Fix IC2 block reactor leaking world instance when leaving world")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixIC2BlockReactorLeak;
 
         @Config.Comment("Fix WorldServer leaking entities when no players are present in a dimension")
         @Config.DefaultBoolean(true)
@@ -95,6 +105,11 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean fixWorldMapStorageLeak;
+
+        @Config.Comment("Fix memory leaks in bibliocraft's tile entity renderers")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixBibliocraftTESRWorldLeak;
     }
 
     public static class AllocationFixes {
@@ -108,5 +123,10 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean fixWitcheryEnumValuesSpam;
+
+        @Config.Comment("Caches the advanced Model renderers to speedup loading and avoid wasting memory with duplicate models")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean cacheAdvancedModels;
     }
 }
