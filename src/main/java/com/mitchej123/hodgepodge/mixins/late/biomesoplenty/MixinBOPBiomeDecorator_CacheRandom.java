@@ -12,7 +12,7 @@ import com.mitchej123.hodgepodge.mixins.interfaces.ReusableRandom;
 import biomesoplenty.api.biome.BOPBiomeDecorator;
 import biomesoplenty.common.utils.RandomForcedPositiveOwned;
 
-@Mixin(value = BOPBiomeDecorator.class, remap = false)
+@Mixin(value = BOPBiomeDecorator.class)
 public class MixinBOPBiomeDecorator_CacheRandom {
 
     @Unique
@@ -22,7 +22,8 @@ public class MixinBOPBiomeDecorator_CacheRandom {
             method = "decorateChunk",
             at = @At(
                     value = "NEW",
-                    target = "(Ljava/util/Random;)Lbiomesoplenty/common/utils/RandomForcedPositiveOwned;"))
+                    target = "(Ljava/util/Random;)Lbiomesoplenty/common/utils/RandomForcedPositiveOwned;",
+                    remap = false))
     private RandomForcedPositiveOwned hodgepodge$reuseCachedRandom(Random parent) {
         if (hodgepodge$cachedRandom == null) {
             hodgepodge$cachedRandom = new RandomForcedPositiveOwned(parent);
