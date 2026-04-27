@@ -1365,6 +1365,7 @@ public enum Mixins implements IMixins {
             .addCommonMixins("bibliowood.forestry.MixinTabRegistry")
             .setApplyIf(() -> FixesConfig.fixBibliowoodsForestryRecipes)
             .addRequiredMod(TargetedMod.BIBLIOWOODSFORESTRY)
+            .addExcludedMod(TargetedMod.DREAMCRAFT)
             .setPhase(Phase.LATE)),
 
     // Minefactory Reloaded
