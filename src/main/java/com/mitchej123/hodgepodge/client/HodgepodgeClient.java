@@ -16,8 +16,8 @@ import com.mitchej123.hodgepodge.commands.AllocationsCommand;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
-import com.mitchej123.hodgepodge.util.FontRenderingCompat;
 import com.mitchej123.hodgepodge.mixins.hooks.ClientLeaksCleaningHook;
+import com.mitchej123.hodgepodge.util.FontRenderingCompat;
 import com.mitchej123.hodgepodge.util.ManagedEnum;
 
 import biomesoplenty.common.eventhandler.client.gui.WorldTypeMessageEventHandler;
