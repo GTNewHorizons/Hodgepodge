@@ -15,6 +15,10 @@ public enum Mixins implements IMixins {
 
     // spotless:off
     // region Vanilla Fixes
+    FIX_DATAWATCHER_SHARING_OBJECTS_IN_SP(new MixinBuilder()
+            .addClientMixins("minecraft.MixinDataWatcher_DeepCopyInSP")
+            .setApplyIf(() -> FixesConfig.deepCopyDataWatcherInSP)
+            .setPhase(Phase.EARLY)),
     ONLY_LOAD_LANGUAGES_ONCE_PER_FILE(new MixinBuilder()
             .addCommonMixins("minecraft.MixinLanguageRegistry")
             .setApplyIf(() -> FixesConfig.onlyLoadLanguagesOnce)

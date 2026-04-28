@@ -455,6 +455,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixFakePlayerChatCrash;
 
+    @Config.Comment("Make a deep copy when sending objects from the data watcher to the client in SinglePlayer")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean deepCopyDataWatcherInSP;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
