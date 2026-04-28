@@ -455,6 +455,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixFakePlayerChatCrash;
 
+    @Config.Comment("Fix resetRainAndThunder (called when sleeping) setting rain and thunder timers to 0, which can cause immediate rain on world load if saved at that moment")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixResetRainAndThunder;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
