@@ -88,6 +88,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixForgeOpenGuiHandlerWindowId;
 
+    @Config.Comment("Fix windowId being set on openContainer even if openGui failed")
+    @Config.DefaultBoolean(true)
+    public static boolean fixDeletingWorldExtraFiles;
+
     @Config.Comment("Fix the Forge update checker")
     @Config.DefaultBoolean(true)
     public static boolean fixForgeUpdateChecker;
