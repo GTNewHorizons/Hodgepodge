@@ -49,11 +49,23 @@ public abstract class MixinGuiSelectWorld extends GuiScreen {
                 if (Loader.isModLoaded("journeymap")) {
                     Path jmPath = Paths.get(McDataDir + "/journeymap/data/sp/" + fileName);
                     if (Files.isDirectory(jmPath)) {
-                        Common.log.info("Removing JourneyMap world data found at {}", jmPath);
+                        Common.log.debug("Removing associated JourneyMap data");
                         try {
                             FileUtils.deleteDirectory(jmPath.toFile());
                         } catch (IOException e) {
-                            Common.log.warn("Failed to delete JourneyMap world data");
+                            Common.log.warn("Failed to delete JourneyMap world data found at {}", jmPath);
+                        }
+                    }
+                }
+
+                if (Loader.isModLoaded("tcnodetracker")) {
+                    Path tcPath = Paths.get(McDataDir + "/TCNodeTracker/" + fileName);
+                    if (Files.isDirectory(tcPath)) {
+                        Common.log.debug("Removing associated TCNodeTracker data");
+                        try {
+                            FileUtils.deleteDirectory(tcPath.toFile());
+                        } catch (IOException e) {
+                            Common.log.warn("Failed to delete TCNodeTracker data found at {}", tcPath);
                         }
                     }
                 }
