@@ -6,8 +6,7 @@ import net.minecraft.world.WorldProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(WorldProvider.class)
 public class MixinWorldProvider_FixResetRainAndThunder {
@@ -15,12 +14,19 @@ public class MixinWorldProvider_FixResetRainAndThunder {
     @Shadow
     public World worldObj;
 
-    @Inject(method = "resetRainAndThunder", at = @At("HEAD"), cancellable = true, remap = false)
-    private void hodgepodge$fixResetRainAndThunder(CallbackInfo ci) {
-        worldObj.getWorldInfo().setRainTime(worldObj.rand.nextInt(168000) + 12000);
-        worldObj.getWorldInfo().setRaining(false);
-        worldObj.getWorldInfo().setThunderTime(worldObj.rand.nextInt(168000) + 12000);
-        worldObj.getWorldInfo().setThundering(false);
-        ci.cancel();
+    @ModifyArg(
+            method = "resetRainAndThunder",
+            remap = false,
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/storage/WorldInfo;func_76080_a(I)V"))
+    private int hodgepodge$fixRainTime(int original) {
+        return worldObj.rand.nextInt(168000) + 12000;
+    }
+
+    @ModifyArg(
+            method = "resetRainAndThunder",
+            remap = false,
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/storage/WorldInfo;func_76090_a(I)V"))
+    private int hodgepodge$fixThunderTime(int original) {
+        return worldObj.rand.nextInt(168000) + 12000;
     }
 }
