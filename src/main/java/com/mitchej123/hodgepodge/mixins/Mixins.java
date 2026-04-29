@@ -559,6 +559,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("fml.MixinOpenGuiHandler")
             .setApplyIf(() -> FixesConfig.fixForgeOpenGuiHandlerWindowId)
             .setPhase(Phase.EARLY)),
+    FIX_DELETING_WORLD_EXTRA_FILES(new MixinBuilder("Fix GuiSelectWorld world deletion to handle mods files")
+            .addCommonMixins("minecraft.MixinGuiSelectWorld")
+            .setApplyIf(() -> FixesConfig.fixDeletingWorldExtraFiles)
+            .setPhase(Phase.EARLY)),
     FIX_KEYBIND_CONFLICTS(new MixinBuilder("Trigger all conflicting keybinds")
             .addClientMixins(
                     "minecraft.MixinKeyBinding",
