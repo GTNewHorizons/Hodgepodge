@@ -29,7 +29,7 @@ public abstract class MixinGuiSelectWorld extends GuiScreen {
     @Shadow
     private boolean field_146643_x;
 
-    @Shadow (remap = false)
+    @Shadow(remap = false)
     private List field_146639_s;
 
     @Inject(method = "confirmClicked", at = @At("HEAD"), cancellable = true)
