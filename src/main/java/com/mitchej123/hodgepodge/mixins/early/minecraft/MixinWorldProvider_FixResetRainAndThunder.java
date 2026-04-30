@@ -16,17 +16,15 @@ public class MixinWorldProvider_FixResetRainAndThunder {
 
     @ModifyArg(
             method = "resetRainAndThunder",
-            remap = false,
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/storage/WorldInfo;func_76080_a(I)V"))
-    private int hodgepodge$fixRainTime(int original) {
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/storage/WorldInfo;setRainTime(I)V"))
+    private int fixRainTime(int original) {
         return worldObj.rand.nextInt(168000) + 12000;
     }
 
     @ModifyArg(
             method = "resetRainAndThunder",
-            remap = false,
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/storage/WorldInfo;func_76090_a(I)V"))
-    private int hodgepodge$fixThunderTime(int original) {
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/storage/WorldInfo;setThunderTime(I)V"))
+    private int fixThunderTime(int original) {
         return worldObj.rand.nextInt(168000) + 12000;
     }
 }
