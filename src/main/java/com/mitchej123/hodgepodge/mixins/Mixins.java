@@ -331,7 +331,7 @@ public enum Mixins implements IMixins {
     CONFIGURABLE_PORTAL_RATIO(new MixinBuilder("Make Nether portal travel ratio configurable")
             .addCommonMixins("minecraft.MixinWorldProviderHell")
             .setPhase(Phase.EARLY)),
-    FIX_RESET_RAIN_AND_THUNDER(new MixinBuilder("Fix resetRainAndThunder setting timers to 0 instead of a proper random value")
+    FIX_RESET_RAIN_AND_THUNDER(new MixinBuilder()
             .addCommonMixins("minecraft.MixinWorldProvider_FixResetRainAndThunder")
             .setApplyIf(() -> FixesConfig.fixResetRainAndThunder)
             .setPhase(Phase.EARLY)),
