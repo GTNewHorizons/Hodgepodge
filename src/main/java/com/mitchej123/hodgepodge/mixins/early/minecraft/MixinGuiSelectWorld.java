@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -20,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.util.SaveCleanupUtils;
 
 import cpw.mods.fml.common.Loader;
 
@@ -44,12 +46,10 @@ public abstract class MixinGuiSelectWorld extends GuiScreen {
 
                 ISaveFormat iSaveFormat = this.mc.getSaveLoader();
                 iSaveFormat.flushCache();
-                iSaveFormat.deleteWorldDirectory(fileName);
 
                 if (Loader.isModLoaded("journeymap")) {
-                    Path jmPath = Paths.get(McDataDir + "/journeymap/data/sp/" + fileName);
+                    Path jmPath = Paths.get(McDataDir, "journeymap", "data", "sp", fileName);
                     if (Files.isDirectory(jmPath)) {
-                        Common.log.debug("Removing associated JourneyMap data");
                         try {
                             FileUtils.deleteDirectory(jmPath.toFile());
                         } catch (IOException e) {
@@ -59,9 +59,8 @@ public abstract class MixinGuiSelectWorld extends GuiScreen {
                 }
 
                 if (Loader.isModLoaded("tcnodetracker")) {
-                    Path tcPath = Paths.get(McDataDir + "/TCNodeTracker/" + fileName);
+                    Path tcPath = Paths.get(McDataDir, "TCNodeTracker", fileName);
                     if (Files.isDirectory(tcPath)) {
-                        Common.log.debug("Removing associated TCNodeTracker data");
                         try {
                             FileUtils.deleteDirectory(tcPath.toFile());
                         } catch (IOException e) {
@@ -70,6 +69,41 @@ public abstract class MixinGuiSelectWorld extends GuiScreen {
                     }
                 }
 
+                if (Loader.isModLoaded("visualprospecting")) {
+                    UUID userUUID = SaveCleanupUtils.getUUIDForCurrentUser();
+                    if (userUUID == null) {
+                        userUUID = SaveCleanupUtils.getUUIDFromBytes();
+                    }
+                    Path vpClientPath = Paths.get(McDataDir, "visualprospecting", "client", userUUID.toString());
+                    String wpWId = SaveCleanupUtils.getVisualProspectingWorldId(McDataDir, fileName);
+
+                    if (wpWId != null) {
+                        Path vpClientPathFull = Paths.get(vpClientPath.toString(), wpWId);
+                        if (Files.isDirectory(vpClientPathFull)) {
+                            try {
+                                FileUtils.deleteDirectory(vpClientPathFull.toFile());
+                            } catch (IOException e) {
+                                Common.log.warn(
+                                        "Failed to delete Visual Prospecting client data found at {}",
+                                        vpClientPathFull);
+                            }
+                        }
+
+                        Path vpServerPathFull = Paths.get(McDataDir, "visualprospecting", "server", wpWId);
+                        if (Files.isDirectory(vpServerPathFull)) {
+                            try {
+                                FileUtils.deleteDirectory(vpServerPathFull.toFile());
+                            } catch (IOException e) {
+                                Common.log.warn(
+                                        "Failed to delete Visual Prospecting server data found at {}",
+                                        vpServerPathFull);
+                            }
+                        }
+                    }
+
+                }
+
+                iSaveFormat.deleteWorldDirectory(fileName);
                 ci.cancel();
             }
             this.mc.displayGuiScreen(this);
