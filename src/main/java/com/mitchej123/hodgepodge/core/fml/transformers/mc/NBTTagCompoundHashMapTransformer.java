@@ -33,6 +33,8 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer, Opco
     private static String nbtbase_name;
     private static String nbttagcompound_name;
     private static String tagMap_name;
+    private static String setTag_name;
+    private static String setTag_desc;
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
@@ -52,6 +54,9 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer, Opco
         nbtbase_name = HodgepodgeCore.isObf() ? "dy" : "net/minecraft/nbt/NBTBase";
         nbttagcompound_name = HodgepodgeCore.isObf() ? "dh" : "net/minecraft/nbt/NBTTagCompound";
         tagMap_name = HodgepodgeCore.isObf() ? "c" : "tagMap";
+        setTag_name = HodgepodgeCore.isObf() ? "a" : "setTag";
+        setTag_desc = HodgepodgeCore.isObf() ? "(Ljava/lang/String;Ldy;)V"
+                : "(Ljava/lang/String;Lnet/minecraft/nbt/NBTBase;)V";
     }
 
     private static byte[] transformBytes(byte[] basicClass) {
@@ -80,14 +85,14 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer, Opco
      *
      * <pre>
      * {@code
-     * private NBTTagCompound(Map map) {
-     *     this.tagMap = new Object2ObjectOpenHashMap(map);
+     * public NBTTagCompound(int capacity) {
+     *     this.tagMap = new Object2ObjectOpenHashMap<>(capacity);
      * }
      * }
      * </pre>
      */
     private static void addConstructor(ClassNode cn) {
-        MethodVisitor mv = cn.visitMethod(ACC_PRIVATE, "<init>", "(Ljava/util/Map;)V", null, null);
+        MethodVisitor mv = cn.visitMethod(ACC_PUBLIC, "<init>", "(I)V", null, null);
         mv.visitCode();
         Label label0 = new Label();
         mv.visitLabel(label0);
@@ -98,8 +103,8 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer, Opco
         mv.visitVarInsn(ALOAD, 0);
         mv.visitTypeInsn(NEW, FASTUTIL_HASHMAP);
         mv.visitInsn(DUP);
-        mv.visitVarInsn(ALOAD, 1);
-        mv.visitMethodInsn(INVOKESPECIAL, FASTUTIL_HASHMAP, "<init>", "(Ljava/util/Map;)V", false);
+        mv.visitVarInsn(ILOAD, 1);
+        mv.visitMethodInsn(INVOKESPECIAL, FASTUTIL_HASHMAP, "<init>", "(I)V", false);
         mv.visitFieldInsn(PUTFIELD, nbttagcompound_name, tagMap_name, "Ljava/util/Map;");
         Label label2 = new Label();
         mv.visitLabel(label2);
@@ -107,7 +112,7 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer, Opco
         Label label3 = new Label();
         mv.visitLabel(label3);
         mv.visitLocalVariable("this", "L" + nbttagcompound_name + ";", null, label0, label3, 0);
-        mv.visitLocalVariable("map", "Ljava/util/Map;", null, label0, label3, 1);
+        mv.visitLocalVariable("capacity", "I", null, label0, label3, 1);
         mv.visitMaxs(4, 2);
         mv.visitEnd();
     }
@@ -144,7 +149,14 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer, Opco
      * <pre>
      * {@code
      * public NBTBase copy() {
-     *     return new NBTTagCompound(this.tagMap);
+     *     NBTTagCompound nbt = new NBTTagCompound(this.tagMap.size());
+     *     Object2ObjectMap.FastEntrySet<String, NBTBase> entries = ((Object2ObjectOpenHashMap)this.tagMap).object2ObjectEntrySet();
+     *     ObjectIterator<Object2ObjectMap.Entry<String, NBTBase>> fastIterator = entries.fastIterator();
+     *     while(fastIterator.hasNext()) {
+     *         Object2ObjectMap.Entry<String, NBTBase> entry = (Object2ObjectMap.Entry)fastIterator.next();
+     *         nbt.setTag((String)entry.getKey(), ((NBTBase)entry.getValue()).copy());
+     *     }
+     *     return nbt;
      * }
      * }
      * </pre>
@@ -161,12 +173,114 @@ public class NBTTagCompoundHashMapTransformer implements IClassTransformer, Opco
         mn.visitInsn(DUP);
         mn.visitVarInsn(ALOAD, 0);
         mn.visitFieldInsn(GETFIELD, nbttagcompound_name, tagMap_name, "Ljava/util/Map;");
-        mn.visitMethodInsn(INVOKESPECIAL, nbttagcompound_name, "<init>", "(Ljava/util/Map;)V", false);
-        mn.visitInsn(ARETURN);
+        mn.visitMethodInsn(INVOKEINTERFACE, "java/util/Map", "size", "()I", true);
+        mn.visitMethodInsn(INVOKESPECIAL, nbttagcompound_name, "<init>", "(I)V", false);
+        mn.visitVarInsn(ASTORE, 1);
         Label label1 = new Label();
         mn.visitLabel(label1);
-        mn.visitLocalVariable("this", "L" + nbttagcompound_name + ";", null, label0, label1, 0);
-        mn.visitMaxs(3, 1);
+        mn.visitVarInsn(ALOAD, 0);
+        mn.visitFieldInsn(GETFIELD, nbttagcompound_name, tagMap_name, "Ljava/util/Map;");
+        mn.visitTypeInsn(CHECKCAST, FASTUTIL_HASHMAP);
+        Label label2 = new Label();
+        mn.visitLabel(label2);
+        mn.visitMethodInsn(
+                INVOKEVIRTUAL,
+                FASTUTIL_HASHMAP,
+                "object2ObjectEntrySet",
+                "()Lit/unimi/dsi/fastutil/objects/Object2ObjectMap$FastEntrySet;",
+                false);
+        mn.visitVarInsn(ASTORE, 2);
+        Label label3 = new Label();
+        mn.visitLabel(label3);
+        mn.visitVarInsn(ALOAD, 2);
+        mn.visitMethodInsn(
+                INVOKEINTERFACE,
+                "it/unimi/dsi/fastutil/objects/Object2ObjectMap$FastEntrySet",
+                "fastIterator",
+                "()Lit/unimi/dsi/fastutil/objects/ObjectIterator;",
+                true);
+        mn.visitVarInsn(ASTORE, 3);
+        Label label4 = new Label();
+        mn.visitLabel(label4);
+        mn.visitFrame(
+                F_APPEND,
+                3,
+                new Object[] { nbttagcompound_name, "it/unimi/dsi/fastutil/objects/Object2ObjectMap$FastEntrySet",
+                        "it/unimi/dsi/fastutil/objects/ObjectIterator" },
+                0,
+                null);
+        mn.visitVarInsn(ALOAD, 3);
+        mn.visitMethodInsn(INVOKEINTERFACE, "it/unimi/dsi/fastutil/objects/ObjectIterator", "hasNext", "()Z", true);
+        Label label5 = new Label();
+        mn.visitJumpInsn(IFEQ, label5);
+        Label label6 = new Label();
+        mn.visitLabel(label6);
+        mn.visitVarInsn(ALOAD, 3);
+        mn.visitMethodInsn(
+                INVOKEINTERFACE,
+                "it/unimi/dsi/fastutil/objects/ObjectIterator",
+                "next",
+                "()Ljava/lang/Object;",
+                true);
+        mn.visitTypeInsn(CHECKCAST, "it/unimi/dsi/fastutil/objects/Object2ObjectMap$Entry");
+        mn.visitVarInsn(ASTORE, 4);
+        Label label7 = new Label();
+        mn.visitLabel(label7);
+        mn.visitVarInsn(ALOAD, 1);
+        mn.visitVarInsn(ALOAD, 4);
+        mn.visitMethodInsn(
+                INVOKEINTERFACE,
+                "it/unimi/dsi/fastutil/objects/Object2ObjectMap$Entry",
+                "getKey",
+                "()Ljava/lang/Object;",
+                true);
+        mn.visitTypeInsn(CHECKCAST, "java/lang/String");
+        mn.visitVarInsn(ALOAD, 4);
+        mn.visitMethodInsn(
+                INVOKEINTERFACE,
+                "it/unimi/dsi/fastutil/objects/Object2ObjectMap$Entry",
+                "getValue",
+                "()Ljava/lang/Object;",
+                true);
+        mn.visitTypeInsn(CHECKCAST, nbtbase_name);
+        mn.visitMethodInsn(INVOKEVIRTUAL, nbtbase_name, copy_name, copy_desc, false);
+        mn.visitMethodInsn(INVOKEVIRTUAL, nbttagcompound_name, setTag_name, setTag_desc, false);
+        Label label8 = new Label();
+        mn.visitLabel(label8);
+        mn.visitJumpInsn(GOTO, label4);
+        mn.visitLabel(label5);
+        mn.visitFrame(F_SAME, 0, null, 0, null);
+        mn.visitVarInsn(ALOAD, 1);
+        mn.visitInsn(ARETURN);
+        Label label9 = new Label();
+        mn.visitLabel(label9);
+        mn.visitLocalVariable(
+                "entry",
+                "Lit/unimi/dsi/fastutil/objects/Object2ObjectMap$Entry;",
+                "Lit/unimi/dsi/fastutil/objects/Object2ObjectMap$Entry<Ljava/lang/String;L" + nbtbase_name + ";>;",
+                label7,
+                label8,
+                4);
+        mn.visitLocalVariable("this", "L" + nbttagcompound_name + ";", null, label0, label9, 0);
+        mn.visitLocalVariable("nbt", "L" + nbttagcompound_name + ";", null, label1, label9, 1);
+        mn.visitLocalVariable(
+                "entries",
+                "Lit/unimi/dsi/fastutil/objects/Object2ObjectMap$FastEntrySet;",
+                "Lit/unimi/dsi/fastutil/objects/Object2ObjectMap$FastEntrySet<Ljava/lang/String;L" + nbtbase_name
+                        + ";>;",
+                label3,
+                label9,
+                2);
+        mn.visitLocalVariable(
+                "fastIterator",
+                "Lit/unimi/dsi/fastutil/objects/ObjectIterator;",
+                "Lit/unimi/dsi/fastutil/objects/ObjectIterator<Lit/unimi/dsi/fastutil/objects/Object2ObjectMap$Entry<Ljava/lang/String;L"
+                        + nbtbase_name
+                        + ";>;>;",
+                label4,
+                label9,
+                3);
+        mn.visitMaxs(3, 5);
         mn.visitEnd();
     }
 }
