@@ -119,6 +119,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixPotionRenderOffset;
 
+    @Config.Comment("Show potion effect icons in inventory screens")
+    @Config.DefaultBoolean(true)
+    public static boolean showInventoryEffectIcons;
+
     @Config.Comment("Stops rendering the crosshair when you are playing in third person")
     @Config.DefaultBoolean(true)
     public static boolean hideCrosshairInThirdPerson;

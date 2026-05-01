@@ -171,6 +171,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinInventoryEffectRenderer_PotionOffset")
             .setApplyIf(() -> TweaksConfig.fixPotionRenderOffset)
             .setPhase(Phase.EARLY)),
+    TOGGLE_INVENTORY_EFFECT_ICONS(new MixinBuilder()
+            .addClientMixins("minecraft.MixinInventoryEffectRenderer_TogglePotionIcons")
+            .setApplyIf(() -> TweaksConfig.fixPotionRenderOffset)
+            .setPhase(Phase.EARLY)),
     FIX_POTION_EFFECT_RENDERING(new MixinBuilder()
             .addClientMixins("minecraft.MixinInventoryEffectRenderer_PotionEffectRendering")
             .setApplyIf(() -> TweaksConfig.fixPotionEffectRender)
