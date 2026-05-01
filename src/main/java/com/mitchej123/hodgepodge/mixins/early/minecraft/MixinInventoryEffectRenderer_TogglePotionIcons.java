@@ -11,6 +11,5 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 public class MixinInventoryEffectRenderer_TogglePotionIcons {
 
     @WrapMethod(method = "func_147044_g")
-    private void hodgepodge$togglePotionEffectIcons(Operation<Void> original) {
-    }
+    private void hodgepodge$togglePotionEffectIcons(Operation<Void> original) {}
 }
