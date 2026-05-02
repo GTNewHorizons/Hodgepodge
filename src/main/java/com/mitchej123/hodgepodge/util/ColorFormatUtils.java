@@ -5,6 +5,8 @@ public final class ColorFormatUtils {
 
     private ColorFormatUtils() {}
 
+    public static final char SECTION = '§';
+
     /** Length of a {@code §x§R§R§G§G§B§B} RGB sequence. */
     public static final int SECTION_X_SEQ_LEN = 14;
 
@@ -67,13 +69,12 @@ public final class ColorFormatUtils {
 
     /** Build a {@code §x§R§R§G§G§B§B} sequence from an RGB int. */
     public static String buildSectionX(int rgb) {
-        char S = '\u00a7';
         int r = (rgb >> 16) & 0xFF, g = (rgb >> 8) & 0xFF, b = rgb & 0xFF;
-        return new StringBuilder(SECTION_X_SEQ_LEN).append(S).append('x').append(S)
-                .append(Character.forDigit((r >> 4) & 0xF, 16)).append(S).append(Character.forDigit(r & 0xF, 16))
-                .append(S).append(Character.forDigit((g >> 4) & 0xF, 16)).append(S)
-                .append(Character.forDigit(g & 0xF, 16)).append(S).append(Character.forDigit((b >> 4) & 0xF, 16))
-                .append(S).append(Character.forDigit(b & 0xF, 16)).toString();
+        return new StringBuilder(SECTION_X_SEQ_LEN).append(SECTION).append('x').append(SECTION)
+                .append(Character.forDigit((r >> 4) & 0xF, 16)).append(SECTION).append(Character.forDigit(r & 0xF, 16))
+                .append(SECTION).append(Character.forDigit((g >> 4) & 0xF, 16)).append(SECTION)
+                .append(Character.forDigit(g & 0xF, 16)).append(SECTION).append(Character.forDigit((b >> 4) & 0xF, 16))
+                .append(SECTION).append(Character.forDigit(b & 0xF, 16)).toString();
     }
 
     /** Check if all characters from {@code from} to {@code to} (inclusive) are hex digits. */
@@ -151,7 +152,7 @@ public final class ColorFormatUtils {
     public static int countVisibleInGradient(String text, int startIdx) {
         int count = 0;
         for (int i = startIdx; i < text.length(); i++) {
-            if (text.charAt(i) == '§' && i + 1 < text.length()) {
+            if (text.charAt(i) == ColorFormatUtils.SECTION && i + 1 < text.length()) {
                 char code = Character.toLowerCase(text.charAt(i + 1));
                 if (isGradientTerminator(code)) {
                     break;
@@ -169,7 +170,7 @@ public final class ColorFormatUtils {
         int count = 0;
         int limit = Math.min(endIdx, text.length());
         for (int i = startIdx; i < limit; i++) {
-            if (text.charAt(i) == '§' && i + 1 < limit) {
+            if (text.charAt(i) == ColorFormatUtils.SECTION && i + 1 < limit) {
                 char code = Character.toLowerCase(text.charAt(i + 1));
                 if (isGradientTerminator(code)) {
                     break;

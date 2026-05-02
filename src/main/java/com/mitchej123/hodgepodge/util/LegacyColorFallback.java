@@ -8,8 +8,6 @@ import com.gtnewhorizon.gtnhlib.util.font.FontRendering;
  */
 public class LegacyColorFallback implements FontRendering.TextPreprocessor {
 
-    private static final char SECTION = '§';
-
     private static final int[] VANILLA_COLORS = { 0x000000, // §0
             0x0000AA, // §1
             0x00AA00, // §2
@@ -40,20 +38,20 @@ public class LegacyColorFallback implements FontRendering.TextPreprocessor {
         for (int i = 0; i < len; i++) {
             char c = text.charAt(i);
 
-            if (c == SECTION && i + 1 < len) {
+            if (c == ColorFormatUtils.SECTION && i + 1 < len) {
                 char next = Character.toLowerCase(text.charAt(i + 1));
 
                 if (next == 'x' && i + ColorFormatUtils.SECTION_X_SEQ_LEN <= len) {
                     int rgb = parseHexPairs(text, i + 2, 6);
                     if (rgb != -1) {
-                        sb.append(SECTION).append(nearestVanilla(rgb));
+                        sb.append(ColorFormatUtils.SECTION).append(nearestVanilla(rgb));
                         i += ColorFormatUtils.SECTION_X_SEQ_LEN - 1;
                         continue;
                     }
                 } else if (next == 'g' && i + ColorFormatUtils.GRADIENT_SEQ_LEN <= len) {
                     int startRgb = parseSectionX(text, i + 2);
                     if (startRgb != -1) {
-                        sb.append(SECTION).append(nearestVanilla(startRgb));
+                        sb.append(ColorFormatUtils.SECTION).append(nearestVanilla(startRgb));
                         i += ColorFormatUtils.GRADIENT_SEQ_LEN - 1;
                         continue;
                     }
@@ -67,7 +65,7 @@ public class LegacyColorFallback implements FontRendering.TextPreprocessor {
                 if (next == '#' && i + ColorFormatUtils.AMP_HEX_LEN <= len) {
                     int rgb = parseHex6(text, i + 2);
                     if (rgb != -1) {
-                        sb.append(SECTION).append(nearestVanilla(rgb));
+                        sb.append(ColorFormatUtils.SECTION).append(nearestVanilla(rgb));
                         i += ColorFormatUtils.AMP_HEX_LEN - 1;
                         continue;
                     }
@@ -76,7 +74,7 @@ public class LegacyColorFallback implements FontRendering.TextPreprocessor {
                         && text.charAt(i + 3) == '#') {
                             int rgb = parseHex6(text, i + 4);
                             if (rgb != -1) {
-                                sb.append(SECTION).append(nearestVanilla(rgb));
+                                sb.append(ColorFormatUtils.SECTION).append(nearestVanilla(rgb));
                                 i += ColorFormatUtils.AMP_GRADIENT_LEN - 1;
                                 continue;
                             }
@@ -85,7 +83,7 @@ public class LegacyColorFallback implements FontRendering.TextPreprocessor {
                         i += 1;
                         continue;
                     } else if (isVanillaCode(next)) {
-                        sb.append(SECTION).append(next);
+                        sb.append(ColorFormatUtils.SECTION).append(next);
                         i += 1;
                         continue;
                     }
@@ -125,7 +123,8 @@ public class LegacyColorFallback implements FontRendering.TextPreprocessor {
 
     private static int parseSectionX(String str, int start) {
         if (start + ColorFormatUtils.SECTION_X_SEQ_LEN > str.length()) return -1;
-        if (str.charAt(start) != SECTION || Character.toLowerCase(str.charAt(start + 1)) != 'x') return -1;
+        if (str.charAt(start) != ColorFormatUtils.SECTION || Character.toLowerCase(str.charAt(start + 1)) != 'x')
+            return -1;
         return parseHexPairs(str, start + 2, 6);
     }
 
@@ -134,7 +133,7 @@ public class LegacyColorFallback implements FontRendering.TextPreprocessor {
         int result = 0;
         for (int k = 0; k < count; k++) {
             int pos = start + k * 2;
-            if (str.charAt(pos) != SECTION) return -1;
+            if (str.charAt(pos) != ColorFormatUtils.SECTION) return -1;
             int hex = hexValue(str.charAt(pos + 1));
             if (hex == -1) return -1;
             result = (result << 4) | hex;

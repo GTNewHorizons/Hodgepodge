@@ -48,7 +48,7 @@ public class MixinNetHandlerPlayServer_AnvilColorCodes {
                     continue;
                 }
             }
-            if (ch == '\u00a7' && i + 1 < len) {
+            if (ch == ColorFormatUtils.SECTION && i + 1 < len) {
                 i++;
                 continue;
             }

@@ -78,7 +78,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
     private static String hodgepodge$getActiveEffects(String text) {
         boolean wave = false, dinnerbone = false, rainbow = false;
         for (int i = 0; i < text.length() - 1; i++) {
-            if (text.charAt(i) == '§') {
+            if (text.charAt(i) == ColorFormatUtils.SECTION) {
                 char code = Character.toLowerCase(text.charAt(i + 1));
                 if (code == 'r') {
                     wave = false;
@@ -98,9 +98,9 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         }
         if (!wave && !dinnerbone && !rainbow) return "";
         StringBuilder sb = new StringBuilder(6);
-        if (rainbow) sb.append('§').append('q');
-        if (wave) sb.append('§').append('z');
-        if (dinnerbone) sb.append('§').append('v');
+        if (rainbow) sb.append(ColorFormatUtils.SECTION).append('q');
+        if (wave) sb.append(ColorFormatUtils.SECTION).append('z');
+        if (dinnerbone) sb.append(ColorFormatUtils.SECTION).append('v');
         return sb.toString();
     }
 
@@ -109,7 +109,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         if (format.indexOf('q') == -1 && format.indexOf('z') == -1 && format.indexOf('v') == -1) return format;
         StringBuilder sb = new StringBuilder(format.length());
         for (int i = 0; i < format.length() - 1; i++) {
-            if (format.charAt(i) == '§') {
+            if (format.charAt(i) == ColorFormatUtils.SECTION) {
                 char code = Character.toLowerCase(format.charAt(i + 1));
                 if (code != 'q' && code != 'z' && code != 'v') {
                     sb.append(format, i, i + 2);
@@ -123,7 +123,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
     @Unique
     private static boolean hodgepodge$formatHasBold(String format) {
         for (int i = 0; i < format.length() - 1; i++) {
-            if (format.charAt(i) == '§' && Character.toLowerCase(format.charAt(i + 1)) == 'l') {
+            if (format.charAt(i) == ColorFormatUtils.SECTION && Character.toLowerCase(format.charAt(i + 1)) == 'l') {
                 return true;
             }
         }
@@ -164,7 +164,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         int end = Math.min(endPos, fullText.length());
         int rainbowStart = -1;
         for (int i = 0; i < end - 1; i++) {
-            if (fullText.charAt(i) != '§') continue;
+            if (fullText.charAt(i) != ColorFormatUtils.SECTION) continue;
             char code = Character.toLowerCase(fullText.charAt(i + 1));
             if (code == 'q') {
                 rainbowStart = i + 2;
@@ -183,7 +183,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         if (rainbowStart == -1 || rainbowStart >= end) return 0;
         int count = 0;
         for (int i = rainbowStart; i < end; i++) {
-            if (fullText.charAt(i) == '§' && i + 1 < end) {
+            if (fullText.charAt(i) == ColorFormatUtils.SECTION && i + 1 < end) {
                 i++;
             } else {
                 count++;
@@ -199,7 +199,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         int charIdx = startCharIdx;
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);
-            if (ch == '§' && i + 1 < text.length()) {
+            if (ch == ColorFormatUtils.SECTION && i + 1 < text.length()) {
                 char code = Character.toLowerCase(text.charAt(i + 1));
                 if (ColorFormatUtils.isGradientTerminator(code)) {
                     sb.append(text, i, text.length());
@@ -292,7 +292,8 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
             return "\u00a7r"
                     + hodgepodge$expandRainbowToPerChar(beforeCursor, scrolledChars, otherEffects + colorAndStyles);
         }
-        if (colorAndStyles.length() >= ColorFormatUtils.GRADIENT_SEQ_LEN && colorAndStyles.charAt(0) == '\u00a7'
+        if (colorAndStyles.length() >= ColorFormatUtils.GRADIENT_SEQ_LEN
+                && colorAndStyles.charAt(0) == ColorFormatUtils.SECTION
                 && colorAndStyles.charAt(1) == 'g') {
             String expanded = hodgepodge$expandGradientSegment(colorAndStyles, beforeCursor, this.lineScrollOffset);
             return "\u00a7r" + (activeEffects.isEmpty() ? expanded : activeEffects + expanded);
@@ -324,7 +325,8 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
             return "\u00a7r"
                     + hodgepodge$expandRainbowToPerChar(afterCursor, rainbowOffset, otherEffects + colorAndStyles);
         }
-        if (colorAndStyles.length() >= ColorFormatUtils.GRADIENT_SEQ_LEN && colorAndStyles.charAt(0) == '\u00a7'
+        if (colorAndStyles.length() >= ColorFormatUtils.GRADIENT_SEQ_LEN
+                && colorAndStyles.charAt(0) == ColorFormatUtils.SECTION
                 && colorAndStyles.charAt(1) == 'g') {
             // Expand to per-char §x colors (same path as before-cursor) to avoid
             // float rounding differences between per-char and §g gradient rendering
@@ -393,7 +395,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         int gradCharIdx = startCharIdx;
         for (int i = 0; i < visibleText.length(); i++) {
             char ch = visibleText.charAt(i);
-            if (ch == '\u00a7' && i + 1 < visibleText.length()) {
+            if (ch == ColorFormatUtils.SECTION && i + 1 < visibleText.length()) {
                 char code = Character.toLowerCase(visibleText.charAt(i + 1));
                 if (ColorFormatUtils.isGradientTerminator(code)) {
                     sb.append(visibleText, i, visibleText.length());
@@ -427,7 +429,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         int gradCharIdx = startCharIdx;
         for (int i = gradIdx + ColorFormatUtils.GRADIENT_SEQ_LEN; i < text.length(); i++) {
             char ch = text.charAt(i);
-            if (ch == '\u00a7' && i + 1 < text.length()) {
+            if (ch == ColorFormatUtils.SECTION && i + 1 < text.length()) {
                 char code = Character.toLowerCase(text.charAt(i + 1));
                 // Gradient terminator: copy rest as-is
                 if (ColorFormatUtils.isGradientTerminator(code)) {
@@ -460,7 +462,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         // Look back to see if we're inside a §x§R§R§G§G§B§B sequence
         for (int lb = 1; lb < ColorFormatUtils.SECTION_X_SEQ_LEN && offset - lb >= 0; lb++) {
             int candidate = offset - lb;
-            if (candidate + 1 < text.length() && text.charAt(candidate) == '\u00a7'
+            if (candidate + 1 < text.length() && text.charAt(candidate) == ColorFormatUtils.SECTION
                     && Character.toLowerCase(text.charAt(candidate + 1)) == 'x') {
                 int seqEnd = candidate + ColorFormatUtils.SECTION_X_SEQ_LEN;
                 if (offset < seqEnd && seqEnd <= text.length()) {
@@ -471,7 +473,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         }
 
         // Check if we're between § and its pair char (simple 2-char format like §c)
-        if (text.charAt(offset - 1) == '\u00a7') {
+        if (text.charAt(offset - 1) == ColorFormatUtils.SECTION) {
             return Math.min(offset + 1, text.length());
         }
 
@@ -494,24 +496,24 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
 
                 if (next == 'g' && ColorFormatUtils.isAmpGradientAt(raw, ri)) {
                     rawLen = ColorFormatUtils.AMP_GRADIENT_LEN;
-                    if (pi + 1 < preprocessed.length() && preprocessed.charAt(pi) == '\u00a7'
+                    if (pi + 1 < preprocessed.length() && preprocessed.charAt(pi) == ColorFormatUtils.SECTION
                             && Character.toLowerCase(preprocessed.charAt(pi + 1)) == 'g') {
                         prepLen = ColorFormatUtils.GRADIENT_SEQ_LEN;
-                    } else if (pi < preprocessed.length() && preprocessed.charAt(pi) == '\u00a7') {
+                    } else if (pi < preprocessed.length() && preprocessed.charAt(pi) == ColorFormatUtils.SECTION) {
                         prepLen = 2;
                     }
                 } else if (next == '#' && ColorFormatUtils.isAmpHexAt(raw, ri)) {
                     rawLen = ColorFormatUtils.AMP_HEX_LEN;
-                    if (pi + 1 < preprocessed.length() && preprocessed.charAt(pi) == '\u00a7'
+                    if (pi + 1 < preprocessed.length() && preprocessed.charAt(pi) == ColorFormatUtils.SECTION
                             && Character.toLowerCase(preprocessed.charAt(pi + 1)) == 'x') {
                         prepLen = ColorFormatUtils.SECTION_X_SEQ_LEN;
-                    } else if (pi < preprocessed.length() && preprocessed.charAt(pi) == '\u00a7') {
+                    } else if (pi < preprocessed.length() && preprocessed.charAt(pi) == ColorFormatUtils.SECTION) {
                         prepLen = 2;
                     }
                 } else if (ColorFormatUtils.VALID_AMP_SINGLE_CODES.indexOf(next) != -1) {
                     rawLen = 2;
                     if (next == 'q' || next == 'z' || next == 'v') {
-                        if (pi + 1 < preprocessed.length() && preprocessed.charAt(pi) == '\u00a7'
+                        if (pi + 1 < preprocessed.length() && preprocessed.charAt(pi) == ColorFormatUtils.SECTION
                                 && Character.toLowerCase(preprocessed.charAt(pi + 1)) == next) {
                             prepLen = 2;
                         }
