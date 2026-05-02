@@ -15,6 +15,10 @@ public enum Mixins implements IMixins {
 
     // spotless:off
     // region Vanilla Fixes
+    FIX_DATAWATCHER_SHARING_OBJECTS_IN_SP(new MixinBuilder()
+            .addClientMixins("minecraft.MixinDataWatcher_DeepCopyInSP")
+            .setApplyIf(() -> FixesConfig.deepCopyDataWatcherInSP)
+            .setPhase(Phase.EARLY)),
     ONLY_LOAD_LANGUAGES_ONCE_PER_FILE(new MixinBuilder()
             .addCommonMixins("minecraft.MixinLanguageRegistry")
             .setApplyIf(() -> FixesConfig.onlyLoadLanguagesOnce)
@@ -166,6 +170,10 @@ public enum Mixins implements IMixins {
     FIX_INVENTORY_OFFSET_WITH_POTIONS(new MixinBuilder()
             .addClientMixins("minecraft.MixinInventoryEffectRenderer_PotionOffset")
             .setApplyIf(() -> TweaksConfig.fixPotionRenderOffset)
+            .setPhase(Phase.EARLY)),
+    TOGGLE_INVENTORY_EFFECT_ICONS(new MixinBuilder()
+            .addClientMixins("minecraft.MixinInventoryEffectRenderer_TogglePotionIcons")
+            .setApplyIf(() -> !TweaksConfig.showInventoryEffectIcons)  
             .setPhase(Phase.EARLY)),
     FIX_POTION_EFFECT_RENDERING(new MixinBuilder()
             .addClientMixins("minecraft.MixinInventoryEffectRenderer_PotionEffectRendering")
@@ -326,6 +334,10 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)),
     CONFIGURABLE_PORTAL_RATIO(new MixinBuilder("Make Nether portal travel ratio configurable")
             .addCommonMixins("minecraft.MixinWorldProviderHell")
+            .setPhase(Phase.EARLY)),
+    FIX_RESET_RAIN_AND_THUNDER(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinWorldProvider_FixResetRainAndThunder")
+            .setApplyIf(() -> FixesConfig.fixResetRainAndThunder)
             .setPhase(Phase.EARLY)),
     FIX_EATING_STACKED_STEW(new MixinBuilder("Stacked Mushroom Stew Eating Fix")
             .addCommonMixins("minecraft.MixinItemSoup")
@@ -1369,6 +1381,7 @@ public enum Mixins implements IMixins {
             .addCommonMixins("bibliowood.forestry.MixinTabRegistry")
             .setApplyIf(() -> FixesConfig.fixBibliowoodsForestryRecipes)
             .addRequiredMod(TargetedMod.BIBLIOWOODSFORESTRY)
+            .addExcludedMod(TargetedMod.DREAMCRAFT)
             .setPhase(Phase.LATE)),
 
     // Minefactory Reloaded
