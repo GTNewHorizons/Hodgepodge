@@ -106,4 +106,79 @@ public final class ColorFormatUtils {
         int b = (int) ((from & 0xFF) * (1 - t) + (to & 0xFF) * t);
         return (r << 16) | (g << 8) | b;
     }
+
+    /** Convert a hue (0-360) at full saturation/value to an RGB int. */
+    public static int hsvToRgb(float hue) {
+        int h = (int) (hue / 60f) % 6;
+        float f = hue / 60f - h;
+        float r, g, b;
+        switch (h) {
+            case 0:
+                r = 1;
+                g = f;
+                b = 0;
+                break;
+            case 1:
+                r = 1 - f;
+                g = 1;
+                b = 0;
+                break;
+            case 2:
+                r = 0;
+                g = 1;
+                b = f;
+                break;
+            case 3:
+                r = 0;
+                g = 1 - f;
+                b = 1;
+                break;
+            case 4:
+                r = f;
+                g = 0;
+                b = 1;
+                break;
+            default:
+                r = 1;
+                g = 0;
+                b = 1 - f;
+                break;
+        }
+        return ((int) (r * 255) << 16) | ((int) (g * 255) << 8) | (int) (b * 255);
+    }
+
+    /** Count visible chars from {@code startIdx}, stopping at gradient-terminating codes. */
+    public static int countVisibleInGradient(String text, int startIdx) {
+        int count = 0;
+        for (int i = startIdx; i < text.length(); i++) {
+            if (text.charAt(i) == '§' && i + 1 < text.length()) {
+                char code = Character.toLowerCase(text.charAt(i + 1));
+                if (isGradientTerminator(code)) {
+                    break;
+                }
+                i++;
+            } else {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /** Count visible chars from {@code startIdx} to {@code endIdx}, stopping at gradient-terminating codes. */
+    public static int countVisibleBounded(String text, int startIdx, int endIdx) {
+        int count = 0;
+        int limit = Math.min(endIdx, text.length());
+        for (int i = startIdx; i < limit; i++) {
+            if (text.charAt(i) == '§' && i + 1 < limit) {
+                char code = Character.toLowerCase(text.charAt(i + 1));
+                if (isGradientTerminator(code)) {
+                    break;
+                }
+                i++;
+            } else {
+                count++;
+            }
+        }
+        return count;
+    }
 }

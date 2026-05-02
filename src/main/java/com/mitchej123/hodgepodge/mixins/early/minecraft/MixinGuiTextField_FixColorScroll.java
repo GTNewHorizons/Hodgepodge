@@ -55,6 +55,9 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
     @Shadow
     public abstract int getSelectionEnd();
 
+    @Shadow
+    public abstract int getWidth();
+
     @Unique
     private String hodgepodge$originalText;
     @Unique
@@ -118,43 +121,41 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
     }
 
     @Unique
-    private static int hodgepodge$hsvToRgb(float hue) {
-        int h = (int) (hue / 60f) % 6;
-        float f = hue / 60f - h;
-        float r, g, b;
-        switch (h) {
-            case 0:
-                r = 1;
-                g = f;
-                b = 0;
-                break;
-            case 1:
-                r = 1 - f;
-                g = 1;
-                b = 0;
-                break;
-            case 2:
-                r = 0;
-                g = 1;
-                b = f;
-                break;
-            case 3:
-                r = 0;
-                g = 1 - f;
-                b = 1;
-                break;
-            case 4:
-                r = f;
-                g = 0;
-                b = 1;
-                break;
-            default:
-                r = 1;
-                g = 0;
-                b = 1 - f;
-                break;
+    private static boolean hodgepodge$formatHasBold(String format) {
+        for (int i = 0; i < format.length() - 1; i++) {
+            if (format.charAt(i) == '§' && Character.toLowerCase(format.charAt(i + 1)) == 'l') {
+                return true;
+            }
         }
-        return ((int) (r * 255) << 16) | ((int) (g * 255) << 8) | (int) (b * 255);
+        return false;
+    }
+
+    @Unique
+    private void hodgepodge$compensateBoldScroll(String text) {
+        if (this.lineScrollOffset <= 0 || this.lineScrollOffset >= text.length()) return;
+
+        int targetPos = Math.min(this.cursorPosition, text.length());
+        String prefix = text.substring(0, this.lineScrollOffset);
+        String activeFormat = FontRenderer.getFormatFromString(prefix);
+        if (!hodgepodge$formatHasBold(activeFormat)) return;
+
+        int fieldWidth = this.getWidth();
+
+        for (int i = 0; i < 20 && this.lineScrollOffset < targetPos; i++) {
+            String withFormat = activeFormat + text.substring(this.lineScrollOffset);
+            String trimmed = this.field_146211_a.trimStringToWidth(withFormat, fieldWidth);
+            int visibleEnd = this.lineScrollOffset + trimmed.length() - activeFormat.length();
+
+            if (targetPos <= visibleEnd) break;
+
+            this.lineScrollOffset++;
+            this.lineScrollOffset = hodgepodge$snapToFormatBoundary(text, this.lineScrollOffset);
+            if (this.lineScrollOffset >= text.length()) break;
+
+            prefix = text.substring(0, this.lineScrollOffset);
+            activeFormat = FontRenderer.getFormatFromString(prefix);
+            if (!hodgepodge$formatHasBold(activeFormat)) break;
+        }
     }
 
     @Unique
@@ -208,7 +209,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
                 i++;
             } else {
                 float hue = (charIdx * 15f) % 360f;
-                sb.append(ColorFormatUtils.buildSectionX(hodgepodge$hsvToRgb(hue)));
+                sb.append(ColorFormatUtils.buildSectionX(ColorFormatUtils.hsvToRgb(hue)));
                 sb.append(ch);
                 charIdx++;
             }
@@ -236,21 +237,14 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         this.text = preprocessed;
         this.cursorPosition = hodgepodge$mapPosition(posMap, hodgepodge$originalCursorPosition);
 
-        // Compute scroll offset in two passes:
-        // 1) Let setSelectionPos compute an initial offset
-        // 2) Snap past any format code boundary
-        // 3) Re-run setSelectionPos so it readjusts to keep cursor visible
         this.lineScrollOffset = 0;
-        this.setSelectionPos(mappedSelection);
-        int preSnap = this.lineScrollOffset;
-        this.lineScrollOffset = hodgepodge$snapToFormatBoundary(preprocessed, this.lineScrollOffset);
-        int snapped = this.lineScrollOffset - preSnap; // how many extra chars we skipped
-        this.setSelectionPos(mappedSelection);
-        // The snap skipped zero-width format chars, but setSelectionPos doesn't know that.
-        // Add the skipped count so the cursor stays fully in view.
-        if (snapped > 0) {
-            this.lineScrollOffset += snapped;
+        for (int iter = 0; iter < 10; iter++) {
+            int prev = this.lineScrollOffset;
+            this.setSelectionPos(mappedSelection);
+            this.lineScrollOffset = hodgepodge$snapToFormatBoundary(preprocessed, this.lineScrollOffset);
+            if (this.lineScrollOffset == prev) break;
         }
+        hodgepodge$compensateBoldScroll(preprocessed);
     }
 
     @Inject(method = "drawTextBox", at = @At("RETURN"))
@@ -274,33 +268,36 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
                     ordinal = 0),
             index = 0)
     private String hodgepodge$fixScrolledColorCodes(String beforeCursor) {
-        // Check for gradient embedded in the visible before-cursor text
+        // Vanilla shadow-pass style leak fix: drawString calls renderStringAtPos twice (shadow + main)
+        // but only resets styles once. Style codes set during shadow leak into main pass.
+        // Prepending reset at the start fixes this (no-op in shadow, resets leaked styles in main).
         int gradInText = beforeCursor.lastIndexOf("\u00a7g");
         if (gradInText != -1 && gradInText + ColorFormatUtils.GRADIENT_SEQ_LEN <= beforeCursor.length()) {
-            return hodgepodge$expandGradientToPerChar(beforeCursor, gradInText);
+            return "\u00a7r" + hodgepodge$expandGradientToPerChar(beforeCursor, gradInText);
         }
 
         if (this.lineScrollOffset <= 0) {
-            return beforeCursor;
+            return "\u00a7r" + beforeCursor;
         }
         String prefix = this.text.substring(0, Math.min(this.lineScrollOffset, this.text.length()));
         String activeFormat = FontRenderer.getFormatFromString(prefix);
         String activeEffects = hodgepodge$getActiveEffects(prefix);
         String colorAndStyles = hodgepodge$stripEffectCodes(activeFormat);
         if (colorAndStyles.isEmpty() && activeEffects.isEmpty()) {
-            return beforeCursor;
+            return "\u00a7r" + beforeCursor;
         }
         if (activeEffects.length() >= 2 && activeEffects.charAt(1) == 'q') {
             int scrolledChars = hodgepodge$getRainbowCharOffset(this.lineScrollOffset);
             String otherEffects = activeEffects.length() > 2 ? activeEffects.substring(2) : "";
-            return hodgepodge$expandRainbowToPerChar(beforeCursor, scrolledChars, otherEffects + colorAndStyles);
+            return "\u00a7r"
+                    + hodgepodge$expandRainbowToPerChar(beforeCursor, scrolledChars, otherEffects + colorAndStyles);
         }
         if (colorAndStyles.length() >= ColorFormatUtils.GRADIENT_SEQ_LEN && colorAndStyles.charAt(0) == '\u00a7'
                 && colorAndStyles.charAt(1) == 'g') {
-            String expanded = hodgepodge$expandScrolledGradientToPerChar(colorAndStyles, beforeCursor);
-            return activeEffects.isEmpty() ? expanded : activeEffects + expanded;
+            String expanded = hodgepodge$expandGradientSegment(colorAndStyles, beforeCursor, this.lineScrollOffset);
+            return "\u00a7r" + (activeEffects.isEmpty() ? expanded : activeEffects + expanded);
         }
-        return activeEffects + colorAndStyles + beforeCursor;
+        return "\u00a7r" + activeEffects + colorAndStyles + beforeCursor;
     }
 
     /**
@@ -319,21 +316,22 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         String activeEffects = hodgepodge$getActiveEffects(prefix);
         String colorAndStyles = hodgepodge$stripEffectCodes(activeFormat);
         if (colorAndStyles.isEmpty() && activeEffects.isEmpty()) {
-            return afterCursor;
+            return "\u00a7r" + afterCursor;
         }
         if (activeEffects.length() >= 2 && activeEffects.charAt(1) == 'q') {
             int rainbowOffset = hodgepodge$getRainbowCharOffset(this.cursorPosition);
             String otherEffects = activeEffects.length() > 2 ? activeEffects.substring(2) : "";
-            return hodgepodge$expandRainbowToPerChar(afterCursor, rainbowOffset, otherEffects + colorAndStyles);
+            return "\u00a7r"
+                    + hodgepodge$expandRainbowToPerChar(afterCursor, rainbowOffset, otherEffects + colorAndStyles);
         }
         if (colorAndStyles.length() >= ColorFormatUtils.GRADIENT_SEQ_LEN && colorAndStyles.charAt(0) == '\u00a7'
                 && colorAndStyles.charAt(1) == 'g') {
             // Expand to per-char §x colors (same path as before-cursor) to avoid
             // float rounding differences between per-char and §g gradient rendering
-            String expanded = hodgepodge$expandAfterCursorGradientToPerChar(colorAndStyles, afterCursor);
-            return activeEffects.isEmpty() ? expanded : activeEffects + expanded;
+            String expanded = hodgepodge$expandGradientSegment(colorAndStyles, afterCursor, this.cursorPosition);
+            return "\u00a7r" + (activeEffects.isEmpty() ? expanded : activeEffects + expanded);
         }
-        return activeEffects + colorAndStyles + afterCursor;
+        return "\u00a7r" + activeEffects + colorAndStyles + afterCursor;
     }
 
     /**
@@ -357,56 +355,51 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         if (startRgb == -1 || endRgb == -1) return beforeCursor;
 
         int specEnd = fullGradIdx + ColorFormatUtils.GRADIENT_SEQ_LEN;
-        int totalVisible = hodgepodge$countVisibleInGradient(this.text, specEnd);
+        int totalVisible = ColorFormatUtils.countVisibleInGradient(this.text, specEnd);
         if (totalVisible <= 1) return beforeCursor;
 
         // Count gradient chars scrolled past (if any)
         int scrolledChars = 0;
         if (this.lineScrollOffset > specEnd) {
-            scrolledChars = hodgepodge$countVisibleBounded(this.text, specEnd, this.lineScrollOffset);
+            scrolledChars = ColorFormatUtils.countVisibleBounded(this.text, specEnd, this.lineScrollOffset);
         }
 
         return hodgepodge$buildPerCharGradient(beforeCursor, gradIdx, startRgb, endRgb, totalVisible, scrolledChars);
     }
 
-    /**
-     * Expand a scrolled-past gradient into per-char §x color codes for the visible text.
-     */
     @Unique
-    private String hodgepodge$expandScrolledGradientToPerChar(String activeFormat, String beforeCursor) {
+    private String hodgepodge$expandGradientSegment(String activeFormat, String visibleText, int countFromOffset) {
         int startRgb = ColorFormatUtils.parseRgbFromSectionX(activeFormat, ColorFormatUtils.GRADIENT_FIRST_RGB_OFFSET);
         int endRgb = ColorFormatUtils.parseRgbFromSectionX(activeFormat, ColorFormatUtils.GRADIENT_SECOND_RGB_OFFSET);
-        if (startRgb == -1 || endRgb == -1) return activeFormat + beforeCursor;
+        if (startRgb == -1 || endRgb == -1) return activeFormat + visibleText;
 
         String upToCursor = this.text.substring(0, Math.min(this.cursorPosition, this.text.length()));
         int fullGradIdx = upToCursor.lastIndexOf("\u00a7g");
         if (fullGradIdx == -1 || fullGradIdx + ColorFormatUtils.GRADIENT_SEQ_LEN > this.text.length())
-            return activeFormat + beforeCursor;
+            return activeFormat + visibleText;
 
         int specEnd = fullGradIdx + ColorFormatUtils.GRADIENT_SEQ_LEN;
-        int totalVisible = hodgepodge$countVisibleInGradient(this.text, specEnd);
-        if (totalVisible <= 1) return activeFormat + beforeCursor;
+        int totalVisible = ColorFormatUtils.countVisibleInGradient(this.text, specEnd);
+        if (totalVisible <= 1) return activeFormat + visibleText;
 
-        int scrolledChars = hodgepodge$countVisibleBounded(this.text, specEnd, this.lineScrollOffset);
+        int startCharIdx = ColorFormatUtils.countVisibleBounded(this.text, specEnd, countFromOffset);
 
-        // Preserve effects/styles from activeFormat (after the gradient spec)
         String extras = activeFormat.length() > ColorFormatUtils.GRADIENT_SEQ_LEN
                 ? activeFormat.substring(ColorFormatUtils.GRADIENT_SEQ_LEN)
                 : "";
 
-        // Build per-char colored text (no embedded gradient spec — it was scrolled past)
-        StringBuilder sb = new StringBuilder(beforeCursor.length() * 8);
+        StringBuilder sb = new StringBuilder(visibleText.length() * 8);
         if (!extras.isEmpty()) sb.append(extras);
-        int gradCharIdx = scrolledChars;
-        for (int i = 0; i < beforeCursor.length(); i++) {
-            char ch = beforeCursor.charAt(i);
-            if (ch == '\u00a7' && i + 1 < beforeCursor.length()) {
-                char code = Character.toLowerCase(beforeCursor.charAt(i + 1));
+        int gradCharIdx = startCharIdx;
+        for (int i = 0; i < visibleText.length(); i++) {
+            char ch = visibleText.charAt(i);
+            if (ch == '\u00a7' && i + 1 < visibleText.length()) {
+                char code = Character.toLowerCase(visibleText.charAt(i + 1));
                 if (ColorFormatUtils.isGradientTerminator(code)) {
-                    sb.append(beforeCursor, i, beforeCursor.length());
+                    sb.append(visibleText, i, visibleText.length());
                     return sb.toString();
                 }
-                sb.append(ch).append(beforeCursor.charAt(i + 1));
+                sb.append(ch).append(visibleText.charAt(i + 1));
                 i++;
             } else {
                 float t = (float) gradCharIdx / (totalVisible - 1);
@@ -446,56 +439,6 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
                 i++;
             } else {
                 // Visible char: emit its exact gradient color
-                float t = (float) gradCharIdx / (totalVisible - 1);
-                t = Math.min(t, 1f);
-                sb.append(ColorFormatUtils.buildSectionX(ColorFormatUtils.lerpRgb(startRgb, endRgb, t)));
-                sb.append(ch);
-                gradCharIdx++;
-            }
-        }
-        return sb.toString();
-    }
-
-    /**
-     * Expand the after-cursor gradient into per-char §x colors using the full gradient's parameters, matching the
-     * before-cursor computation path exactly.
-     */
-    @Unique
-    private String hodgepodge$expandAfterCursorGradientToPerChar(String activeFormat, String afterCursor) {
-        int startRgb = ColorFormatUtils.parseRgbFromSectionX(activeFormat, ColorFormatUtils.GRADIENT_FIRST_RGB_OFFSET);
-        int endRgb = ColorFormatUtils.parseRgbFromSectionX(activeFormat, ColorFormatUtils.GRADIENT_SECOND_RGB_OFFSET);
-        if (startRgb == -1 || endRgb == -1) return activeFormat + afterCursor;
-
-        String upToCursor = this.text.substring(0, Math.min(this.cursorPosition, this.text.length()));
-        int fullGradIdx = upToCursor.lastIndexOf("\u00a7g");
-        if (fullGradIdx == -1 || fullGradIdx + ColorFormatUtils.GRADIENT_SEQ_LEN > this.text.length())
-            return activeFormat + afterCursor;
-
-        int specEnd = fullGradIdx + ColorFormatUtils.GRADIENT_SEQ_LEN;
-        int totalVisible = hodgepodge$countVisibleInGradient(this.text, specEnd);
-        if (totalVisible <= 1) return activeFormat + afterCursor;
-
-        int visibleBefore = hodgepodge$countVisibleBounded(this.text, specEnd, this.cursorPosition);
-
-        // Preserve effects/styles from activeFormat (after the gradient spec)
-        String extras = activeFormat.length() > ColorFormatUtils.GRADIENT_SEQ_LEN
-                ? activeFormat.substring(ColorFormatUtils.GRADIENT_SEQ_LEN)
-                : "";
-
-        StringBuilder sb = new StringBuilder(afterCursor.length() * 8);
-        if (!extras.isEmpty()) sb.append(extras);
-        int gradCharIdx = visibleBefore;
-        for (int i = 0; i < afterCursor.length(); i++) {
-            char ch = afterCursor.charAt(i);
-            if (ch == '\u00a7' && i + 1 < afterCursor.length()) {
-                char code = Character.toLowerCase(afterCursor.charAt(i + 1));
-                if (ColorFormatUtils.isGradientTerminator(code)) {
-                    sb.append(afterCursor, i, afterCursor.length());
-                    return sb.toString();
-                }
-                sb.append(ch).append(afterCursor.charAt(i + 1));
-                i++;
-            } else {
                 float t = (float) gradCharIdx / (totalVisible - 1);
                 t = Math.min(t, 1f);
                 sb.append(ColorFormatUtils.buildSectionX(ColorFormatUtils.lerpRgb(startRgb, endRgb, t)));
@@ -602,43 +545,6 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         if (rawPos <= 0) return 0;
         if (rawPos >= posMap.length) return posMap[posMap.length - 1];
         return posMap[rawPos];
-    }
-
-    /** Count visible chars from startIdx, stopping at gradient-terminating codes (§r, §0-f, §x, §q, §g). */
-    @Unique
-    private static int hodgepodge$countVisibleInGradient(String text, int startIdx) {
-        int count = 0;
-        for (int i = startIdx; i < text.length(); i++) {
-            if (text.charAt(i) == '\u00a7' && i + 1 < text.length()) {
-                char code = Character.toLowerCase(text.charAt(i + 1));
-                if (ColorFormatUtils.isGradientTerminator(code)) {
-                    break;
-                }
-                i++; // skip non-terminating format codes (k-o, w, j)
-            } else {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    /** Count visible chars from startIdx to endIdx, stopping at gradient-terminating codes. */
-    @Unique
-    private static int hodgepodge$countVisibleBounded(String text, int startIdx, int endIdx) {
-        int count = 0;
-        int limit = Math.min(endIdx, text.length());
-        for (int i = startIdx; i < limit; i++) {
-            if (text.charAt(i) == '\u00a7' && i + 1 < limit) {
-                char code = Character.toLowerCase(text.charAt(i + 1));
-                if (ColorFormatUtils.isGradientTerminator(code)) {
-                    break;
-                }
-                i++;
-            } else {
-                count++;
-            }
-        }
-        return count;
     }
 
     // --- Format-code-aware cursor navigation ---
