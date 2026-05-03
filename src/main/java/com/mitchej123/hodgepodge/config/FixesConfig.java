@@ -36,6 +36,14 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixChatWrappedColors;
 
+    @Config.Comment("Fix newline characters in chat messages not rendering as line breaks")
+    @Config.DefaultBoolean(true)
+    public static boolean fixChatNewlines;
+
+    @Config.Comment("Fix newline characters in drawString not rendering as line breaks")
+    @Config.DefaultBoolean(true)
+    public static boolean fixFontRendererNewlines;
+
     @Config.Comment("Prevents crash if server sends container with wrong itemStack size")
     @Config.DefaultBoolean(true)
     public static boolean fixContainerPutStacksInSlots;
