@@ -20,13 +20,13 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean optimizeASMDataTable;
 
+    @Config.Comment("Deduplicate Forge's per-mod resource pack construction")
+    @Config.DefaultBoolean(true)
+    public static boolean deduplicateModResourcePackLoading;
+
     @Config.Comment("Optimize texture loading")
     @Config.DefaultBoolean(true)
     public static boolean optimizeTextureLoading;
-
-    @Config.Comment("Deduplicate Forge's per-mod resource pack loading")
-    @Config.DefaultBoolean(true)
-    public static boolean deduplicateModResourcePackLoading;
 
     @Config.Comment("Optimize tileEntity removal in World.class")
     @Config.DefaultBoolean(true)

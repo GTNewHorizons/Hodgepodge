@@ -40,7 +40,7 @@ public class MixinFallbackResourceManager_PreventDuplicates {
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/resources/IResourcePack;resourceExists(Lnet/minecraft/util/ResourceLocation;)Z"))
     public boolean hodgepodge$preventDuplicateDiscovery(IResourcePack iresourcepack, ResourceLocation loc,
-                                                        Operation<Boolean> exists) {
+            Operation<Boolean> exists) {
 
         if (iresourcepack instanceof AbstractResourcePack abstractPack) {
             if (!hodgepodge$visitedJars.add(abstractPack.resourcePackFile)) {
