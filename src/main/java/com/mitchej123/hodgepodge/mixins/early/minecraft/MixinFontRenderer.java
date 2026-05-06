@@ -48,7 +48,8 @@ public abstract class MixinFontRenderer {
             String newFormat = getFormatFromString(formatting.toString());
 
             // Handle gradient continuation: interpolate color at wrap point
-            if (newFormat.length() >= ColorFormatUtils.GRADIENT_SEQ_LEN && newFormat.charAt(0) == '\u00a7'
+            if (newFormat.length() >= ColorFormatUtils.GRADIENT_SEQ_LEN
+                    && newFormat.charAt(0) == ColorFormatUtils.SECTION
                     && newFormat.charAt(1) == 'g') {
                 String remainder = StringUtils.substring(
                         str,
@@ -93,7 +94,7 @@ public abstract class MixinFontRenderer {
     private static int hodgepodge$countVisible(String text, int startIdx) {
         int count = 0;
         for (int i = startIdx; i < text.length(); i++) {
-            if (text.charAt(i) == '\u00a7' && i + 1 < text.length()) {
+            if (text.charAt(i) == ColorFormatUtils.SECTION && i + 1 < text.length()) {
                 i++;
             } else {
                 count++;

@@ -216,6 +216,11 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean asyncBatchedNBTParsing;
 
+    @Config.Comment("Reduce regex overhead when loading object models")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean optimizeWavefrontObjectModelLoading;
+
     // Biomes O' Plenty
 
     @Config.Comment("Speedup biome fog rendering in BiomesOPlenty")

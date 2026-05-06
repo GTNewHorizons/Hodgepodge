@@ -455,6 +455,16 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixFakePlayerChatCrash;
 
+    @Config.Comment("Fix resetRainAndThunder (called when sleeping) setting rain and thunder timers to 0, which can cause immediate rain on world load if saved at that moment")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixResetRainAndThunder;
+
+    @Config.Comment("Make a deep copy when sending objects from the data watcher to the client in SinglePlayer")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean deepCopyDataWatcherInSP;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -697,6 +707,10 @@ public class FixesConfig {
     @Config.Comment("Fix IC2 keybinds using hardware key state instead of KeyBinding state, preventing other mods from suppressing keys")
     @Config.DefaultBoolean(true)
     public static boolean fixIc2KeybindsIgnoreKeyState;
+
+    @Config.Comment("Fix IC2 filled tin cans not running logic on both client and server")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2TinCan;
 
     // Journey Map
 
