@@ -15,6 +15,9 @@ public enum Mixins implements IMixins {
 
     // spotless:off
     // region Vanilla Fixes
+    HODGEPODGE_F3_INFO(new MixinBuilder()
+            .addClientMixins("debug.MixinIntCache")
+            .setPhase(Phase.EARLY)),
     FIX_DATAWATCHER_SHARING_OBJECTS_IN_SP(new MixinBuilder()
             .addClientMixins("minecraft.MixinDataWatcher_DeepCopyInSP")
             .setApplyIf(() -> FixesConfig.deepCopyDataWatcherInSP)
@@ -173,7 +176,7 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)),
     TOGGLE_INVENTORY_EFFECT_ICONS(new MixinBuilder()
             .addClientMixins("minecraft.MixinInventoryEffectRenderer_TogglePotionIcons")
-            .setApplyIf(() -> !TweaksConfig.showInventoryEffectIcons)  
+            .setApplyIf(() -> !TweaksConfig.showInventoryEffectIcons)
             .setPhase(Phase.EARLY)),
     FIX_POTION_EFFECT_RENDERING(new MixinBuilder()
             .addClientMixins("minecraft.MixinInventoryEffectRenderer_PotionEffectRendering")
