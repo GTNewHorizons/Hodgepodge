@@ -1,7 +1,6 @@
 package com.mitchej123.hodgepodge.util;
 
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 import net.minecraft.item.Item;
 import net.minecraft.util.ChatComponentStyle;
@@ -9,8 +8,6 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
 
 public class ChatComponentItemTranslation extends ChatComponentStyle {
-
-    private static final Pattern FORMATTING_CODE_PATTERN = Pattern.compile("(?i)\u00a7[0-9A-FK-OR]");
 
     private final Item item;
 
@@ -54,7 +51,7 @@ public class ChatComponentItemTranslation extends ChatComponentStyle {
     }
 
     private static String getTextWithoutFormattingCodes(String text) {
-        return text == null ? null : FORMATTING_CODE_PATTERN.matcher(text).replaceAll("");
+        return StringUtil.removeFormattingCodes(text);
     }
 
 }
