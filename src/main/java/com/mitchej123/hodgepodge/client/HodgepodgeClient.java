@@ -56,15 +56,12 @@ public class HodgepodgeClient {
 
         MinecraftForge.EVENT_BUS.register(new ReloadSoundsGui());
 
-        if (TweaksConfig.addSystemInfo) {
-            MinecraftForge.EVENT_BUS.register(DebugScreenHandler.INSTANCE);
-        }
+        MinecraftForge.EVENT_BUS.register(DebugScreenHandler.INSTANCE);
 
         if (DebugConfig.showChunkGenDebug || !FMLForgePlugin.RUNTIME_DEOBF) {
             MinecraftForge.EVENT_BUS.register(ChunkGenDebugHandler.INSTANCE);
         }
 
-        MinecraftForge.EVENT_BUS.register(new AllocationRateHUD(true));
         ClientCommandHandler.instance.registerCommand(new AllocationsCommand());
 
         FMLCommonHandler.instance().bus().register(new ClientKeyListener());
