@@ -343,6 +343,13 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixWrongBlockPlacementDistanceCheck;
 
+    @Config.Comment({ "Disable the server-side 'moved too quickly' speed check.",
+            "When enabled, the threshold for the check is set to Double.MAX_VALUE, effectively disabling it.",
+            "Useful for servers with fast-movement items like GraviChestplate, MPS jetpacks, etc." })
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean disableMovedTooQuicklyCheck;
+
     @Config.Comment("Fix inventory sync lag: prevents client to check recipes on empty slots. Particularly fixes lag when trying to eat food when full.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart

@@ -867,6 +867,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinNetHandlePlayServer_FixWrongBlockPlacementCheck")
             .setApplyIf(() -> FixesConfig.fixWrongBlockPlacementDistanceCheck)
             .setPhase(Phase.EARLY)),
+    DISABLE_MOVED_TOO_QUICKLY_CHECK(new MixinBuilder("Disable the 'moved too quickly' server-side speed check")
+            .addCommonMixins("minecraft.MixinNetHandlerPlayServer_DisableMovedTooQuickly")
+            .setApplyIf(() -> FixesConfig.disableMovedTooQuicklyCheck)
+            .setPhase(Phase.EARLY)),
     FIX_ITEM_BOUNCING(new MixinBuilder("Fixes items bouncing on stairs and other blocks with odd hitboxes")
             .addCommonMixins("minecraft.MixinEntityItem_BouncingFix")
             .setApplyIf(() -> FixesConfig.fixEntityBouncing)
