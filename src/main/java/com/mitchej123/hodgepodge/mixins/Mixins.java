@@ -173,7 +173,7 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)),
     TOGGLE_INVENTORY_EFFECT_ICONS(new MixinBuilder()
             .addClientMixins("minecraft.MixinInventoryEffectRenderer_TogglePotionIcons")
-            .setApplyIf(() -> !TweaksConfig.showInventoryEffectIcons)  
+            .setApplyIf(() -> !TweaksConfig.showInventoryEffectIcons)
             .setPhase(Phase.EARLY)),
     FIX_POTION_EFFECT_RENDERING(new MixinBuilder()
             .addClientMixins("minecraft.MixinInventoryEffectRenderer_PotionEffectRendering")
@@ -1030,6 +1030,10 @@ public enum Mixins implements IMixins {
     // endregion
 
     // region Ic2 adjustments
+    FIX_TESR_LEAK(new MixinBuilder()
+            .addClientMixins("ic2.leaks.MixinOverlayTesr")
+            .setApplyIf(() -> MemoryConfig.leaks.fixIC2TESRleak)
+            .setPhase(Phase.LATE)),
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
             .addCommonMixins("ic2.MixinIc2WaterKinetic")
             .setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
