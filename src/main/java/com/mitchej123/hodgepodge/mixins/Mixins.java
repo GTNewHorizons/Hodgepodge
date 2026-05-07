@@ -1027,6 +1027,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("forge.MixinAdvancedModelLoader_CacheModels")
             .setApplyIf(() -> MemoryConfig.allocs.cacheAdvancedModels)
             .setPhase(Phase.EARLY)),
+    FIX_FORGE_PLAYER_LEAK(new MixinBuilder()
+            .addCommonMixins("memory.MixinFakePlayerFactory_FixLeak")
+            .setApplyIf(() -> MemoryConfig.leaks.fixForgePlayerFactoryLeak)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments
