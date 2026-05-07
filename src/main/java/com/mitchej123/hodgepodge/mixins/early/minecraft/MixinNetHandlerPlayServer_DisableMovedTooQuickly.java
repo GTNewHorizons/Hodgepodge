@@ -12,13 +12,15 @@ import com.mitchej123.hodgepodge.config.FixesConfig;
 public class MixinNetHandlerPlayServer_DisableMovedTooQuickly {
 
     /**
-     * The vanilla "moved too quickly" check compares the squared distance of a player's movement per tick against 100.0
-     * (i.e. 10 blocks/tick). When the config option is enabled, replace this threshold with Double.MAX_VALUE so the
-     * check can never trigger, suppressing the log spam and the position rollback that happens with fast-moving items
-     * like GraviChestplate, MPS jetpacks, etc.
+     * The vanilla "moved too quickly" check compares the squared distance of a player's movement per tick against
+     * 100.0 (i.e. 10 blocks/tick in a single axis). Fast-movement items like GraviChestplate combined with
+     * ThaumicBoots or MPS jetpacks can legitimately exceed this threshold, causing log spam and position rollbacks.
+     * <p>
+     * Replaces the hardcoded 100.0 with the configured threshold. Values below 100.0 fall back to vanilla.
      */
     @ModifyConstant(method = "processPlayer", constant = @Constant(doubleValue = 100.0D, ordinal = 0))
-    private double hodgepodge$disableMovedTooQuicklyCheck(double original) {
-        return FixesConfig.disableMovedTooQuicklyCheck ? Double.MAX_VALUE : original;
+    private double hodgepodge$movedTooQuicklyThreshold(double original) {
+        double configured = FixesConfig.movedTooQuicklyThreshold;
+        return configured > original ? configured : original;
     }
 }
