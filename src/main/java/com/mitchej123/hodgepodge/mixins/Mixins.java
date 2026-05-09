@@ -1221,6 +1221,12 @@ public enum Mixins implements IMixins {
     DISABLE_CHUNK_TERRAIN_GENERATION(new MixinBuilder()
             .addCommonMixins("minecraft.MixinChunkProviderServer_DisableTerrain")
             .setApplyIf(() -> TweaksConfig.disableChunkTerrainGeneration)
+            .addExcludedMod(TargetedMod.ENDLESSIDS)
+            .setPhase(Phase.EARLY)),
+    DISABLE_CHUNK_TERRAIN_GENERATION_ENDLESS_IDS(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinChunkProviderServer_DisableTerrain_EndlessIDs")
+            .setApplyIf(() -> TweaksConfig.disableChunkTerrainGeneration)
+            .addRequiredMod(TargetedMod.ENDLESSIDS)
             .setPhase(Phase.EARLY)),
     DISABLE_WORLD_TYPE_CHUNK_POPULATION(new MixinBuilder("Disable chunk population tied to chunk generation (ores/structure)")
             .addCommonMixins("minecraft.MixinChunkProviderServer_DisablePopulation")
