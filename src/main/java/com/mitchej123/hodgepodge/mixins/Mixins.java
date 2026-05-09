@@ -647,6 +647,10 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinGuiTextField_FixColorScroll")
             .setApplyIf(() -> FixesConfig.fixChatWrappedColors)
             .setPhase(Phase.EARLY)),
+    FIX_COMMAND_FORMATTING_LOSS(new MixinBuilder("Fix /say, /tell, /me losing formatting after first word")
+            .addCommonMixins("minecraft.MixinCommandBase_JoinArgs")
+            .setApplyIf(() -> FixesConfig.fixCommandFormattingLoss)
+            .setPhase(Phase.EARLY)),
     COMPACT_CHAT(new MixinBuilder()
             .addClientMixins("minecraft.MixinGuiNewChat_CompactChat")
             .setApplyIf(() -> TweaksConfig.compactChat)
