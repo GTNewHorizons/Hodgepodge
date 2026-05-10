@@ -451,6 +451,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinMinecraft_ToggleDebugMessage")
             .setApplyIf(() -> TweaksConfig.addToggleDebugMessage)
             .setPhase(Phase.EARLY)),
+    RESOURCE_MANAGER_DEDUP_GET_ALL(new MixinBuilder("Deduplicates the results of FallbackResourceManager.getAllResources")
+            .addClientMixins("minecraft.textures.client.MixinFallbackResourceManager_PreventDuplicates")
+            .setApplyIf(() -> SpeedupsConfig.deduplicateModResourcePackLoading)
+            .setPhase(Phase.EARLY)),
     OPTIMIZE_TEXTURE_LOADING(new MixinBuilder()
             .addClientMixins("minecraft.textures.client.MixinTextureUtil")
             .addExcludedMod(TargetedMod.ANGELICA)
