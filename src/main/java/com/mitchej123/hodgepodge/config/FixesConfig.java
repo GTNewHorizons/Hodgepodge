@@ -36,6 +36,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixChatWrappedColors;
 
+    @Config.Comment("Fix /say, /tell, /me losing formatting after the first word")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCommandFormattingLoss;
+
     @Config.Comment("Prevents crash if server sends container with wrong itemStack size")
     @Config.DefaultBoolean(true)
     public static boolean fixContainerPutStacksInSlots;
