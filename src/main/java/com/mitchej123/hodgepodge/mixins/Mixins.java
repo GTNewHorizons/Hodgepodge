@@ -488,6 +488,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("fml.MixinASMDataTable")
             .setApplyIf(() -> SpeedupsConfig.optimizeASMDataTable)
             .setPhase(Phase.EARLY)),
+    OPTIMIZE_JAR_DISCOVERER(new MixinBuilder("Reduce FML jar discovery regex overhead")
+            .addCommonMixins("fml.MixinJarDiscoverer")
+            .setApplyIf(() -> SpeedupsConfig.optimizeJarDiscovererRegexOverhead)
+            .setPhase(Phase.EARLY)),
     SQUASH_BED_ERROR_MESSAGE(new MixinBuilder()
             .addClientMixins("minecraft.MixinNetHandlerPlayClient_SquashBedMessages")
             .setApplyIf(() -> FixesConfig.squashBedErrorMessage)
@@ -649,6 +653,10 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinGuiNewChat_FixColorWrapping",
                     "minecraft.MixinGuiTextField_FixColorScroll")
             .setApplyIf(() -> FixesConfig.fixChatWrappedColors)
+            .setPhase(Phase.EARLY)),
+    FIX_COMMAND_FORMATTING_LOSS(new MixinBuilder("Fix /say, /tell, /me losing formatting after first word")
+            .addCommonMixins("minecraft.MixinCommandBase_JoinArgs")
+            .setApplyIf(() -> FixesConfig.fixCommandFormattingLoss)
             .setPhase(Phase.EARLY)),
     COMPACT_CHAT(new MixinBuilder()
             .addClientMixins("minecraft.MixinGuiNewChat_CompactChat")
@@ -1033,6 +1041,10 @@ public enum Mixins implements IMixins {
     // endregion
 
     // region Ic2 adjustments
+    FIX_TESR_LEAK(new MixinBuilder()
+            .addClientMixins("ic2.leaks.MixinOverlayTesr")
+            .setApplyIf(() -> MemoryConfig.leaks.fixIC2TESRleak)
+            .setPhase(Phase.LATE)),
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
             .addCommonMixins("ic2.MixinIc2WaterKinetic")
             .setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
@@ -1224,6 +1236,12 @@ public enum Mixins implements IMixins {
     DISABLE_CHUNK_TERRAIN_GENERATION(new MixinBuilder()
             .addCommonMixins("minecraft.MixinChunkProviderServer_DisableTerrain")
             .setApplyIf(() -> TweaksConfig.disableChunkTerrainGeneration)
+            .addExcludedMod(TargetedMod.ENDLESSIDS)
+            .setPhase(Phase.EARLY)),
+    DISABLE_CHUNK_TERRAIN_GENERATION_ENDLESS_IDS(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinChunkProviderServer_DisableTerrain_EndlessIDs")
+            .setApplyIf(() -> TweaksConfig.disableChunkTerrainGeneration)
+            .addRequiredMod(TargetedMod.ENDLESSIDS)
             .setPhase(Phase.EARLY)),
     DISABLE_WORLD_TYPE_CHUNK_POPULATION(new MixinBuilder("Disable chunk population tied to chunk generation (ores/structure)")
             .addCommonMixins("minecraft.MixinChunkProviderServer_DisablePopulation")
