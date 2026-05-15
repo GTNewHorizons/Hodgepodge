@@ -13,6 +13,7 @@ import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.client.handlers.ClientKeyListener;
 import com.mitchej123.hodgepodge.client.handlers.ReloadSoundsGui;
 import com.mitchej123.hodgepodge.commands.AllocationsCommand;
+import com.mitchej123.hodgepodge.commands.DumpTextureAtlasCommand;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
@@ -66,6 +67,7 @@ public class HodgepodgeClient {
 
         MinecraftForge.EVENT_BUS.register(new AllocationRateHUD(true));
         ClientCommandHandler.instance.registerCommand(new AllocationsCommand());
+        ClientCommandHandler.instance.registerCommand(new DumpTextureAtlasCommand());
 
         FMLCommonHandler.instance().bus().register(new ClientKeyListener());
 
