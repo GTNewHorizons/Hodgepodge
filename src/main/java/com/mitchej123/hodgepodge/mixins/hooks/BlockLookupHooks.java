@@ -1,6 +1,5 @@
 package com.mitchej123.hodgepodge.mixins.hooks;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Set;
@@ -73,27 +72,9 @@ public final class BlockLookupHooks {
     }
 
     public static void rebuild() {
-        final Block[] old = blockById;
-        blockById = null;
+        invalidate();
 
-        if (old != null) {
-            for (final Block b : old) {
-                if (b instanceof BlockExt_FastLookup ext) {
-                    ext.hodgepodge$setBlockId(-1);
-                }
-            }
-        }
-
-        Block[] arr = new Block[4096];
-
-        for (final Object obj : Block.blockRegistry) {
-            final int id = Block.blockRegistry.getIDForObject(obj);
-
-            if (id >= 0) {
-                if (id >= arr.length) arr = Arrays.copyOf(arr, Math.max(arr.length * 2, id + 1));
-                arr[id] = (Block) obj;
-            }
-        }
+        final Block[] arr = buildBlockByIdArray();
 
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] instanceof BlockExt_FastLookup ext) {
@@ -118,5 +99,33 @@ public final class BlockLookupHooks {
         }
 
         loggedUncachedBlocks.clear();
+    }
+
+    private static Block[] buildBlockByIdArray() {
+        int maxId = -1;
+
+        for (final Object obj : Block.blockRegistry) {
+            if (!(obj instanceof Block)) continue;
+
+            final int id = Block.blockRegistry.getIDForObject(obj);
+
+            if (id > maxId) {
+                maxId = id;
+            }
+        }
+
+        final Block[] arr = maxId >= 0 ? new Block[maxId + 1] : new Block[0];
+
+        for (final Object obj : Block.blockRegistry) {
+            if (!(obj instanceof Block block)) continue;
+
+            final int id = Block.blockRegistry.getIDForObject(block);
+
+            if (id >= 0) {
+                arr[id] = block;
+            }
+        }
+
+        return arr;
     }
 }
