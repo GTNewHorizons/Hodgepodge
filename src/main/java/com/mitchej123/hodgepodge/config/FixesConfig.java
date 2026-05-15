@@ -108,6 +108,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixGlStateBugs;
 
+    @Config.Comment("Fix Disconnect screen button overlapping the reason text at large GUI scales")
+    @Config.DefaultBoolean(true)
+    public static boolean fixGuiDisconnectedLayout;
+
     @Config.Comment("Fix Game Over GUI buttons disabled if switching fullscreen")
     @Config.DefaultBoolean(true)
     public static boolean fixGuiGameOver;
