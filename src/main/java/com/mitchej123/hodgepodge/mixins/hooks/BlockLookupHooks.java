@@ -14,8 +14,12 @@ import com.mitchej123.hodgepodge.mixins.interfaces.BlockExt_FastLookup;
 public final class BlockLookupHooks {
 
     private static final Logger LOGGER = LogManager.getLogger("BlockLookupHooks");
+
+    // Track by identity: different Block instances must not be collapsed by equals().
     private static final Set<Block> loggedUncachedBlocks = Collections.newSetFromMap(new IdentityHashMap<>());
 
+    // Published as a whole snapshot. Readers either use the previous complete cache,
+    // the next complete cache, or fall back to the registry while it is null.
     private static volatile Block[] blockById = null;
 
     public static Block getBlockById(final int id) {
@@ -23,7 +27,8 @@ public final class BlockLookupHooks {
 
         if (arr == null) return (Block) Block.blockRegistry.getObjectById(id);
 
-        // arr[0] is air — match FML's default-object behavior for unknown/unregistered IDs
+        // arr[0] is air. This preserves the vanilla/FML behavior where invalid
+        // or missing IDs resolve to the default block instead of null.
         final Block b = (id >= 0 && id < arr.length) ? arr[id] : null;
 
         return b != null ? b : arr[0];
@@ -34,10 +39,15 @@ public final class BlockLookupHooks {
 
         final Block[] arr = blockById;
 
+        // During registry rebuild/remap the fast cache is deliberately disabled.
+        // In that window, the live registry is the source of truth.
         if (arr == null) return Block.blockRegistry.getIDForObject(block);
 
         final int id = ((BlockExt_FastLookup) block).hodgepodge$getBlockId();
 
+        // Do not trust a cached positive ID blindly.
+        // Old-world ID remapping can temporarily leave a Block instance with a stale hodgepodge$blockId.
+        // The cache entry must map back to the same Block instance.
         if (id < 0 || id >= arr.length || arr[id] != block) {
             return getIdFromBlockFallback(block);
         }
@@ -51,6 +61,9 @@ public final class BlockLookupHooks {
         if (registryId >= 0) {
             final Block[] arr = blockById;
 
+            // Only refresh the per-block cached ID if the current array confirms
+            // that this registry ID maps back to the same Block instance.
+            // Otherwise, keep the per-block cache invalid and let future calls consult the registry again.
             if (arr != null && registryId < arr.length && arr[registryId] == block) {
                 ((BlockExt_FastLookup) block).hodgepodge$setBlockId(registryId);
             } else {
@@ -65,6 +78,8 @@ public final class BlockLookupHooks {
                         registryId);
             }
         } else {
+            // The block is not present in the active registry.
+            // Keep its cached ID invalid instead of preserving a stale value.
             ((BlockExt_FastLookup) block).hodgepodge$setBlockId(-1);
         }
 
@@ -72,22 +87,29 @@ public final class BlockLookupHooks {
     }
 
     public static void rebuild() {
+        // Drop old per-block IDs before constructing the new array.
+        // This prevents lookups from observing stale IDs while the active registry is changing.
         invalidate();
 
         final Block[] arr = buildBlockByIdArray();
 
+        // Populate the embedded ID only after the full array has been built from the active registry.
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] instanceof BlockExt_FastLookup ext) {
                 ext.hodgepodge$setBlockId(i);
             }
         }
 
+        // Publish the complete snapshot atomically.
         blockById = arr;
         loggedUncachedBlocks.clear();
     }
 
     public static void invalidate() {
         final Block[] old = blockById;
+
+        // Disable fast lookups first. Any concurrent lookup will fall back to the
+        // registry instead of using a partially invalidated cache.
         blockById = null;
 
         if (old != null) {
@@ -104,6 +126,8 @@ public final class BlockLookupHooks {
     private static Block[] buildBlockByIdArray() {
         int maxId = -1;
 
+        // Do not assume the registry fits in the vanilla 4096 block ID range (EndlessIDs mod).
+        // Build the array size from the actual highest active registry ID.
         for (final Object obj : Block.blockRegistry) {
             if (!(obj instanceof Block)) continue;
 
