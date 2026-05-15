@@ -305,6 +305,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.speedupVanillaFurnace)
             .addRequiredMod(TargetedMod.GTNHLIB)
             .setPhase(Phase.EARLY)),
+    DISCONNECTED_GUI_LAYOUT(new MixinBuilder("Fix Disconnect GUI layout")
+            .addClientMixins("minecraft.MixinGuiDisconnected_FixLayout")
+            .setApplyIf(() -> FixesConfig.fixGuiDisconnectedLayout)
+            .setPhase(Phase.EARLY)),
     GAMEOVER_GUI_LOCKED_DISABLED(new MixinBuilder("Fix Gameover GUI")
             .addClientMixins("minecraft.MixinGuiGameOver")
             .setApplyIf(() -> FixesConfig.fixGuiGameOver)
