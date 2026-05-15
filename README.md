@@ -90,7 +90,7 @@ Hodgepodge is LGPL-3.
 
 Various speedups and crash fixes are implemented, such as preventing "chunk bans" by increasing the packet size limits.
 
-## Debug JVM args
+## Debug Commands & JVM args
 
 A list of JVM args used to activate debugging tools
 
@@ -102,3 +102,7 @@ A list of JVM args used to activate debugging tools
 - `-Dhodgepodge.logEnumValues=true` logs when `Enum#values()` is called a lot, creates a `EnumValuesDebug.csv` file with results
 - `-Dhodgepodge.logIntervalEnumValues=500` used with `logEnumValues`, defines the threshold at which it prints a log message
 - `-Dhodgepodge.logStacktraceEnumValues=true` used with `logEnumValues`, prints the stacktrace of where `Enum#values()` is called
+
+Debug Commands:
+
+- `/dumptextureatlas` dumps both the item & block texture atlas, including all empty & errored textures

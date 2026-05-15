@@ -916,8 +916,9 @@ public enum Mixins implements IMixins {
     BETTER_MOD_LIST(new MixinBuilder()
             .addClientMixins(
                     "fml.MixinGuiModList",
-                    "fml.MixinGuiSlotModList",
-                    "fml.MixinGuiScrollingList")
+                    "fml.MixinGuiScrollingList",
+                    "fml.AccessorGuiScrollingList",
+                    "fml.AccessorGuiSlotModList")
             .setApplyIf(() -> TweaksConfig.betterModList)
             .addExcludedMod(TargetedMod.ENDERCORE_WITH_MODLIST)
             .setPhase(Phase.EARLY)),
@@ -1034,6 +1035,10 @@ public enum Mixins implements IMixins {
     CACHE_ADVANCED_MODEL_LOADER(new MixinBuilder()
             .addClientMixins("forge.MixinAdvancedModelLoader_CacheModels")
             .setApplyIf(() -> MemoryConfig.allocs.cacheAdvancedModels)
+            .setPhase(Phase.EARLY)),
+    FIX_FORGE_PLAYER_LEAK(new MixinBuilder()
+            .addCommonMixins("memory.MixinFakePlayerFactory_FixLeak")
+            .setApplyIf(() -> MemoryConfig.leaks.fixForgePlayerFactoryLeak)
             .setPhase(Phase.EARLY)),
     // endregion
 
