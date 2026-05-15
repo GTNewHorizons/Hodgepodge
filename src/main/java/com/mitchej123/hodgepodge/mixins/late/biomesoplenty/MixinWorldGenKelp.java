@@ -16,12 +16,11 @@ public class MixinWorldGenKelp {
      *         coordinate passed to generate() so that it is offset by +8 blocks.
      */
     @ModifyVariable(
-            method = "Lbiomesoplenty/common/world/features/WorldGenKelp;generate(Lnet/minecraft/world/World;Ljava/util/Random;III)Z",
+            method = "generate(Lnet/minecraft/world/World;Ljava/util/Random;III)Z",
             argsOnly = true,
             at = @At(value = "HEAD"),
-            remap = true,
             ordinal = 0)
-    private int hodgepodge$offsetKelpXBy8(int x) {
+    private int offsetKelpXBy8(int x) {
         return x + 8;
     }
 
@@ -32,12 +31,11 @@ public class MixinWorldGenKelp {
      *         coordinate passed to generate() so that it is offset by +8 blocks.
      */
     @ModifyVariable(
-            method = "Lbiomesoplenty/common/world/features/WorldGenKelp;generate(Lnet/minecraft/world/World;Ljava/util/Random;III)Z",
+            method = "generate(Lnet/minecraft/world/World;Ljava/util/Random;III)Z",
             argsOnly = true,
             at = @At(value = "HEAD"),
-            remap = true,
             ordinal = 2)
-    private int hodgepodge$offsetKelpZBy8(int z) {
+    private int offsetKelpZBy8(int z) {
         return z + 8;
     }
 }
