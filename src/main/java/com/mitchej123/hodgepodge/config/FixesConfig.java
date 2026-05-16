@@ -538,6 +538,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(false)
     public static boolean removeBOPWarning;
 
+    @Config.Comment("Fixes cascading worldgen caused by Biomes O' Plenty Kelp.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBOPCascadingKelp;
+
     // Candycraft
 
     @Config.Comment("Fix NPE when interacting with sugar block")
