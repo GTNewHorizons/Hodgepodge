@@ -27,6 +27,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGameSettings_SprintKey")
             .setApplyIf(() -> TweaksConfig.changeSprintCategory)
             .setPhase(Phase.EARLY)),
+    CONFIGURABLE_MUSIC_DELAY(new MixinBuilder("Configurable delay between in-game music tracks")
+            .addClientMixins("minecraft.MixinMusicTicker")
+            .setApplyIf(() -> TweaksConfig.configurableMusicDelay)
+            .setPhase(Phase.EARLY)),
     SIGN_INPUT_IGNORES_FORMAT_CODES(new MixinBuilder("Sign input counts visible chars only")
             .addClientMixins("minecraft.MixinGuiEditSign")
             .addCommonMixins(
