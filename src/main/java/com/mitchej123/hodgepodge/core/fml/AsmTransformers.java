@@ -59,7 +59,13 @@ public enum AsmTransformers implements ITransformers {
             "Removes the logging of GL errors from OptiFine/Shadersmod",
             () -> TweaksConfig.removeOptifineGLErrors,
             Side.CLIENT,
-            "com.mitchej123.hodgepodge.core.fml.transformers.optifine.GLErrorLoggingTransformer");
+            "com.mitchej123.hodgepodge.core.fml.transformers.optifine.GLErrorLoggingTransformer"),
+    PER_WORLD_DIFFICULTY(
+            "Backport per-world difficulty from 1.8.9: redirects all World.difficultySetting accesses through WorldInfo",
+            () -> TweaksConfig.perWorldDifficulty,
+             Side.COMMON,
+            "com.mitchej123.hodgepodge.core.fml.transformers.mc.DifficultyFieldTransformer");
+
     // spotless:on
 
     private final TransformerBuilder builder;

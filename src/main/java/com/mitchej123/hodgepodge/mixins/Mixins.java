@@ -984,10 +984,6 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinItemRenderer_FixInstantItemSwitch")
             .setApplyIf(() -> FixesConfig.fixInstantHandItemTextureSwitch)
             .setPhase(Phase.EARLY)),
-    SEND_DIFFICULTY_CHANGE_TO_CLIENT(new MixinBuilder("When difficulty updates on the server, inform all clients")
-            .addCommonMixins("minecraft.MixinMinecraftServer_UpdateClientDifficulty")
-            .setApplyIf(() -> FixesConfig.updateClientDifficultyOnServer)
-            .setPhase(Phase.EARLY)),
     MAINTAIN_SLIME_HEALTH(new MixinBuilder("Prevent slimes from resetting to max health when loaded from NBT")
             .setApplyIf(() -> FixesConfig.maintainSlimeHealth)
             .addCommonMixins("minecraft.MixinEntitySlime_MaintainHealth")
@@ -1040,6 +1036,18 @@ public enum Mixins implements IMixins {
             .addCommonMixins("memory.MixinFakePlayerFactory_FixLeak")
             .setApplyIf(() -> MemoryConfig.leaks.fixForgePlayerFactoryLeak)
             .setPhase(Phase.EARLY)),
+    PER_WORLD_DIFFICULTY(new MixinBuilder()
+            .addCommonMixins("minecraft.difficulty.MixinIntegratedServer",
+                    "minecraft.difficulty.MixinServerConfigurationManager",
+                    "minecraft.difficulty.MixinDerivedWorldInfo",
+                    "minecraft.difficulty.MixinWorldInfo")
+            .addClientMixins("minecraft.difficulty.MixinGuiOptions",
+                    "minecraft.difficulty.MixinNetHandlerPlayClient")
+            .setApplyIf(() -> TweaksConfig.perWorldDifficulty)
+            .setPhase(Phase.EARLY)
+
+    ),
+
     // endregion
 
     // region Ic2 adjustments

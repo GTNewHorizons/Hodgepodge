@@ -5,6 +5,9 @@ import net.minecraft.world.EnumDifficulty;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
+import com.mitchej123.hodgepodge.config.TweaksConfig;
+import com.mitchej123.hodgepodge.core.fml.hooks.mc.DifficultyHook;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import iguanaman.hungeroverhaul.HungerOverhaul;
 import iguanaman.hungeroverhaul.config.IguanaConfig;
@@ -24,7 +27,9 @@ public class MixinHungerOverhaulHealthRegen {
         float wellfedModifier = 1.0F;
         if (event.player.isPotionActive(HungerOverhaul.potionWellFed)) wellfedModifier = 0.75F;
 
-        EnumDifficulty difficulty = event.player.worldObj.difficultySetting;
+        EnumDifficulty difficulty = TweaksConfig.perWorldDifficulty
+                ? DifficultyHook.getDifficulty(event.player.worldObj)
+                : event.player.worldObj.difficultySetting;
         float difficultyModifierHealing = 1.0F;
         if (IguanaConfig.difficultyScalingHealing) {
             if (difficulty.getDifficultyId() <= EnumDifficulty.EASY.getDifficultyId())
