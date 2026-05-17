@@ -12,7 +12,7 @@ public class StringUtil {
         int count = 0;
         for (int i = 0; i < len; i++) {
             final char c = chars[i];
-            if (c == '§' && i + 1 < len && "0123456789abcdefklmnorABCDEFKLMNOR".indexOf(chars[i + 1]) != -1) {
+            if (c == '§' && i + 1 < len && "0123456789abcdefklmnorqzvuABCDEFKLMNORQZVU".indexOf(chars[i + 1]) != -1) {
                 i++;
                 continue;
             }

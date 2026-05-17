@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class MixinNetHandlerPlayServer_AnvilColorCodes {
 
     // Note: 'g' excluded — &g only valid as part of &g&#RRGGBB&#RRGGBB (handled separately below)
-    private static final String HODGEPODGE$VALID_CODES = "0123456789abcdefklmnorqzv";
+    private static final String HODGEPODGE$VALID_CODES = "0123456789abcdefklmnorqzvu";
 
     /**
      * Vanilla checks {@code s.length() <= 30} for anvil item names and silently drops the name if exceeded. With color
