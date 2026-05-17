@@ -26,7 +26,7 @@ public final class ColorFormatUtils {
     public static final int AMP_GRADIENT_LEN = 2 + AMP_HEX_LEN + AMP_HEX_LEN;
 
     /** Valid single {@code &} codes (excludes {@code g} which only converts as {@code &g&#RRGGBB&#RRGGBB}). */
-    public static final String VALID_AMP_SINGLE_CODES = "0123456789abcdefklmnorqzv";
+    public static final String VALID_AMP_SINGLE_CODES = "0123456789abcdefklmnorqzvu";
 
     /**
      * Codes that terminate an active gradient: reset ({@code r}), legacy colors ({@code 0}-{@code 9}, {@code a}-{@code
