@@ -12,7 +12,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiDifficultyLockButton extends GuiButton {
 
-    private static final ResourceLocation LOCK_TEXTURE = new ResourceLocation("hodgepodge", "textures/gui/lock_icons.png");
+    private static final ResourceLocation LOCK_TEXTURE = new ResourceLocation(
+            "hodgepodge",
+            "textures/gui/lock_icons.png");
 
     private boolean locked;
 
@@ -35,7 +37,9 @@ public class GuiDifficultyLockButton extends GuiButton {
         mc.getTextureManager().bindTexture(LOCK_TEXTURE);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        final boolean hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+        final boolean hovered = mouseX >= this.xPosition && mouseY >= this.yPosition
+                && mouseX < this.xPosition + this.width
+                && mouseY < this.yPosition + this.height;
 
         final Icon icon = Icon.get(this.locked, this.enabled, hovered);
 
@@ -71,12 +75,18 @@ public class GuiDifficultyLockButton extends GuiButton {
         public static Icon get(boolean locked, boolean enabled, boolean hovered) {
             final int state = (locked ? 0 : 3) + (!enabled ? 2 : hovered ? 1 : 0);
             switch (state) {
-                case 1: return LOCKED_HOVER;
-                case 2: return LOCKED_DISABLED;
-                case 3: return UNLOCKED;
-                case 4: return UNLOCKED_HOVER;
-                case 5: return UNLOCKED_DISABLED;
-                default: return LOCKED;
+                case 1:
+                    return LOCKED_HOVER;
+                case 2:
+                    return LOCKED_DISABLED;
+                case 3:
+                    return UNLOCKED;
+                case 4:
+                    return UNLOCKED_HOVER;
+                case 5:
+                    return UNLOCKED_DISABLED;
+                default:
+                    return LOCKED;
             }
         }
     }
