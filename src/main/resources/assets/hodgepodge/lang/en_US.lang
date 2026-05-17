@@ -67,3 +67,6 @@ hodgepodge.debug.help.9=F3 + S/T = Reload resource packs
 hodgepodge.debug.help.etfuturum=F3 + F4 = [Et-Futurum-Requiem] Open game mode switcher
 hodgepodge.debug.help.nei.1=%s = [NEI] Open Mob Spawning Overlay
 hodgepodge.debug.help.nei.2=%s = [NEI] Open Chunk Overlay
+
+difficulty.lock.title=Lock World Difficulty
+difficulty.lock.question=Are you sure you want to lock the difficulty of this world? This will set this world to always be %1$s, and you will never be able to change that again.
