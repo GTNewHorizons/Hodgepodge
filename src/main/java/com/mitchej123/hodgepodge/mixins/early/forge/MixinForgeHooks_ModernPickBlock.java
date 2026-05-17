@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mitchej123.hodgepodge.Common;
 
 @Mixin(value = ForgeHooks.class, remap = false)
 public class MixinForgeHooks_ModernPickBlock {
@@ -23,6 +24,15 @@ public class MixinForgeHooks_ModernPickBlock {
     private static void hodgepodge$onPickBlock(MovingObjectPosition target, EntityPlayer player, World world,
             CallbackInfoReturnable<Boolean> cir, @Local(name = "result") ItemStack result) {
         Minecraft clientObject = Minecraft.getMinecraft();
+        // Pick-block fires only with no GUI shown, so openContainer should already be inventoryContainer.
+        // If it isn't, some mod leaked a container reference and we should fix the state.
+        if (player.openContainer != player.inventoryContainer) {
+            Common.log.warn(
+                    "ModernPickBlock: leaked openContainer {} (size={}); resetting to inventoryContainer",
+                    player.openContainer.getClass().getName(),
+                    player.openContainer.inventorySlots.size());
+            player.closeScreen();
+        }
         for (int x = 9; x < 36; x++) {
             ItemStack stack = player.inventory.getStackInSlot(x);
             if (stack != null && stack.isItemEqual(result) && ItemStack.areItemStackTagsEqual(stack, result)) {

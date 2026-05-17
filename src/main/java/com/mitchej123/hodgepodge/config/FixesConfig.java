@@ -36,6 +36,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixChatWrappedColors;
 
+    @Config.Comment("Fix /say, /tell, /me losing formatting after the first word")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCommandFormattingLoss;
+
     @Config.Comment("Prevents crash if server sends container with wrong itemStack size")
     @Config.DefaultBoolean(true)
     public static boolean fixContainerPutStacksInSlots;
@@ -533,6 +537,10 @@ public class FixesConfig {
     @Config.Comment("Remove the BOP warning on first world generation (ignored when dreamcraft is present)")
     @Config.DefaultBoolean(false)
     public static boolean removeBOPWarning;
+
+    @Config.Comment("Fixes cascading worldgen caused by Biomes O' Plenty Kelp.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBOPCascadingKelp;
 
     // Candycraft
 
