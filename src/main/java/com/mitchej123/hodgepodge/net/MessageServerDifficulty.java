@@ -26,13 +26,13 @@ public class MessageServerDifficulty implements IPacket {
     }
 
     @Override
-    public void encode(PacketBuffer buf) throws IOException {
+    public void encode(PacketBuffer buf)  {
         buf.writeByte(difficulty.getDifficultyId());
         buf.writeBoolean(locked);
     }
 
     @Override
-    public void decode(PacketBuffer buf) throws IOException {
+    public void decode(PacketBuffer buf) {
         difficulty = EnumDifficulty.getDifficultyEnum(buf.readUnsignedByte());
         locked = buf.readBoolean();
     }

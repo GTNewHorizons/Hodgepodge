@@ -56,14 +56,13 @@ public abstract class MixinIntegratedServer extends MinecraftServer {
         // Read ACTUAL state after super
         WorldServer[] servers = this.worldServers;
         WorldServer server = this.worldServers[0];
-        if (servers == null) return;
         if (server == null || !(server.getWorldInfo() instanceof IWorldDifficulty info)) return;
 
         this.mc.gameSettings.difficulty = info.getDifficulty();
 
         // Sync client WorldInfo immediately without waiting for packet
         WorldClient worldClient = this.mc.theWorld;
-        if (worldClient != null && worldClient instanceof IWorldDifficulty worldDifficulty) {
+        if (worldClient instanceof IWorldDifficulty worldDifficulty) {
             worldDifficulty.setDifficulty(info.getDifficulty());
             worldDifficulty.setDifficultyLocked(info.isDifficultyLocked());
         }

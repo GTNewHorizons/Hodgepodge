@@ -125,12 +125,12 @@ public class TileEntityDescriptionBatcher {
         public ByteBuf data;
 
         @Override
-        public void encode(PacketBuffer buf) throws IOException {
+        public void encode(PacketBuffer buf) {
             buf.writeBytes(this.data);
         }
 
         @Override
-        public void decode(PacketBuffer buf) throws IOException {
+        public void decode(PacketBuffer buf) {
             this.data = Unpooled.buffer(buf.readableBytes());
             this.data.writeBytes(buf);
         }

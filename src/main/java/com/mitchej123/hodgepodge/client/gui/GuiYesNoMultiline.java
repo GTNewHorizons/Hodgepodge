@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.client.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 
@@ -35,8 +36,8 @@ public class GuiYesNoMultiline extends GuiYesNo {
             y += this.fontRendererObj.FONT_HEIGHT;
         }
 
-        for (int i = 0; i < this.buttonList.size(); ++i) {
-            this.buttonList.get(i).drawButton(this.mc, mouseX, mouseY);
+        for (GuiButton guiButton : this.buttonList) {
+            guiButton.drawButton(this.mc, mouseX, mouseY);
         }
     }
 }

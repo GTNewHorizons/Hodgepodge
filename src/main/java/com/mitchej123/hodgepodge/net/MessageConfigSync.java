@@ -22,13 +22,13 @@ public class MessageConfigSync implements IPacket {
     }
 
     @Override
-    public void encode(PacketBuffer buf) throws IOException {
+    public void encode(PacketBuffer buf) {
         buf.writeBoolean(longerSentMessages);
         buf.writeBoolean(fastBlockPlacingServerSide);
     }
 
     @Override
-    public void decode(PacketBuffer buf) throws IOException {
+    public void decode(PacketBuffer buf) {
         longerSentMessages = buf.readBoolean();
         // Ensures clients with the setting can still join servers without the setting
         // (servers running older versions of the mod).

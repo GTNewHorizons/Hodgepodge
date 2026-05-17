@@ -103,19 +103,17 @@ public class DifficultyFieldTransformer implements IClassTransformer {
         @Override
         public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
             final MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
-            return new DifficultyMethodVisitor(mv, className + "." + name, isVanilla, this);
+            return new DifficultyMethodVisitor(mv, isVanilla, this);
         }
     }
 
     private static final class DifficultyMethodVisitor extends MethodVisitor {
 
-        private final String location;
         private final boolean isVanilla;
         private final DifficultyVisitor parent;
 
-        DifficultyMethodVisitor(MethodVisitor mv, String location, boolean isVanilla, DifficultyVisitor parent) {
+        DifficultyMethodVisitor(MethodVisitor mv, boolean isVanilla, DifficultyVisitor parent) {
             super(ASM5, mv);
-            this.location = location;
             this.isVanilla = isVanilla;
             this.parent = parent;
         }

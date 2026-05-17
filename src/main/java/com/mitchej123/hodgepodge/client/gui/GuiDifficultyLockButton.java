@@ -23,7 +23,7 @@ public class GuiDifficultyLockButton extends GuiButton {
     }
 
     public boolean isLocked() {
-        return this.locked;
+        return !this.locked;
     }
 
     public void setLocked(boolean lockedIn) {
@@ -43,7 +43,7 @@ public class GuiDifficultyLockButton extends GuiButton {
 
         final Icon icon = Icon.get(this.locked, this.enabled, hovered);
 
-        this.func_146110_a(this.xPosition, this.yPosition, icon.getU(), icon.getV(), this.width, this.height, 64, 64);
+        func_146110_a(this.xPosition, this.yPosition, icon.getU(), icon.getV(), this.width, this.height, 64, 64);
     }
 
     @SideOnly(Side.CLIENT)
@@ -74,20 +74,14 @@ public class GuiDifficultyLockButton extends GuiButton {
 
         public static Icon get(boolean locked, boolean enabled, boolean hovered) {
             final int state = (locked ? 0 : 3) + (!enabled ? 2 : hovered ? 1 : 0);
-            switch (state) {
-                case 1:
-                    return LOCKED_HOVER;
-                case 2:
-                    return LOCKED_DISABLED;
-                case 3:
-                    return UNLOCKED;
-                case 4:
-                    return UNLOCKED_HOVER;
-                case 5:
-                    return UNLOCKED_DISABLED;
-                default:
-                    return LOCKED;
-            }
+            return switch (state) {
+                case 1 -> LOCKED_HOVER;
+                case 2 -> LOCKED_DISABLED;
+                case 3 -> UNLOCKED;
+                case 4 -> UNLOCKED_HOVER;
+                case 5 -> UNLOCKED_DISABLED;
+                default -> LOCKED;
+            };
         }
     }
 }

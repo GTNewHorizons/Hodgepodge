@@ -30,8 +30,6 @@ public abstract class MixinGuiOptions extends GuiScreen implements GuiYesNoCallb
 
     @Unique
     private GuiButton hodgepodge$difficultyButton = null;
-    @Unique
-    private GuiDifficultyLockButton hodgepodge$lockButton = null;
 
     // remove the GameSettings.Options.DIFFICULTY from the main menu options
     @WrapOperation(
@@ -64,15 +62,15 @@ public abstract class MixinGuiOptions extends GuiScreen implements GuiYesNoCallb
 
             if (this.mc.isSingleplayer() && !this.mc.theWorld.getWorldInfo().isHardcoreModeEnabled()) {
                 this.hodgepodge$difficultyButton.width = this.hodgepodge$difficultyButton.getButtonWidth() - 20;
-                this.hodgepodge$lockButton = new GuiDifficultyLockButton(
+                GuiDifficultyLockButton hodgepodge$lockButton = new GuiDifficultyLockButton(
                         109,
                         this.hodgepodge$difficultyButton.xPosition + this.hodgepodge$difficultyButton.getButtonWidth(),
                         this.hodgepodge$difficultyButton.yPosition);
-                this.buttonList.add(this.hodgepodge$lockButton);
+                this.buttonList.add(hodgepodge$lockButton);
 
-                this.hodgepodge$lockButton.setLocked(pwd.isDifficultyLocked());
-                this.hodgepodge$lockButton.enabled = !this.hodgepodge$lockButton.isLocked();
-                this.hodgepodge$difficultyButton.enabled = !this.hodgepodge$lockButton.isLocked();
+                hodgepodge$lockButton.setLocked(pwd.isDifficultyLocked());
+                hodgepodge$lockButton.enabled = hodgepodge$lockButton.isLocked();
+                this.hodgepodge$difficultyButton.enabled = hodgepodge$lockButton.isLocked();
             } else {
                 this.hodgepodge$difficultyButton.enabled = false;
             }
