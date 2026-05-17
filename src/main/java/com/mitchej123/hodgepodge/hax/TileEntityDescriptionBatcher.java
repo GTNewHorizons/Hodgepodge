@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.INetHandlerPlayClient;
@@ -19,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.MapMaker;
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
+import com.gtnewhorizon.gtnhlib.network.base.IPacket;
 import com.mitchej123.hodgepodge.client.AsyncNBTParser;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
@@ -26,9 +28,8 @@ import com.mitchej123.hodgepodge.net.NetworkHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
@@ -119,51 +120,41 @@ public class TileEntityDescriptionBatcher {
         NetworkHandler.instance.sendTo(packet, player);
     }
 
-    public static class BatchedDescriptionPacket implements IMessage {
+    public static class BatchedDescriptionPacket implements IPacket {
 
         public ByteBuf data;
 
         @Override
-        public void fromBytes(ByteBuf buf) {
+        public void encode(PacketBuffer buf) throws IOException {
+            buf.writeBytes(this.data);
+        }
+
+        @Override
+        public void decode(PacketBuffer buf) throws IOException {
             this.data = Unpooled.buffer(buf.readableBytes());
-
-            data.writeBytes(buf);
+            this.data.writeBytes(buf);
         }
 
         @Override
-        public void toBytes(ByteBuf buf) {
-            buf.writeBytes(data);
-        }
-    }
-
-    public static class BatchedDescriptionHandler implements IMessageHandler<BatchedDescriptionPacket, IMessage> {
-
-        @Override
-        public IMessage onMessage(BatchedDescriptionPacket message, MessageContext ctx) {
-            if (!(ctx.netHandler instanceof INetHandlerPlayClient client)) {
-                LOGGER.error(
-                        "Received BatchedDescriptionPacket while not playing: ignoring it (ctx: {})",
-                        ctx.netHandler);
-                return null;
-            }
-
+        @SideOnly(Side.CLIENT)
+        public IPacket executeClient(NetHandlerPlayClient handler) {
             if (SpeedupsConfig.asyncBatchedNBTParsing) {
                 // Copy bytes for async processing - the original buffer may be reused
-                byte[] rawData = new byte[message.data.readableBytes()];
-                message.data.readBytes(rawData);
+                byte[] rawData = new byte[this.data.readableBytes()];
+                this.data.readBytes(rawData);
 
                 AsyncNBTParser.submit(() -> {
                     List<S35PacketUpdateTileEntity> packets = parsePackets(rawData);
                     if (!packets.isEmpty()) {
                         Minecraft.getMinecraft().func_152344_a(() -> {
                             for (S35PacketUpdateTileEntity packet : packets) {
-                                client.handleUpdateTileEntity(packet);
+                                handler.handleUpdateTileEntity(packet);
                             }
                         });
                     }
                 });
             } else {
-                parseAndHandle(message.data, client);
+                parseAndHandle(this.data, handler);
             }
 
             return null;

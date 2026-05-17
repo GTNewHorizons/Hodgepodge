@@ -1,13 +1,17 @@
 package com.mitchej123.hodgepodge.net;
 
+import java.io.IOException;
+
+import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.network.PacketBuffer;
+
+import com.gtnewhorizon.gtnhlib.network.base.IPacket;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-public class MessageConfigSync implements IMessage, IMessageHandler<MessageConfigSync, IMessage> {
+public class MessageConfigSync implements IPacket {
 
     private boolean longerSentMessages;
     private boolean fastBlockPlacingServerSide;
@@ -18,36 +22,25 @@ public class MessageConfigSync implements IMessage, IMessageHandler<MessageConfi
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        longerSentMessages = buf.readBoolean();
-        // Ensures clients with the setting can still join servers without the setting (servers running older versions
-        // of the mod)
-        if (buf.readableBytes() < 1) {
-            fastBlockPlacingServerSide = true;
-        } else {
-            fastBlockPlacingServerSide = buf.readBoolean();
-        }
-    }
-
-    @Override
-    public void toBytes(ByteBuf buf) {
+    public void encode(PacketBuffer buf) throws IOException {
         buf.writeBoolean(longerSentMessages);
         buf.writeBoolean(fastBlockPlacingServerSide);
     }
 
-    public boolean isFastBlockPlacingServerSide() {
-        return fastBlockPlacingServerSide;
-    }
-
-    public boolean isLongerSentMessages() {
-        return longerSentMessages;
+    @Override
+    public void decode(PacketBuffer buf) throws IOException {
+        longerSentMessages = buf.readBoolean();
+        // Ensures clients with the setting can still join servers without the setting
+        // (servers running older versions of the mod).
+        fastBlockPlacingServerSide = buf.readableBytes() < 1 || buf.readBoolean();
     }
 
     @Override
-    public IMessage onMessage(MessageConfigSync message, MessageContext ctx) {
-        TweaksConfig.longerSentMessages = message.isLongerSentMessages();
+    @SideOnly(Side.CLIENT)
+    public IPacket executeClient(NetHandlerPlayClient handler) {
+        TweaksConfig.longerSentMessages = longerSentMessages;
 
-        if (!message.isFastBlockPlacingServerSide()) {
+        if (!fastBlockPlacingServerSide) {
             TweaksConfig.fastBlockPlacing = false;
             TweaksConfig.fastBlockPlacingServerSide = false;
         }
