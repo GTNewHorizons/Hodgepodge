@@ -232,6 +232,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean cleanChatLogs = true;
 
+    @Config.Comment("Backport per-world difficulty from 1.8.9")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean perWorldDifficulty = true;
+
     // NBT String Pooling
 
     @Config.Comment("Enable string pooling for NBT TagCompound Keys")
