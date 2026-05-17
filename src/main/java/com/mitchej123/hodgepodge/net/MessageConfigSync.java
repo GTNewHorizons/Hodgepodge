@@ -1,7 +1,5 @@
 package com.mitchej123.hodgepodge.net;
 
-import java.io.IOException;
-
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.PacketBuffer;
 

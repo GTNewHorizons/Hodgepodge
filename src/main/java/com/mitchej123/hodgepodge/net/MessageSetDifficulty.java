@@ -1,7 +1,5 @@
 package com.mitchej123.hodgepodge.net;
 
-import java.io.IOException;
-
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.server.MinecraftServer;
@@ -24,7 +22,7 @@ public class MessageSetDifficulty implements IPacket {
     }
 
     @Override
-    public void encode(PacketBuffer buf)  {
+    public void encode(PacketBuffer buf) {
         buf.writeByte(this.difficulty.getDifficultyId());
         buf.writeBoolean(this.locked);
     }
