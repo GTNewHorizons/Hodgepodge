@@ -13,7 +13,8 @@ public class MixinMerchantRecipeList_ReadPacketData {
 
     @ModifyReturnValue(method = "func_151390_b", at = @At(value = "TAIL"))
     private static MerchantRecipeList hodgepodge$readPacketData(MerchantRecipeList original, PacketBuffer buffer) {
-        // This is a S3FPacketCustomPayload, so the buffer is basically always larger than needed with the rest being zeros.
+        // This is a S3FPacketCustomPayload, so the buffer is basically always larger than needed with the rest being
+        // zeros.
         // To make this not set tool uses and max trade uses to zero if hodgepodge is not present on the server side,
         // cancel if the signal from the server side patch is not detected
         if (buffer.readableBytes() == 0 || !buffer.readBoolean()) {
