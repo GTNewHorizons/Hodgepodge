@@ -1800,6 +1800,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.noPauseGuiClipboard)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
+    BIBLIOCRAFT_PAINTING_UTIL_FIX(new MixinBuilder("PaintingUtil jar Path Fix")
+            .addCommonMixins("bibliocraft.MixinPaintingUtil")
+            .setApplyIf(() -> FixesConfig.fixBibliocraftPaintingUtilPath)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
+            .setPhase(Phase.LATE)),
     BIBLIOCRAFT_FIX_TESR_WORLD_LEAK(new MixinBuilder()
             .addClientMixins(
                     "bibliocraft.leaks.MixinTileEntityArmorStandRenderer",
