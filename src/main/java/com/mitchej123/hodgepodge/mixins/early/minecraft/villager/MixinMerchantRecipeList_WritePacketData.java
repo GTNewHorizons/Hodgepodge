@@ -16,6 +16,9 @@ public class MixinMerchantRecipeList_WritePacketData extends ArrayList<MerchantR
 
     @Inject(method = "func_151391_a", at = @At(value = "TAIL"))
     private void hodgepodge$writePacketData(PacketBuffer buffer, CallbackInfo ci) {
+        // signal to client that the following data is real data and not just padding
+        buffer.writeBoolean(true);
+
         for (MerchantRecipe recipe : this) {
             buffer.writeVarIntToBuffer(((AccessorMerchantRecipe) recipe).hodgepodge$getToolUses());
             buffer.writeVarIntToBuffer(((AccessorMerchantRecipe) recipe).hodgepodge$getMaxTradeUses());
