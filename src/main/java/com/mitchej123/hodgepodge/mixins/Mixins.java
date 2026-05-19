@@ -919,8 +919,9 @@ public enum Mixins implements IMixins {
     BETTER_MOD_LIST(new MixinBuilder()
             .addClientMixins(
                     "fml.MixinGuiModList",
-                    "fml.MixinGuiSlotModList",
-                    "fml.MixinGuiScrollingList")
+                    "fml.MixinGuiScrollingList",
+                    "fml.AccessorGuiScrollingList",
+                    "fml.AccessorGuiSlotModList")
             .setApplyIf(() -> TweaksConfig.betterModList)
             .addExcludedMod(TargetedMod.ENDERCORE_WITH_MODLIST)
             .setPhase(Phase.EARLY)),
@@ -1037,6 +1038,10 @@ public enum Mixins implements IMixins {
     CACHE_ADVANCED_MODEL_LOADER(new MixinBuilder()
             .addClientMixins("forge.MixinAdvancedModelLoader_CacheModels")
             .setApplyIf(() -> MemoryConfig.allocs.cacheAdvancedModels)
+            .setPhase(Phase.EARLY)),
+    FIX_FORGE_PLAYER_LEAK(new MixinBuilder()
+            .addCommonMixins("memory.MixinFakePlayerFactory_FixLeak")
+            .setApplyIf(() -> MemoryConfig.leaks.fixForgePlayerFactoryLeak)
             .setPhase(Phase.EARLY)),
     // endregion
 
@@ -1394,6 +1399,11 @@ public enum Mixins implements IMixins {
                     "biomesoplenty.MixinWorldGenBOPTallGrass_CacheItemStack",
                     "biomesoplenty.MixinBiomeFeatures_CacheFields")
             .setApplyIf(() -> SpeedupsConfig.speedupBOPBiomeDecoration)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    FIX_BOP_CASCADING_KELP(new MixinBuilder("Fixes cascading worldgen caused by BOP Kelp.")
+            .addCommonMixins("biomesoplenty.MixinWorldGenKelp")
+            .setApplyIf(() -> FixesConfig.fixBOPCascadingKelp)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
 
@@ -1791,6 +1801,11 @@ public enum Mixins implements IMixins {
     BIBLIOCRAFT_NO_PAUSE_GUI_CLIPBOARD(new MixinBuilder()
             .addCommonMixins("bibliocraft.MixinGuiClipboard_NoPause")
             .setApplyIf(() -> FixesConfig.noPauseGuiClipboard)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
+            .setPhase(Phase.LATE)),
+    BIBLIOCRAFT_PAINTING_UTIL_FIX(new MixinBuilder("PaintingUtil jar Path Fix")
+            .addCommonMixins("bibliocraft.MixinPaintingUtil")
+            .setApplyIf(() -> FixesConfig.fixBibliocraftPaintingUtilPath)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
     BIBLIOCRAFT_FIX_TESR_WORLD_LEAK(new MixinBuilder()

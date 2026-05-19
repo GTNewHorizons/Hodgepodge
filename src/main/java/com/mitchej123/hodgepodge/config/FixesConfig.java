@@ -518,6 +518,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean noPauseGuiClipboard;
 
+    @Config.Comment("Fix Bibliocraft PaintingUtil getting it's own jar path")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBibliocraftPaintingUtilPath;
+
     // Bibliowoods Forestry
 
     @Config.Comment("Fix Bibliowoods Forestry recipes")
@@ -537,6 +541,10 @@ public class FixesConfig {
     @Config.Comment("Remove the BOP warning on first world generation (ignored when dreamcraft is present)")
     @Config.DefaultBoolean(false)
     public static boolean removeBOPWarning;
+
+    @Config.Comment("Fixes cascading worldgen caused by Biomes O' Plenty Kelp.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBOPCascadingKelp;
 
     // Candycraft
 

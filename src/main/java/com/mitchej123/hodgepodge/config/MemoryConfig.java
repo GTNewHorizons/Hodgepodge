@@ -115,6 +115,11 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean fixBibliocraftTESRWorldLeak;
+
+        @Config.Comment("Fix forge's FakePlayerFactory leaking the world instance")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixForgePlayerFactoryLeak;
     }
 
     public static class AllocationFixes {
