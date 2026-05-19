@@ -472,4 +472,8 @@ public class TweaksConfig {
     @Config.Comment("Allow creative tab gui title color via localization key")
     @Config.DefaultBoolean(true)
     public static boolean creativeTabLocalizationOverrides;
+
+    @Config.Comment("Makes the int cache size more readable")
+    @Config.DefaultBoolean(true)
+    public static boolean moreReadableIntCacheSize;
 }
