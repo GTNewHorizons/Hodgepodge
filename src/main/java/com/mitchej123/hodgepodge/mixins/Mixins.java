@@ -28,7 +28,9 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.changeSprintCategory)
             .setPhase(Phase.EARLY)),
     SIGN_INPUT_IGNORES_FORMAT_CODES(new MixinBuilder("Sign input counts visible chars only")
-            .addClientMixins("minecraft.MixinGuiEditSign")
+            .addClientMixins(
+                    "minecraft.MixinGuiEditSign",
+                    "minecraft.MixinTileEntitySignRenderer_CursorReset")
             .addCommonMixins(
                     "minecraft.MixinNetHandlerPlayServer_SignLimit",
                     "minecraft.MixinC12PacketUpdateSign_RaiseReadLimit",
