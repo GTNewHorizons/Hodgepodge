@@ -15,6 +15,10 @@ public enum Mixins implements IMixins {
 
     // spotless:off
     // region Vanilla Fixes
+    HODGEPODGE_F3_INFO(new MixinBuilder()
+            .addClientMixins("debug.MixinIntCache")
+            .setApplyIf(() -> TweaksConfig.moreReadableIntCacheSize)
+            .setPhase(Phase.EARLY)),
     FIX_DATAWATCHER_SHARING_OBJECTS_IN_SP(new MixinBuilder()
             .addClientMixins("minecraft.MixinDataWatcher_DeepCopyInSP")
             .setApplyIf(() -> FixesConfig.deepCopyDataWatcherInSP)
