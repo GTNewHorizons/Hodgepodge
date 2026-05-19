@@ -518,6 +518,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean noPauseGuiClipboard;
 
+    @Config.Comment("Fix Bibliocraft PaintingUtil getting it's own jar path")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBibliocraftPaintingUtilPath;
+
     // Bibliowoods Forestry
 
     @Config.Comment("Fix Bibliowoods Forestry recipes")
