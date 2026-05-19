@@ -54,7 +54,6 @@ public abstract class MixinIntegratedServer extends MinecraftServer {
     public void func_147139_a(EnumDifficulty difficulty) {
         super.func_147139_a(difficulty);
         // Read ACTUAL state after super
-        WorldServer[] servers = this.worldServers;
         WorldServer server = this.worldServers[0];
         if (server == null || !(server.getWorldInfo() instanceof IWorldDifficulty info)) return;
 
