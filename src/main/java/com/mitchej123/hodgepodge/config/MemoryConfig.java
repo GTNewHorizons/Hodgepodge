@@ -138,5 +138,10 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean cacheAdvancedModels;
+
+        @Config.Comment("Reduce the memory usage from resource location domain strings")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean internResourceLocationDomain;
     }
 }
