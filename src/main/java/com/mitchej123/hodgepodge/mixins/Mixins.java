@@ -1044,6 +1044,13 @@ public enum Mixins implements IMixins {
             .addCommonMixins("memory.MixinFakePlayerFactory_FixLeak")
             .setApplyIf(() -> MemoryConfig.leaks.fixForgePlayerFactoryLeak)
             .setPhase(Phase.EARLY)),
+    INTERN_ASMDATATABLE_STRINGS(new MixinBuilder()
+            .addCommonMixins(
+                    "fml.MixinEnumHolder_Intern",
+                    "fml.MixinModAnnotation_Intern",
+                    "fml.MixinASMData_Intern")
+            .setApplyIf(() -> MemoryConfig.allocs.internASMDataTableStrings)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments
