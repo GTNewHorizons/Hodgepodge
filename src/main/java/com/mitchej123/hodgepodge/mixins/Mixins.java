@@ -1048,6 +1048,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("memory.MixinResourceLocation_Intern")
             .setApplyIf(() -> MemoryConfig.allocs.internResourceLocationDomain)
             .setPhase(Phase.EARLY)),
+    INTERN_UNIQUE_IDENTIFIER_MODID(new MixinBuilder()
+            .addClientMixins("fml.MixinUniqueIdentifier_Intern")
+            .setApplyIf(() -> MemoryConfig.allocs.internUniqueIdentifierModid)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments

@@ -143,5 +143,10 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean internResourceLocationDomain;
+
+        @Config.Comment("Reduce the memory usage from unique identifier modid strings")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean internUniqueIdentifierModid;
     }
 }
