@@ -22,4 +22,13 @@ public class MixinModAnnotation_Intern {
     private String intern(String original) {
         return ASMDataStringPooler.intern(original);
     }
+
+    @Definition(id = "member", field = "Lcpw/mods/fml/common/discovery/asm/ModAnnotation;member:Ljava/lang/String;")
+    @Expression("this.member = @(?)")
+    @ModifyExpressionValue(
+            method = "<init>(Lcpw/mods/fml/common/discovery/asm/ASMModParser$AnnotationType;Lorg/objectweb/asm/Type;Ljava/lang/String;)V",
+            at = @At("MIXINEXTRAS:EXPRESSION"))
+    private String intern2(String original) {
+        return ASMDataStringPooler.intern(original);
+    }
 }
