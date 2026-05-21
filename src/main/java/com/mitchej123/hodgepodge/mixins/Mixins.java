@@ -15,6 +15,10 @@ public enum Mixins implements IMixins {
 
     // spotless:off
     // region Vanilla Fixes
+    HODGEPODGE_F3_INFO(new MixinBuilder()
+            .addClientMixins("debug.MixinIntCache")
+            .setApplyIf(() -> TweaksConfig.moreReadableIntCacheSize)
+            .setPhase(Phase.EARLY)),
     FIX_DATAWATCHER_SHARING_OBJECTS_IN_SP(new MixinBuilder()
             .addClientMixins("minecraft.MixinDataWatcher_DeepCopyInSP")
             .setApplyIf(() -> FixesConfig.deepCopyDataWatcherInSP)
@@ -655,6 +659,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinCommandBase_JoinArgs")
             .setApplyIf(() -> FixesConfig.fixCommandFormattingLoss)
             .setPhase(Phase.EARLY)),
+    FIX_DISCONNECT_SCREEN_LAYOUT(new MixinBuilder("Fix disconnect screen button overlapping long kick messages")
+            .addClientMixins("minecraft.MixinGuiDisconnected_FixLayout")
+            .setApplyIf(() -> FixesConfig.fixDisconnectScreenLayout)
+            .setPhase(Phase.EARLY)),
     COMPACT_CHAT(new MixinBuilder()
             .addClientMixins("minecraft.MixinGuiNewChat_CompactChat")
             .setApplyIf(() -> TweaksConfig.compactChat)
@@ -882,6 +890,10 @@ public enum Mixins implements IMixins {
     FIX_PLAYER_BLOCK_PLACEMENT_DISTANCE_CHECK(new MixinBuilder("Fix wrong block placement distance check")
             .addCommonMixins("minecraft.MixinNetHandlePlayServer_FixWrongBlockPlacementCheck")
             .setApplyIf(() -> FixesConfig.fixWrongBlockPlacementDistanceCheck)
+            .setPhase(Phase.EARLY)),
+    MOVED_TOO_QUICKLY_THRESHOLD(new MixinBuilder("Override the 'moved too quickly' server-side speed check threshold")
+            .addCommonMixins("minecraft.MixinNetHandlerPlayServer_DisableMovedTooQuickly")
+            .setApplyIf(() -> FixesConfig.movedTooQuicklyThreshold > 100.0D)
             .setPhase(Phase.EARLY)),
     FIX_ITEM_BOUNCING(new MixinBuilder("Fixes items bouncing on stairs and other blocks with odd hitboxes")
             .addCommonMixins("minecraft.MixinEntityItem_BouncingFix")
@@ -1152,12 +1164,19 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixIc2KeybindsIgnoreKeyState)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
-    // endregion
     IC2_TIN_CAN(new MixinBuilder("Fix IC2 filled tin cans not running logic on both client and server")
             .addCommonMixins("ic2.MixinIc2TinCan")
             .setApplyIf(() -> FixesConfig.fixIc2TinCan)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
+    IC2_EID_COMPAT(new MixinBuilder("Fix EndlessIds incompatibility with IC2")
+            .addCommonMixins("ic2.MixinIC2TileEntityTerra_EIDCompat")
+            .setApplyIf(() -> FixesConfig.fixIc2Eid)
+            .addRequiredMod(TargetedMod.IC2)
+            .addRequiredMod(TargetedMod.ENDLESSIDS)
+            .setPhase(Phase.LATE)),
+    // endregion
+
 
     // Disable update checkers
     COFH_CORE_UPDATE_CHECK(new MixinBuilder("Yeet COFH Core Update Check")
@@ -1402,6 +1421,12 @@ public enum Mixins implements IMixins {
             .addCommonMixins("biomesoplenty.MixinWorldGenKelp")
             .setApplyIf(() -> FixesConfig.fixBOPCascadingKelp)
             .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    BOP_EID_COMPAT(new MixinBuilder("Fix EndlessIds incompatibility with BoP")
+            .addCommonMixins("biomesoplenty.MixinBOPBiomeUtils_EIDCompat")
+            .setApplyIf(() -> FixesConfig.fixBoPEid)
+            .addRequiredMod(TargetedMod.BOP)
+            .addRequiredMod(TargetedMod.ENDLESSIDS)
             .setPhase(Phase.LATE)),
 
     // Bibliowood Recipe Fix
@@ -1783,6 +1808,12 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> MemoryConfig.allocs.fixWitcheryEnumValuesSpam)
             .addRequiredMod(TargetedMod.WITCHERY)
             .setPhase(Phase.LATE)),
+    WITCHERY_EID_COMPAT(new MixinBuilder()
+            .addCommonMixins("witchery.MixinRiteClimateChange_EIDCompat")
+            .setApplyIf(() -> FixesConfig.fixWitcheryEid)
+            .addRequiredMod(TargetedMod.WITCHERY)
+            .addRequiredMod(TargetedMod.ENDLESSIDS)
+            .setPhase(Phase.LATE)),
 
     // Various Exploits/Fixes
     BIBLIOCRAFT_PACKET_FIX(new MixinBuilder("Packet Fix")
@@ -1798,6 +1829,11 @@ public enum Mixins implements IMixins {
     BIBLIOCRAFT_NO_PAUSE_GUI_CLIPBOARD(new MixinBuilder()
             .addCommonMixins("bibliocraft.MixinGuiClipboard_NoPause")
             .setApplyIf(() -> FixesConfig.noPauseGuiClipboard)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
+            .setPhase(Phase.LATE)),
+    BIBLIOCRAFT_PAINTING_UTIL_FIX(new MixinBuilder("PaintingUtil jar Path Fix")
+            .addCommonMixins("bibliocraft.MixinPaintingUtil")
+            .setApplyIf(() -> FixesConfig.fixBibliocraftPaintingUtilPath)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
     BIBLIOCRAFT_FIX_TESR_WORLD_LEAK(new MixinBuilder()

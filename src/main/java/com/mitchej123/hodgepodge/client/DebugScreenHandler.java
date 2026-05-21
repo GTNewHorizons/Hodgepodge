@@ -1,18 +1,22 @@
 package com.mitchej123.hodgepodge.client;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.gen.layer.IntCache;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 import org.lwjgl.opengl.GL11;
 
 import com.mitchej123.hodgepodge.config.DebugConfig;
+import com.mitchej123.hodgepodge.config.TweaksConfig;
 
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class DebugScreenHandler {
 
     public static final DebugScreenHandler INSTANCE = new DebugScreenHandler();
 
+    private final AllocationRateHUD allocRate = new AllocationRateHUD();
     private final boolean is64bit;
     private final String javaVersion;
     private final String javaVendor;
@@ -33,23 +37,33 @@ public class DebugScreenHandler {
         this.osVersion = System.getProperty("os.version");
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onRenderGameOverlayTextEvent(RenderGameOverlayEvent.Text event) {
         if (Minecraft.getMinecraft().gameSettings.showDebugInfo) {
-            int offset = event.right.isEmpty() ? 0 : 2;
-            event.right.add(offset, null); // Empty Line
-            event.right.add(
-                    1 + offset,
-                    "Java: " + this.javaVersion + (this.is64bit ? " 64bit (" : " 32bit (") + this.javaVendor + ")");
-            event.right.add(2 + offset, "GPU: " + this.gpuName);
-            event.right.add(3 + offset, "OpenGL: " + this.glVersion);
-            event.right.add(4 + offset, "CPU Cores: " + Runtime.getRuntime().availableProcessors());
-            event.right.add(5 + offset, "OS: " + this.osName + " (" + this.osVersion + ", " + this.osArch + ")");
-
-            if (DebugConfig.renderDebug) {
-                event.right.add(6 + offset, null); // Empty Line
+            int offset = 0;
+            for (int i = 0; i < event.right.size(); i++) {
+                final String s = event.right.get(i);
+                if (s != null && s.startsWith("Allocated memory: ")) {
+                    offset = i + 1;
+                    break;
+                }
+            }
+            event.right.add(offset, this.allocRate.updateText());
+            event.right.add(1 + offset, IntCache.getCacheSizes());
+            if (TweaksConfig.addSystemInfo) {
+                event.right.add(2 + offset, null); // Empty Line
+                event.right.add(
+                        3 + offset,
+                        "Java: " + this.javaVersion + (this.is64bit ? " 64bit (" : " 32bit (") + this.javaVendor + ")");
+                event.right.add(4 + offset, "GPU: " + this.gpuName);
+                event.right.add(5 + offset, "OpenGL: " + this.glVersion);
+                event.right.add(6 + offset, "CPU Cores: " + Runtime.getRuntime().availableProcessors());
+                event.right.add(7 + offset, "OS: " + this.osName + " (" + this.osVersion + ", " + this.osArch + ")");
                 if (DebugConfig.renderDebug) {
-                    event.right.add(8 + offset, "renderDebugMode: " + HodgepodgeClient.renderDebugMode);
+                    event.right.add(8 + offset, null); // Empty Line
+                    if (DebugConfig.renderDebug) {
+                        event.right.add(9 + offset, "renderDebugMode: " + HodgepodgeClient.renderDebugMode);
+                    }
                 }
             }
         }
