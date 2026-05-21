@@ -44,12 +44,11 @@ public class MessageSetDifficulty implements IPacket {
 
         if (this.locked) {
             for (WorldServer world : server.worldServers) {
-                if (world != null && world.getWorldInfo() instanceof IWorldDifficulty worldDifficulty) {
+                if (world == null) continue;
+                if (world.getWorldInfo() instanceof IWorldDifficulty worldDifficulty) {
                     worldDifficulty.setDifficultyLocked(true);
                 }
-            }
-            for (WorldServer world : server.worldServers) {
-                if (world != null && world.provider != null) {
+                if (world.provider != null) {
                     NetworkHandler.instance.sendToDimension(
                             new MessageServerDifficulty(this.difficulty, true),
                             world.provider.dimensionId);
