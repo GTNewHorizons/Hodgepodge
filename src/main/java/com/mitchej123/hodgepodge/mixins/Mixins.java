@@ -659,6 +659,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinCommandBase_JoinArgs")
             .setApplyIf(() -> FixesConfig.fixCommandFormattingLoss)
             .setPhase(Phase.EARLY)),
+    FIX_DISCONNECT_SCREEN_LAYOUT(new MixinBuilder("Fix disconnect screen button overlapping long kick messages")
+            .addClientMixins("minecraft.MixinGuiDisconnected_FixLayout")
+            .setApplyIf(() -> FixesConfig.fixDisconnectScreenLayout)
+            .setPhase(Phase.EARLY)),
     COMPACT_CHAT(new MixinBuilder()
             .addClientMixins("minecraft.MixinGuiNewChat_CompactChat")
             .setApplyIf(() -> TweaksConfig.compactChat)
@@ -886,6 +890,10 @@ public enum Mixins implements IMixins {
     FIX_PLAYER_BLOCK_PLACEMENT_DISTANCE_CHECK(new MixinBuilder("Fix wrong block placement distance check")
             .addCommonMixins("minecraft.MixinNetHandlePlayServer_FixWrongBlockPlacementCheck")
             .setApplyIf(() -> FixesConfig.fixWrongBlockPlacementDistanceCheck)
+            .setPhase(Phase.EARLY)),
+    MOVED_TOO_QUICKLY_THRESHOLD(new MixinBuilder("Override the 'moved too quickly' server-side speed check threshold")
+            .addCommonMixins("minecraft.MixinNetHandlerPlayServer_DisableMovedTooQuickly")
+            .setApplyIf(() -> FixesConfig.movedTooQuicklyThreshold > 100.0D)
             .setPhase(Phase.EARLY)),
     FIX_ITEM_BOUNCING(new MixinBuilder("Fixes items bouncing on stairs and other blocks with odd hitboxes")
             .addCommonMixins("minecraft.MixinEntityItem_BouncingFix")

@@ -40,6 +40,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixCommandFormattingLoss;
 
+    @Config.Comment("Fix disconnect screen button overlapping long kick messages")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixDisconnectScreenLayout;
+
     @Config.Comment("Prevents crash if server sends container with wrong itemStack size")
     @Config.DefaultBoolean(true)
     public static boolean fixContainerPutStacksInSlots;
@@ -346,6 +351,16 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixWrongBlockPlacementDistanceCheck;
+
+    @Config.Comment({ "Override the server-side 'moved too quickly' speed check threshold.",
+            "Vanilla value is 100.0 (squared distance per tick, i.e. 10 blocks/tick in a single axis).",
+            "Increase this if fast-movement items like GraviChestplate + ThaumicBoots trigger the check.",
+            "A value of 200.0 accommodates ~14 blocks/tick and covers known modded items.",
+            "Set to a very large number (e.g. 1.7976931348623157E308) to effectively disable the check.",
+            "Values below 100.0 are ignored and the vanilla default is used instead." })
+    @Config.DefaultDouble(100.0)
+    @Config.RequiresMcRestart
+    public static double movedTooQuicklyThreshold;
 
     @Config.Comment("Fix inventory sync lag: prevents client to check recipes on empty slots. Particularly fixes lag when trying to eat food when full.")
     @Config.DefaultBoolean(true)
