@@ -1,6 +1,9 @@
 package com.mitchej123.hodgepodge.client.bettermodlist;
 
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.StringUtils;
@@ -9,21 +12,33 @@ import cpw.mods.fml.common.ModContainer;
 
 public enum SortType {
 
-    NORMAL(24),
-    A_TO_Z(25),
-    Z_TO_A(26);
+    NORMAL(24, (a, b) -> 0),
+    A_TO_Z(25, Comparator.comparing(SortType::sortKey)),
+    Z_TO_A(26, Comparator.comparing(SortType::sortKey).reversed());
+
+    public static final SortType[] VALUES = SortType.values();
+
+    private static final Map<Integer, SortType> BY_BUTTON_ID = new HashMap<>();
+    static {
+        for (SortType t : values()) {
+            BY_BUTTON_ID.put(t.buttonID, t);
+        }
+    }
+
+    private static String sortKey(ModContainer m) {
+        return StringUtils.stripControlCodes(m.getName()).toLowerCase(Locale.US);
+    }
 
     private final int buttonID;
-    private final ModComparator comparator;
+    private final Comparator<ModContainer> comparator;
 
-    // Constructor that accepts button ID
-    private SortType(int buttonID) {
+    SortType(int buttonID, Comparator<ModContainer> comparator) {
         this.buttonID = buttonID;
-        this.comparator = new ModComparator(this);
+        this.comparator = comparator;
     }
 
     // Get the comparator associated with this SortType
-    public ModComparator getComparator() {
+    public Comparator<ModContainer> getComparator() {
         return comparator;
     }
 
@@ -34,40 +49,9 @@ public enum SortType {
 
     // Get SortType based on button ID (to match button press with the sorting mode)
     public static SortType getTypeForButton(int buttonID) {
-        for (SortType t : values()) {
-            if (t.buttonID == buttonID) {
-                return t;
-            }
-        }
-        return null; // Default to null if no match is found
+        return BY_BUTTON_ID.get(buttonID);
     }
 
-    // Comparator to compare mod containers based on the selected sort type
-    public static class ModComparator implements Comparator<ModContainer> {
-
-        private final SortType sortType;
-
-        private ModComparator(SortType sortType) {
-            this.sortType = sortType;
-        }
-
-        @Override
-        public int compare(ModContainer o1, ModContainer o2) {
-            String name1 = StringUtils.stripControlCodes(o1.getName()).toLowerCase();
-            String name2 = StringUtils.stripControlCodes(o2.getName()).toLowerCase();
-
-            switch (sortType) {
-                case A_TO_Z:
-                    return name1.compareTo(name2);
-                case Z_TO_A:
-                    return name2.compareTo(name1);
-                default:
-                    return 0; // No sorting applied (i.e., default state)
-            }
-        }
-    }
-
-    // Method to get the name of the SortType
     public String getName() {
         return I18n.format("bettermodlist.sort." + this.name().toLowerCase());
     }

@@ -15,6 +15,10 @@ public enum Mixins implements IMixins {
 
     // spotless:off
     // region Vanilla Fixes
+    HODGEPODGE_F3_INFO(new MixinBuilder()
+            .addClientMixins("debug.MixinIntCache")
+            .setApplyIf(() -> TweaksConfig.moreReadableIntCacheSize)
+            .setPhase(Phase.EARLY)),
     FIX_DATAWATCHER_SHARING_OBJECTS_IN_SP(new MixinBuilder()
             .addClientMixins("minecraft.MixinDataWatcher_DeepCopyInSP")
             .setApplyIf(() -> FixesConfig.deepCopyDataWatcherInSP)
@@ -173,7 +177,7 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)),
     TOGGLE_INVENTORY_EFFECT_ICONS(new MixinBuilder()
             .addClientMixins("minecraft.MixinInventoryEffectRenderer_TogglePotionIcons")
-            .setApplyIf(() -> !TweaksConfig.showInventoryEffectIcons)  
+            .setApplyIf(() -> !TweaksConfig.showInventoryEffectIcons)
             .setPhase(Phase.EARLY)),
     FIX_POTION_EFFECT_RENDERING(new MixinBuilder()
             .addClientMixins("minecraft.MixinInventoryEffectRenderer_PotionEffectRendering")
@@ -485,6 +489,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("fml.MixinASMDataTable")
             .setApplyIf(() -> SpeedupsConfig.optimizeASMDataTable)
             .setPhase(Phase.EARLY)),
+    OPTIMIZE_JAR_DISCOVERER(new MixinBuilder("Reduce FML jar discovery regex overhead")
+            .addCommonMixins("fml.MixinJarDiscoverer")
+            .setApplyIf(() -> SpeedupsConfig.optimizeJarDiscovererRegexOverhead)
+            .setPhase(Phase.EARLY)),
     SQUASH_BED_ERROR_MESSAGE(new MixinBuilder()
             .addClientMixins("minecraft.MixinNetHandlerPlayClient_SquashBedMessages")
             .setApplyIf(() -> FixesConfig.squashBedErrorMessage)
@@ -646,6 +654,14 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinGuiNewChat_FixColorWrapping",
                     "minecraft.MixinGuiTextField_FixColorScroll")
             .setApplyIf(() -> FixesConfig.fixChatWrappedColors)
+            .setPhase(Phase.EARLY)),
+    FIX_COMMAND_FORMATTING_LOSS(new MixinBuilder("Fix /say, /tell, /me losing formatting after first word")
+            .addCommonMixins("minecraft.MixinCommandBase_JoinArgs")
+            .setApplyIf(() -> FixesConfig.fixCommandFormattingLoss)
+            .setPhase(Phase.EARLY)),
+    FIX_DISCONNECT_SCREEN_LAYOUT(new MixinBuilder("Fix disconnect screen button overlapping long kick messages")
+            .addClientMixins("minecraft.MixinGuiDisconnected_FixLayout")
+            .setApplyIf(() -> FixesConfig.fixDisconnectScreenLayout)
             .setPhase(Phase.EARLY)),
     COMPACT_CHAT(new MixinBuilder()
             .addClientMixins("minecraft.MixinGuiNewChat_CompactChat")
@@ -912,8 +928,9 @@ public enum Mixins implements IMixins {
     BETTER_MOD_LIST(new MixinBuilder()
             .addClientMixins(
                     "fml.MixinGuiModList",
-                    "fml.MixinGuiSlotModList",
-                    "fml.MixinGuiScrollingList")
+                    "fml.MixinGuiScrollingList",
+                    "fml.AccessorGuiScrollingList",
+                    "fml.AccessorGuiSlotModList")
             .setApplyIf(() -> TweaksConfig.betterModList)
             .addExcludedMod(TargetedMod.ENDERCORE_WITH_MODLIST)
             .setPhase(Phase.EARLY)),
@@ -1031,9 +1048,17 @@ public enum Mixins implements IMixins {
             .addClientMixins("forge.MixinAdvancedModelLoader_CacheModels")
             .setApplyIf(() -> MemoryConfig.allocs.cacheAdvancedModels)
             .setPhase(Phase.EARLY)),
+    FIX_FORGE_PLAYER_LEAK(new MixinBuilder()
+            .addCommonMixins("memory.MixinFakePlayerFactory_FixLeak")
+            .setApplyIf(() -> MemoryConfig.leaks.fixForgePlayerFactoryLeak)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments
+    FIX_TESR_LEAK(new MixinBuilder()
+            .addClientMixins("ic2.leaks.MixinOverlayTesr")
+            .setApplyIf(() -> MemoryConfig.leaks.fixIC2TESRleak)
+            .setPhase(Phase.LATE)),
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
             .addCommonMixins("ic2.MixinIc2WaterKinetic")
             .setApplyIf(() -> FixesConfig.fixIc2UnprotectedGetBlock)
@@ -1139,12 +1164,19 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixIc2KeybindsIgnoreKeyState)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
-    // endregion
     IC2_TIN_CAN(new MixinBuilder("Fix IC2 filled tin cans not running logic on both client and server")
             .addCommonMixins("ic2.MixinIc2TinCan")
             .setApplyIf(() -> FixesConfig.fixIc2TinCan)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
+    IC2_EID_COMPAT(new MixinBuilder("Fix EndlessIds incompatibility with IC2")
+            .addCommonMixins("ic2.MixinIC2TileEntityTerra_EIDCompat")
+            .setApplyIf(() -> FixesConfig.fixIc2Eid)
+            .addRequiredMod(TargetedMod.IC2)
+            .addRequiredMod(TargetedMod.ENDLESSIDS)
+            .setPhase(Phase.LATE)),
+    // endregion
+
 
     // Disable update checkers
     COFH_CORE_UPDATE_CHECK(new MixinBuilder("Yeet COFH Core Update Check")
@@ -1225,6 +1257,12 @@ public enum Mixins implements IMixins {
     DISABLE_CHUNK_TERRAIN_GENERATION(new MixinBuilder()
             .addCommonMixins("minecraft.MixinChunkProviderServer_DisableTerrain")
             .setApplyIf(() -> TweaksConfig.disableChunkTerrainGeneration)
+            .addExcludedMod(TargetedMod.ENDLESSIDS)
+            .setPhase(Phase.EARLY)),
+    DISABLE_CHUNK_TERRAIN_GENERATION_ENDLESS_IDS(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinChunkProviderServer_DisableTerrain_EndlessIDs")
+            .setApplyIf(() -> TweaksConfig.disableChunkTerrainGeneration)
+            .addRequiredMod(TargetedMod.ENDLESSIDS)
             .setPhase(Phase.EARLY)),
     DISABLE_WORLD_TYPE_CHUNK_POPULATION(new MixinBuilder("Disable chunk population tied to chunk generation (ores/structure)")
             .addCommonMixins("minecraft.MixinChunkProviderServer_DisablePopulation")
@@ -1378,6 +1416,17 @@ public enum Mixins implements IMixins {
                     "biomesoplenty.MixinBiomeFeatures_CacheFields")
             .setApplyIf(() -> SpeedupsConfig.speedupBOPBiomeDecoration)
             .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    FIX_BOP_CASCADING_KELP(new MixinBuilder("Fixes cascading worldgen caused by BOP Kelp.")
+            .addCommonMixins("biomesoplenty.MixinWorldGenKelp")
+            .setApplyIf(() -> FixesConfig.fixBOPCascadingKelp)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    BOP_EID_COMPAT(new MixinBuilder("Fix EndlessIds incompatibility with BoP")
+            .addCommonMixins("biomesoplenty.MixinBOPBiomeUtils_EIDCompat")
+            .setApplyIf(() -> FixesConfig.fixBoPEid)
+            .addRequiredMod(TargetedMod.BOP)
+            .addRequiredMod(TargetedMod.ENDLESSIDS)
             .setPhase(Phase.LATE)),
 
     // Bibliowood Recipe Fix
@@ -1759,6 +1808,12 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> MemoryConfig.allocs.fixWitcheryEnumValuesSpam)
             .addRequiredMod(TargetedMod.WITCHERY)
             .setPhase(Phase.LATE)),
+    WITCHERY_EID_COMPAT(new MixinBuilder()
+            .addCommonMixins("witchery.MixinRiteClimateChange_EIDCompat")
+            .setApplyIf(() -> FixesConfig.fixWitcheryEid)
+            .addRequiredMod(TargetedMod.WITCHERY)
+            .addRequiredMod(TargetedMod.ENDLESSIDS)
+            .setPhase(Phase.LATE)),
 
     // Various Exploits/Fixes
     BIBLIOCRAFT_PACKET_FIX(new MixinBuilder("Packet Fix")
@@ -1774,6 +1829,11 @@ public enum Mixins implements IMixins {
     BIBLIOCRAFT_NO_PAUSE_GUI_CLIPBOARD(new MixinBuilder()
             .addCommonMixins("bibliocraft.MixinGuiClipboard_NoPause")
             .setApplyIf(() -> FixesConfig.noPauseGuiClipboard)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
+            .setPhase(Phase.LATE)),
+    BIBLIOCRAFT_PAINTING_UTIL_FIX(new MixinBuilder("PaintingUtil jar Path Fix")
+            .addCommonMixins("bibliocraft.MixinPaintingUtil")
+            .setApplyIf(() -> FixesConfig.fixBibliocraftPaintingUtilPath)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
     BIBLIOCRAFT_FIX_TESR_WORLD_LEAK(new MixinBuilder()
