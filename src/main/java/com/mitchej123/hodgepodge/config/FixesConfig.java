@@ -40,6 +40,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixCommandFormattingLoss;
 
+    @Config.Comment("Fix disconnect screen button overlapping long kick messages")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixDisconnectScreenLayout;
+
     @Config.Comment("Prevents crash if server sends container with wrong itemStack size")
     @Config.DefaultBoolean(true)
     public static boolean fixContainerPutStacksInSlots;
