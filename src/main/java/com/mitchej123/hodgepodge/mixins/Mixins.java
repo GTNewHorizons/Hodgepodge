@@ -1049,7 +1049,7 @@ public enum Mixins implements IMixins {
                     "fml.MixinEnumHolder_Intern",
                     "fml.MixinModAnnotation_Intern",
                     "fml.MixinASMData_Intern")
-            .setApplyIf(() -> MemoryConfig.allocs.internASMDataTableStrings)
+            .setApplyIf(() -> MemoryConfig.allocs.deduplicateASMDataTableStrings)
             .setPhase(Phase.EARLY)),
     // endregion
 

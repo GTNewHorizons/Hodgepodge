@@ -142,6 +142,6 @@ public class MemoryConfig {
         @Config.Comment("Reduces the RAM usage of the ASMDataTable by interning the Strings")
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
-        public boolean internASMDataTableStrings;
+        public boolean deduplicateASMDataTableStrings;
     }
 }

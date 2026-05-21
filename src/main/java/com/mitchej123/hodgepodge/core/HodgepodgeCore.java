@@ -82,6 +82,12 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
                 }
             }
         } catch (Exception ignored) {}
+
+        if (MemoryConfig.allocs.deduplicateASMDataTableStrings) {
+            String transformer = "com.mitchej123.hodgepodge.core.fml.transformers.early.ModCandidateTransformer";
+            FMLRelaunchLog.finer("Registering transformer %s", transformer);
+            Launch.classLoader.registerTransformer(transformer);
+        }
     }
 
     @Override
