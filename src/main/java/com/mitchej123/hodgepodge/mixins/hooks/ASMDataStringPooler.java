@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 public final class ASMDataStringPooler {
 
-    private static final ConcurrentHashMap<String, String> pool = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, String> pool = new ConcurrentHashMap<>();
 
     public static String intern(String s) {
         if (s == null) return null;
@@ -13,6 +13,6 @@ public final class ASMDataStringPooler {
     }
 
     public static void free() {
-        pool.clear();
+        pool = new ConcurrentHashMap<>();
     }
 }
