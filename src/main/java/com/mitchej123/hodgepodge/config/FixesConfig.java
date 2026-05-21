@@ -40,6 +40,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixCommandFormattingLoss;
 
+    @Config.Comment("Fix disconnect screen button overlapping long kick messages")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixDisconnectScreenLayout;
+
     @Config.Comment("Prevents crash if server sends container with wrong itemStack size")
     @Config.DefaultBoolean(true)
     public static boolean fixContainerPutStacksInSlots;
@@ -546,6 +551,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixBOPCascadingKelp;
 
+    @Config.Comment("Fix EndlessIds incompatibility with BoP")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBoPEid;
+
     // Candycraft
 
     @Config.Comment("Fix NPE when interacting with sugar block")
@@ -724,6 +733,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixIc2TinCan;
 
+    @Config.Comment("Fix EndlessIds incompatibility with IC2")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2Eid;
+
     // Journey Map
 
     @Config.Comment("Prevents journeymap from using illegal character in file paths")
@@ -875,6 +888,10 @@ public class FixesConfig {
             "such as capturing the Demon in an EnderIO Soul Vial." })
     @Config.DefaultBoolean(true)
     public static boolean fixWitcheryDemonShiftClick;
+
+    @Config.Comment("Fix EndlessIds incompatibility with Witchery")
+    @Config.DefaultBoolean(true)
+    public static boolean fixWitcheryEid;
 
     // Xaero's Minimap
     @Config.Comment("Fixes the player entity dot rendering when arrow is chosen")
