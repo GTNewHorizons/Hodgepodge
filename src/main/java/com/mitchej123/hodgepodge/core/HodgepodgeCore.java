@@ -1,7 +1,6 @@
 package com.mitchej123.hodgepodge.core;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,8 +23,6 @@ import com.mitchej123.hodgepodge.config.MemoryConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.core.fml.AsmTransformers;
-import com.mitchej123.hodgepodge.core.fml.LateAsmTransformers;
-import com.mitchej123.hodgepodge.core.fml.tweakers.HodgepodgeLateTweaker;
 import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
 import com.mitchej123.hodgepodge.mixins.Mixins;
 import com.mitchej123.hodgepodge.util.StringPooler;
@@ -121,15 +118,11 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
         VoxelMapCacheMover.changeFileExtensions((File) data.get("mcLocation"));
 
         final List<String> tweaks = (List<String>) Launch.blackboard.get("TweakClasses");
-        if (tweaks != null && replaceCoFHCoreAT) {
-            tweaks.add("com.mitchej123.hodgepodge.core.fml.tweakers.CoFHCoreATDisablerTweaker");
-        }
-        // Resolve late transformers here where ASMConfig is initialized and store on the blackboard to avoid
-        // classloader issues
-        final String[] lateTransformers = ITransformers.getTransformers(LateAsmTransformers.class);
-        if (tweaks != null && lateTransformers.length > 0) {
-            Launch.blackboard.put(HodgepodgeLateTweaker.BLACKBOARD_KEY, Arrays.asList(lateTransformers));
+        if (tweaks != null) {
             tweaks.add("com.mitchej123.hodgepodge.core.fml.tweakers.HodgepodgeLateTweaker");
+            if (replaceCoFHCoreAT) {
+                tweaks.add("com.mitchej123.hodgepodge.core.fml.tweakers.CoFHCoreATDisablerTweaker");
+            }
         }
     }
 

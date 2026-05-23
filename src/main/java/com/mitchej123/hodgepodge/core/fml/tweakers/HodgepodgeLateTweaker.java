@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge.core.fml.tweakers;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import net.minecraft.launchwrapper.ITweaker;
@@ -10,8 +11,6 @@ import net.minecraft.launchwrapper.LaunchClassLoader;
 // Must not reference Hodgepodge classes: tweaker may load on a different ClassLoader
 // than HodgepodgeCore
 public class HodgepodgeLateTweaker implements ITweaker {
-
-    public static final String BLACKBOARD_KEY = "hodgepodge.lateTransformerClasses";
 
     @Override
     public void acceptOptions(List<String> args, File gameDir, File assetsDir, String profile) {}
@@ -26,13 +25,12 @@ public class HodgepodgeLateTweaker implements ITweaker {
 
     @Override
     public String[] getLaunchArguments() {
-        final Object raw = Launch.blackboard.get(BLACKBOARD_KEY);
-        if (raw instanceof List<?>) {
-            for (Object o : (List<?>) raw) {
-                if (o instanceof String) {
-                    Launch.classLoader.registerTransformer((String) o);
-                }
-            }
+        try {
+            Class.forName("com.mitchej123.hodgepodge.core.fml.LateAsmTransformers", true, Launch.classLoader)
+                    .getDeclaredMethod("registerLateTransformers").invoke(null);
+        } catch (ClassNotFoundException | InvocationTargetException | IllegalAccessException
+                | NoSuchMethodException e) {
+            throw new RuntimeException(e);
         }
         return new String[0];
     }
