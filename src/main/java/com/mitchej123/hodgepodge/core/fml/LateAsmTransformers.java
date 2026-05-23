@@ -8,8 +8,8 @@ import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.mixins.TargetedMod;
 
 /**
- * Transformers that must run at the end of coremods transformer chain.
- * Registered via {@link com.mitchej123.hodgepodge.core.fml.tweakers.HodgepodgeLateTweaker}
+ * Transformers that must run at the end of coremods transformer chain. Registered via
+ * {@link com.mitchej123.hodgepodge.core.fml.tweakers.HodgepodgeLateTweaker}
  */
 public enum LateAsmTransformers implements ITransformers {
 
