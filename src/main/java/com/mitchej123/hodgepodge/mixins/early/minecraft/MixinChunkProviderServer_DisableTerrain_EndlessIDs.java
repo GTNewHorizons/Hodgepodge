@@ -41,7 +41,7 @@ public class MixinChunkProviderServer_DisableTerrain_EndlessIDs {
 
         short[] biomeArray = ((ChunkBiomeHook) chunk).getBiomeShortArray();
         Chunk newChunk = new Chunk(chunk.worldObj, ids, metadata, chunk.xPosition, chunk.zPosition);
-        ((ChunkBiomeHook) chunk).setBiomeShortArray(biomeArray);
+        ((ChunkBiomeHook) newChunk).setBiomeShortArray(biomeArray);
 
         return newChunk;
     }
