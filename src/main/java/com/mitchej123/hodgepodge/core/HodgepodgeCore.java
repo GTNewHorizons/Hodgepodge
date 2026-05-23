@@ -118,8 +118,11 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
         VoxelMapCacheMover.changeFileExtensions((File) data.get("mcLocation"));
 
         final List<String> tweaks = (List<String>) Launch.blackboard.get("TweakClasses");
-        if (tweaks != null && replaceCoFHCoreAT) {
-            tweaks.add("com.mitchej123.hodgepodge.core.fml.tweakers.CoFHCoreATDisablerTweaker");
+        if (tweaks != null) {
+            tweaks.add("com.mitchej123.hodgepodge.core.fml.tweakers.HodgepodgeLateTweaker");
+            if (replaceCoFHCoreAT) {
+                tweaks.add("com.mitchej123.hodgepodge.core.fml.tweakers.CoFHCoreATDisablerTweaker");
+            }
         }
     }
 

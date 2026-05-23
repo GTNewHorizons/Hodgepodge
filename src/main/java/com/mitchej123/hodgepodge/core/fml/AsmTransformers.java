@@ -40,12 +40,6 @@ public enum AsmTransformers implements ITransformers {
             () -> ASMConfig.dissectVarargs,
             Side.COMMON,
             "com.mitchej123.hodgepodge.core.fml.transformers.mc.VarargDissector"),
-    SPEEDUP_FORGE_ORE_DICTIONARY(new TransformerBuilder()
-            .setApplyIf(() -> ASMConfig.speedupOreDictionary)
-            .addExcludedMod(TargetedMod.FASTCRAFT)
-            .addExcludedMod(TargetedMod.BUKKIT)
-            .addExcludedMod(TargetedMod.ULTRAMINE)
-            .addCommonTransformers("com.mitchej123.hodgepodge.core.fml.transformers.mc.SpeedupOreDictionaryTransformer")),
     FIX_BOGUS_INTEGRATED_SERVER_NPE(
             "Fix bogus FMLProxyPacket NPEs on integrated server crashes",
             () -> FixesConfig.fixBogusIntegratedServerNPEs,
