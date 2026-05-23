@@ -23,6 +23,7 @@ import com.mitchej123.hodgepodge.config.MemoryConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.core.fml.AsmTransformers;
+import com.mitchej123.hodgepodge.core.fml.LateAsmTransformers;
 import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
 import com.mitchej123.hodgepodge.mixins.Mixins;
 import com.mitchej123.hodgepodge.util.StringPooler;
@@ -120,6 +121,10 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
         final List<String> tweaks = (List<String>) Launch.blackboard.get("TweakClasses");
         if (tweaks != null && replaceCoFHCoreAT) {
             tweaks.add("com.mitchej123.hodgepodge.core.fml.tweakers.CoFHCoreATDisablerTweaker");
+        }
+        // Register LateTweaker
+        if (tweaks != null && ITransformers.getTransformers(LateAsmTransformers.class).length > 0) {
+            tweaks.add("com.mitchej123.hodgepodge.core.fml.tweakers.HodgepodgeLateTweaker");
         }
     }
 
