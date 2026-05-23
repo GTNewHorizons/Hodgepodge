@@ -232,6 +232,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean cleanChatLogs = true;
 
+    @Config.Comment("Enable extra F1 toggle to hide GUI but keep rendering hand")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean f1ShowHand;
+
     // NBT String Pooling
 
     @Config.Comment("Enable string pooling for NBT TagCompound Keys")
