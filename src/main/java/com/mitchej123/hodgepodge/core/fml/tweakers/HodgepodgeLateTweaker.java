@@ -7,15 +7,11 @@ import net.minecraft.launchwrapper.ITweaker;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 
-import com.gtnewhorizon.gtnhmixins.builders.ITransformers;
-import com.mitchej123.hodgepodge.core.fml.LateAsmTransformers;
-
-import cpw.mods.fml.relauncher.FMLRelaunchLog;
-
-/**
- * Registers Hodgepodge transformers that must run last in the LaunchClassLoader chain.
- */
+// Must not reference Hodgepodge classes: tweaker may load on a different ClassLoader
+// than HodgepodgeCore
 public class HodgepodgeLateTweaker implements ITweaker {
+
+    public static final String BLACKBOARD_KEY = "hodgepodge.lateTransformerClasses";
 
     @Override
     public void acceptOptions(List<String> args, File gameDir, File assetsDir, String profile) {}
@@ -30,9 +26,13 @@ public class HodgepodgeLateTweaker implements ITweaker {
 
     @Override
     public String[] getLaunchArguments() {
-        for (String transformer : ITransformers.getTransformers(LateAsmTransformers.class)) {
-            FMLRelaunchLog.finer("Registering late transformer %s", transformer);
-            Launch.classLoader.registerTransformer(transformer);
+        final Object raw = Launch.blackboard.get(BLACKBOARD_KEY);
+        if (raw instanceof List<?>) {
+            for (Object o : (List<?>) raw) {
+                if (o instanceof String) {
+                    Launch.classLoader.registerTransformer((String) o);
+                }
+            }
         }
         return new String[0];
     }
