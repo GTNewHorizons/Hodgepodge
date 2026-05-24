@@ -8,16 +8,16 @@ import org.objectweb.asm.tree.ClassNode;
 
 import cpw.mods.fml.relauncher.FMLRelaunchLog;
 
-@SuppressWarnings("unused")
 public class ModAPITransformerHook {
 
-    public static void stripInterfaceFromSignature(ClassNode classNode, String ifaceInternalName) {
-        if (classNode == null || classNode.signature == null) return;
+    public static void stripInterfaceFromSignature(ClassNode classNode, String interfaceName) {
+        if (classNode.signature == null) return;
         final String original = classNode.signature;
-        if (original.indexOf(ifaceInternalName) < 0) return;
+        final String ifaceName = interfaceName.replace('.', '/');
+        if (!original.contains(ifaceName)) return;
 
         final SignatureWriter writer = new SignatureWriter();
-        final Rewriter rewriter = new Rewriter(ifaceInternalName, writer);
+        final Rewriter rewriter = new Rewriter(ifaceName, writer);
 
         try {
             new SignatureReader(original).accept(rewriter);
@@ -25,7 +25,7 @@ public class ModAPITransformerHook {
             FMLRelaunchLog.warning(
                     "Optional removal - failed to scan Signature for %s (interface %s): %s",
                     classNode.name,
-                    ifaceInternalName,
+                    ifaceName,
                     e);
             return;
         }
@@ -34,10 +34,8 @@ public class ModAPITransformerHook {
 
         final String rewritten = writer.toString();
         classNode.signature = rewritten.isEmpty() ? null : rewritten;
-        FMLRelaunchLog.finer(
-                "Optional removal - rewrote Signature for %s to drop interface %s",
-                classNode.name,
-                ifaceInternalName);
+        FMLRelaunchLog
+                .finer("Optional removal - rewrote Signature for %s to drop interface %s", classNode.name, ifaceName);
     }
 
     private static final class Rewriter extends SignatureVisitor {

@@ -21,7 +21,6 @@ import com.mitchej123.hodgepodge.core.HodgepodgeCore;
 import com.mitchej123.hodgepodge.core.shared.HodgepodgeClassDump;
 
 // Patches ModAPITransformer.stripInterface to also rewrite classNode.signature after removing the interface
-@SuppressWarnings("unused")
 public class ModAPITransformerSignaturePatch implements IClassTransformer, Opcodes {
 
     private static final String TARGET = "cpw.mods.fml.common.asm.transformers.ModAPITransformer";
@@ -51,9 +50,8 @@ public class ModAPITransformerSignaturePatch implements IClassTransformer, Opcod
         cr.accept(cn, 0);
 
         boolean patched = false;
-        if (cn.methods != null) {
-            for (MethodNode m : cn.methods) {
-                if (!STRIP_INTERFACE_NAME.equals(m.name) || !STRIP_INTERFACE_DESC.equals(m.desc)) continue;
+        for (MethodNode m : cn.methods) {
+            if (STRIP_INTERFACE_NAME.equals(m.name) && STRIP_INTERFACE_DESC.equals(m.desc)) {
                 patched = injectSignatureHook(m);
                 break;
             }
@@ -79,45 +77,32 @@ public class ModAPITransformerSignaturePatch implements IClassTransformer, Opcod
     // String ifaceName = interfaceName.replace('.', '/');
     // boolean found = classNode.interfaces.remove(ifaceName);
     //
-    // if (found) ModAPITransformerHook.stripInterfaceFromSignature(classNode, ifaceName); // <-- injected
+    // if (found) ModAPITransformerHook.stripInterfaceFromSignature(classNode, interfaceName); // <-- injected
     //
     // if (found && logDebugInfo) ...
     //
     private static boolean injectSignatureHook(MethodNode m) {
         for (AbstractInsnNode insn : m.instructions.toArray()) {
-            if (insn.getOpcode() != INVOKEINTERFACE) continue;
-            MethodInsnNode call = (MethodInsnNode) insn;
-            if (!LIST_OWNER.equals(call.owner) || !LIST_REMOVE_NAME.equals(call.name)
-                    || !LIST_REMOVE_DESC.equals(call.desc))
-                continue;
-
-            AbstractInsnNode prev = skipMeta(insn.getPrevious(), false);
-            if (prev == null || prev.getOpcode() != ALOAD) return false;
-            final int ifaceSlot = ((VarInsnNode) prev).var;
-
-            AbstractInsnNode anchor = skipMeta(insn.getNext(), true);
-            if (anchor == null || anchor.getOpcode() != ISTORE) return false;
-            final int foundSlot = ((VarInsnNode) anchor).var;
-
-            final LabelNode skip = new LabelNode();
-            InsnList toInject = new InsnList();
-            toInject.add(new VarInsnNode(ILOAD, foundSlot));
-            toInject.add(new JumpInsnNode(IFEQ, skip));
-            toInject.add(new VarInsnNode(ALOAD, 1));
-            toInject.add(new VarInsnNode(ALOAD, ifaceSlot));
-            toInject.add(new MethodInsnNode(INVOKESTATIC, HOOK_OWNER, HOOK_NAME, HOOK_DESC, false));
-            toInject.add(skip);
-            m.instructions.insert(anchor, toInject);
-            return true;
+            if (insn.getOpcode() == INVOKEINTERFACE) {
+                MethodInsnNode mn = (MethodInsnNode) insn;
+                if (LIST_OWNER.equals(mn.owner) && LIST_REMOVE_NAME.equals(mn.name)
+                        && LIST_REMOVE_DESC.equals(mn.desc)) {
+                    if (insn.getNext().getOpcode() == ISTORE && insn.getPrevious().getOpcode() == ALOAD) {
+                        final int boolIndex = ((VarInsnNode) insn.getNext()).var;
+                        final LabelNode skip = new LabelNode();
+                        final InsnList list = new InsnList();
+                        list.add(new VarInsnNode(ILOAD, boolIndex));
+                        list.add(new JumpInsnNode(IFEQ, skip));
+                        list.add(new VarInsnNode(ALOAD, 1));
+                        list.add(new VarInsnNode(ALOAD, 2));
+                        list.add(new MethodInsnNode(INVOKESTATIC, HOOK_OWNER, HOOK_NAME, HOOK_DESC, false));
+                        list.add(skip);
+                        m.instructions.insert(insn.getNext(), list);
+                        return true;
+                    }
+                }
+            }
         }
         return false;
-    }
-
-    private static AbstractInsnNode skipMeta(AbstractInsnNode n, boolean forward) {
-        while (n != null && (n.getType() == AbstractInsnNode.LABEL || n.getType() == AbstractInsnNode.LINE
-                || n.getType() == AbstractInsnNode.FRAME)) {
-            n = forward ? n.getNext() : n.getPrevious();
-        }
-        return n;
     }
 }
