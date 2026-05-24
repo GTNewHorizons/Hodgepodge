@@ -16,6 +16,7 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
+import com.gtnewhorizon.gtnhlib.asm.SafeClassWriter;
 import com.mitchej123.hodgepodge.core.HodgepodgeCore;
 import com.mitchej123.hodgepodge.core.shared.HodgepodgeClassDump;
 
@@ -68,7 +69,7 @@ public class ModAPITransformerSignaturePatch implements IClassTransformer, Opcod
         }
 
         HodgepodgeCore.logASM(LOGGER, "TRANSFORMING " + TARGET);
-        final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        final ClassWriter cw = new SafeClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
         cn.accept(cw);
         return cw.toByteArray();
     }
