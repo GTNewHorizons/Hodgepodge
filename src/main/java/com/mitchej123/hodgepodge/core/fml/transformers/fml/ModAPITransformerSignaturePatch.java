@@ -40,9 +40,7 @@ public class ModAPITransformerSignaturePatch implements IClassTransformer, Opcod
         if (basicClass == null) return null;
         if (!TARGET.equals(name)) return basicClass;
         final byte[] transformedBytes = transformBytes(basicClass);
-        if (transformedBytes != basicClass) {
-            HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
-        }
+        HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
         return transformedBytes;
     }
 
