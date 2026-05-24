@@ -203,6 +203,12 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiNewChat_CleanChatLogs")
             .setApplyIf(() -> TweaksConfig.cleanChatLogs)
             .setPhase(Phase.EARLY)),
+    F1_SHOW_HAND(new MixinBuilder()
+            .addClientMixins(
+                    "minecraft.MixinEntityRenderer_F1ShowHand",
+                    "minecraft.MixinMinecraft_F1ShowHand")
+            .setApplyIf(() -> TweaksConfig.f1ShowHand)
+            .setPhase(Phase.EARLY)),
     FIX_ENTITY_ATTRIBUTES_RANGE(new MixinBuilder()
             .addClientMixins("minecraft.MixinNetHandlerPlayClient_FixEntityAttributesRange")
             .setApplyIf(() -> FixesConfig.fixEntityAttributesRange)

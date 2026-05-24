@@ -33,6 +33,7 @@ public class HodgepodgeClient {
 
     public static final ManagedEnum<AnimationMode> animationsMode = new ManagedEnum<>(AnimationMode.VISIBLE_ONLY);
     public static final ManagedEnum<RenderDebugMode> renderDebugMode = new ManagedEnum<>(RenderDebugMode.REDUCED);
+    public static F1State F1_STATE = F1State.SHOW_ALL;
 
     public static void postInit() {
         FontRenderingCompat.registerFallbackIfNoAngelica();
