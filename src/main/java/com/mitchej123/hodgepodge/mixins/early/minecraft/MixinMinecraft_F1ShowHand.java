@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mitchej123.hodgepodge.client.F1State;
+import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 
 @Mixin(Minecraft.class)
 public class MixinMinecraft_F1ShowHand {
@@ -20,9 +21,9 @@ public class MixinMinecraft_F1ShowHand {
                     value = "FIELD",
                     opcode = Opcodes.PUTFIELD,
                     target = "Lnet/minecraft/client/settings/GameSettings;hideGUI:Z"))
-    private void hodgepodge$f1Cycle(GameSettings instance, boolean value, Operation<Void> original) {
-        F1State.state.cycle();
-        boolean shouldHideGui = F1State.state != F1State.SHOW_ALL;
+    private void f1Cycle(GameSettings instance, boolean value, Operation<Void> original) {
+        HodgepodgeClient.F1_STATE = HodgepodgeClient.F1_STATE.next();
+        boolean shouldHideGui = HodgepodgeClient.F1_STATE != F1State.SHOW_ALL;
         original.call(instance, shouldHideGui);
     }
 }

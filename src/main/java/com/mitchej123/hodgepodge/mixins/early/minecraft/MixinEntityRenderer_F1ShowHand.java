@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mitchej123.hodgepodge.client.F1State;
+import com.mitchej123.hodgepodge.client.HodgepodgeClient;
 
 @Mixin(EntityRenderer.class)
 public class MixinEntityRenderer_F1ShowHand {
@@ -18,7 +19,7 @@ public class MixinEntityRenderer_F1ShowHand {
                     value = "FIELD",
                     opcode = Opcodes.GETFIELD,
                     target = "Lnet/minecraft/client/settings/GameSettings;hideGUI:Z"))
-    private boolean hodgepodge$shouldHideHand(boolean original) {
-        return F1State.state == F1State.HIDE_ALL;
+    private boolean shouldHideHand(boolean original) {
+        return HodgepodgeClient.F1_STATE == F1State.HIDE_ALL;
     }
 }
