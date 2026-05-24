@@ -82,6 +82,12 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
                 }
             }
         } catch (Exception ignored) {}
+
+        if (MemoryConfig.allocs.deduplicateASMDataTableStrings) {
+            String transformer = "com.mitchej123.hodgepodge.core.fml.transformers.early.ModCandidateTransformer";
+            FMLRelaunchLog.finer("Registering transformer %s", transformer);
+            Launch.classLoader.registerTransformer(transformer);
+        }
     }
 
     @Override
@@ -118,8 +124,11 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
         VoxelMapCacheMover.changeFileExtensions((File) data.get("mcLocation"));
 
         final List<String> tweaks = (List<String>) Launch.blackboard.get("TweakClasses");
-        if (tweaks != null && replaceCoFHCoreAT) {
-            tweaks.add("com.mitchej123.hodgepodge.core.fml.tweakers.CoFHCoreATDisablerTweaker");
+        if (tweaks != null) {
+            tweaks.add("com.mitchej123.hodgepodge.core.fml.tweakers.HodgepodgeLateTweaker");
+            if (replaceCoFHCoreAT) {
+                tweaks.add("com.mitchej123.hodgepodge.core.fml.tweakers.CoFHCoreATDisablerTweaker");
+            }
         }
     }
 
