@@ -2,8 +2,8 @@ package com.mitchej123.hodgepodge.core;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -98,39 +98,6 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
         }
     }
 
-    private static final String FML_TRANSFORMER_PKG = "cpw.mods.fml.common.asm.transformers.";
-
-    private static final String[] FML_TRANSFORMER_KEEP_EXCLUDED = { FML_TRANSFORMER_PKG + "AccessTransformer",
-            FML_TRANSFORMER_PKG + "DeobfuscationTransformer", FML_TRANSFORMER_PKG + "EventSubscriptionTransformer",
-            FML_TRANSFORMER_PKG + "ItemStackTransformer", FML_TRANSFORMER_PKG + "MarkerTransformer",
-            FML_TRANSFORMER_PKG + "ModAccessTransformer", FML_TRANSFORMER_PKG + "PatchingTransformer",
-            FML_TRANSFORMER_PKG + "SideTransformer", FML_TRANSFORMER_PKG + "TerminalTransformer", };
-
-    private static void narrowFmlTransformerExclusion() {
-        try {
-            final Field f = LaunchClassLoader.class.getDeclaredField("transformerExceptions");
-            f.setAccessible(true);
-            if (f.get(Launch.classLoader) instanceof Collection<?>col) {
-                @SuppressWarnings("unchecked")
-                final Collection<String> exceptions = (Collection<String>) col;
-                if (exceptions.remove(FML_TRANSFORMER_PKG)) {
-                    Collections.addAll(exceptions, FML_TRANSFORMER_KEEP_EXCLUDED);
-                    FMLRelaunchLog.fine(
-                            "Narrowed %s exclusion to leave ModAPITransformer transformable",
-                            FML_TRANSFORMER_PKG);
-                } else {
-                    FMLRelaunchLog.warning(
-                            "%s not present in transformerExceptions - ModAPITransformer Signature patch will not apply",
-                            FML_TRANSFORMER_PKG);
-                }
-            }
-        } catch (Throwable t) {
-            FMLRelaunchLog.warning(
-                    "Failed to narrow FML transformer exclusion - ModAPITransformer Signature patch will not apply: %s",
-                    t);
-        }
-    }
-
     @Override
     public String getMixinConfig() {
         return "mixins.hodgepodge.early.json";
@@ -203,6 +170,37 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
             log.debug(message);
         } else {
             log.info(message);
+        }
+    }
+
+    private static final String FML_TRANSFORMER_PKG = "cpw.mods.fml.common.asm.transformers.";
+
+    private static final String[] FML_TRANSFORMER_KEEP_EXCLUDED = { "AccessTransformer", "DeobfuscationTransformer",
+            "EventSubscriptionTransformer", "ItemStackTransformer", "MarkerTransformer", "ModAccessTransformer",
+            "PatchingTransformer", "SideTransformer", "TerminalTransformer" };
+
+    private static void narrowFmlTransformerExclusion() {
+        try {
+            final Field f = LaunchClassLoader.class.getDeclaredField("transformerExceptions");
+            f.setAccessible(true);
+            if (f.get(Launch.classLoader) instanceof Collection<?>col) {
+                @SuppressWarnings("unchecked")
+                final Collection<String> exceptions = (Collection<String>) col;
+                if (exceptions.remove(FML_TRANSFORMER_PKG)) {
+                    Arrays.stream(FML_TRANSFORMER_KEEP_EXCLUDED).forEach(s -> exceptions.add(FML_TRANSFORMER_PKG + s));
+                    FMLRelaunchLog.fine(
+                            "Narrowed %s exclusion to leave ModAPITransformer transformable",
+                            FML_TRANSFORMER_PKG);
+                } else {
+                    FMLRelaunchLog.warning(
+                            "%s not present in transformerExceptions - ModAPITransformer Signature patch will not apply",
+                            FML_TRANSFORMER_PKG);
+                }
+            }
+        } catch (Throwable t) {
+            FMLRelaunchLog.warning(
+                    "Failed to narrow FML transformer exclusion - ModAPITransformer Signature patch will not apply: %s",
+                    t);
         }
     }
 }
