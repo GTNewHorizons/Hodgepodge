@@ -33,6 +33,7 @@ public class HodgepodgeClient {
 
     public static final ManagedEnum<AnimationMode> animationsMode = new ManagedEnum<>(AnimationMode.VISIBLE_ONLY);
     public static final ManagedEnum<RenderDebugMode> renderDebugMode = new ManagedEnum<>(RenderDebugMode.REDUCED);
+    public static F1State F1_STATE = F1State.SHOW_ALL;
 
     public static void postInit() {
         FontRenderingCompat.registerFallbackIfNoAngelica();
@@ -57,15 +58,12 @@ public class HodgepodgeClient {
 
         MinecraftForge.EVENT_BUS.register(new ReloadSoundsGui());
 
-        if (TweaksConfig.addSystemInfo) {
-            MinecraftForge.EVENT_BUS.register(DebugScreenHandler.INSTANCE);
-        }
+        MinecraftForge.EVENT_BUS.register(DebugScreenHandler.INSTANCE);
 
         if (DebugConfig.showChunkGenDebug || !FMLForgePlugin.RUNTIME_DEOBF) {
             MinecraftForge.EVENT_BUS.register(ChunkGenDebugHandler.INSTANCE);
         }
 
-        MinecraftForge.EVENT_BUS.register(new AllocationRateHUD(true));
         ClientCommandHandler.instance.registerCommand(new AllocationsCommand());
         ClientCommandHandler.instance.registerCommand(new DumpTextureAtlasCommand());
 
