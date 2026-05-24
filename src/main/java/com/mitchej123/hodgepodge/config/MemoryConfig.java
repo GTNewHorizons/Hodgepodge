@@ -138,5 +138,10 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean cacheAdvancedModels;
+
+        @Config.Comment("Reduces the RAM usage of the ASMDataTable by interning the Strings")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean deduplicateASMDataTableStrings;
     }
 }
