@@ -1,4 +1,4 @@
-# A Hodgepodge of Fixes
+# A Hodgepodge of Patches
 
 Requires UniMixins 0.1.14+ (https://github.com/LegacyModdingMC/UniMixins/) to work.  
 Requires GTNHLib 0.2.2+ (https://github.com/GTNewHorizons/GTNHLib) to work.

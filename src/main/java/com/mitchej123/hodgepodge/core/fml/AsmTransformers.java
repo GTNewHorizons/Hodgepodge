@@ -40,17 +40,16 @@ public enum AsmTransformers implements ITransformers {
             () -> ASMConfig.dissectVarargs,
             Side.COMMON,
             "com.mitchej123.hodgepodge.core.fml.transformers.mc.VarargDissector"),
-    SPEEDUP_FORGE_ORE_DICTIONARY(new TransformerBuilder()
-            .setApplyIf(() -> ASMConfig.speedupOreDictionary)
-            .addExcludedMod(TargetedMod.FASTCRAFT)
-            .addExcludedMod(TargetedMod.BUKKIT)
-            .addExcludedMod(TargetedMod.ULTRAMINE)
-            .addCommonTransformers("com.mitchej123.hodgepodge.core.fml.transformers.mc.SpeedupOreDictionaryTransformer")),
     FIX_BOGUS_INTEGRATED_SERVER_NPE(
             "Fix bogus FMLProxyPacket NPEs on integrated server crashes",
             () -> FixesConfig.fixBogusIntegratedServerNPEs,
             Side.COMMON,
             "com.mitchej123.hodgepodge.core.fml.transformers.fml.FMLIndexedMessageToMessageCodecTransformer"),
+    FIX_FORGE_OPTIONAL_INTERFACE_SIGNATURE(
+            "Patch ModAPITransformer to rewrite Signature attribute when stripping interfaces",
+            () -> FixesConfig.fixForgeOptionalInterfaceSignature,
+            Side.COMMON,
+            "com.mitchej123.hodgepodge.core.fml.transformers.fml.ModAPITransformerSignaturePatch"),
     THERMOS_SLEDGEHAMMER_FURNACE_FIX(new TransformerBuilder("Take a sledgehammer to CraftServer.resetRecipes() to prevent it from breaking our Furnace Fix")
             .setApplyIf(() -> SpeedupsConfig.speedupVanillaFurnace)
             .addRequiredMod(TargetedMod.BUKKIT)
