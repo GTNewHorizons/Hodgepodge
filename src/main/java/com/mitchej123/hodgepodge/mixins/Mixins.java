@@ -203,6 +203,12 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiNewChat_CleanChatLogs")
             .setApplyIf(() -> TweaksConfig.cleanChatLogs)
             .setPhase(Phase.EARLY)),
+    F1_SHOW_HAND(new MixinBuilder()
+            .addClientMixins(
+                    "minecraft.MixinEntityRenderer_F1ShowHand",
+                    "minecraft.MixinMinecraft_F1ShowHand")
+            .setApplyIf(() -> TweaksConfig.f1ShowHand)
+            .setPhase(Phase.EARLY)),
     FIX_ENTITY_ATTRIBUTES_RANGE(new MixinBuilder()
             .addClientMixins("minecraft.MixinNetHandlerPlayClient_FixEntityAttributesRange")
             .setApplyIf(() -> FixesConfig.fixEntityAttributesRange)
@@ -1060,6 +1066,21 @@ public enum Mixins implements IMixins {
 
     ),
 
+    INTERN_ASMDATATABLE_STRINGS(new MixinBuilder()
+            .addCommonMixins(
+                    "fml.MixinEnumHolder_Intern",
+                    "fml.MixinModAnnotation_Intern",
+                    "fml.MixinASMData_Intern")
+            .setApplyIf(() -> MemoryConfig.allocs.deduplicateASMDataTableStrings)
+            .setPhase(Phase.EARLY)),
+    INTERN_RESOURCE_LOCATION_DOMAIN(new MixinBuilder()
+            .addClientMixins("memory.MixinResourceLocation_Intern")
+            .setApplyIf(() -> MemoryConfig.allocs.internResourceLocationDomain)
+            .setPhase(Phase.EARLY)),
+    INTERN_UNIQUE_IDENTIFIER_MODID(new MixinBuilder()
+            .addClientMixins("fml.MixinUniqueIdentifier_Intern")
+            .setApplyIf(() -> MemoryConfig.allocs.internUniqueIdentifierModid)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments

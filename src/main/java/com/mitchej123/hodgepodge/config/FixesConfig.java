@@ -28,6 +28,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixBogusIntegratedServerNPEs;
 
+    @Config.Comment("Patch Forge's @Optional.Interface processor to also strip Signature attribute entries (fixes TypeNotPresentException from Class.getGenericInterfaces when an optional interface's mod is missing)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixForgeOptionalInterfaceSignature;
+
     @Config.Comment("Do not flip bottom face textures (1.8+ behavior, see MC-47811)")
     @Config.DefaultBoolean(true)
     public static boolean fixBottomFaceUV;
