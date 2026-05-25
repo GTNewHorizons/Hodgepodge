@@ -592,6 +592,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinFontRenderer_FallbackPreprocess")
             .setApplyIf(() -> true)
             .setPhase(Phase.EARLY)),
+    FONT_RENDERER_FALLBACK_SHADOW(new MixinBuilder("Render drop shadow for text segments with shadow format code when Angelica is absent")
+            .addClientMixins("minecraft.MixinFontRenderer_FallbackShadow")
+            .setApplyIf(() -> true)
+            .setPhase(Phase.EARLY)),
     BED_MESSAGE_ABOVE_HOTBAR(new MixinBuilder()
             .addCommonMixins("minecraft.MixinBlockBed")
             .setApplyIf(() -> TweaksConfig.bedMessageAboveHotbar)

@@ -58,6 +58,20 @@ public class LegacyColorFallback implements FontRendering.TextPreprocessor {
                 } else if (next == 'q' || next == 'z' || next == 'v') {
                     i += 1;
                     continue;
+                } else if (next == 'u') {
+                    if (i + 2 + ColorFormatUtils.SECTION_X_SEQ_LEN <= len
+                            && text.charAt(i + 2) == ColorFormatUtils.SECTION
+                            && Character.toLowerCase(text.charAt(i + 3)) == 'x') {
+                        int rgb = parseHexPairs(text, i + 4, 6);
+                        if (rgb != -1) {
+                            sb.append(ColorFormatUtils.SECTION).append('u');
+                            i += 1 + ColorFormatUtils.SECTION_X_SEQ_LEN;
+                            continue;
+                        }
+                    }
+                    sb.append(ColorFormatUtils.SECTION).append('u');
+                    i += 1;
+                    continue;
                 }
             } else if (c == '&' && i + 1 < len) {
                 char next = Character.toLowerCase(text.charAt(i + 1));
@@ -80,6 +94,19 @@ public class LegacyColorFallback implements FontRendering.TextPreprocessor {
                             }
                         } else
                     if (next == 'q' || next == 'z' || next == 'v') {
+                        i += 1;
+                        continue;
+                    } else if (next == 'u') {
+                        if (i + 2 + ColorFormatUtils.AMP_HEX_LEN <= len && text.charAt(i + 2) == '&'
+                                && text.charAt(i + 3) == '#') {
+                            int rgb = parseHex6(text, i + 4);
+                            if (rgb != -1) {
+                                sb.append(ColorFormatUtils.SECTION).append('u');
+                                i += 1 + ColorFormatUtils.AMP_HEX_LEN;
+                                continue;
+                            }
+                        }
+                        sb.append(ColorFormatUtils.SECTION).append('u');
                         i += 1;
                         continue;
                     } else if (isVanillaCode(next)) {
