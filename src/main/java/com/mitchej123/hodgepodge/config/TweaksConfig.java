@@ -235,7 +235,7 @@ public class TweaksConfig {
     @Config.Comment("Backport per-world difficulty from 1.8.9")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    
+
     public static boolean perWorldDifficulty = true;
     @Config.Comment("Enable extra F1 toggle to hide GUI but keep rendering hand")
     @Config.DefaultBoolean(true)
