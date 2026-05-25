@@ -325,15 +325,15 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
             int scrolledChars = hodgepodge$getRainbowCharOffset(this.lineScrollOffset);
             String otherEffects = activeEffects.length() > 2 ? activeEffects.substring(2) : "";
             return "\u00a7r"
-                    + hodgepodge$expandRainbowToPerChar(beforeCursor, scrolledChars, otherEffects + colorAndStyles);
+                    + hodgepodge$expandRainbowToPerChar(beforeCursor, scrolledChars, colorAndStyles + otherEffects);
         }
         if (colorAndStyles.length() >= ColorFormatUtils.GRADIENT_SEQ_LEN
                 && colorAndStyles.charAt(0) == ColorFormatUtils.SECTION
                 && colorAndStyles.charAt(1) == 'g') {
             String expanded = hodgepodge$expandGradientSegment(colorAndStyles, beforeCursor, this.lineScrollOffset);
-            return "\u00a7r" + (activeEffects.isEmpty() ? expanded : activeEffects + expanded);
+            return "\u00a7r" + hodgepodge$insertEffectsAfterColor(expanded, activeEffects);
         }
-        return "\u00a7r" + activeEffects + colorAndStyles + beforeCursor;
+        return "\u00a7r" + colorAndStyles + activeEffects + beforeCursor;
     }
 
     /**
@@ -358,17 +358,15 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
             int rainbowOffset = hodgepodge$getRainbowCharOffset(this.cursorPosition);
             String otherEffects = activeEffects.length() > 2 ? activeEffects.substring(2) : "";
             return "\u00a7r"
-                    + hodgepodge$expandRainbowToPerChar(afterCursor, rainbowOffset, otherEffects + colorAndStyles);
+                    + hodgepodge$expandRainbowToPerChar(afterCursor, rainbowOffset, colorAndStyles + otherEffects);
         }
         if (colorAndStyles.length() >= ColorFormatUtils.GRADIENT_SEQ_LEN
                 && colorAndStyles.charAt(0) == ColorFormatUtils.SECTION
                 && colorAndStyles.charAt(1) == 'g') {
-            // Expand to per-char §x colors (same path as before-cursor) to avoid
-            // float rounding differences between per-char and §g gradient rendering
             String expanded = hodgepodge$expandGradientSegment(colorAndStyles, afterCursor, this.cursorPosition);
-            return "\u00a7r" + (activeEffects.isEmpty() ? expanded : activeEffects + expanded);
+            return "\u00a7r" + hodgepodge$insertEffectsAfterColor(expanded, activeEffects);
         }
-        return "\u00a7r" + activeEffects + colorAndStyles + afterCursor;
+        return "\u00a7r" + colorAndStyles + activeEffects + afterCursor;
     }
 
     /**
@@ -491,6 +489,19 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
      * never starts mid-format-code.
      */
     @Unique
+    private static String hodgepodge$insertEffectsAfterColor(String expanded, String effects) {
+        if (effects.isEmpty()) return expanded;
+        for (int i = 0; i < expanded.length() - 1; i++) {
+            if (expanded.charAt(i) == ColorFormatUtils.SECTION && Character.toLowerCase(expanded.charAt(i + 1)) == 'x'
+                    && i + ColorFormatUtils.SECTION_X_SEQ_LEN <= expanded.length()) {
+                int after = i + ColorFormatUtils.SECTION_X_SEQ_LEN;
+                return expanded.substring(0, after) + effects + expanded.substring(after);
+            }
+        }
+        return effects + expanded;
+    }
+
+    @Unique
     private static int hodgepodge$snapToFormatBoundary(String text, int offset) {
         if (offset <= 0 || offset >= text.length()) return offset;
 
@@ -523,6 +534,13 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
 
         while (ri < raw.length()) {
             map[ri] = pi;
+
+            if (raw.charAt(ri) == '\\' && ri + 1 < raw.length() && raw.charAt(ri + 1) == '&') {
+                map[ri + 1] = pi;
+                ri += 2;
+                pi += 1;
+                continue;
+            }
 
             if (raw.charAt(ri) == '&' && ri + 1 < raw.length()) {
                 char next = Character.toLowerCase(raw.charAt(ri + 1));
@@ -647,6 +665,15 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
 
         int i = 0;
         while (i < text.length()) {
+            if (text.charAt(i) == '\\' && i + 1 < text.length() && text.charAt(i + 1) == '&') {
+                int escEnd = i + 2;
+                boolean inside = forward ? (pos >= i && pos < escEnd) : (pos > i && pos < escEnd);
+                if (inside) {
+                    return forward ? escEnd : i;
+                }
+                i = escEnd;
+                continue;
+            }
             if (text.charAt(i) != '&' || i + 1 >= text.length()) {
                 i++;
                 continue;
@@ -660,6 +687,11 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
                 codeEnd = i + ColorFormatUtils.AMP_HEX_LEN;
             } else if (ColorFormatUtils.VALID_AMP_SINGLE_CODES.indexOf(next) != -1) {
                 codeEnd = i + 2;
+                if (next == 'u' && codeEnd < text.length()
+                        && text.charAt(codeEnd) == '&'
+                        && ColorFormatUtils.isAmpHexAt(text, codeEnd)) {
+                    codeEnd += ColorFormatUtils.AMP_HEX_LEN;
+                }
             }
 
             if (codeEnd != -1) {
@@ -681,6 +713,13 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         if (text == null || pos < 0 || pos >= text.length()) return null;
         int i = 0;
         while (i < text.length()) {
+            if (text.charAt(i) == '\\' && i + 1 < text.length() && text.charAt(i + 1) == '&') {
+                if (pos >= i && pos < i + 2) {
+                    return new int[] { i, i + 2 };
+                }
+                i += 2;
+                continue;
+            }
             if (text.charAt(i) != '&' || i + 1 >= text.length()) {
                 i++;
                 continue;
@@ -694,6 +733,11 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
                 codeEnd = i + ColorFormatUtils.AMP_HEX_LEN;
             } else if (ColorFormatUtils.VALID_AMP_SINGLE_CODES.indexOf(next) != -1) {
                 codeEnd = i + 2;
+                if (next == 'u' && codeEnd < text.length()
+                        && text.charAt(codeEnd) == '&'
+                        && ColorFormatUtils.isAmpHexAt(text, codeEnd)) {
+                    codeEnd += ColorFormatUtils.AMP_HEX_LEN;
+                }
             }
 
             if (codeEnd != -1) {
