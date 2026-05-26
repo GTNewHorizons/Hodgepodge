@@ -24,12 +24,13 @@ public abstract class MixinMinecraftServer {
                     target = "Lnet/minecraft/world/WorldServer;difficultySetting:Lnet/minecraft/world/EnumDifficulty;",
                     opcode = Opcodes.PUTFIELD))
     private void informPlayerDifficulty(WorldServer instance, EnumDifficulty value, Operation<Void> original) {
-        original.call(instance, value);
         if (instance.getWorldInfo() instanceof IWorldDifficulty worldDifficulty) {
+            if (worldDifficulty.isDifficultyLocked()) return;
+            original.call(instance, value);
             worldDifficulty.setDifficulty(value);
-            NetworkHandler.instance.sendToDimension(
-                    new MessageServerDifficulty(value, worldDifficulty.isDifficultyLocked()),
-                    instance.provider.dimensionId);
+            NetworkHandler.instance.sendToDimension(new MessageServerDifficulty(value, false), instance.provider.dimensionId);
+        } else {
+            original.call(instance, value);
         }
     }
 }
