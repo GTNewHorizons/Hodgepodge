@@ -30,13 +30,13 @@ public class MixinMusicTicker {
     private int hodgepodge$configurableMusicDelay(int original, @Local MusicTicker.MusicType musictype) {
         // Only override long-form in-game music; leave menu/credits/end_boss vanilla.
         switch (musictype) {
-            case GAME, CREATIVE, NETHER, END -> {
+            case CREDITS, END_BOSS, MENU -> {
+                return original;
+            }
+            default -> {
                 int min = TweaksConfig.musicDelayMinSeconds * 20;
                 int max = Math.max(min, TweaksConfig.musicDelayMaxSeconds * 20);
                 return MathHelper.getRandomIntegerInRange(this.field_147679_a, min, max);
-            }
-            default -> {
-                return original;
             }
         }
     }
