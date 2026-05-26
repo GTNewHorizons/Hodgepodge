@@ -1060,16 +1060,14 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)),
     PER_WORLD_DIFFICULTY(new MixinBuilder()
             .addCommonMixins("minecraft.difficulty.MixinIntegratedServer",
+                    "minecraft.difficulty.MixinMinecraftServer",
                     "minecraft.difficulty.MixinServerConfigurationManager",
                     "minecraft.difficulty.MixinDerivedWorldInfo",
                     "minecraft.difficulty.MixinWorldInfo")
             .addClientMixins("minecraft.difficulty.MixinGuiOptions",
                     "minecraft.difficulty.MixinNetHandlerPlayClient")
             .setApplyIf(() -> TweaksConfig.perWorldDifficulty)
-            .setPhase(Phase.EARLY)
-
-    ),
-
+            .setPhase(Phase.EARLY)),
     INTERN_ASMDATATABLE_STRINGS(new MixinBuilder()
             .addCommonMixins(
                     "fml.MixinEnumHolder_Intern",

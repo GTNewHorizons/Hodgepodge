@@ -8,15 +8,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.world.EnumDifficulty;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
 import com.mitchej123.hodgepodge.Common;
-import com.mitchej123.hodgepodge.config.TweaksConfig;
-import com.mitchej123.hodgepodge.core.fml.hooks.mc.DifficultyHook;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import iguanaman.hungeroverhaul.config.IguanaConfig;
@@ -80,11 +77,9 @@ public class MixinHungerOverhaulLowStatEffect {
 
                 if (IguanaConfig.addLowStatEffects) {
                     int difficultyModifierEffects = 2;
-                    if (IguanaConfig.difficultyScalingEffects) {
-                        EnumDifficulty d = TweaksConfig.perWorldDifficulty
-                                ? DifficultyHook.getDifficulty(event.entityLiving.worldObj)
-                                : event.entityLiving.worldObj.difficultySetting;
-                        if (d != null) difficultyModifierEffects = d.getDifficultyId();
+                    if (IguanaConfig.difficultyScalingEffects
+                            && event.entityLiving.worldObj.difficultySetting != null) {
+                        difficultyModifierEffects = event.entityLiving.worldObj.difficultySetting.getDifficultyId();
                     }
 
                     // low stat effects

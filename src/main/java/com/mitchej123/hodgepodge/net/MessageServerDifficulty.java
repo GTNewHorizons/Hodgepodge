@@ -40,12 +40,14 @@ public class MessageServerDifficulty implements IPacket {
     public IPacket executeClient(NetHandlerPlayClient handler) {
         Minecraft mc = Minecraft.getMinecraft();
         if (mc.theWorld == null) return null;
+
+        mc.theWorld.difficultySetting = difficulty;
+        mc.gameSettings.difficulty = difficulty;
+
         // sync the client with the server
         IWorldDifficulty pwd = (IWorldDifficulty) mc.theWorld.getWorldInfo();
         pwd.setDifficulty(difficulty);
         pwd.setDifficultyLocked(locked);
-
-        mc.gameSettings.difficulty = difficulty;
 
         return null;
     }
