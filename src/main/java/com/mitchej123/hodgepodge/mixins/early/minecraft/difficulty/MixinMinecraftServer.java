@@ -28,7 +28,8 @@ public abstract class MixinMinecraftServer {
             if (worldDifficulty.isDifficultyLocked()) return;
             original.call(instance, value);
             worldDifficulty.setDifficulty(value);
-            NetworkHandler.instance.sendToDimension(new MessageServerDifficulty(value, false), instance.provider.dimensionId);
+            NetworkHandler.instance
+                    .sendToDimension(new MessageServerDifficulty(value, false), instance.provider.dimensionId);
         } else {
             original.call(instance, value);
         }
