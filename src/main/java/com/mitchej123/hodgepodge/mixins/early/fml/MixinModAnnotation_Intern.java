@@ -33,7 +33,7 @@ public class MixinModAnnotation_Intern {
         return ASMDataStringPooler.intern(original);
     }
 
-    @ModifyVariable(method = "addProperty", at = @At("HEAD"), argsOnly = true, name = "arg2")
+    @ModifyVariable(method = "addProperty", at = @At("HEAD"), argsOnly = true, name = "value")
     private Object intern2(Object original) {
         if (original instanceof String s) {
             return ASMDataStringPooler.intern(s);
