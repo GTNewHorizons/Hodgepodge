@@ -517,12 +517,12 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> ASMConfig.speedupNBTTagCompoundCopy)
             .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
-    STRING_POOLER_NBT_TAG(new MixinBuilder("Pool NBT Strings")
+    STRING_POOLER_NBT_TAG(new MixinBuilder()
             .addCommonMixins("minecraft.nbt.MixinNBTTagCompound_StringPooler")
             .setApplyIf(() -> TweaksConfig.enableTagCompoundStringPooling)
             .addExcludedMod(TargetedMod.DRAGONAPI)
             .setPhase(Phase.EARLY)),
-    STRING_POOLER_NBT_STRING(new MixinBuilder("Pool NBT Strings")
+    STRING_POOLER_NBT_STRING(new MixinBuilder()
             .addCommonMixins("minecraft.nbt.MixinNBTTagString_StringPooler")
             .setApplyIf(() -> TweaksConfig.enableNBTStringPooling)
             .setPhase(Phase.EARLY)),
