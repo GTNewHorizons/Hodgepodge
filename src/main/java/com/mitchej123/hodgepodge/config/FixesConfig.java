@@ -197,6 +197,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixPotionEffectAlphaTest;
 
+    @Config.Comment("Fix creative tab backgrounds showing black corners when alpha test is left disabled by item rendering (Forge GL state bug)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCreativeTabAlphaTest;
+
     @Config.Comment("Fix potions >= 128")
     @Config.DefaultBoolean(true)
     public static boolean fixPotionLimit;
