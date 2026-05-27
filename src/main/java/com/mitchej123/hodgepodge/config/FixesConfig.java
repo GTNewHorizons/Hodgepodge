@@ -569,6 +569,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixBoPEid;
 
+    @Config.Comment("Fix BOP sapling icon showing the wrong type when the growth stage bit is set in meta")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBOPSaplingIcon;
+
     // Candycraft
 
     @Config.Comment("Fix NPE when interacting with sugar block")
