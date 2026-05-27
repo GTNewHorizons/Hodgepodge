@@ -193,6 +193,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixPotionIterating;
 
+    @Config.Comment("Fix potion effect panel rendering glitched when certain items are held on the cursor (Forge GL state bug)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixPotionEffectAlphaTest;
+
     @Config.Comment("Fix potions >= 128")
     @Config.DefaultBoolean(true)
     public static boolean fixPotionLimit;

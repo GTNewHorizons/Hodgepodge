@@ -189,6 +189,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinInventoryEffectRenderer_PotionEffectRendering")
             .setApplyIf(() -> TweaksConfig.fixPotionEffectRender)
             .setPhase(Phase.EARLY)),
+    FIX_POTION_EFFECT_ALPHA_TEST(new MixinBuilder("Fix potion effect panel visual glitch caused by Forge leaving GL_ALPHA_TEST disabled after item rendering")
+            .addClientMixins("minecraft.MixinInventoryEffectRenderer_AlphaTestFix")
+            .setApplyIf(() -> FixesConfig.fixPotionEffectAlphaTest)
+            .setPhase(Phase.EARLY)),
     FIX_IMMOBILE_FIREBALLS(new MixinBuilder()
             .addCommonMixins("minecraft.MixinEntityFireball")
             .setApplyIf(() -> FixesConfig.fixImmobileFireballs)
