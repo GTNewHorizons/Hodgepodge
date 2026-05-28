@@ -1,4 +1,4 @@
-# A Hodgepodge of Fixes
+# A Hodgepodge of Patches
 
 🌐 **Languages:** [English](README.md) | [Čeština](README_cz.md)
 
