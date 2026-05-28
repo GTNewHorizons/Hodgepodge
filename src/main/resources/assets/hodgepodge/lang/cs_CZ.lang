@@ -9,13 +9,13 @@ tile.sand.name=Písek
 tile.flower1.name=Květina
 tile.flower2.name=Květina
 tile.stoneSlab.name=Panel
-tile.monsterStoneEgg.name=Vajíčko kammené příšery
+tile.monsterStoneEgg.name=Vajíčko s rybenkou
 tile.woodSlab.name=Panel
 tile.cobbleWall.name=Zeď
 tile.quartzBlock.name=Křemenný blok
 tile.clayHardenedStained.name=Terakota
 tile.woolCarpet.name=Koberec
-tile.doublePlant.name=Velká rostlina
+tile.doublePlant.name=Vysoká rostlina
 
 item.dyePowder.name=Barvivo
 item.skull.name=Lebka
@@ -34,12 +34,12 @@ bettermodlist.sort.z_to_a=Z-A
 bettermodlist.gui.modlistinfo1=OMG vše je jiné!
 bettermodlist.gui.modlistinfo2=Nové rozložení od:
 
-hodgepodge.debug.advanced_tooltips.enabled=Pokročilé tipy itemů: §aZapnuty
-hodgepodge.debug.advanced_tooltips.disabled=Pokročilé tipy itemů: §cVypnuty
+hodgepodge.debug.advanced_tooltips.enabled=Pokročilé popisky itemů: §aZapnuty
+hodgepodge.debug.advanced_tooltips.disabled=Pokročilé popisky itemů: §cVypnuty
 hodgepodge.debug.hitboxes.enabled=Hitboxy: §aZapnuty
 hodgepodge.debug.hitboxes.disabled=Hitboxy: §cVypnuty
-hodgepodge.debug.pause_focus.enabled=Stopnutí hry při ztrátě zaměření: §aZapnuto
-hodgepodge.debug.pause_focus.disabled=Stopnutí hry při ztrátě zaměření: §cVypnuto
+hodgepodge.debug.pause_focus.enabled=Stopnutí hry při ztrátě aktivity: §aZapnuto
+hodgepodge.debug.pause_focus.disabled=Stopnutí hry při ztrátě aktivity: §cVypnuto
 hodgepodge.debug.reload_chunks.message=Znovu načteny všechny oblasti.
 hodgepodge.debug.reload_pack.message=Znovu načteny balíčky zdrojů za %s sekund.
 hodgepodge.debug.crash.count.0=F3 + C je zmáčknuto. Tohle zhroutí hru za 6 sekund, pokud nebudou klávesy uvolněny.
@@ -60,8 +60,8 @@ hodgepodge.debug.help.2=F3 + A = Znovu načíst oblasti
 hodgepodge.debug.help.3=F3 + B = Zobrazit hitboxy
 hodgepodge.debug.help.4=F3 + C = Zkopírovat lokaci jako /cofh tpx příkaz, nebo držet 6 sekund pro zhroucení hry.
 hodgepodge.debug.help.5=F3 + D = [Hodgepodge] Vyčistit chat
-hodgepodge.debug.help.6=F3 + H = Pokročilé tipy
-hodgepodge.debug.help.7=F3 + P = Stopnutí hry při ztrátě zaměření
+hodgepodge.debug.help.6=F3 + H = Pokročilé popisky
+hodgepodge.debug.help.7=F3 + P = Stopnutí hry při ztrátě aktivity
 hodgepodge.debug.help.8=F3 + Q = [Hodgepodge] Znovu načíst balíčky zdrojů
 hodgepodge.debug.help.9=F3 + S/T = Znovu načíst balíčky zdrojů
 hodgepodge.debug.help.etfuturum=F3 + F4 = [Et-Futurum-Requiem] Otevřít přepínač herních režimů

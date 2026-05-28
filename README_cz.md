@@ -2,8 +2,8 @@
 
 🌐 **Jazyky:** [English](README.md) | [Čeština](README_cz.md)
 
-Požaduje UniMixins 0.1.14+ (https://github.com/LegacyModdingMC/UniMixins/) pro funkci.  
-Požaduje GTNHLib 0.2.2+ (https://github.com/GTNewHorizons/GTNHLib) pro funkci.
+Vyžaduje UniMixins 0.1.14+ (https://github.com/LegacyModdingMC/UniMixins/) k funkci.  
+Vyžaduje GTNHLib 0.2.2+ (https://github.com/GTNewHorizons/GTNHLib) k funkci.
 
 ## Spuštění
 
@@ -14,34 +14,34 @@ Pokud spouštíte aplikaci v dev režimu, přidejte následující argumenty::
 
 ## License
 
-Hodgepodge je licensován pod LGPL-3.
+Hodgepodge je licencován pod LGPL-3.
 
 ## Funkce úprav
 
 ### Chat
-- Zprávy postele "nelze spát" se ukazjí nad rychlým panelem, místo v chatu.
+- Zprávy postele "nelze spát" se ukazují nad rychlým panelem, místo v chatu.
 - Na macOS se ve všech textových polích pro zkratky kopírování/vyjmutí/vložení používá klávesa Command.
 - Pokud chat není otevřený, pozadí za zprávami chatu se nezobrazuje.
 - Opakující se stejné po sobě jdoucí zprávy v chatu jsou sloučeny do jednoho řádku s počtem opakování.
-- Velikost historie chatu byla navýšena. (výchozí 8191, vanilla 100)
+- Délka historie chatu byla navýšena. (výchozí 8191, vanilla 100)
 - Zprávy v chatu mohou mít maximálně 256 znaků místo 100.
 
 ### Základní Minecraft
 
-- Zaklínadla a vylepšené lektvary používají arabská čísla (1, 5, 9) místo římských čísel (I, V, IX).
+- Zaklínadla a vylepšené lektvary používají arabská číslice (1, 5, 9) místo římských čísel (I, V, IX).
 - Tlačítko Minecraft Říše je zakázáno.
 - Nepřátelské stvoření, která seberou vyhozené předměty, je po despawnu znovu upustí.
 - Nepřátelským stvořením je zakázáno sbírat vyhozené předměty.
 - Inventář se už neposouvá do strany při aktivních efektech lektvarů.
-- V third-person režimu (F5) je skrytý zaměřovač.
-- Limit vykreslování částic byl zvýšen. (výchozí 8000, vanilla 4000)
+- V režimu třetí osoby (F5) je skrytý zaměřovač.
+- Limit vykreslování částic byl navýšen. (výchozí 8000, vanilla 4000)
 - Pick-block je povolen v survivalu (vymění se za aktuální slot na hotbaru).
 - Zvuk při pokládání vozíku byl odstraněn.
 - Klávesa sprintu byla přesunuta do kategorie ovládání pohybu.
 - Interval automatického ukládání byl snížen na 45 sekund.
 - Neprůhlednost vody byla snížena z 3 na 1, aby odpovídala moderním verzím Minecraftu.
 - Po zavření kontejneru jsou předměty přesunuty do inventáře hráče místo toho, aby byly vyhozeny.
-- Už nevidíte vlastní částicové efekty lektvarů.
+- Už neuvidíte vlastní částicové efekty lektvarů.
 
 ### Základní Minecraft, výhozí: vypnuto
 - Noční vidění lze upravit tak, aby nemělo ten modravý nádech oblohy.
@@ -57,16 +57,16 @@ Hodgepodge je licensován pod LGPL-3.
 ### Úpravy modů
 - Několik modů má při prvním spuštění odpojené klávesové zkratky, aby se předešlo konfliktům.
 - Forge: Načítací ukazatel průběhu je zrychlený.
-- Automagy: Thirsty Tank nyní podporuje rozhraní pro kapalní kontejnery.
-- Biomes O' Plenty: 5 jedlových saplingů zasazených do tvaru plusu (+) vyroste ve velký jedlový strom.
+- Automagy: Thirsty Tank nyní podporuje rozhraní pro kontejnery na tekutiny.
+- Biomes O' Plenty: 5 sazenic jedle zasazených do tvaru plusu (+) vyroste ve velký jedlový strom.
 - Biomes O' Plenty: Generování tekutého písku lze vypnout.
 - Extra Utilities: Když je zombík zabit pomocí bodce, který používá falešné hráče (zlaté, diamantové), nespustí se zombí pomoc.
 - Extra Utilities: Drums už „nepožírají“ IC2 články ani Forestry kapsle, prázdný kontejner se vrátí hráči.
 - Extra Utilities: Dimenze Poslední Milénium už nemá déšť ani moby.
 - Extra Utilities: Uzel odběru kapaliny už nemaže tekutiny.
-- Industrialcraft 2: Kapalinové články zobrazují lokalizované jméno tekutiny.
+- Industrialcraft 2: Tekutinové články zobrazují lokalizované jméno tekutiny.
 - Industrialcraft 2: Nádrž pro chladící kapalinu nejde automatizovaně používat, pokud reaktor není kapalný reaktor.
-- Industrialcraft 2: Kapalinové články nyní podporují rozhraní kapalních nádrží.
+- Industrialcraft 2: Tekutinové články nyní podporují rozhraní tekutinových nádrží.
 - Industrialcraft 2: Semínka se hromadí po 64 kusech, pokud mají stejné vlastnosti.
 - Journey Map: Opraveno rolování v obrazovce waypointů.
 - Minechem: ID efektu Atropine High (Delirium) je konfigurovatelné kvůli konfliktům ID.
