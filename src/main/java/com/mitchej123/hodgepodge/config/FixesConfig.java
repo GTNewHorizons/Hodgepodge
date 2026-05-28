@@ -488,6 +488,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean deepCopyDataWatcherInSP;
 
+    @Config.Comment("Fix the enchant glint being applied multiple times for items with multiple render passes")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixMultipleEnchantGlint;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
