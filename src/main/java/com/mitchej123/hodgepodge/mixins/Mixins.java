@@ -1083,6 +1083,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("fml.MixinUniqueIdentifier_Intern")
             .setApplyIf(() -> MemoryConfig.allocs.internUniqueIdentifierModid)
             .setPhase(Phase.EARLY)),
+    FIX_MULTIPLE_ENCHANT_GLINT(new MixinBuilder()
+            .addClientMixins("minecraft.MixinItem_EnchantGlint")
+            .setApplyIf(() -> FixesConfig.fixMultipleEnchantGlint)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments
