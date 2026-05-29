@@ -138,7 +138,9 @@ public final class BlockLookupHooks {
             }
         }
 
-        final Block[] arr = maxId >= 0 ? new Block[maxId + 1] : new Block[0];
+        // Keep at least one slot because getBlockById falls back to arr[0],
+        // which is expected to be air in a valid block registry.
+        final Block[] arr = new Block[Math.max(maxId + 1, 1)];
 
         for (final Object obj : Block.blockRegistry) {
             if (!(obj instanceof Block block)) continue;
