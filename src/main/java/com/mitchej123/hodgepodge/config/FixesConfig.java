@@ -28,6 +28,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixBogusIntegratedServerNPEs;
 
+    @Config.Comment("Patch Forge's @Optional.Interface processor to also strip Signature attribute entries (fixes TypeNotPresentException from Class.getGenericInterfaces when an optional interface's mod is missing)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixForgeOptionalInterfaceSignature;
+
     @Config.Comment("Do not flip bottom face textures (1.8+ behavior, see MC-47811)")
     @Config.DefaultBoolean(true)
     public static boolean fixBottomFaceUV;
@@ -483,6 +487,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean deepCopyDataWatcherInSP;
+
+    @Config.Comment("Fix the enchant glint being applied multiple times for items with multiple render passes")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixMultipleEnchantGlint;
 
     /* ====== Minecraft fixes end ===== */
 

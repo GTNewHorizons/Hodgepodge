@@ -31,6 +31,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGameSettings_SprintKey")
             .setApplyIf(() -> TweaksConfig.changeSprintCategory)
             .setPhase(Phase.EARLY)),
+    CONFIGURABLE_MUSIC_DELAY(new MixinBuilder("Configurable delay between in-game music tracks")
+            .addClientMixins("minecraft.MixinMusicTicker")
+            .setApplyIf(() -> TweaksConfig.configurableMusicDelay)
+            .setPhase(Phase.EARLY)),
     SIGN_INPUT_IGNORES_FORMAT_CODES(new MixinBuilder("Sign input counts visible chars only")
             .addClientMixins("minecraft.MixinGuiEditSign")
             .addCommonMixins(
@@ -202,6 +206,12 @@ public enum Mixins implements IMixins {
     CLEAN_CHAT_LOGS(new MixinBuilder()
             .addClientMixins("minecraft.MixinGuiNewChat_CleanChatLogs")
             .setApplyIf(() -> TweaksConfig.cleanChatLogs)
+            .setPhase(Phase.EARLY)),
+    F1_SHOW_HAND(new MixinBuilder()
+            .addClientMixins(
+                    "minecraft.MixinEntityRenderer_F1ShowHand",
+                    "minecraft.MixinMinecraft_F1ShowHand")
+            .setApplyIf(() -> TweaksConfig.f1ShowHand)
             .setPhase(Phase.EARLY)),
     FIX_ENTITY_ATTRIBUTES_RANGE(new MixinBuilder()
             .addClientMixins("minecraft.MixinNetHandlerPlayClient_FixEntityAttributesRange")
@@ -1051,6 +1061,25 @@ public enum Mixins implements IMixins {
     FIX_FORGE_PLAYER_LEAK(new MixinBuilder()
             .addCommonMixins("memory.MixinFakePlayerFactory_FixLeak")
             .setApplyIf(() -> MemoryConfig.leaks.fixForgePlayerFactoryLeak)
+            .setPhase(Phase.EARLY)),
+    INTERN_ASMDATATABLE_STRINGS(new MixinBuilder()
+            .addCommonMixins(
+                    "fml.MixinEnumHolder_Intern",
+                    "fml.MixinModAnnotation_Intern",
+                    "fml.MixinASMData_Intern")
+            .setApplyIf(() -> MemoryConfig.allocs.deduplicateASMDataTableStrings)
+            .setPhase(Phase.EARLY)),
+    INTERN_RESOURCE_LOCATION_DOMAIN(new MixinBuilder()
+            .addClientMixins("memory.MixinResourceLocation_Intern")
+            .setApplyIf(() -> MemoryConfig.allocs.internResourceLocationDomain)
+            .setPhase(Phase.EARLY)),
+    INTERN_UNIQUE_IDENTIFIER_MODID(new MixinBuilder()
+            .addClientMixins("fml.MixinUniqueIdentifier_Intern")
+            .setApplyIf(() -> MemoryConfig.allocs.internUniqueIdentifierModid)
+            .setPhase(Phase.EARLY)),
+    FIX_MULTIPLE_ENCHANT_GLINT(new MixinBuilder()
+            .addClientMixins("minecraft.MixinItem_EnchantGlint")
+            .setApplyIf(() -> FixesConfig.fixMultipleEnchantGlint)
             .setPhase(Phase.EARLY)),
     // endregion
 
