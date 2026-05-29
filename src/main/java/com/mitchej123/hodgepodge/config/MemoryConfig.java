@@ -106,10 +106,20 @@ public class MemoryConfig {
         @Config.RequiresMcRestart
         public boolean fixWorldMapStorageLeak;
 
+        @Config.Comment("Fix IC2 TESR leaking the world instance")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixIC2TESRleak;
+
         @Config.Comment("Fix memory leaks in bibliocraft's tile entity renderers")
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean fixBibliocraftTESRWorldLeak;
+
+        @Config.Comment("Fix forge's FakePlayerFactory leaking the world instance")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixForgePlayerFactoryLeak;
     }
 
     public static class AllocationFixes {
@@ -128,5 +138,20 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean cacheAdvancedModels;
+
+        @Config.Comment("Reduces the RAM usage of the ASMDataTable by interning the Strings")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean deduplicateASMDataTableStrings;
+
+        @Config.Comment("Reduce the memory usage from resource location domain strings")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean internResourceLocationDomain;
+
+        @Config.Comment("Reduce the memory usage from unique identifier modid strings")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean internUniqueIdentifierModid;
     }
 }
