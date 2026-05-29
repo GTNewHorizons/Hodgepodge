@@ -1,8 +1,5 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
-import com.mitchej123.hodgepodge.Compat;
-import com.mitchej123.hodgepodge.client.IHodgepodgePotionPanelRenderer;
-
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.inventory.Container;
@@ -11,6 +8,9 @@ import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+
+import com.mitchej123.hodgepodge.Compat;
+import com.mitchej123.hodgepodge.client.IHodgepodgePotionPanelRenderer;
 
 @Mixin(InventoryEffectRenderer.class)
 public abstract class MixinInventoryEffectRenderer_PotionEffectRendering extends GuiContainer
