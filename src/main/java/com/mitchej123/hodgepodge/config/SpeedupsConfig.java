@@ -23,7 +23,7 @@ public class SpeedupsConfig {
     @Config.Comment("Deduplicate Forge's per-mod resource pack construction")
     @Config.DefaultBoolean(true)
     public static boolean deduplicateModResourcePackLoading;
-    
+
     @Config.Comment("Reduce regex overhead when scanning jar entries for class files during FML mod discovery")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
