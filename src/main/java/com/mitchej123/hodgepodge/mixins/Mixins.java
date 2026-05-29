@@ -186,7 +186,9 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> !TweaksConfig.showInventoryEffectIcons)
             .setPhase(Phase.EARLY)),
     FIX_POTION_EFFECT_RENDERING(new MixinBuilder()
-            .addClientMixins("minecraft.MixinInventoryEffectRenderer_PotionEffectRendering")
+            .addClientMixins(
+                    "minecraft.MixinInventoryEffectRenderer_PotionEffectRendering",
+                    "minecraft.MixinGuiContainer_PotionEffectRendering")
             .setApplyIf(() -> TweaksConfig.fixPotionEffectRender)
             .setPhase(Phase.EARLY)),
     FIX_POTION_EFFECT_ALPHA_TEST(new MixinBuilder("Fix potion effect panel visual glitch caused by Forge leaving GL_ALPHA_TEST disabled after item rendering")
