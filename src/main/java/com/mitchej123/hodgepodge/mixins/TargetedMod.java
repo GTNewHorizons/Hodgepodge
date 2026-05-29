@@ -31,6 +31,7 @@ public enum TargetedMod implements ITargetMod {
     // transformer that got removed and added via mixin in this mod, so we don't
     // load our mixins if an old version of the mod that contains this class is loaded
     ENDERCORE_WITH_MODLIST(null, null, "com.enderio.core.common.transform.EnderCoreTransformerClient"),
+    ENDLESSIDS("com.falsepattern.endlessids.asm.EndlessIDsCore", "endlessids"),
     ETFURUMREQUIEM("ganymedes01.etfuturum.mixinplugin.EtFuturumEarlyMixins", "etfuturum"),
     EXTRATIC("ExtraTiC"),
     EXTRA_UTILITIES("ExtraUtilities"),
@@ -64,7 +65,8 @@ public enum TargetedMod implements ITargetMod {
     MODERNKEYBINDING(null, null, "committee.nova.mkb.ModernKeyBinding"),
     MODULARPOWERSUITS("powersuits"),
     MORPHEUS("Morpheus"),
-    MRTJPCORE("MrTJPCoreMod"),
+    MRTJPCORE_V_BEFORE_113(new TargetModBuilder().setTargetClass("mrtjp.core.handler.MrTJPCoreMod")
+            .testModVersion("MrTJPCoreMod", version -> isVersionLessThan(version, "1.1.3"))),
     NOTENOUGHITEMS("codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
     OPTIFINE("optifine.OptiFineForgeTweaker", "Optifine"),
     PORTAL_GUN("PortalGun"),

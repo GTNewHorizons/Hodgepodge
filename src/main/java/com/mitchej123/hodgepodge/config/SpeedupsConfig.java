@@ -20,6 +20,11 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean optimizeASMDataTable;
 
+    @Config.Comment("Reduce regex overhead when scanning jar entries for class files during FML mod discovery")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean optimizeJarDiscovererRegexOverhead;
+
     @Config.Comment("Optimize texture loading")
     @Config.DefaultBoolean(true)
     public static boolean optimizeTextureLoading;
@@ -215,6 +220,11 @@ public class SpeedupsConfig {
     @Config.Comment("Parse batched tile entity NBT asynchronously on the client")
     @Config.DefaultBoolean(true)
     public static boolean asyncBatchedNBTParsing;
+
+    @Config.Comment("Reduce regex overhead when loading object models")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean optimizeWavefrontObjectModelLoading;
 
     // Biomes O' Plenty
 

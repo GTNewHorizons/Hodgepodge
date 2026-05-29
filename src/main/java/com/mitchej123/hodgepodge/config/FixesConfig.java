@@ -28,6 +28,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixBogusIntegratedServerNPEs;
 
+    @Config.Comment("Patch Forge's @Optional.Interface processor to also strip Signature attribute entries (fixes TypeNotPresentException from Class.getGenericInterfaces when an optional interface's mod is missing)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixForgeOptionalInterfaceSignature;
+
     @Config.Comment("Do not flip bottom face textures (1.8+ behavior, see MC-47811)")
     @Config.DefaultBoolean(true)
     public static boolean fixBottomFaceUV;
@@ -35,6 +39,15 @@ public class FixesConfig {
     @Config.Comment("Fix wrapped chat lines missing colors")
     @Config.DefaultBoolean(true)
     public static boolean fixChatWrappedColors;
+
+    @Config.Comment("Fix /say, /tell, /me losing formatting after the first word")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCommandFormattingLoss;
+
+    @Config.Comment("Fix disconnect screen button overlapping long kick messages")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixDisconnectScreenLayout;
 
     @Config.Comment("Prevents crash if server sends container with wrong itemStack size")
     @Config.DefaultBoolean(true)
@@ -343,6 +356,16 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixWrongBlockPlacementDistanceCheck;
 
+    @Config.Comment({ "Override the server-side 'moved too quickly' speed check threshold.",
+            "Vanilla value is 100.0 (squared distance per tick, i.e. 10 blocks/tick in a single axis).",
+            "Increase this if fast-movement items like GraviChestplate + ThaumicBoots trigger the check.",
+            "A value of 200.0 accommodates ~14 blocks/tick and covers known modded items.",
+            "Set to a very large number (e.g. 1.7976931348623157E308) to effectively disable the check.",
+            "Values below 100.0 are ignored and the vanilla default is used instead." })
+    @Config.DefaultDouble(100.0)
+    @Config.RequiresMcRestart
+    public static double movedTooQuicklyThreshold;
+
     @Config.Comment("Fix inventory sync lag: prevents client to check recipes on empty slots. Particularly fixes lag when trying to eat food when full.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -455,6 +478,21 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixFakePlayerChatCrash;
 
+    @Config.Comment("Fix resetRainAndThunder (called when sleeping) setting rain and thunder timers to 0, which can cause immediate rain on world load if saved at that moment")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixResetRainAndThunder;
+
+    @Config.Comment("Make a deep copy when sending objects from the data watcher to the client in SinglePlayer")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean deepCopyDataWatcherInSP;
+
+    @Config.Comment("Fix the enchant glint being applied multiple times for items with multiple render passes")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixMultipleEnchantGlint;
+
     @Config.Comment("Prevents the entity rendered in the player inventory GUI and the horse GUI from overflowing their boxes.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -509,6 +547,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean noPauseGuiClipboard;
 
+    @Config.Comment("Fix Bibliocraft PaintingUtil getting it's own jar path")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBibliocraftPaintingUtilPath;
+
     // Bibliowoods Forestry
 
     @Config.Comment("Fix Bibliowoods Forestry recipes")
@@ -528,6 +570,14 @@ public class FixesConfig {
     @Config.Comment("Remove the BOP warning on first world generation (ignored when dreamcraft is present)")
     @Config.DefaultBoolean(false)
     public static boolean removeBOPWarning;
+
+    @Config.Comment("Fixes cascading worldgen caused by Biomes O' Plenty Kelp.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBOPCascadingKelp;
+
+    @Config.Comment("Fix EndlessIds incompatibility with BoP")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBoPEid;
 
     // Candycraft
 
@@ -699,6 +749,18 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixIc2KeybindsInGuis;
 
+    @Config.Comment("Fix IC2 keybinds using hardware key state instead of KeyBinding state, preventing other mods from suppressing keys")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2KeybindsIgnoreKeyState;
+
+    @Config.Comment("Fix IC2 filled tin cans not running logic on both client and server")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2TinCan;
+
+    @Config.Comment("Fix EndlessIds incompatibility with IC2")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2Eid;
+
     // Journey Map
 
     @Config.Comment("Prevents journeymap from using illegal character in file paths")
@@ -850,6 +912,10 @@ public class FixesConfig {
             "such as capturing the Demon in an EnderIO Soul Vial." })
     @Config.DefaultBoolean(true)
     public static boolean fixWitcheryDemonShiftClick;
+
+    @Config.Comment("Fix EndlessIds incompatibility with Witchery")
+    @Config.DefaultBoolean(true)
+    public static boolean fixWitcheryEid;
 
     // Xaero's Minimap
     @Config.Comment("Fixes the player entity dot rendering when arrow is chosen")
