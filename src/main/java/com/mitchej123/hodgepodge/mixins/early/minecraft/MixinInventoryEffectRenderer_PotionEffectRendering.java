@@ -1,5 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
+import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.client.IHodgepodgePotionPanelRenderer;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -21,17 +22,22 @@ public abstract class MixinInventoryEffectRenderer_PotionEffectRendering extends
     /**
      * @author Alexdoru
      * @reason Suppress vanilla's post-drawScreen call to func_147044_g (gated on field_147045_u which is only set at
-     *         initGui, missing effects gained while the GUI is open). The panel is rendered via
-     *         MixinGuiContainer_PotionEffectRendering which injects into GuiContainer.drawScreen after
-     *         drawGuiContainerForegroundLayer, giving correct z-ordering before the cursor item and tooltips.
+     *         initGui, missing effects gained while the GUI is open). When the NEI panel is visible the panel is
+     *         pre-rendered here before super.drawScreen so drawDefaultBackground's dark overlay naturally covers it,
+     *         matching the original "background" appearance. Otherwise rendering is deferred to
+     *         MixinGuiContainer_PotionEffectRendering for correct z-ordering before the cursor item and tooltips.
      */
     @Overwrite
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        if (Compat.isNeiLeftPanelVisible() && !this.mc.thePlayer.getActivePotionEffects().isEmpty()) {
+            this.func_147044_g();
+        }
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     @Override
     public void hodgepodge$renderPotionPanelForeground() {
+        if (Compat.isNeiLeftPanelVisible()) return;
         if (!this.mc.thePlayer.getActivePotionEffects().isEmpty()) {
             GL11.glPushMatrix();
             GL11.glTranslatef(-this.guiLeft, -this.guiTop, 0.0F);
