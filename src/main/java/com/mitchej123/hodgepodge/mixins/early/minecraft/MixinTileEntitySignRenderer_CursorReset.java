@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 /**
  * Append {@code §r} before the trailing {@code " <"} cursor marker so the line's active style does not bleed into it.
- * Vanilla centers via {@code drawString(s, -getStringWidth(s) / 2, ...)}, so both args must get the reset. Width-only or
- * draw-only and the line mis-centers, since bold widens the space and {@code <}.
+ * Vanilla centers via {@code drawString(s, -getStringWidth(s) / 2, ...)}, so both args must get the reset. Width-only
+ * or draw-only and the line mis-centers, since bold widens the space and {@code <}.
  */
 @Mixin(TileEntitySignRenderer.class)
 public class MixinTileEntitySignRenderer_CursorReset {
