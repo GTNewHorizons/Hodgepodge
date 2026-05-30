@@ -20,9 +20,9 @@ public abstract class MixinBoreVisFrequencyReduction {
     private float speedyTime;
 
     @Unique
-    private int gTNHLib$cooldown = 0;
+    private int hodgepodge$cooldown = 0;
     @Unique
-    private float gTNHLib$cachedTime = 0;
+    private float hodgepodge$cachedTime = 0;
 
     // Add a cooldown to the if statement.
     @ModifyExpressionValue(
@@ -39,19 +39,19 @@ public abstract class MixinBoreVisFrequencyReduction {
         if (isRemote) return true;
 
         // Cooldown expired, do checks
-        if (gTNHLib$cooldown-- <= 0) {
+        if (hodgepodge$cooldown-- <= 0) {
             if (this.gettingPower()) {
                 // Do a cvis check, sleep 10s
-                gTNHLib$cooldown = 10 * 20;
+                hodgepodge$cooldown = 10 * 20;
                 // double cooldown if it never had cvis
                 // imprecision means it will never be 0 again. I think.
-                gTNHLib$cooldown *= this.speedyTime == 0 ? 2 : 1;
+                hodgepodge$cooldown *= this.speedyTime == 0 ? 2 : 1;
                 return false;
             } else {
                 // Block isn't powered, so do cvis thing but choke to 30s instead
-                gTNHLib$cooldown = 30 * 20;
+                hodgepodge$cooldown = 30 * 20;
                 // double cooldown if it never had cvis
-                gTNHLib$cooldown *= this.speedyTime == 0 ? 2 : 1;
+                hodgepodge$cooldown *= this.speedyTime == 0 ? 2 : 1;
                 return false;
             }
         }
@@ -60,10 +60,10 @@ public abstract class MixinBoreVisFrequencyReduction {
         // Speedy time can be exhausted in 1 second by a constantly-digging bore.
         // if the speedyTime doesn't change since last lookup, increase cooldown to 1/2s
         if (this.speedyTime > 1 && this.speedyTime < 20) {
-            if (this.speedyTime == gTNHLib$cachedTime) {
-                gTNHLib$cooldown = Math.min(gTNHLib$cooldown, 10);
-            } else gTNHLib$cooldown = 0;
-            gTNHLib$cachedTime = this.speedyTime;
+            if (this.speedyTime == hodgepodge$cachedTime) {
+                hodgepodge$cooldown = Math.min(hodgepodge$cooldown, 10);
+            } else hodgepodge$cooldown = 0;
+            hodgepodge$cachedTime = this.speedyTime;
         }
 
         // Cooldown's not up, don't do cvis thing.
