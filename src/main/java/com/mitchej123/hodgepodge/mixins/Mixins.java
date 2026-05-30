@@ -31,6 +31,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGameSettings_SprintKey")
             .setApplyIf(() -> TweaksConfig.changeSprintCategory)
             .setPhase(Phase.EARLY)),
+    CONFIGURABLE_MUSIC_DELAY(new MixinBuilder("Configurable delay between in-game music tracks")
+            .addClientMixins("minecraft.MixinMusicTicker")
+            .setApplyIf(() -> TweaksConfig.configurableMusicDelay)
+            .setPhase(Phase.EARLY)),
     SIGN_INPUT_IGNORES_FORMAT_CODES(new MixinBuilder("Sign input counts visible chars only")
             .addClientMixins(
                     "minecraft.MixinGuiEditSign",
@@ -1078,6 +1082,10 @@ public enum Mixins implements IMixins {
     INTERN_UNIQUE_IDENTIFIER_MODID(new MixinBuilder()
             .addClientMixins("fml.MixinUniqueIdentifier_Intern")
             .setApplyIf(() -> MemoryConfig.allocs.internUniqueIdentifierModid)
+            .setPhase(Phase.EARLY)),
+    FIX_MULTIPLE_ENCHANT_GLINT(new MixinBuilder()
+            .addClientMixins("minecraft.MixinItem_EnchantGlint")
+            .setApplyIf(() -> FixesConfig.fixMultipleEnchantGlint)
             .setPhase(Phase.EARLY)),
     // endregion
 
