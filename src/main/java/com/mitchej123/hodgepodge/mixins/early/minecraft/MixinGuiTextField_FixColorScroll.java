@@ -544,10 +544,6 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         return sb.toString();
     }
 
-    /**
-     * If offset lands inside a §x§R§R§G§G§B§B (14-char) or §c (2-char) sequence, advance it past the end so substring
-     * never starts mid-format-code.
-     */
     @Unique
     private static String hodgepodge$insertEffectsAfterColor(String expanded, String effects) {
         if (effects.isEmpty()) return expanded;
@@ -561,6 +557,10 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         return effects + expanded;
     }
 
+    /**
+     * If offset lands inside a §x§R§R§G§G§B§B (14-char) or §c (2-char) sequence, advance it past the end so substring
+     * never starts mid-format-code.
+     */
     @Unique
     private static int hodgepodge$snapToFormatBoundary(String text, int offset) {
         if (offset <= 0 || offset >= text.length()) return offset;
