@@ -79,6 +79,24 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.mockito:mockito-core:5.+")
+
+
+    // For /nbtEdit command
+    //devOnlyNonPublishable("com.github.GTNewHorizons:ServerUtilities:2.2.36") { transitive = false }
+
+
+    //devOnlyNonPublishable("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev") {transitive = false}
+    //devOnlyNonPublishable('com.github.GTNewHorizons:Baubles-Expanded:2.2.11-GTNH:dev') {transitive = false} // For testing Thaumcraft
+
+    // Replace Baubles with Baubles-Expanded for testing Thaumcraft and other that dep on it
+    project.getConfigurations().configureEach(c -> {
+        final DependencySubstitutions ds = c.getResolutionStrategy()
+                .getDependencySubstitution()
+        ds.substitute(ds.module("com.github.GTNewHorizons:Baubles"))
+                .using(ds.module("com.github.GTNewHorizons:Baubles-Expanded:2.2.11-GTNH"))
+                .withClassifier("dev")
+                .because("Baubles-Expanded replaces Baubles")
+    })
 }
 
 // Replace when RFG support deobfuscation from notch mappings
