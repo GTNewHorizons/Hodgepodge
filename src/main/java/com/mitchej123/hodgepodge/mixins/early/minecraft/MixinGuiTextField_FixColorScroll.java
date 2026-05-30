@@ -126,6 +126,53 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         return sb.toString();
     }
 
+    /**
+     * Like vanilla {@link FontRenderer#getFormatFromString} but {@code §x}-aware: treats {@code §x§R§R§G§G§B§B} (bungee
+     * hex) as a single color token emitted verbatim, instead of letting vanilla collapse it to the last hex digit
+     * (which yields {@code §0} = black). Skips {@code §u} and its optional {@code §x} shadow payload entirely (shadow
+     * state is captured separately by {@link #hodgepodge$getActiveEffects}). Mirrors vanilla for legacy
+     * color/style/reset codes, including resetting pending styles when a color is seen.
+     */
+    @Unique
+    private static String hodgepodge$getColorFormatFromString(String text) {
+        String color = "";
+        StringBuilder styles = new StringBuilder();
+        for (int i = 0; i + 1 < text.length(); i++) {
+            if (text.charAt(i) != ColorFormatUtils.SECTION) continue;
+            char c = Character.toLowerCase(text.charAt(i + 1));
+            if (c == 'u') {
+                // §u toggle or §u§x<hex> custom shadow — skip its own §x payload so it is never read as text color
+                if (i + 2 + ColorFormatUtils.SECTION_X_SEQ_LEN <= text.length()
+                        && text.charAt(i + 2) == ColorFormatUtils.SECTION
+                        && Character.toLowerCase(text.charAt(i + 3)) == 'x'
+                        && ColorFormatUtils.parseRgbFromSectionX(text, i + 2) != -1) {
+                    i += 1 + ColorFormatUtils.SECTION_X_SEQ_LEN;
+                } else {
+                    i++;
+                }
+                continue;
+            }
+            if (c == 'x' && i + ColorFormatUtils.SECTION_X_SEQ_LEN <= text.length()
+                    && ColorFormatUtils.parseRgbFromSectionX(text, i) != -1) {
+                color = text.substring(i, i + ColorFormatUtils.SECTION_X_SEQ_LEN);
+                styles.setLength(0);
+                i += ColorFormatUtils.SECTION_X_SEQ_LEN - 1;
+            } else if (c >= '0' && c <= '9' || c >= 'a' && c <= 'f') {
+                color = "§" + c;
+                styles.setLength(0);
+                i++;
+            } else if (c == 'k' || c == 'l' || c == 'm' || c == 'n' || c == 'o') {
+                styles.append(ColorFormatUtils.SECTION).append(c);
+                i++;
+            } else if (c == 'r') {
+                color = "";
+                styles.setLength(0);
+                i++;
+            }
+        }
+        return color + styles;
+    }
+
     @Unique
     private static String hodgepodge$stripEffectCodes(String format) {
         if (format.indexOf('q') == -1 && format.indexOf('z') == -1
@@ -171,7 +218,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
 
         int targetPos = Math.min(this.cursorPosition, text.length());
         String prefix = text.substring(0, this.lineScrollOffset);
-        String activeFormat = FontRenderer.getFormatFromString(prefix);
+        String activeFormat = hodgepodge$getColorFormatFromString(prefix);
         if (!hodgepodge$formatHasBold(activeFormat)) return;
 
         int fieldWidth = this.getWidth();
@@ -188,7 +235,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
             if (this.lineScrollOffset >= text.length()) break;
 
             prefix = text.substring(0, this.lineScrollOffset);
-            activeFormat = FontRenderer.getFormatFromString(prefix);
+            activeFormat = hodgepodge$getColorFormatFromString(prefix);
             if (!hodgepodge$formatHasBold(activeFormat)) break;
         }
     }
@@ -201,6 +248,19 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         for (int i = 0; i < end - 1; i++) {
             if (fullText.charAt(i) != ColorFormatUtils.SECTION) continue;
             char code = Character.toLowerCase(fullText.charAt(i + 1));
+            if (code == 'u') {
+                // §u§x<hex> custom shadow: consume the §x payload as one unit so its §x is not mistaken for a
+                // gradient terminator (which would spuriously end an active rainbow). A bare §u just skips.
+                if (i + 2 + ColorFormatUtils.SECTION_X_SEQ_LEN <= fullText.length()
+                        && fullText.charAt(i + 2) == ColorFormatUtils.SECTION
+                        && Character.toLowerCase(fullText.charAt(i + 3)) == 'x'
+                        && ColorFormatUtils.parseRgbFromSectionX(fullText, i + 2) != -1) {
+                    i += 1 + ColorFormatUtils.SECTION_X_SEQ_LEN;
+                } else {
+                    i++;
+                }
+                continue;
+            }
             if (code == 'q') {
                 rainbowStart = i + 2;
             } else if (ColorFormatUtils.isGradientTerminator(code)) {
@@ -315,7 +375,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
             return "\u00a7r" + beforeCursor;
         }
         String prefix = this.text.substring(0, Math.min(this.lineScrollOffset, this.text.length()));
-        String activeFormat = FontRenderer.getFormatFromString(prefix);
+        String activeFormat = hodgepodge$getColorFormatFromString(prefix);
         String activeEffects = hodgepodge$getActiveEffects(prefix);
         String colorAndStyles = hodgepodge$stripEffectCodes(activeFormat);
         if (colorAndStyles.isEmpty() && activeEffects.isEmpty()) {
@@ -348,7 +408,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
             index = 0)
     private String hodgepodge$fixCursorSplitColorCodes(String afterCursor) {
         String prefix = this.text.substring(0, Math.min(this.cursorPosition, this.text.length()));
-        String activeFormat = FontRenderer.getFormatFromString(prefix);
+        String activeFormat = hodgepodge$getColorFormatFromString(prefix);
         String activeEffects = hodgepodge$getActiveEffects(prefix);
         String colorAndStyles = hodgepodge$stripEffectCodes(activeFormat);
         if (colorAndStyles.isEmpty() && activeEffects.isEmpty()) {

@@ -64,7 +64,9 @@ public class LegacyColorFallback implements FontRendering.TextPreprocessor {
                             && Character.toLowerCase(text.charAt(i + 3)) == 'x') {
                         int rgb = parseHexPairs(text, i + 4, 6);
                         if (rgb != -1) {
+                            // Keep the custom shadow colour so the fallback shadow pass can render it.
                             sb.append(ColorFormatUtils.SECTION).append('u');
+                            sb.append(ColorFormatUtils.buildSectionX(rgb));
                             i += 1 + ColorFormatUtils.SECTION_X_SEQ_LEN;
                             continue;
                         }
@@ -101,7 +103,9 @@ public class LegacyColorFallback implements FontRendering.TextPreprocessor {
                                 && text.charAt(i + 3) == '#') {
                             int rgb = parseHex6(text, i + 4);
                             if (rgb != -1) {
+                                // Keep the custom shadow colour so the fallback shadow pass can render it.
                                 sb.append(ColorFormatUtils.SECTION).append('u');
+                                sb.append(ColorFormatUtils.buildSectionX(rgb));
                                 i += 1 + ColorFormatUtils.AMP_HEX_LEN;
                                 continue;
                             }
