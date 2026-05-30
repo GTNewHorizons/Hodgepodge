@@ -854,6 +854,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixThaumcraftEE3Check;
 
+    @Config.Comment("Lower frequency of Thaumcraft's Arcane Bore calls to drain vis, and therefore calls to find vis nets.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixArcaneBoreCVisSourceLookup;
+
     // Thermal Dynamics
 
     @Config.Comment("Prevent crash with Thermal Dynamics from Negative Array Exceptions from item duct transfers")

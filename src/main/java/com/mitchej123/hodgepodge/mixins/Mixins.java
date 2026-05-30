@@ -1389,6 +1389,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixThaumcraftEE3Check)
             .addRequiredMod(TargetedMod.THAUMCRAFT)
             .setPhase(Phase.LATE)),
+    THAUM_BORE_VIS_DRAIN_FREQUENCY(new MixinBuilder()
+            .addCommonMixins("MixinBoreVisFrequencyReduction")
+            .setApplyIf(() -> FixesConfig.fixArcaneBoreCVisSourceLookup)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
 
     // BOP
     FIX_QUICKSAND_XRAY(new MixinBuilder()
