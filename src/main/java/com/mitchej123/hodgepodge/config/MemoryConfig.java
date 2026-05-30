@@ -140,17 +140,17 @@ public class MemoryConfig {
         public boolean cacheAdvancedModels;
 
         @Config.Comment("Reduces the RAM usage of the ASMDataTable by interning the Strings")
-        @Config.DefaultBoolean(true)
+        @Config.DefaultBoolean(false)
         @Config.RequiresMcRestart
         public boolean deduplicateASMDataTableStrings;
 
         @Config.Comment("Reduce the memory usage from resource location domain strings")
-        @Config.DefaultBoolean(true)
+        @Config.DefaultBoolean(false)
         @Config.RequiresMcRestart
         public boolean internResourceLocationDomain;
 
         @Config.Comment("Reduce the memory usage from unique identifier modid strings")
-        @Config.DefaultBoolean(true)
+        @Config.DefaultBoolean(false)
         @Config.RequiresMcRestart
         public boolean internUniqueIdentifierModid;
     }
