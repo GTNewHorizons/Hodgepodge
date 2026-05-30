@@ -4,7 +4,6 @@ import java.util.Random;
 
 import net.minecraft.client.gui.FontRenderer;
 
-import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -188,15 +187,6 @@ public abstract class MixinFontRenderer_FallbackShadow {
         float shadowOffset = this.unicodeFlag ? 0.5f : 1.0f;
         int lastShadowColor = -1;
 
-        // Shadow glyphs are coplanar (Z=0) with the main text drawn afterwards but offset ~1px in X/Y. In 3D (signs,
-        // nametags) perspective makes those coplanar same-depth quads z-fight into a flickering pixel-wide line as the
-        // camera moves. Disable depth WRITES (not the depth TEST) for the shadow pass: the shadow stays correctly
-        // occluded by world geometry but writes no depth, so the main text drawn afterwards always wins the overlap by
-        // draw order. Correct in both 3D and the 2D GUI. polygonOffset is wrong here: text quads are view-parallel so
-        // its slope term is ~0 and it either under-corrects or pushes the shadow into the plank behind it.
-        final boolean prevDepthMask = GL11.glGetBoolean(GL11.GL_DEPTH_WRITEMASK);
-        GL11.glDepthMask(false);
-
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
 
@@ -278,8 +268,6 @@ public abstract class MixinFontRenderer_FallbackShadow {
                 trackX += 1.0f;
             }
         }
-
-        GL11.glDepthMask(prevDepthMask);
 
         this.posX = startPosX;
         this.posY = startPosY;
