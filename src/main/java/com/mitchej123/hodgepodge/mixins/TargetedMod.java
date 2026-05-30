@@ -68,6 +68,8 @@ public enum TargetedMod implements ITargetMod {
     MRTJPCORE_V_BEFORE_113(new TargetModBuilder().setTargetClass("mrtjp.core.handler.MrTJPCoreMod")
             .testModVersion("MrTJPCoreMod", version -> isVersionLessThan(version, "1.1.3"))),
     NOTENOUGHITEMS("codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
+    // Target the version not included in angelica
+    NOTFINE("jss.notfine.mixinplugin.NotFineEarlyMixins", null, "jss.notfine.NotFine"),
     OPTIFINE("optifine.OptiFineForgeTweaker", "Optifine"),
     PORTAL_GUN("PortalGun"),
     PROJECTE("ProjectE"),

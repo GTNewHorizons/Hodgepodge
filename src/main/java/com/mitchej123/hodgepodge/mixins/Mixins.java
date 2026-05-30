@@ -828,6 +828,7 @@ public enum Mixins implements IMixins {
     ASYNC_ICON_LOADING(new MixinBuilder()
             .addClientMixins("minecraft.fastload.MixinTextureMap_AsyncIcons")
             .setApplyIf(() -> SpeedupsConfig.asyncIconLoading)
+            .addExcludedMod(TargetedMod.NOTFINE)
             .setPhase(Phase.EARLY)),
     SPEEDUP_BOP_LEAF_DECAY(new MixinBuilder()
             .addCommonMixins(
