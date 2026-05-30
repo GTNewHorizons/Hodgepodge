@@ -1,5 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
+import java.util.Random;
+
 import net.minecraft.client.gui.FontRenderer;
 
 import org.lwjgl.opengl.GL11;
@@ -35,6 +37,12 @@ public abstract class MixinFontRenderer_FallbackShadow {
 
     @Shadow
     private int[] colorCode;
+
+    @Shadow
+    protected int[] charWidth;
+
+    @Shadow
+    public Random fontRandom;
 
     @Shadow
     private float alpha;
@@ -125,17 +133,38 @@ public abstract class MixinFontRenderer_FallbackShadow {
     private static final String hodgepodge$FONT_POS = "\u00c0\u00c1\u00c2\u00c8\u00ca\u00cb\u00cd\u00d3\u00d4\u00d5\u00da\u00df\u00e3\u00f5\u011f\u0130\u0131\u0152\u0153\u015e\u015f\u0174\u0175\u017e\u0207\u0000\u0000\u0000\u0000\u0000\u0000\u0000 !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u0000\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb\u00e8\u00ef\u00ee\u00ec\u00c4\u00c5\u00c9\u00e6\u00c6\u00f4\u00f6\u00f2\u00fb\u00f9\u00ff\u00d6\u00dc\u00f8\u00a3\u00d8\u00d7\u0192\u00e1\u00ed\u00f3\u00fa\u00f1\u00d1\u00aa\u00ba\u00bf\u00ae\u00ac\u00bd\u00bc\u00a1\u00ab\u00bb\u2591\u2592\u2593\u2502\u2524\u2561\u2562\u2556\u2555\u2563\u2551\u2557\u255d\u255c\u255b\u2510\u2514\u2534\u252c\u251c\u2500\u253c\u255e\u255f\u255a\u2554\u2569\u2566\u2560\u2550\u256c\u2567\u2568\u2564\u2565\u2559\u2558\u2552\u2553\u256b\u256a\u2518\u250c\u2588\u2584\u258c\u2590\u2580\u03b1\u03b2\u0393\u03c0\u03a3\u03c3\u03bc\u03c4\u03a6\u0398\u03a9\u03b4\u221e\u2205\u2208\u2229\u2261\u00b1\u2265\u2264\u2320\u2321\u00f7\u2248\u00b0\u2219\u00b7\u221a\u207f\u00b2\u25a0\u0000";
 
     /**
-     * Mirrors vanilla {@code FontRenderer#renderCharAtPos} exactly: space draws nothing, default-font chars draw from
-     * default.png at their CELL INDEX (not the raw char code), everything else draws from the unicode pages. The old
-     * implementation passed the raw char code as the cell index (so {@code 'a'} drew cell 97 = {@code '^'}) and sent
-     * space through {@code renderUnicodeChar}, which drew a missing-glyph box for every trailing space.
+     * Resolves the default.png cell a char draws from, mirroring vanilla {@code FontRenderer#renderCharAtPos}: a char's
+     * INDEX in {@link #hodgepodge$FONT_POS} is its cell. Returns -1 for chars not in the default font (drawn from the
+     * unicode pages instead). Under the {@code §k} obfuscated style, the cell is swapped for a random same-width one
+     * (as vanilla does in {@code renderStringAtPos}) so the shadow tracks the scrambling main text instead of ghosting
+     * the literal characters behind it. The result is resolved once per char and reused for the bold overlay, matching
+     * vanilla which renders bold from the same (already randomized) cell.
      */
     @Unique
-    private void hodgepodge$renderShadowChar(char c, boolean italic) {
-        if (c == ' ') return;
+    private int hodgepodge$resolveShadowCell(char c, boolean random) {
+        if (this.unicodeFlag) return -1;
         int idx = hodgepodge$FONT_POS.indexOf(c);
-        if (idx != -1 && !this.unicodeFlag) {
-            renderDefaultChar(idx, italic);
+        if (idx == -1) return -1;
+        if (random) {
+            int k;
+            do {
+                k = this.fontRandom.nextInt(this.charWidth.length);
+            } while (this.charWidth[idx] != this.charWidth[k]);
+            idx = k;
+        }
+        return idx;
+    }
+
+    /**
+     * Draws one shadow glyph at the current pos. {@code cell} comes from {@link #hodgepodge$resolveShadowCell}: -1
+     * means draw from the unicode pages, otherwise that default.png cell. Space draws nothing (vanilla special-case) —
+     * routing it through {@code renderUnicodeChar} would paint a missing-glyph box.
+     */
+    @Unique
+    private void hodgepodge$drawShadowGlyph(char c, int cell, boolean italic) {
+        if (c == ' ') return;
+        if (cell != -1) {
+            renderDefaultChar(cell, italic);
         } else {
             renderUnicodeChar(c, italic);
         }
@@ -155,6 +184,7 @@ public abstract class MixinFontRenderer_FallbackShadow {
         int initialColor = curColor;
         boolean curBold = false;
         boolean curItalic = false;
+        boolean curRandom = false;
         float shadowOffset = this.unicodeFlag ? 0.5f : 1.0f;
         int lastShadowColor = -1;
 
@@ -197,8 +227,11 @@ public abstract class MixinFontRenderer_FallbackShadow {
                 if (idx < 16) {
                     curBold = false;
                     curItalic = false;
+                    curRandom = false;
                     int colorIdx = (idx < 0 || idx > 15) ? 15 : idx;
                     curColor = this.colorCode[colorIdx];
+                } else if (idx == 16) {
+                    curRandom = true;
                 } else if (idx == 17) {
                     curBold = true;
                 } else if (idx == 20) {
@@ -206,6 +239,7 @@ public abstract class MixinFontRenderer_FallbackShadow {
                 } else if (idx == 21) {
                     curBold = false;
                     curItalic = false;
+                    curRandom = false;
                     shadowActive = false;
                     customShadowActive = false;
                     curColor = initialColor;
@@ -226,14 +260,16 @@ public abstract class MixinFontRenderer_FallbackShadow {
                     lastShadowColor = shadowRgb;
                 }
 
+                int shadowCell = hodgepodge$resolveShadowCell(c, curRandom);
+
                 this.posX = trackX + shadowOffset;
                 this.posY = startPosY + shadowOffset;
-                hodgepodge$renderShadowChar(c, curItalic);
+                hodgepodge$drawShadowGlyph(c, shadowCell, curItalic);
 
                 if (curBold) {
                     this.posX = trackX + shadowOffset + 1.0f;
                     this.posY = startPosY + shadowOffset;
-                    hodgepodge$renderShadowChar(c, curItalic);
+                    hodgepodge$drawShadowGlyph(c, shadowCell, curItalic);
                 }
             }
 
