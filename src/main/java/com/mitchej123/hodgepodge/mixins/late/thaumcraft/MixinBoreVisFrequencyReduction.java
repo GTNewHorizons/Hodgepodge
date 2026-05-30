@@ -43,10 +43,15 @@ public abstract class MixinBoreVisFrequencyReduction {
             if (this.gettingPower()) {
                 // Do a cvis check, sleep 10s
                 gTNHLib$cooldown = 10 * 20;
+                // double cooldown if it never had cvis
+                // imprecision means it will never be 0 again. I think.
+                gTNHLib$cooldown *= this.speedyTime == 0 ? 2 : 1;
                 return false;
             } else {
                 // Block isn't powered, so do cvis thing but choke to 30s instead
                 gTNHLib$cooldown = 30 * 20;
+                // double cooldown if it never had cvis
+                gTNHLib$cooldown *= this.speedyTime == 0 ? 2 : 1;
                 return false;
             }
         }
