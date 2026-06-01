@@ -9,7 +9,7 @@ import biomesoplenty.common.blocks.BlockBOPColorizedSapling;
 @Mixin(BlockBOPColorizedSapling.class)
 public class MixinBlockBOPColorizedSapling_FixIcon {
 
-    @ModifyVariable(method = "func_149691_a", at = @At("HEAD"), argsOnly = true, index = 2)
+    @ModifyVariable(method = "getIcon", at = @At("HEAD"), argsOnly = true, index = 2)
     private int hodgepodge$maskMetaGrowthBit(int meta) {
         return meta & 7;
     }
