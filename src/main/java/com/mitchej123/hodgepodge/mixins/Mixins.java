@@ -1467,6 +1467,11 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.BOP)
             .addRequiredMod(TargetedMod.ENDLESSIDS)
             .setPhase(Phase.LATE)),
+    FIX_BOP_SAPLING_ICON(new MixinBuilder("Fix BOP sapling icon when growth stage bit is set in meta")
+            .addCommonMixins("biomesoplenty.MixinBlockBOPColorizedSapling_FixIcon")
+            .setApplyIf(() -> FixesConfig.fixBOPSaplingIcon)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
 
     // Bibliowood Recipe Fix
     BIBLIOWOODS_RECIPE_FIX(new MixinBuilder("Fixes Bibliowoods Forestry recipes")
