@@ -69,7 +69,7 @@ public enum TargetedMod implements ITargetMod {
             .testModVersion("MrTJPCoreMod", version -> isVersionLessThan(version, "1.1.3"))),
     NOTENOUGHITEMS("codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
     // Target the version not included in angelica
-    NOTFINE("jss.notfine.mixinplugin.NotFineEarlyMixins", null, "jss.notfine.NotFine"),
+    NOTFINE("jss.notfine.mixinplugin.NotFineEarlyMixins", null),
     OPTIFINE("optifine.OptiFineForgeTweaker", "Optifine"),
     PORTAL_GUN("PortalGun"),
     PROJECTE("ProjectE"),

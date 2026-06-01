@@ -18,6 +18,8 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
 import net.minecraft.util.IIcon;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -31,12 +33,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.gtnewhorizons.angelica.AngelicaMod;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mitchej123.hodgepodge.mixins.interfaces.TextureMapAsyncIconsHook;
 
 @Mixin(TextureMap.class)
 public class MixinTextureMap_AsyncIcons implements TextureMapAsyncIconsHook {
+
+    @Unique
+    private static final Logger hodgepodge$LOGGER = LogManager.getLogger("Hodgepodge/Async Icons");
 
     @Shadow
     @Final
@@ -49,6 +53,10 @@ public class MixinTextureMap_AsyncIcons implements TextureMapAsyncIconsHook {
     @Final
     @Shadow
     private int textureType;
+
+    @Shadow
+    @Final
+    private String basePath;
 
     @Inject(
             method = "<init>(ILjava/lang/String;Z)V",
@@ -77,7 +85,11 @@ public class MixinTextureMap_AsyncIcons implements TextureMapAsyncIconsHook {
     @Overwrite
     private void registerIcons() {
         this.mapRegisteredSprites.clear();
-        ExecutorService executor = Executors.newCachedThreadPool(r -> {
+        long startTime = System.currentTimeMillis();
+        int threadCount = Runtime.getRuntime().availableProcessors();
+
+        hodgepodge$LOGGER.info("Starting async icon loading with {} threads for {}", threadCount, basePath);
+        ExecutorService executor = Executors.newFixedThreadPool(threadCount, r -> {
             Thread t = new Thread(r, "IconLoader");
             t.setDaemon(true);
             return t;
@@ -91,15 +103,17 @@ public class MixinTextureMap_AsyncIcons implements TextureMapAsyncIconsHook {
                     }
                 }
             }
+            hodgepodge$LOGGER.info("Loading icons for {} blocks", futures.size());
             for (Future<?> future : futures) {
                 try {
                     future.get();
                 } catch (Exception e) {
-                    AngelicaMod.LOGGER.error("Error loading block icon", e);
+                    hodgepodge$LOGGER.error("Error loading block icon", e);
                 }
             }
             Minecraft.getMinecraft().renderGlobal.registerDestroyBlockIcons((IIconRegister) this);
             RenderManager.instance.updateIcons((IIconRegister) this);
+            hodgepodge$LOGGER.info("Block icons loaded!");
         }
 
         List<Future<?>> futures = new ArrayList<>(Item.itemRegistry.getKeys().size());
@@ -110,15 +124,20 @@ public class MixinTextureMap_AsyncIcons implements TextureMapAsyncIconsHook {
                 }
             }
         }
+        hodgepodge$LOGGER.info("Loading icons for {} item", futures.size());
         for (Future<?> future : futures) {
             try {
                 future.get();
             } catch (Exception e) {
-                AngelicaMod.LOGGER.error("Error loading item icon", e);
+                hodgepodge$LOGGER.error("Error loading item icon", e);
             }
         }
+        hodgepodge$LOGGER.info("Item icons loaded!");
         hodgepodge$processingIcons.clear();
         executor.shutdown();
+        long time = System.currentTimeMillis() - startTime;
+        hodgepodge$LOGGER.info("Finished async icon loading in {}ms", time);
+
     }
 
     /**
