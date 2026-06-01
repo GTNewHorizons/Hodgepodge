@@ -36,7 +36,9 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.configurableMusicDelay)
             .setPhase(Phase.EARLY)),
     SIGN_INPUT_IGNORES_FORMAT_CODES(new MixinBuilder("Sign input counts visible chars only")
-            .addClientMixins("minecraft.MixinGuiEditSign")
+            .addClientMixins(
+                    "minecraft.MixinGuiEditSign",
+                    "minecraft.MixinTileEntitySignRenderer_CursorReset")
             .addCommonMixins(
                     "minecraft.MixinNetHandlerPlayServer_SignLimit",
                     "minecraft.MixinC12PacketUpdateSign_RaiseReadLimit",
@@ -602,6 +604,10 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)),
     FONT_RENDERER_FALLBACK_PREPROCESS(new MixinBuilder("Preprocess text through GTNHLib fallback when Angelica is absent")
             .addClientMixins("minecraft.MixinFontRenderer_FallbackPreprocess")
+            .setApplyIf(() -> true)
+            .setPhase(Phase.EARLY)),
+    FONT_RENDERER_FALLBACK_SHADOW(new MixinBuilder("Render drop shadow for text segments with shadow format code when Angelica is absent")
+            .addClientMixins("minecraft.MixinFontRenderer_FallbackShadow")
             .setApplyIf(() -> true)
             .setPhase(Phase.EARLY)),
     BED_MESSAGE_ABOVE_HOTBAR(new MixinBuilder()
