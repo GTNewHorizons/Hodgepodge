@@ -493,6 +493,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixMultipleEnchantGlint;
 
+    @Config.Comment("Prevents the entity rendered in the player inventory GUI and the horse GUI from overflowing their boxes.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean clipPlayerRenderInGuis;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes

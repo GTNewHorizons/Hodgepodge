@@ -1087,6 +1087,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinItem_EnchantGlint")
             .setApplyIf(() -> FixesConfig.fixMultipleEnchantGlint)
             .setPhase(Phase.EARLY)),
+    CLIP_PLAYER_IN_INVENTORY(new MixinBuilder()
+            .addClientMixins("minecraft.MixinGuiInventory_ClipPlayer", "minecraft.MixinGuiContainerCreative_ClipPlayer", "minecraft.MixinGuiScreenHorseInventory_ClipPlayer")
+            .setApplyIf(() -> FixesConfig.clipPlayerRenderInGuis)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments
