@@ -493,6 +493,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixMultipleEnchantGlint;
 
+    @Config.Comment("Prevents the entity rendered in the player inventory GUI and the horse GUI from overflowing their boxes.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean clipPlayerRenderInGuis;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -573,6 +578,10 @@ public class FixesConfig {
     @Config.Comment("Fix EndlessIds incompatibility with BoP")
     @Config.DefaultBoolean(true)
     public static boolean fixBoPEid;
+
+    @Config.Comment("Fix BOP sapling icon showing the wrong type when the growth stage bit is set in meta")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBOPSaplingIcon;
 
     // Candycraft
 
