@@ -27,7 +27,10 @@ public abstract class MixinGuiScreenHorseInventory_ClipPlayer extends GuiContain
     private void enableClipping(int x, int y, int scale, float relMouseX, float relMouseY, EntityLivingBase entity,
             Operation<Void> original) {
         GLScissorHelper.glScissorByGuiCoords(mc, guiLeft + 26, guiTop + 18, 52, 52);
-        original.call(x, y, scale, relMouseX, relMouseY, entity);
-        GLScissorHelper.endGlScissor();
+        try {
+            original.call(x, y, scale, relMouseX, relMouseY, entity);
+        } finally {
+            GLScissorHelper.endGlScissor();
+        }
     }
 }

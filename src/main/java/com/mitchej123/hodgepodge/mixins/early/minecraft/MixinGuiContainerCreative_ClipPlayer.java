@@ -27,7 +27,10 @@ public abstract class MixinGuiContainerCreative_ClipPlayer extends InventoryEffe
     private void enableClipping(int x, int y, int scale, float relMouseX, float relMouseY, EntityLivingBase entity,
             Operation<Void> original) {
         GLScissorHelper.glScissorByGuiCoords(mc, guiLeft + 28, guiTop + 6, 32, 43);
-        original.call(x, y, scale, relMouseX, relMouseY, entity);
-        GLScissorHelper.endGlScissor();
+        try {
+            original.call(x, y, scale, relMouseX, relMouseY, entity);
+        } finally {
+            GLScissorHelper.endGlScissor();
+        }
     }
 }
