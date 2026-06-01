@@ -13,7 +13,7 @@ public class StringUtil {
         for (int i = 0; i < len; i++) {
             final char c = chars[i];
             if (c == ColorFormatUtils.SECTION && i + 1 < len
-                    && "0123456789abcdefgklmnorqvxzABCDEFGKLMNORQVXZ".indexOf(chars[i + 1]) != -1) {
+                    && "0123456789abcdefgklmnorqvxzuABCDEFGKLMNORQVXZU".indexOf(chars[i + 1]) != -1) {
                 i++;
                 continue;
             }
