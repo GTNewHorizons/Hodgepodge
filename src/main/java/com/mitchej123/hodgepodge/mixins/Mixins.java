@@ -36,7 +36,9 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.configurableMusicDelay)
             .setPhase(Phase.EARLY)),
     SIGN_INPUT_IGNORES_FORMAT_CODES(new MixinBuilder("Sign input counts visible chars only")
-            .addClientMixins("minecraft.MixinGuiEditSign")
+            .addClientMixins(
+                    "minecraft.MixinGuiEditSign",
+                    "minecraft.MixinTileEntitySignRenderer_CursorReset")
             .addCommonMixins(
                     "minecraft.MixinNetHandlerPlayServer_SignLimit",
                     "minecraft.MixinC12PacketUpdateSign_RaiseReadLimit",
@@ -604,6 +606,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinFontRenderer_FallbackPreprocess")
             .setApplyIf(() -> true)
             .setPhase(Phase.EARLY)),
+    FONT_RENDERER_FALLBACK_SHADOW(new MixinBuilder("Render drop shadow for text segments with shadow format code when Angelica is absent")
+            .addClientMixins("minecraft.MixinFontRenderer_FallbackShadow")
+            .setApplyIf(() -> true)
+            .setPhase(Phase.EARLY)),
     BED_MESSAGE_ABOVE_HOTBAR(new MixinBuilder()
             .addCommonMixins("minecraft.MixinBlockBed")
             .setApplyIf(() -> TweaksConfig.bedMessageAboveHotbar)
@@ -1081,6 +1087,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinItem_EnchantGlint")
             .setApplyIf(() -> FixesConfig.fixMultipleEnchantGlint)
             .setPhase(Phase.EARLY)),
+    CLIP_PLAYER_IN_INVENTORY(new MixinBuilder()
+            .addClientMixins("minecraft.MixinGuiInventory_ClipPlayer", "minecraft.MixinGuiContainerCreative_ClipPlayer", "minecraft.MixinGuiScreenHorseInventory_ClipPlayer")
+            .setApplyIf(() -> FixesConfig.clipPlayerRenderInGuis)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments
@@ -1456,6 +1466,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixBoPEid)
             .addRequiredMod(TargetedMod.BOP)
             .addRequiredMod(TargetedMod.ENDLESSIDS)
+            .setPhase(Phase.LATE)),
+    FIX_BOP_SAPLING_ICON(new MixinBuilder("Fix BOP sapling icon when growth stage bit is set in meta")
+            .addCommonMixins("biomesoplenty.MixinBlockBOPColorizedSapling_FixIcon")
+            .setApplyIf(() -> FixesConfig.fixBOPSaplingIcon)
+            .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
 
     // Bibliowood Recipe Fix
