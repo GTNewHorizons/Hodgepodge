@@ -24,11 +24,11 @@ Hodgepodge je licencován pod LGPL-3.
 - Pokud chat není otevřený, pozadí za zprávami chatu se nezobrazuje.
 - Opakující se stejné po sobě jdoucí zprávy v chatu jsou sloučeny do jednoho řádku s počtem opakování.
 - Délka historie chatu byla navýšena. (výchozí 8191, vanilla 100)
-- Zprávy v chatu mohou mít maximálně 256 znaků místo 100.
+- Zprávy v chatu mohou mít maximálně 256 znaků namísto 100.
 
 ### Základní Minecraft
 
-- Zaklínadla a vylepšené lektvary používají arabská číslice (1, 5, 9) místo římských čísel (I, V, IX).
+- Zaklínadla a vylepšené lektvary používají arabské číslice (1, 5, 9) místo římských číslic (I, V, IX).
 - Tlačítko Minecraft Říše je zakázáno.
 - Nepřátelské stvoření, která seberou vyhozené předměty, je po despawnu znovu upustí.
 - Nepřátelským stvořením je zakázáno sbírat vyhozené předměty.
