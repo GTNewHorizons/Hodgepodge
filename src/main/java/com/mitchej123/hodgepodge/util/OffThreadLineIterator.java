@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Iterator;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.commons.io.Charsets;
@@ -17,16 +19,17 @@ import com.mitchej123.hodgepodge.Common;
  */
 public class OffThreadLineIterator implements Iterator<String> {
 
+    private static final ExecutorService executor = Executors
+            .newSingleThreadExecutor(OffThreadLineIterator::createThread);;
+
     private final BufferedReader reader;
     private final LinkedBlockingQueue<String> pendingLines = new LinkedBlockingQueue<>();
-    private boolean finished;
+    private volatile boolean finished;
     private String next;
 
     public OffThreadLineIterator(InputStream stream) {
         reader = new BufferedReader(new InputStreamReader(stream, Charsets.toCharset(Charsets.UTF_8)));
-        Thread thread = new Thread(this::run, "OffThreadLineIterator");
-        thread.setDaemon(true);
-        thread.start();
+        executor.submit(this::run);
     }
 
     @Override
@@ -63,4 +66,9 @@ public class OffThreadLineIterator implements Iterator<String> {
         }
     }
 
+    private static Thread createThread(Runnable r) {
+        Thread thread = new Thread(r, "OffThreadLineIterator");
+        thread.setDaemon(true);
+        return thread;
+    }
 }
