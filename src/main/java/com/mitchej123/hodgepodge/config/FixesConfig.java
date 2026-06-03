@@ -498,6 +498,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean clipPlayerRenderInGuis;
 
+    @Config.Comment("Sets a minimum of 0 for Looting. Negative values still exist, but are treated as 0 for most purposes. Fixes crashes when killing mobs with negative looting, if you somehow manage to achieve it.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean minLootingIsZero;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
