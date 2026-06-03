@@ -13,6 +13,8 @@ public enum TargetedMod implements ITargetMod {
 
     ADVANCED_SOLAR_PANELS("AdvancedSolarPanel"),
     ANGELICA("com.gtnewhorizons.angelica.loading.AngelicaTweaker", "angelica"),
+    ANGELICA_LT_2129(new TargetModBuilder().setTargetClass("com.gtnewhorizons.angelica.AngelicaMod")
+            .setModId("angelica").testModVersion("angelica", version -> isVersionLessThan(version, "2.1.29"))),
     ARCHAICFIX("org.embeddedt.archaicfix.ArchaicCore", "archaicfix"),
     AUTOMAGY("Automagy"),
     BAUBLES("Baubles"),
