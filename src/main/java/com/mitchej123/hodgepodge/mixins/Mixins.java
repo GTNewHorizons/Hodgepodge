@@ -1486,6 +1486,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixBOPSaplingIcon)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
+    ADD_LAVENDER_TO_BONE_MEAL(new MixinBuilder()
+            .addCommonMixins("biomesoplenty.MixinBiomeGenLavenderFields")
+            .setApplyIf(() -> TweaksConfig.addBOPLavenderToBoneMealPool)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
 
     // Bibliowood Recipe Fix
     BIBLIOWOODS_RECIPE_FIX(new MixinBuilder("Fixes Bibliowoods Forestry recipes")

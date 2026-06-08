@@ -335,6 +335,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean removeBOPDonatorEffect;
 
+    @Config.Comment("Add BOP lavenders to the bone meal pool in lavender fields")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean addBOPLavenderToBoneMealPool;
+
     // Cofh
 
     @Config.Comment("Improve CoFH's breakBlock method")
