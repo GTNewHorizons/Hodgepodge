@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mitchej123.hodgepodge.client.IHodgepodgePotionPanelRenderer;
+import com.mitchej123.hodgepodge.mixins.interfaces.InventoryEffectRendererExt;
 
 /**
  * Injects the potion panel render into GuiContainer.drawScreen immediately after the drawGuiContainerForegroundLayer
@@ -25,8 +25,8 @@ public abstract class MixinGuiContainer_PotionEffectRendering {
                     shift = At.Shift.AFTER))
     private void hodgepodge$renderPotionPanelAfterForeground(int mouseX, int mouseY, float partialTicks,
             CallbackInfo ci) {
-        if (this instanceof IHodgepodgePotionPanelRenderer) {
-            ((IHodgepodgePotionPanelRenderer) this).hodgepodge$renderPotionPanelForeground();
+        if (this instanceof InventoryEffectRendererExt) {
+            ((InventoryEffectRendererExt) this).hp$renderPotionPanelForeground();
         }
     }
 }

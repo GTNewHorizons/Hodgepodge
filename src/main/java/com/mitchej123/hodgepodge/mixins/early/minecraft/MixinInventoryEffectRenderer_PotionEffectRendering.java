@@ -10,11 +10,11 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 import com.mitchej123.hodgepodge.Compat;
-import com.mitchej123.hodgepodge.client.IHodgepodgePotionPanelRenderer;
+import com.mitchej123.hodgepodge.mixins.interfaces.InventoryEffectRendererExt;
 
 @Mixin(InventoryEffectRenderer.class)
 public abstract class MixinInventoryEffectRenderer_PotionEffectRendering extends GuiContainer
-        implements IHodgepodgePotionPanelRenderer {
+        implements InventoryEffectRendererExt {
 
     @Shadow
     private void func_147044_g() {}
@@ -36,7 +36,7 @@ public abstract class MixinInventoryEffectRenderer_PotionEffectRendering extends
     }
 
     @Override
-    public void hodgepodge$renderPotionPanelForeground() {
+    public void hp$renderPotionPanelForeground() {
         if (Compat.isNeiLeftPanelVisible()) return;
         if (!this.mc.thePlayer.getActivePotionEffects().isEmpty()) {
             GL11.glPushMatrix();
