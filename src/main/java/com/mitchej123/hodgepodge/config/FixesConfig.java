@@ -511,6 +511,15 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean minLootingIsZero;
 
+    @Config.Comment({
+            "Fix ItemStack.func_151000_E() (chat item link) always resolving item names server-side in English.",
+            "Replaces it with ChatComponentItemName from GTNHLib, which sends the raw ItemStack to the client",
+            "and lets each player see the name in their own locale.",
+            "Also fixes client crashes caused by NBT toString roundtrip in hover events (see GTNH#21933, GTNH#21940)." })
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixItemStackChatLocalization;
+
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
