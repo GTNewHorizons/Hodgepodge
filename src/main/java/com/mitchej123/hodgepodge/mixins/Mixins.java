@@ -186,8 +186,18 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> !TweaksConfig.showInventoryEffectIcons)
             .setPhase(Phase.EARLY)),
     FIX_POTION_EFFECT_RENDERING(new MixinBuilder()
-            .addClientMixins("minecraft.MixinInventoryEffectRenderer_PotionEffectRendering")
+            .addClientMixins(
+                    "minecraft.MixinInventoryEffectRenderer_PotionEffectRendering",
+                    "minecraft.MixinGuiContainer_PotionEffectRendering")
             .setApplyIf(() -> TweaksConfig.fixPotionEffectRender)
+            .setPhase(Phase.EARLY)),
+    FIX_POTION_EFFECT_ALPHA_TEST(new MixinBuilder("Fix potion effect panel visual glitch caused by Forge leaving GL_ALPHA_TEST disabled after item rendering")
+            .addClientMixins("minecraft.MixinInventoryEffectRenderer_AlphaTestFix")
+            .setApplyIf(() -> FixesConfig.fixPotionEffectAlphaTest)
+            .setPhase(Phase.EARLY)),
+    FIX_CREATIVE_TAB_ALPHA_TEST(new MixinBuilder("Fix creative tab background black corners caused by Forge leaving GL_ALPHA_TEST disabled after item rendering")
+            .addClientMixins("minecraft.MixinGuiContainerCreative_AlphaTestFix")
+            .setApplyIf(() -> FixesConfig.fixCreativeTabAlphaTest)
             .setPhase(Phase.EARLY)),
     FIX_IMMOBILE_FIREBALLS(new MixinBuilder()
             .addCommonMixins("minecraft.MixinEntityFireball")
@@ -1049,7 +1059,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixBreakingSpecialArmorHelmetOnBlockFall)
             .setPhase(Phase.EARLY)),
     FIX_SAVE_FILE_WRITTEN_TO_EXIST_DIRECTORY(new MixinBuilder()
-            .addCommonMixins("minecraft.MixinGuiCreateWorld_NotWriteToExistDir")
+            .addClientMixins("minecraft.MixinGuiCreateWorld_NotWriteToExistDir")
             .setApplyIf(() -> FixesConfig.fixSaveFileWrittenToExistingDirectory)
             .setPhase(Phase.EARLY)),
     FIX_FAKE_PLAYER_CHAT_CRASH(new MixinBuilder()
@@ -1483,6 +1493,11 @@ public enum Mixins implements IMixins {
     FIX_BOP_SAPLING_ICON(new MixinBuilder("Fix BOP sapling icon when growth stage bit is set in meta")
             .addCommonMixins("biomesoplenty.MixinBlockBOPColorizedSapling_FixIcon")
             .setApplyIf(() -> FixesConfig.fixBOPSaplingIcon)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    ADD_LAVENDER_TO_BONE_MEAL(new MixinBuilder()
+            .addCommonMixins("biomesoplenty.MixinBiomeGenLavenderFields")
+            .setApplyIf(() -> TweaksConfig.addBOPLavenderToBoneMealPool)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
 
