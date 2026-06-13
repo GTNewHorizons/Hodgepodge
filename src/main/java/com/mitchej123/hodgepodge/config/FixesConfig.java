@@ -519,7 +519,7 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixItemStackChatLocalization;
-    
+
     @Config.Comment("Fix Villagers only updating out-of-stock state after reopening GUI")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
