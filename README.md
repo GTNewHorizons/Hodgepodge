@@ -1,4 +1,6 @@
-# A Hodgepodge of Fixes
+# A Hodgepodge of Patches
+
+🌐 **Languages:** [English](README.md) | [Čeština](README_cz.md)
 
 Requires UniMixins 0.1.14+ (https://github.com/LegacyModdingMC/UniMixins/) to work.  
 Requires GTNHLib 0.2.2+ (https://github.com/GTNewHorizons/GTNHLib) to work.
@@ -90,7 +92,7 @@ Hodgepodge is LGPL-3.
 
 Various speedups and crash fixes are implemented, such as preventing "chunk bans" by increasing the packet size limits.
 
-## Debug JVM args
+## Debug Commands & JVM args
 
 A list of JVM args used to activate debugging tools
 
@@ -102,3 +104,7 @@ A list of JVM args used to activate debugging tools
 - `-Dhodgepodge.logEnumValues=true` logs when `Enum#values()` is called a lot, creates a `EnumValuesDebug.csv` file with results
 - `-Dhodgepodge.logIntervalEnumValues=500` used with `logEnumValues`, defines the threshold at which it prints a log message
 - `-Dhodgepodge.logStacktraceEnumValues=true` used with `logEnumValues`, prints the stacktrace of where `Enum#values()` is called
+
+Debug Commands:
+
+- `/dumptextureatlas` dumps both the item & block texture atlas, including all empty & errored textures

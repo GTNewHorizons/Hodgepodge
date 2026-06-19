@@ -72,6 +72,11 @@ public class MemoryConfig {
         @Config.RequiresMcRestart
         public boolean fixEnchantmentHelperLeak;
 
+        @Config.Comment("Fix Render Falling Block leaking world instance when leaving world")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixRenderFallingBlockLeak;
+
         @Config.Comment("Fix PlayerController leaking world instance when leaving world")
         @Config.DefaultBoolean(true)
         public boolean fixPlayerControllerWorldLeak;
@@ -80,6 +85,11 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean fixNetHandlerClientWorldLeak;
+
+        @Config.Comment("Fix IC2 block reactor leaking world instance when leaving world")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixIC2BlockReactorLeak;
 
         @Config.Comment("Fix WorldServer leaking entities when no players are present in a dimension")
         @Config.DefaultBoolean(true)
@@ -95,6 +105,21 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean fixWorldMapStorageLeak;
+
+        @Config.Comment("Fix IC2 TESR leaking the world instance")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixIC2TESRleak;
+
+        @Config.Comment("Fix memory leaks in bibliocraft's tile entity renderers")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixBibliocraftTESRWorldLeak;
+
+        @Config.Comment("Fix forge's FakePlayerFactory leaking the world instance")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixForgePlayerFactoryLeak;
     }
 
     public static class AllocationFixes {
@@ -108,5 +133,25 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean fixWitcheryEnumValuesSpam;
+
+        @Config.Comment("Caches the advanced Model renderers to speedup loading and avoid wasting memory with duplicate models")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean cacheAdvancedModels;
+
+        @Config.Comment("Reduces the RAM usage of the ASMDataTable by interning the Strings")
+        @Config.DefaultBoolean(false)
+        @Config.RequiresMcRestart
+        public boolean deduplicateASMDataTableStrings;
+
+        @Config.Comment("Reduce the memory usage from resource location domain strings")
+        @Config.DefaultBoolean(false)
+        @Config.RequiresMcRestart
+        public boolean internResourceLocationDomain;
+
+        @Config.Comment("Reduce the memory usage from unique identifier modid strings")
+        @Config.DefaultBoolean(false)
+        @Config.RequiresMcRestart
+        public boolean internUniqueIdentifierModid;
     }
 }

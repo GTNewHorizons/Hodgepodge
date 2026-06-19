@@ -52,8 +52,9 @@ public class MixinGuiNewChat_FixColorWrapping {
             // Validate §g followed by two §x§R§R§G§G§B§B sequences
             final int firstRgbPos = gIdx + ColorFormatUtils.GRADIENT_FIRST_RGB_OFFSET;
             final int secondRgbPos = gIdx + ColorFormatUtils.GRADIENT_SECOND_RGB_OFFSET;
-            if (text.charAt(firstRgbPos) != '\u00a7' || Character.toLowerCase(text.charAt(firstRgbPos + 1)) != 'x'
-                    || text.charAt(secondRgbPos) != '\u00a7'
+            if (text.charAt(firstRgbPos) != ColorFormatUtils.SECTION
+                    || Character.toLowerCase(text.charAt(firstRgbPos + 1)) != 'x'
+                    || text.charAt(secondRgbPos) != ColorFormatUtils.SECTION
                     || Character.toLowerCase(text.charAt(secondRgbPos + 1)) != 'x') {
                 gIdx = text.indexOf("\u00a7g", gIdx + 2);
                 continue;
@@ -81,7 +82,7 @@ public class MixinGuiNewChat_FixColorWrapping {
             int visIdx = 0;
             for (int i = textStart; i < text.length(); i++) {
                 char ch = text.charAt(i);
-                if (ch == '\u00a7' && i + 1 < text.length()) {
+                if (ch == ColorFormatUtils.SECTION && i + 1 < text.length()) {
                     char code = Character.toLowerCase(text.charAt(i + 1));
                     if (ColorFormatUtils.isGradientTerminator(code)) {
                         last = i;
@@ -120,7 +121,7 @@ public class MixinGuiNewChat_FixColorWrapping {
         int count = 0;
         for (int i = startIdx; i < text.length(); i++) {
             char ch = text.charAt(i);
-            if (ch == '\u00a7' && i + 1 < text.length()) {
+            if (ch == ColorFormatUtils.SECTION && i + 1 < text.length()) {
                 char code = Character.toLowerCase(text.charAt(i + 1));
                 if (ColorFormatUtils.isGradientTerminator(code)) {
                     break;

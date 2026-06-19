@@ -58,6 +58,21 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean compactChat;
 
+    @Config.Comment("Override the vanilla delay between in-game music tracks using musicDelayMinSeconds/musicDelayMaxSeconds.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean configurableMusicDelay;
+
+    @Config.Comment("Minimum delay between in-game music tracks, in seconds. 1.7.10 GAME: 600. Modern GAME: 5. Only applies to long-form music types (game/creative/nether/end), not menu/credits.")
+    @Config.RangeInt(min = 0, max = 3600)
+    @Config.DefaultInt(5)
+    public static int musicDelayMinSeconds;
+
+    @Config.Comment("Maximum delay between in-game music tracks, in seconds. 1.7.10 GAME: 1200. Modern GAME: 300. Clamped to >= musicDelayMinSeconds at use time.")
+    @Config.RangeInt(min = 0, max = 3600)
+    @Config.DefaultInt(300)
+    public static int musicDelayMaxSeconds;
+
     @Config.Comment("Specify default LAN port to open an integrated server on. Set to 0 to always open the server on an automatically allocated port.")
     @Config.RangeInt(min = 0, max = 65535)
     @Config.DefaultInt(25565)
@@ -118,6 +133,10 @@ public class TweaksConfig {
     @Config.Comment("Prevents the inventory from shifting when the player has active potion effects")
     @Config.DefaultBoolean(true)
     public static boolean fixPotionRenderOffset;
+
+    @Config.Comment("Show potion effect icons in inventory screens")
+    @Config.DefaultBoolean(true)
+    public static boolean showInventoryEffectIcons;
 
     @Config.Comment("Stops rendering the crosshair when you are playing in third person")
     @Config.DefaultBoolean(true)
@@ -228,6 +247,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean cleanChatLogs = true;
 
+    @Config.Comment("Enable extra F1 toggle to hide GUI but keep rendering hand")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean f1ShowHand;
+
     // NBT String Pooling
 
     @Config.Comment("Enable string pooling for NBT TagCompound Keys")
@@ -310,6 +334,11 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean removeBOPDonatorEffect;
+
+    @Config.Comment("Add BOP lavenders to the bone meal pool in lavender fields")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean addBOPLavenderToBoneMealPool;
 
     // Cofh
 
@@ -468,4 +497,8 @@ public class TweaksConfig {
     @Config.Comment("Allow creative tab gui title color via localization key")
     @Config.DefaultBoolean(true)
     public static boolean creativeTabLocalizationOverrides;
+
+    @Config.Comment("Makes the int cache size more readable")
+    @Config.DefaultBoolean(true)
+    public static boolean moreReadableIntCacheSize;
 }
