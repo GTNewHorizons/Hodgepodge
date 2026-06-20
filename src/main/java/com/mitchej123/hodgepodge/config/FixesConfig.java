@@ -69,6 +69,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixDuplicateSounds;
 
+    @Config.Comment("Fix vanilla item frame duplication.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixItemFrameDupe;
+
     @Config.Comment("Fix deleting stack when eating mushroom stew")
     @Config.DefaultBoolean(true)
     public static boolean fixEatingStackedStew;

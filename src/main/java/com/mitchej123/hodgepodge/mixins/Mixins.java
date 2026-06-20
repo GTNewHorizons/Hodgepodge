@@ -1114,6 +1114,10 @@ public enum Mixins implements IMixins {
                     "minecraft.villager.MixinNpcMerchant")
             .setApplyIf(() -> FixesConfig.fixVillagerTradingDesync)
             .setPhase(Phase.EARLY)),
+    FIX_ITEM_FRAME_DUPE(new MixinBuilder("Fix vanilla item frame duplication.")
+            .addCommonMixins("minecraft.MixinEntityItemFrame_FixDupe")
+            .setApplyIf(() -> FixesConfig.fixItemFrameDupe)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments
