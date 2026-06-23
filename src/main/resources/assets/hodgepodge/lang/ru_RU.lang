@@ -21,6 +21,8 @@ item.dyePowder.name=Краситель
 item.skull.name=Череп
 item.fish.name=Рыба
 
+entity.Skeleton.wither.name=Скелет-иссушитель
+
 commands.time.get=Текущее мировое время составляет %s (время суток: %s)
 commands.time.usageWithGet=/time <set|add> <value> ИЛИ /time get
 
