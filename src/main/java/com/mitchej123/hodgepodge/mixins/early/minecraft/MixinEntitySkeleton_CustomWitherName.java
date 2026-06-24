@@ -22,7 +22,7 @@ public abstract class MixinEntitySkeleton_CustomWitherName extends EntityMob {
 
     @Override
     public String getCommandSenderName() {
-        if (this.getSkeletonType() == 1) {
+        if (!this.hasCustomNameTag() && this.getSkeletonType() == 1) {
             return StatCollector.translateToLocal("entity.Skeleton.wither.name");
         } else {
             return super.getCommandSenderName();
@@ -31,7 +31,7 @@ public abstract class MixinEntitySkeleton_CustomWitherName extends EntityMob {
 
     @Override
     public IChatComponent func_145748_c_() {
-        if (this.getSkeletonType() == 1) {
+        if (!this.hasCustomNameTag() && this.getSkeletonType() == 1) {
             return new ChatComponentTranslation("entity.Skeleton.wither.name");
         } else {
             return super.func_145748_c_();
