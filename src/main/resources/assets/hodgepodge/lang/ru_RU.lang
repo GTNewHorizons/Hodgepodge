@@ -22,6 +22,12 @@ item.skull.name=Череп
 item.fish.name=Рыба
 
 entity.Skeleton.wither.name=Скелет-иссушитель
+entity.MinecartRideable.name=Вагонетка
+entity.MinecartChest.name=Грузовая вагонетка
+entity.MinecartFurnace.name=Самоходная вагонетка
+entity.MinecartTNT.name=Вагонетка с динамитом
+entity.MinecartHopper.name=Вагонетка с загрузочной воронкой
+entity.MinecartCommandBlock.name=Вагонетка с командным блоком
 
 commands.time.get=Текущее мировое время составляет %s (время суток: %s)
 commands.time.usageWithGet=/time <set|add> <value> ИЛИ /time get
