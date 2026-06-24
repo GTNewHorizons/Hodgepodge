@@ -34,7 +34,7 @@ public class MixinMapGenStructure {
             method = "func_151538_a",
             at = @At(value = "INVOKE", target = "Ljava/util/Map;containsKey(Ljava/lang/Object;)Z"))
     private boolean hodgepodge$primitiveContains(Map<Long, StructureStart> instance, Object o,
-                                                 @Share("unboxedLong") LocalLongRef unboxedLong) {
+            @Share("unboxedLong") LocalLongRef unboxedLong) {
         return ((Long2ObjectMap<StructureStart>) structureMap).containsKey(unboxedLong.get());
     }
 
@@ -45,7 +45,7 @@ public class MixinMapGenStructure {
                     target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
                     ordinal = 0))
     private Object hodgepodge$primitiveContains(Map<Long, StructureStart> instance, Object k, Object v,
-                                                @Share("unboxedLong") LocalLongRef unboxedLong) {
+            @Share("unboxedLong") LocalLongRef unboxedLong) {
         return ((Long2ObjectMap<StructureStart>) structureMap).put(unboxedLong.get(), (StructureStart) v);
     }
 }
