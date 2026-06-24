@@ -1142,6 +1142,7 @@ public enum Mixins implements IMixins {
     FIX_TESR_LEAK(new MixinBuilder()
             .addClientMixins("ic2.leaks.MixinOverlayTesr")
             .setApplyIf(() -> MemoryConfig.leaks.fixIC2TESRleak)
+            .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
             .addCommonMixins("ic2.MixinIc2WaterKinetic")
@@ -1949,6 +1950,7 @@ public enum Mixins implements IMixins {
                     "bibliocraft.leaks.MixinTileEntityTypeSetRenderer",
                     "bibliocraft.leaks.MixinTileEntityTypewriterRenderer")
             .setApplyIf(() -> MemoryConfig.leaks.fixBibliocraftTESRWorldLeak)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
     ZTONES_PACKET_FIX(new MixinBuilder("Packet Fix")
             .addCommonMixins("ztones.MixinZtonesPatchPacketExploits")
