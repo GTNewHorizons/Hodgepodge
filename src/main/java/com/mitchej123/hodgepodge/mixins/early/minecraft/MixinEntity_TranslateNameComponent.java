@@ -13,7 +13,9 @@ public abstract class MixinEntity_TranslateNameComponent {
 
     /**
      * New implementation based on {@link Entity#getCommandSenderName()}. This may cause issues with mods that override
-     * {@link Entity#getCommandSenderName()} but not {@link Entity#func_145748_c_()}.
+     * {@link Entity#getCommandSenderName()} but not {@link Entity#func_145748_c_()}. (Specifically,
+     * {@code func_145748_c_} will return a translation key of {@code entity.[entity ID].name}, which may not be the
+     * same as the text returned by the mod's implementation of {@code getCommandSenderName}.)
      *
      * @author nicksitnikov
      * @reason This method initially returned a component that was translated on the server. Replacing it with a
