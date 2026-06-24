@@ -525,6 +525,15 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixVillagerTradingDesync;
 
+    @Config.Comment("Fix death messages containing English-localized entity names even on non-English clients.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean entityNameLocalization;
+
+    @Config.Comment("Makes Wither Skeletons not appear as just \"Skeleton\" in death messages and WAILA.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean witherSkeletonSpecialName;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
