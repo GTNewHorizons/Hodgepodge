@@ -13,6 +13,8 @@ import net.minecraftforge.common.ForgeHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(value = ForgeHooks.class, remap = false)
 public class MixinForgeHooks {
@@ -69,5 +71,10 @@ public class MixinForgeHooks {
         // Append the rest of the message.
         ichat.appendText(string.substring(lastEnd));
         return ichat;
+    }
+
+    @ModifyVariable(method = "onPlaceItemIntoWorld", at = @At(value = "LOAD"), name = "flag")
+    private static boolean runItemHooksAlways(boolean originalValue) {
+        return true;
     }
 }
