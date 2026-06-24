@@ -82,6 +82,11 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean speedupLeafDecay;
 
+    @Config.Comment("Load texture map icons on multiple threads")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean asyncIconLoading;
+
     @Config.Comment("Skip scheduling falling block ticks when the block below is solid")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart

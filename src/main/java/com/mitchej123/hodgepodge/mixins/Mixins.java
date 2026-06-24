@@ -841,6 +841,12 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinBlockLeaves_BFSDecay")
             .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)
             .setPhase(Phase.EARLY)),
+    ASYNC_ICON_LOADING(new MixinBuilder()
+            .addClientMixins("minecraft.fastload.MixinTextureMap_AsyncIcons")
+            .setApplyIf(() -> SpeedupsConfig.asyncIconLoading)
+            .addExcludedMod(TargetedMod.NOTFINE)
+            .addExcludedMod(TargetedMod.ANGELICA_LT_2129)
+            .setPhase(Phase.EARLY)),
     SPEEDUP_BOP_LEAF_DECAY(new MixinBuilder()
             .addCommonMixins(
                     "bfsleafdecay.MixinBlockBOPAppleLeaves",
