@@ -837,6 +837,11 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.fastload.MixinBlock_FastLookup")
             .setApplyIf(() -> SpeedupsConfig.fastBlockLookup)
             .setPhase(Phase.EARLY)),
+    FAST_LOCALE_LOAD(new MixinBuilder("Improve speed of language file loading")
+            .addClientMixins("minecraft.fastload.MixinLocale")
+            .addCommonMixins("minecraft.fastload.MixinStringTranslate")
+            .setApplyIf(() -> SpeedupsConfig.fastLangLoad)
+            .setPhase(Phase.EARLY)),
     SPEEDUP_LEAF_DECAY(new MixinBuilder()
             .addCommonMixins("minecraft.MixinBlockLeaves_BFSDecay")
             .setApplyIf(() -> SpeedupsConfig.speedupLeafDecay)

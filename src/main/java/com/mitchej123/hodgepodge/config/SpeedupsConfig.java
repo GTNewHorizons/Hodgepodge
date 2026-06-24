@@ -164,6 +164,11 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean fastBlockLookup;
 
+    @Config.Comment("Speedup language file loading")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fastLangLoad;
+
     @Config.Comment("Optimize mob spawning")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
