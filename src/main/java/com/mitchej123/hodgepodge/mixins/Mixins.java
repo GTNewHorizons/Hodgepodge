@@ -1118,6 +1118,20 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinEntityItemFrame_FixDupe")
             .setApplyIf(() -> FixesConfig.fixItemFrameDupe)
             .setPhase(Phase.EARLY)),
+    FIX_ENTITY_NAME_LOCALIZATION(new MixinBuilder()
+            .addCommonMixins(
+                    "minecraft.MixinEntity_TranslateNameComponent",
+                    "minecraft.MixinEntityHorse_ChatComponentName",
+                    "minecraft.MixinEntityItem_ChatComponentName",
+                    "minecraft.MixinEntityLiving_ChatComponentName",
+                    "minecraft.MixinEntityMinecart_ChatComponentName",
+                    "minecraft.MixinEntityOcelot_ChatComponentName")
+            .setApplyIf(() -> FixesConfig.entityNameLocalization)
+            .setPhase(Phase.EARLY)),
+    WITHER_SKELETON_CUSTOM_NAME(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinEntitySkeleton_CustomWitherName")
+            .setApplyIf(() -> FixesConfig.witherSkeletonSpecialName)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments
