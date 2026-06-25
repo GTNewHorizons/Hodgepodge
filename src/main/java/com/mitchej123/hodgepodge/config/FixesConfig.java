@@ -69,6 +69,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixDuplicateSounds;
 
+    @Config.Comment("Fix vanilla item frame duplication.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixItemFrameDupe;
+
     @Config.Comment("Fix deleting stack when eating mushroom stew")
     @Config.DefaultBoolean(true)
     public static boolean fixEatingStackedStew;
@@ -525,6 +529,15 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixVillagerTradingDesync;
 
+    @Config.Comment("Fix death messages containing English-localized entity names even on non-English clients.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean entityNameLocalization;
+
+    @Config.Comment("Makes Wither Skeletons not appear as just \"Skeleton\" in death messages and WAILA.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean witherSkeletonSpecialName;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
