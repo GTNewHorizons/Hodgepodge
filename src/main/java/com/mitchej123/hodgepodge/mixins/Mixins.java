@@ -1066,6 +1066,13 @@ public enum Mixins implements IMixins {
             .addCommonMixins("forge.MixinFakePlayer")
             .setApplyIf(() -> FixesConfig.fixFakePlayerChatCrash)
             .setPhase(Phase.EARLY)),
+    FIX_ITEM_STACK_CHAT_LOCALIZATION(new MixinBuilder("Fix item chat links showing English names on dedicated servers and crashing with complex NBT items")
+            .addCommonMixins("minecraft.MixinItemStack_FixChatLocalization")
+            .addClientMixins(
+                    "minecraft.MixinGuiNewChat_ItemNameTooltip",
+                    "minecraft.MixinGuiChat_ItemNameTooltip")
+            .setApplyIf(() -> FixesConfig.fixItemStackChatLocalization)
+            .setPhase(Phase.EARLY)),
     OPTIMIZE_WAVEFRONT_OBJECT_MODEL_LOADING(new MixinBuilder("Reduce regex overhead when loading object models")
             .addClientMixins("forge.MixinWavefrontObject_OptimizeModelLoading")
             .setApplyIf(() -> SpeedupsConfig.optimizeWavefrontObjectModelLoading)
