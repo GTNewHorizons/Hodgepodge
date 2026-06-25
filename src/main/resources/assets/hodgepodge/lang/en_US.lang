@@ -21,6 +21,14 @@ item.dyePowder.name=Dye
 item.skull.name=Skull
 item.fish.name=Fish
 
+entity.Skeleton.wither.name=Wither Skeleton
+entity.MinecartRideable.name=Minecart
+entity.MinecartChest.name=Minecart with Chest
+entity.MinecartFurnace.name=Minecart with Furnace
+entity.MinecartTNT.name=Minecart with TNT
+entity.MinecartHopper.name=Minecart with Hopper
+entity.MinecartCommandBlock.name=Minecart with Command Block
+
 commands.time.get=The current world time is %s (time of day: %s)
 commands.time.usageWithGet=/time <set|add> <value> OR /time get
 

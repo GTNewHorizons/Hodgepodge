@@ -69,6 +69,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixDuplicateSounds;
 
+    @Config.Comment("Fix vanilla item frame duplication.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixItemFrameDupe;
+
     @Config.Comment("Fix deleting stack when eating mushroom stew")
     @Config.DefaultBoolean(true)
     public static boolean fixEatingStackedStew;
@@ -192,6 +196,14 @@ public class FixesConfig {
     @Config.Comment("Fix crashes with ConcurrentModificationException because of incorrectly iterating over active potions")
     @Config.DefaultBoolean(true)
     public static boolean fixPotionIterating;
+
+    @Config.Comment("Fix potion effect panel rendering glitched when certain items are held on the cursor (Forge GL state bug)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixPotionEffectAlphaTest;
+
+    @Config.Comment("Fix creative tab backgrounds showing black corners when alpha test is left disabled by item rendering (Forge GL state bug)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCreativeTabAlphaTest;
 
     @Config.Comment("Fix potions >= 128")
     @Config.DefaultBoolean(true)
@@ -493,6 +505,30 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixMultipleEnchantGlint;
 
+    @Config.Comment("Prevents the entity rendered in the player inventory GUI and the horse GUI from overflowing their boxes.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean clipPlayerRenderInGuis;
+
+    @Config.Comment("Sets a minimum of 0 for Looting. Negative values still exist, but are treated as 0 for most purposes. Fixes crashes when killing mobs with negative looting, if you somehow manage to achieve it.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean minLootingIsZero;
+
+    @Config.Comment("Fix Villagers only updating out-of-stock state after reopening GUI")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixVillagerTradingDesync;
+
+    @Config.Comment("Fix death messages containing English-localized entity names even on non-English clients.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean entityNameLocalization;
+
+    @Config.Comment("Makes Wither Skeletons not appear as just \"Skeleton\" in death messages and WAILA.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean witherSkeletonSpecialName;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -573,6 +609,10 @@ public class FixesConfig {
     @Config.Comment("Fix EndlessIds incompatibility with BoP")
     @Config.DefaultBoolean(true)
     public static boolean fixBoPEid;
+
+    @Config.Comment("Fix BOP sapling icon showing the wrong type when the growth stage bit is set in meta")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBOPSaplingIcon;
 
     // Candycraft
 
