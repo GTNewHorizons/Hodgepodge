@@ -1,5 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.fastload;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 
 import net.minecraft.world.gen.structure.MapGenStructure;
@@ -47,5 +49,14 @@ public class MixinMapGenStructure {
                     ordinal = 0))
     private Object hodgepodge$primitiveContains(Map<Long, StructureStart> instance, Object k, Object v) {
         return ((Long2ObjectOpenHashMap<StructureStart>) structureMap).put(hodgepodge$localRef, (StructureStart) v);
+    }
+
+    @Redirect(
+            method = { "generateStructuresInChunk(Lnet/minecraft/world/World;Ljava/util/Random;II)Z",
+                    "func_143028_c(III)Lnet/minecraft/world/gen/structure/StructureStart;", "func_142038_b(III)Z",
+                    "func_151545_a(Lnet/minecraft/world/World;III)Lnet/minecraft/world/ChunkPosition;" },
+            at = @At(value = "INVOKE", target = "Ljava/util/Map;values()Ljava/util/Collection;"))
+    private Collection<StructureStart> hodgepodge$snapshotStructureStarts(Map<Long, StructureStart> instance) {
+        return new ArrayList<>(instance.values());
     }
 }
