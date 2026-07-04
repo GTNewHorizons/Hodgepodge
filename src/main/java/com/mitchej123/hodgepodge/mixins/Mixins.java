@@ -585,6 +585,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("forge.MixinGuiIngameForge_CrosshairThirdPerson")
             .setApplyIf(() -> TweaksConfig.hideCrosshairInThirdPerson)
             .setPhase(Phase.EARLY)),
+    CROSSHAIR_GUI_OPEN(new MixinBuilder("Stops rendering the crosshair when a GUI screen is open")
+            .addClientMixins("forge.MixinGuiIngameForge_CrosshairGuiOpen")
+            .setApplyIf(() -> TweaksConfig.hideCrosshairInGui)
+            .setPhase(Phase.EARLY)),
     DONT_INVERT_CROSSHAIR_COLORS(new MixinBuilder("Don't invert crosshair colors")
             .addClientMixins("forge.MixinGuiIngameForge_CrosshairInvertColors")
             .setApplyIf(() -> TweaksConfig.dontInvertCrosshairColor)
