@@ -1114,6 +1114,10 @@ public enum Mixins implements IMixins {
                     "minecraft.villager.MixinNpcMerchant")
             .setApplyIf(() -> FixesConfig.fixVillagerTradingDesync)
             .setPhase(Phase.EARLY)),
+    FIX_UNDEAD_FIRE_FLICKER(new MixinBuilder("Fix undead entities flickering with fire when exposed to the sun while immune to fire")
+            .addCommonMixins("minecraft.MixinEntityUndead_SunFireImmunity")
+            .setApplyIf(() -> FixesConfig.preventFireImmuneUndeadFlicker)
+            .setPhase(Phase.EARLY)),
     FIX_ITEM_FRAME_DUPE(new MixinBuilder("Fix vanilla item frame duplication.")
             .addCommonMixins("minecraft.MixinEntityItemFrame_FixDupe")
             .setApplyIf(() -> FixesConfig.fixItemFrameDupe)

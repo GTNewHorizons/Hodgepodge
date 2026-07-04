@@ -515,6 +515,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean minLootingIsZero;
 
+    @Config.Comment("Prevent Zombies & Skeletons from flickering with fire when exposed to the sun while immune to fire (in particular, Wither Skeletons)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean preventFireImmuneUndeadFlicker;
+
     @Config.Comment("Fix Villagers only updating out-of-stock state after reopening GUI")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
