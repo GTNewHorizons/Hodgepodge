@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.early.forge;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraftforge.client.GuiIngameForge;
 
@@ -14,7 +15,7 @@ public class MixinGuiIngameForge_CrosshairGuiOpen extends GuiIngame {
 
     @Inject(method = "renderCrosshairs", at = @At("HEAD"), cancellable = true, remap = false)
     public void hodgepodge$hideCrosshairInGui(int width, int height, CallbackInfo ci) {
-        if (mc.currentScreen != null) {
+        if (mc.currentScreen != null && !(mc.currentScreen instanceof GuiChat)) {
             ci.cancel();
         }
     }
