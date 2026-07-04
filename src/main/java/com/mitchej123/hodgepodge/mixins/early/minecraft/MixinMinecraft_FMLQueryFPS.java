@@ -11,8 +11,7 @@ public class MixinMinecraft_FMLQueryFPS {
 
     @ModifyArg(
             method = "launchIntegratedServer(Ljava/lang/String;Ljava/lang/String;Lnet/minecraft/world/WorldSettings;)V",
-            at = @At(value = "INVOKE", target = "Ljava/lang/Thread;sleep(J)V"),
-            remap = false)
+            at = @At(value = "INVOKE", target = "Ljava/lang/Thread;sleep(J)V"))
     private long hodgepodge$raiseFMLQueryFPS(long millis) {
         return 34;
     }
