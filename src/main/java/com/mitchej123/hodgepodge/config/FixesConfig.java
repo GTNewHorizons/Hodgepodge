@@ -529,6 +529,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean witherSkeletonSpecialName;
+
+    @Config.Comment("Raise FPS limit in the FML missing items screen (or any other FML StartupQuery).")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean raiseMissingItemsFPS;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
