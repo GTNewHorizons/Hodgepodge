@@ -83,7 +83,7 @@ public class MixinForgeHooks {
             World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         if (!originalValue) {
             // Forge does not resync client properly if it return false, we do it here. Does not change any behavior.
-            // Code identical to ForgeHooks place success
+            // Code identical to ForgeHooks place success but without updating block server side
             List<BlockSnapshot> blockSnapshots = (List<BlockSnapshot>) world.capturedBlockSnapshots.clone();
             for (BlockSnapshot blocksnapshot : blockSnapshots) {
                 int blockX = blocksnapshot.x;
