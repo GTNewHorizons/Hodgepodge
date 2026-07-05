@@ -2,13 +2,18 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.util.BlockSnapshot;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -74,7 +79,22 @@ public class MixinForgeHooks {
     }
 
     @ModifyVariable(method = "onPlaceItemIntoWorld", at = @At(value = "LOAD"), name = "flag")
-    private static boolean runItemHooksAlways(boolean originalValue) {
-        return true;
+    private static boolean resyncClientAlways(boolean originalValue, ItemStack itemstack, EntityPlayer player,
+            World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+        if (!originalValue) {
+            // Forge does not resync client properly if it return false, we do it here. Does not change any behavior.
+            // Code identical to ForgeHooks place success
+            List<BlockSnapshot> blockSnapshots = (List<BlockSnapshot>) world.capturedBlockSnapshots.clone();
+            for (BlockSnapshot blocksnapshot : blockSnapshots) {
+                int blockX = blocksnapshot.x;
+                int blockY = blocksnapshot.y;
+                int blockZ = blocksnapshot.z;
+                int updateFlag = blocksnapshot.flag;
+                if ((updateFlag & 2) != 0) {
+                    world.markBlockForUpdate(blockX, blockY, blockZ);
+                }
+            }
+        }
+        return originalValue;
     }
 }
