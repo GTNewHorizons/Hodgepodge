@@ -142,6 +142,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean hideCrosshairInThirdPerson;
 
+    @Config.Comment("Stops rendering the crosshair when a GUI screen (e.g. an inventory) is open")
+    @Config.DefaultBoolean(true)
+    public static boolean hideCrosshairInGui;
+
     @Config.Comment("Increase particle limit")
     @Config.DefaultBoolean(true)
     public static boolean increaseParticleLimit;

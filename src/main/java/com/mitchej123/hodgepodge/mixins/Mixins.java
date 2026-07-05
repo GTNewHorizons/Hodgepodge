@@ -585,6 +585,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("forge.MixinGuiIngameForge_CrosshairThirdPerson")
             .setApplyIf(() -> TweaksConfig.hideCrosshairInThirdPerson)
             .setPhase(Phase.EARLY)),
+    CROSSHAIR_GUI_OPEN(new MixinBuilder("Stops rendering the crosshair when a GUI screen is open")
+            .addClientMixins("forge.MixinGuiIngameForge_CrosshairGuiOpen")
+            .setApplyIf(() -> TweaksConfig.hideCrosshairInGui)
+            .setPhase(Phase.EARLY)),
     DONT_INVERT_CROSSHAIR_COLORS(new MixinBuilder("Don't invert crosshair colors")
             .addClientMixins("forge.MixinGuiIngameForge_CrosshairInvertColors")
             .setApplyIf(() -> TweaksConfig.dontInvertCrosshairColor)
@@ -1114,12 +1118,35 @@ public enum Mixins implements IMixins {
                     "minecraft.villager.MixinNpcMerchant")
             .setApplyIf(() -> FixesConfig.fixVillagerTradingDesync)
             .setPhase(Phase.EARLY)),
+    FIX_UNDEAD_FIRE_FLICKER(new MixinBuilder("Fix undead entities flickering with fire when exposed to the sun while immune to fire")
+            .addCommonMixins("minecraft.MixinEntityUndead_SunFireImmunity")
+            .setApplyIf(() -> FixesConfig.preventFireImmuneUndeadFlicker)
+            .setPhase(Phase.EARLY)),
+    FIX_ITEM_FRAME_DUPE(new MixinBuilder("Fix vanilla item frame duplication.")
+            .addCommonMixins("minecraft.MixinEntityItemFrame_FixDupe")
+            .setApplyIf(() -> FixesConfig.fixItemFrameDupe)
+            .setPhase(Phase.EARLY)),
+    FIX_ENTITY_NAME_LOCALIZATION(new MixinBuilder()
+            .addCommonMixins(
+                    "minecraft.MixinEntity_TranslateNameComponent",
+                    "minecraft.MixinEntityHorse_ChatComponentName",
+                    "minecraft.MixinEntityItem_ChatComponentName",
+                    "minecraft.MixinEntityLiving_ChatComponentName",
+                    "minecraft.MixinEntityMinecart_ChatComponentName",
+                    "minecraft.MixinEntityOcelot_ChatComponentName")
+            .setApplyIf(() -> FixesConfig.entityNameLocalization)
+            .setPhase(Phase.EARLY)),
+    WITHER_SKELETON_CUSTOM_NAME(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinEntitySkeleton_CustomWitherName")
+            .setApplyIf(() -> FixesConfig.witherSkeletonSpecialName)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments
     FIX_TESR_LEAK(new MixinBuilder()
             .addClientMixins("ic2.leaks.MixinOverlayTesr")
             .setApplyIf(() -> MemoryConfig.leaks.fixIC2TESRleak)
+            .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
             .addCommonMixins("ic2.MixinIc2WaterKinetic")
@@ -1927,6 +1954,7 @@ public enum Mixins implements IMixins {
                     "bibliocraft.leaks.MixinTileEntityTypeSetRenderer",
                     "bibliocraft.leaks.MixinTileEntityTypewriterRenderer")
             .setApplyIf(() -> MemoryConfig.leaks.fixBibliocraftTESRWorldLeak)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
     ZTONES_PACKET_FIX(new MixinBuilder("Packet Fix")
             .addCommonMixins("ztones.MixinZtonesPatchPacketExploits")

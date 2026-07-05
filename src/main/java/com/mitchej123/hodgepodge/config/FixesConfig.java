@@ -33,7 +33,7 @@ public class FixesConfig {
     public static boolean fixForgeOptionalInterfaceSignature;
 
     @Config.Comment("Do not flip bottom face textures (1.8+ behavior, see MC-47811)")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     public static boolean fixBottomFaceUV;
 
     @Config.Comment("Fix wrapped chat lines missing colors")
@@ -68,6 +68,10 @@ public class FixesConfig {
     @Config.Comment("Fix duplicate sounds from playing when closing a gui.")
     @Config.DefaultBoolean(true)
     public static boolean fixDuplicateSounds;
+
+    @Config.Comment("Fix vanilla item frame duplication.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixItemFrameDupe;
 
     @Config.Comment("Fix deleting stack when eating mushroom stew")
     @Config.DefaultBoolean(true)
@@ -511,11 +515,25 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean minLootingIsZero;
 
+    @Config.Comment("Prevent Zombies & Skeletons from flickering with fire when exposed to the sun while immune to fire (in particular, Wither Skeletons)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean preventFireImmuneUndeadFlicker;
+
     @Config.Comment("Fix Villagers only updating out-of-stock state after reopening GUI")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixVillagerTradingDesync;
 
+    @Config.Comment("Fix death messages containing English-localized entity names even on non-English clients.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean entityNameLocalization;
+
+    @Config.Comment("Makes Wither Skeletons not appear as just \"Skeleton\" in death messages and WAILA.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean witherSkeletonSpecialName;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
