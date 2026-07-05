@@ -33,7 +33,7 @@ public class FixesConfig {
     public static boolean fixForgeOptionalInterfaceSignature;
 
     @Config.Comment("Do not flip bottom face textures (1.8+ behavior, see MC-47811)")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     public static boolean fixBottomFaceUV;
 
     @Config.Comment("Fix wrapped chat lines missing colors")
