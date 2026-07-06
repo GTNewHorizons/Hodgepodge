@@ -604,6 +604,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.triggerAllConflictingKeybindings)
             .addExcludedMod(TargetedMod.MODERNKEYBINDING)
             .setPhase(Phase.EARLY)),
+    FIX_KEYBIND_CATEGORY_SORTING(new MixinBuilder("Fix controls menu crash on colliding localized category names")
+            .addClientMixins("minecraft.MixinKeyBinding_FixComparison")
+            .setApplyIf(() -> FixesConfig.fixKeybindCategorySorting)
+            .addExcludedMod(TargetedMod.MODERNKEYBINDING)
+            .setPhase(Phase.EARLY)),
     REMOVE_SPAWN_MINECART_SOUND(new MixinBuilder("Remove sound when spawning a minecart")
             .addClientMixins("minecraft.MixinWorldClient")
             .setApplyIf(() -> TweaksConfig.removeSpawningMinecartSound)
