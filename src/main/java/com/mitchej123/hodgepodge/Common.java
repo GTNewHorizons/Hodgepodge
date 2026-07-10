@@ -4,6 +4,7 @@ import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
@@ -12,10 +13,13 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
+import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 
 import ic2.core.Ic2Items;
 import ic2.core.block.EntityItnt;
+import sun.misc.Signal;
+import sun.misc.SignalHandler;
 
 public class Common {
 
@@ -26,6 +30,9 @@ public class Common {
     public static void init() {
         if (Compat.isIC2Present()) {
             ic2DispenserBehavior();
+        }
+        if (FixesConfig.shutdownGracefullyOnSignal) {
+            registerSignalHandler();
         }
     }
 
@@ -52,4 +59,30 @@ public class Common {
                     });
         }
     }
+
+    private static void registerSignalHandler() {
+        SignalHandler signalHandler = sig -> {
+            log.info("Received {} signal", sig.getName());
+            MinecraftServer server = MinecraftServer.getServer();
+            if (server != null) {
+                if (server.isServerRunning()) {
+                    server.initiateShutdown();
+                    long start = System.currentTimeMillis();
+                    while (!server.isServerStopped()) {
+                        try {
+                            if (System.currentTimeMillis() - start > 30_000) {
+                                break;
+                            }
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                            break;
+                        }
+                    }
+                }
+            }
+        };
+        Signal.handle(new Signal("INT"), signalHandler);
+        Signal.handle(new Signal("TERM"), signalHandler);
+    }
+
 }
