@@ -538,6 +538,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean witherSkeletonSpecialName;
+
+    @Config.Comment("Shutdown server gracefully on SIGINT/SIGTERM")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean shutdownGracefullyOnSignal;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
