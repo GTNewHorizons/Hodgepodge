@@ -179,6 +179,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean transparentChat;
 
+    @Config.Comment("Use a custom textured scrollbar")
+    @Config.DefaultBoolean(true)
+    public static boolean texturedScrollbar;
+
     @Config.Comment("Sets the interval for auto saves in ticks (20 ticks = 1 second)")
     @Config.RangeInt(min = 1)
     @Config.DefaultInt(900)
