@@ -9,9 +9,9 @@ import org.lwjgl.opengl.GL11;
 import com.mitchej123.hodgepodge.Hodgepodge;
 
 /**
- * Draws a texture-based scrollbar track/thumb using {@code scrollbar.png} (12x6), a 6px-wide
- * Track column followed by a 6px-wide Thumb column, each sliced vertically into a 2px top cap,
- * a 2px bottom cap, and a repeatable 2px middle band that is tiled to fill the requested height.
+ * Draws a texture-based scrollbar track/thumb using {@code scrollbar.png} (12x6), a 6px-wide Track column followed by a
+ * 6px-wide Thumb column, each sliced vertically into a 2px top cap, a 2px bottom cap, and a repeatable 2px middle band
+ * that is tiled to fill the requested height.
  */
 public class ScrollbarRenderer {
 
