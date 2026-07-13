@@ -33,7 +33,7 @@ public class FixesConfig {
     public static boolean fixForgeOptionalInterfaceSignature;
 
     @Config.Comment("Do not flip bottom face textures (1.8+ behavior, see MC-47811)")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     public static boolean fixBottomFaceUV;
 
     @Config.Comment("Fix wrapped chat lines missing colors")
@@ -148,6 +148,10 @@ public class FixesConfig {
     @Config.Comment("Fix the bug that makes fireballs stop moving when chunk unloads")
     @Config.DefaultBoolean(true)
     public static boolean fixImmobileFireballs;
+
+    @Config.Comment("Fix crash in the controls menu when two keybind categories share the same localized name")
+    @Config.DefaultBoolean(true)
+    public static boolean fixKeybindCategorySorting;
 
     @Config.Comment("Fix Sugar Cane inability to replace replaceable blocks indirectly.")
     @Config.DefaultBoolean(true)
@@ -515,6 +519,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean minLootingIsZero;
 
+    @Config.Comment("Prevent Zombies & Skeletons from flickering with fire when exposed to the sun while immune to fire (in particular, Wither Skeletons)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean preventFireImmuneUndeadFlicker;
+
     @Config.Comment("Fix Villagers only updating out-of-stock state after reopening GUI")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -529,6 +538,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean witherSkeletonSpecialName;
+
+    @Config.Comment("Raise FPS limit in the FML missing items screen (or any other FML StartupQuery).")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean raiseMissingItemsFPS;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
