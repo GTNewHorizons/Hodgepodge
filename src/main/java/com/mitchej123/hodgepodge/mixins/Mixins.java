@@ -1151,6 +1151,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinEntitySkeleton_CustomWitherName")
             .setApplyIf(() -> FixesConfig.witherSkeletonSpecialName)
             .setPhase(Phase.EARLY)),
+    FML_QUERY_SCREEN_FPS(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinMinecraft_FMLQueryFPS")
+            .setApplyIf(() -> FixesConfig.raiseMissingItemsFPS)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments
