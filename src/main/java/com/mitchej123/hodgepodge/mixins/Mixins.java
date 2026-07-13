@@ -585,6 +585,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("forge.MixinGuiIngameForge_CrosshairThirdPerson")
             .setApplyIf(() -> TweaksConfig.hideCrosshairInThirdPerson)
             .setPhase(Phase.EARLY)),
+    CROSSHAIR_GUI_OPEN(new MixinBuilder("Stops rendering the crosshair when a GUI screen is open")
+            .addClientMixins("forge.MixinGuiIngameForge_CrosshairGuiOpen")
+            .setApplyIf(() -> TweaksConfig.hideCrosshairInGui)
+            .setPhase(Phase.EARLY)),
     DONT_INVERT_CROSSHAIR_COLORS(new MixinBuilder("Don't invert crosshair colors")
             .addClientMixins("forge.MixinGuiIngameForge_CrosshairInvertColors")
             .setApplyIf(() -> TweaksConfig.dontInvertCrosshairColor)
@@ -598,6 +602,11 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinKeyBinding",
                     "minecraft.MixinMinecraft_UpdateKeys")
             .setApplyIf(() -> FixesConfig.triggerAllConflictingKeybindings)
+            .addExcludedMod(TargetedMod.MODERNKEYBINDING)
+            .setPhase(Phase.EARLY)),
+    FIX_KEYBIND_CATEGORY_SORTING(new MixinBuilder("Fix controls menu crash on colliding localized category names")
+            .addClientMixins("minecraft.MixinKeyBinding_FixComparison")
+            .setApplyIf(() -> FixesConfig.fixKeybindCategorySorting)
             .addExcludedMod(TargetedMod.MODERNKEYBINDING)
             .setPhase(Phase.EARLY)),
     REMOVE_SPAWN_MINECART_SOUND(new MixinBuilder("Remove sound when spawning a minecart")
@@ -1105,12 +1114,48 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.crashfixes.MixinEnchantmentHelper")
             .setApplyIf(() -> FixesConfig.minLootingIsZero)
             .setPhase(Phase.EARLY)),
+    FIX_VILLAGER_TRADING_DESYNC(new MixinBuilder("Fix Villagers only updating out-of-stock state after reopening GUI")
+            .addCommonMixins(
+                    "minecraft.villager.AccessorMerchantRecipe",
+                    "minecraft.villager.MixinMerchantRecipeList_WritePacketData")
+            .addClientMixins(
+                    "minecraft.villager.MixinMerchantRecipeList_ReadPacketData",
+                    "minecraft.villager.MixinNpcMerchant")
+            .setApplyIf(() -> FixesConfig.fixVillagerTradingDesync)
+            .setPhase(Phase.EARLY)),
+    FIX_UNDEAD_FIRE_FLICKER(new MixinBuilder("Fix undead entities flickering with fire when exposed to the sun while immune to fire")
+            .addCommonMixins("minecraft.MixinEntityUndead_SunFireImmunity")
+            .setApplyIf(() -> FixesConfig.preventFireImmuneUndeadFlicker)
+            .setPhase(Phase.EARLY)),
+    FIX_ITEM_FRAME_DUPE(new MixinBuilder("Fix vanilla item frame duplication.")
+            .addCommonMixins("minecraft.MixinEntityItemFrame_FixDupe")
+            .setApplyIf(() -> FixesConfig.fixItemFrameDupe)
+            .setPhase(Phase.EARLY)),
+    FIX_ENTITY_NAME_LOCALIZATION(new MixinBuilder()
+            .addCommonMixins(
+                    "minecraft.MixinEntity_TranslateNameComponent",
+                    "minecraft.MixinEntityHorse_ChatComponentName",
+                    "minecraft.MixinEntityItem_ChatComponentName",
+                    "minecraft.MixinEntityLiving_ChatComponentName",
+                    "minecraft.MixinEntityMinecart_ChatComponentName",
+                    "minecraft.MixinEntityOcelot_ChatComponentName")
+            .setApplyIf(() -> FixesConfig.entityNameLocalization)
+            .setPhase(Phase.EARLY)),
+    WITHER_SKELETON_CUSTOM_NAME(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinEntitySkeleton_CustomWitherName")
+            .setApplyIf(() -> FixesConfig.witherSkeletonSpecialName)
+            .setPhase(Phase.EARLY)),
+    FML_QUERY_SCREEN_FPS(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinMinecraft_FMLQueryFPS")
+            .setApplyIf(() -> FixesConfig.raiseMissingItemsFPS)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments
     FIX_TESR_LEAK(new MixinBuilder()
             .addClientMixins("ic2.leaks.MixinOverlayTesr")
             .setApplyIf(() -> MemoryConfig.leaks.fixIC2TESRleak)
+            .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
     IC2_UNPROTECTED_GET_BLOCK_FIX(new MixinBuilder("IC2 Kinetic Fix")
             .addCommonMixins("ic2.MixinIc2WaterKinetic")
@@ -1918,6 +1963,7 @@ public enum Mixins implements IMixins {
                     "bibliocraft.leaks.MixinTileEntityTypeSetRenderer",
                     "bibliocraft.leaks.MixinTileEntityTypewriterRenderer")
             .setApplyIf(() -> MemoryConfig.leaks.fixBibliocraftTESRWorldLeak)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
     ZTONES_PACKET_FIX(new MixinBuilder("Packet Fix")
             .addCommonMixins("ztones.MixinZtonesPatchPacketExploits")
