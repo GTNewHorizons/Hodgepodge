@@ -856,6 +856,10 @@ public enum Mixins implements IMixins {
             .addExcludedMod(TargetedMod.NOTFINE)
             .addExcludedMod(TargetedMod.ANGELICA_LT_2129)
             .setPhase(Phase.EARLY)),
+    REMOVE_EXTRA_ICON_LOAD(new MixinBuilder()
+            .addClientMixins("minecraft.fastload.MixinTextureMap_RemoveExtraIconLoad")
+            .setApplyIf(() -> SpeedupsConfig.removeExtraIconLoad)
+            .setPhase(Phase.EARLY)),
     SPEEDUP_BOP_LEAF_DECAY(new MixinBuilder()
             .addCommonMixins(
                     "bfsleafdecay.MixinBlockBOPAppleLeaves",

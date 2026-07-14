@@ -87,6 +87,11 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean asyncIconLoading;
 
+    @Config.Comment("Remove icon loading on texture map init")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean removeExtraIconLoad;
+
     @Config.Comment("Skip scheduling falling block ticks when the block below is solid")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart

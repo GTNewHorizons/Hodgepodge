@@ -30,7 +30,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.llamalad7.mixinextras.sugar.Local;
@@ -45,7 +44,7 @@ public class MixinTextureMap_AsyncIcons implements TextureMapAsyncIconsHook {
     @Shadow
     @Final
     @Mutable
-    private Map<?, ?> mapRegisteredSprites;
+    private Map<?, ?> mapRegisteredSprites = new ConcurrentHashMap<>();
 
     @Unique
     private final Map<String, CompletableFuture<IIcon>> hodgepodge$processingIcons = new ConcurrentHashMap<>();
@@ -57,26 +56,6 @@ public class MixinTextureMap_AsyncIcons implements TextureMapAsyncIconsHook {
     @Shadow
     @Final
     private String basePath;
-
-    @Inject(
-            method = "<init>(ILjava/lang/String;Z)V",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lcom/google/common/collect/Maps;newHashMap()Ljava/util/HashMap;",
-                    shift = Shift.AFTER,
-                    ordinal = 1,
-                    remap = false))
-    private void hodgepodge$changeToConcurrent(int p_i1281_1_, String p_i1281_2_, boolean skipFirst, CallbackInfo ci) {
-        mapRegisteredSprites = new ConcurrentHashMap<>(33_500);
-    }
-
-    /**
-     * Removes an unnecessary call to registerIcons in the constructor
-     */
-    @Redirect(
-            method = "<init>(ILjava/lang/String;Z)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/texture/TextureMap;registerIcons()V"))
-    private void hodgepodge$dontRegisterIconsInInit(TextureMap instance) {}
 
     /**
      * @author tiffit
