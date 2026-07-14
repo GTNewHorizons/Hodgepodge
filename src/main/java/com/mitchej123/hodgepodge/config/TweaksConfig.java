@@ -142,6 +142,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean hideCrosshairInThirdPerson;
 
+    @Config.Comment("Stops rendering the crosshair when a GUI screen (e.g. an inventory) is open")
+    @Config.DefaultBoolean(true)
+    public static boolean hideCrosshairInGui;
+
     @Config.Comment("Increase particle limit")
     @Config.DefaultBoolean(true)
     public static boolean increaseParticleLimit;
@@ -248,7 +252,7 @@ public class TweaksConfig {
     public static boolean cleanChatLogs = true;
 
     @Config.Comment("Enable extra F1 toggle to hide GUI but keep rendering hand")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean f1ShowHand;
 
@@ -334,6 +338,11 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean removeBOPDonatorEffect;
+
+    @Config.Comment("Add BOP lavenders to the bone meal pool in lavender fields")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean addBOPLavenderToBoneMealPool;
 
     // Cofh
 
