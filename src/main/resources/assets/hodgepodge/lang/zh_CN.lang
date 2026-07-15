@@ -21,6 +21,14 @@ item.dyePowder.name=染料
 item.skull.name=头颅
 item.fish.name=鱼
 
+entity.Skeleton.wither.name=凋灵骷髅
+entity.MinecartRideable.name=矿车
+entity.MinecartChest.name=运输矿车
+entity.MinecartFurnace.name=动力矿车
+entity.MinecartTNT.name=TNT矿车
+entity.MinecartHopper.name=漏斗矿车
+entity.MinecartCommandBlock.name=命令方块矿车
+
 commands.time.get=当前世界时间为 %s（一天中的时间：%s）
 commands.time.usageWithGet=/time <set|add> <数值> 或 /time get
 
@@ -33,3 +41,38 @@ bettermodlist.sort.a_to_z=A-Z
 bettermodlist.sort.z_to_a=Z-A
 bettermodlist.gui.modlistinfo1=天啊！一切都焕然一新！
 bettermodlist.gui.modlistinfo2=新版布局由以下提供：
+
+hodgepodge.debug.advanced_tooltips.enabled=高级物品提示：§a开启
+hodgepodge.debug.advanced_tooltips.disabled=高级物品提示：§c关闭
+hodgepodge.debug.hitboxes.enabled=碰撞箱：§a开启
+hodgepodge.debug.hitboxes.disabled=碰撞箱：§c关闭
+hodgepodge.debug.pause_focus.enabled=失去焦点时暂停：§a开启
+hodgepodge.debug.pause_focus.disabled=失去焦点时暂停：§c关闭
+hodgepodge.debug.reload_chunks.message=已重新加载所有区块。
+hodgepodge.debug.reload_pack.message=已在 %s 秒内重新加载资源包。
+hodgepodge.debug.crash.count.0=F3 + C 已按住。若不松开，将在 6 秒后使游戏崩溃。
+hodgepodge.debug.crash.count.1=将在 5 秒后崩溃……
+hodgepodge.debug.crash.count.2=将在 4 秒后崩溃……
+hodgepodge.debug.crash.count.3=将在 3 秒后崩溃……
+hodgepodge.debug.crash.count.4=将在 2 秒后崩溃……
+hodgepodge.debug.crash.count.5=将在 1 秒后崩溃……
+hodgepodge.debug.crash.count.6=时间已到，松开任意按键后游戏将立即崩溃。
+hodgepodge.debug.crash.cancel=已取消崩溃。
+hodgepodge.debug.copy_location.message=已将当前位置复制到剪贴板。
+
+hodgepodge.debug.help.message=快捷键：
+hodgepodge.debug.help.0=F3 = 打开调试界面
+hodgepodge.debug.help.1=Shift + F3 = 打开调试界面并显示性能分析器图表
+hodgepodge.debug.help.angelica=Alt + F3 = [Angelica] 打开调试界面并显示 FPS/TPS 图表
+hodgepodge.debug.help.2=F3 + A = 重新加载区块
+hodgepodge.debug.help.3=F3 + B = 显示碰撞箱
+hodgepodge.debug.help.4=F3 + C = 将当前位置复制为 /cofh tpx 命令，或按住 6 秒使游戏崩溃
+hodgepodge.debug.help.5=F3 + D = [Hodgepodge] 清空聊天记录
+hodgepodge.debug.help.6=F3 + H = 切换高级物品提示
+hodgepodge.debug.help.7=F3 + P = 切换失去焦点时暂停
+hodgepodge.debug.help.8=F3 + Q = [Hodgepodge] 显示此帮助列表
+hodgepodge.debug.help.9=F3 + S/T = 重新加载资源包
+hodgepodge.debug.help.etfuturum=F3 + F4 = [Et-Futurum-Requiem] 打开游戏模式切换器
+hodgepodge.debug.help.nei.1=%s = [NEI] 打开生物生成覆盖层
+hodgepodge.debug.help.nei.2=%s = [NEI] 打开区块覆盖层
+

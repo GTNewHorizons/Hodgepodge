@@ -608,6 +608,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.triggerAllConflictingKeybindings)
             .addExcludedMod(TargetedMod.MODERNKEYBINDING)
             .setPhase(Phase.EARLY)),
+    FIX_KEYBIND_CATEGORY_SORTING(new MixinBuilder("Fix controls menu crash on colliding localized category names")
+            .addClientMixins("minecraft.MixinKeyBinding_FixComparison")
+            .setApplyIf(() -> FixesConfig.fixKeybindCategorySorting)
+            .addExcludedMod(TargetedMod.MODERNKEYBINDING)
+            .setPhase(Phase.EARLY)),
     REMOVE_SPAWN_MINECART_SOUND(new MixinBuilder("Remove sound when spawning a minecart")
             .addClientMixins("minecraft.MixinWorldClient")
             .setApplyIf(() -> TweaksConfig.removeSpawningMinecartSound)
@@ -1143,6 +1148,10 @@ public enum Mixins implements IMixins {
     WITHER_SKELETON_CUSTOM_NAME(new MixinBuilder()
             .addCommonMixins("minecraft.MixinEntitySkeleton_CustomWitherName")
             .setApplyIf(() -> FixesConfig.witherSkeletonSpecialName)
+            .setPhase(Phase.EARLY)),
+    FML_QUERY_SCREEN_FPS(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinMinecraft_FMLQueryFPS")
+            .setApplyIf(() -> FixesConfig.raiseMissingItemsFPS)
             .setPhase(Phase.EARLY)),
     // endregion
 

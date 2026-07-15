@@ -153,6 +153,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixImmobileFireballs;
 
+    @Config.Comment("Fix crash in the controls menu when two keybind categories share the same localized name")
+    @Config.DefaultBoolean(true)
+    public static boolean fixKeybindCategorySorting;
+
     @Config.Comment("Fix Sugar Cane inability to replace replaceable blocks indirectly.")
     @Config.DefaultBoolean(true)
     public static boolean fixSugarCanePlacement;
@@ -538,6 +542,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean witherSkeletonSpecialName;
+
+    @Config.Comment("Raise FPS limit in the FML missing items screen (or any other FML StartupQuery).")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean raiseMissingItemsFPS;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
