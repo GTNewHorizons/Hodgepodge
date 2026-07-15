@@ -43,12 +43,8 @@ public abstract class MixinS02PacketChat_FixHugeChatKick {
             if (FixesConfig.logHugeChat) {
                 String incidentId = "" + System.currentTimeMillis() + ThreadLocalRandom.current().nextInt(1000);
                 LOGGER.info("HUGE chat message caught. Incident ID {}. Serialized message {}.", incidentId, s);
-                bytes = Serializer
-                        .func_150696_a /* componentToJson */ (
-                                new ChatComponentTranslation(
-                                        "hodgepodge.chat.huge_message.logged",
-                                        incidentId,
-                                        messageStart))
+                bytes = Serializer.func_150696_a /* componentToJson */ (
+                        new ChatComponentTranslation("hodgepodge.chat.huge_message.logged", incidentId, messageStart))
                         .getBytes(StandardCharsets.UTF_8);
             } else {
                 LOGGER.info("HUGE chat message caught. Details are not logged here as requested in config.");

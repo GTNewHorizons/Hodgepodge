@@ -33,8 +33,8 @@ public abstract class MixinNetHandlerHandshakeTCP_TranslatableKick {
     private void hodgepodge$translatableStartingKick(C00Handshake packet, CallbackInfo ci) {
         if (!FMLCommonHandler.instance().shouldAllowPlayerLogins()) {
             IChatComponent message = new ChatComponentTranslation("hodgepodge.multiplayer.disconnect.server_starting");
-            this.field_147386_b.func_150725_a(new S00PacketDisconnect(message), new GenericFutureListener[0]);
-            this.field_147386_b.func_150718_a(message);
+            this.field_147386_b.scheduleOutboundPacket(new S00PacketDisconnect(message), new GenericFutureListener[0]);
+            this.field_147386_b.closeChannel(message);
             ci.cancel();
         }
     }
