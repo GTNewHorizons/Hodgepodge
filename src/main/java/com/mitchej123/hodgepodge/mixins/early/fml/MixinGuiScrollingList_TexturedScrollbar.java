@@ -53,19 +53,13 @@ public abstract class MixinGuiScrollingList_TexturedScrollbar {
         int trackHeight = this.bottom - this.top;
         int scrollRange = contentHeight - (trackHeight - 4);
 
-        if (scrollRange > 0) {
-            int thumbHeight = trackHeight * trackHeight / contentHeight;
-            thumbHeight = Math.max(32, Math.min(thumbHeight, trackHeight - 8));
-
-            int thumbY = (int) this.scrollDistance * (trackHeight - thumbHeight) / scrollRange + this.top;
-            if (thumbY < this.top) {
-                thumbY = this.top;
-            }
-
-            int scrollBarX = this.left + this.listWidth - 6;
-            ScrollbarRenderer.drawTrack(scrollBarX, this.top, trackHeight);
-            ScrollbarRenderer.drawThumb(scrollBarX, thumbY, thumbHeight);
-        }
+        ScrollbarRenderer.drawScrollbar(
+                this.left + this.listWidth - 6,
+                this.top,
+                trackHeight,
+                contentHeight,
+                this.scrollDistance,
+                scrollRange);
 
         return trackHeight - 4;
     }

@@ -27,6 +27,24 @@ public class ScrollbarRenderer {
     private static final int TRACK_U_OFFSET = 0;
     private static final int THUMB_U_OFFSET = TRACK_WIDTH;
 
+    public static void drawScrollbar(int scrollBarX, int top, int trackHeight, int contentHeight, float scrollAmount,
+            int scrollRange) {
+        if (scrollRange <= 0) {
+            return;
+        }
+
+        int thumbHeight = trackHeight * trackHeight / contentHeight;
+        thumbHeight = Math.max(32, Math.min(thumbHeight, trackHeight - 8));
+
+        int thumbY = (int) scrollAmount * (trackHeight - thumbHeight) / scrollRange + top;
+        if (thumbY < top) {
+            thumbY = top;
+        }
+
+        drawTrack(scrollBarX, top, trackHeight);
+        drawThumb(scrollBarX, thumbY, thumbHeight);
+    }
+
     public static void drawTrack(int x, int y, int height) {
         draw(x, y, height, TRACK_U_OFFSET);
     }

@@ -41,20 +41,14 @@ public abstract class MixinGuiSlot_TexturedScrollbar {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiSlot;func_148135_f()I", ordinal = 1))
     private int hodgepodge$drawTexturedScrollbarAndSuppressVanilla(GuiSlot self) {
         int scrollRange = this.func_148135_f();
-        if (scrollRange > 0) {
-            int trackHeight = this.bottom - this.top;
-            int thumbHeight = trackHeight * trackHeight / this.getContentHeight();
-            thumbHeight = Math.max(32, Math.min(thumbHeight, trackHeight - 8));
-
-            int thumbY = (int) this.amountScrolled * (trackHeight - thumbHeight) / scrollRange + this.top;
-            if (thumbY < this.top) {
-                thumbY = this.top;
-            }
-
-            int scrollBarX = this.getScrollBarX();
-            ScrollbarRenderer.drawTrack(scrollBarX, this.top, trackHeight);
-            ScrollbarRenderer.drawThumb(scrollBarX, thumbY, thumbHeight);
-        }
+        int trackHeight = this.bottom - this.top;
+        ScrollbarRenderer.drawScrollbar(
+                this.getScrollBarX(),
+                this.top,
+                trackHeight,
+                this.getContentHeight(),
+                this.amountScrolled,
+                scrollRange);
 
         return 0;
     }
