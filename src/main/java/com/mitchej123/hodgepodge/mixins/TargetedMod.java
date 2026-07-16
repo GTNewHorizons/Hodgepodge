@@ -13,6 +13,8 @@ public enum TargetedMod implements ITargetMod {
 
     ADVANCED_SOLAR_PANELS("AdvancedSolarPanel"),
     ANGELICA("com.gtnewhorizons.angelica.loading.AngelicaTweaker", "angelica"),
+    ANGELICA_LT_2129(new TargetModBuilder().setTargetClass("com.gtnewhorizons.angelica.AngelicaMod")
+            .setModId("angelica").testModVersion("angelica", version -> isVersionLessThan(version, "2.1.29"))),
     ARCHAICFIX("org.embeddedt.archaicfix.ArchaicCore", "archaicfix"),
     AUTOMAGY("Automagy"),
     BAUBLES("Baubles"),
@@ -68,6 +70,8 @@ public enum TargetedMod implements ITargetMod {
     MRTJPCORE_V_BEFORE_113(new TargetModBuilder().setTargetClass("mrtjp.core.handler.MrTJPCoreMod")
             .testModVersion("MrTJPCoreMod", version -> isVersionLessThan(version, "1.1.3"))),
     NOTENOUGHITEMS("codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
+    // Target the version not included in angelica
+    NOTFINE("jss.notfine.mixinplugin.NotFineEarlyMixins", null),
     OPTIFINE("optifine.OptiFineForgeTweaker", "Optifine"),
     PORTAL_GUN("PortalGun"),
     PROJECTE("ProjectE"),
