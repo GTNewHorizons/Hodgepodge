@@ -1283,6 +1283,17 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.IC2)
             .addRequiredMod(TargetedMod.ENDLESSIDS)
             .setPhase(Phase.LATE)),
+    IC2_NETWORK_SECURITY(new MixinBuilder("Reject unauthorized or malformed IC2 client network actions")
+            .addCommonMixins(
+                    "ic2.MixinIC2DataEncoderNetworkSecurity",
+                    "ic2.MixinIC2NetworkManagerSecurity",
+                    "ic2.MixinNuclearControlAverageCounterNetworkSecurity",
+                    "ic2.MixinIC2ObscuratorNetworkSecurity",
+                    "ic2.MixinIC2ScannableRpcSecurity",
+                    "ic2.MixinIC2TileEntityLatheNetworkSecurity")
+            .setApplyIf(() -> FixesConfig.fixIc2NetworkSecurity)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
     // endregion
 
 

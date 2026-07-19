@@ -810,6 +810,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixIc2Eid;
 
+    @Config.Comment("Reject unauthorized or malformed IC2 client network actions")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2NetworkSecurity;
+
     // Journey Map
 
     @Config.Comment("Prevents journeymap from using illegal character in file paths")
