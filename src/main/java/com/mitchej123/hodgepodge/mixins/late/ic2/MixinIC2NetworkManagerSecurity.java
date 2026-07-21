@@ -38,6 +38,9 @@ public abstract class MixinIC2NetworkManagerSecurity {
     @Shadow(remap = false)
     protected abstract void onPacketData(InputStream input, EntityPlayer player);
 
+    @Shadow(remap = false)
+    protected abstract boolean isClient();
+
     @Redirect(
             method = "onPacket",
             at = @At(
@@ -70,6 +73,7 @@ public abstract class MixinIC2NetworkManagerSecurity {
             remap = false)
     private void hodgepodge$validateItemEvent(INetworkItemEventListener listener, ItemStack packetStack,
             EntityPlayer player, int event) {
+        // Opcode 1 carries no trusted slot, so only the held stack can be bound unambiguously.
         ItemStack heldStack = player.getHeldItem();
         if (heldStack != null && heldStack.getItem() == listener) {
             listener.onNetworkEvent(heldStack, player, event);
@@ -117,16 +121,19 @@ public abstract class MixinIC2NetworkManagerSecurity {
             at = @At(
                     value = "INVOKE",
                     target = "Lic2/core/util/ReflectionUtil;setValueRecursive(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Object;)Z",
-                    ordinal = 1,
                     remap = false),
+            require = 2,
             remap = false)
-    private boolean hodgepodge$validateTileFieldUpdate(Object object, String fieldName, Object value,
+    private boolean hodgepodge$validateFieldUpdate(Object object, String fieldName, Object value,
             Operation<Boolean> original, @Local(argsOnly = true) EntityPlayer player) {
-        if (!(object instanceof TileEntity) || !hodgepodge$isOpenContainerFor(player, (TileEntity) object)
-                || !hodgepodge$isCompatibleFieldValue(object, fieldName, value)) {
+        if (isClient()) return original.call(object, fieldName, value);
+
+        boolean authorized = object == player.openContainer
+                || object instanceof TileEntity && hodgepodge$isOpenContainerFor(player, (TileEntity) object);
+        if (!authorized || !hodgepodge$isCompatibleFieldValue(object, fieldName, value)) {
             Common.log.warn(
                     Common.securityMarker,
-                    "Rejected unauthorized or invalid IC2 tile field update '{}' from {}",
+                    "Rejected unauthorized or invalid IC2 field update '{}' from {}",
                     fieldName,
                     player.getGameProfile());
             return false;
@@ -210,9 +217,9 @@ public abstract class MixinIC2NetworkManagerSecurity {
     private static void hodgepodge$rejectMalformedPacket(EntityPlayer player, Exception exception) {
         Common.log.warn(
                 Common.securityMarker,
-                "Rejected malformed IC2 network packet from {}: {}",
+                "Rejected malformed IC2 network packet from {}",
                 player.getGameProfile(),
-                exception.toString());
+                exception);
         if (player instanceof EntityPlayerMP) {
             ((EntityPlayerMP) player).playerNetServerHandler.kickPlayerFromServer("Malformed IC2 network packet");
         }
