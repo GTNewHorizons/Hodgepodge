@@ -83,12 +83,12 @@ public class SpeedupsConfig {
     public static boolean speedupLeafDecay;
 
     @Config.Comment("Load texture map icons on multiple threads")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean asyncIconLoading;
 
     @Config.Comment("Remove icon loading on texture map init")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean removeExtraIconLoad;
 
