@@ -98,9 +98,9 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean enableDefaultLanPort;
 
-    @Config.Comment("Use CMD key on MacOS to COPY / INSERT / SELECT in text fields (Chat, NEI, Server IP etc.)")
+    @Config.Comment("Use CTRL (CMD on MacOS) to COPY / PASTE / SELECT ALL / CUT in text fields (Chat, NEI, Server IP etc.), fixes these shortcuts not working with some keyboard layouts")
     @Config.DefaultBoolean(true)
-    public static boolean enableMacosCmdShortcuts;
+    public static boolean enableTextFieldCtrlShortcuts;
 
     @Config.Comment("Shows renderer's impact on FPS in vanilla lagometer")
     @Config.DefaultBoolean(true)
