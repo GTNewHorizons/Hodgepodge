@@ -1081,6 +1081,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiCreateWorld_NotWriteToExistDir")
             .setApplyIf(() -> FixesConfig.fixSaveFileWrittenToExistingDirectory)
             .setPhase(Phase.EARLY)),
+    FIX_FLAT_WORLD_LAYER_MISSING_ITEM_BLOCK_CRASH(new MixinBuilder()
+            .addClientMixins("minecraft.MixinGuiCreateFlatWorld_FixItemCrash")
+            .setApplyIf(() -> FixesConfig.fixFlatWorldLayerMissingItemBlockCrash)
+            .setPhase(Phase.EARLY)),
     FIX_FAKE_PLAYER_CHAT_CRASH(new MixinBuilder()
             .addCommonMixins("forge.MixinFakePlayer")
             .setApplyIf(() -> FixesConfig.fixFakePlayerChatCrash)
