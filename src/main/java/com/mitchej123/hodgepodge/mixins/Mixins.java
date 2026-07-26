@@ -962,6 +962,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.fastItemEntityPhysics)
             .addExcludedMod(TargetedMod.FALSETWEAKS)
             .setPhase(Phase.EARLY)),
+    CULL_DISTANT_ITEM_FRAME_CONTENTS(new MixinBuilder("Skip rendering distant item frames and their contents")
+            .addClientMixins("minecraft.MixinRenderItemFrame_CullDistantContents")
+            .setApplyIf(() -> SpeedupsConfig.cullDistantItemFrameContents)
+            .setPhase(Phase.EARLY)),
     FIX_FENCE_RIGHT_CLICK(new MixinBuilder()
             .addCommonMixins("minecraft.MixinBlockFence_RightClick")
             .setApplyIf(() -> FixesConfig.fixFenceRightClick)
