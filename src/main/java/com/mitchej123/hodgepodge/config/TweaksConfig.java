@@ -326,6 +326,12 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean thirstyTankContainer;
 
+    // BiblioCraft
+
+    @Config.Comment("Better Printing Press automation")
+    @Config.DefaultBoolean(true)
+    public static boolean betterPrintingPressAutomation;
+
     // Biomes O' Plenty
 
     @Config.Comment("Allow 5 Fir Sapling planted together ('+' shape) to grow to a big fir tree")
