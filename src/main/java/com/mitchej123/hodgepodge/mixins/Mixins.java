@@ -613,9 +613,9 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinWorldClient")
             .setApplyIf(() -> TweaksConfig.removeSpawningMinecartSound)
             .setPhase(Phase.EARLY)),
-    MACOS_KEYS_TEXTFIELD_SHORTCUTS(new MixinBuilder("Macos use CMD to copy/select/delete text")
+    TEXTFIELD_CTRL_SHORTCUTS(new MixinBuilder("Use CTRL (CMD on MacOS) to copy/select/delete text")
             .addClientMixins("minecraft.MixinGuiTextField")
-            .setApplyIf(() -> TweaksConfig.enableMacosCmdShortcuts && System.getProperty("os.name").toLowerCase().contains("mac"))
+            .setApplyIf(() -> TweaksConfig.enableTextFieldCtrlShortcuts)
             .setPhase(Phase.EARLY)),
     FIX_FONT_RENDERER_LINEWRAP_RECURSION(new MixinBuilder("Replace recursion with iteration in FontRenderer line wrapping code")
             .addClientMixins("minecraft.MixinFontRenderer")
