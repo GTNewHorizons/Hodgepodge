@@ -61,28 +61,30 @@ public class Common {
     }
 
     private static void registerSignalHandler() {
-        SignalHandler signalHandler = sig -> {
-            log.info("Received {} signal", sig.getName());
-            MinecraftServer server = MinecraftServer.getServer();
-            if (server != null) {
-                if (server.isServerRunning()) {
-                    server.initiateShutdown();
-                    long start = System.currentTimeMillis();
-                    while (!server.isServerStopped()) {
-                        try {
-                            if (System.currentTimeMillis() - start > 30_000) {
+        try {
+            SignalHandler signalHandler = sig -> {
+                log.info("Received {} signal", sig.getName());
+                MinecraftServer server = MinecraftServer.getServer();
+                if (server != null) {
+                    if (server.isServerRunning()) {
+                        server.initiateShutdown();
+                        while (!server.isServerStopped()) {
+                            try {
+                                Thread.sleep(10);
+                            } catch (InterruptedException e) {
                                 break;
                             }
-                            Thread.sleep(10);
-                        } catch (InterruptedException e) {
-                            break;
                         }
                     }
                 }
-            }
-        };
-        Signal.handle(new Signal("INT"), signalHandler);
-        Signal.handle(new Signal("TERM"), signalHandler);
+            };
+            Signal.handle(new Signal("INT"), signalHandler);
+            Signal.handle(new Signal("TERM"), signalHandler);
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    "sun.misc.SignalHandler probably is unavailable on this JVM. Disable shutdownGracefullyOnSignal option in config or try another JVM.",
+                    e);
+        }
     }
 
 }
