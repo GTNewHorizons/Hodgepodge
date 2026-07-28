@@ -1,5 +1,8 @@
 package com.mitchej123.hodgepodge.mixins.late.bibliocraft;
 
+import static com.mitchej123.hodgepodge.Compat.isAutomagyPresent;
+import static com.mitchej123.hodgepodge.Compat.isEnderIoPresent;
+
 import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -67,7 +70,7 @@ public class MixinBibliocraftAutomationTypesettingTile extends TileEntity {
         CubeIterator iter = new CubeIterator(8);
         ArrayList<ExperienceContainer> obeliskstodrain;
         int xp;
-        if (isEioLoaded) {
+        if (isEnderIoPresent()) {
             if (!worldObj.isRemote) obeliskstodrain = new ArrayList<>();
             while (iter.hasNext()) {
                 iter.next();
@@ -90,7 +93,7 @@ public class MixinBibliocraftAutomationTypesettingTile extends TileEntity {
                 }
             }
         }
-        if (isAutomagyLoaded) {
+        if (isAutomagyPresent()) {
             ArrayList<TileEntityJarXP> jarstodrain = worldObj.isRemote ? null : new ArrayList<>();
             iter.n = 0;
             iter.l = 0;
