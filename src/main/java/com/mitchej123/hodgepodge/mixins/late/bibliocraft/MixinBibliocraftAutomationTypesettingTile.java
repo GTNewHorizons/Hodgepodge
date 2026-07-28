@@ -53,11 +53,11 @@ public abstract class MixinBibliocraftAutomationTypesettingTile extends TileEnti
     }
 
     @Shadow(remap = false)
-    public abstract boolean addBookOrPlate(ItemStack playerstack, World world);
+    public abstract boolean addBookorPlate(ItemStack playerstack, World world);
 
     @WrapMethod(method = "setInventorySlotContents")
-    private void hodgepodge$useAddBookOrPlate(int slot, ItemStack itemstack, Operation<Void> original) {
-        if (slot == 0 && itemstack != null) addBookOrPlate(itemstack, this.worldObj);
+    private void hodgepodge$useAddBookorPlate(int slot, ItemStack itemstack, Operation<Void> original) {
+        if (slot == 0 && itemstack != null) addBookorPlate(itemstack, this.worldObj);
         else original.call(slot, itemstack);
     }
 
