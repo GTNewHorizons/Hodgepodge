@@ -43,13 +43,19 @@ public abstract class MixinBibliocraftAutomationTypesettingTile extends TileEnti
     private boolean hodgepodge$allowAllValidInputTypes(int slot, ItemStack itemstack, Operation<Boolean> original) {
         NBTTagCompound nbt;
         Item stackItem = itemstack.getItem();
-        if (slot == 0) return stackItem instanceof ItemPlate || stackItem instanceof ItemEditableBook || stackItem instanceof ItemEnchantedBook || stackItem instanceof ItemStockroomCatalog || ((stackItem instanceof ItemBigBook || stackItem instanceof ItemRecipeBook) && (nbt = itemstack.getTagCompound()) != null && nbt.getBoolean("signed")) || stackItem instanceof ItemAtlas && itemstack.getTagCompound() != null;
+        if (slot == 0) return stackItem instanceof ItemPlate || stackItem instanceof ItemEditableBook
+                || stackItem instanceof ItemEnchantedBook
+                || stackItem instanceof ItemStockroomCatalog
+                || ((stackItem instanceof ItemBigBook || stackItem instanceof ItemRecipeBook)
+                        && (nbt = itemstack.getTagCompound()) != null
+                        && nbt.getBoolean("signed"))
+                || stackItem instanceof ItemAtlas && itemstack.getTagCompound() != null;
         return original.call(slot, itemstack);
     }
 
     @Shadow(remap = false)
     public abstract boolean addBookOrPlate(ItemStack playerstack, World world);
-    
+
     @WrapMethod(method = "setInventorySlotContents")
     private void hodgepodge$useAddBookOrPlate(int slot, ItemStack itemstack, Operation<Void> original) {
         if (slot == 0 && itemstack != null) addBookOrPlate(itemstack, this.worldObj);
@@ -65,10 +71,18 @@ public abstract class MixinBibliocraftAutomationTypesettingTile extends TileEnti
         op.call();
     }
 
-    @WrapOperation(method = "enchantPlate", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/entity/player/EntityPlayer;experienceLevel:I"), remap = false)
+    @WrapOperation(
+            method = "enchantPlate",
+            at = @At(
+                    value = "FIELD",
+                    opcode = Opcodes.GETFIELD,
+                    target = "Lnet/minecraft/entity/player/EntityPlayer;experienceLevel:I"),
+            remap = false)
     private int hdogepodge$cursedXpDrainImpl(EntityPlayer instance, Operation<Integer> original, @Local int levelcost) {
         if (instance != null) return instance.experienceLevel;
-        int xpCost = levelcost < 16 ? 17 * levelcost : levelcost < 30 ? (((3 * levelcost - 59) * levelcost) >> 1) + 360 : (((7 * levelcost - 303) * levelcost) >> 1) + 2220;
+        int xpCost = levelcost < 16 ? 17 * levelcost
+                : levelcost < 30 ? (((3 * levelcost - 59) * levelcost) >> 1) + 360
+                : (((7 * levelcost - 303) * levelcost) >> 1) + 2220;
         CubeIterator iter = new CubeIterator(8);
         ArrayList<ExperienceContainer> obeliskstodrain = null;
         int xp;
@@ -124,7 +138,12 @@ public abstract class MixinBibliocraftAutomationTypesettingTile extends TileEnti
     
     }
 
-    @WrapOperation(method = "enchantPlate", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayer;addExperienceLevel(Lnet/minecraft/entity/player/EntityPlayer;I)V"), remap = false)
+    @WrapOperation(
+            method = "enchantPlate",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/entity/player/EntityPlayer;addExperienceLevel(Lnet/minecraft/entity/player/EntityPlayer;I)V"),
+            remap = false)
     private void hodgepodge$avoidDrainIfNull(EntityPlayer instance, int lvl, Operation<Void> op) {
         if(instance == null) return;
         op.call(lvl);
