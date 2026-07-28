@@ -37,7 +37,7 @@ import jds.bibliocraft.tileentities.TileEntityTypeMachine;
 import tuhljin.automagy.tiles.TileEntityJarXP;
 
 @Mixin(TileEntityTypeMachine.class)
-public class MixinBibliocraftAutomationTypesettingTile extends TileEntity {
+public abstract class MixinBibliocraftAutomationTypesettingTile extends TileEntity {
 
     @WrapMethod(method = "isItemValidForSlot")
     private boolean hodgepodge$allowAllValidInputTypes(int slot, ItemStack itemstack, Operation<Boolean> original) {
