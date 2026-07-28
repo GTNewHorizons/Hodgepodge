@@ -82,7 +82,7 @@ public abstract class MixinBibliocraftAutomationTypesettingTile extends TileEnti
         if (instance != null) return instance.experienceLevel;
         int xpCost = levelcost < 16 ? 17 * levelcost
                 : levelcost < 30 ? (((3 * levelcost - 59) * levelcost) >> 1) + 360
-                : (((7 * levelcost - 303) * levelcost) >> 1) + 2220;
+                    : (((7 * levelcost - 303) * levelcost) >> 1) + 2220;
         CubeIterator iter = new CubeIterator(8);
         ArrayList<ExperienceContainer> obeliskstodrain = null;
         int xp;
