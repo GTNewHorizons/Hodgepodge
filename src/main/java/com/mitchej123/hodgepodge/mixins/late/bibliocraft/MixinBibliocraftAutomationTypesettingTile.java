@@ -75,9 +75,9 @@ public class MixinBibliocraftAutomationTypesettingTile extends TileEntity {
             while (iter.hasNext()) {
                 iter.next();
                 if (this.worldObj.getTileEntity(
-                    cubeIter.n + this.xCoord,
-                   cubeIter.l + this.yCoord,
-                    cubeIter.m + this.zCoord) instanceof TileExperienceObelisk obelisk) {
+                    iter.n + this.xCoord,
+                   iter.l + this.yCoord,
+                    iter.m + this.zCoord) instanceof TileExperienceObelisk obelisk) {
                     ExperienceContainer cont = obelisk.getContainer();
                     xp = cont.getExperienceTotal();
                     long r11 = xpCost - xp;
