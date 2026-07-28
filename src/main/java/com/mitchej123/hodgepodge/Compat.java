@@ -198,13 +198,13 @@ public class Compat {
      * Cannot be used before pre-init phase.
      */
     public static boolean isEnderIoPresent() {
-        return isEnderIoPresent();
+        return isEnderIoPresent;
     }
 
     /**
      * Cannot be used before pre-init phase.
      */
     public static boolean isAutomagyPresent() {
-        return isAutomagyPresent();
+        return isAutomagyPresent;
     }
 }
