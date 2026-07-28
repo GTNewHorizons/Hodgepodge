@@ -1,5 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.late.bibliocraft;
 
+import java.util.ArrayList;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemEditableBook;
@@ -18,6 +20,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 
+import crazypants.enderio.machine.obelisk.xp.TileExperienceObelisk;
+import crazypants.enderio.xp.ExperienceContainer;
 import jds.bibliocraft.items.ItemAtlas;
 import jds.bibliocraft.items.ItemBigBook;
 import jds.bibliocraft.items.ItemLoader;
@@ -25,6 +29,7 @@ import jds.bibliocraft.items.ItemPlate;
 import jds.bibliocraft.items.ItemRecipeBook;
 import jds.bibliocraft.items.ItemStockroomCatalog;
 import jds.bibliocraft.tileentities.TileEntityTypeMachine;
+import tuhljin.automagy.tiles.TileEntityJarXP;
 
 @Mixin(TileEntityTypeMachine.class)
 public class MixinBibliocraftAutomationTypesettingTile extends TileEntity {
