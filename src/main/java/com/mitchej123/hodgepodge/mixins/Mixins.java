@@ -2035,14 +2035,14 @@ public enum Mixins implements IMixins {
             .addServerMixins("morpheus.MixinMorpheusWakePlayers")
             .setApplyIf(() -> FixesConfig.fixMorpheusWaking)
             .addRequiredMod(TargetedMod.MORPHEUS)
-            .setPhase(Phase.LATE));
+            .setPhase(Phase.LATE)),
 
     // Bibliocraft
     BIBLIOCRAFT_AUTOMATION_ENCHANTED_PLATE(new MixinBuilder("Bibliocraft enchanted plate automation")
             .addCommonMixins("bibliocraft.MixinBibliocraftAutomationTypesettingTile")
             .setApplyIf(() -> TweaksConfig.automateBibliocraftEnchantedPlates)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
-            .setPhase(Phase.LATE)),
+            .setPhase(Phase.LATE));
 
     // spotless:on
     private final MixinBuilder builder;
