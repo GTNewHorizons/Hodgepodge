@@ -82,7 +82,7 @@ public abstract class MixinBibliocraftAutomationTypesettingTile extends TileEnti
         if (instance != null) return instance.experienceLevel;
         int xpCost = levelcost < 16 ? 17 * levelcost
                 : levelcost < 30 ? (((3 * levelcost - 59) * levelcost) >> 1) + 360
-                    : (((7 * levelcost - 303) * levelcost) >> 1) + 2220;
+                        : (((7 * levelcost - 303) * levelcost) >> 1) + 2220;
         CubeIterator iter = new CubeIterator(8);
         ArrayList<ExperienceContainer> obeliskstodrain = null;
         int xp;
@@ -91,9 +91,9 @@ public abstract class MixinBibliocraftAutomationTypesettingTile extends TileEnti
             while (iter.hasNext()) {
                 iter.next();
                 if (this.worldObj.getTileEntity(
-                    iter.n + this.xCoord,
-                   iter.l + this.yCoord,
-                    iter.m + this.zCoord) instanceof TileExperienceObelisk obelisk) {
+                        iter.n + this.xCoord,
+                        iter.l + this.yCoord,
+                        iter.m + this.zCoord) instanceof TileExperienceObelisk obelisk) {
                     ExperienceContainer cont = obelisk.getContainer();
                     xp = cont.getExperienceTotal();
                     int r11d = xpCost - xp;
@@ -104,7 +104,8 @@ public abstract class MixinBibliocraftAutomationTypesettingTile extends TileEnti
                             if (r11d != 0) cont.addExperience(-r11d);
                         }
                         return Integer.MAX_VALUE;
-                    } if (obeliskstodrain != null) obeliskstodrain.add(cont);
+                    }
+                    if (obeliskstodrain != null) obeliskstodrain.add(cont);
                     xpCost = r11d;
                 }
             }
@@ -117,9 +118,9 @@ public abstract class MixinBibliocraftAutomationTypesettingTile extends TileEnti
             while (iter.hasNext()) {
                 iter.next();
                 if (this.worldObj.getTileEntity(
-                    iter.n + this.xCoord,
-                    iter.l + this.yCoord,
-                    iter.m + this.zCoord) instanceof TileEntityJarXP jar) {
+                        iter.n + this.xCoord,
+                        iter.l + this.yCoord,
+                        iter.m + this.zCoord) instanceof TileEntityJarXP jar) {
                     xp = jar.getXP();
                     xpCost -= xp;
                     if (xpCost < 0) {
