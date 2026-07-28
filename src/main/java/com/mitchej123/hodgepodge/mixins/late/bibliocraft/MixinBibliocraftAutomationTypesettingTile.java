@@ -29,7 +29,6 @@ import crazypants.enderio.machine.obelisk.xp.TileExperienceObelisk;
 import crazypants.enderio.xp.ExperienceContainer;
 import jds.bibliocraft.items.ItemAtlas;
 import jds.bibliocraft.items.ItemBigBook;
-import jds.bibliocraft.items.ItemLoader;
 import jds.bibliocraft.items.ItemPlate;
 import jds.bibliocraft.items.ItemRecipeBook;
 import jds.bibliocraft.items.ItemStockroomCatalog;
