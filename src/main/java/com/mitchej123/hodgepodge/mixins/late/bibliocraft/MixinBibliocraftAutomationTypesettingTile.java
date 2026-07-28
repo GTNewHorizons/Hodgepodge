@@ -59,13 +59,13 @@ public class MixinBibliocraftAutomationTypesettingTile extends TileEntity {
     @Shadow(remap = false)
     public abstract boolean enchantPlate(EntityPlayer player);
 
-    @WrapMethod(method = "setPlate")
+    @WrapMethod(method = "setPlate", remap = false)
     private void hodgepodge$enchIfCanEnch(Operation<Void> op) {
         if (enchantPlate(null)) return;
         op.call();
     }
 
-    @WrapOperation(method = "enchantPlate", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/entity/player/EntityPlayer;experienceLevel:I"))
+    @WrapOperation(method = "enchantPlate", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/entity/player/EntityPlayer;experienceLevel:I"), remap = false)
     private int hdogepodge$cursedXpDrainImpl(EntityPlayer instance, Operation<Integer> original, @Local int levelcost) {
         if (instance != null) return instance.experienceLevel;
         int xpCost = levelcost < 16 ? 17 * levelcost : levelcost < 30 ? (((3 * levelcost - 59) * levelcost) >> 1) + 360 : (((7 * levelcost - 303) * levelcost) >> 1) + 2220;
