@@ -1,5 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.late.bibliocraft;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemEditableBook;
 import net.minecraft.item.ItemEnchantedBook;
@@ -7,11 +8,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+import com.gtnewhorizon.gtnhlib.geometry.CubeIterator;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 
 import jds.bibliocraft.items.ItemAtlas;
 import jds.bibliocraft.items.ItemBigBook;
@@ -39,6 +44,80 @@ public class MixinBibliocraftAutomationTypesettingTile extends TileEntity {
     private void hodgepodge$useAddBookOrPlate(int slot, ItemStack itemstack, Operation<Void> original) {
         if (slot == 0 && itemstack != null) addBookOrPlate(itemstack, this.worldObj);
         else original.call(slot, itemstack);
+    }
+
+    @Shadow(remap = false)
+    private abstract boolean enchantPlate(EntityPlayer player);
+
+    @WrapMethod(method = "setPlate")
+    private void hodgepodge$enchIfCanEnch(Operation<Void> op) {
+        if (enchantPlate(null)) return;
+        op.call();
+    }
+
+    @WrapOperation(method = "enchantPlate", at = @At(value = FIELD, opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/entity/player/EntityPlayer;experienceLevel:I"))
+    private int hdogepodge$cursedXpDrainImpl(EntityPlayer instance, Operation<Integer> original, @Local int levelcost) {
+        if (instance != null) return instance.experienceLevel;
+        int xpCost = levelcost < 16 ? 17 * levelcost : levelcost < 30 ? (((3 * levelcost - 59) * levelcost) >> 1) + 360 : (((7 * levelcost - 303) * levelcost) >> 1) + 2220;
+        CubeIterator iter = new CubeIterator(8);
+        ArrayList<ExperienceContainer> obeliskstodrain;
+        int xp;
+        if (isEioLoaded) {
+            if (!worldObj.isRemote) obeliskstodrain = new ArrayList<>();
+            while (iter.hasNext()) {
+                iter.next();
+                if (this.worldObj.getTileEntity(
+                    cubeIter.n + this.xCoord,
+                   cubeIter.l + this.yCoord,
+                    cubeIter.m + this.zCoord) instanceof TileExperienceObelisk obelisk) {
+                    ExperienceContainer cont = obelisk.getContainer();
+                    xp = cont.getExperienceTotal();
+                    long r11 = xpCost - xp;
+                    if (r11 < 0) {
+                        if (obeliskstodrain != null) {
+                            obeliskstodrain.forEach(c -> c.drain(null, Integer.MAX_VALUE, true));
+                            cont.drain(null, Integer.MAX_VALUE, true);
+                            if (r11 != 0) cont.addExperience(-r11);
+                        }
+                        return Integer.MAX_VALUE;
+                    } if (obeliskstodrain != null) obeliskstodrain.add(cont);
+                    xpCost = r11;
+                }
+            }
+        }
+        if (isAutomagyLoaded) {
+            ArrayList<TileEntityJarXP> jarstodrain = worldObj.isRemote ? null : new ArrayList<>();
+            iter.n = 0;
+            iter.l = 0;
+            iter.m = 0;
+            while (iter.hasNext()) {
+                iter.next();
+                if (this.worldObj.getTileEntity(
+                    iter.n + this.xCoord,
+                    iter.l + this.yCoord,
+                    iter.m + this.zCoord) instancof TileEntityJarXP jar {
+                    xp = jar.getXP();
+                    xpCost -= xp;
+                    if (xpCost < 0) {
+                        if (jarstodrain != null) {
+                            if (obeliskstodrain != null) obeliskstodrain.forEach(c -> c.drain(null, Integer.MAX_VALUE, true));
+                            jarstodrain.forEach(j -> j.setXP(0));
+                            jar.setXP(-xpCost);
+                        }
+                        return Integer.MAX_VALUE;
+                    }
+                }
+            }
+        }
+
+        return Integer.MIN_VALUE;
+    
+    }
+
+    @WrapOperation(method = "enchantPlate", at = @At(value = INVOKE, target = "Lnet/minecraft/entity/player/EntityPlayer;addExperienceLevel(Lnet/minecraft/entity/player/EntityPlayer;I)V"))
+    private void hodgepodge$avoidDrainIfNull(EntityPlayer instance, int lvl, Operation<Void> op) {
+        if(instance == null) return;
+        op.call(lvl);
     }
 
 }
