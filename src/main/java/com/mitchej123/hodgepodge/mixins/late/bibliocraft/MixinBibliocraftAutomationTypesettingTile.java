@@ -20,7 +20,7 @@ import jds.bibliocraft.items.ItemStockroomCatalog;
 import jds.bibliocraft.tileentities.TileEntityTypeMachine;
 
 @Mixin(TileEntityTypeMachine.class)
-public class MixinBibliocraftTypesettingAutomation {
+public class MixinBibliocraftAutomationTypesettingTile {
 
     @WrapMethod(method = "isItemValidForSlot")
     private boolean hodgepodge$allowAllValidInputTypes(int slot, ItemStack itemstack, Operation<Boolean> original) {
