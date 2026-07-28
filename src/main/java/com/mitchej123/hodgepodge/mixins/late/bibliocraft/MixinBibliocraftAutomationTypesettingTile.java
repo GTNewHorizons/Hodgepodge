@@ -12,10 +12,12 @@ import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
 
 import com.gtnewhorizon.gtnhlib.geometry.CubeIterator;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
@@ -63,7 +65,7 @@ public class MixinBibliocraftAutomationTypesettingTile extends TileEntity {
         op.call();
     }
 
-    @WrapOperation(method = "enchantPlate", at = @At(value = FIELD, opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/entity/player/EntityPlayer;experienceLevel:I"))
+    @WrapOperation(method = "enchantPlate", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/entity/player/EntityPlayer;experienceLevel:I"))
     private int hdogepodge$cursedXpDrainImpl(EntityPlayer instance, Operation<Integer> original, @Local int levelcost) {
         if (instance != null) return instance.experienceLevel;
         int xpCost = levelcost < 16 ? 17 * levelcost : levelcost < 30 ? (((3 * levelcost - 59) * levelcost) >> 1) + 360 : (((7 * levelcost - 303) * levelcost) >> 1) + 2220;
@@ -80,16 +82,16 @@ public class MixinBibliocraftAutomationTypesettingTile extends TileEntity {
                     iter.m + this.zCoord) instanceof TileExperienceObelisk obelisk) {
                     ExperienceContainer cont = obelisk.getContainer();
                     xp = cont.getExperienceTotal();
-                    long r11 = xpCost - xp;
-                    if (r11 < 0) {
+                    int r11d = xpCost - xp;
+                    if (r11d < 0) {
                         if (obeliskstodrain != null) {
                             obeliskstodrain.forEach(c -> c.drain(null, Integer.MAX_VALUE, true));
                             cont.drain(null, Integer.MAX_VALUE, true);
-                            if (r11 != 0) cont.addExperience(-r11);
+                            if (r11d != 0) cont.addExperience(-r11d);
                         }
                         return Integer.MAX_VALUE;
                     } if (obeliskstodrain != null) obeliskstodrain.add(cont);
-                    xpCost = r11;
+                    xpCost = r11d;
                 }
             }
         }
@@ -122,7 +124,7 @@ public class MixinBibliocraftAutomationTypesettingTile extends TileEntity {
     
     }
 
-    @WrapOperation(method = "enchantPlate", at = @At(value = INVOKE, target = "Lnet/minecraft/entity/player/EntityPlayer;addExperienceLevel(Lnet/minecraft/entity/player/EntityPlayer;I)V"))
+    @WrapOperation(method = "enchantPlate", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayer;addExperienceLevel(Lnet/minecraft/entity/player/EntityPlayer;I)V"))
     private void hodgepodge$avoidDrainIfNull(EntityPlayer instance, int lvl, Operation<Void> op) {
         if(instance == null) return;
         op.call(lvl);
