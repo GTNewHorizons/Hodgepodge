@@ -125,7 +125,8 @@ public abstract class MixinBibliocraftAutomationTypesettingTile extends TileEnti
                     xpCost -= xp;
                     if (xpCost < 0) {
                         if (jarstodrain != null) {
-                            if (obeliskstodrain != null) obeliskstodrain.forEach(c -> c.drain(null, Integer.MAX_VALUE, true));
+                            if (obeliskstodrain != null)
+                                obeliskstodrain.forEach(c -> c.drain(null, Integer.MAX_VALUE, true));
                             jarstodrain.forEach(j -> j.setXP(0));
                             jar.setXP(-xpCost);
                         }
@@ -136,7 +137,7 @@ public abstract class MixinBibliocraftAutomationTypesettingTile extends TileEnti
         }
 
         return Integer.MIN_VALUE;
-    
+
     }
 
     @WrapOperation(
@@ -146,7 +147,7 @@ public abstract class MixinBibliocraftAutomationTypesettingTile extends TileEnti
                     target = "Lnet/minecraft/entity/player/EntityPlayer;addExperienceLevel(Lnet/minecraft/entity/player/EntityPlayer;I)V"),
             remap = false)
     private void hodgepodge$avoidDrainIfNull(EntityPlayer instance, int lvl, Operation<Void> op) {
-        if(instance == null) return;
+        if (instance != null) return;
         op.call(lvl);
     }
 
