@@ -124,7 +124,7 @@ public class MixinBibliocraftAutomationTypesettingTile extends TileEntity {
     
     }
 
-    @WrapOperation(method = "enchantPlate", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayer;addExperienceLevel(Lnet/minecraft/entity/player/EntityPlayer;I)V"))
+    @WrapOperation(method = "enchantPlate", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayer;addExperienceLevel(Lnet/minecraft/entity/player/EntityPlayer;I)V"), remap = false)
     private void hodgepodge$avoidDrainIfNull(EntityPlayer instance, int lvl, Operation<Void> op) {
         if(instance == null) return;
         op.call(lvl);
