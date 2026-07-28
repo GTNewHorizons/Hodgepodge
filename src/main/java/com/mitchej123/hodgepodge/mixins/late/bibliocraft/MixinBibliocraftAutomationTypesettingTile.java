@@ -48,7 +48,7 @@ public class MixinBibliocraftAutomationTypesettingTile extends TileEntity {
     }
 
     @Shadow(remap = false)
-    private abstract boolean addBookOrPlate(ItemStack playerstack, World world);
+    public abstract boolean addBookOrPlate(ItemStack playerstack, World world);
     
     @WrapMethod(method = "setInventorySlotContents")
     private void hodgepodge$useAddBookOrPlate(int slot, ItemStack itemstack, Operation<Void> original) {
@@ -57,7 +57,7 @@ public class MixinBibliocraftAutomationTypesettingTile extends TileEntity {
     }
 
     @Shadow(remap = false)
-    private abstract boolean enchantPlate(EntityPlayer player);
+    public abstract boolean enchantPlate(EntityPlayer player);
 
     @WrapMethod(method = "setPlate")
     private void hodgepodge$enchIfCanEnch(Operation<Void> op) {
