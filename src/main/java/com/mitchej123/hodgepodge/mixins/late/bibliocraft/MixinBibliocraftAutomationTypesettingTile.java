@@ -103,7 +103,7 @@ public class MixinBibliocraftAutomationTypesettingTile extends TileEntity {
                 if (this.worldObj.getTileEntity(
                     iter.n + this.xCoord,
                     iter.l + this.yCoord,
-                    iter.m + this.zCoord) instanceof TileEntityJarXP jar {
+                    iter.m + this.zCoord) instanceof TileEntityJarXP jar) {
                     xp = jar.getXP();
                     xpCost -= xp;
                     if (xpCost < 0) {
