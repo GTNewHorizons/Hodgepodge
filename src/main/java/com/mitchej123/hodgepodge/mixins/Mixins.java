@@ -619,9 +619,9 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinWorldClient")
             .setApplyIf(() -> TweaksConfig.removeSpawningMinecartSound)
             .setPhase(Phase.EARLY)),
-    MACOS_KEYS_TEXTFIELD_SHORTCUTS(new MixinBuilder("Macos use CMD to copy/select/delete text")
+    TEXTFIELD_CTRL_SHORTCUTS(new MixinBuilder("Use CTRL (CMD on MacOS) to copy/select/delete text")
             .addClientMixins("minecraft.MixinGuiTextField")
-            .setApplyIf(() -> TweaksConfig.enableMacosCmdShortcuts && System.getProperty("os.name").toLowerCase().contains("mac"))
+            .setApplyIf(() -> TweaksConfig.enableTextFieldCtrlShortcuts)
             .setPhase(Phase.EARLY)),
     FIX_FONT_RENDERER_LINEWRAP_RECURSION(new MixinBuilder("Replace recursion with iteration in FontRenderer line wrapping code")
             .addClientMixins("minecraft.MixinFontRenderer")
@@ -860,7 +860,7 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.fastload.MixinTextureMap_AsyncIcons")
             .setApplyIf(() -> SpeedupsConfig.asyncIconLoading)
             .addExcludedMod(TargetedMod.NOTFINE)
-            .addExcludedMod(TargetedMod.ANGELICA_LT_2129)
+            .addExcludedMod(TargetedMod.ANGELICA_LT_2158)
             .setPhase(Phase.EARLY)),
     REMOVE_EXTRA_ICON_LOAD(new MixinBuilder()
             .addClientMixins("minecraft.fastload.MixinTextureMap_RemoveExtraIconLoad")
@@ -967,6 +967,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinWorld_FastItemPhysics")
             .setApplyIf(() -> SpeedupsConfig.fastItemEntityPhysics)
             .addExcludedMod(TargetedMod.FALSETWEAKS)
+            .setPhase(Phase.EARLY)),
+    CULL_DISTANT_ITEM_FRAME_CONTENTS(new MixinBuilder("Skip rendering distant item frames and their contents")
+            .addClientMixins("minecraft.MixinRenderItemFrame_CullDistantContents")
+            .setApplyIf(() -> SpeedupsConfig.cullDistantItemFrameContents)
             .setPhase(Phase.EARLY)),
     FIX_FENCE_RIGHT_CLICK(new MixinBuilder()
             .addCommonMixins("minecraft.MixinBlockFence_RightClick")

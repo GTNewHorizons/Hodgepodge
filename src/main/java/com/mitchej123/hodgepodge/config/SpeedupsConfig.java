@@ -16,6 +16,10 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean fastItemEntityPhysics;
 
+    @Config.Comment("Skip rendering item frame contents farther than 64 blocks and entire frames farther than 96 blocks")
+    @Config.DefaultBoolean(true)
+    public static boolean cullDistantItemFrameContents;
+
     @Config.Comment("Optimize ASMDataTable getAnnotationsFor for faster startup")
     @Config.DefaultBoolean(true)
     public static boolean optimizeASMDataTable;
@@ -83,12 +87,12 @@ public class SpeedupsConfig {
     public static boolean speedupLeafDecay;
 
     @Config.Comment("Load texture map icons on multiple threads")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean asyncIconLoading;
 
     @Config.Comment("Remove icon loading on texture map init")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean removeExtraIconLoad;
 
