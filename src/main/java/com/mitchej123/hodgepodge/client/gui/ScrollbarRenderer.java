@@ -65,7 +65,6 @@ public class ScrollbarRenderer {
         addBar(tessellator, scrollBarX, thumbY, thumbHeight, THUMB_U_OFFSET);
         tessellator.draw();
         GL11.glDisable(GL11.GL_BLEND);
-        // (disable the texture here)
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     }
