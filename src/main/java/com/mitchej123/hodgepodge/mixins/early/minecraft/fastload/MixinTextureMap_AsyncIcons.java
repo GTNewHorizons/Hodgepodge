@@ -10,9 +10,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
@@ -23,19 +20,21 @@ import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mitchej123.hodgepodge.mixins.interfaces.TextureMapAsyncIconsHook;
 
-@Mixin(TextureMap.class)
+@Mixin(value = TextureMap.class, priority = 1100)
 public class MixinTextureMap_AsyncIcons implements TextureMapAsyncIconsHook {
 
     @Unique
@@ -49,74 +48,90 @@ public class MixinTextureMap_AsyncIcons implements TextureMapAsyncIconsHook {
     @Unique
     private final Map<String, CompletableFuture<IIcon>> hodgepodge$processingIcons = new ConcurrentHashMap<>();
 
-    @Final
-    @Shadow
-    private int textureType;
-
     @Shadow
     @Final
     private String basePath;
+
+    @Unique
+    private ExecutorService hodgepodge$executor;
+
+    @Unique
+    private List<Future<?>> hodgepodge$pending;
+
+    @Unique
+    private long hodgepodge$startTime;
 
     /**
      * @author tiffit
      * @reason Rewritten to use multiple threads to load icons
      */
-    @Overwrite
-    private void registerIcons() {
-        this.mapRegisteredSprites.clear();
-        long startTime = System.currentTimeMillis();
-        int threadCount = Runtime.getRuntime().availableProcessors();
-
+    @Inject(method = "registerIcons", at = @At("HEAD"))
+    private void hodgepodge$startAsyncIconLoading(CallbackInfo ci) {
+        final int threadCount = Runtime.getRuntime().availableProcessors();
+        hodgepodge$startTime = System.currentTimeMillis();
+        hodgepodge$pending = new ArrayList<>();
         hodgepodge$LOGGER.info("Starting async icon loading with {} threads for {}", threadCount, basePath);
-        ExecutorService executor = Executors.newFixedThreadPool(threadCount, r -> {
+        hodgepodge$executor = Executors.newFixedThreadPool(threadCount, r -> {
             Thread t = new Thread(r, "IconLoader");
             t.setDaemon(true);
             return t;
         });
-        if (this.textureType == 0) {
-            List<Future<?>> futures = new ArrayList<>(Block.blockRegistry.getKeys().size());
-            for (Object obj : Block.blockRegistry) {
-                if (obj instanceof Block block) {
-                    if (block.getMaterial() != Material.air) {
-                        futures.add(executor.submit(() -> block.registerBlockIcons((IIconRegister) this)));
-                    }
-                }
-            }
-            hodgepodge$LOGGER.info("Loading icons for {} blocks", futures.size());
-            for (Future<?> future : futures) {
-                try {
-                    future.get();
-                } catch (Exception e) {
-                    hodgepodge$LOGGER.error("Error loading block icon", e);
-                }
-            }
-            Minecraft.getMinecraft().renderGlobal.registerDestroyBlockIcons((IIconRegister) this);
-            RenderManager.instance.updateIcons((IIconRegister) this);
-            hodgepodge$LOGGER.info("Block icons loaded!");
-        }
+    }
 
-        List<Future<?>> futures = new ArrayList<>(Item.itemRegistry.getKeys().size());
-        for (Object obj : Item.itemRegistry) {
-            if (obj instanceof Item item) {
-                if (item.getSpriteNumber() == this.textureType) {
-                    futures.add(executor.submit(() -> item.registerIcons((IIconRegister) this)));
-                }
-            }
-        }
-        hodgepodge$LOGGER.info("Loading icons for {} item", futures.size());
-        for (Future<?> future : futures) {
+    @WrapOperation(
+            method = "registerIcons",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/block/Block;registerBlockIcons(Lnet/minecraft/client/renderer/texture/IIconRegister;)V"))
+    private void hodgepodge$registerBlockIconsAsync(Block block, IIconRegister register, Operation<Void> original) {
+        hodgepodge$pending.add(hodgepodge$executor.submit(() -> { original.call(block, register); }));
+    }
+
+    /**
+     * Destroy block icons and the render manager register on the calling thread, so every block must be done first.
+     */
+    @Inject(
+            method = "registerIcons",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/renderer/RenderGlobal;registerDestroyBlockIcons(Lnet/minecraft/client/renderer/texture/IIconRegister;)V"))
+    private void hodgepodge$awaitBlockIcons(CallbackInfo ci) {
+        hodgepodge$await("block");
+        hodgepodge$LOGGER.info("Block icons loaded!");
+    }
+
+    @WrapOperation(
+            method = "registerIcons",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/item/Item;registerIcons(Lnet/minecraft/client/renderer/texture/IIconRegister;)V"))
+    private void hodgepodge$registerItemIconsAsync(Item item, IIconRegister register, Operation<Void> original) {
+        hodgepodge$pending.add(hodgepodge$executor.submit(() -> { original.call(item, register); }));
+    }
+
+    @Inject(method = "registerIcons", at = @At("RETURN"))
+    private void hodgepodge$finishAsyncIconLoading(CallbackInfo ci) {
+        hodgepodge$await("item");
+        hodgepodge$LOGGER.info("Item icons loaded!");
+        hodgepodge$processingIcons.clear();
+        hodgepodge$executor.shutdown();
+        hodgepodge$executor = null;
+        hodgepodge$pending = null;
+        hodgepodge$LOGGER
+                .info("Finished async icon loading in {}ms", System.currentTimeMillis() - hodgepodge$startTime);
+    }
+
+    @Unique
+    private void hodgepodge$await(String kind) {
+        hodgepodge$LOGGER.info("Loading icons for {} {}s", hodgepodge$pending.size(), kind);
+        for (Future<?> future : hodgepodge$pending) {
             try {
                 future.get();
             } catch (Exception e) {
-                hodgepodge$LOGGER.error("Error loading item icon", e);
+                hodgepodge$LOGGER.error("Error loading {} icon", kind, e);
             }
         }
-        hodgepodge$LOGGER.info("Item icons loaded!");
-        hodgepodge$processingIcons.clear();
-        executor.shutdown();
-        long time = System.currentTimeMillis() - startTime;
-        hodgepodge$LOGGER.info("Finished async icon loading in {}ms", time);
-
+        hodgepodge$pending.clear();
     }
 
     /**
