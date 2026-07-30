@@ -215,6 +215,12 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiNewChat_TransparentChat")
             .setApplyIf(() -> TweaksConfig.transparentChat)
             .setPhase(Phase.EARLY)),
+    TEXTURED_SCROLLBAR(new MixinBuilder("Replace vanilla scrollbar with a textured one")
+            .addClientMixins(
+                    "minecraft.MixinGuiSlot_TexturedScrollbar",
+                    "fml.MixinGuiScrollingList_TexturedScrollbar")
+            .setApplyIf(() -> TweaksConfig.texturedScrollbar)
+            .setPhase(Phase.EARLY)),
     CLEAN_CHAT_LOGS(new MixinBuilder()
             .addClientMixins("minecraft.MixinGuiNewChat_CleanChatLogs")
             .setApplyIf(() -> TweaksConfig.cleanChatLogs)
