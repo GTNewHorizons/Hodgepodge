@@ -35,11 +35,11 @@ public class SoundConfig {
     @Config.DefaultFloat(0.03f)
     public static float defaultRolloffFactor;
 
-    @Config.Comment("Value to use for the doppler factor, for determining Doppler scale.")
+    @Config.Comment("Value to use for the Doppler factor, for determining Doppler scale.")
     @Config.DefaultFloat(0.0f)
     public static float dopplerFactor;
 
-    @Config.Comment("Value to use for the doppler velocity.")
+    @Config.Comment("Value to use for the Doppler velocity.")
     @Config.DefaultFloat(1.0f)
     public static float dopplerVelocity;
 
@@ -51,7 +51,7 @@ public class SoundConfig {
     @Config.DefaultInt(131072)
     public static int streamingBufferSize;
 
-    @Config.Comment("Number of buffers used for each streaming sorce. Slow codecs may require this number to be greater than 2 to prevent audio skipping during playback.")
+    @Config.Comment("Number of buffers used for each streaming source. Slow codecs may require this number to be greater than 2 to prevent audio skipping during playback.")
     @Config.DefaultInt(3)
     public static int numberStreamingBuffers;
 
@@ -72,6 +72,11 @@ public class SoundConfig {
     @Config.Comment("MIDI device to try using as the Synthesizer. May be the full name or part of the name. If this String is empty, the default Synthesizer will be used, or one of the common alternate synthesizers if the default Synthesizer is unavailable.")
     @Config.DefaultString("")
     public static String overrideMIDISynthesizer;
+
+    @Config.Comment({
+            "Fix positional sounds: Downmix stereo sounds to mono, so you can hear which direction they come from. Music and records are not affected." })
+    @Config.DefaultBoolean(true)
+    public static boolean downmixStereoSounds;
 
     public static void apply() {
         SoundSystemConfig.setNumberNormalChannels(numberNormalChannels);
