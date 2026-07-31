@@ -83,9 +83,11 @@ public final class SoundDeviceTweaks {
         getInt.invoke(null, device, ALC_FREQUENCY, out);
         final int rate = out[0];
         final boolean outputMode = (Boolean) isPresent.invoke(null, device, "ALC_SOFT_output_mode");
+        final boolean limiterExt = (Boolean) isPresent.invoke(null, device, "ALC_SOFT_output_limiter");
 
         final boolean ok = (Boolean) Class.forName("org.lwjgl.openal.SOFTHRTF")
-                .getMethod("alcResetDeviceSOFT", long.class, int[].class).invoke(null, device, attribs(outputMode));
+                .getMethod("alcResetDeviceSOFT", long.class, int[].class)
+                .invoke(null, device, attribs(outputMode, limiterExt));
         if (!ok) {
             unavailable = true;
             Common.log.warn("alcResetDeviceSOFT failed, leaving audio unchanged");
@@ -102,7 +104,8 @@ public final class SoundDeviceTweaks {
                 outputMode ? "yes" : "no",
                 appliedHrtf,
                 s >= 0 && s < STATUS.length ? STATUS[s] : "unknown (" + s + ")",
-                appliedLimiter);
+                appliedLimiter == Tristate.DEFAULT || limiterExt ? appliedLimiter
+                        : appliedLimiter + " (unsupported by this device)");
     }
 
     /**
@@ -113,10 +116,10 @@ public final class SoundDeviceTweaks {
      * output ({@code panning.cpp} reports unsupported-format for anything else) - so prefer ALC_SOFT_output_mode, which
      * forces stereo+HRTF outright.
      */
-    private static int[] attribs(boolean outputMode) {
+    private static int[] attribs(boolean outputMode, boolean limiterExt) {
         final boolean hrtfOn = SoundConfig.hrtf == Tristate.ON;
         final boolean setHrtf = SoundConfig.hrtf != Tristate.DEFAULT;
-        final boolean setLimiter = SoundConfig.outputLimiter != Tristate.DEFAULT;
+        final boolean setLimiter = limiterExt && SoundConfig.outputLimiter != Tristate.DEFAULT;
 
         final int[] a = new int[(setHrtf ? 2 : 0) + (setLimiter ? 2 : 0) + 1];
         int i = 0;
