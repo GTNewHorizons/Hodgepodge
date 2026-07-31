@@ -78,6 +78,24 @@ public class SoundConfig {
     @Config.DefaultBoolean(true)
     public static boolean downmixStereoSounds;
 
+    public enum Tristate {
+        DEFAULT,
+        ON,
+        OFF
+    }
+
+    @Config.Comment({
+            "HRTF adds above/below and front/back positioning on headphones, instead of just left/right. Sounds wrong on speakers.",
+            "DEFAULT leaves it to OpenAL, ON forces it, OFF disables it. Requires lwjgl3ify; ignored on Java 8." })
+    @Config.DefaultEnum("DEFAULT")
+    public static Tristate hrtf;
+
+    @Config.Comment({
+            "Limiter that stops the mix clipping when many sounds play at once, instead of letting them distort.",
+            "DEFAULT leaves it to OpenAL, ON forces it, OFF disables it. Requires lwjgl3ify; ignored on Java 8." })
+    @Config.DefaultEnum("DEFAULT")
+    public static Tristate outputLimiter;
+
     public static void apply() {
         SoundSystemConfig.setNumberNormalChannels(numberNormalChannels);
         SoundSystemConfig.setNumberStreamingChannels(numberStreamingChannels);
