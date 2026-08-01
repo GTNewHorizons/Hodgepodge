@@ -16,8 +16,8 @@ public class SoundConfig {
     }
 
     @Config.Comment({
-            "Maximum number of normal (non-streaming) channels, i.e. how many sound effects can play at once before old ones get cut off.",
-            "The old default of 28 dates from 2000s sound cards; OpenAL Soft guarantees 256 sources total, and if a system offers fewer the extras are simply skipped. Idle channels cost nothing.",
+            "Maximum number of normal (non-streaming) channels: how many sound effects can play at once before another must be stopped.",
+            "OpenAL Soft defaults to 256 sources unless overridden. If fewer are available, Paulscode creates as many channels as it can.",
             "Takes effect after 'Reload Sounds' in the sound options, or a restart." })
     @Config.DefaultInt(64)
     public static int numberNormalChannels;
@@ -65,11 +65,11 @@ public class SoundConfig {
     @Config.DefaultBoolean(false)
     public static boolean streamQueueFormatsMatch;
 
-    @Config.Comment("The maximum number of bytes to read in for (non-streaming) files. Increase this value if non-streaming sounds are getting cut off. Decrease this value if large sound files are causing lag during load time.")
+    @Config.Comment("Maximum decoded size of a non-streaming sound. OGG decoding stops at this limit on a complete PCM frame. Streamed sounds are unaffected.")
     @Config.DefaultInt(268435456)
     public static int maxFileSize;
 
-    @Config.Comment("Size of each chunk to read at a time for loading (non-streaming) files. Increase if loading sound files is causing significant lag.")
+    @Config.Comment("Size of each chunk used by non-streaming codecs that honor it. OGG uses streamingBufferSize to keep decode copying bounded.")
     @Config.DefaultInt(1048576)
     public static int fileChunkSize;
 
@@ -78,26 +78,29 @@ public class SoundConfig {
     public static String overrideMIDISynthesizer;
 
     @Config.Comment({
-            "Fix positional sounds: Downmix stereo sounds to mono, so you can hear which direction they come from. Music and records are not affected.",
-            "Ignored for sounds handled by spatializeStereoSounds, which fixes the same problem without the downmix." })
+            "Downmix non-streaming stereo OGG sounds to mono, halving their decoded PCM size and allowing positional audio.",
+            "Non-streaming is used as a proxy for positional, so rare non-positional effects may also be downmixed. Streaming sounds, normally music and records, are unaffected.",
+            "Ignored for sounds handled by spatializeStereoSounds. Takes full effect after 'Reload Sounds' or a restart." })
     @Config.DefaultBoolean(true)
     public static boolean downmixStereoSounds;
 
     @Config.Comment({
-            "Position stereo sounds without downmixing them, keeping their stereo width. Better than downmixStereoSounds where available, but uses twice the memory per stereo sound.",
-            "Requires lwjgl3ify; ignored on Java 8, where downmixing is used instead." })
-    @Config.DefaultBoolean(false)
+            "Ask OpenAL to position stereo sounds without converting them to mono. This preserves the stereo PCM but uses roughly twice the buffer memory of mono.",
+            "Requires lwjgl3ify and AL_SOFT_source_spatialize; otherwise downmixing is used.",
+            "Takes full effect after 'Reload Sounds' or a restart." })
+    @Config.DefaultBoolean(true)
     public static boolean spatializeStereoSounds;
 
     @Config.Comment({
-            "Release the decoded copy of each sound from the Java heap once OpenAL has it. Minecraft keeps both, so this halves the memory every sound uses.",
-            "Turn off only if you suspect it of causing missing or corrupted sounds." })
+            "Discard the Java-heap PCM copy after a non-streaming sound is uploaded to OpenAL, removing one of the two cached decoded copies.",
+            "Turn off only if you suspect it of causing missing or corrupted sounds. Takes full effect after 'Reload Sounds' or a restart." })
     @Config.DefaultBoolean(true)
     public static boolean releaseDecodedSoundData;
 
     @Config.Comment({
-            "Environmental reverb: caves and enclosed rooms echo, open ground stays dry. Works on both Java 8 and 17+.",
-            "The room is estimated from a dozen short raycasts around you a few times a second - cheap, but approximate." })
+            "Add environmental reverb to positional sounds based on how enclosed the listener is. Requires OpenAL EFX, available in the bundled Java 8 and lwjgl3ify backends.",
+            "Surroundings are estimated by sampling 12 directions up to 20 blocks four times per second.",
+            "Takes full effect after 'Reload Sounds' or a restart." })
     @Config.DefaultBoolean(false)
     public static boolean environmentalReverb;
 
@@ -115,7 +118,7 @@ public class SoundConfig {
 
     @Config.Comment({
             "Binaural 3D audio for headphones (HRTF): lets you hear whether a sound is above, below, in front or behind you, instead of just left/right.",
-            "Headphones only - on speakers it sounds hollow and wrong. DEFAULT leaves it to the OpenAL driver config, ON forces it, OFF forces it off.",
+            "Designed for headphones; speakers may sound hollow or coloured. DEFAULT leaves it to the OpenAL driver config, ON forces it, OFF forces it off.",
             "Requires lwjgl3ify; ignored on Java 8." })
     @Config.DefaultEnum("DEFAULT")
     public static Tristate hrtf;
