@@ -1,6 +1,8 @@
 package com.mitchej123.hodgepodge.client.sound;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.sampled.AudioFormat;
 
@@ -14,11 +16,17 @@ import paulscode.sound.SoundSystemException;
 import paulscode.sound.codecs.CodecJOrbis;
 
 /**
- * Downmixes stereo sounds to mono as they are decoded. OpenAL only spatializes mono buffers, so a stereo sound is never
- * panned - it plays centred wherever it actually is - and costs twice the memory. (Distance fade is unaffected;
- * Minecraft computes that in Java and applies it as AL_GAIN.)
+ * Wraps {@link CodecJOrbis} to do two things.
  * <p>
- * Only {@link #readAll()} is downmixed, which is the non-streaming path. Music and records are streamed, so they keep
+ * <b>Decodes without the quadratic copying.</b> CodecJOrbis reallocates and copies the whole accumulated array for
+ * every 16 KB chunk, and does it while Paulscode holds its global lock - which is what freezes the client when a big
+ * sound is first played. See {@link #readAllChunked()}. This applies to every non-streaming sound, mono included.
+ * <p>
+ * <b>Downmixes stereo to mono.</b> OpenAL only spatializes mono buffers, so a stereo sound is never panned - it plays
+ * centred wherever it actually is - and costs twice the memory. (Distance fade is unaffected; Minecraft computes that
+ * in Java and applies it as AL_GAIN.)
+ * <p>
+ * Only {@link #readAll()} is touched, which is the non-streaming path. Music and records are streamed, so they keep
  * their stereo automatically.
  */
 public class DownmixingOggCodec implements ICodec {
@@ -66,7 +74,7 @@ public class DownmixingOggCodec implements ICodec {
     /** Non-streaming path: positional sound effects. */
     @Override
     public SoundBuffer readAll() {
-        final SoundBuffer buffer = delegate.readAll();
+        final SoundBuffer buffer = readAllChunked();
         if (!SoundConfig.downmixStereoSounds || buffer == null
                 || buffer.audioData == null
                 || buffer.audioFormat == null) {
@@ -100,6 +108,35 @@ public class DownmixingOggCodec implements ICodec {
         // Only the streaming path reads this; LibraryLWJGLOpenAL uses SoundBuffer.audioFormat instead.
         final AudioFormat format = delegate.getAudioFormat();
         return downmixed && format != null ? toMono(format) : format;
+    }
+
+    /**
+     * Replacement for {@link CodecJOrbis#readAll()}, which reallocates and copies the whole accumulated array for every
+     * 16 KB chunk it decodes - ~900 MB of copying for a 5 MB sound, all of it while Paulscode holds its global
+     * THREAD_SYNC lock, which is what stalls the client thread. {@link CodecJOrbis#read()} accumulates the same way but
+     * stops at 128 KB, so looping it and joining once yields the same bytes for a fraction of the work.
+     */
+    private SoundBuffer readAllChunked() {
+        final List<byte[]> chunks = new ArrayList<>();
+        int total = 0;
+        while (!delegate.endOfStream()) {
+            final SoundBuffer chunk = delegate.read();
+            if (chunk == null || chunk.audioData == null || chunk.audioData.length == 0) break;
+            chunks.add(chunk.audioData);
+            total += chunk.audioData.length;
+        }
+        if (chunks.isEmpty()) return null;
+
+        final AudioFormat format = delegate.getAudioFormat();
+        if (chunks.size() == 1) return new SoundBuffer(chunks.get(0), format);
+
+        final byte[] all = new byte[total];
+        int offset = 0;
+        for (final byte[] chunk : chunks) {
+            System.arraycopy(chunk, 0, all, offset, chunk.length);
+            offset += chunk.length;
+        }
+        return new SoundBuffer(all, format);
     }
 
     private static AudioFormat toMono(AudioFormat format) {
