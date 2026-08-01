@@ -27,6 +27,10 @@ import paulscode.sound.codecs.CodecJOrbis;
  * centred wherever it actually is - and costs twice the memory. (Distance fade is unaffected; Minecraft computes that
  * in Java and applies it as AL_GAIN.)
  * <p>
+ * The downmix is the fallback, not the primary fix: {@link SpatializeSupport} solves the same problem without losing
+ * the stereo width, and takes precedence wherever it works. In practice that leaves downmixing to the Java 8 build,
+ * which has no such extension - hence {@link #preferLeftChannel} caring about the level loss.
+ * <p>
  * Only {@link #readAll()} is touched, which is the non-streaming path. Music and records are streamed, so they keep
  * their stereo automatically.
  */
@@ -90,10 +94,49 @@ public class DownmixingOggCodec implements ICodec {
         }
 
         final int before = buffer.audioData.length;
-        downmix(buffer, format);
+        final boolean leftOnly = preferLeftChannel(buffer.audioData, format.isBigEndian());
+        downmix(buffer, format, leftOnly);
         downmixed = true;
-        Common.log.debug("Downmixed {} to mono, {} KB -> {} KB", source, before / 1024, buffer.audioData.length / 1024);
+        Common.log.debug(
+                "Downmixed {} to mono ({}), {} KB -> {} KB",
+                source,
+                leftOnly ? "left channel" : "averaged",
+                before / 1024,
+                buffer.audioData.length / 1024);
         return buffer;
+    }
+
+    /**
+     * Decides whether to take the left channel instead of averaging, by measuring which is louder.
+     * <p>
+     * Averaging cancels whatever is out of phase between the channels; on the worst GregTech sounds that cost over 4
+     * dB. Taking one channel cannot cancel, but it does discard anything only present in the other - so it is only
+     * worth it when averaging measurably loses.
+     * <p>
+     * The threshold sorts the two cases apart on its own. If the channels carry the <i>same</i> content in opposing
+     * phase, averaging guts it while the left channel is untouched, and the gap is large. If they carry genuinely
+     * <i>different</i> content, both lose about the same and the gap is small - so averaging wins and keeps both.
+     */
+    private static boolean preferLeftChannel(byte[] src, boolean bigEndian) {
+        final int frames = src.length / 4;
+        if (frames == 0) return false;
+        // Every 4th frame is far more than enough for an RMS comparison, and quarters the cost of this pass.
+        final int stride = 4;
+        double midEnergy = 0, leftEnergy = 0;
+        for (int frame = 0; frame < frames; frame += stride) {
+            final int i = frame * 4;
+            final int left = sample(src, i, bigEndian);
+            final int right = sample(src, i + 2, bigEndian);
+            final int mid = (left + right) >> 1;
+            midEnergy += (double) mid * mid;
+            leftEnergy += (double) left * left;
+        }
+        // ~1 dB in energy terms (10^0.1). Below that, prefer averaging so nothing is thrown away.
+        return leftEnergy > midEnergy * 1.259;
+    }
+
+    private static int sample(byte[] src, int i, boolean bigEndian) {
+        return bigEndian ? (src[i] << 8) | (src[i + 1] & 0xFF) : (src[i + 1] << 8) | (src[i] & 0xFF);
     }
 
     @Override
@@ -164,7 +207,7 @@ public class DownmixingOggCodec implements ICodec {
         return new AudioFormat(format.getSampleRate(), format.getSampleSizeInBits(), 1, true, format.isBigEndian());
     }
 
-    private static void downmix(SoundBuffer buffer, AudioFormat format) {
+    private static void downmix(SoundBuffer buffer, AudioFormat format, boolean leftOnly) {
         final byte[] src = buffer.audioData;
         final boolean bigEndian = format.isBigEndian();
         final int frames = src.length / 4; // 2 channels * 2 bytes
@@ -179,7 +222,7 @@ public class DownmixingOggCodec implements ICodec {
                 left = (src[in + 1] << 8) | (src[in] & 0xFF);
                 right = (src[in + 3] << 8) | (src[in + 2] & 0xFF);
             }
-            final int mono = (left + right) >> 1;
+            final int mono = leftOnly ? left : (left + right) >> 1;
             if (bigEndian) {
                 out[o] = (byte) (mono >> 8);
                 out[o + 1] = (byte) mono;
