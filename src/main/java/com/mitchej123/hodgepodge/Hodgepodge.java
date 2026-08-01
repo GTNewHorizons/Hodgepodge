@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge;
 import java.util.Map;
 
 import com.mitchej123.hodgepodge.client.HodgepodgeClient;
+import com.mitchej123.hodgepodge.client.sound.SoundSetupHandler;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
@@ -68,6 +69,8 @@ public class Hodgepodge {
     public void preinit(FMLPreInitializationEvent event) {
         Compat.init(event.getSide());
         EVENT_HANDLER.preinit();
+        // Must be before the SoundManager constructor fires SoundSetupEvent, which is right after pre-init.
+        if (event.getSide() == Side.CLIENT) SoundSetupHandler.register();
     }
 
     @EventHandler

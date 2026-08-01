@@ -74,9 +74,22 @@ public class SoundConfig {
     public static String overrideMIDISynthesizer;
 
     @Config.Comment({
-            "Fix positional sounds: Downmix stereo sounds to mono, so you can hear which direction they come from. Music and records are not affected." })
+            "Fix positional sounds: Downmix stereo sounds to mono, so you can hear which direction they come from. Music and records are not affected.",
+            "Ignored for sounds handled by spatializeStereoSounds, which fixes the same problem without the downmix." })
     @Config.DefaultBoolean(true)
     public static boolean downmixStereoSounds;
+
+    @Config.Comment({
+            "Position stereo sounds without downmixing them, keeping their stereo width. Better than downmixStereoSounds where available, but uses twice the memory per stereo sound.",
+            "Requires lwjgl3ify; ignored on Java 8, where downmixing is used instead." })
+    @Config.DefaultBoolean(false)
+    public static boolean spatializeStereoSounds;
+
+    @Config.Comment({
+            "Release the decoded copy of each sound from the Java heap once OpenAL has it. Minecraft keeps both, so this halves the memory every sound uses.",
+            "Turn off only if you suspect it of causing missing or corrupted sounds." })
+    @Config.DefaultBoolean(true)
+    public static boolean releaseDecodedSoundData;
 
     public enum Tristate {
         DEFAULT,

@@ -75,7 +75,9 @@ public class DownmixingOggCodec implements ICodec {
     @Override
     public SoundBuffer readAll() {
         final SoundBuffer buffer = readAllChunked();
-        if (!SoundConfig.downmixStereoSounds || buffer == null
+        // SpatializeSupport fixes the same problem without losing the stereo width, so defer to it when it is live.
+        if (!SoundConfig.downmixStereoSounds || SpatializeSupport.active()
+                || buffer == null
                 || buffer.audioData == null
                 || buffer.audioFormat == null) {
             return buffer;

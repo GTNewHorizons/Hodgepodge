@@ -12,7 +12,6 @@ import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.client.handlers.ClientKeyListener;
 import com.mitchej123.hodgepodge.client.handlers.ReloadSoundsGui;
-import com.mitchej123.hodgepodge.client.sound.DownmixingOggCodec;
 import com.mitchej123.hodgepodge.commands.AllocationsCommand;
 import com.mitchej123.hodgepodge.commands.DumpTextureAtlasCommand;
 import com.mitchej123.hodgepodge.config.DebugConfig;
@@ -93,8 +92,6 @@ public class HodgepodgeClient {
         }
 
         SoundConfig.apply();
-
-        DownmixingOggCodec.register();
     }
 
     public enum AnimationMode {
