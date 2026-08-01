@@ -95,6 +95,18 @@ public class SoundConfig {
     @Config.DefaultBoolean(true)
     public static boolean releaseDecodedSoundData;
 
+    @Config.Comment({
+            "Environmental reverb: caves and enclosed rooms echo, open ground stays dry. Works on both Java 8 and 17+.",
+            "The room is estimated from a dozen short raycasts around you a few times a second - cheap, but approximate." })
+    @Config.DefaultBoolean(false)
+    public static boolean environmentalReverb;
+
+    @Config.Comment({ "How wet the reverb gets in a fully enclosed space. Lower is subtler.",
+            "Only used when environmentalReverb is on." })
+    @Config.DefaultFloat(0.3f)
+    @Config.RangeFloat(min = 0.0f, max = 1.0f)
+    public static float reverbStrength;
+
     public enum Tristate {
         DEFAULT,
         ON,

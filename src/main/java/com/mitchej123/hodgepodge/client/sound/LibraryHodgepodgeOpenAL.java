@@ -29,6 +29,9 @@ public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
 
     public LibraryHodgepodgeOpenAL() throws SoundSystemException {
         super();
+        // A reload builds a new Library on a new AL context, so any effect objects we held are stale. Doing this
+        // here rather than off a device-change check keeps it working on the Java 8 build too.
+        ReverbSupport.invalidate();
     }
 
     /**
@@ -65,11 +68,15 @@ public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
         return loaded;
     }
 
-    /** Applies spatialization once the source has a channel; Paulscode attaches it inside super.play(). */
+    /** Configures the source once it has a channel; Paulscode attaches it inside super.play(). */
     @Override
     public void play(Source source) {
         super.play(source);
         if (source == null || !(source.channel instanceof ChannelLWJGLOpenAL channel)) return;
-        SpatializeSupport.apply(channel, source.attModel != SoundSystemConfig.ATTENUATION_NONE);
+        if (channel.ALSource == null) return;
+        final boolean positional = source.attModel != SoundSystemConfig.ATTENUATION_NONE;
+        SpatializeSupport.apply(channel, positional);
+        // Only world sounds get reverb; UI clicks and music should stay dry.
+        if (positional) ReverbSupport.route(channel.ALSource.get(0));
     }
 }
