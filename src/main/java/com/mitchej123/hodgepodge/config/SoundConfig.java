@@ -92,6 +92,14 @@ public class SoundConfig {
     public static boolean spatializeStereoSounds;
 
     @Config.Comment({
+            "Sounds whose path contains any of these are never downmixed, so interface sounds keep their stereo.",
+            "Matched case-insensitively against 'domain:path', e.g. 'gregtech:sounds/buttonup.ogg'.",
+            "Only used by downmixStereoSounds. spatializeStereoSounds needs no list: it decides per sound from whether the game actually plays it in the world.",
+            "Matching a world sound by mistake is harmless - it simply stays stereo, as it would without Hodgepodge." })
+    @Config.DefaultStringList({ "button", "click", "/gui", "menu", "typing", "page" })
+    public static String[] downmixExclusions;
+
+    @Config.Comment({
             "Discard the Java-heap PCM copy after a non-streaming sound is uploaded to OpenAL, removing one of the two cached decoded copies.",
             "Turn off only if you suspect it of causing missing or corrupted sounds. Takes full effect after 'Reload Sounds' or a restart." })
     @Config.DefaultBoolean(true)

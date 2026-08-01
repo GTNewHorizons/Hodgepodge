@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import javax.sound.sampled.AudioFormat;
 
@@ -89,7 +90,7 @@ public class DownmixingOggCodec implements ICodec {
         }
 
         final AudioFormat format = buffer.audioFormat;
-        if (format.getChannels() != 2 || format.getSampleSizeInBits() != 16) {
+        if (format.getChannels() != 2 || format.getSampleSizeInBits() != 16 || excluded(source)) {
             return buffer;
         }
 
@@ -133,6 +134,27 @@ public class DownmixingOggCodec implements ICodec {
         }
         // ~1 dB in energy terms (10^0.1). Below that, prefer averaging so nothing is thrown away.
         return leftEnergy > midEnergy * 1.259;
+    }
+
+    /**
+     * Keeps interface sounds stereo.
+     * <p>
+     * Downmixing exists to make world sounds locatable; a sound played at the listener gains nothing from it and just
+     * loses its stereo image. Which sounds those are is only knowable per <i>play</i>, from the attenuation model,
+     * while Paulscode caches one buffer per <i>file</i> - so a decode-time decision can never be more than a guess. A
+     * path list is that guess, and a cheap one.
+     * <p>
+     * Being wrong is not costly in either direction: matching a world sound by mistake leaves it stereo, exactly as it
+     * would be without this mod, and missing an interface sound leaves it mono. {@link SpatializeSupport} needs none of
+     * this, since it decides per play from the real signal.
+     */
+    private static boolean excluded(String path) {
+        if (path == null || path.isEmpty()) return false;
+        final String lower = path.toLowerCase(Locale.ROOT);
+        for (final String pattern : SoundConfig.downmixExclusions) {
+            if (!pattern.isEmpty() && lower.contains(pattern.toLowerCase(Locale.ROOT))) return true;
+        }
+        return false;
     }
 
     private static int sample(byte[] src, int i, boolean bigEndian) {
