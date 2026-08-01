@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.client.sound;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.sound.sampled.AudioFormat;
@@ -120,16 +121,28 @@ public class DownmixingOggCodec implements ICodec {
      */
     private SoundBuffer readAllChunked() {
         final List<byte[]> chunks = new ArrayList<>();
+        final AudioFormat format = delegate.getAudioFormat();
+        final int maxBytes = frameAlignedLimit(
+                SoundSystemConfig.getMaxFileSize(),
+                format == null ? 1 : format.getFrameSize());
         int total = 0;
-        while (!delegate.endOfStream()) {
+        boolean truncated = false;
+        while (!delegate.endOfStream() && total < maxBytes) {
             final SoundBuffer chunk = delegate.read();
             if (chunk == null || chunk.audioData == null || chunk.audioData.length == 0) break;
-            chunks.add(chunk.audioData);
-            total += chunk.audioData.length;
+            final int keep = Math.min(chunk.audioData.length, maxBytes - total);
+            chunks.add(keep == chunk.audioData.length ? chunk.audioData : Arrays.copyOf(chunk.audioData, keep));
+            total += keep;
+            if (keep < chunk.audioData.length) {
+                truncated = true;
+                break;
+            }
         }
+        truncated |= !delegate.endOfStream();
+        if (truncated)
+            Common.log.warn("Truncated {} at the configured decoded size limit of {} bytes", source, maxBytes);
         if (chunks.isEmpty()) return null;
 
-        final AudioFormat format = delegate.getAudioFormat();
         if (chunks.size() == 1) return new SoundBuffer(chunks.get(0), format);
 
         final byte[] all = new byte[total];
@@ -139,6 +152,12 @@ public class DownmixingOggCodec implements ICodec {
             offset += chunk.length;
         }
         return new SoundBuffer(all, format);
+    }
+
+    static int frameAlignedLimit(int maxBytes, int frameSize) {
+        if (maxBytes <= 0) return 0;
+        final int alignment = Math.max(frameSize, 1);
+        return maxBytes - maxBytes % alignment;
     }
 
     private static AudioFormat toMono(AudioFormat format) {
