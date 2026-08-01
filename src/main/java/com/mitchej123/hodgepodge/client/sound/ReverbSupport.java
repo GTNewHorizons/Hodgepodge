@@ -53,17 +53,28 @@ public final class ReverbSupport {
     private static int effect = 0, slot = 0;
     private static boolean resolved = false;
     private static boolean supported = false;
+    private static boolean everRouted = false;
     private static float appliedDecay = -1f;
+    private static float appliedWet = -1f;
 
     public static boolean active() {
         return SoundConfig.environmentalReverb && resolve();
     }
 
-    /** Routes a source through the reverb slot. Called per play, since channels are pooled. */
-    static void route(int sourceId) {
-        if (!active()) return;
+    /**
+     * Routes a source through the reverb slot, or explicitly clears the send.
+     * <p>
+     * The send belongs to the pooled OpenAL source and survives buffer attachment, so writing it only for world sounds
+     * would leave a UI click or music inheriting reverb from whatever used the channel before - and would leave every
+     * routed channel wet after the setting is switched off. Hence slot 0 rather than an early return.
+     */
+    static void route(int alSource, boolean positional) {
+        final boolean want = SoundConfig.environmentalReverb && positional;
+        if (!want && !everRouted) return; // nothing was ever routed, so nothing to clear
+        if (!resolve()) return;
         try {
-            alSource3i.invoke(null, sourceId, AL_AUXILIARY_SEND_FILTER, slot, 0, AL_FILTER_NULL);
+            alSource3i.invoke(null, alSource, AL_AUXILIARY_SEND_FILTER, want ? slot : 0, 0, AL_FILTER_NULL);
+            everRouted = true;
         } catch (Throwable t) {
             supported = false;
             Common.log.warn("Could not route a sound through reverb, disabling it", t);
@@ -105,7 +116,12 @@ public final class ReverbSupport {
                 final int bx = (int) Math.floor(px + dx * step);
                 final int by = (int) Math.floor(py + dy * step);
                 final int bz = (int) Math.floor(pz + dz * step);
-                if (by < 0 || by > 255) break; // out of the world counts as open
+                if (by < 0 || by > 255) {
+                    // Leaving the world is open sky, so the rest of the ray has to be counted as such - otherwise
+                    // standing high up reads as enclosed and an open rooftop gets cave reverb.
+                    totalSteps += RAY_LENGTH - step + 1;
+                    break;
+                }
                 if (world.getBlock(bx, by, bz).isOpaqueCube()) {
                     distance = step;
                     break;
@@ -126,8 +142,11 @@ public final class ReverbSupport {
         final float enclosure = 1f - openness;
         final float decay = 0.15f + (meanDistance / RAY_LENGTH) * enclosure * 3.0f;
         final float wet = enclosure * enclosure * SoundConfig.reverbStrength;
-        if (Math.abs(decay - appliedDecay) < 0.05f) return; // avoid churning the effect every tick
+        // Both have to be in the check: reverbStrength only moves wet, so gating on decay alone would let a live
+        // change to it sit unapplied until the room estimate happened to shift.
+        if (Math.abs(decay - appliedDecay) < 0.05f && Math.abs(wet - appliedWet) < 0.01f) return;
         appliedDecay = decay;
+        appliedWet = wet;
         try {
             alEffectf.invoke(null, effect, AL_REVERB_DECAY_TIME, clamp(decay, 0.1f, 20f));
             alEffectf.invoke(null, effect, AL_REVERB_GAIN, clamp(wet, 0f, 1f));
@@ -152,9 +171,11 @@ public final class ReverbSupport {
     static synchronized void invalidate() {
         resolved = false;
         supported = false;
+        everRouted = false;
         effect = 0;
         slot = 0;
         appliedDecay = -1f;
+        appliedWet = -1f;
     }
 
     private static synchronized boolean resolve() {

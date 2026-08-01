@@ -29,9 +29,11 @@ public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
 
     public LibraryHodgepodgeOpenAL() throws SoundSystemException {
         super();
-        // A reload builds a new Library on a new AL context, so any effect objects we held are stale. Doing this
-        // here rather than off a device-change check keeps it working on the Java 8 build too.
+        // A reload builds a new Library on a new AL context, so anything we cached about the old one is stale.
+        // This is the reliable signal: a recreated device can land on the same native pointer, so comparing handles
+        // is not enough. Doing it here rather than off a device-change check also keeps it working on Java 8.
         ReverbSupport.invalidate();
+        SoundDeviceTweaks.invalidate();
     }
 
     /**
@@ -68,15 +70,25 @@ public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
         return loaded;
     }
 
-    /** Configures the source once it has a channel; Paulscode attaches it inside super.play(). */
+    /**
+     * Configures the source once it has a channel; Paulscode attaches it inside super.play().
+     * <p>
+     * The {@code attachedSource} check is not optional. {@code play()} can return without assigning a channel - the
+     * source may be inactive, already playing, or every channel busy - while {@code source.channel} still points at a
+     * channel {@code getNextChannel} has since handed to a different source, since it reassigns without clearing the
+     * previous owner's reference. Paulscode guards every one of its own AL accesses the same way.
+     */
     @Override
     public void play(Source source) {
         super.play(source);
         if (source == null || !(source.channel instanceof ChannelLWJGLOpenAL channel)) return;
-        if (channel.ALSource == null) return;
+        if (channel.attachedSource != source || channel.ALSource == null) return;
+
+        final int alSource = channel.ALSource.get(0);
+        // Channels are pooled, so both of these must be written on every attach, not just when switching on -
+        // otherwise a UI click inherits the settings of whatever world sound used the channel last.
         final boolean positional = source.attModel != SoundSystemConfig.ATTENUATION_NONE;
-        SpatializeSupport.apply(channel, positional);
-        // Only world sounds get reverb; UI clicks and music should stay dry.
-        if (positional) ReverbSupport.route(channel.ALSource.get(0));
+        SpatializeSupport.apply(alSource, positional);
+        ReverbSupport.route(alSource, positional);
     }
 }

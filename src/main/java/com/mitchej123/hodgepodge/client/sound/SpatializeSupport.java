@@ -6,7 +6,6 @@ import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.config.SoundConfig;
 
 import cpw.mods.fml.common.Loader;
-import paulscode.sound.libraries.ChannelLWJGLOpenAL;
 
 /**
  * Forces OpenAL to spatialize stereo sources, so they can be positioned without being downmixed to mono first.
@@ -27,6 +26,7 @@ public final class SpatializeSupport {
     private static Method alSourcei;
     private static boolean resolved = false;
     private static boolean supported = false;
+    private static boolean everApplied = false;
 
     /**
      * True when stereo sounds will actually be positioned, and therefore should <i>not</i> be downmixed. Read by
@@ -36,16 +36,18 @@ public final class SpatializeSupport {
         return SoundConfig.spatializeStereoSounds && resolve();
     }
 
-    /** Sets the flag on the channel's OpenAL source. Channels are pooled, so this runs on every attach. */
-    static void apply(ChannelLWJGLOpenAL channel, boolean positional) {
-        if (!SoundConfig.spatializeStereoSounds || channel.ALSource == null || !resolve()) return;
+    /**
+     * Sets the flag on an OpenAL source. Channels are pooled and OpenAL keeps source properties across buffer
+     * attachment, so this writes on <i>every</i> attach - including AL_AUTO, which is what restores stock behaviour for
+     * UI sounds and for channels left forced-on after the setting is switched off.
+     */
+    static void apply(int alSource, boolean positional) {
+        final boolean want = SoundConfig.spatializeStereoSounds && positional;
+        if (!want && !everApplied) return; // nothing was ever forced on, so nothing to undo
+        if (!resolve()) return;
         try {
-            // AL_AUTO restores stock behaviour for non-positional sounds, which is what UI clicks want.
-            alSourcei.invoke(
-                    null,
-                    channel.ALSource.get(0),
-                    AL_SOURCE_SPATIALIZE_SOFT,
-                    positional ? AL_TRUE : AL_AUTO_SOFT);
+            alSourcei.invoke(null, alSource, AL_SOURCE_SPATIALIZE_SOFT, want ? AL_TRUE : AL_AUTO_SOFT);
+            everApplied = true;
         } catch (Throwable t) {
             supported = false; // stop trying; the codec falls back to downmixing on the next decode
             Common.log.warn("Could not set source spatialization, falling back to downmixing", t);

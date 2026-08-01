@@ -38,6 +38,17 @@ public final class SoundDeviceTweaks {
     private static long configuredDevice = 0L;
     private static boolean unavailable = false;
 
+    /**
+     * Called when a new Library is built. The settings live on the AL device, which the reload replaced - and the
+     * {@code unavailable} latch has to clear too, since a different device may well support what the old one did not.
+     */
+    static synchronized void invalidate() {
+        appliedHrtf = Tristate.DEFAULT;
+        appliedLimiter = Tristate.DEFAULT;
+        configuredDevice = 0L;
+        unavailable = false;
+    }
+
     /** Polled from the client tick. */
     public static void tick() {
         if (unavailable || (SoundConfig.hrtf == Tristate.DEFAULT && SoundConfig.outputLimiter == Tristate.DEFAULT)) {
@@ -54,8 +65,8 @@ public final class SoundDeviceTweaks {
             if (alcDevice == null) return;
             final long device = alcDevice.getClass().getField("device").getLong(alcDevice);
 
-            // Reloading the sound system destroys the device and opens a new one, taking our settings with it.
-            // ArchaicFix does exactly that whenever the output device changes.
+            // Backstop only: a recreated device can reuse the same native pointer, so this cannot be relied on to
+            // spot a reload. LibraryHodgepodgeOpenAL's constructor calls invalidate(), which is the real signal.
             if (device != configuredDevice) {
                 appliedHrtf = Tristate.DEFAULT;
                 appliedLimiter = Tristate.DEFAULT;
@@ -124,10 +135,13 @@ public final class SoundDeviceTweaks {
         final int[] a = new int[(setHrtf ? 2 : 0) + (setLimiter ? 2 : 0) + 1];
         int i = 0;
         if (setHrtf) {
-            if (outputMode) {
+            if (hrtfOn && outputMode) {
+                // Forces stereo output as well, which is the only way to get HRTF on a device set to surround.
                 a[i++] = ALC_OUTPUT_MODE_SOFT;
-                a[i++] = hrtfOn ? ALC_STEREO_HRTF_SOFT : ALC_ANY_SOFT;
+                a[i++] = ALC_STEREO_HRTF_SOFT;
             } else {
+                // OFF must go through ALC_HRTF_SOFT. ALC_ANY_SOFT means "no override" (alc.cpp:1437), so sending it
+                // would just hand the decision back to the driver config instead of forcing HRTF off.
                 a[i++] = ALC_HRTF_SOFT;
                 a[i++] = hrtfOn ? ALC_TRUE : ALC_FALSE;
             }
