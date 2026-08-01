@@ -15,12 +15,16 @@ public class SoundConfig {
 
     }
 
-    @Config.Comment("Maximum number of normal (non-streaming) channels that can be created.")
-    @Config.DefaultInt(28)
+    @Config.Comment({
+            "Maximum number of normal (non-streaming) channels, i.e. how many sound effects can play at once before old ones get cut off.",
+            "The old default of 28 dates from 2000s sound cards; OpenAL Soft guarantees 256 sources total, and if a system offers fewer the extras are simply skipped. Idle channels cost nothing.",
+            "Takes effect after 'Reload Sounds' in the sound options, or a restart." })
+    @Config.DefaultInt(64)
     public static int numberNormalChannels;
 
-    @Config.Comment("Maximum number of streaming channels that can be created.")
-    @Config.DefaultInt(4)
+    @Config.Comment({ "Maximum number of streaming channels: music, records, and other streamed audio playing at once.",
+            "Takes effect after 'Reload Sounds' in the sound options, or a restart." })
+    @Config.DefaultInt(8)
     public static int numberStreamingChannels;
 
     @Config.Comment({
@@ -98,8 +102,9 @@ public class SoundConfig {
     }
 
     @Config.Comment({
-            "HRTF adds above/below and front/back positioning on headphones, instead of just left/right. Sounds wrong on speakers.",
-            "DEFAULT leaves it to OpenAL, ON forces it, OFF disables it. Requires lwjgl3ify; ignored on Java 8." })
+            "Binaural 3D audio for headphones (HRTF): lets you hear whether a sound is above, below, in front or behind you, instead of just left/right.",
+            "Headphones only - on speakers it sounds hollow and wrong. DEFAULT leaves it to the OpenAL driver config, ON forces it, OFF forces it off.",
+            "Requires lwjgl3ify; ignored on Java 8." })
     @Config.DefaultEnum("DEFAULT")
     public static Tristate hrtf;
 
