@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge.client.sound;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.config.SoundConfig;
@@ -28,10 +29,13 @@ public final class SoundDeviceTweaks {
     private static final int ALC_HRTF_STATUS_SOFT = 6547;
     private static final int ALC_OUTPUT_LIMITER_SOFT = 6554;
     private static final int ALC_OUTPUT_MODE_SOFT = 6572;
-    private static final int ALC_ANY_SOFT = 6573;
     private static final int ALC_STEREO_HRTF_SOFT = 6578;
     private static final String[] STATUS = { "disabled", "enabled", "denied", "required", "headphones detected",
             "unsupported output format" };
+
+    /** Bumped by the CommandThread on reload, consumed by the client thread. The only cross-thread state here. */
+    private static final AtomicInteger reloads = new AtomicInteger();
+    private static int seenReload = 0;
 
     private static Tristate appliedHrtf = Tristate.DEFAULT;
     private static Tristate appliedLimiter = Tristate.DEFAULT;
@@ -39,18 +43,33 @@ public final class SoundDeviceTweaks {
     private static boolean unavailable = false;
 
     /**
-     * Called when a new Library is built. The settings live on the AL device, which the reload replaced - and the
-     * {@code unavailable} latch has to clear too, since a different device may well support what the old one did not.
+     * Called when a new Library is built, from Paulscode's CommandThread. The settings live on the AL device, which the
+     * reload replaced.
+     * <p>
+     * It only bumps a counter, so that every field below stays written by the client thread alone. Sharing them across
+     * threads would need either a lock or volatile, and a lock is the wrong tool here: {@link #tick()} can sit inside
+     * {@code alcResetDeviceSOFT} for milliseconds, and blocking the CommandThread on that would in turn block the
+     * client thread, which needs Paulscode's global lock every tick. This keeps the caller wait-free.
      */
-    static synchronized void invalidate() {
+    static void invalidate() {
+        reloads.incrementAndGet();
+    }
+
+    /** Picks up a pending invalidate. Client thread only, so the applied state has a single writer. */
+    private static void consumeInvalidate() {
+        final int current = reloads.get();
+        if (current == seenReload) return;
+        seenReload = current;
         appliedHrtf = Tristate.DEFAULT;
         appliedLimiter = Tristate.DEFAULT;
         configuredDevice = 0L;
+        // A different device may support what the previous one did not, so the latch clears too.
         unavailable = false;
     }
 
-    /** Polled from the client tick. */
+    /** Polled from the client tick. Sole writer of the applied state, so no locking is needed here. */
     public static void tick() {
+        consumeInvalidate();
         if (unavailable || (SoundConfig.hrtf == Tristate.DEFAULT && SoundConfig.outputLimiter == Tristate.DEFAULT)) {
             return;
         }

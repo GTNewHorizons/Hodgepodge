@@ -174,8 +174,9 @@ public final class ReverbSupport {
         everRouted = false;
         effect = 0;
         slot = 0;
-        appliedDecay = -1f;
-        appliedWet = -1f;
+        // appliedDecay/appliedWet are deliberately not touched here: this runs on the CommandThread while they are
+        // written by the client thread in applyRoom(). resolve() clears them instead, under this same lock, on
+        // whichever thread rebuilds the effect - so they always match the effect object they describe.
     }
 
     private static synchronized boolean resolve() {
@@ -193,6 +194,10 @@ public final class ReverbSupport {
             effect = (Integer) efx.getMethod("alGenEffects").invoke(null);
             slot = (Integer) efx.getMethod("alGenAuxiliaryEffectSlots").invoke(null);
             alEffecti.invoke(null, effect, AL_EFFECT_TYPE, AL_EFFECT_REVERB);
+            // Fresh effect object, so nothing has been pushed to it yet - otherwise applyRoom() would think the old
+            // values still held and skip the first update, leaving the new effect at its defaults.
+            appliedDecay = -1f;
+            appliedWet = -1f;
             supported = true;
             Common.log.info("Environmental reverb enabled (EFX effect {}, slot {})", effect, slot);
         } catch (Throwable t) {
