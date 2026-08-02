@@ -12,12 +12,12 @@ import com.mitchej123.hodgepodge.config.SoundConfig;
 /**
  * Environmental reverb, so caves and enclosed rooms sound like caves and enclosed rooms.
  * <p>
- * Uses ALC_EXT_EFX, which is present on <b>both</b> tiers - LWJGL2 bundles the bindings as {@code EFX10} and LWJGL3 as
- * {@code EXTEfx}, with identical method names and constants - so unlike HRTF this is not lwjgl3ify-only. Reflective for
+ * Uses ALC_EXT_EFX, which is present on <b>both</b> tiers. LWJGL2 bundles the bindings as {@code EFX10} and LWJGL3 as
+ * {@code EXTEfx}, with identical method names and constants. Unlike HRTF, this is not lwjgl3ify-only. Reflective for
  * the usual reason: both versions live in {@code org.lwjgl.openal}, so they cannot both be on the compile classpath.
  * <p>
  * The room is estimated by casting a handful of short rays from the player and looking at how far they travel before
- * hitting something. That is deliberately cheap and approximate; it is a tuning knob, not physics.
+ * hitting something. The result is deliberately cheap and approximate, not a physical simulation.
  */
 public final class ReverbSupport {
 
@@ -36,16 +36,16 @@ public final class ReverbSupport {
     private static final int AL_REVERB_REFLECTIONS_GAIN = 7;
     private static final int AL_REVERB_LATE_REVERB_GAIN = 9;
 
-    /** Rays cast per probe, and how far each travels. 12 x 20 block lookups a few times a second is negligible. */
+    /** Rays cast per probe, and how far each travels: at most 240 block lookups per probe. */
     private static final int RAYS = 12;
     private static final int RAY_LENGTH = 20;
     /**
-     * Spread of the ray fan, as a fraction of a full sphere. 1.2 puts elevations between about +72 and -9 degrees:
-     * mostly upward, dipping just below the horizon.
+     * Vertical spread of the ray fan in cosine space. 1.2 puts elevations between about +72 and -9 degrees: mostly
+     * upward, dipping just below the horizon. A full sphere would use 2.0.
      * <p>
      * A full sphere does not work. Standing outdoors, every downward ray hits the ground immediately, which drags the
-     * score down until open ground and a large cavern look the same. Weighting upward separates them - simulated over
-     * flat ground, a hut, a corridor and a cavern, 1.2 gave the widest spread of scores.
+     * score down until open ground and a large cavern look the same. Weighting upward separates them. In simulations
+     * over flat ground, a hut, a corridor and a cavern, 1.2 gave the widest spread of scores.
      */
     private static final double RAY_SPREAD = 1.2;
 
@@ -65,8 +65,8 @@ public final class ReverbSupport {
      * Routes a source through the reverb slot, or explicitly clears the send.
      * <p>
      * The send belongs to the pooled OpenAL source and survives buffer attachment, so writing it only for world sounds
-     * would leave a UI click or music inheriting reverb from whatever used the channel before - and would leave every
-     * routed channel wet after the setting is switched off. Hence slot 0 rather than an early return.
+     * would leave a UI click or music inheriting reverb from whatever used the channel before. It would also leave
+     * every routed channel wet after the setting is switched off. Hence slot 0 rather than an early return.
      */
     static void route(int alSource, boolean positional) {
         final boolean want = SoundConfig.environmentalReverb && positional;
@@ -95,8 +95,8 @@ public final class ReverbSupport {
     }
 
     /**
-     * Returns {@code { openness, meanDistance }} - how much space surrounds the player (0 sealed, 1 open sky) and how
-     * far a ray gets on average, which stands in for room size.
+     * Returns {@code { openness, meanDistance }}. Openness ranges from 0 for immediately blocked rays to 1 when every
+     * ray reaches the probe radius; mean distance is a rough proxy for room size.
      * <p>
      * Stepped a block at a time rather than via rayTrace, to avoid allocating vectors several times a second. Rooms
      * bigger than {@link #RAY_LENGTH} read as open sky; that is the accepted ceiling of a cheap probe.
@@ -117,7 +117,7 @@ public final class ReverbSupport {
                 final int by = (int) Math.floor(py + dy * step);
                 final int bz = (int) Math.floor(pz + dz * step);
                 if (by < 0 || by > 255) {
-                    // Leaving the world is open sky, so the rest of the ray has to be counted as such - otherwise
+                    // Leaving the world is open sky, so the rest of the ray has to be counted as such. Otherwise,
                     // standing high up reads as enclosed and an open rooftop gets cave reverb.
                     totalSteps += RAY_LENGTH - step + 1;
                     break;
@@ -174,9 +174,8 @@ public final class ReverbSupport {
         everRouted = false;
         effect = 0;
         slot = 0;
-        // appliedDecay/appliedWet are deliberately not touched here: this runs on the CommandThread while they are
-        // written by the client thread in applyRoom(). resolve() clears them instead, under this same lock, on
-        // whichever thread rebuilds the effect - so they always match the effect object they describe.
+        // Library construction may run off the client thread while applyRoom() owns these cached values. resolve()
+        // resets them under this lock when it creates the replacement effect, keeping the cache tied to that effect.
     }
 
     private static synchronized boolean resolve() {
@@ -194,8 +193,8 @@ public final class ReverbSupport {
             effect = (Integer) efx.getMethod("alGenEffects").invoke(null);
             slot = (Integer) efx.getMethod("alGenAuxiliaryEffectSlots").invoke(null);
             alEffecti.invoke(null, effect, AL_EFFECT_TYPE, AL_EFFECT_REVERB);
-            // Fresh effect object, so nothing has been pushed to it yet - otherwise applyRoom() would think the old
-            // values still held and skip the first update, leaving the new effect at its defaults.
+            // This is a fresh effect object, so nothing has been pushed to it yet. Otherwise, applyRoom() would think
+            // the old values still held and skip the first update, leaving the new effect at its defaults.
             appliedDecay = -1f;
             appliedWet = -1f;
             supported = true;

@@ -15,8 +15,7 @@ public class SoundConfig {
 
     }
 
-    @Config.Comment({
-            "Maximum number of normal (non-streaming) channels: how many sound effects can play at once before another must be stopped.",
+    @Config.Comment({ "Maximum number of normal (non-streaming) channels available for simultaneous sound effects.",
             "OpenAL Soft defaults to 256 sources unless overridden. If fewer are available, Paulscode creates as many channels as it can.",
             "Takes effect after 'Reload Sounds' in the sound options, or a restart." })
     @Config.DefaultInt(64)
@@ -85,8 +84,8 @@ public class SoundConfig {
     public static boolean downmixStereoSounds;
 
     @Config.Comment({
-            "Ask OpenAL to position stereo sounds without converting them to mono. This preserves the stereo PCM but uses roughly twice the buffer memory of mono.",
-            "Requires lwjgl3ify and AL_SOFT_source_spatialize; otherwise downmixing is used.",
+            "Let OpenAL position stereo sounds that use distance attenuation without converting them to mono. This preserves the stereo PCM but uses roughly twice the buffer memory of mono.",
+            "Requires lwjgl3ify and AL_SOFT_source_spatialize; otherwise downmixStereoSounds can provide the fallback.",
             "Takes full effect after 'Reload Sounds' or a restart." })
     @Config.DefaultBoolean(true)
     public static boolean spatializeStereoSounds;
@@ -94,8 +93,8 @@ public class SoundConfig {
     @Config.Comment({
             "Sounds whose path contains any of these are never downmixed, so interface sounds keep their stereo.",
             "Matched case-insensitively against 'domain:path', e.g. 'gregtech:sounds/buttonup.ogg'.",
-            "Only used by downmixStereoSounds. spatializeStereoSounds needs no list: it decides per sound from whether the game actually plays it in the world.",
-            "Matching a world sound by mistake is harmless - it simply stays stereo, as it would without Hodgepodge." })
+            "Only used by downmixStereoSounds. spatializeStereoSounds needs no list because it decides per playback from the attenuation model.",
+            "Broad patterns can also match world sounds; those stay stereo and cannot be positioned by the downmix fallback." })
     @Config.DefaultStringList({ "button", "click", "/gui", "menu", "typing", "page" })
     public static String[] downmixExclusions;
 
@@ -126,13 +125,14 @@ public class SoundConfig {
 
     @Config.Comment({
             "Binaural 3D audio for headphones (HRTF): lets you hear whether a sound is above, below, in front or behind you, instead of just left/right.",
-            "Designed for headphones; speakers may sound hollow or coloured. DEFAULT leaves it to the OpenAL driver config, ON forces it, OFF forces it off.",
+            "Designed for headphones; speakers may sound hollow or coloured. DEFAULT leaves it to OpenAL's device configuration, ON forces it, OFF forces it off.",
             "Requires lwjgl3ify; ignored on Java 8." })
     @Config.DefaultEnum("DEFAULT")
     public static Tristate hrtf;
 
     @Config.Comment({
-            "Limiter that stops the mix clipping when many sounds play at once, instead of letting them distort.",
+            "Protects the final output mix from clipping by reducing gain when its combined level exceeds the device range.",
+            "It reacts to signal level, not the number of playing sounds, and does not limit sound or channel count.",
             "DEFAULT leaves it to OpenAL, ON forces it, OFF disables it. Requires lwjgl3ify; ignored on Java 8." })
     @Config.DefaultEnum("DEFAULT")
     public static Tristate outputLimiter;

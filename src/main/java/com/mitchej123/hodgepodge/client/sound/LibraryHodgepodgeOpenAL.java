@@ -15,14 +15,16 @@ import paulscode.sound.libraries.LibraryLWJGLOpenAL;
  * Drop-in replacement for {@link LibraryLWJGLOpenAL}, installed through Paulscode's own
  * {@link SoundSystemConfig#addLibrary} plugin registry rather than by patching anything.
  * <p>
- * Fixes two things the stock library cannot:
+ * Adds the hooks the stock library lacks for three audio improvements:
  * <ul>
- * <li><b>Sounds are stored twice.</b> {@code loadSound} keeps the decoded PCM in a Java {@code byte[]} <i>and</i>
- * uploads the same bytes to OpenAL, so every sound costs double. Nothing reads the heap copy afterwards, so it is
- * released here - see {@link #loadSound(FilenameURL)}.</li>
+ * <li><b>Release redundant decoded data.</b> {@code loadSound} keeps the decoded PCM in a Java {@code byte[]} after
+ * uploading it to OpenAL. Nothing reads the heap copy afterwards, so it is released here. See
+ * {@link #loadSound(FilenameURL)}.</li>
  * <li><b>Stereo sounds cannot be positioned.</b> OpenAL skips its 3D pipeline for multi-channel buffers unless asked
  * not to. {@link #play(Source)} sets AL_SOURCE_SPATIALIZE_SOFT per source, which lets stereo sounds keep their width
- * instead of being downmixed - see {@link SpatializeSupport}.</li>
+ * instead of being downmixed. See {@link SpatializeSupport}.</li>
+ * <li><b>Environmental reverb needs a per-source send.</b> {@link #play(Source)} also routes positional sources through
+ * the shared effect slot and clears that state when a pooled channel is reused. See {@link ReverbSupport}.</li>
  * </ul>
  */
 public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
@@ -39,8 +41,8 @@ public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
     /**
      * Registers this in place of the stock library. Minecraft adds {@link LibraryLWJGLOpenAL} in the SoundManager
      * constructor and then fires SoundSetupEvent, and SoundSystem's no-arg constructor walks the registry in order
-     * using the first entry that initialises - so removing theirs and adding ours wins every time, including for the
-     * SoundSystems ArchaicFix recreates on a device change.
+     * using the first entry that initialises. Removing theirs and adding ours therefore wins every time, including for
+     * the SoundSystems ArchaicFix recreates on a device change.
      */
     public static void register() {
         try {
@@ -56,9 +58,9 @@ public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
      * Releases the heap-side copy of the audio once OpenAL has it.
      * <p>
      * {@code trimData(0)} is Paulscode's own API for dropping the array. The map entry has to stay, because
-     * {@code loadSound} uses its presence as the "already decoded" check - only the bytes are redundant. Safe because
-     * the only reader of {@code audioData} after upload is streaming pre-load, and streaming sources never come through
-     * here.
+     * {@code loadSound} uses its presence as the "already decoded" check. Only the bytes are redundant. This is safe
+     * because the only reader of {@code audioData} after upload is streaming pre-load, and streaming sources never come
+     * through here.
      */
     @Override
     public boolean loadSound(FilenameURL filenameURL) {
@@ -73,10 +75,10 @@ public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
     /**
      * Configures the source once it has a channel; Paulscode attaches it inside super.play().
      * <p>
-     * The {@code attachedSource} check is not optional. {@code play()} can return without assigning a channel - the
-     * source may be inactive, already playing, or every channel busy - while {@code source.channel} still points at a
-     * channel {@code getNextChannel} has since handed to a different source, since it reassigns without clearing the
-     * previous owner's reference. Paulscode guards every one of its own AL accesses the same way.
+     * The {@code attachedSource} check is not optional. {@code play()} can return without assigning a channel. The
+     * source may be inactive, already playing, or every channel may be busy. Meanwhile, {@code source.channel} can
+     * still point at a channel {@code getNextChannel} has since handed to a different source, since it reassigns
+     * without clearing the previous owner's reference. Paulscode guards every one of its own AL accesses the same way.
      */
     @Override
     public void play(Source source) {

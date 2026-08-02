@@ -9,8 +9,8 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
  * Installs our codec and sound library.
  * <p>
  * Minecraft registers the stock ones in the SoundManager constructor and fires SoundSetupEvent on the very next line,
- * which is the seam Forge provides for exactly this. That happens after mod pre-init but before the SoundSystem is ever
- * constructed, so ours are in place from the first sound onwards - and again after any reload.
+ * which is the seam Forge provides for exactly this. It happens before the SoundSystem is constructed, so ours are in
+ * place from the first sound onwards and remain in the static plugin registry across reloads.
  */
 public class SoundSetupHandler {
 

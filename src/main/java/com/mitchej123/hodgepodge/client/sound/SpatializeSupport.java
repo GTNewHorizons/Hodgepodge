@@ -8,12 +8,12 @@ import com.mitchej123.hodgepodge.config.SoundConfig;
 import cpw.mods.fml.common.Loader;
 
 /**
- * Forces OpenAL to spatialize stereo sources, so they can be positioned without being downmixed to mono first.
+ * Lets OpenAL spatialize positional stereo sources without downmixing them to mono first.
  * <p>
- * Needs AL_SOFT_source_spatialize, which arrived in OpenAL Soft 1.19 - long after the OpenAL LWJGL2 bundles - so this
- * is lwjgl3ify-only and stays off on the Java 8 build. Reflective for the same reason as {@link SoundDeviceTweaks}:
- * LWJGL2 and LWJGL3 share the {@code org.lwjgl.openal} package, so compiling against LWJGL3 would put two different
- * AL10 classes on the classpath.
+ * Needs AL_SOFT_source_spatialize, which arrived in OpenAL Soft 1.19, long after the OpenAL LWJGL2 bundles. This is
+ * therefore lwjgl3ify-only and stays off on the Java 8 build. Reflective for the same reason as
+ * {@link SoundDeviceTweaks}: LWJGL2 and LWJGL3 share the {@code org.lwjgl.openal} package, so compiling against LWJGL3
+ * would put two different AL10 classes on the classpath.
  */
 public final class SpatializeSupport {
 
@@ -29,8 +29,8 @@ public final class SpatializeSupport {
     private static boolean everApplied = false;
 
     /**
-     * True when stereo sounds will actually be positioned, and therefore should <i>not</i> be downmixed. Read by
-     * {@link DownmixingOggCodec}, so the two never both act on the same sound.
+     * True when the codec should keep buffers stereo. {@link #apply(int, boolean)} then decides per playback whether to
+     * force spatialization or leave the source on OpenAL's automatic behavior.
      */
     public static boolean active() {
         return SoundConfig.spatializeStereoSounds && resolve();
@@ -38,8 +38,8 @@ public final class SpatializeSupport {
 
     /**
      * Sets the flag on an OpenAL source. Channels are pooled and OpenAL keeps source properties across buffer
-     * attachment, so this writes on <i>every</i> attach - including AL_AUTO, which is what restores stock behaviour for
-     * UI sounds and for channels left forced-on after the setting is switched off.
+     * attachment, so this writes on <i>every</i> attach. That includes AL_AUTO, which restores stock behaviour for UI
+     * sounds and for channels left forced-on after the setting is switched off.
      */
     static void apply(int alSource, boolean positional) {
         final boolean want = SoundConfig.spatializeStereoSounds && positional;

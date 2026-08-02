@@ -21,16 +21,16 @@ import paulscode.sound.codecs.CodecJOrbis;
  * Wraps {@link CodecJOrbis} to do two things.
  * <p>
  * <b>Decodes without the quadratic copying.</b> CodecJOrbis reallocates and copies the whole accumulated array for
- * every 16 KB chunk, and does it while Paulscode holds its global lock - which is what freezes the client when a big
- * sound is first played. See {@link #readAllChunked()}. This applies to every non-streaming sound, mono included.
+ * every 16 KB chunk. It does so while Paulscode holds its global lock, which freezes the client when a big sound is
+ * first played. See {@link #readAllChunked()}. This applies to every non-streaming sound, mono included.
  * <p>
- * <b>Downmixes stereo to mono.</b> OpenAL only spatializes mono buffers, so a stereo sound is never panned - it plays
- * centred wherever it actually is - and costs twice the memory. (Distance fade is unaffected; Minecraft computes that
- * in Java and applies it as AL_GAIN.)
+ * <b>Downmixes stereo to mono.</b> By default OpenAL only spatializes mono buffers, so a stereo sound is never panned.
+ * It plays centred regardless of its actual position and costs twice the memory. (Distance fade is unaffected;
+ * Minecraft computes that in Java and applies it as AL_GAIN.)
  * <p>
  * The downmix is the fallback, not the primary fix: {@link SpatializeSupport} solves the same problem without losing
  * the stereo width, and takes precedence wherever it works. In practice that leaves downmixing to the Java 8 build,
- * which has no such extension - hence {@link #planDownmix} caring about the level loss.
+ * which has no such extension. That is why {@link #planDownmix} accounts for the level loss.
  * <p>
  * Only {@link #readAll()} is touched, which is the non-streaming path. Music and records are streamed, so they keep
  * their stereo automatically.
@@ -42,7 +42,8 @@ public class DownmixingOggCodec implements ICodec {
     private String source = "";
 
     /**
-     * Minecraft registers CodecJOrbis in the SoundManager constructor, before postInit and never again, so this wins.
+     * SoundSetupEvent fires immediately after Minecraft registers CodecJOrbis, so this replacement wins and remains in
+     * the codec registry across sound-system reloads.
      */
     public static void register() {
         try {
@@ -55,7 +56,7 @@ public class DownmixingOggCodec implements ICodec {
 
     @Override
     public void reverseByteOrder(boolean b) {
-        // CodecJOrbis ignores this - it always emits 16-bit signed little-endian, as it reports.
+        // CodecJOrbis ignores this. It always emits 16-bit signed little-endian, as it reports.
         delegate.reverseByteOrder(b);
     }
 
@@ -77,7 +78,7 @@ public class DownmixingOggCodec implements ICodec {
         return delegate.read();
     }
 
-    /** Non-streaming path: positional sound effects. */
+    /** Non-streaming path: cached sound effects; downmix eligibility is checked below. */
     @Override
     public SoundBuffer readAll() {
         final SoundBuffer buffer = readAllChunked();
@@ -112,17 +113,16 @@ public class DownmixingOggCodec implements ICodec {
      * Picks how to fold the two channels into one, and how much to scale the result.
      * <p>
      * Averaging cancels whatever is out of phase, which cost up to 4 dB on the GregTech sounds. Taking one channel
-     * avoids that but discards anything only the other channel had, so it is reserved for the one case where the
-     * discarded channel provably carries nothing new: it is a near-perfect inversion of the one kept.
+     * avoids that but discards anything unique to the other channel, so it is reserved for near-perfect inversion,
+     * where one channel is effectively an inverted copy and averaging would cause severe cancellation.
      * <p>
-     * Everything else keeps both channels and restores the lost level with gain instead. That is the common case - real
-     * content is only ever partly out of phase, so no correlation threshold strict enough to mean "cancellation" is
-     * ever reached. Measured over the pre-downmix GregTech and TecTech stereo files, correlation ran -0.30 to +1.00; a
-     * cutoff of -0.5 corresponds to a 6 dB loss and never fires at all.
+     * Everything else keeps both channels and restores the lost level with gain instead. Measured over the pre-downmix
+     * GregTech and TecTech stereo files, correlation ran from -0.30 to +1.00, so the deliberately strict -0.9 cutoff
+     * does not select a single channel for that corpus.
      * <p>
      * There is deliberately no "one channel is near-silent, just take the other" shortcut. The gain path already covers
-     * it - averaging a silent channel against a live one halves the level and the computed 2x gain puts it back - so
-     * the shortcut only added a way to throw away content that was quiet overall but not absent.
+     * it. Averaging a silent channel against a live one halves the level, and the computed 2x gain restores it. The
+     * shortcut only added a way to throw away content that was quiet overall but not absent.
      */
     static DownmixPlan planDownmix(byte[] src, boolean bigEndian) {
         final int frames = src.length / 4;
@@ -135,8 +135,8 @@ public class DownmixingOggCodec implements ICodec {
             final int right = sample(src, i + 2, bigEndian);
             final int mid = (left + right) >> 1;
             final int magnitude = mid < 0 ? -mid : mid;
-            // The peak is a hard bound for the gain below, so it has to see every frame - a sampled maximum could
-            // miss the one spike that matters and let the result clip.
+            // The peak is a hard bound for the gain below, so it has to see every frame. A sampled maximum could miss
+            // the one spike that matters and let the result clip.
             if (magnitude > midPeak) midPeak = magnitude;
             // Every frame here too. Sampling at a fixed stride can land on the same phase of a periodic signal
             // forever: a quadrature pair at a quarter of the sample rate reads as one silent channel and one loud
@@ -149,16 +149,16 @@ public class DownmixingOggCodec implements ICodec {
 
         final double correlation = crossEnergy / Math.sqrt(leftEnergy * rightEnergy);
         if (correlation < -0.9) {
-            // Near-perfect inversion: the discarded channel is a negated copy, so nothing is lost by dropping it.
+            // Near-perfect inversion: keep the louder channel rather than severely cancelling both.
             return new DownmixPlan(leftEnergy >= rightEnergy ? DownmixMode.LEFT : DownmixMode.RIGHT, 1f);
         }
 
         final double midEnergy = (leftEnergy + rightEnergy + 2 * crossEnergy) / 4;
         if (midEnergy <= 0) return new DownmixPlan(DownmixMode.AVERAGE, 1f);
-        // Aim for the louder channel's level - what the downmix would have been worth without cancellation.
+        // Aim for the louder channel's level. This is what the downmix would have been worth without cancellation.
         final double wanted = Math.sqrt(Math.max(leftEnergy, rightEnergy) / midEnergy);
-        // Capped so it can never clip. Both terms are >= 1: mid can only be quieter than the louder channel, and
-        // (left+right)/2 of two 16-bit samples cannot exceed 16-bit range.
+        // Cap against the observed peak so the restored level cannot clip. This can be just below 1 for a -32768
+        // sample because positive 16-bit PCM stops at 32767.
         final float gain = (float) Math.min(wanted, midPeak > 0 ? 32767.0 / midPeak : wanted);
         return new DownmixPlan(DownmixMode.AVERAGE, gain);
     }
@@ -186,12 +186,12 @@ public class DownmixingOggCodec implements ICodec {
      * <p>
      * Downmixing exists to make world sounds locatable; a sound played at the listener gains nothing from it and just
      * loses its stereo image. Which sounds those are is only knowable per <i>play</i>, from the attenuation model,
-     * while Paulscode caches one buffer per <i>file</i> - so a decode-time decision can never be more than a guess. A
-     * path list is that guess, and a cheap one.
+     * while Paulscode caches one buffer per <i>file</i>. A decode-time decision can therefore never be more than a
+     * guess. A path list is that guess, and a cheap one.
      * <p>
-     * Being wrong is not costly in either direction: matching a world sound by mistake leaves it stereo, exactly as it
-     * would be without this mod, and missing an interface sound leaves it mono. {@link SpatializeSupport} needs none of
-     * this, since it decides per play from the real signal.
+     * A false positive leaves a world sound stereo and therefore unpositioned on the fallback path; a false negative
+     * leaves an interface sound mono. {@link SpatializeSupport} needs none of this because it decides per playback from
+     * the actual attenuation model.
      */
     private static boolean excluded(String path) {
         if (path == null || path.isEmpty()) return false;
@@ -225,9 +225,10 @@ public class DownmixingOggCodec implements ICodec {
 
     /**
      * Replacement for {@link CodecJOrbis#readAll()}, which reallocates and copies the whole accumulated array for every
-     * 16 KB chunk it decodes - ~900 MB of copying for a 5 MB sound, all of it while Paulscode holds its global
-     * THREAD_SYNC lock, which is what stalls the client thread. {@link CodecJOrbis#read()} accumulates the same way but
-     * stops at 128 KB, so looping it and joining once yields the same bytes for a fraction of the work.
+     * 16 KB chunk it decodes. A 5 MB sound causes about 900 MB of copying, all while Paulscode holds its global
+     * THREAD_SYNC lock, which stalls the client thread. {@link CodecJOrbis#read()} accumulates the same way but stops
+     * at the configured streaming-buffer size (128 KB by default), so looping it and joining once yields the same
+     * decoded data up to the configured size limit for a fraction of the work.
      */
     private SoundBuffer readAllChunked() {
         final List<byte[]> chunks = new ArrayList<>();

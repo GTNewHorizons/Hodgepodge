@@ -69,7 +69,7 @@ public class Hodgepodge {
     public void preinit(FMLPreInitializationEvent event) {
         Compat.init(event.getSide());
         EVENT_HANDLER.preinit();
-        // Must be before the SoundManager constructor fires SoundSetupEvent, which is right after pre-init.
+        // SoundManager posts SoundSetupEvent from its constructor, so register before client startup creates it.
         if (event.getSide() == Side.CLIENT) SoundSetupHandler.register();
     }
 

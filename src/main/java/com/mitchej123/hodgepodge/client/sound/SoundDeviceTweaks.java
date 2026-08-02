@@ -11,7 +11,7 @@ import cpw.mods.fml.common.Loader;
 
 /**
  * OpenAL Soft device settings Minecraft never exposes: HRTF (binaural positioning on headphones) and the output limiter
- * (stops the mix clipping when a lot of sources play at once).
+ * (protects the final mix from out-of-range peaks).
  * <p>
  * Requires lwjgl3ify; LWJGL2's bundled OpenAL predates both, so this no-ops on the Java 8 build. Done by reflection
  * because LWJGL2 and LWJGL3 share the {@code org.lwjgl.openal} package, so compiling against LWJGL3 would put two
@@ -33,7 +33,7 @@ public final class SoundDeviceTweaks {
     private static final String[] STATUS = { "disabled", "enabled", "denied", "required", "headphones detected",
             "unsupported output format" };
 
-    /** Bumped by the CommandThread on reload, consumed by the client thread. The only cross-thread state here. */
+    /** Bumped when a new Library is constructed and consumed by the client thread. The only cross-thread state here. */
     private static final AtomicInteger reloads = new AtomicInteger();
     private static int seenReload = 0;
 
@@ -43,13 +43,12 @@ public final class SoundDeviceTweaks {
     private static boolean unavailable = false;
 
     /**
-     * Called when a new Library is built, from Paulscode's CommandThread. The settings live on the AL device, which the
-     * reload replaced.
+     * Called when a new Library is built. Minecraft normally does that on its Sound Library Loader thread, but a device
+     * reload may use another thread. The settings live on the AL device, which the reload replaced.
      * <p>
      * It only bumps a counter, so that every field below stays written by the client thread alone. Sharing them across
-     * threads would need either a lock or volatile, and a lock is the wrong tool here: {@link #tick()} can sit inside
-     * {@code alcResetDeviceSOFT} for milliseconds, and blocking the CommandThread on that would in turn block the
-     * client thread, which needs Paulscode's global lock every tick. This keeps the caller wait-free.
+     * threads would need more synchronization, while {@link #tick()} can sit inside {@code alcResetDeviceSOFT} for
+     * milliseconds. This keeps the library-construction callback short and non-blocking.
      */
     static void invalidate() {
         reloads.incrementAndGet();
@@ -143,7 +142,7 @@ public final class SoundDeviceTweaks {
      * settings therefore go in one call rather than two.
      * <p>
      * ALC_HRTF_SOFT alone cannot override a device configured for surround, and HRTF is only ever applied to stereo
-     * output ({@code panning.cpp} reports unsupported-format for anything else) - so prefer ALC_SOFT_output_mode, which
+     * output ({@code panning.cpp} reports unsupported-format for anything else). Prefer ALC_SOFT_output_mode, which
      * forces stereo+HRTF outright.
      */
     private static int[] attribs(boolean outputMode, boolean limiterExt) {
