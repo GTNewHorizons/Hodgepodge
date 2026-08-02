@@ -30,7 +30,7 @@ import paulscode.sound.codecs.CodecJOrbis;
  * <p>
  * The downmix is the fallback, not the primary fix: {@link SpatializeSupport} solves the same problem without losing
  * the stereo width, and takes precedence wherever it works. In practice that leaves downmixing to the Java 8 build,
- * which has no such extension - hence {@link #chooseDownmixMode} caring about the level loss.
+ * which has no such extension - hence {@link #planDownmix} caring about the level loss.
  * <p>
  * Only {@link #readAll()} is touched, which is the non-streaming path. Music and records are streamed, so they keep
  * their stereo automatically.
@@ -95,56 +95,86 @@ public class DownmixingOggCodec implements ICodec {
         }
 
         final int before = buffer.audioData.length;
-        final DownmixMode mode = chooseDownmixMode(buffer.audioData, format.isBigEndian());
-        downmix(buffer, format, mode);
+        final DownmixPlan plan = planDownmix(buffer.audioData, format.isBigEndian());
+        downmix(buffer, format, plan);
         downmixed = true;
         Common.log.debug(
-                "Downmixed {} to mono ({}), {} KB -> {} KB",
+                "Downmixed {} to mono ({}{}), {} KB -> {} KB",
                 source,
-                mode.name().toLowerCase(Locale.ROOT),
+                plan.mode.name().toLowerCase(Locale.ROOT),
+                plan.gain > 1.001f ? String.format(Locale.ROOT, " +%.1f dB", 20 * Math.log10(plan.gain)) : "",
                 before / 1024,
                 buffer.audioData.length / 1024);
         return buffer;
     }
 
     /**
-     * Chooses between averaging and taking either channel, without discarding ordinary distinct stereo content.
+     * Picks how to fold the two channels into one, and how much to scale the result.
      * <p>
-     * A nearly silent channel carries nothing useful, while strongly negative L/R correlation identifies actual phase
-     * cancellation. Everything else stays averaged so unrelated right-channel content is not thrown away merely because
-     * averaging has lower RMS.
+     * Averaging cancels whatever is out of phase, which cost up to 4 dB on the GregTech sounds. Taking one channel
+     * avoids that but discards anything only the other channel had, so it is reserved for the two cases where the
+     * discarded channel demonstrably carries nothing: it is near-silent, or it is a near-perfect inversion of the one
+     * kept.
+     * <p>
+     * Everything else keeps both channels and restores the lost level with gain instead. That is the common case - real
+     * content is only ever partly out of phase, so no correlation threshold strict enough to mean "cancellation" is
+     * ever reached. Measured over the pre-downmix GregTech and TecTech stereo files, correlation ran -0.30 to +1.00; a
+     * cutoff of -0.5 corresponds to a 6 dB loss and never fires at all.
      */
-    static DownmixMode chooseDownmixMode(byte[] src, boolean bigEndian) {
+    static DownmixPlan planDownmix(byte[] src, boolean bigEndian) {
         final int frames = src.length / 4;
-        if (frames == 0) return DownmixMode.AVERAGE;
-        // Every 4th frame is ample for this comparison, and quarters the cost of the analysis pass.
-        final int stride = 4;
+        if (frames == 0) return new DownmixPlan(DownmixMode.AVERAGE, 1f);
         double leftEnergy = 0, rightEnergy = 0, crossEnergy = 0;
-        for (int frame = 0; frame < frames; frame += stride) {
+        int midPeak = 0;
+        for (int frame = 0; frame < frames; frame++) {
             final int i = frame * 4;
             final int left = sample(src, i, bigEndian);
             final int right = sample(src, i + 2, bigEndian);
-            leftEnergy += (double) left * left;
-            rightEnergy += (double) right * right;
-            crossEnergy += (double) left * right;
+            final int mid = (left + right) >> 1;
+            final int magnitude = mid < 0 ? -mid : mid;
+            // The peak has to see every frame - it is a hard bound for the gain below, and a sampled maximum could
+            // miss the one spike that matters and let the result clip.
+            if (magnitude > midPeak) midPeak = magnitude;
+            // The energies are statistical, so every 4th frame is ample and saves three quarters of the multiplies.
+            if ((frame & 3) == 0) {
+                leftEnergy += (double) left * left;
+                rightEnergy += (double) right * right;
+                crossEnergy += (double) left * right;
+            }
         }
-        if (leftEnergy == 0 && rightEnergy == 0) return DownmixMode.AVERAGE;
+        if (leftEnergy == 0 && rightEnergy == 0) return new DownmixPlan(DownmixMode.AVERAGE, 1f);
 
         // A channel at least 30 dB below the other is effectively silent; do not halve the useful channel's level.
         final double silentRatio = 0.001;
-        if (leftEnergy <= rightEnergy * silentRatio) return DownmixMode.RIGHT;
-        if (rightEnergy <= leftEnergy * silentRatio) return DownmixMode.LEFT;
+        if (leftEnergy <= rightEnergy * silentRatio) return new DownmixPlan(DownmixMode.RIGHT, 1f);
+        if (rightEnergy <= leftEnergy * silentRatio) return new DownmixPlan(DownmixMode.LEFT, 1f);
 
         final double correlation = crossEnergy / Math.sqrt(leftEnergy * rightEnergy);
-        if (correlation < -0.5) {
-            // Only discard a channel when averaging loses at least ~1 dB and the loss is demonstrably cancellation.
-            final double midEnergy = (leftEnergy + rightEnergy + 2 * crossEnergy) / 4;
-            final double louderEnergy = Math.max(leftEnergy, rightEnergy);
-            if (louderEnergy > midEnergy * 1.259) {
-                return leftEnergy >= rightEnergy ? DownmixMode.LEFT : DownmixMode.RIGHT;
-            }
+        if (correlation < -0.9) {
+            // Near-perfect inversion: the discarded channel is a negated copy, so nothing is lost by dropping it.
+            return new DownmixPlan(leftEnergy >= rightEnergy ? DownmixMode.LEFT : DownmixMode.RIGHT, 1f);
         }
-        return DownmixMode.AVERAGE;
+
+        final double midEnergy = (leftEnergy + rightEnergy + 2 * crossEnergy) / 4;
+        if (midEnergy <= 0) return new DownmixPlan(DownmixMode.AVERAGE, 1f);
+        // Aim for the louder channel's level - what the downmix would have been worth without cancellation.
+        final double wanted = Math.sqrt(Math.max(leftEnergy, rightEnergy) / midEnergy);
+        // Capped so it can never clip. Both terms are >= 1: mid can only be quieter than the louder channel, and
+        // (left+right)/2 of two 16-bit samples cannot exceed 16-bit range.
+        final float gain = (float) Math.min(wanted, midPeak > 0 ? 32767.0 / midPeak : wanted);
+        return new DownmixPlan(DownmixMode.AVERAGE, gain);
+    }
+
+    /** How to fold the channels, and the gain to apply afterwards. */
+    static final class DownmixPlan {
+
+        final DownmixMode mode;
+        final float gain;
+
+        DownmixPlan(DownmixMode mode, float gain) {
+            this.mode = mode;
+            this.gain = gain;
+        }
     }
 
     enum DownmixMode {
@@ -246,9 +276,11 @@ public class DownmixingOggCodec implements ICodec {
         return new AudioFormat(format.getSampleRate(), format.getSampleSizeInBits(), 1, true, format.isBigEndian());
     }
 
-    private static void downmix(SoundBuffer buffer, AudioFormat format, DownmixMode mode) {
+    private static void downmix(SoundBuffer buffer, AudioFormat format, DownmixPlan plan) {
         final byte[] src = buffer.audioData;
         final boolean bigEndian = format.isBigEndian();
+        final DownmixMode mode = plan.mode;
+        final float gain = plan.gain;
         final int frames = src.length / 4; // 2 channels * 2 bytes
         final byte[] out = new byte[frames * 2];
 
@@ -261,7 +293,13 @@ public class DownmixingOggCodec implements ICodec {
                 left = (src[in + 1] << 8) | (src[in] & 0xFF);
                 right = (src[in + 3] << 8) | (src[in + 2] & 0xFF);
             }
-            final int mono = mode == DownmixMode.LEFT ? left : mode == DownmixMode.RIGHT ? right : (left + right) >> 1;
+            int mono = mode == DownmixMode.LEFT ? left : mode == DownmixMode.RIGHT ? right : (left + right) >> 1;
+            if (gain != 1f) {
+                // The gain is peak-capped, so this clamp should never trigger; it is here so a rounding edge cannot
+                // wrap a sample to the opposite sign.
+                final int scaled = Math.round(mono * gain);
+                mono = scaled > 32767 ? 32767 : scaled < -32768 ? -32768 : scaled;
+            }
             if (bigEndian) {
                 out[o] = (byte) (mono >> 8);
                 out[o + 1] = (byte) mono;
