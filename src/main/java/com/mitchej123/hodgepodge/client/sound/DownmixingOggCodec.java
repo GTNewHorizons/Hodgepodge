@@ -30,7 +30,7 @@ import paulscode.sound.codecs.CodecJOrbis;
  * <p>
  * The downmix is the fallback, not the primary fix: {@link SpatializeSupport} solves the same problem without losing
  * the stereo width, and takes precedence wherever it works. In practice that leaves downmixing to the Java 8 build,
- * which has no such extension - hence {@link #preferLeftChannel} caring about the level loss.
+ * which has no such extension - hence {@link #chooseDownmixMode} caring about the level loss.
  * <p>
  * Only {@link #readAll()} is touched, which is the non-streaming path. Music and records are streamed, so they keep
  * their stereo automatically.
@@ -95,45 +95,62 @@ public class DownmixingOggCodec implements ICodec {
         }
 
         final int before = buffer.audioData.length;
-        final boolean leftOnly = preferLeftChannel(buffer.audioData, format.isBigEndian());
-        downmix(buffer, format, leftOnly);
+        final DownmixMode mode = chooseDownmixMode(buffer.audioData, format.isBigEndian());
+        downmix(buffer, format, mode);
         downmixed = true;
         Common.log.debug(
                 "Downmixed {} to mono ({}), {} KB -> {} KB",
                 source,
-                leftOnly ? "left channel" : "averaged",
+                mode.name().toLowerCase(Locale.ROOT),
                 before / 1024,
                 buffer.audioData.length / 1024);
         return buffer;
     }
 
     /**
-     * Decides whether to take the left channel instead of averaging, by measuring which is louder.
+     * Chooses between averaging and taking either channel, without discarding ordinary distinct stereo content.
      * <p>
-     * Averaging cancels whatever is out of phase between the channels; on the worst GregTech sounds that cost over 4
-     * dB. Taking one channel cannot cancel, but it does discard anything only present in the other - so it is only
-     * worth it when averaging measurably loses.
-     * <p>
-     * The threshold sorts the two cases apart on its own. If the channels carry the <i>same</i> content in opposing
-     * phase, averaging guts it while the left channel is untouched, and the gap is large. If they carry genuinely
-     * <i>different</i> content, both lose about the same and the gap is small - so averaging wins and keeps both.
+     * A nearly silent channel carries nothing useful, while strongly negative L/R correlation identifies actual phase
+     * cancellation. Everything else stays averaged so unrelated right-channel content is not thrown away merely because
+     * averaging has lower RMS.
      */
-    private static boolean preferLeftChannel(byte[] src, boolean bigEndian) {
+    static DownmixMode chooseDownmixMode(byte[] src, boolean bigEndian) {
         final int frames = src.length / 4;
-        if (frames == 0) return false;
-        // Every 4th frame is far more than enough for an RMS comparison, and quarters the cost of this pass.
+        if (frames == 0) return DownmixMode.AVERAGE;
+        // Every 4th frame is ample for this comparison, and quarters the cost of the analysis pass.
         final int stride = 4;
-        double midEnergy = 0, leftEnergy = 0;
+        double leftEnergy = 0, rightEnergy = 0, crossEnergy = 0;
         for (int frame = 0; frame < frames; frame += stride) {
             final int i = frame * 4;
             final int left = sample(src, i, bigEndian);
             final int right = sample(src, i + 2, bigEndian);
-            final int mid = (left + right) >> 1;
-            midEnergy += (double) mid * mid;
             leftEnergy += (double) left * left;
+            rightEnergy += (double) right * right;
+            crossEnergy += (double) left * right;
         }
-        // ~1 dB in energy terms (10^0.1). Below that, prefer averaging so nothing is thrown away.
-        return leftEnergy > midEnergy * 1.259;
+        if (leftEnergy == 0 && rightEnergy == 0) return DownmixMode.AVERAGE;
+
+        // A channel at least 30 dB below the other is effectively silent; do not halve the useful channel's level.
+        final double silentRatio = 0.001;
+        if (leftEnergy <= rightEnergy * silentRatio) return DownmixMode.RIGHT;
+        if (rightEnergy <= leftEnergy * silentRatio) return DownmixMode.LEFT;
+
+        final double correlation = crossEnergy / Math.sqrt(leftEnergy * rightEnergy);
+        if (correlation < -0.5) {
+            // Only discard a channel when averaging loses at least ~1 dB and the loss is demonstrably cancellation.
+            final double midEnergy = (leftEnergy + rightEnergy + 2 * crossEnergy) / 4;
+            final double louderEnergy = Math.max(leftEnergy, rightEnergy);
+            if (louderEnergy > midEnergy * 1.259) {
+                return leftEnergy >= rightEnergy ? DownmixMode.LEFT : DownmixMode.RIGHT;
+            }
+        }
+        return DownmixMode.AVERAGE;
+    }
+
+    enum DownmixMode {
+        AVERAGE,
+        LEFT,
+        RIGHT
     }
 
     /**
@@ -229,7 +246,7 @@ public class DownmixingOggCodec implements ICodec {
         return new AudioFormat(format.getSampleRate(), format.getSampleSizeInBits(), 1, true, format.isBigEndian());
     }
 
-    private static void downmix(SoundBuffer buffer, AudioFormat format, boolean leftOnly) {
+    private static void downmix(SoundBuffer buffer, AudioFormat format, DownmixMode mode) {
         final byte[] src = buffer.audioData;
         final boolean bigEndian = format.isBigEndian();
         final int frames = src.length / 4; // 2 channels * 2 bytes
@@ -244,7 +261,7 @@ public class DownmixingOggCodec implements ICodec {
                 left = (src[in + 1] << 8) | (src[in] & 0xFF);
                 right = (src[in + 3] << 8) | (src[in + 2] & 0xFF);
             }
-            final int mono = leftOnly ? left : (left + right) >> 1;
+            final int mono = mode == DownmixMode.LEFT ? left : mode == DownmixMode.RIGHT ? right : (left + right) >> 1;
             if (bigEndian) {
                 out[o] = (byte) (mono >> 8);
                 out[o + 1] = (byte) mono;
