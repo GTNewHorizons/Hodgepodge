@@ -112,14 +112,17 @@ public class DownmixingOggCodec implements ICodec {
      * Picks how to fold the two channels into one, and how much to scale the result.
      * <p>
      * Averaging cancels whatever is out of phase, which cost up to 4 dB on the GregTech sounds. Taking one channel
-     * avoids that but discards anything only the other channel had, so it is reserved for the two cases where the
-     * discarded channel demonstrably carries nothing: it is near-silent, or it is a near-perfect inversion of the one
-     * kept.
+     * avoids that but discards anything only the other channel had, so it is reserved for the one case where the
+     * discarded channel provably carries nothing new: it is a near-perfect inversion of the one kept.
      * <p>
      * Everything else keeps both channels and restores the lost level with gain instead. That is the common case - real
      * content is only ever partly out of phase, so no correlation threshold strict enough to mean "cancellation" is
      * ever reached. Measured over the pre-downmix GregTech and TecTech stereo files, correlation ran -0.30 to +1.00; a
      * cutoff of -0.5 corresponds to a 6 dB loss and never fires at all.
+     * <p>
+     * There is deliberately no "one channel is near-silent, just take the other" shortcut. The gain path already covers
+     * it - averaging a silent channel against a live one halves the level and the computed 2x gain puts it back - so
+     * the shortcut only added a way to throw away content that was quiet overall but not absent.
      */
     static DownmixPlan planDownmix(byte[] src, boolean bigEndian) {
         final int frames = src.length / 4;
@@ -132,22 +135,17 @@ public class DownmixingOggCodec implements ICodec {
             final int right = sample(src, i + 2, bigEndian);
             final int mid = (left + right) >> 1;
             final int magnitude = mid < 0 ? -mid : mid;
-            // The peak has to see every frame - it is a hard bound for the gain below, and a sampled maximum could
+            // The peak is a hard bound for the gain below, so it has to see every frame - a sampled maximum could
             // miss the one spike that matters and let the result clip.
             if (magnitude > midPeak) midPeak = magnitude;
-            // The energies are statistical, so every 4th frame is ample and saves three quarters of the multiplies.
-            if ((frame & 3) == 0) {
-                leftEnergy += (double) left * left;
-                rightEnergy += (double) right * right;
-                crossEnergy += (double) left * right;
-            }
+            // Every frame here too. Sampling at a fixed stride can land on the same phase of a periodic signal
+            // forever: a quadrature pair at a quarter of the sample rate reads as one silent channel and one loud
+            // one, when in truth they carry identical energy. The loop already visits every frame anyway.
+            leftEnergy += (double) left * left;
+            rightEnergy += (double) right * right;
+            crossEnergy += (double) left * right;
         }
         if (leftEnergy == 0 && rightEnergy == 0) return new DownmixPlan(DownmixMode.AVERAGE, 1f);
-
-        // A channel at least 30 dB below the other is effectively silent; do not halve the useful channel's level.
-        final double silentRatio = 0.001;
-        if (leftEnergy <= rightEnergy * silentRatio) return new DownmixPlan(DownmixMode.RIGHT, 1f);
-        if (rightEnergy <= leftEnergy * silentRatio) return new DownmixPlan(DownmixMode.LEFT, 1f);
 
         final double correlation = crossEnergy / Math.sqrt(leftEnergy * rightEnergy);
         if (correlation < -0.9) {
