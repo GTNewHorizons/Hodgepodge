@@ -44,6 +44,11 @@ public class DownmixingOggCodec implements ICodec {
     /**
      * SoundSetupEvent fires immediately after Minecraft registers CodecJOrbis, so this replacement wins and remains in
      * the codec registry across sound-system reloads.
+     * <p>
+     * Note that setCodec replaces rather than stacks: it drops every registration matching the extension. This wraps
+     * CodecJOrbis directly, not whatever was registered before, so another mod's ogg codec would be bypassed rather
+     * than delegated to. Unavoidable with this API - Minecraft's own setCodec call one line earlier does the same thing
+     * - and whoever registers last wins.
      */
     public static void register() {
         try {
@@ -146,8 +151,8 @@ public class DownmixingOggCodec implements ICodec {
             crossEnergy += (double) left * right;
         }
         if (leftEnergy == 0 && rightEnergy == 0) return new DownmixPlan(DownmixMode.AVERAGE, 1f);
-
-        final double correlation = crossEnergy / Math.sqrt(leftEnergy * rightEnergy);
+        final double scale = Math.sqrt(leftEnergy * rightEnergy);
+        final double correlation = scale > 0 ? crossEnergy / scale : 0;
         if (correlation < -0.9) {
             // Near-perfect inversion: keep the louder channel rather than severely cancelling both.
             return new DownmixPlan(leftEnergy >= rightEnergy ? DownmixMode.LEFT : DownmixMode.RIGHT, 1f);
@@ -266,9 +271,9 @@ public class DownmixingOggCodec implements ICodec {
     }
 
     static int frameAlignedLimit(int maxBytes, int frameSize) {
-        if (maxBytes <= 0) return 0;
         final int alignment = Math.max(frameSize, 1);
-        return maxBytes - maxBytes % alignment;
+        final int limit = maxBytes <= 0 ? Integer.MAX_VALUE : maxBytes;
+        return limit - limit % alignment;
     }
 
     private static AudioFormat toMono(AudioFormat format) {

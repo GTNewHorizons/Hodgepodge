@@ -54,6 +54,7 @@ public final class ReverbSupport {
     private static boolean resolved = false;
     private static boolean supported = false;
     private static boolean everRouted = false;
+    private static int resolveFailures = 0;
     private static float appliedDecay = -1f;
     private static float appliedWet = -1f;
 
@@ -172,6 +173,7 @@ public final class ReverbSupport {
         resolved = false;
         supported = false;
         everRouted = false;
+        resolveFailures = 0;
         effect = 0;
         slot = 0;
         // Library construction may run off the client thread while applyRoom() owns these cached values. resolve()
@@ -200,7 +202,8 @@ public final class ReverbSupport {
             supported = true;
             Common.log.info("Environmental reverb enabled (EFX effect {}, slot {})", effect, slot);
         } catch (Throwable t) {
-            Common.log.warn("EFX reverb unavailable, leaving audio dry", t);
+            resolved = ++resolveFailures >= 3;
+            if (resolveFailures == 1) Common.log.warn("EFX reverb unavailable, leaving audio dry", t);
         }
         return supported;
     }
