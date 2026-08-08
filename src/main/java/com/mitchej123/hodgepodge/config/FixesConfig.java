@@ -185,6 +185,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixPerspectiveCamera;
 
+    @Config.Comment("Orient particles from the render view entity instead of the player, so detached cameras (freecam, spectator-likes) do not tilt them (MC-46445)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCameraParticleRotation;
+
     @Config.Comment("Allow some mods to properly fetch the player skin")
     @Config.DefaultBoolean(true)
     public static boolean fixPlayerSkinFetching;

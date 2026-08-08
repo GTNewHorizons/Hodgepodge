@@ -164,6 +164,10 @@ public enum Mixins implements IMixins {
             .addExcludedMod(TargetedMod.ANGELICA)
             .setApplyIf(() -> FixesConfig.fixPerspectiveCamera)
             .setPhase(Phase.EARLY)),
+    FIX_CAMERA_PARTICLE_ROTATION(new MixinBuilder("Orient particles from the render view entity (MC-46445)")
+            .addClientMixins("minecraft.MixinActiveRenderInfo_CameraRotation")
+            .setApplyIf(() -> FixesConfig.fixCameraParticleRotation)
+            .setPhase(Phase.EARLY)),
     FIX_DEBUG_BOUNDING_BOX(new MixinBuilder("Fix Bounding Box")
             .addClientMixins("minecraft.MixinRenderManager")
             .setApplyIf(() -> FixesConfig.fixDebugBoundingBox)
