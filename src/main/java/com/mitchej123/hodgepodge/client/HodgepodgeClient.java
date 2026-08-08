@@ -57,6 +57,8 @@ public class HodgepodgeClient {
 
         FMLCommonHandler.instance().bus().register(ClientTicker.INSTANCE);
 
+        QuickPlay.registerIfRequested();
+
         MinecraftForge.EVENT_BUS.register(new ReloadSoundsGui());
 
         MinecraftForge.EVENT_BUS.register(DebugScreenHandler.INSTANCE);
