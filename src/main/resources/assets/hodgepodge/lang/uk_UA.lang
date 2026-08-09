@@ -1,0 +1,77 @@
+key.hodgepodge.category=Hodgepodge
+key.fastBlockPlacing.desc=Швидке розміщення блоків
+key.fastBlockPlacing.enabled=§fШвидке розміщення блоків §aУвімкнено
+key.fastBlockPlacing.disabled=§fШвидке розміщення блоків §cВимкнено
+
+tile.dirt.name=Ґрунт
+tile.sapling.name=Паросток
+tile.sand.name=Пісок
+tile.flower1.name=Квітка
+tile.flower2.name=Квітка
+tile.stoneSlab.name=Кам'яна плита
+tile.monsterStoneEgg.name=Камінь із лусківницями
+tile.woodSlab.name=Дубова плита
+tile.cobbleWall.name=Стінка з кругляку
+tile.quartzBlock.name=Блок кварцу
+tile.clayHardenedStained.name=Обпалена пофарбована глина
+tile.woolCarpet.name=Килим
+tile.doublePlant.name=Висока трава
+
+item.dyePowder.name=Барвник
+item.skull.name=Голова
+item.fish.name=Сира риба
+
+entity.Skeleton.wither.name=Візер-скелет
+entity.MinecartRideable.name=Вагонетка
+entity.MinecartChest.name=Вагонетка зі скринею
+entity.MinecartFurnace.name=Вагонетка з піччю
+entity.MinecartTNT.name=Вагонетка з динамітом
+entity.MinecartHopper.name=Вагонетка з воронкою
+entity.MinecartCommandBlock.name=Вагонетка з командним блоком
+
+commands.time.get=Поточний час світу: %s (час доби: %s)
+commands.time.usageWithGet=/time <set|add> <значення> АБО /time get
+
+hodgepodge.soundsmenu.refreshsounds=Оновити звуки
+hodgepodge.bed_respawn.msg=Точку відродження встановлено
+hodgepodge.menu.mod_options=Налаштування модів...
+
+bettermodlist.sort.normal=Типово
+bettermodlist.sort.a_to_z=A-Z
+bettermodlist.sort.z_to_a=Z-A
+bettermodlist.gui.modlistinfo1=Овва! Тут усе по-іншому!
+bettermodlist.gui.modlistinfo2=Нове компонування надано:
+
+hodgepodge.debug.advanced_tooltips.enabled=Розширені підказки предметів: §aУвімкнено
+hodgepodge.debug.advanced_tooltips.disabled=Розширені підказки предметів: §cВимкнено
+hodgepodge.debug.hitboxes.enabled=Хітбокси: §aУвімкнено
+hodgepodge.debug.hitboxes.disabled=Хітбокси: §cВимкнено
+hodgepodge.debug.pause_focus.enabled=Пауза при втраті фокусу: §aУвімкнено
+hodgepodge.debug.pause_focus.disabled=Пауза при втраті фокусу: §cВимкнено
+hodgepodge.debug.reload_chunks.message=Усі чанки перезавантажено.
+hodgepodge.debug.reload_pack.message=Пакети ресурсів перезавантажено за %s сек.
+hodgepodge.debug.crash.count.0=Утримуються клавіші F3 + C. Якщо їх не відпустити, гра зазнає збою через 6 секунд.
+hodgepodge.debug.crash.count.1=Збій гри через 5...
+hodgepodge.debug.crash.count.2=Збій гри через 4...
+hodgepodge.debug.crash.count.3=Збій гри через 3...
+hodgepodge.debug.crash.count.4=Збій гри через 2...
+hodgepodge.debug.crash.count.5=Збій гри через 1...
+hodgepodge.debug.crash.count.6=Час вичерпано. Гра зазнає збою при відпущенні БУДЬ-ЯКОЇ клавіші.
+hodgepodge.debug.crash.cancel=Збій скасовано.
+hodgepodge.debug.copy_location.message=Координати скопійовано до буфера обміну.
+
+hodgepodge.debug.help.message=Комбінації клавіш:
+hodgepodge.debug.help.0=F3 = Відкрити екран налагодження
+hodgepodge.debug.help.1=Shift + F3 = Відкрити екран налагодження та відобразити графік профайлера
+hodgepodge.debug.help.angelica=Alt + F3 = [Angelica] Відкрити екран налагодження та відобразити графік FPS/TPS
+hodgepodge.debug.help.2=F3 + A = Перезавантажити чанки
+hodgepodge.debug.help.3=F3 + B = Відобразити хітбокси
+hodgepodge.debug.help.4=F3 + C = Скопіювати координати як команду /cofh tpx, або утримувати 6 секунд для збою гри
+hodgepodge.debug.help.5=F3 + D = [Hodgepodge] Очистити чат
+hodgepodge.debug.help.6=F3 + H = Розширені підказки
+hodgepodge.debug.help.7=F3 + P = Пауза при втраті фокусу
+hodgepodge.debug.help.8=F3 + Q = [Hodgepodge] Відобразити цей список
+hodgepodge.debug.help.9=F3 + S/T = Перезавантажити пакети ресурсів
+hodgepodge.debug.help.etfuturum=F3 + F4 = [Et-Futurum-Requiem] Відкрити перемикач режимів гри
+hodgepodge.debug.help.nei.1=%s = [NEI] Відкрити оверлей спавну мобів
+hodgepodge.debug.help.nei.2=%s = [NEI] Відкрити оверлей чанків
