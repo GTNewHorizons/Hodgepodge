@@ -6,6 +6,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
+import com.mitchej123.hodgepodge.mixins.early.minecraft.PotionEffectAccessor;
+
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -56,8 +58,7 @@ public class MessagePotionDuration implements IMessage, IMessageHandler<MessageP
         final PotionEffect effect = ((EntityLivingBase) entity).getActivePotionEffect(potion);
         if (effect == null) return null;
 
-        // combine() is the only public way to raise the duration; it takes the larger of the two
-        effect.combine(new PotionEffect(message.potionId, message.duration, effect.getAmplifier()));
+        ((PotionEffectAccessor) effect).setDuration(message.duration);
         effect.setPotionDurationMax(false);
 
         return null;

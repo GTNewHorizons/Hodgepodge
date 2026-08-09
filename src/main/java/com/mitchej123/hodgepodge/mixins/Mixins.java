@@ -242,7 +242,8 @@ public enum Mixins implements IMixins {
     FIX_LONG_POTION_DURATION(new MixinBuilder("Fix Potion Durations Longer Than 27 Minutes")
             .addCommonMixins(
                     "minecraft.MixinS1DPacketEntityEffect_LongDuration",
-                    "minecraft.MixinNetHandlerPlayServer_LongPotionDuration")
+                    "minecraft.MixinNetHandlerPlayServer_LongPotionDuration",
+                    "minecraft.PotionEffectAccessor")
             .setApplyIf(() -> FixesConfig.fixLongPotionDuration)
             .setPhase(Phase.EARLY)),
     FIX_LONG_TIMER_FORMAT(new MixinBuilder("Show Timers Longer Than An Hour As h:mm:ss")
