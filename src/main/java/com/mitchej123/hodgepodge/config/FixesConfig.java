@@ -396,6 +396,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixEntityAttributesRange;
 
+    @Config.Comment("Display timers longer than an hour as h:mm:ss instead of vanilla's unbounded mm:ss")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixLongTimerFormat;
+
     @Config.Comment("Fixes items bouncing on stairs and other blocks with odd hitboxes")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
