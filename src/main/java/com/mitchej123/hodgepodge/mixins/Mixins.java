@@ -86,6 +86,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiScreenResourcePacks")
             .setApplyIf(() -> FixesConfig.fixResourcePackOpening)
             .setPhase(Phase.EARLY)),
+    RESOURCEPACK_SCREEN_ORE_OUTLINE_BUTTON(new MixinBuilder("Add a button next to the resource pack folder button to switch between normal and outlined ores.")
+            .addClientMixins("minecraft.MixinGuiScreenResourcePacks_OreOutlineButton")
+            .setApplyIf(() -> true)
+            .setPhase(Phase.EARLY)),
     FIX_ENCHANTMENT_LEVEL_NUMERALS(new MixinBuilder("Fix enchantment levels not displaying properly above a certain value")
             .addCommonMixins("minecraft.MixinEnchantment_FixRomanNumerals")
             .setApplyIf(() -> FixesConfig.fixEnchantmentNumerals || TweaksConfig.arabicNumbersForEnchantsPotions)
