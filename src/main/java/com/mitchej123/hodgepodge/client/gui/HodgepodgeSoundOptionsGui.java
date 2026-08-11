@@ -24,6 +24,7 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
     private static final int DONE_BUTTON_ID = 200;
 
     private final GuiScreen parent;
+    private final boolean deviceTweaksAvailable = Loader.isModLoaded("lwjgl3ify");
 
     public HodgepodgeSoundOptionsGui(GuiScreen parent) {
         this.parent = parent;
@@ -33,7 +34,6 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
     public void initGui() {
         int left = width / 2 - 155;
         int top = height / 6 + 24;
-        boolean deviceTweaksAvailable = Loader.isModLoaded("lwjgl3ify");
 
         GuiButton hrtf = new GuiButton(HRTF_BUTTON_ID, left, top, 150, 20, hrtfText());
         GuiButton limiter = new GuiButton(LIMITER_BUTTON_ID, left + 160, top, 150, 20, limiterText());
@@ -109,7 +109,7 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
                 width / 2,
                 15,
                 0xFFFFFF);
-        if (!Loader.isModLoaded("lwjgl3ify")) {
+        if (!deviceTweaksAvailable) {
             drawCenteredString(
                     fontRendererObj,
                     I18n.format("hodgepodge.soundsmenu.enhancements.lwjgl3ify"),
@@ -121,7 +121,7 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
                 fontRendererObj,
                 I18n.format("hodgepodge.soundsmenu.enhancements.reload"),
                 width / 2,
-                height / 6 + 120,
+                height / 6 + (deviceTweaksAvailable ? 108 : 120),
                 0xA0A0A0);
         super.drawScreen(mouseX, mouseY, partialTicks);
 
