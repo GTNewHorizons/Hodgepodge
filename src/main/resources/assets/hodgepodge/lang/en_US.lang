@@ -42,6 +42,9 @@ bettermodlist.sort.z_to_a=Z-A
 bettermodlist.gui.modlistinfo1=OMG everything is different!
 bettermodlist.gui.modlistinfo2=New layout provided by:
 
+hodgepodge.resourcepacks.ore_outline.enabled=Outlined Ores: §aEnabled
+hodgepodge.resourcepacks.ore_outline.disabled=Outlined Ores: §cDisabled
+
 hodgepodge.debug.advanced_tooltips.enabled=Advanced Item Tooltips: §aOn
 hodgepodge.debug.advanced_tooltips.disabled=Advanced Item Tooltips: §cOff
 hodgepodge.debug.hitboxes.enabled=Hitboxes: §aOn
