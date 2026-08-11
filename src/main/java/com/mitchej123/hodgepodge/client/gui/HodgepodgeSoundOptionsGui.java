@@ -7,11 +7,10 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
 import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
+import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.client.handlers.ReloadSoundsGui;
 import com.mitchej123.hodgepodge.config.SoundConfig;
 import com.mitchej123.hodgepodge.config.SoundConfig.Tristate;
-
-import cpw.mods.fml.common.Loader;
 
 public class HodgepodgeSoundOptionsGui extends GuiScreen {
 
@@ -24,7 +23,7 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
     private static final int DONE_BUTTON_ID = 200;
 
     private final GuiScreen parent;
-    private final boolean deviceTweaksAvailable = Loader.isModLoaded("lwjgl3ify");
+    private final boolean deviceTweaksAvailable = Compat.isLwjgl3ifyPresent();
 
     public HodgepodgeSoundOptionsGui(GuiScreen parent) {
         this.parent = parent;
