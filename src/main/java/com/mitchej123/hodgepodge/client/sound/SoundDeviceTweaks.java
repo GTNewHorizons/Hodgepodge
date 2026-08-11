@@ -69,7 +69,9 @@ public final class SoundDeviceTweaks {
     /** Polled from the client tick. Sole writer of the applied state, so no locking is needed here. */
     public static void tick() {
         consumeInvalidate();
-        if (unavailable || (SoundConfig.hrtf == Tristate.DEFAULT && SoundConfig.outputLimiter == Tristate.DEFAULT)) {
+        if (unavailable || (SoundConfig.hrtf == Tristate.DEFAULT && SoundConfig.outputLimiter == Tristate.DEFAULT
+                && appliedHrtf == Tristate.DEFAULT
+                && appliedLimiter == Tristate.DEFAULT)) {
             return;
         }
         if (!Loader.isModLoaded("lwjgl3ify")) {
