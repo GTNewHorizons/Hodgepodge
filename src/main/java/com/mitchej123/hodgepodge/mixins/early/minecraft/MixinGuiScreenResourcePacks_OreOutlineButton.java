@@ -16,6 +16,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
+import com.mitchej123.hodgepodge.config.TweaksConfig;
+
 @Mixin(GuiScreenResourcePacks.class)
 public class MixinGuiScreenResourcePacks_OreOutlineButton extends GuiScreen {
 
@@ -27,9 +30,6 @@ public class MixinGuiScreenResourcePacks_OreOutlineButton extends GuiScreen {
     @Unique
     private static final int hodgepodge$buttonId = 9001;
 
-    @Unique
-    private boolean hodgepodge$outlineEnabled = false;
-
     @Inject(method = "initGui", at = @At("TAIL"))
     private void hodgepodge$addOreOutlineButton(CallbackInfo ci) {
         this.buttonList.add(new GuiButton(hodgepodge$buttonId, this.width / 2 - 204, this.height - 48, 20, 20, ""));
@@ -38,7 +38,8 @@ public class MixinGuiScreenResourcePacks_OreOutlineButton extends GuiScreen {
     @Inject(method = "actionPerformed", at = @At("HEAD"))
     private void hodgepodge$onActionPerformed(GuiButton button, CallbackInfo ci) {
         if (button.id == hodgepodge$buttonId) {
-            hodgepodge$outlineEnabled = !hodgepodge$outlineEnabled;
+            TweaksConfig.oreOutlineEnabled = !TweaksConfig.oreOutlineEnabled;
+            ConfigurationManager.save(TweaksConfig.class);
         }
     }
 
@@ -49,12 +50,12 @@ public class MixinGuiScreenResourcePacks_OreOutlineButton extends GuiScreen {
 
         this.mc.getTextureManager().bindTexture(hodgepodge$icon);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Gui.func_146110_a(iconX, iconY, 0, hodgepodge$outlineEnabled ? 16 : 0, 16, 16, 16, 32);
+        Gui.func_146110_a(iconX, iconY, 0, TweaksConfig.oreOutlineEnabled ? 16 : 0, 16, 16, 16, 32);
 
         int buttonX = this.width / 2 - 204;
         int buttonY = this.height - 48;
         if (mouseX >= buttonX && mouseX < buttonX + 20 && mouseY >= buttonY && mouseY < buttonY + 20) {
-            String key = hodgepodge$outlineEnabled ? "hodgepodge.resourcepacks.ore_outline.enabled"
+            String key = TweaksConfig.oreOutlineEnabled ? "hodgepodge.resourcepacks.ore_outline.enabled"
                     : "hodgepodge.resourcepacks.ore_outline.disabled";
             this.drawHoveringText(Collections.singletonList(I18n.format(key)), mouseX, mouseY, this.fontRendererObj);
         }

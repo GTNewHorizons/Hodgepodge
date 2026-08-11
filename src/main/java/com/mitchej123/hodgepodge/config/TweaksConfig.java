@@ -162,6 +162,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean modernPickBlock;
 
+    @Config.Comment("Outline ores in the world (toggleable from the resource packs screen)")
+    @Config.DefaultBoolean(false)
+    public static boolean oreOutlineEnabled;
+
     @Config.Comment("Particle limit (Vanilla: 4000)")
     @Config.RangeInt(min = 4000, max = 16000)
     @Config.DefaultInt(8000)
