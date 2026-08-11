@@ -1,0 +1,77 @@
+package com.mitchej123.hodgepodge.client.sound;
+
+import java.lang.reflect.Method;
+
+import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.config.SoundConfig;
+
+import cpw.mods.fml.common.Loader;
+
+/**
+ * Lets OpenAL spatialize positional stereo sources without downmixing them to mono first.
+ * <p>
+ * Needs AL_SOFT_source_spatialize, which arrived in OpenAL Soft 1.19, long after the OpenAL LWJGL2 bundles. This is
+ * therefore lwjgl3ify-only and stays off on the Java 8 build. Reflective for the same reason as
+ * {@link SoundDeviceTweaks}: LWJGL2 and LWJGL3 share the {@code org.lwjgl.openal} package, so compiling against LWJGL3
+ * would put two different AL10 classes on the classpath.
+ */
+public final class SpatializeSupport {
+
+    private SpatializeSupport() {}
+
+    private static final int AL_SOURCE_SPATIALIZE_SOFT = 4628;
+    private static final int AL_AUTO_SOFT = 2;
+    private static final int AL_TRUE = 1;
+
+    private static Method alSourcei;
+    private static boolean resolved = false;
+    private static boolean supported = false;
+    private static boolean everApplied = false;
+
+    /**
+     * True when the codec should keep buffers stereo. {@link #apply(int, boolean)} then decides per playback whether to
+     * force spatialization or leave the source on OpenAL's automatic behavior.
+     */
+    public static boolean active() {
+        return SoundConfig.spatializeStereoSounds && resolve();
+    }
+
+    /**
+     * Sets the flag on an OpenAL source. Channels are pooled and OpenAL keeps source properties across buffer
+     * attachment, so this writes on <i>every</i> attach. That includes AL_AUTO, which restores stock behaviour for UI
+     * sounds and for channels left forced-on after the setting is switched off.
+     */
+    static void apply(int alSource, boolean positional) {
+        final boolean want = SoundConfig.spatializeStereoSounds && positional;
+        if (!want && !everApplied) return; // nothing was ever forced on, so nothing to undo
+        if (!resolve()) return;
+        try {
+            alSourcei.invoke(null, alSource, AL_SOURCE_SPATIALIZE_SOFT, want ? AL_TRUE : AL_AUTO_SOFT);
+            everApplied = true;
+        } catch (Throwable t) {
+            supported = false; // stop trying; the codec falls back to downmixing on the next decode
+            Common.log.warn("Could not set source spatialization, falling back to downmixing", t);
+        }
+    }
+
+    private static synchronized boolean resolve() {
+        if (resolved) return supported;
+        resolved = true;
+        if (!Loader.isModLoaded("lwjgl3ify")) return false; // LWJGL2's OpenAL predates the extension
+        try {
+            final Class<?> al10 = Class.forName("org.lwjgl.openal.AL10");
+            final boolean present = (Boolean) al10.getMethod("alIsExtensionPresent", CharSequence.class)
+                    .invoke(null, "AL_SOFT_source_spatialize");
+            if (!present) {
+                Common.log.info("AL_SOFT_source_spatialize unavailable, stereo sounds will be downmixed instead");
+                return false;
+            }
+            alSourcei = al10.getMethod("alSourcei", int.class, int.class, int.class);
+            supported = true;
+            Common.log.info("Using AL_SOFT_source_spatialize; stereo sounds keep their width");
+        } catch (Throwable t) {
+            Common.log.warn("Could not set up source spatialization, stereo sounds will be downmixed instead", t);
+        }
+        return supported;
+    }
+}
