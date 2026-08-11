@@ -10,7 +10,6 @@ import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 import com.mitchej123.hodgepodge.client.handlers.ReloadSoundsGui;
 import com.mitchej123.hodgepodge.config.SoundConfig;
 import com.mitchej123.hodgepodge.config.SoundConfig.Tristate;
-import com.mitchej123.hodgepodge.config.TweaksConfig;
 
 import cpw.mods.fml.common.Loader;
 
@@ -48,25 +47,19 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
         spatialize.enabled = deviceTweaksAvailable;
         buttonList.add(spatialize);
 
-        if (TweaksConfig.reloadSoundsButton) {
-            buttonList.add(
-                    new GuiButton(
-                            RELOAD_BUTTON_ID,
-                            left,
-                            height / 6 + 168,
-                            150,
-                            20,
-                            I18n.format("hodgepodge.soundsmenu.refreshsounds")));
-            buttonList
-                    .add(new GuiButton(DONE_BUTTON_ID, left + 160, height / 6 + 168, 150, 20, I18n.format("gui.done")));
-        } else {
-            buttonList.add(new GuiButton(DONE_BUTTON_ID, width / 2 - 100, height / 6 + 168, I18n.format("gui.done")));
-        }
+        buttonList.add(
+                new GuiButton(
+                        RELOAD_BUTTON_ID,
+                        left,
+                        height / 6 + 168,
+                        150,
+                        20,
+                        I18n.format("hodgepodge.soundsmenu.refreshsounds")));
+        buttonList.add(new GuiButton(DONE_BUTTON_ID, left + 160, height / 6 + 168, 150, 20, I18n.format("gui.done")));
     }
 
     @Override
     protected void actionPerformed(GuiButton button) {
-        if (!button.enabled) return;
         switch (button.id) {
             case HRTF_BUTTON_ID -> {
                 SoundConfig.hrtf = next(SoundConfig.hrtf);
@@ -116,12 +109,14 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
                 width / 2,
                 15,
                 0xFFFFFF);
-        drawCenteredString(
-                fontRendererObj,
-                I18n.format("hodgepodge.soundsmenu.enhancements.lwjgl3ify"),
-                width / 2,
-                height / 6 + 108,
-                0xA0A0A0);
+        if (!Loader.isModLoaded("lwjgl3ify")) {
+            drawCenteredString(
+                    fontRendererObj,
+                    I18n.format("hodgepodge.soundsmenu.enhancements.lwjgl3ify"),
+                    width / 2,
+                    height / 6 + 108,
+                    0xA0A0A0);
+        }
         drawCenteredString(
                 fontRendererObj,
                 I18n.format("hodgepodge.soundsmenu.enhancements.reload"),

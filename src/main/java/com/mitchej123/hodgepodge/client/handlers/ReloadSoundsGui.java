@@ -19,7 +19,8 @@ public class ReloadSoundsGui {
     @SuppressWarnings("unchecked")
     @SubscribeEvent
     public void onInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
-        if (event.gui instanceof GuiScreenOptionsSounds) {
+        if (event.gui instanceof GuiScreenOptionsSounds
+                && (TweaksConfig.soundEnhancementsButton || TweaksConfig.reloadSoundsButton)) {
             int posY = 0;
             for (Object o : event.buttonList) {
                 if (o instanceof GuiButton guiButton
@@ -31,24 +32,33 @@ public class ReloadSoundsGui {
                 posY = event.gui.height / 6 + 168 - (20 + 4) * 2;
             }
             posY += 20 + 4;
-            int posX = event.gui.width / 2 - 155;
-            int optionsWidth = TweaksConfig.reloadSoundsButton ? 150 : 310;
-            event.buttonList.add(
-                    new GuiButton(
-                            OPTIONS_BUTTON_ID,
-                            posX,
-                            posY,
-                            optionsWidth,
-                            20,
-                            StatCollector.translateToLocal("hodgepodge.soundsmenu.enhancements")));
-            if (TweaksConfig.reloadSoundsButton) {
+            if (TweaksConfig.soundEnhancementsButton) {
+                int posX = event.gui.width / 2 - 155;
+                int optionsWidth = TweaksConfig.reloadSoundsButton ? 150 : 310;
+                event.buttonList.add(
+                        new GuiButton(
+                                OPTIONS_BUTTON_ID,
+                                posX,
+                                posY,
+                                optionsWidth,
+                                20,
+                                StatCollector.translateToLocal("hodgepodge.soundsmenu.enhancements")));
+                if (TweaksConfig.reloadSoundsButton) {
+                    event.buttonList.add(
+                            new GuiButton(
+                                    RELOAD_BUTTON_ID,
+                                    posX + 160,
+                                    posY,
+                                    150,
+                                    20,
+                                    StatCollector.translateToLocal("hodgepodge.soundsmenu.refreshsounds")));
+                }
+            } else {
                 event.buttonList.add(
                         new GuiButton(
                                 RELOAD_BUTTON_ID,
-                                posX + 160,
+                                event.gui.width / 2 - 100,
                                 posY,
-                                150,
-                                20,
                                 StatCollector.translateToLocal("hodgepodge.soundsmenu.refreshsounds")));
             }
         }
@@ -57,7 +67,7 @@ public class ReloadSoundsGui {
     @SubscribeEvent
     public void onClick(GuiScreenEvent.ActionPerformedEvent.Post event) {
         if (event.gui instanceof GuiScreenOptionsSounds) {
-            if (event.button.id == OPTIONS_BUTTON_ID) {
+            if (TweaksConfig.soundEnhancementsButton && event.button.id == OPTIONS_BUTTON_ID) {
                 Minecraft.getMinecraft().displayGuiScreen(new HodgepodgeSoundOptionsGui(event.gui));
             } else if (TweaksConfig.reloadSoundsButton && event.button.id == RELOAD_BUTTON_ID) {
                 reloadSounds();
