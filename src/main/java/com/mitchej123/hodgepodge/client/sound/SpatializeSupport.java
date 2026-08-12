@@ -3,9 +3,8 @@ package com.mitchej123.hodgepodge.client.sound;
 import java.lang.reflect.Method;
 
 import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.config.SoundConfig;
-
-import cpw.mods.fml.common.Loader;
 
 /**
  * Lets OpenAL spatialize positional stereo sources without downmixing them to mono first.
@@ -57,7 +56,7 @@ public final class SpatializeSupport {
     private static synchronized boolean resolve() {
         if (resolved) return supported;
         resolved = true;
-        if (!Loader.isModLoaded("lwjgl3ify")) return false; // LWJGL2's OpenAL predates the extension
+        if (!Compat.isLwjgl3ifyPresent()) return false; // LWJGL2's OpenAL predates the extension
         try {
             final Class<?> al10 = Class.forName("org.lwjgl.openal.AL10");
             final boolean present = (Boolean) al10.getMethod("alIsExtensionPresent", CharSequence.class)

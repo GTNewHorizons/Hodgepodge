@@ -4,10 +4,9 @@ import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.config.SoundConfig;
 import com.mitchej123.hodgepodge.config.SoundConfig.Tristate;
-
-import cpw.mods.fml.common.Loader;
 
 /**
  * OpenAL Soft device settings Minecraft never exposes: HRTF (binaural positioning on headphones) and the output limiter
@@ -69,10 +68,12 @@ public final class SoundDeviceTweaks {
     /** Polled from the client tick. Sole writer of the applied state, so no locking is needed here. */
     public static void tick() {
         consumeInvalidate();
-        if (unavailable || (SoundConfig.hrtf == Tristate.DEFAULT && SoundConfig.outputLimiter == Tristate.DEFAULT)) {
+        if (unavailable || (SoundConfig.hrtf == Tristate.DEFAULT && SoundConfig.outputLimiter == Tristate.DEFAULT
+                && appliedHrtf == Tristate.DEFAULT
+                && appliedLimiter == Tristate.DEFAULT)) {
             return;
         }
-        if (!Loader.isModLoaded("lwjgl3ify")) {
+        if (!Compat.isLwjgl3ifyPresent()) {
             unavailable = true; // LWJGL2's OpenAL predates these extensions
             return;
         }
