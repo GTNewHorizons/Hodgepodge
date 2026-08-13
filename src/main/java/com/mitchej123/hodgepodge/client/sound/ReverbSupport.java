@@ -57,10 +57,7 @@ public final class ReverbSupport {
     private static int resolveFailures = 0;
     private static float appliedDecay = -1f;
     private static float appliedWet = -1f;
-
-    public static boolean active() {
-        return SoundConfig.environmentalReverb && resolve();
-    }
+    private static float appliedStrength = -1f;
 
     /**
      * Routes a source through the reverb slot, or explicitly clears the send.
@@ -90,6 +87,11 @@ public final class ReverbSupport {
         // Being in a world guarantees the sound system finished starting, so resolve() below has a live AL context
         // to create its effect objects in.
         if (player == null || mc.theWorld == null) return;
+        if (SoundConfig.reverbStrength <= 0f) {
+            // Silence the existing effect once, without continuing to probe the world for inaudible reverb.
+            if (appliedWet > 0f && resolve()) applyRoom(1f, RAY_LENGTH);
+            return;
+        }
         if (!resolve()) return;
         final float[] room = probeRoom(mc.theWorld, player);
         applyRoom(room[0], room[1]);
@@ -143,11 +145,14 @@ public final class ReverbSupport {
         final float enclosure = 1f - openness;
         final float decay = 0.15f + (meanDistance / RAY_LENGTH) * enclosure * 3.0f;
         final float wet = enclosure * enclosure * SoundConfig.reverbStrength;
-        // Both have to be in the check: reverbStrength only moves wet, so gating on decay alone would let a live
-        // change to it sit unapplied until the room estimate happened to shift.
-        if (Math.abs(decay - appliedDecay) < 0.05f && Math.abs(wet - appliedWet) < 0.01f) return;
+        // Strength is checked directly so every slider step applies even when enclosure scales its wet change below
+        // the room-probe dead zone.
+        if (Math.abs(decay - appliedDecay) < 0.05f && Math.abs(wet - appliedWet) < 0.01f
+                && SoundConfig.reverbStrength == appliedStrength)
+            return;
         appliedDecay = decay;
         appliedWet = wet;
+        appliedStrength = SoundConfig.reverbStrength;
         try {
             alEffectf.invoke(null, effect, AL_REVERB_DECAY_TIME, clamp(decay, 0.1f, 20f));
             alEffectf.invoke(null, effect, AL_REVERB_GAIN, clamp(wet, 0f, 1f));
@@ -199,6 +204,7 @@ public final class ReverbSupport {
             // the old values still held and skip the first update, leaving the new effect at its defaults.
             appliedDecay = -1f;
             appliedWet = -1f;
+            appliedStrength = -1f;
             supported = true;
             Common.log.info("Environmental reverb enabled (EFX effect {}, slot {})", effect, slot);
         } catch (Throwable t) {
