@@ -12,6 +12,8 @@ import com.mitchej123.hodgepodge.client.handlers.ReloadSoundsGui;
 import com.mitchej123.hodgepodge.config.SoundConfig;
 import com.mitchej123.hodgepodge.config.SoundConfig.Tristate;
 
+import cpw.mods.fml.client.config.GuiSlider;
+
 public class HodgepodgeSoundOptionsGui extends GuiScreen {
 
     private static final int HRTF_BUTTON_ID = 0;
@@ -20,10 +22,13 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
     private static final int DOWNMIX_BUTTON_ID = 3;
     private static final int SPATIALIZE_BUTTON_ID = 4;
     private static final int RELOAD_BUTTON_ID = 5;
+    private static final int REVERB_STRENGTH_SLIDER_ID = 6;
     private static final int DONE_BUTTON_ID = 200;
 
     private final GuiScreen parent;
     private final boolean deviceTweaksAvailable = Compat.isLwjgl3ifyPresent();
+    private GuiSlider reverbStrengthSlider;
+    private boolean reverbStrengthDirty;
 
     public HodgepodgeSoundOptionsGui(GuiScreen parent) {
         this.parent = parent;
@@ -40,7 +45,28 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
         limiter.enabled = deviceTweaksAvailable;
         buttonList.add(hrtf);
         buttonList.add(limiter);
-        buttonList.add(new GuiButton(REVERB_BUTTON_ID, left, top + 24, 310, 20, reverbText()));
+        buttonList.add(new GuiButton(REVERB_BUTTON_ID, left, top + 24, 150, 20, reverbText()));
+        reverbStrengthSlider = new GuiSlider(
+                REVERB_STRENGTH_SLIDER_ID,
+                left + 160,
+                top + 24,
+                150,
+                20,
+                "",
+                "",
+                0,
+                100,
+                SoundConfig.reverbStrength * 100,
+                false,
+                true,
+                slider -> {
+                    SoundConfig.reverbStrength = slider.getValueInt() / 100f;
+                    updateReverbStrengthSliderText(slider);
+                    reverbStrengthDirty = true;
+                });
+        updateReverbStrengthSliderText(reverbStrengthSlider);
+        reverbStrengthSlider.enabled = SoundConfig.environmentalReverb;
+        buttonList.add(reverbStrengthSlider);
         buttonList.add(new GuiButton(DOWNMIX_BUTTON_ID, left, top + 48, 150, 20, downmixText()));
         GuiButton spatialize = new GuiButton(SPATIALIZE_BUTTON_ID, left + 160, top + 48, 150, 20, spatializeText());
         spatialize.enabled = deviceTweaksAvailable;
@@ -73,6 +99,7 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
             case REVERB_BUTTON_ID -> {
                 SoundConfig.environmentalReverb = !SoundConfig.environmentalReverb;
                 button.displayString = reverbText();
+                reverbStrengthSlider.enabled = SoundConfig.environmentalReverb;
                 save();
             }
             case DOWNMIX_BUTTON_ID -> {
@@ -88,6 +115,18 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
             case RELOAD_BUTTON_ID -> ReloadSoundsGui.reloadSounds();
             case DONE_BUTTON_ID -> mc.displayGuiScreen(parent);
         }
+    }
+
+    @Override
+    protected void mouseMovedOrUp(int mouseX, int mouseY, int state) {
+        boolean finishedDragging = state == 0 && reverbStrengthSlider.dragging;
+        super.mouseMovedOrUp(mouseX, mouseY, state);
+        if (finishedDragging) saveReverbStrength();
+    }
+
+    @Override
+    public void onGuiClosed() {
+        saveReverbStrength();
     }
 
     @Override
@@ -181,14 +220,28 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
         return I18n.format("hodgepodge.soundsmenu.option", I18n.format(name), I18n.format(valueKey));
     }
 
+    private static void updateReverbStrengthSliderText(GuiSlider slider) {
+        slider.displayString = I18n.format(
+                "hodgepodge.soundsmenu.option",
+                I18n.format("hodgepodge.soundsmenu.reverb_strength"),
+                slider.getValueInt() + "%");
+    }
+
     private static String tooltip(int buttonId) {
         return switch (buttonId) {
             case HRTF_BUTTON_ID -> "hodgepodge.soundsmenu.hrtf.tooltip";
             case LIMITER_BUTTON_ID -> "hodgepodge.soundsmenu.output_limiter.tooltip";
             case REVERB_BUTTON_ID -> "hodgepodge.soundsmenu.environmental_reverb.tooltip";
+            case REVERB_STRENGTH_SLIDER_ID -> "hodgepodge.soundsmenu.reverb_strength.tooltip";
             case DOWNMIX_BUTTON_ID -> "hodgepodge.soundsmenu.downmix_stereo.tooltip";
             case SPATIALIZE_BUTTON_ID -> "hodgepodge.soundsmenu.spatialize_stereo.tooltip";
             default -> null;
         };
+    }
+
+    private void saveReverbStrength() {
+        if (!reverbStrengthDirty) return;
+        save();
+        reverbStrengthDirty = false;
     }
 }
