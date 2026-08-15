@@ -1291,6 +1291,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixIc2TinCan)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
+    IC2_RUBBER_SAPLING_BONEMEAL_FIX(new MixinBuilder("Prevent IC2 rubber saplings from consuming bone meal twice")
+            .addCommonMixins("ic2.MixinBlockRubSapling")
+            .setApplyIf(() -> FixesConfig.fixIc2RubberSaplingBonemeal)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
     IC2_EID_COMPAT(new MixinBuilder("Fix EndlessIds incompatibility with IC2")
             .addCommonMixins("ic2.MixinIC2TileEntityTerra_EIDCompat")
             .setApplyIf(() -> FixesConfig.fixIc2Eid)
