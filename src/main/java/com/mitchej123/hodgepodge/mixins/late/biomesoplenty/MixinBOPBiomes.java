@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.mixins.late.biomesoplenty;
 
 import java.lang.reflect.Field;
 
+import com.mitchej123.hodgepodge.Common;
 import net.minecraft.world.biome.BiomeGenBase;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -48,7 +49,7 @@ public class MixinBOPBiomes {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Common.log.error(e);
             }
         }
     }

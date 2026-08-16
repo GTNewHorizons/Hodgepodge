@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.client.biomesoplenty;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.mitchej123.hodgepodge.Common;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
@@ -55,7 +56,7 @@ public class BOPFogHandler {
                     try {
                         sleep(1000);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Common.log.error(e);
                     }
                 }
                 if (ticks.get() > 0) {
@@ -123,7 +124,7 @@ public class BOPFogHandler {
                         AccessorFogHandler.setFogInit(true);
 
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Common.log.error(e);
                     }
 
                     ticks.decrementAndGet();
@@ -132,7 +133,7 @@ public class BOPFogHandler {
                     try {
                         sleep(1000);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Common.log.error(e);
                     }
                 }
             }

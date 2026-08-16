@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.mitchej123.hodgepodge.Common;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.storage.IThreadedFileIO;
@@ -76,7 +77,7 @@ public class WorldDataSaver implements IThreadedFileIO {
 
         } catch (Exception e) {
             LOGGER.error("Failed to write data to file {}", file, e);
-            e.printStackTrace();
+            Common.log.error(e);
         }
         return true;
     }

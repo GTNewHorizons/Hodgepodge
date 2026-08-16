@@ -1,5 +1,6 @@
 package com.mitchej123.hodgepodge.mixins.late.lotr;
 
+import com.mitchej123.hodgepodge.Common;
 import net.minecraft.server.MinecraftServer;
 
 import org.apache.logging.log4j.Logger;
@@ -29,7 +30,7 @@ public class MixinLOTRLogReflection {
 
         } catch (final Exception e) {
             FMLLog.warning("LOTR: Failed to find logger!");
-            e.printStackTrace();
+            Common.log.error(e);
         }
     }
 }

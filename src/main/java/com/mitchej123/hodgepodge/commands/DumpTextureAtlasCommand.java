@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
+import com.mitchej123.hodgepodge.Common;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -52,7 +53,7 @@ public final class DumpTextureAtlasCommand extends CommandBase {
         try {
             dumpAtlas(TextureMap.locationBlocksTexture);
         } catch (Exception e) {
-            e.printStackTrace();
+            Common.log.error(e);
             sender.addChatMessage(
                     new ChatComponentText(
                             EnumChatFormatting.RED
@@ -61,7 +62,7 @@ public final class DumpTextureAtlasCommand extends CommandBase {
         try {
             dumpAtlas(TextureMap.locationItemsTexture);
         } catch (Exception e) {
-            e.printStackTrace();
+            Common.log.error(e);
             sender.addChatMessage(
                     new ChatComponentText(
                             EnumChatFormatting.RED + "Failed to copy the item texture atlas. See logs for more info."));
@@ -171,7 +172,7 @@ public final class DumpTextureAtlasCommand extends CommandBase {
         try {
             ImageIO.write(bufferedimage, "png", file);
         } catch (Exception e) {
-            e.printStackTrace();
+            Common.log.error(e);
         }
     }
 }

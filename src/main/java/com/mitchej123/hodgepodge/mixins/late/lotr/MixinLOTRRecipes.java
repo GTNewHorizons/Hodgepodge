@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.mixins.late.lotr;
 
 import java.util.Map;
 
+import com.mitchej123.hodgepodge.Common;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -28,7 +29,7 @@ public class MixinLOTRRecipes {
                     .getPrivateValue(FurnaceRecipes.class, FurnaceRecipes.smelting(), 2);
             map.put(new ItemStack(item, 1, 32767), xp);
         } catch (Exception e) {
-            e.printStackTrace();
+            Common.log.error(e);
         }
     }
 }

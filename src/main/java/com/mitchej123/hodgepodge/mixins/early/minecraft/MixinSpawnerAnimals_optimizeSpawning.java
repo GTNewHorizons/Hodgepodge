@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 import java.util.List;
 import java.util.Random;
 
+import com.mitchej123.hodgepodge.Common;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -200,7 +201,7 @@ public class MixinSpawnerAnimals_optimizeSpawning {
                                         try {
                                             entityLiving = ((SpawnListEntryExt) spawnListEntry).constructEntity(world);
                                         } catch (Exception exception) {
-                                            exception.printStackTrace();
+                                            Common.log.error(exception);
                                             return totalSpawnedEntities;
                                         }
 
@@ -316,7 +317,7 @@ public class MixinSpawnerAnimals_optimizeSpawning {
                         try {
                             entityLiving = ((SpawnListEntryExt) spawnListEntry).constructEntity(world);
                         } catch (Exception exception) {
-                            exception.printStackTrace();
+                            Common.log.error(exception);
                             continue;
                         }
 

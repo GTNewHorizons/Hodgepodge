@@ -310,7 +310,7 @@ public class SimulationDistanceHelper {
                 writer.write(content);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Common.log.error(e);
         }
     }
 
@@ -331,7 +331,7 @@ public class SimulationDistanceHelper {
     private void checkThread() {
         if (thread != null && thread != Thread.currentThread()) {
             FMLLog.getLogger().error("Original stacktrace:");
-            originalStackTraceException.printStackTrace();
+            FMLLog.getLogger().error(originalStackTraceException);
             throw new RuntimeException("Called from different thread!");
         }
     }

@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import com.gtnewhorizon.gtnhlib.reflect.Fields;
 
+import com.mitchej123.hodgepodge.Common;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
@@ -23,7 +24,7 @@ public class FinalValueHelper {
                     .getUntypedField(Fields.LookupType.DECLARED_IN_HIERARCHY, field.getName());
             accessor.setValue(instance, value);
         } catch (Exception e) {
-            e.printStackTrace();
+            Common.log.error(e);
         }
     }
 }

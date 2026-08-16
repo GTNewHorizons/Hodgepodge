@@ -171,7 +171,7 @@ public abstract class MixinRegionFile {
                 this.chunkTimestamps[i] = timestamp;
             }
         } catch (IOException e) {
-            e.printStackTrace(System.err);
+            Common.log.error(e);
         }
         throw hodgepodge$magicException;
     }
@@ -180,7 +180,7 @@ public abstract class MixinRegionFile {
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Ljava/io/IOException;printStackTrace()V"))
     private void hodgepodge$ignoreMagicException(IOException e) {
         if (e != hodgepodge$magicException) {
-            e.printStackTrace(System.err);
+            Common.log.error(e);
         }
     }
 
@@ -318,7 +318,7 @@ public abstract class MixinRegionFile {
 
             this.setChunkTimestamp(x, z, (int) (MinecraftServer.getSystemTimeMillis() / 1000L));
         } catch (IOException ioexception) {
-            ioexception.printStackTrace(System.err);
+            Common.log.error(ioexception);
         }
     }
 
