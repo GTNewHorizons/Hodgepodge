@@ -2,13 +2,13 @@ package com.mitchej123.hodgepodge.mixins.late.biomesoplenty;
 
 import java.lang.reflect.Field;
 
-import com.mitchej123.hodgepodge.Common;
 import net.minecraft.world.biome.BiomeGenBase;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
 import com.gtnewhorizon.gtnhlib.reflect.Fields;
+import com.mitchej123.hodgepodge.Common;
 
 import biomesoplenty.api.biome.BOPOverriddenBiome;
 import biomesoplenty.common.configuration.BOPConfigurationBiomeGen;

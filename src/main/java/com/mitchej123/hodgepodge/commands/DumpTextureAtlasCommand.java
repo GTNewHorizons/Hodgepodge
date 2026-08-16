@@ -15,7 +15,6 @@ import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
-import com.mitchej123.hodgepodge.Common;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -29,6 +28,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.core.HodgepodgeCore;
 
 public final class DumpTextureAtlasCommand extends CommandBase {

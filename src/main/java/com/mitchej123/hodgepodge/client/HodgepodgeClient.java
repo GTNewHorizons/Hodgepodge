@@ -47,7 +47,9 @@ public class HodgepodgeClient {
 
         if (TweaksConfig.enableDefaultLanPort) {
             if (TweaksConfig.defaultLanPort < 0 || TweaksConfig.defaultLanPort > 65535) {
-                Common.log.error("Default LAN port number must be in range of 0-65535, but {} was given. Defaulting to 0.", TweaksConfig.defaultLanPort);
+                Common.log.error(
+                        "Default LAN port number must be in range of 0-65535, but {} was given. Defaulting to 0.",
+                        TweaksConfig.defaultLanPort);
                 TweaksConfig.defaultLanPort = 0;
             }
         }

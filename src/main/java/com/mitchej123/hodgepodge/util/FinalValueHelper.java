@@ -3,8 +3,8 @@ package com.mitchej123.hodgepodge.util;
 import java.lang.reflect.Field;
 
 import com.gtnewhorizon.gtnhlib.reflect.Fields;
-
 import com.mitchej123.hodgepodge.Common;
+
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 

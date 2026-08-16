@@ -3,7 +3,6 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 import java.util.List;
 import java.util.Random;
 
-import com.mitchej123.hodgepodge.Common;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -27,6 +26,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.mixins.hooks.BukkitSpawnHelper;

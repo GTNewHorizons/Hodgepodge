@@ -1,12 +1,13 @@
 package com.mitchej123.hodgepodge.mixins.late.lotr;
 
-import com.mitchej123.hodgepodge.Common;
 import net.minecraft.server.MinecraftServer;
 
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+
+import com.mitchej123.hodgepodge.Common;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;

@@ -2,13 +2,13 @@ package com.mitchej123.hodgepodge.client.biomesoplenty;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.mitchej123.hodgepodge.Common;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.mixins.late.biomesoplenty.AccessorFogHandler;
 

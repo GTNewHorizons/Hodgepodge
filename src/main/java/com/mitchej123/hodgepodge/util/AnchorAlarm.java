@@ -54,7 +54,13 @@ public class AnchorAlarm {
                         int x = buf.readInt();
                         int y = buf.readInt();
                         int z = buf.readInt();
-                        Common.log.debug("[AnchorDebug] Anchor ({}, {}, {}) at dim {} for player {}", x, y, z, dim, playerName);
+                        Common.log.debug(
+                                "[AnchorDebug] Anchor ({}, {}, {}) at dim {} for player {}",
+                                x,
+                                y,
+                                z,
+                                dim,
+                                playerName);
                     }
                 }
                 return true;
@@ -118,10 +124,20 @@ public class AnchorAlarm {
                                     newbuf.writeInt(y);
                                     newbuf.writeInt(z);
                                 } else if (AnchorDebug) {
-                                    Common.log.info("[AnchorDebug] Someone else's anchor at ({}, {}, {}) at dim {}", x, y, z, dim);
+                                    Common.log.info(
+                                            "[AnchorDebug] Someone else's anchor at ({}, {}, {}) at dim {}",
+                                            x,
+                                            y,
+                                            z,
+                                            dim);
                                 }
                             } else if (AnchorDebug) {
-                                Common.log.info("[AnchorDebug] Failed loading anchor at ({}, {}, {}) at dim {}", x, y, z, dim);
+                                Common.log.info(
+                                        "[AnchorDebug] Failed loading anchor at ({}, {}, {}) at dim {}",
+                                        x,
+                                        y,
+                                        z,
+                                        dim);
                             }
                         } else if (AnchorDebug) Common.log.info("[AnchorDebug] Failed loading dimension {}", dim);
                     }
