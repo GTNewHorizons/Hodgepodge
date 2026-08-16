@@ -7,8 +7,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 
-import com.mitchej123.hodgepodge.Common;
 import net.minecraft.launchwrapper.Launch;
+
+import com.mitchej123.hodgepodge.Common;
 
 public final class FileLogger implements AutoCloseable {
 

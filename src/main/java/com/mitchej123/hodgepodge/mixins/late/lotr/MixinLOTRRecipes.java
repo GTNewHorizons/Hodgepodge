@@ -2,13 +2,14 @@ package com.mitchej123.hodgepodge.mixins.late.lotr;
 
 import java.util.Map;
 
-import com.mitchej123.hodgepodge.Common;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+
+import com.mitchej123.hodgepodge.Common;
 
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import lotr.common.recipe.LOTRRecipes;

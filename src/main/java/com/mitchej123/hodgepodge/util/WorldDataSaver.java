@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.mitchej123.hodgepodge.Common;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.storage.IThreadedFileIO;
@@ -15,6 +14,8 @@ import net.minecraft.world.storage.ThreadedFileIOBase;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.mitchej123.hodgepodge.Common;
 
 public class WorldDataSaver implements IThreadedFileIO {
 
