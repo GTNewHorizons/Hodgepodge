@@ -810,6 +810,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixIc2TinCan;
 
+    @Config.Comment("Fix IC2 rubber saplings consuming bone meal twice and allowing the stack size to underflow")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2RubberSaplingBonemeal;
+
     @Config.Comment("Fix EndlessIds incompatibility with IC2")
     @Config.DefaultBoolean(true)
     public static boolean fixIc2Eid;
