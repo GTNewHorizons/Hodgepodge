@@ -1433,6 +1433,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.speedupThaumGetInfusionRecipes)
             .addRequiredMod(TargetedMod.THAUMCRAFT)
             .setPhase(Phase.LATE)),
+    SPEEDUP_THAUMCRAFT_POTION_ASPECTS(new MixinBuilder()
+            .addCommonMixins("thaumcraft.MixinConfigAspects_SpeedupPotionAspects")
+            .setApplyIf(() -> SpeedupsConfig.speedupThaumPotionAspectRegistration)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
     THREADED_THAUMCRAFT_MAZE_SAVING(new MixinBuilder()
             .addCommonMixins("thaumcraft.MixinMazeHandler_threadedIO")
             .setApplyIf(() -> TweaksConfig.threadedWorldDataSaving)

@@ -275,4 +275,9 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean speedupThaumGetInfusionRecipes;
 
+    @Config.Comment("Cache equivalent potion effects during Thaumcraft aspect registration")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupThaumPotionAspectRegistration;
+
 }
