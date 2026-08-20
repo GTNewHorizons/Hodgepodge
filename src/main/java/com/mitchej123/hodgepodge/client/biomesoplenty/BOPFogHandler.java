@@ -8,6 +8,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.mixins.late.biomesoplenty.AccessorFogHandler;
 
@@ -55,7 +56,7 @@ public class BOPFogHandler {
                     try {
                         sleep(1000);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Common.log.error(e);
                     }
                 }
                 if (ticks.get() > 0) {
@@ -123,7 +124,7 @@ public class BOPFogHandler {
                         AccessorFogHandler.setFogInit(true);
 
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Common.log.error(e);
                     }
 
                     ticks.decrementAndGet();
@@ -132,7 +133,7 @@ public class BOPFogHandler {
                     try {
                         sleep(1000);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Common.log.error(e);
                     }
                 }
             }
