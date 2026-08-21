@@ -16,6 +16,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean reloadSoundsButton;
 
+    @Config.Comment("Adds a button in the sounds menu for Hodgepodge's sound enhancements")
+    @Config.DefaultBoolean(true)
+    public static boolean soundEnhancementsButton;
+
     @Config.Comment("Adds system info to the F3 overlay (Java version and vendor; GPU name; OpenGL version; CPU cores; OS name, version and architecture)")
     @Config.DefaultBoolean(true)
     public static boolean addSystemInfo;
@@ -178,6 +182,10 @@ public class TweaksConfig {
     @Config.Comment("Doesn't render the black box behind messages when the chat is closed")
     @Config.DefaultBoolean(true)
     public static boolean transparentChat;
+
+    @Config.Comment("Use a custom textured scrollbar")
+    @Config.DefaultBoolean(true)
+    public static boolean texturedScrollbar;
 
     @Config.Comment("Sets the interval for auto saves in ticks (20 ticks = 1 second)")
     @Config.RangeInt(min = 1)

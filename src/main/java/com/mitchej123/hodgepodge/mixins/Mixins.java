@@ -164,6 +164,10 @@ public enum Mixins implements IMixins {
             .addExcludedMod(TargetedMod.ANGELICA)
             .setApplyIf(() -> FixesConfig.fixPerspectiveCamera)
             .setPhase(Phase.EARLY)),
+    FIX_CAMERA_PARTICLE_ROTATION(new MixinBuilder("Orient particles from the render view entity (MC-46445)")
+            .addClientMixins("minecraft.MixinActiveRenderInfo_CameraRotation")
+            .setApplyIf(() -> FixesConfig.fixCameraParticleRotation)
+            .setPhase(Phase.EARLY)),
     FIX_DEBUG_BOUNDING_BOX(new MixinBuilder("Fix Bounding Box")
             .addClientMixins("minecraft.MixinRenderManager")
             .setApplyIf(() -> FixesConfig.fixDebugBoundingBox)
@@ -214,6 +218,12 @@ public enum Mixins implements IMixins {
     TRANSPARENT_CHAT(new MixinBuilder()
             .addClientMixins("minecraft.MixinGuiNewChat_TransparentChat")
             .setApplyIf(() -> TweaksConfig.transparentChat)
+            .setPhase(Phase.EARLY)),
+    TEXTURED_SCROLLBAR(new MixinBuilder("Replace vanilla scrollbar with a textured one")
+            .addClientMixins(
+                    "minecraft.MixinGuiSlot_TexturedScrollbar",
+                    "fml.MixinGuiScrollingList_TexturedScrollbar")
+            .setApplyIf(() -> TweaksConfig.texturedScrollbar)
             .setPhase(Phase.EARLY)),
     CLEAN_CHAT_LOGS(new MixinBuilder()
             .addClientMixins("minecraft.MixinGuiNewChat_CleanChatLogs")
@@ -1279,6 +1289,11 @@ public enum Mixins implements IMixins {
     IC2_TIN_CAN(new MixinBuilder("Fix IC2 filled tin cans not running logic on both client and server")
             .addCommonMixins("ic2.MixinIc2TinCan")
             .setApplyIf(() -> FixesConfig.fixIc2TinCan)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
+    IC2_RUBBER_SAPLING_BONEMEAL_FIX(new MixinBuilder("Prevent IC2 rubber saplings from consuming bone meal twice")
+            .addCommonMixins("ic2.MixinBlockRubSapling")
+            .setApplyIf(() -> FixesConfig.fixIc2RubberSaplingBonemeal)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
     IC2_EID_COMPAT(new MixinBuilder("Fix EndlessIds incompatibility with IC2")

@@ -16,6 +16,8 @@ public class Compat {
 
     private static boolean isGT5Present;
 
+    private static boolean isLwjgl3ifyPresent;
+
     private static boolean isIC2CropPluginPresent;
 
     private static boolean isThaumcraftPresent;
@@ -54,6 +56,8 @@ public class Compat {
         }
 
         isGT5Present = Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi");
+
+        isLwjgl3ifyPresent = Loader.isModLoaded("lwjgl3ify");
 
         isIC2CropPluginPresent = Loader.isModLoaded("Ic2Nei");
 
@@ -101,6 +105,13 @@ public class Compat {
      */
     public static boolean isGT5Present() {
         return isGT5Present;
+    }
+
+    /**
+     * Cannot be used before pre-init phase.
+     */
+    public static boolean isLwjgl3ifyPresent() {
+        return isLwjgl3ifyPresent;
     }
 
     /**

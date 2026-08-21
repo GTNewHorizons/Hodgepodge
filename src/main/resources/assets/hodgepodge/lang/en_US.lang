@@ -33,6 +33,24 @@ commands.time.get=The current world time is %s (time of day: %s)
 commands.time.usageWithGet=/time <set|add> <value> OR /time get
 
 hodgepodge.soundsmenu.refreshsounds=Refresh Sounds
+hodgepodge.soundsmenu.enhancements=Sound Enhancements...
+hodgepodge.soundsmenu.enhancements.title=Sound Enhancements
+hodgepodge.soundsmenu.enhancements.lwjgl3ify=HRTF, output limiting, and stereo spatialization require lwjgl3ify (Java 17+).
+hodgepodge.soundsmenu.enhancements.reload=Refresh sounds to apply reverb to sounds already playing.
+hodgepodge.soundsmenu.option=%s: %s
+hodgepodge.soundsmenu.hrtf=Headphone HRTF
+hodgepodge.soundsmenu.hrtf.tooltip=Uses headphone-specific audio processing to make sounds feel above, below, in front of, or behind you. Best with headphones; speakers may sound hollow. DEFAULT follows OpenAL's device setting. Requires lwjgl3ify.
+hodgepodge.soundsmenu.output_limiter=Output Limiter
+hodgepodge.soundsmenu.output_limiter.tooltip=Reduces the final mix only when it would clip, preventing harsh distortion when many loud sounds overlap. DEFAULT follows OpenAL's device setting. Requires lwjgl3ify.
+hodgepodge.soundsmenu.environmental_reverb=Environmental Reverb
+hodgepodge.soundsmenu.environmental_reverb.tooltip=Adds echoes to positional sounds based on how enclosed you are, so caves and rooms sound less flat. Refresh sounds after changing this to update sounds already playing.
+hodgepodge.soundsmenu.reverb_strength=Reverb Amount
+hodgepodge.soundsmenu.reverb_strength.tooltip=Controls how strong environmental echoes can become. Changes apply live. Default: 30%%.
+hodgepodge.soundsmenu.downmix_stereo=Stereo Downmix
+hodgepodge.soundsmenu.downmix_stereo.tooltip=Converts positional stereo sound effects to mono as they load. This halves their decoded memory and lets older OpenAL position them in 3D. Streaming music and records are unchanged. Refresh sounds to rebuild cached audio.
+hodgepodge.soundsmenu.spatialize_stereo=Stereo Spatialization
+hodgepodge.soundsmenu.spatialize_stereo.tooltip=Keeps positional sounds stereo while allowing newer OpenAL to place them in 3D. Requires lwjgl3ify and takes priority over Stereo Downmix when supported. Refresh sounds after changing it.
+hodgepodge.soundsmenu.default=DEFAULT
 hodgepodge.bed_respawn.msg=Respawn point set
 hodgepodge.menu.mod_options=Mod Options...
 

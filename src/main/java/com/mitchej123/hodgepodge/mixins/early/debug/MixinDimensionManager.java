@@ -72,7 +72,7 @@ public class MixinDimensionManager {
     @Unique
     private static void log(int id) {
         Common.log.warn("DimensionManager crashed!");
-        Common.log.warn("dimension id: " + id);
+        Common.log.warn("dimension id: {}", id);
         Common.log.warn("logs for 'registerDimension':");
         if (registerLogs != null && registerLogs.containsKey(id)) {
             Common.log.warn(registerLogs.get(id));
