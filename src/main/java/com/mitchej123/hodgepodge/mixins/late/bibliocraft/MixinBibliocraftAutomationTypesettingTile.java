@@ -79,6 +79,7 @@ public abstract class MixinBibliocraftAutomationTypesettingTile extends TileEnti
             remap = false)
     private int hdogepodge$cursedXpDrainImpl(EntityPlayer instance, Operation<Integer> original, @Local int levelcost) {
         if (instance != null) return instance.experienceLevel;
+        levelcost = levelcost > 22222 ? 22222 : levelcost < 0 ? 0 : levelcost; // avoid >maxint exp
         int xpCost = levelcost < 16 ? 17 * levelcost
                 : levelcost < 30 ? (((3 * levelcost - 59) * levelcost) >> 1) + 360
                         : (((7 * levelcost - 303) * levelcost) >> 1) + 2220;
