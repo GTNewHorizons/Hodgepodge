@@ -1040,6 +1040,10 @@ public enum Mixins implements IMixins {
                     "forge.tiledescriptions.MixinForgeHooks")
             .setApplyIf(() -> SpeedupsConfig.batchDescriptionPacketsMixins)
             .setPhase(Phase.EARLY)),
+    SPEEDUP_TILE_DESCRIPTION_PACKETS_NBT(new MixinBuilder("Optimize S35PacketUpdateTileEntity Packets")
+            .addCommonMixins("minecraft.packets.MixinS35PacketUpdateTileEntity_ByteArray")
+            .setApplyIf(() -> SpeedupsConfig.skipTileEntityNbtSerializationMixins)
+            .setPhase(Phase.EARLY)),
     HIDE_DEPRECATED_ID_NOTICE(new MixinBuilder()
             .addClientMixins("minecraft.MixinHideDeprecatedIdNotice")
             .setApplyIf(() -> TweaksConfig.hideDeprecatedIdNotice)
