@@ -1,28 +1,27 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.packets;
 
-import com.mitchej123.hodgepodge.config.SpeedupsConfig;
-import com.mitchej123.hodgepodge.config.TweaksConfig;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.C01PacketChatMessage;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraftforge.common.util.Constants;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.Redirect;
-
 import java.io.IOException;
 import java.util.Set;
+
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraftforge.common.util.Constants;
+
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
+
+import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 
 @Mixin(S35PacketUpdateTileEntity.class)
 public class MixinS35PacketUpdateTileEntity_ByteArray {
 
-    @Redirect(method = "readPacketData",
-    at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/network/PacketBuffer;readNBTTagCompoundFromBuffer()Lnet/minecraft/nbt/NBTTagCompound;"))
+    @Redirect(
+            method = "readPacketData",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/network/PacketBuffer;readNBTTagCompoundFromBuffer()Lnet/minecraft/nbt/NBTTagCompound;"))
     public NBTTagCompound hodgepodge$readNBTTagCompoundFromBuffer(PacketBuffer data) throws IOException {
         if (!SpeedupsConfig.skipTileEntityNbtSerializationCode) {
             return data.readNBTTagCompoundFromBuffer();
@@ -39,7 +38,8 @@ public class MixinS35PacketUpdateTileEntity_ByteArray {
         return tag;
     }
 
-    @Redirect(method = "writePacketData",
+    @Redirect(
+            method = "writePacketData",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/network/PacketBuffer;writeNBTTagCompoundToBuffer(Lnet/minecraft/nbt/NBTTagCompound;)V"))
