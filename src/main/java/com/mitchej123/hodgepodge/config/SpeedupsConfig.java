@@ -210,15 +210,15 @@ public class SpeedupsConfig {
     @Config.DefaultStringList({})
     public static String[] batchDescriptionBlacklist;
 
-    @Config.Comment("Transfer special S35PacketUpdateTileEntity buffers directly without NBT (Enables Mixins)")
+    @Config.Comment("Transfer S35PacketUpdateTileEntity array buffers directly without NBT (Enables Mixins)")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean skipTileEntityNbtSerializationMixins;
+    public static boolean directTileEntityArraySerializationMixins;
 
-    @Config.Comment("Transfer special S35PacketUpdateTileEntity buffers directly without NBT")
+    @Config.Comment("Transfer S35PacketUpdateTileEntity array buffers directly without NBT")
     @Config.DefaultBoolean(true)
     @Config.Sync
-    public static boolean skipTileEntityNbtSerializationCode;
+    public static boolean directTileEntityArraySerializationCode;
 
     @Config.Comment("Pool Inflater/Deflater instances for NBT compression to reduce native cleanup overhead")
     @Config.DefaultBoolean(true)

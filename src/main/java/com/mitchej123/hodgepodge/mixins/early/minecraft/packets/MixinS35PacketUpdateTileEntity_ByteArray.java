@@ -23,7 +23,7 @@ public class MixinS35PacketUpdateTileEntity_ByteArray {
                     value = "INVOKE",
                     target = "Lnet/minecraft/network/PacketBuffer;readNBTTagCompoundFromBuffer()Lnet/minecraft/nbt/NBTTagCompound;"))
     public NBTTagCompound hodgepodge$readNBTTagCompoundFromBuffer(PacketBuffer data) throws IOException {
-        if (!SpeedupsConfig.skipTileEntityNbtSerializationCode) {
+        if (!SpeedupsConfig.directTileEntityArraySerializationCode) {
             return data.readNBTTagCompoundFromBuffer();
         }
         byte id = data.readByte();
@@ -44,7 +44,7 @@ public class MixinS35PacketUpdateTileEntity_ByteArray {
                     value = "INVOKE",
                     target = "Lnet/minecraft/network/PacketBuffer;writeNBTTagCompoundToBuffer(Lnet/minecraft/nbt/NBTTagCompound;)V"))
     public void hodgepodge$writeNBTTagCompoundFromBuffer(PacketBuffer data, NBTTagCompound nbt) throws IOException {
-        if (!SpeedupsConfig.skipTileEntityNbtSerializationCode) {
+        if (!SpeedupsConfig.directTileEntityArraySerializationCode) {
             data.writeNBTTagCompoundToBuffer(nbt);
             return;
         }
