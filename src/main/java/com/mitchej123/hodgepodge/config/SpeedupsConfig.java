@@ -213,12 +213,7 @@ public class SpeedupsConfig {
     @Config.Comment("Transfer S35PacketUpdateTileEntity array buffers directly without NBT (Enables Mixins)")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean directTileEntityArraySerializationMixins;
-
-    @Config.Comment("Transfer S35PacketUpdateTileEntity array buffers directly without NBT")
-    @Config.DefaultBoolean(true)
-    @Config.Sync
-    public static boolean directTileEntityArraySerializationCode;
+    public static boolean directTileEntityArraySerialization;
 
     @Config.Comment("Pool Inflater/Deflater instances for NBT compression to reduce native cleanup overhead")
     @Config.DefaultBoolean(true)

@@ -1042,7 +1042,7 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)),
     SPEEDUP_TILE_DESCRIPTION_PACKETS_NBT(new MixinBuilder("Optimize S35PacketUpdateTileEntity Array Packets")
             .addCommonMixins("minecraft.packets.MixinS35PacketUpdateTileEntity_ByteArray")
-            .setApplyIf(() -> SpeedupsConfig.directTileEntityArraySerializationMixins)
+            .setApplyIf(() -> SpeedupsConfig.directTileEntityArraySerialization)
             .setPhase(Phase.EARLY)),
     HIDE_DEPRECATED_ID_NOTICE(new MixinBuilder()
             .addClientMixins("minecraft.MixinHideDeprecatedIdNotice")

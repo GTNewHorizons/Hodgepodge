@@ -9,10 +9,9 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.util.Constants;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-
-import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 
 @Mixin(S35PacketUpdateTileEntity.class)
 public class MixinS35PacketUpdateTileEntity_ByteArray {
@@ -23,9 +22,6 @@ public class MixinS35PacketUpdateTileEntity_ByteArray {
                     value = "INVOKE",
                     target = "Lnet/minecraft/network/PacketBuffer;readNBTTagCompoundFromBuffer()Lnet/minecraft/nbt/NBTTagCompound;"))
     public NBTTagCompound hodgepodge$readNBTTagCompoundFromBuffer(PacketBuffer data) throws IOException {
-        if (!SpeedupsConfig.directTileEntityArraySerializationCode) {
-            return data.readNBTTagCompoundFromBuffer();
-        }
         byte id = data.readByte();
         if (id == 0) {
             return data.readNBTTagCompoundFromBuffer();
@@ -44,36 +40,33 @@ public class MixinS35PacketUpdateTileEntity_ByteArray {
                     value = "INVOKE",
                     target = "Lnet/minecraft/network/PacketBuffer;writeNBTTagCompoundToBuffer(Lnet/minecraft/nbt/NBTTagCompound;)V"))
     public void hodgepodge$writeNBTTagCompoundFromBuffer(PacketBuffer data, NBTTagCompound nbt) throws IOException {
-        if (!SpeedupsConfig.directTileEntityArraySerializationCode) {
-            data.writeNBTTagCompoundToBuffer(nbt);
-            return;
-        }
         Set<String> keys = nbt.func_150296_c();
         if (keys.size() != 1) {
-            data.writeByte(0);
-            data.writeNBTTagCompoundToBuffer(nbt);
+            hodgepodge$bailOut(data, nbt);
             return;
         }
         String key = keys.iterator().next();
         if (key.length() != 1) {
-            data.writeByte(0);
-            data.writeNBTTagCompoundToBuffer(nbt);
+            hodgepodge$bailOut(data, nbt);
             return;
         }
         char k = key.charAt(0);
         if (k == 0 || k > 255) {
-            data.writeByte(0);
-            data.writeNBTTagCompoundToBuffer(nbt);
             return;
         }
         if (!nbt.hasKey(key, Constants.NBT.TAG_BYTE_ARRAY)) {
-            data.writeByte(0);
-            data.writeNBTTagCompoundToBuffer(nbt);
+            hodgepodge$bailOut(data, nbt);
             return;
         }
         byte[] arr = nbt.getByteArray(key);
         data.writeByte(k);
         data.writeVarIntToBuffer(arr.length);
         data.writeBytes(arr);
+    }
+
+    @Unique
+    private void hodgepodge$bailOut(PacketBuffer data, NBTTagCompound nbt) throws IOException {
+        data.writeByte(0);
+        data.writeNBTTagCompoundToBuffer(nbt);
     }
 }
