@@ -169,9 +169,9 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixNetHandlerLoginServerOfflineMode;
 
-    @Config.Comment("Remove kicked players immediately instead of waiting for their network channel to close")
+    @Config.Comment("Remove the previous player entity immediately when the same UUID reconnects")
     @Config.DefaultBoolean(true)
-    public static boolean fixPlayerCleanupOnKick;
+    public static boolean fixPlayerCloningOnReconnect;
 
     @Config.Comment("Prevents crash if server sends itemStack with index larger than client's container")
     @Config.DefaultBoolean(true)
