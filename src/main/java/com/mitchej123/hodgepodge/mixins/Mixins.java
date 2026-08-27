@@ -907,6 +907,7 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.fastload.MixinChunkProviderServer_FastUnload")
             .setApplyIf(() -> SpeedupsConfig.speedupChunkUnload)
             .addExcludedMod(TargetedMod.BUKKIT)
+            .addExcludedMod(TargetedMod.ULTRAMINE)
             .setPhase(Phase.EARLY)),
     ENTITY_CHUNK_LOAD_GUARD(new MixinBuilder("Prevent entity ticks from triggering chunk generation")
             .addCommonMixins(
