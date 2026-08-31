@@ -24,20 +24,27 @@ public abstract class MixinBlockArmorStand_CheckedBreak extends BlockContainer {
     }
 
     @WrapMethod(method = "breakBlock")
-    private void checkMatchesBlock(World world, int x, int y, int z, Block blockBroken, int metaData,
+    private void checkMatchesBlock(World world, int x, int y, int z, Block blockBroken, int meta,
             Operation<Void> original) {
-        int otherY = metaData < 4 ? y + 1 : y - 1;
-        int otherMeta = metaData < 4 ? metaData + 4 : metaData - 4;
+        // For the Armor Stand, metadata 0-3 is the bottom half & metadata 4-7 is the top half.
+        // (metadata & 0b11) determines the rotation of the block.
+        boolean isBottomHalf = meta < 4;
+
+        // Calculate the expected position & meta of the other half of the Armor Stand.
+        int otherY = isBottomHalf ? y + 1 : y - 1;
+        int otherMeta = isBottomHalf ? meta + 4 : meta - 4;
 
         if (world.getBlock(x, otherY, z) == blockBroken && world.getBlockMetadata(x, otherY, z) == otherMeta) {
-            original.call(world, x, y, z, blockBroken, metaData);
+            // If both halves of the Armor Stand are present, destroy both.
+            original.call(world, x, y, z, blockBroken, meta);
         } else {
-            // If the block below / above it is not the other part of the armor stand, don't break that block.
-            if (metaData < 4) {
+            // If the block below / above it is not the other half of the armor stand, don't break it.
+            if (isBottomHalf) {
+                // The bottom half of the armor stand stores the inventory.
                 this.dropItems(world, x, y, z);
             }
 
-            super.breakBlock(world, x, y, z, blockBroken, metaData);
+            super.breakBlock(world, x, y, z, blockBroken, meta);
         }
     }
 }
