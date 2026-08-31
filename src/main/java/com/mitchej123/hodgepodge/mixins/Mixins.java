@@ -1965,6 +1965,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixBibliocraftPackets)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
+    BIBLIOCRAFT_ARMOR_STAND_BREAK_FIX(new MixinBuilder("Bibliocraft Armor Stand on-break-block fix")
+            .addCommonMixins("bibliocraft.MixinBlockArmorStand_CheckedBreak")
+            .setApplyIf(() -> FixesConfig.fixBibliocraftArmorStandBreak)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
+            .setPhase(Phase.LATE)),
     BIBLIOCRAFT_PATH_SANITIZATION_FIX(new MixinBuilder("Path sanitization fix")
             .addCommonMixins("bibliocraft.MixinPathSanitization")
             .setApplyIf(() -> FixesConfig.fixBibliocraftPathSanitization)
