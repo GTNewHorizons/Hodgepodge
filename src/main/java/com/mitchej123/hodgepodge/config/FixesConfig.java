@@ -547,6 +547,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean raiseMissingItemsFPS;
+
+    @Config.Comment("Fix block hit delay after game mode changed from creative to survival.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBlockHitDelay;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes

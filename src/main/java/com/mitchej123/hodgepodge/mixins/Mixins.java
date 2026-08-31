@@ -1174,6 +1174,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinMinecraft_FMLQueryFPS")
             .setApplyIf(() -> FixesConfig.raiseMissingItemsFPS)
             .setPhase(Phase.EARLY)),
+    FIX_BLOCK_HIT_DELAY(new MixinBuilder()
+            .addClientMixins("minecraft.MixinPlayerControllerMP_BlockHitDelay")
+            .setApplyIf(() -> FixesConfig.fixBlockHitDelay)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments
@@ -1955,7 +1959,9 @@ public enum Mixins implements IMixins {
 
     // Various Exploits/Fixes
     BIBLIOCRAFT_PACKET_FIX(new MixinBuilder("Packet Fix")
-            .addCommonMixins("bibliocraft.MixinBibliocraftPatchPacketExploits")
+            .addCommonMixins(
+                    "bibliocraft.MixinBibliocraftPatchPacketExploits",
+                    "bibliocraft.MixinContainerFancySign")
             .setApplyIf(() -> FixesConfig.fixBibliocraftPackets)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
