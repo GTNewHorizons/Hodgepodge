@@ -547,6 +547,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean raiseMissingItemsFPS;
+
+    @Config.Comment("Fix block hit delay after game mode changed from creative to survival.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBlockHitDelay;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -587,6 +592,10 @@ public class FixesConfig {
     @Config.Comment("Fix Bibliocraft packet exploits")
     @Config.DefaultBoolean(true)
     public static boolean fixBibliocraftPackets;
+
+    @Config.Comment("Fix Bibliocraft armor stands breaking their other half without checking if the other half is an Armor Stand.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBibliocraftArmorStandBreak;
 
     @Config.Comment("Fix Bibliocraft path sanitization")
     @Config.DefaultBoolean(true)
