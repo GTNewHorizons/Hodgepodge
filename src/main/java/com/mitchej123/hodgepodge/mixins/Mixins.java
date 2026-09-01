@@ -341,6 +341,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.speedupVanillaFurnace)
             .addRequiredMod(TargetedMod.GTNHLIB)
             .setPhase(Phase.EARLY)),
+    FIX_FUEL_OVERFLOW(new MixinBuilder("Fix vanilla furnace fuel overflow")
+            .addCommonMixins("minecraft.MixinTileEntityFurnace_FixFuelOverflow")
+            .setApplyIf(() -> FixesConfig.fixFuelOverflow)
+            .setPhase(Phase.EARLY)),
     GAMEOVER_GUI_LOCKED_DISABLED(new MixinBuilder("Fix Gameover GUI")
             .addClientMixins("minecraft.MixinGuiGameOver")
             .setApplyIf(() -> FixesConfig.fixGuiGameOver)

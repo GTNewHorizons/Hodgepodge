@@ -113,6 +113,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixFriendlyCreatureSounds;
 
+    @Config.Comment("Fix vanilla furnaces' burn time overflowing from long burn time fuel")
+    @Config.DefaultBoolean(true)
+    public static boolean fixFuelOverflow;
+
     @Config.Comment("Fix Volume Slider is ineffective until reaching the lower end")
     @Config.DefaultBoolean(true)
     public static boolean logarithmicVolumeControl;
