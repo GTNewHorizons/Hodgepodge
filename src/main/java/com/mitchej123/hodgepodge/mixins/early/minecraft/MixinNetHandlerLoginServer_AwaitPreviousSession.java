@@ -117,16 +117,6 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
             }
         }
 
-        if (waited >= hodgepodge$FORCE_CLOSE_AFTER) {
-            for (NetworkManager manager : accepting) {
-                // Once the play handler exists, closing would log out a session that never logged in. Before it,
-                // there is no player yet, so this only ends a handshake that is not going to finish.
-                if (!(manager.getNetHandler() instanceof NetHandlerPlayServer)) {
-                    this.hodgepodge$forceClose(manager);
-                }
-            }
-        }
-
         if (waited >= hodgepodge$GIVE_UP_AFTER) {
             for (EntityPlayerMP player : stranded) {
                 this.hodgepodge$repairStrandedSession(player);
@@ -175,6 +165,9 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
                 if (handler instanceof NetHandlerPlayServer) {
                     final EntityPlayerMP player = ((NetHandlerPlayServer) handler).playerEntity;
                     if (player != null && uuid.equals(player.getUniqueID())) {
+                        // Only a session that reached the world is kicked. FML builds NetHandlerPlayServer before
+                        // its client round trips, so closing one still arriving logs out a session that never
+                        // logged in; those are waited out instead.
                         if (scm.playerEntityList.contains(player)) {
                             live.add(manager);
                         } else {
