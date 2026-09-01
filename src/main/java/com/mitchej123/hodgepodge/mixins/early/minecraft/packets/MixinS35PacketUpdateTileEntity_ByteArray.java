@@ -52,6 +52,7 @@ public class MixinS35PacketUpdateTileEntity_ByteArray {
         }
         char k = key.charAt(0);
         if (k == 0 || k > 255) {
+            hodgepodge$bailOut(data, nbt);
             return;
         }
         if (!nbt.hasKey(key, Constants.NBT.TAG_BYTE_ARRAY)) {
