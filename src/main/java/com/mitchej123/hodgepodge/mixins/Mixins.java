@@ -106,10 +106,13 @@ public enum Mixins implements IMixins {
             .addServerMixins("minecraft.MixinNetHandlerLoginServer_OfflineMode")
             .setApplyIf(() -> FixesConfig.fixNetHandlerLoginServerOfflineMode)
             .setPhase(Phase.EARLY)),
-    FIX_PLAYER_CLONING_ON_RECONNECT(new MixinBuilder("Remove stale player entities before accepting a reconnect with the same UUID")
+    FIX_PLAYER_CLONING_ON_RECONNECT(new MixinBuilder("Wait for an earlier session for the same UUID to leave the world before accepting a login")
             .addCommonMixins(
-                    "minecraft.MixinServerConfigurationManager_DuplicateLogin",
-                    "minecraft.MixinNetHandlerPlayServer_DisconnectOnce")
+                    "minecraft.MixinNetHandlerLoginServer_AwaitPreviousSession",
+                    "minecraft.MixinNetHandlerPlayServer_LoginSessionState",
+                    "fml.MixinNetworkDispatcher_LoginSessionState",
+                    "minecraft.NetworkSystemAccessor",
+                    "minecraft.NetworkManagerInboundAccessor")
             .setApplyIf(() -> FixesConfig.fixPlayerCloningOnReconnect)
             .setPhase(Phase.EARLY)),
     FIX_INVENTORY_POTION_EFFECT_NUMERALS(new MixinBuilder("Fix potion effects level not displaying properly above a certain value")
