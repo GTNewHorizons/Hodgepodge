@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 /**
- * Optimize NBT of the form {[one character]: [byte array]}, e.g. {"X": [B;0b, 1b]}. This skips the compression and the NBT
- * overhead on the network. NBT that does not follow this will get sent normally with an extra byte instead.
+ * Optimize NBT of the form {[one character]: [byte array]}, e.g. {"X": [B;0b, 1b]}. This skips the compression and the
+ * NBT overhead on the network. NBT that does not follow this will get sent normally with an extra byte instead.
  */
 @Mixin(S35PacketUpdateTileEntity.class)
 public class MixinS35PacketUpdateTileEntity_ByteArray {
