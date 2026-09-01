@@ -98,9 +98,8 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
         final List<NetworkManager> live = new ArrayList<>();
         final List<EntityPlayerMP> stranded = new ArrayList<>();
         final List<NetworkManager> accepting = new ArrayList<>();
-        this.hodgepodge$collectSessions(server, scm, uuid, live, stranded, accepting);
 
-        if (live.isEmpty() && stranded.isEmpty() && accepting.isEmpty()) {
+        if (!this.hodgepodge$collectSessions(server, scm, uuid, live, stranded, accepting)) {
             this.hodgepodge$ticksWaited = 0;
             LoginSessionState.setAcceptedUuid(this.field_147333_a, uuid);
             return;
@@ -109,38 +108,59 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
         final int waited = this.hodgepodge$ticksWaited++;
 
         for (NetworkManager manager : live) {
-            final NetHandlerPlayServer handler = (NetHandlerPlayServer) manager.getNetHandler();
             if (LoginSessionState.markSuperseded(manager)) {
-                handler.kickPlayerFromServer(hodgepodge$KICK_REASON);
-                // The kick stops further reads but leaves the queue to be dispatched; this session is about to be
-                // saved and removed, so applying more of its input is worse than dropping it.
-                ((NetworkManagerInboundAccessor) manager).hodgepodge$getReceivedPacketsQueue().clear();
-                continue;
-            }
-            final boolean overdue = waited >= hodgepodge$FORCE_CLOSE_AFTER && manager.isChannelOpen();
-            if (overdue && LoginSessionState.requestClose(manager)) {
+                ((NetHandlerPlayServer) manager.getNetHandler()).kickPlayerFromServer(hodgepodge$KICK_REASON);
+            } else if (waited >= hodgepodge$FORCE_CLOSE_AFTER) {
                 // kickPlayerFromServer closes only once the disconnect packet has been written, which on a half-dead
                 // connection means waiting out the OS retransmit timeout - exactly the case this fix exists for.
-                manager.closeChannel(new ChatComponentText(hodgepodge$KICK_REASON));
+                this.hodgepodge$forceClose(manager);
             }
         }
 
-        if (waited >= hodgepodge$GIVE_UP_AFTER && !this.hodgepodge$gaveUp) {
-            // func_147322_a leaves the login state alone, so onNetworkTick keeps calling us until the channel is
-            // actually seen closed a tick or two later.
-            this.hodgepodge$gaveUp = true;
+        if (waited >= hodgepodge$FORCE_CLOSE_AFTER) {
+            for (NetworkManager manager : accepting) {
+                // Once the play handler exists, closing would log out a session that never logged in. Before it,
+                // there is no player yet, so this only ends a handshake that is not going to finish.
+                if (!(manager.getNetHandler() instanceof NetHandlerPlayServer)) {
+                    this.hodgepodge$forceClose(manager);
+                }
+            }
+        }
+
+        if (waited >= hodgepodge$GIVE_UP_AFTER) {
             for (EntityPlayerMP player : stranded) {
                 this.hodgepodge$repairStrandedSession(player);
             }
+            if (!this.hodgepodge$collectSessions(server, scm, uuid, live, stranded, accepting)) {
+                // The repair freed the last blocker, so there is nothing left to wait for.
+                this.hodgepodge$ticksWaited = 0;
+                LoginSessionState.setAcceptedUuid(this.field_147333_a, uuid);
+                return;
+            }
+            // func_147322_a leaves the login state alone, so onNetworkTick keeps calling us until the channel is
+            // actually seen closed a tick or two later.
+            this.hodgepodge$gaveUp = true;
             this.func_147322_a("Your previous session is still being cleaned up, please reconnect in a moment");
         }
 
         ci.cancel();
     }
 
+    /** Closes a connection at most once, however many ticks ask for it. */
     @Unique
-    private void hodgepodge$collectSessions(MinecraftServer server, ServerConfigurationManager scm, UUID uuid,
+    private void hodgepodge$forceClose(NetworkManager manager) {
+        if (manager.isChannelOpen() && LoginSessionState.requestClose(manager)) {
+            manager.closeChannel(new ChatComponentText(hodgepodge$KICK_REASON));
+        }
+    }
+
+    /** Returns true while something still holds this UUID. */
+    @Unique
+    private boolean hodgepodge$collectSessions(MinecraftServer server, ServerConfigurationManager scm, UUID uuid,
             List<NetworkManager> live, List<EntityPlayerMP> stranded, List<NetworkManager> accepting) {
+        live.clear();
+        stranded.clear();
+        accepting.clear();
         final List<?> managers = ((NetworkSystemAccessor) server.func_147137_ag()).hodgepodge$getNetworkManagers();
 
         // networkTick, our caller, already holds this monitor; taking it again is reentrant and keeps Netty threads
@@ -185,6 +205,7 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
             }
         }
 
+        return !live.isEmpty() || !stranded.isEmpty() || !accepting.isEmpty();
     }
 
     /** Runs the cleanup networkTick can no longer reach, so the next login attempt finds a clear world. */

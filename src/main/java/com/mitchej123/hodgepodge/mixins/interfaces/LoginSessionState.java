@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import net.minecraft.network.NetworkManager;
 
+import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 
 /** Login bookkeeping stored on the channel so it survives every network-handler handoff. */
@@ -16,7 +17,9 @@ public final class LoginSessionState {
     private LoginSessionState() {}
 
     public static UUID getAcceptedUuid(NetworkManager manager) {
-        return manager.channel().attr(ACCEPTED_UUID).get();
+        // NetworkSystem registers a connection before its channel is set, so the scan can reach one without.
+        final Channel channel = manager.channel();
+        return channel == null ? null : channel.attr(ACCEPTED_UUID).get();
     }
 
     public static void setAcceptedUuid(NetworkManager manager, UUID uuid) {
