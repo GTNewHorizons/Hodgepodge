@@ -13,6 +13,8 @@ public final class LoginSessionState {
     private static final AttributeKey<UUID> ACCEPTED_UUID = new AttributeKey<>("hodgepodge:accepted_login_uuid");
     private static final AttributeKey<Boolean> SUPERSEDED = new AttributeKey<>("hodgepodge:superseded_login");
     private static final AttributeKey<Boolean> CLOSE_REQUESTED = new AttributeKey<>("hodgepodge:login_close_requested");
+    private static final AttributeKey<Boolean> DISCONNECT_POSTED = new AttributeKey<>(
+            "hodgepodge:login_disconnect_posted");
 
     private LoginSessionState() {}
 
@@ -33,6 +35,11 @@ public final class LoginSessionState {
 
     public static boolean isSuperseded(NetworkManager manager) {
         return Boolean.TRUE.equals(manager.channel().attr(SUPERSEDED).get());
+    }
+
+    /** Returns true only for the first FML disconnect event posted for this connection. */
+    public static boolean markDisconnectPosted(NetworkManager manager) {
+        return manager.channel().attr(DISCONNECT_POSTED).setIfAbsent(Boolean.TRUE) == null;
     }
 
     /** Returns true only for the first direct close request. */

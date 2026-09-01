@@ -16,8 +16,9 @@ import cpw.mods.fml.common.eventhandler.EventBus;
 import cpw.mods.fml.common.network.handshake.NetworkDispatcher;
 
 /**
- * A throwing FML disconnect listener normally prevents the rest of NetworkDispatcher.close from closing the channel.
- * EventBus has already logged the exception, so a superseded session must be allowed to finish closing.
+ * Keeps a superseded session closing cleanly. Its disconnect event is posted once however many closes the kick and the
+ * barrier between them end up running through the pipeline, and a throwing listener cannot hold the close back, since
+ * EventBus has already logged the exception.
  */
 @Mixin(NetworkDispatcher.class)
 public abstract class MixinNetworkDispatcher_LoginSessionState {
@@ -34,12 +35,15 @@ public abstract class MixinNetworkDispatcher_LoginSessionState {
             remap = false,
             expect = 2)
     private boolean hodgepodge$finishSupersededClose(EventBus bus, Event event, Operation<Boolean> original) {
+        if (!LoginSessionState.isSuperseded(this.manager)) {
+            return original.call(bus, event);
+        }
+        if (!LoginSessionState.markDisconnectPosted(this.manager)) {
+            return false;
+        }
         try {
             return original.call(bus, event);
         } catch (RuntimeException | Error exception) {
-            if (!LoginSessionState.isSuperseded(this.manager)) {
-                throw exception;
-            }
             return false;
         }
     }
