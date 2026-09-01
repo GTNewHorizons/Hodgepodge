@@ -210,7 +210,9 @@ public class SpeedupsConfig {
     @Config.DefaultStringList({})
     public static String[] batchDescriptionBlacklist;
 
-    @Config.Comment("Transfer S35PacketUpdateTileEntity array buffers directly without NBT (Enables Mixins)")
+    @Config.Comment({ "Transfer S35PacketUpdateTileEntity array buffers directly without NBT.",
+            "The NBT contained in S35PacketUpdateTileEntity must be of the format {[one character]: [byte array]}",
+            "(e.g. {\"X\": [0, 1]}) for this to apply for a given TileEntity." })
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean directTileEntityArraySerialization;
