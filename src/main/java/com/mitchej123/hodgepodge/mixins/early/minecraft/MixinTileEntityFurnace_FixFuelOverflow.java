@@ -3,11 +3,12 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
 
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import com.llamalad7.mixinextras.sugar.Local;
 
 @Mixin(TileEntityFurnace.class)
 public class MixinTileEntityFurnace_FixFuelOverflow {
@@ -30,12 +31,16 @@ public class MixinTileEntityFurnace_FixFuelOverflow {
     /**
      * Fixes BurnTime overflow with fuel over Short.MAX_VALUE BurnTime
      * <p>
-     * Overwrites the getShort earlier in the method, additionally allows conversion of old short BurnTime to an Integer
+     * Overwrites the getShort with the getInteger value when it attempts to write the short value
      */
-    @Inject(method = "readFromNBT", at = @At("RETURN"))
-    private void hodgepodge$readBurnTime(NBTTagCompound compound, CallbackInfo ci) {
-        if (compound.hasKey("BurnTime", 3)) {
-            ((TileEntityFurnace) (Object) this).furnaceBurnTime = compound.getInteger("BurnTime");
-        }
+    @Redirect(
+            method = "readFromNBT",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/tileentity/TileEntityFurnace;furnaceBurnTime:I",
+                    opcode = Opcodes.PUTFIELD))
+    private void hodgepodge$readBurnTime(TileEntityFurnace instance, int value,
+            @Local(argsOnly = true) NBTTagCompound compound) {
+        instance.furnaceBurnTime = compound.getInteger("BurnTime");
     }
 }
