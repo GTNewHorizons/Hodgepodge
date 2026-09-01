@@ -1178,6 +1178,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinMinecraft_FMLQueryFPS")
             .setApplyIf(() -> FixesConfig.raiseMissingItemsFPS)
             .setPhase(Phase.EARLY)),
+    FIX_BLOCK_HIT_DELAY(new MixinBuilder()
+            .addClientMixins("minecraft.MixinPlayerControllerMP_BlockHitDelay")
+            .setApplyIf(() -> FixesConfig.fixBlockHitDelay)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments
@@ -1959,8 +1963,15 @@ public enum Mixins implements IMixins {
 
     // Various Exploits/Fixes
     BIBLIOCRAFT_PACKET_FIX(new MixinBuilder("Packet Fix")
-            .addCommonMixins("bibliocraft.MixinBibliocraftPatchPacketExploits")
+            .addCommonMixins(
+                    "bibliocraft.MixinBibliocraftPatchPacketExploits",
+                    "bibliocraft.MixinContainerFancySign")
             .setApplyIf(() -> FixesConfig.fixBibliocraftPackets)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
+            .setPhase(Phase.LATE)),
+    BIBLIOCRAFT_ARMOR_STAND_BREAK_FIX(new MixinBuilder("Bibliocraft Armor Stand on-break-block fix")
+            .addCommonMixins("bibliocraft.MixinBlockArmorStand_CheckedBreak")
+            .setApplyIf(() -> FixesConfig.fixBibliocraftArmorStandBreak)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
     BIBLIOCRAFT_PATH_SANITIZATION_FIX(new MixinBuilder("Path sanitization fix")
