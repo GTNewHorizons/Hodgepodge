@@ -89,6 +89,9 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession implements
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/management/ServerConfigurationManager;createPlayerForUser(Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/entity/player/EntityPlayerMP;"))
     private void hodgepodge$markAccepted(CallbackInfo ci) {
+        // Vanilla completed the profile just above us, so this is the UUID it is about to create the player with,
+        // rather than the one the barrier derived on whichever tick it first ran.
+        this.hodgepodge$loginUuid = EntityPlayer.func_146094_a(this.field_147337_i);
         this.hodgepodge$accepted = true;
     }
 
@@ -115,7 +118,8 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession implements
 
         final List<NetworkManager> live = new ArrayList<>();
         final List<EntityPlayerMP> stranded = new ArrayList<>();
-        final boolean loggingIn = this.hodgepodge$collectSessions(server, scm, uuid, live, stranded);
+        final List<NetworkManager> accepting = new ArrayList<>();
+        final boolean loggingIn = this.hodgepodge$collectSessions(server, scm, uuid, live, stranded, accepting);
 
         if (loggingIn) {
             // Disconnecting a session mid initializeConnectionToPlayer would run its PlayerLoggedOutEvent handlers
@@ -125,7 +129,7 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession implements
             return;
         }
 
-        if (live.isEmpty() && stranded.isEmpty()) {
+        if (live.isEmpty() && stranded.isEmpty() && accepting.isEmpty()) {
             this.hodgepodge$ticksWaited = 0;
             return;
         }
@@ -164,7 +168,7 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession implements
     /** Returns true if one of the live sessions is currently being put into the world. */
     @Unique
     private boolean hodgepodge$collectSessions(MinecraftServer server, ServerConfigurationManager scm, UUID uuid,
-            List<NetworkManager> live, List<EntityPlayerMP> stranded) {
+            List<NetworkManager> live, List<EntityPlayerMP> stranded, List<NetworkManager> accepting) {
         boolean loggingIn = false;
         final List<?> managers = ((NetworkSystemAccessor) server.func_147137_ag()).hodgepodge$getNetworkManagers();
 
@@ -179,8 +183,11 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession implements
                 final INetHandler handler = manager.getNetHandler();
                 if (handler instanceof NetHandlerLoginServer) {
                     // FML starts the handshake from a Netty task, so a login accepted earlier in this same networkTick
-                    // has not installed its NetHandlerPlayServer yet and would otherwise be invisible here.
-                    loggingIn |= uuid.equals(((AcceptedLogin) handler).hodgepodge$getAcceptedUuid());
+                    // has not installed its NetHandlerPlayServer yet and would otherwise be invisible here. That gap is
+                    // a single task dispatch, so it gets the deadline rather than the patience loggingIn grants.
+                    if (uuid.equals(((AcceptedLogin) handler).hodgepodge$getAcceptedUuid())) {
+                        accepting.add(manager);
+                    }
                     continue;
                 }
                 // NetHandlerPlayServer is installed at the start of the handshake, so this sees pending logins too.
