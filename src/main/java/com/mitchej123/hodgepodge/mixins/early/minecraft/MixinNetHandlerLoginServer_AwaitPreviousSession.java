@@ -125,8 +125,12 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
             // act on it. markSuperseded latches per connection, so each session we kick restarts the clock once.
             this.hodgepodge$ticksWaited = 0;
         } else if (waited >= hodgepodge$GIVE_UP_AFTER) {
-            for (EntityPlayerMP player : stranded) {
-                this.hodgepodge$repairStrandedSession(player);
+            // Both a repair and a live session's own disconnect write the same player file, and the last one wins.
+            // The live session is the newer state, so nothing stranded is saved while one is still on its way out.
+            if (live.isEmpty()) {
+                for (EntityPlayerMP player : stranded) {
+                    this.hodgepodge$repairStrandedSession(player);
+                }
             }
             if (!this.hodgepodge$collectSessions(server, scm, uuid, live, stranded, accepting)) {
                 // The repair freed the last blocker, so there is nothing left to wait for.
