@@ -184,9 +184,9 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
                 if (handler instanceof NetHandlerPlayServer) {
                     final EntityPlayerMP player = ((NetHandlerPlayServer) handler).playerEntity;
                     if (player != null && uuid.equals(player.getUniqueID())) {
-                        // Only a session that reached the world is kicked. FML builds NetHandlerPlayServer before
-                        // its client round trips, so closing one still arriving logs out a session that never
-                        // logged in; those are waited out instead.
+                        // Only a session that reached the world is kicked. Until initializeConnectionToPlayer
+                        // runs the player is unread, so closing one still arriving reaches playerLoggedOut and
+                        // saves that empty player over their file. Wait those out instead.
                         if (scm.playerEntityList.contains(player)) {
                             live.add(manager);
                         } else {
