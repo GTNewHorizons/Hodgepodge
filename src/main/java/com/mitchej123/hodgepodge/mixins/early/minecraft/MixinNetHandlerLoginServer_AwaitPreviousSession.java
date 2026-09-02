@@ -120,13 +120,11 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
         }
 
         if (kicked) {
-            // The deadline measures how long the session in the way has had to leave, not how long this login has
-            // been here. A handshake that only just reached the world would otherwise be kicked and given no time to
-            // act on it. markSuperseded latches per connection, so each session we kick restarts the clock once.
+            // The deadline belongs to the session we just kicked, not to this login. markSuperseded latches per
+            // connection, so each one restarts the clock once.
             this.hodgepodge$ticksWaited = 0;
         } else if (waited >= hodgepodge$GIVE_UP_AFTER) {
-            // Both a repair and a live session's own disconnect write the same player file, and the last one wins.
-            // The live session is the newer state, so nothing stranded is saved while one is still on its way out.
+            // Both writes land on the same file and the last wins, so never save a stranded clone over a live one.
             if (live.isEmpty()) {
                 for (EntityPlayerMP player : stranded) {
                     this.hodgepodge$repairStrandedSession(player);
@@ -158,11 +156,8 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
     /**
      * Returns true while something still holds this UUID.
      * <p>
-     * Every waiting login rescans every connection each tick, so K logins queued behind one UUID cost O(K^2) on the
-     * server thread until they time out. Reaching the wait needs a login vanilla already admitted, which in online mode
-     * means K authenticated sessions on one account; only an offline-mode server makes that free, and there a flood of
-     * distinct names is cheaper still, since each one costs vanilla a player and a read off disk. Bound the number of
-     * waiters if that ever stops holding.
+     * Each waiting login rescans every connection, so K logins behind one UUID cost O(K^2) a tick. Only free in offline
+     * mode, where flooding distinct names is cheaper anyway; bound the waiters if that stops holding.
      */
     @Unique
     private boolean hodgepodge$collectSessions(MinecraftServer server, ServerConfigurationManager scm, UUID uuid,

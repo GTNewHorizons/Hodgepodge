@@ -35,7 +35,7 @@ public abstract class MixinNetworkDispatcher_LoginSessionState {
             remap = false,
             expect = 2)
     private boolean hodgepodge$finishSupersededClose(EventBus bus, Event event, Operation<Boolean> original) {
-        // Recorded for every close, so a close that ran before the barrier stepped in still counts as the one post.
+        // Recorded on every close, so one that ran before the barrier stepped in still counts as the post.
         final boolean firstPost = LoginSessionState.markDisconnectPosted(this.manager);
         if (!LoginSessionState.isSuperseded(this.manager)) {
             return original.call(bus, event);
