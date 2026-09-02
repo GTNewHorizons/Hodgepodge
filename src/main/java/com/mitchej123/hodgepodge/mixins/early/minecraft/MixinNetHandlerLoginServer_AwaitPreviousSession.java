@@ -220,10 +220,11 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
     private void hodgepodge$repairStrandedSession(EntityPlayerMP player) {
         final NetHandlerPlayServer handler = player.playerNetServerHandler;
         if (handler == null) {
-            // writePlayerData would refuse to save them, so removing them would silently drop their progress.
+            // initializeConnectionToPlayer sets the handler before adding to playerEntityList, so this should not
+            // happen. Log it rather than guess at a cleanup for a state we do not understand.
             Common.log.error(
-                    "{} is in the world with no connection at all and cannot be cleaned up safely; they will not be "
-                            + "able to log in until the server restarts",
+                    "{} is in the world with no connection at all; they will not be able to log in until the server "
+                            + "restarts",
                     player.getCommandSenderName());
             return;
         }
