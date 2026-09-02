@@ -155,7 +155,15 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
         }
     }
 
-    /** Returns true while something still holds this UUID. */
+    /**
+     * Returns true while something still holds this UUID.
+     * <p>
+     * Every waiting login rescans every connection each tick, so K logins queued behind one UUID cost O(K^2) on the
+     * server thread until they time out. Reaching the wait needs a login vanilla already admitted, which in online mode
+     * means K authenticated sessions on one account; only an offline-mode server makes that free, and there a flood of
+     * distinct names is cheaper still, since each one costs vanilla a player and a read off disk. Bound the number of
+     * waiters if that ever stops holding.
+     */
     @Unique
     private boolean hodgepodge$collectSessions(MinecraftServer server, ServerConfigurationManager scm, UUID uuid,
             List<NetworkManager> live, List<EntityPlayerMP> stranded, List<NetworkManager> accepting) {
