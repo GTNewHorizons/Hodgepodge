@@ -107,9 +107,11 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
 
         final int waited = this.hodgepodge$ticksWaited++;
 
+        boolean kicked = false;
         for (NetworkManager manager : live) {
             if (LoginSessionState.markSuperseded(manager)) {
                 ((NetHandlerPlayServer) manager.getNetHandler()).kickPlayerFromServer(hodgepodge$KICK_REASON);
+                kicked = true;
             } else if (waited >= hodgepodge$FORCE_CLOSE_AFTER) {
                 // kickPlayerFromServer closes only once the disconnect packet has been written, which on a half-dead
                 // connection means waiting out the OS retransmit timeout - exactly the case this fix exists for.
@@ -117,7 +119,12 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
             }
         }
 
-        if (waited >= hodgepodge$GIVE_UP_AFTER) {
+        if (kicked) {
+            // The deadline measures how long the session in the way has had to leave, not how long this login has
+            // been here. A handshake that only just reached the world would otherwise be kicked and given no time to
+            // act on it. markSuperseded latches per connection, so each session we kick restarts the clock once.
+            this.hodgepodge$ticksWaited = 0;
+        } else if (waited >= hodgepodge$GIVE_UP_AFTER) {
             for (EntityPlayerMP player : stranded) {
                 this.hodgepodge$repairStrandedSession(player);
             }
