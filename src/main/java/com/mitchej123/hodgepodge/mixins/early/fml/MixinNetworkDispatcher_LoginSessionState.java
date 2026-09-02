@@ -16,9 +16,9 @@ import cpw.mods.fml.common.eventhandler.EventBus;
 import cpw.mods.fml.common.network.handshake.NetworkDispatcher;
 
 /**
- * Keeps a superseded session closing cleanly. Its disconnect event is posted once however many closes the kick and the
- * barrier between them end up running through the pipeline, and a throwing listener cannot hold the close back, since
- * EventBus has already logged the exception.
+ * Keeps a superseded session closing cleanly. Its disconnect event is posted once no matter how many closes reach the
+ * pipeline, including one that ran before the barrier superseded the session, and a throwing listener cannot hold the
+ * close back, since EventBus has already logged the exception.
  */
 @Mixin(NetworkDispatcher.class)
 public abstract class MixinNetworkDispatcher_LoginSessionState {
@@ -35,10 +35,12 @@ public abstract class MixinNetworkDispatcher_LoginSessionState {
             remap = false,
             expect = 2)
     private boolean hodgepodge$finishSupersededClose(EventBus bus, Event event, Operation<Boolean> original) {
+        // Recorded for every close, so a close that ran before the barrier stepped in still counts as the one post.
+        final boolean firstPost = LoginSessionState.markDisconnectPosted(this.manager);
         if (!LoginSessionState.isSuperseded(this.manager)) {
             return original.call(bus, event);
         }
-        if (!LoginSessionState.markDisconnectPosted(this.manager)) {
+        if (!firstPost) {
             return false;
         }
         try {
