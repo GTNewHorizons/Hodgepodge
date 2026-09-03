@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
@@ -44,6 +45,7 @@ import org.mockito.MockedStatic;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.mitchej123.hodgepodge.mixins.early.fml.MixinNetworkDispatcher_LoginSessionState;
 import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinNetHandlerLoginServer_AwaitPreviousSession;
 import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinNetHandlerPlayServer_PreWorldDisconnect;
 import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinNetworkSystem_LoginSessionIndex;
@@ -52,6 +54,8 @@ import com.mitchej123.hodgepodge.mixins.interfaces.LoginSessionState;
 import com.mitchej123.hodgepodge.util.LoginSessionIndex;
 import com.mojang.authlib.GameProfile;
 
+import cpw.mods.fml.common.eventhandler.Event;
+import cpw.mods.fml.common.eventhandler.EventBus;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.embedded.EmbeddedChannel;
@@ -269,6 +273,31 @@ class LoginSessionBarrierTest {
         assertFalse(LoginSessionState.markKicked(manager, 61));
         assertEquals(60, LoginSessionState.getKickedTick(manager));
         assertFalse(LoginSessionState.markDisconnectPosted(manager));
+    }
+
+    @Test
+    void closePostedBeforeSupersessionIsNotPostedAgain() throws Exception {
+        NetworkManager manager = manager();
+        MixinNetworkDispatcher_LoginSessionState mixin = new MixinNetworkDispatcher_LoginSessionState() {};
+        mixin.manager = manager;
+        Method hook = MixinNetworkDispatcher_LoginSessionState.class
+                .getDeclaredMethod("hodgepodge$finishSupersededClose", EventBus.class, Event.class, Operation.class);
+        hook.setAccessible(true);
+        AtomicInteger posts = new AtomicInteger();
+        Operation<Boolean> post = args -> {
+            posts.incrementAndGet();
+            throw new IllegalStateException("disconnect listener failed");
+        };
+
+        InvocationTargetException failure = assertThrows(
+                InvocationTargetException.class,
+                () -> hook.invoke(mixin, mock(EventBus.class), mock(Event.class), post));
+        assertTrue(failure.getCause() instanceof IllegalStateException);
+        assertEquals(1, posts.get());
+
+        LoginSessionState.markSuperseded(manager, tick);
+        assertFalse((boolean) hook.invoke(mixin, mock(EventBus.class), mock(Event.class), post));
+        assertEquals(1, posts.get());
     }
 
     @Test
