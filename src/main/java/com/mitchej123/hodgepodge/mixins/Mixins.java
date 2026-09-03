@@ -111,7 +111,7 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinNetHandlerLoginServer_AwaitPreviousSession",
                     "minecraft.MixinServerConfigurationManager_LoginSessionSave",
                     "fml.MixinNetworkDispatcher_LoginSessionState",
-                    "minecraft.NetworkSystemAccessor")
+                    "minecraft.MixinNetworkSystem_LoginSessionIndex")
             .setApplyIf(() -> FixesConfig.fixPlayerCloningOnReconnect)
             .setPhase(Phase.EARLY)),
     FIX_INVENTORY_POTION_EFFECT_NUMERALS(new MixinBuilder("Fix potion effects level not displaying properly above a certain value")

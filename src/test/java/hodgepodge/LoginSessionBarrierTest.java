@@ -2,10 +2,13 @@ package hodgepodge;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
@@ -15,19 +18,23 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.NetworkSystem;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.storage.IPlayerFileData;
 
 import org.junit.jupiter.api.AfterEach;
@@ -36,10 +43,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinNetHandlerLoginServer_AwaitPreviousSession;
+import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinNetworkSystem_LoginSessionIndex;
 import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinServerConfigurationManager_LoginSessionSave;
-import com.mitchej123.hodgepodge.mixins.early.minecraft.NetworkSystemAccessor;
 import com.mitchej123.hodgepodge.mixins.interfaces.LoginSessionState;
+import com.mitchej123.hodgepodge.util.LoginSessionIndex;
 import com.mojang.authlib.GameProfile;
 
 import io.netty.channel.Channel;
@@ -50,10 +59,13 @@ class LoginSessionBarrierTest {
 
     private static final UUID PLAYER_UUID = UUID.fromString("11111111-1111-1111-1111-111111111111");
 
-    private final List<NetworkManager> managers = new ArrayList<>();
+    private final CountingList<NetworkManager> managers = new CountingList<>();
+    private final CountingList<EntityPlayerMP> players = new CountingList<>();
     private final List<Channel> channels = new ArrayList<>();
     private final List<EntityPlayerMP> savedPlayers = new ArrayList<>();
     private ServerConfigurationManager scm;
+    private MixinNetworkSystem_LoginSessionIndex networkHooks;
+    private MixinServerConfigurationManager_LoginSessionSave playerHooks;
     private MockedStatic<MinecraftServer> serverLookup;
     private int tick;
 
@@ -61,6 +73,7 @@ class LoginSessionBarrierTest {
     void setUp() throws Exception {
         MinecraftServer server = mock(MinecraftServer.class);
         scm = new TestPlayerList(server);
+        setField(ServerConfigurationManager.class, scm, "playerEntityList", players);
         IPlayerFileData playerData = mock(IPlayerFileData.class);
         doAnswer(call -> {
             savedPlayers.add(call.getArgument(0));
@@ -69,8 +82,16 @@ class LoginSessionBarrierTest {
         Field saveHandler = ServerConfigurationManager.class.getDeclaredField("playerNBTManagerObj");
         saveHandler.setAccessible(true);
         saveHandler.set(scm, playerData);
-        NetworkSystem network = mock(NetworkSystem.class, withSettings().extraInterfaces(NetworkSystemAccessor.class));
-        when(((NetworkSystemAccessor) network).hodgepodge$getNetworkManagers()).thenAnswer(call -> managers);
+        networkHooks = new MixinNetworkSystem_LoginSessionIndex();
+        setField(MixinNetworkSystem_LoginSessionIndex.class, networkHooks, "mcServer", server);
+        setField(MixinNetworkSystem_LoginSessionIndex.class, networkHooks, "networkManagers", managers);
+        playerHooks = new MixinServerConfigurationManager_LoginSessionSave();
+        setField(MixinServerConfigurationManager_LoginSessionSave.class, playerHooks, "mcServer", server);
+        NetworkSystem network = mock(
+                NetworkSystem.class,
+                withSettings().extraInterfaces(LoginSessionIndex.Provider.class));
+        when(((LoginSessionIndex.Provider) network).hodgepodge$getLoginSessionIndex())
+                .thenAnswer(call -> networkHooks.hodgepodge$getLoginSessionIndex());
         when(server.getConfigurationManager()).thenReturn(scm);
         when(server.func_147137_ag()).thenReturn(network);
         when(server.getTickCounter()).thenAnswer(call -> tick);
@@ -149,6 +170,20 @@ class LoginSessionBarrierTest {
     }
 
     @Test
+    void duplicatePlayerListEntriesStillPreventUnsafeRecovery() throws Exception {
+        EntityPlayerMP stranded = player(false, true);
+        players.add(stranded);
+        TestLogin login = login();
+        for (tick = 0; tick <= 60; tick++) {
+            assertFalse(login.poll());
+        }
+        assertTrue(login.rejected);
+        assertTrue(LoginSessionState.isPlayerSaveBlocked(stranded.playerNetServerHandler.func_147362_b()));
+        verify(stranded.playerNetServerHandler, never()).onDisconnect(any());
+        assertTrue(savedPlayers.isEmpty());
+    }
+
+    @Test
     void saveAllSkipsStrandedCloneButKeepsLiveAndDisconnectSaves() throws Exception {
         player(false, true);
         EntityPlayerMP live = player(true, true);
@@ -174,7 +209,7 @@ class LoginSessionBarrierTest {
             assertFalse(first.poll());
             assertFalse(second.poll());
         }
-        scm.playerEntityList.add(arriving);
+        addPlayer(arriving);
         assertFalse(first.poll());
         assertFalse(second.poll());
         assertFalse(first.rejected);
@@ -225,6 +260,139 @@ class LoginSessionBarrierTest {
         assertFalse(LoginSessionState.markDisconnectPosted(manager));
     }
 
+    @Test
+    void sameTickAdmissionsReserveUuidWithoutAnotherFullScan() throws Exception {
+        List<TestLogin> arrivals = new ArrayList<>();
+        for (int i = 0; i < 40; i++) {
+            arrivals.add(login(new UUID(0, i)));
+        }
+        TestLogin first = login();
+        TestLogin second = login();
+        for (TestLogin arrival : arrivals) {
+            assertTrue(arrival.poll());
+        }
+        assertTrue(first.poll());
+        assertFalse(second.poll());
+        verify(first.field_147333_a, never()).closeChannel(any());
+        assertEquals(managers.size(), managers.visits);
+        assertEquals(0, managers.membershipChecks);
+    }
+
+    @Test
+    void idleTickDiscardsOldSnapshotWithoutScanningAgain() throws Exception {
+        assertTrue(login().poll());
+        LoginSessionIndex previous = networkHooks.hodgepodge$getLoginSessionIndex();
+        tick++;
+        Method beginTick = MixinNetworkSystem_LoginSessionIndex.class
+                .getDeclaredMethod("hodgepodge$discardPreviousTick", CallbackInfo.class);
+        beginTick.setAccessible(true);
+        beginTick.invoke(networkHooks, new CallbackInfo("networkTick", false));
+        assertNotSame(previous, networkHooks.hodgepodge$getLoginSessionIndex());
+        assertEquals(managers.size(), managers.visits);
+        assertEquals(0, players.visits);
+    }
+
+    @Test
+    void manyWaitersShareOneScanAndOneBlockerPassPerTick() throws Exception {
+        List<NetworkManager> blockers = new ArrayList<>();
+        List<TestLogin> waiters = new ArrayList<>();
+        for (int i = 0; i < 40; i++) {
+            blockers.add(player(true, true).playerNetServerHandler.func_147362_b());
+            waiters.add(login());
+        }
+        for (TestLogin waiter : waiters) {
+            assertFalse(waiter.poll());
+        }
+        assertEquals(managers.size(), managers.visits);
+        assertEquals(players.size(), players.visits);
+        // Once to index, once to classify, once to kick; later waiters reuse the prepared bucket.
+        for (NetworkManager manager : blockers) {
+            verify(manager, times(3)).getNetHandler();
+        }
+        tick++;
+        for (TestLogin waiter : waiters) {
+            assertFalse(waiter.poll());
+        }
+        assertEquals(2 * managers.size(), managers.visits);
+        assertEquals(2 * players.size(), players.visits);
+        assertEquals(0, managers.membershipChecks);
+        assertEquals(0, players.membershipChecks);
+        for (NetworkManager manager : blockers) {
+            verify(manager, times(5)).getNetHandler();
+        }
+    }
+
+    @Test
+    void sameTickHandshakeCompletionInvalidatesWaitersDeadline() throws Exception {
+        EntityPlayerMP arriving = player(true, false);
+        TestLogin first = login();
+        TestLogin second = login();
+        for (tick = 0; tick < 59; tick++) {
+            assertFalse(first.poll());
+            assertFalse(second.poll());
+        }
+        assertFalse(first.poll());
+        addPlayer(arriving);
+        assertFalse(second.poll());
+        assertFalse(first.poll());
+        assertFalse(first.rejected);
+        assertFalse(second.rejected);
+        verify(arriving.playerNetServerHandler, times(1)).kickPlayerFromServer(anyString());
+        verify(arriving.playerNetServerHandler.func_147362_b(), never()).closeChannel(any());
+        assertEquals(tick, LoginSessionState.getSupersededTick(arriving.playerNetServerHandler.func_147362_b()));
+    }
+
+    @Test
+    void respawnReplacementKeepsConnectionReservedWithinTick() throws Exception {
+        EntityPlayerMP oldPlayer = player(true, true);
+        TestLogin login = login();
+        assertFalse(login.poll());
+        removePlayer(oldPlayer);
+        assertFalse(login.poll());
+        EntityPlayerMP replacement = mock(EntityPlayerMP.class);
+        when(replacement.getUniqueID()).thenReturn(PLAYER_UUID);
+        replacement.playerNetServerHandler = oldPlayer.playerNetServerHandler;
+        addPlayer(replacement);
+        replacement.playerNetServerHandler.playerEntity = replacement;
+        assertFalse(login.poll());
+        assertFalse(login.rejected);
+        assertEquals(managers.size(), managers.visits);
+        verify(oldPlayer.playerNetServerHandler, times(1)).kickPlayerFromServer(anyString());
+        assertFalse(LoginSessionState.isPlayerSaveBlocked(replacement.playerNetServerHandler.func_147362_b()));
+    }
+
+    @Test
+    void failedDisconnectRemainsStrandedAndBlockedWithinTick() throws Exception {
+        EntityPlayerMP previous = player(true, true);
+        TestLogin login = login();
+        assertFalse(login.poll());
+        NetworkManager manager = previous.playerNetServerHandler.func_147362_b();
+        managers.remove(manager);
+        InvocationTargetException failure = assertThrows(
+                InvocationTargetException.class,
+                () -> {
+                    finishDisconnect(manager, () -> { throw new IllegalStateException("logout listener failed"); });
+                });
+        assertTrue(failure.getCause() instanceof IllegalStateException);
+        assertFalse(login.poll());
+        assertTrue(networkHooks.hodgepodge$getLoginSessionIndex().getSessions(PLAYER_UUID).hasStranded());
+        assertTrue(savedPlayers.isEmpty());
+    }
+
+    @Test
+    void failedKickDoesNotCacheIncompleteDeadlineForOtherWaiters() throws Exception {
+        EntityPlayerMP previous = player(true, true);
+        TestLogin first = login();
+        TestLogin second = login();
+        doThrow(new IllegalStateException("kick failed")).when(previous.playerNetServerHandler)
+                .kickPlayerFromServer(anyString());
+        InvocationTargetException failure = assertThrows(InvocationTargetException.class, first::poll);
+        assertTrue(failure.getCause() instanceof IllegalStateException);
+        assertFalse(second.poll());
+        assertFalse(second.rejected);
+        assertTrue(savedPlayers.isEmpty());
+    }
+
     private NetworkManager manager() {
         NetworkManager manager = mock(NetworkManager.class);
         Channel channel = new EmbeddedChannel(new ChannelInboundHandlerAdapter());
@@ -246,7 +414,7 @@ class LoginSessionBarrierTest {
         when(handler.func_147362_b()).thenReturn(manager);
         doAnswer(call -> {
             ((TestPlayerList) scm).writePlayerData(player);
-            scm.playerEntityList.remove(player);
+            removePlayer(player);
             return null;
         }).when(handler).onDisconnect(any());
         if (tracked) {
@@ -259,19 +427,92 @@ class LoginSessionBarrierTest {
         return player;
     }
 
-    private void disconnect(EntityPlayerMP player) {
-        managers.remove(player.playerNetServerHandler.func_147362_b());
-        player.playerNetServerHandler.onDisconnect(new ChatComponentText("Disconnected"));
+    private void disconnect(EntityPlayerMP player) throws Exception {
+        NetworkManager manager = player.playerNetServerHandler.func_147362_b();
+        managers.remove(manager);
+        finishDisconnect(
+                manager,
+                () -> player.playerNetServerHandler.onDisconnect(new ChatComponentText("Disconnected")));
     }
 
     private TestLogin login() throws Exception {
+        return login(PLAYER_UUID);
+    }
+
+    private TestLogin login(UUID uuid) throws Exception {
         TestLogin login = new TestLogin();
         login.field_147333_a = manager();
         Field profile = MixinNetHandlerLoginServer_AwaitPreviousSession.class.getDeclaredField("field_147337_i");
         profile.setAccessible(true);
-        profile.set(login, new GameProfile(PLAYER_UUID, "test-player"));
+        profile.set(login, new GameProfile(uuid, "test-player"));
         managers.add(login.field_147333_a);
         return login;
+    }
+
+    private void addPlayer(EntityPlayerMP player) throws Exception {
+        mutatePlayers("hodgepodge$indexPlayerAdded", player, args -> players.add((EntityPlayerMP) args[1]));
+    }
+
+    private void removePlayer(EntityPlayerMP player) throws Exception {
+        mutatePlayers("hodgepodge$indexPlayerRemoved", player, args -> players.remove(args[1]));
+    }
+
+    private void mutatePlayers(String name, EntityPlayerMP player, Operation<Boolean> operation) throws Exception {
+        Method hook = MixinServerConfigurationManager_LoginSessionSave.class
+                .getDeclaredMethod(name, List.class, Object.class, Operation.class);
+        hook.setAccessible(true);
+        hook.invoke(playerHooks, players, player, operation);
+    }
+
+    private void finishDisconnect(NetworkManager manager, Runnable cleanup) throws Exception {
+        Method hook = MixinNetworkSystem_LoginSessionIndex.class.getDeclaredMethod(
+                "hodgepodge$finishDisconnect",
+                INetHandler.class,
+                IChatComponent.class,
+                Operation.class,
+                NetworkManager.class);
+        hook.setAccessible(true);
+        Operation<Void> operation = args -> {
+            cleanup.run();
+            return null;
+        };
+        hook.invoke(networkHooks, manager.getNetHandler(), new ChatComponentText("Disconnected"), operation, manager);
+    }
+
+    private static void setField(Class<?> owner, Object target, String name, Object value) throws Exception {
+        Field field = owner.getDeclaredField(name);
+        field.setAccessible(true);
+        field.set(target, value);
+    }
+
+    private static class CountingList<E> extends ArrayList<E> {
+
+        private int visits;
+        private int membershipChecks;
+
+        @Override
+        public boolean contains(Object value) {
+            membershipChecks++;
+            return super.contains(value);
+        }
+
+        @Override
+        public Iterator<E> iterator() {
+            Iterator<E> delegate = super.iterator();
+            return new Iterator<E>() {
+
+                @Override
+                public boolean hasNext() {
+                    return delegate.hasNext();
+                }
+
+                @Override
+                public E next() {
+                    visits++;
+                    return delegate.next();
+                }
+            };
+        }
     }
 
     private static class TestLogin extends MixinNetHandlerLoginServer_AwaitPreviousSession {
