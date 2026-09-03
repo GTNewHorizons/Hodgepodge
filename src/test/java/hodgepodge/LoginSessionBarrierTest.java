@@ -28,6 +28,7 @@ import net.minecraft.network.NetworkSystem;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.world.storage.IPlayerFileData;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +37,7 @@ import org.mockito.MockedStatic;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinNetHandlerLoginServer_AwaitPreviousSession;
+import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinServerConfigurationManager_LoginSessionSave;
 import com.mitchej123.hodgepodge.mixins.early.minecraft.NetworkSystemAccessor;
 import com.mitchej123.hodgepodge.mixins.interfaces.LoginSessionState;
 import com.mojang.authlib.GameProfile;
@@ -58,10 +60,15 @@ class LoginSessionBarrierTest {
     @BeforeEach
     void setUp() throws Exception {
         MinecraftServer server = mock(MinecraftServer.class);
-        scm = mock(ServerConfigurationManager.class);
-        Field players = ServerConfigurationManager.class.getField("playerEntityList");
-        players.setAccessible(true);
-        players.set(scm, new ArrayList<EntityPlayerMP>());
+        scm = new TestPlayerList(server);
+        IPlayerFileData playerData = mock(IPlayerFileData.class);
+        doAnswer(call -> {
+            savedPlayers.add(call.getArgument(0));
+            return null;
+        }).when(playerData).writePlayerData(any());
+        Field saveHandler = ServerConfigurationManager.class.getDeclaredField("playerNBTManagerObj");
+        saveHandler.setAccessible(true);
+        saveHandler.set(scm, playerData);
         NetworkSystem network = mock(NetworkSystem.class, withSettings().extraInterfaces(NetworkSystemAccessor.class));
         when(((NetworkSystemAccessor) network).hodgepodge$getNetworkManagers()).thenAnswer(call -> managers);
         when(server.getConfigurationManager()).thenReturn(scm);
@@ -104,12 +111,14 @@ class LoginSessionBarrierTest {
             assertFalse(first.poll());
         }
         assertTrue(first.rejected);
+        assertTrue(first.reason.contains("server administrator"));
         managers.remove(first.field_147333_a);
         TestLogin retry = login();
         for (int i = 0; i <= 61; i++, tick++) {
             assertFalse(retry.poll());
         }
         assertTrue(retry.rejected);
+        assertTrue(retry.reason.contains("server administrator"));
         assertEquals(Collections.singletonList(live), savedPlayers);
         verify(stranded.playerNetServerHandler, never()).onDisconnect(any());
     }
@@ -135,6 +144,23 @@ class LoginSessionBarrierTest {
             assertFalse(login.poll());
         }
         assertTrue(login.rejected);
+        scm.saveAllPlayerData();
+        assertTrue(savedPlayers.isEmpty());
+    }
+
+    @Test
+    void saveAllSkipsStrandedCloneButKeepsLiveAndDisconnectSaves() throws Exception {
+        player(false, true);
+        EntityPlayerMP live = player(true, true);
+        TestLogin login = login();
+        assertFalse(login.poll());
+        scm.saveAllPlayerData();
+        assertEquals(Collections.singletonList(live), savedPlayers);
+        savedPlayers.clear();
+        disconnect(live);
+        assertEquals(Collections.singletonList(live), savedPlayers);
+        savedPlayers.clear();
+        scm.saveAllPlayerData();
         assertTrue(savedPlayers.isEmpty());
     }
 
@@ -183,6 +209,7 @@ class LoginSessionBarrierTest {
             assertFalse(login.poll());
         }
         assertTrue(login.rejected);
+        assertTrue(login.reason.contains("reconnect in a moment"));
         verify(arriving, never()).closeChannel(any());
     }
 
@@ -218,7 +245,7 @@ class LoginSessionBarrierTest {
         when(manager.getNetHandler()).thenReturn(handler);
         when(handler.func_147362_b()).thenReturn(manager);
         doAnswer(call -> {
-            savedPlayers.add(player);
+            ((TestPlayerList) scm).writePlayerData(player);
             scm.playerEntityList.remove(player);
             return null;
         }).when(handler).onDisconnect(any());
@@ -250,10 +277,12 @@ class LoginSessionBarrierTest {
     private static class TestLogin extends MixinNetHandlerLoginServer_AwaitPreviousSession {
 
         private boolean rejected;
+        private String reason;
 
         @Override
         public void func_147322_a(String reason) {
             rejected = true;
+            this.reason = reason;
         }
 
         private boolean poll() throws Exception {
@@ -263,6 +292,30 @@ class LoginSessionBarrierTest {
             CallbackInfo ci = new CallbackInfo("func_147326_c", true);
             barrier.invoke(this, ci);
             return !ci.isCancelled();
+        }
+    }
+
+    private static class TestPlayerList extends ServerConfigurationManager {
+
+        private TestPlayerList(MinecraftServer server) {
+            super(server);
+        }
+
+        @Override
+        public void writePlayerData(EntityPlayerMP player) {
+            // Exercise the production condition and vanilla save implementation without booting a Mixin launcher.
+            try {
+                Method guard = MixinServerConfigurationManager_LoginSessionSave.class.getDeclaredMethod(
+                        "hodgepodge$allowPlayerSave",
+                        ServerConfigurationManager.class,
+                        EntityPlayerMP.class);
+                guard.setAccessible(true);
+                if ((boolean) guard.invoke(new MixinServerConfigurationManager_LoginSessionSave(), this, player)) {
+                    super.writePlayerData(player);
+                }
+            } catch (ReflectiveOperationException e) {
+                throw new AssertionError(e);
+            }
         }
     }
 }

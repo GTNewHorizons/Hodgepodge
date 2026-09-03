@@ -14,6 +14,8 @@ public final class LoginSessionState {
     private static final AttributeKey<Integer> SUPERSEDED_AT = new AttributeKey<>("hodgepodge:login_superseded_at");
     private static final AttributeKey<Boolean> UNSAFE_STRANDED_RECOVERY = new AttributeKey<>(
             "hodgepodge:unsafe_stranded_recovery");
+    private static final AttributeKey<Boolean> PLAYER_SAVE_BLOCKED = new AttributeKey<>(
+            "hodgepodge:player_save_blocked");
     private static final AttributeKey<Boolean> CLOSE_REQUESTED = new AttributeKey<>("hodgepodge:login_close_requested");
     private static final AttributeKey<Boolean> DISCONNECT_POSTED = new AttributeKey<>(
             "hodgepodge:login_disconnect_posted");
@@ -54,6 +56,19 @@ public final class LoginSessionState {
     public static boolean isStrandedRecoveryUnsafe(NetworkManager manager) {
         final Channel channel = manager.channel();
         return channel == null || Boolean.TRUE.equals(channel.attr(UNSAFE_STRANDED_RECOVERY).get());
+    }
+
+    /** Only an observed stranded session is blocked; the live competitor must still write its final save. */
+    public static void blockPlayerSave(NetworkManager manager) {
+        final Channel channel = manager.channel();
+        if (channel != null) {
+            channel.attr(PLAYER_SAVE_BLOCKED).set(Boolean.TRUE);
+        }
+    }
+
+    public static boolean isPlayerSaveBlocked(NetworkManager manager) {
+        final Channel channel = manager.channel();
+        return channel == null || Boolean.TRUE.equals(channel.attr(PLAYER_SAVE_BLOCKED).get());
     }
 
     /** Returns true only for the first FML disconnect event posted for this connection. */

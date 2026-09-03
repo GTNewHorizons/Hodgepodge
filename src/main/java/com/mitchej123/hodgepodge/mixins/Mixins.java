@@ -109,6 +109,7 @@ public enum Mixins implements IMixins {
     FIX_PLAYER_CLONING_ON_RECONNECT(new MixinBuilder("Wait for an earlier session for the same UUID to leave the world before accepting a login")
             .addCommonMixins(
                     "minecraft.MixinNetHandlerLoginServer_AwaitPreviousSession",
+                    "minecraft.MixinServerConfigurationManager_LoginSessionSave",
                     "fml.MixinNetworkDispatcher_LoginSessionState",
                     "minecraft.NetworkSystemAccessor")
             .setApplyIf(() -> FixesConfig.fixPlayerCloningOnReconnect)

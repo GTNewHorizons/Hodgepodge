@@ -139,7 +139,9 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
             // func_147322_a leaves the login state alone, so onNetworkTick keeps calling us until the channel is
             // actually seen closed a tick or two later.
             this.hodgepodge$gaveUp = true;
-            this.func_147322_a("Your previous session is still being cleaned up, please reconnect in a moment");
+            this.func_147322_a(
+                    stranded.isEmpty() ? "Your previous session is still being cleaned up, please reconnect in a moment"
+                            : "Your previous session could not be cleaned up safely. Please contact a server administrator.");
         }
 
         ci.cancel();
@@ -156,8 +158,8 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
     /**
      * Returns true while something still holds this UUID.
      * <p>
-     * Each waiting login rescans every connection, so K logins behind one UUID cost O(K^2) a tick. Only free in offline
-     * mode, where flooding distinct names is cheaper anyway; bound the waiters if that stops holding.
+     * Each waiting login rescans all C connections every tick (O(K*C) for K waiters), even before any FML handshake
+     * installs a player. Vanilla scans the player list once when admitting a login.
      */
     @Unique
     private boolean hodgepodge$collectSessions(MinecraftServer server, ServerConfigurationManager scm, UUID uuid,
@@ -179,9 +181,8 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
                 if (handler instanceof NetHandlerPlayServer) {
                     final EntityPlayerMP player = ((NetHandlerPlayServer) handler).playerEntity;
                     if (player != null && uuid.equals(player.getUniqueID())) {
-                        // Only a session that reached the world is kicked. Until initializeConnectionToPlayer
-                        // runs the player is unread, so closing one still arriving reaches playerLoggedOut and
-                        // saves that empty player over their file. Wait those out instead.
+                        // FML clears playerNetServerHandler during the handshake, so vanilla skips the player save.
+                        // Logout listeners can still run before login initialization finishes; wait those out.
                         if (scm.playerEntityList.contains(player)) {
                             live.add(manager);
                         } else {
@@ -213,16 +214,23 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
 
             // A competing session can save and disappear before recovery runs. Remember the ambiguity on each
             // connection so neither this waiter nor a later login can save a leftover clone over that newer file.
-            if (live.size() + stranded.size() + accepting.size() > 1) {
+            final boolean conflicting = live.size() + stranded.size() + accepting.size() > 1;
+            if (conflicting) {
                 for (NetworkManager manager : live) {
                     LoginSessionState.markStrandedRecoveryUnsafe(manager);
                 }
                 for (NetworkManager manager : accepting) {
                     LoginSessionState.markStrandedRecoveryUnsafe(manager);
                 }
-                for (EntityPlayerMP player : stranded) {
-                    if (player.playerNetServerHandler != null) {
-                        LoginSessionState.markStrandedRecoveryUnsafe(player.playerNetServerHandler.func_147362_b());
+            }
+            for (EntityPlayerMP player : stranded) {
+                if (player.playerNetServerHandler != null) {
+                    final NetworkManager manager = player.playerNetServerHandler.func_147362_b();
+                    if (conflicting) {
+                        LoginSessionState.markStrandedRecoveryUnsafe(manager);
+                    }
+                    if (LoginSessionState.isStrandedRecoveryUnsafe(manager)) {
+                        LoginSessionState.blockPlayerSave(manager);
                     }
                 }
             }
