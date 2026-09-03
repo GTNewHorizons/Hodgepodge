@@ -60,8 +60,11 @@ public final class LoginSessionState {
         return channel == null || Boolean.TRUE.equals(channel.attr(UNSAFE_STRANDED_RECOVERY).get());
     }
 
-    /** Only an observed stranded session is blocked; the live competitor must still write its final save. */
-    /** Returns true only when this connection's player saves first become blocked. */
+    /**
+     * Only an observed stranded session is blocked; the live competitor must still write its final save.
+     *
+     * @return true only when this connection's player saves first become blocked
+     */
     public static boolean blockPlayerSave(NetworkManager manager) {
         final Channel channel = manager.channel();
         return channel != null && channel.attr(PLAYER_SAVE_BLOCKED).setIfAbsent(Boolean.TRUE) == null;
