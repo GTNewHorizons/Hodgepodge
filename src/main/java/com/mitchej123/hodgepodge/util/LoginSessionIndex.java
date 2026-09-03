@@ -133,7 +133,7 @@ public final class LoginSessionIndex {
         private final Set<NetworkManager> connections = new HashSet<>();
         // Preserve duplicate list entries too: deduplicating a broken player list could hide an unsafe clone.
         private final List<EntityPlayerMP> players = new ArrayList<>();
-        private final List<NetworkManager> live = new ArrayList<>();
+        private final Set<NetworkManager> live = new HashSet<>();
         private final List<EntityPlayerMP> stranded = new ArrayList<>();
         private boolean prepared;
         private boolean repairAttempted;
@@ -153,7 +153,6 @@ public final class LoginSessionIndex {
                         && installed.contains(((NetHandlerPlayServer) handler).playerEntity)) {
                     live.add(manager);
                 }
-                // Other accepted connections are still in the FML handshake. Never kick or force-close them.
             }
             for (EntityPlayerMP player : players) {
                 final NetHandlerPlayServer handler = player.playerNetServerHandler;
@@ -181,15 +180,22 @@ public final class LoginSessionIndex {
 
             closingTicks = Integer.MAX_VALUE;
             try {
-                for (NetworkManager manager : live) {
-                    if (LoginSessionState.markSuperseded(manager, tick)) {
+                for (NetworkManager manager : connections) {
+                    LoginSessionState.markSuperseded(manager, tick);
+                    final boolean livePlayer = live.contains(manager);
+                    if (livePlayer && LoginSessionState.markKicked(manager, tick)) {
                         ((NetHandlerPlayServer) manager.getNetHandler()).kickPlayerFromServer(KICK_REASON);
                     }
-                    final int closingFor = tick - LoginSessionState.getSupersededTick(manager);
+                    final int closingFor = tick - (livePlayer ? LoginSessionState.getKickedTick(manager)
+                            : LoginSessionState.getSupersededTick(manager));
                     closingTicks = Math.min(closingTicks, closingFor);
-                    // A half-dead connection may never finish writing the kick packet.
+                    // A handshake has a play handler before it has a player in the world. Tag its forced close so the
+                    // play handler does not run logout against that uninstalled player.
                     if (closingFor >= FORCE_CLOSE_AFTER && manager.isChannelOpen()
                             && LoginSessionState.requestClose(manager)) {
+                        if (!livePlayer) {
+                            LoginSessionState.markPreWorldClose(manager);
+                        }
                         manager.closeChannel(new ChatComponentText(KICK_REASON));
                     }
                 }
@@ -209,7 +215,7 @@ public final class LoginSessionIndex {
         }
 
         public int waited(int fallback) {
-            return live.isEmpty() ? fallback : closingTicks;
+            return connections.isEmpty() ? fallback : closingTicks;
         }
 
         public void repairStranded() {

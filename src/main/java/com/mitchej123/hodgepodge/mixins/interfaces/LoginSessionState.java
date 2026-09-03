@@ -16,6 +16,8 @@ public final class LoginSessionState {
             "hodgepodge:unsafe_stranded_recovery");
     private static final AttributeKey<Boolean> PLAYER_SAVE_BLOCKED = new AttributeKey<>(
             "hodgepodge:player_save_blocked");
+    private static final AttributeKey<Boolean> PRE_WORLD_CLOSE = new AttributeKey<>("hodgepodge:login_pre_world_close");
+    private static final AttributeKey<Integer> KICKED_AT = new AttributeKey<>("hodgepodge:login_kicked_at");
     private static final AttributeKey<Boolean> CLOSE_REQUESTED = new AttributeKey<>("hodgepodge:login_close_requested");
     private static final AttributeKey<Boolean> DISCONNECT_POSTED = new AttributeKey<>(
             "hodgepodge:login_disconnect_posted");
@@ -69,6 +71,24 @@ public final class LoginSessionState {
     public static boolean isPlayerSaveBlocked(NetworkManager manager) {
         final Channel channel = manager.channel();
         return channel == null || Boolean.TRUE.equals(channel.attr(PLAYER_SAVE_BLOCKED).get());
+    }
+
+    /** Marks a superseded handshake whose play handler never installed its player in the world. */
+    public static void markPreWorldClose(NetworkManager manager) {
+        manager.channel().attr(PRE_WORLD_CLOSE).set(Boolean.TRUE);
+    }
+
+    public static boolean isPreWorldClose(NetworkManager manager) {
+        return Boolean.TRUE.equals(manager.channel().attr(PRE_WORLD_CLOSE).get());
+    }
+
+    /** Returns true only when this connection first becomes a live player after being superseded. */
+    public static boolean markKicked(NetworkManager manager, int tick) {
+        return manager.channel().attr(KICKED_AT).setIfAbsent(tick) == null;
+    }
+
+    public static int getKickedTick(NetworkManager manager) {
+        return manager.channel().attr(KICKED_AT).get();
     }
 
     /** Returns true only for the first FML disconnect event posted for this connection. */

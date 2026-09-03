@@ -45,6 +45,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinNetHandlerLoginServer_AwaitPreviousSession;
+import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinNetHandlerPlayServer_PreWorldDisconnect;
 import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinNetworkSystem_LoginSessionIndex;
 import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinServerConfigurationManager_LoginSessionSave;
 import com.mitchej123.hodgepodge.mixins.interfaces.LoginSessionState;
@@ -64,6 +65,7 @@ class LoginSessionBarrierTest {
     private final List<Channel> channels = new ArrayList<>();
     private final List<EntityPlayerMP> savedPlayers = new ArrayList<>();
     private ServerConfigurationManager scm;
+    private MinecraftServer server;
     private MixinNetworkSystem_LoginSessionIndex networkHooks;
     private MixinServerConfigurationManager_LoginSessionSave playerHooks;
     private MockedStatic<MinecraftServer> serverLookup;
@@ -71,7 +73,7 @@ class LoginSessionBarrierTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        MinecraftServer server = mock(MinecraftServer.class);
+        server = mock(MinecraftServer.class);
         scm = new TestPlayerList(server);
         setField(ServerConfigurationManager.class, scm, "playerEntityList", players);
         IPlayerFileData playerData = mock(IPlayerFileData.class);
@@ -205,7 +207,7 @@ class LoginSessionBarrierTest {
         NetworkManager previousManager = arriving.playerNetServerHandler.func_147362_b();
         TestLogin first = login();
         TestLogin second = login();
-        for (tick = 0; tick < 60; tick++) {
+        for (tick = 0; tick < 4; tick++) {
             assertFalse(first.poll());
             assertFalse(second.poll());
         }
@@ -215,12 +217,12 @@ class LoginSessionBarrierTest {
         assertFalse(first.rejected);
         assertFalse(second.rejected);
         verify(previousManager, never()).closeChannel(any());
-        for (tick = 61; tick < 65; tick++) {
+        for (tick = 5; tick < 9; tick++) {
             assertFalse(first.poll());
             assertFalse(second.poll());
         }
         verify(previousManager, never()).closeChannel(any());
-        for (; tick < 120; tick++) {
+        for (; tick < 64; tick++) {
             assertFalse(first.poll());
             assertFalse(second.poll());
             assertFalse(first.rejected);
@@ -232,20 +234,26 @@ class LoginSessionBarrierTest {
         assertTrue(second.rejected);
         verify(arriving.playerNetServerHandler, times(1)).kickPlayerFromServer(anyString());
         verify(previousManager, times(1)).closeChannel(any());
+        assertFalse(LoginSessionState.isPreWorldClose(previousManager));
     }
 
     @Test
-    void acceptedHandshakeWithoutPlayHandlerRemainsProtectedAndWaitIsBounded() throws Exception {
+    void acceptedHandshakeIsClosedAndReplacementProceedsAfterRemoval() throws Exception {
         NetworkManager arriving = manager();
         managers.add(arriving);
         LoginSessionState.setAcceptedUuid(arriving, PLAYER_UUID);
         TestLogin login = login();
-        for (tick = 0; tick <= 61; tick++) {
+        for (tick = 0; tick < 5; tick++) {
             assertFalse(login.poll());
         }
-        assertTrue(login.rejected);
-        assertTrue(login.reason.contains("reconnect in a moment"));
         verify(arriving, never()).closeChannel(any());
+        assertFalse(login.poll());
+        verify(arriving, times(1)).closeChannel(any());
+        assertTrue(LoginSessionState.isPreWorldClose(arriving));
+        managers.remove(arriving);
+        networkHooks.hodgepodge$getLoginSessionIndex().connectionRemoved(arriving);
+        assertTrue(login.poll());
+        assertFalse(login.rejected);
     }
 
     @Test
@@ -257,7 +265,28 @@ class LoginSessionBarrierTest {
         assertTrue(LoginSessionState.isSuperseded(manager));
         assertFalse(LoginSessionState.markSuperseded(manager, 60));
         assertEquals(0, LoginSessionState.getSupersededTick(manager));
+        assertTrue(LoginSessionState.markKicked(manager, 60));
+        assertFalse(LoginSessionState.markKicked(manager, 61));
+        assertEquals(60, LoginSessionState.getKickedTick(manager));
         assertFalse(LoginSessionState.markDisconnectPosted(manager));
+    }
+
+    @Test
+    void forcedHandshakeCloseSkipsLogoutOnlyUntilPlayerEntersWorld() throws Exception {
+        EntityPlayerMP arriving = player(true, false);
+        NetHandlerPlayServer handler = arriving.playerNetServerHandler;
+        NetworkManager manager = handler.func_147362_b();
+        arriving.playerNetServerHandler = null;
+        TestLogin login = login();
+        for (tick = 0; tick <= 5; tick++) {
+            assertFalse(login.poll());
+        }
+        verify(manager, times(1)).closeChannel(any());
+        assertTrue(preWorldLogoutCancelled(manager, arriving));
+
+        arriving.playerNetServerHandler = handler;
+        addPlayer(arriving);
+        assertFalse(preWorldLogoutCancelled(manager, arriving));
     }
 
     @Test
@@ -338,8 +367,9 @@ class LoginSessionBarrierTest {
         assertFalse(first.rejected);
         assertFalse(second.rejected);
         verify(arriving.playerNetServerHandler, times(1)).kickPlayerFromServer(anyString());
-        verify(arriving.playerNetServerHandler.func_147362_b(), never()).closeChannel(any());
-        assertEquals(tick, LoginSessionState.getSupersededTick(arriving.playerNetServerHandler.func_147362_b()));
+        verify(arriving.playerNetServerHandler.func_147362_b(), times(1)).closeChannel(any());
+        assertEquals(0, LoginSessionState.getSupersededTick(arriving.playerNetServerHandler.func_147362_b()));
+        assertEquals(tick, LoginSessionState.getKickedTick(arriving.playerNetServerHandler.func_147362_b()));
     }
 
     @Test
@@ -477,6 +507,19 @@ class LoginSessionBarrierTest {
             return null;
         };
         hook.invoke(networkHooks, manager.getNetHandler(), new ChatComponentText("Disconnected"), operation, manager);
+    }
+
+    private boolean preWorldLogoutCancelled(NetworkManager manager, EntityPlayerMP player) throws Exception {
+        MixinNetHandlerPlayServer_PreWorldDisconnect mixin = new MixinNetHandlerPlayServer_PreWorldDisconnect();
+        setField(MixinNetHandlerPlayServer_PreWorldDisconnect.class, mixin, "netManager", manager);
+        setField(MixinNetHandlerPlayServer_PreWorldDisconnect.class, mixin, "serverController", server);
+        setField(MixinNetHandlerPlayServer_PreWorldDisconnect.class, mixin, "playerEntity", player);
+        Method hook = MixinNetHandlerPlayServer_PreWorldDisconnect.class
+                .getDeclaredMethod("hodgepodge$skipPreWorldLogout", CallbackInfo.class);
+        hook.setAccessible(true);
+        CallbackInfo ci = new CallbackInfo("onDisconnect", true);
+        hook.invoke(mixin, ci);
+        return ci.isCancelled();
     }
 
     private static void setField(Class<?> owner, Object target, String name, Object value) throws Exception {
