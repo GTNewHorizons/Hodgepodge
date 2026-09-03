@@ -1,8 +1,10 @@
 package com.mitchej123.hodgepodge.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -146,7 +148,8 @@ public final class LoginSessionIndex {
             prepared = true;
             live.clear();
             stranded.clear();
-            final Set<EntityPlayerMP> installed = new HashSet<>(players);
+            final Set<EntityPlayerMP> installed = Collections.newSetFromMap(new IdentityHashMap<>());
+            installed.addAll(players);
             for (NetworkManager manager : connections) {
                 final INetHandler handler = manager.getNetHandler();
                 if (handler instanceof NetHandlerPlayServer
