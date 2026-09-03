@@ -105,25 +105,25 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
             return;
         }
 
-        final int waited = this.hodgepodge$ticksWaited++;
+        final int tick = server.getTickCounter();
+        int waited = live.isEmpty() ? this.hodgepodge$ticksWaited : Integer.MAX_VALUE;
 
-        boolean kicked = false;
         for (NetworkManager manager : live) {
-            if (LoginSessionState.markSuperseded(manager)) {
+            if (LoginSessionState.markSuperseded(manager, tick)) {
                 ((NetHandlerPlayServer) manager.getNetHandler()).kickPlayerFromServer(hodgepodge$KICK_REASON);
-                kicked = true;
-            } else if (waited >= hodgepodge$FORCE_CLOSE_AFTER) {
+            }
+            final int closingFor = tick - LoginSessionState.getSupersededTick(manager);
+            waited = Math.min(waited, closingFor);
+            if (closingFor >= hodgepodge$FORCE_CLOSE_AFTER) {
                 // kickPlayerFromServer closes only once the disconnect packet has been written, which on a half-dead
                 // connection means waiting out the OS retransmit timeout - exactly the case this fix exists for.
                 this.hodgepodge$forceClose(manager);
             }
         }
 
-        if (kicked) {
-            // The deadline belongs to the session we just kicked, not to this login. markSuperseded latches per
-            // connection, so each one restarts the clock once.
-            this.hodgepodge$ticksWaited = 0;
-        } else if (waited >= hodgepodge$GIVE_UP_AFTER) {
+        // Every waiter gives the most recently superseded session the same full cleanup interval.
+        this.hodgepodge$ticksWaited = waited + 1;
+        if (waited >= hodgepodge$GIVE_UP_AFTER) {
             // Both writes land on the same file and the last wins, so never save a stranded clone over a live one.
             if (live.isEmpty()) {
                 for (EntityPlayerMP player : stranded) {
@@ -210,6 +210,22 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
                     stranded.add(player);
                 }
             }
+
+            // A competing session can save and disappear before recovery runs. Remember the ambiguity on each
+            // connection so neither this waiter nor a later login can save a leftover clone over that newer file.
+            if (live.size() + stranded.size() + accepting.size() > 1) {
+                for (NetworkManager manager : live) {
+                    LoginSessionState.markStrandedRecoveryUnsafe(manager);
+                }
+                for (NetworkManager manager : accepting) {
+                    LoginSessionState.markStrandedRecoveryUnsafe(manager);
+                }
+                for (EntityPlayerMP player : stranded) {
+                    if (player.playerNetServerHandler != null) {
+                        LoginSessionState.markStrandedRecoveryUnsafe(player.playerNetServerHandler.func_147362_b());
+                    }
+                }
+            }
         }
 
         return !live.isEmpty() || !stranded.isEmpty() || !accepting.isEmpty();
@@ -225,6 +241,14 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
             Common.log.error(
                     "{} is in the world with no connection at all; they will not be able to log in until the server "
                             + "restarts",
+                    player.getCommandSenderName());
+            return;
+        }
+
+        if (LoginSessionState.isStrandedRecoveryUnsafe(handler.func_147362_b())) {
+            Common.log.error(
+                    "Refusing to save the stranded session for {} because its save ownership is uncertain; "
+                            + "manual cleanup is required",
                     player.getCommandSenderName());
             return;
         }

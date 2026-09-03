@@ -11,7 +11,9 @@ import io.netty.util.AttributeKey;
 public final class LoginSessionState {
 
     private static final AttributeKey<UUID> ACCEPTED_UUID = new AttributeKey<>("hodgepodge:accepted_login_uuid");
-    private static final AttributeKey<Boolean> SUPERSEDED = new AttributeKey<>("hodgepodge:superseded_login");
+    private static final AttributeKey<Integer> SUPERSEDED_AT = new AttributeKey<>("hodgepodge:login_superseded_at");
+    private static final AttributeKey<Boolean> UNSAFE_STRANDED_RECOVERY = new AttributeKey<>(
+            "hodgepodge:unsafe_stranded_recovery");
     private static final AttributeKey<Boolean> CLOSE_REQUESTED = new AttributeKey<>("hodgepodge:login_close_requested");
     private static final AttributeKey<Boolean> DISCONNECT_POSTED = new AttributeKey<>(
             "hodgepodge:login_disconnect_posted");
@@ -29,12 +31,29 @@ public final class LoginSessionState {
     }
 
     /** Returns true only for the login that first supersedes this connection. */
-    public static boolean markSuperseded(NetworkManager manager) {
-        return manager.channel().attr(SUPERSEDED).setIfAbsent(Boolean.TRUE) == null;
+    public static boolean markSuperseded(NetworkManager manager, int tick) {
+        return manager.channel().attr(SUPERSEDED_AT).setIfAbsent(tick) == null;
+    }
+
+    public static int getSupersededTick(NetworkManager manager) {
+        return manager.channel().attr(SUPERSEDED_AT).get();
     }
 
     public static boolean isSuperseded(NetworkManager manager) {
-        return Boolean.TRUE.equals(manager.channel().attr(SUPERSEDED).get());
+        return manager.channel().attr(SUPERSEDED_AT).get() != null;
+    }
+
+    /** Retained after the competing session leaves, including across later login attempts. */
+    public static void markStrandedRecoveryUnsafe(NetworkManager manager) {
+        final Channel channel = manager.channel();
+        if (channel != null) {
+            channel.attr(UNSAFE_STRANDED_RECOVERY).set(Boolean.TRUE);
+        }
+    }
+
+    public static boolean isStrandedRecoveryUnsafe(NetworkManager manager) {
+        final Channel channel = manager.channel();
+        return channel == null || Boolean.TRUE.equals(channel.attr(UNSAFE_STRANDED_RECOVERY).get());
     }
 
     /** Returns true only for the first FML disconnect event posted for this connection. */
