@@ -28,7 +28,7 @@ public class MixinNetHandlerPlayServer_PreWorldDisconnect {
     @Shadow
     public EntityPlayerMP playerEntity;
 
-    @Inject(method = "onDisconnect", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "onDisconnect", at = @At("HEAD"), cancellable = true, require = 1)
     private void hodgepodge$skipPreWorldLogout(CallbackInfo ci) {
         if (LoginSessionState.isPreWorldClose(this.netManager)
                 && !this.serverController.getConfigurationManager().playerEntityList.contains(this.playerEntity)) {

@@ -172,8 +172,11 @@ public final class LoginSessionIndex {
                     if (conflicting) {
                         LoginSessionState.markStrandedRecoveryUnsafe(manager);
                     }
-                    if (LoginSessionState.isStrandedRecoveryUnsafe(manager)) {
-                        LoginSessionState.blockPlayerSave(manager);
+                    if (LoginSessionState.isStrandedRecoveryUnsafe(manager)
+                            && LoginSessionState.blockPlayerSave(manager)) {
+                        Common.log.warn(
+                                "Blocking saves for {}'s stranded session because its save ownership is uncertain; manual cleanup may be required",
+                                player.getCommandSenderName());
                     }
                 }
             }

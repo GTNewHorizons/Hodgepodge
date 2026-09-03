@@ -33,7 +33,8 @@ public abstract class MixinNetworkDispatcher_LoginSessionState {
                     value = "INVOKE",
                     target = "Lcpw/mods/fml/common/eventhandler/EventBus;post(Lcpw/mods/fml/common/eventhandler/Event;)Z"),
             remap = false,
-            expect = 2)
+            expect = 2,
+            require = 2)
     private boolean hodgepodge$finishSupersededClose(EventBus bus, Event event, Operation<Boolean> original) {
         // Recorded on every close, so one that ran before the barrier stepped in still counts as the post.
         final boolean firstPost = LoginSessionState.markDisconnectPosted(this.manager);

@@ -35,7 +35,7 @@ public class MixinNetworkSystem_LoginSessionIndex implements LoginSessionIndex.P
     @Unique
     private LoginSessionIndex hodgepodge$loginSessionIndex;
 
-    @Inject(method = "networkTick", at = @At("HEAD"))
+    @Inject(method = "networkTick", at = @At("HEAD"), require = 1)
     private void hodgepodge$discardPreviousTick(CallbackInfo ci) {
         // Do not retain disconnected players indefinitely when no more login attempts arrive.
         this.hodgepodge$loginSessionIndex = null;
@@ -54,7 +54,8 @@ public class MixinNetworkSystem_LoginSessionIndex implements LoginSessionIndex.P
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/network/INetHandler;onDisconnect(Lnet/minecraft/util/IChatComponent;)V"),
-            expect = 2)
+            expect = 2,
+            require = 2)
     private void hodgepodge$finishDisconnect(INetHandler handler, IChatComponent reason, Operation<Void> original,
             @Local NetworkManager manager) {
         try {

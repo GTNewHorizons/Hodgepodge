@@ -63,7 +63,8 @@ public abstract class MixinNetHandlerLoginServer_AwaitPreviousSession {
                     value = "FIELD",
                     target = "Lnet/minecraft/server/network/NetHandlerLoginServer;field_147328_g:Lnet/minecraft/server/network/NetHandlerLoginServer$LoginState;",
                     opcode = Opcodes.PUTFIELD),
-            cancellable = true)
+            cancellable = true,
+            require = 1)
     private void hodgepodge$awaitPreviousSession(CallbackInfo ci) {
         final MinecraftServer server = MinecraftServer.getServer();
         if (server == null || this.field_147337_i == null) {

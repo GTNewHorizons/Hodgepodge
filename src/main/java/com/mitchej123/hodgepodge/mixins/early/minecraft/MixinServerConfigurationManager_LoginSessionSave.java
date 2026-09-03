@@ -28,7 +28,8 @@ public class MixinServerConfigurationManager_LoginSessionSave {
     @WrapOperation(
             method = { "playerLoggedIn", "respawnPlayer" },
             at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", remap = false),
-            expect = 2)
+            expect = 2,
+            require = 2)
     private boolean hodgepodge$indexPlayerAdded(List<EntityPlayerMP> players, Object entry,
             Operation<Boolean> original) {
         final boolean added = original.call(players, entry);
@@ -42,7 +43,8 @@ public class MixinServerConfigurationManager_LoginSessionSave {
     @WrapOperation(
             method = { "playerLoggedOut", "respawnPlayer" },
             at = @At(value = "INVOKE", target = "Ljava/util/List;remove(Ljava/lang/Object;)Z", remap = false),
-            expect = 2)
+            expect = 2,
+            require = 2)
     private boolean hodgepodge$indexPlayerRemoved(List<EntityPlayerMP> players, Object entry,
             Operation<Boolean> original) {
         final boolean removed = original.call(players, entry);
@@ -60,7 +62,8 @@ public class MixinServerConfigurationManager_LoginSessionSave {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/management/ServerConfigurationManager;writePlayerData(Lnet/minecraft/entity/player/EntityPlayerMP;)V"),
-            expect = 2)
+            expect = 2,
+            require = 2)
     private boolean hodgepodge$allowPlayerSave(ServerConfigurationManager scm, EntityPlayerMP player) {
         final NetHandlerPlayServer handler = player.playerNetServerHandler;
         return handler == null || !LoginSessionState.isPlayerSaveBlocked(handler.func_147362_b());

@@ -276,6 +276,14 @@ class LoginSessionBarrierTest {
     }
 
     @Test
+    void saveBlockReportsOnlyItsFirstTransition() {
+        NetworkManager manager = manager();
+        assertTrue(LoginSessionState.blockPlayerSave(manager));
+        assertFalse(LoginSessionState.blockPlayerSave(manager));
+        assertTrue(LoginSessionState.isPlayerSaveBlocked(manager));
+    }
+
+    @Test
     void closePostedBeforeSupersessionIsNotPostedAgain() throws Exception {
         NetworkManager manager = manager();
         MixinNetworkDispatcher_LoginSessionState mixin = new MixinNetworkDispatcher_LoginSessionState() {};
