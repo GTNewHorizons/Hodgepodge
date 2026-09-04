@@ -169,6 +169,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixNetHandlerLoginServerOfflineMode;
 
+    @Config.Comment("Hold back a login until any earlier session for the same UUID has finished leaving the world, "
+            + "instead of letting both exist at once and duplicating the player's inventory")
+    @Config.DefaultBoolean(true)
+    public static boolean fixPlayerCloningOnReconnect;
+
     @Config.Comment("Prevents crash if server sends itemStack with index larger than client's container")
     @Config.DefaultBoolean(true)
     public static boolean fixNetHandlerPlayClientHandleSetSlot;

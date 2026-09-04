@@ -106,6 +106,17 @@ public enum Mixins implements IMixins {
             .addServerMixins("minecraft.MixinNetHandlerLoginServer_OfflineMode")
             .setApplyIf(() -> FixesConfig.fixNetHandlerLoginServerOfflineMode)
             .setPhase(Phase.EARLY)),
+    FIX_PLAYER_CLONING_ON_RECONNECT(new MixinBuilder("Wait for an earlier session for the same UUID to leave the world before accepting a login")
+            // Thermos moves logout saving/removal to disconnect(), outside the vanilla hook targets.
+            .addExcludedMod(TargetedMod.BUKKIT)
+            .addCommonMixins(
+                    "minecraft.MixinNetHandlerLoginServer_AwaitPreviousSession",
+                    "minecraft.MixinNetHandlerPlayServer_PreWorldDisconnect",
+                    "minecraft.MixinServerConfigurationManager_LoginSessionSave",
+                    "fml.MixinNetworkDispatcher_LoginSessionState",
+                    "minecraft.MixinNetworkSystem_LoginSessionIndex")
+            .setApplyIf(() -> FixesConfig.fixPlayerCloningOnReconnect)
+            .setPhase(Phase.EARLY)),
     FIX_INVENTORY_POTION_EFFECT_NUMERALS(new MixinBuilder("Fix potion effects level not displaying properly above a certain value")
             .addClientMixins(
                     "minecraft.MixinInventoryEffectRenderer_FixPotionEffectNumerals",
