@@ -128,6 +128,41 @@ class LoginSessionBarrierTest {
     }
 
     @Test
+    void earlyLogoutWithOpenConnectionStillSavesInventoryBeforeReconnect() throws Exception {
+        EntityPlayerMP previous = player(true, true);
+        NetworkManager manager = previous.playerNetServerHandler.func_147362_b();
+        AtomicInteger inventory = new AtomicInteger(64);
+        List<Integer> savedInventory = new ArrayList<>();
+        IPlayerFileData playerData = mock(IPlayerFileData.class);
+        doAnswer(call -> {
+            savedInventory.add(inventory.get());
+            return null;
+        }).when(playerData).writePlayerData(previous);
+        setField(ServerConfigurationManager.class, scm, "playerNBTManagerObj", playerData);
+
+        // ServerUtilities' AFK cleanup logs the player out without closing their connection.
+        previous.playerNetServerHandler.onDisconnect(new ChatComponentText("AFK"));
+        assertEquals(Collections.singletonList(64), savedInventory);
+        assertTrue(managers.contains(manager));
+        assertTrue(players.isEmpty());
+        beginNetworkTick();
+
+        TestLogin reconnect = login();
+        assertFalse(reconnect.poll());
+        // The open connection can still process queued inventory/drop packets after the first save.
+        inventory.set(0);
+        for (int i = 0; i < 5; i++) {
+            beginNetworkTick();
+            assertFalse(reconnect.poll());
+        }
+        verify(manager, times(1)).closeChannel(any());
+        disconnect(previous);
+        assertTrue(reconnect.poll());
+        assertEquals(2, savedInventory.size());
+        assertEquals(0, savedInventory.get(1));
+    }
+
+    @Test
     void strandedCloneCannotOverwriteLiveSaveEvenOnAnotherLoginAttempt() throws Exception {
         EntityPlayerMP stranded = player(false, true);
         EntityPlayerMP live = player(true, true);
@@ -324,6 +359,14 @@ class LoginSessionBarrierTest {
         arriving.playerNetServerHandler = handler;
         addPlayer(arriving);
         assertFalse(preWorldLogoutCancelled(manager, arriving));
+
+        // Installation can win the race with the asynchronous close, followed by an early mod logout.
+        removePlayer(arriving);
+        beginNetworkTick();
+        assertFalse(preWorldLogoutCancelled(manager, arriving));
+        disconnect(arriving);
+        assertTrue(login.poll());
+        assertEquals(Collections.singletonList(arriving), savedPlayers);
     }
 
     @Test
@@ -348,11 +391,7 @@ class LoginSessionBarrierTest {
     void idleTickDiscardsOldSnapshotWithoutScanningAgain() throws Exception {
         assertTrue(login().poll());
         LoginSessionIndex previous = networkHooks.hodgepodge$getLoginSessionIndex();
-        tick++;
-        Method beginTick = MixinNetworkSystem_LoginSessionIndex.class
-                .getDeclaredMethod("hodgepodge$discardPreviousTick", CallbackInfo.class);
-        beginTick.setAccessible(true);
-        beginTick.invoke(networkHooks, new CallbackInfo("networkTick", false));
+        beginNetworkTick();
         assertNotSame(previous, networkHooks.hodgepodge$getLoginSessionIndex());
         assertEquals(managers.size(), managers.visits);
         assertEquals(0, players.visits);
@@ -469,7 +508,7 @@ class LoginSessionBarrierTest {
         return manager;
     }
 
-    private EntityPlayerMP player(boolean tracked, boolean installed) {
+    private EntityPlayerMP player(boolean tracked, boolean installed) throws Exception {
         NetworkManager manager = manager();
         EntityPlayerMP player = mock(EntityPlayerMP.class);
         NetHandlerPlayServer handler = mock(NetHandlerPlayServer.class);
@@ -488,7 +527,7 @@ class LoginSessionBarrierTest {
             managers.add(manager);
         }
         if (installed) {
-            scm.playerEntityList.add(player);
+            addPlayer(player);
         }
         LoginSessionState.setAcceptedUuid(manager, PLAYER_UUID);
         return player;
@@ -497,9 +536,20 @@ class LoginSessionBarrierTest {
     private void disconnect(EntityPlayerMP player) throws Exception {
         NetworkManager manager = player.playerNetServerHandler.func_147362_b();
         managers.remove(manager);
-        finishDisconnect(
-                manager,
-                () -> player.playerNetServerHandler.onDisconnect(new ChatComponentText("Disconnected")));
+        boolean cancelled = preWorldLogoutCancelled(manager, player);
+        finishDisconnect(manager, () -> {
+            if (!cancelled) {
+                player.playerNetServerHandler.onDisconnect(new ChatComponentText("Disconnected"));
+            }
+        });
+    }
+
+    private void beginNetworkTick() throws Exception {
+        tick++;
+        Method beginTick = MixinNetworkSystem_LoginSessionIndex.class
+                .getDeclaredMethod("hodgepodge$discardPreviousTick", CallbackInfo.class);
+        beginTick.setAccessible(true);
+        beginTick.invoke(networkHooks, new CallbackInfo("networkTick", false));
     }
 
     private TestLogin login() throws Exception {

@@ -102,6 +102,11 @@ public final class LoginSessionIndex {
 
     /** Called at the player-list mutations, including the old/new entity swap during respawn. */
     public void playerAdded(EntityPlayerMP player) {
+        // Record installation even before the first snapshot, and retain it after this index is discarded.
+        final NetHandlerPlayServer handler = player.playerNetServerHandler;
+        if (handler != null) {
+            LoginSessionState.markPlayerInstalled(handler.func_147362_b());
+        }
         if (isCurrent()) {
             final Sessions sessions = bucket(player.getUniqueID());
             sessions.players.add(player);
@@ -195,8 +200,8 @@ public final class LoginSessionIndex {
                     final int closingFor = tick - (livePlayer ? LoginSessionState.getKickedTick(manager)
                             : LoginSessionState.getSupersededTick(manager));
                     closingTicks = Math.min(closingTicks, closingFor);
-                    // A handshake has a play handler before it has a player in the world. Tag its forced close so the
-                    // play handler does not run logout against that uninstalled player.
+                    // A missing player may be an unfinished handshake or a session already logged out by a mod.
+                    // Installation history keeps the latter's final logout/save enabled.
                     if (closingFor >= FORCE_CLOSE_AFTER && manager.isChannelOpen()
                             && LoginSessionState.requestClose(manager)) {
                         if (!livePlayer) {

@@ -16,6 +16,8 @@ public final class LoginSessionState {
             "hodgepodge:unsafe_stranded_recovery");
     private static final AttributeKey<Boolean> PLAYER_SAVE_BLOCKED = new AttributeKey<>(
             "hodgepodge:player_save_blocked");
+    private static final AttributeKey<Boolean> PLAYER_INSTALLED = new AttributeKey<>(
+            "hodgepodge:login_player_installed");
     private static final AttributeKey<Boolean> PRE_WORLD_CLOSE = new AttributeKey<>("hodgepodge:login_pre_world_close");
     private static final AttributeKey<Integer> KICKED_AT = new AttributeKey<>("hodgepodge:login_kicked_at");
     private static final AttributeKey<Boolean> CLOSE_REQUESTED = new AttributeKey<>("hodgepodge:login_close_requested");
@@ -75,13 +77,23 @@ public final class LoginSessionState {
         return channel == null || Boolean.TRUE.equals(channel.attr(PLAYER_SAVE_BLOCKED).get());
     }
 
-    /** Marks a superseded handshake whose play handler never installed its player in the world. */
+    /** Retained across logout and respawn, even if a mod removes the player before closing the connection. */
+    public static void markPlayerInstalled(NetworkManager manager) {
+        final Channel channel = manager == null ? null : manager.channel();
+        if (channel != null) {
+            channel.attr(PLAYER_INSTALLED).set(Boolean.TRUE);
+        }
+    }
+
+    /** Tags a forced close so logout can be skipped if this connection never installed a player. */
     public static void markPreWorldClose(NetworkManager manager) {
         manager.channel().attr(PRE_WORLD_CLOSE).set(Boolean.TRUE);
     }
 
     public static boolean isPreWorldClose(NetworkManager manager) {
-        return Boolean.TRUE.equals(manager.channel().attr(PRE_WORLD_CLOSE).get());
+        final Channel channel = manager.channel();
+        return Boolean.TRUE.equals(channel.attr(PRE_WORLD_CLOSE).get())
+                && !Boolean.TRUE.equals(channel.attr(PLAYER_INSTALLED).get());
     }
 
     /** Returns true only when this connection first becomes a live player after being superseded. */
