@@ -74,6 +74,7 @@ class LoginSessionBarrierTest {
     private MixinServerConfigurationManager_LoginSessionSave playerHooks;
     private MockedStatic<MinecraftServer> serverLookup;
     private int tick;
+    private boolean paused;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -118,7 +119,7 @@ class LoginSessionBarrierTest {
         EntityPlayerMP previous = player(true, true);
         TestLogin login = login();
         assertFalse(login.poll());
-        tick++;
+        beginNetworkTick();
         assertFalse(login.poll());
         verify(previous.playerNetServerHandler, times(1)).kickPlayerFromServer(anyString());
         disconnect(previous);
@@ -169,14 +170,14 @@ class LoginSessionBarrierTest {
         TestLogin first = login();
         assertFalse(first.poll());
         disconnect(live);
-        for (tick = 1; tick <= 62; tick++) {
+        for (beginNetworkTick(); tick <= 62; beginNetworkTick()) {
             assertFalse(first.poll());
         }
         assertTrue(first.rejected);
         assertTrue(first.reason.contains("server administrator"));
         managers.remove(first.field_147333_a);
         TestLogin retry = login();
-        for (int i = 0; i <= 61; i++, tick++) {
+        for (int i = 0; i <= 61; i++, beginNetworkTick()) {
             assertFalse(retry.poll());
         }
         assertTrue(retry.rejected);
@@ -189,7 +190,7 @@ class LoginSessionBarrierTest {
     void soleStrandedSessionStillRecovers() throws Exception {
         EntityPlayerMP stranded = player(false, true);
         TestLogin login = login();
-        for (tick = 0; tick < 60; tick++) {
+        for (; tick < 60; beginNetworkTick()) {
             assertFalse(login.poll());
         }
         assertTrue(login.poll());
@@ -202,7 +203,7 @@ class LoginSessionBarrierTest {
         player(false, true);
         player(false, true);
         TestLogin login = login();
-        for (tick = 0; tick <= 61; tick++) {
+        for (; tick <= 61; beginNetworkTick()) {
             assertFalse(login.poll());
         }
         assertTrue(login.rejected);
@@ -215,7 +216,7 @@ class LoginSessionBarrierTest {
         EntityPlayerMP stranded = player(false, true);
         players.add(stranded);
         TestLogin login = login();
-        for (tick = 0; tick <= 60; tick++) {
+        for (; tick <= 60; beginNetworkTick()) {
             assertFalse(login.poll());
         }
         assertTrue(login.rejected);
@@ -246,7 +247,7 @@ class LoginSessionBarrierTest {
         NetworkManager previousManager = arriving.playerNetServerHandler.func_147362_b();
         TestLogin first = login();
         TestLogin second = login();
-        for (tick = 0; tick < 4; tick++) {
+        for (; tick < 4; beginNetworkTick()) {
             assertFalse(first.poll());
             assertFalse(second.poll());
         }
@@ -256,12 +257,12 @@ class LoginSessionBarrierTest {
         assertFalse(first.rejected);
         assertFalse(second.rejected);
         verify(previousManager, never()).closeChannel(any());
-        for (tick = 5; tick < 9; tick++) {
+        for (beginNetworkTick(); tick < 9; beginNetworkTick()) {
             assertFalse(first.poll());
             assertFalse(second.poll());
         }
         verify(previousManager, never()).closeChannel(any());
-        for (; tick < 64; tick++) {
+        for (; tick < 64; beginNetworkTick()) {
             assertFalse(first.poll());
             assertFalse(second.poll());
             assertFalse(first.rejected);
@@ -282,7 +283,7 @@ class LoginSessionBarrierTest {
         managers.add(arriving);
         LoginSessionState.setAcceptedUuid(arriving, PLAYER_UUID);
         TestLogin login = login();
-        for (tick = 0; tick < 5; tick++) {
+        for (; tick < 5; beginNetworkTick()) {
             assertFalse(login.poll());
         }
         verify(arriving, never()).closeChannel(any());
@@ -293,6 +294,70 @@ class LoginSessionBarrierTest {
         networkHooks.hodgepodge$getLoginSessionIndex().connectionRemoved(arriving);
         assertTrue(login.poll());
         assertFalse(login.rejected);
+    }
+
+    @Test
+    void pausedNetworkTicksAdvanceSharedDeadlinesAcrossSnapshotResets() throws Exception {
+        // ServerUtilities keeps servicing networking while cancelling the tick that advances this counter.
+        tick = 1000;
+        paused = true;
+        EntityPlayerMP arriving = player(true, false);
+        NetworkManager manager = arriving.playerNetServerHandler.func_147362_b();
+        TestLogin first = login();
+        TestLogin second = login();
+        for (int elapsed = 0; elapsed <= 60; elapsed++) {
+            if (elapsed > 0) {
+                beginNetworkTick();
+            }
+            assertFalse(first.poll());
+            assertFalse(second.poll());
+            assertEquals(elapsed, networkHooks.hodgepodge$getLoginSessionIndex().getSessions(PLAYER_UUID).waited(0));
+            verify(manager, times(elapsed >= 5 ? 1 : 0)).closeChannel(any());
+            assertEquals(elapsed == 60, first.rejected);
+            assertEquals(elapsed == 60, second.rejected);
+        }
+        assertEquals(1000, server.getTickCounter());
+        assertTrue(LoginSessionState.isPreWorldClose(manager));
+        assertTrue(savedPlayers.isEmpty());
+    }
+
+    @Test
+    void resumingServerPreservesKickGraceAndFinalSave() throws Exception {
+        tick = 1000;
+        paused = true;
+        EntityPlayerMP arriving = player(true, false);
+        NetworkManager manager = arriving.playerNetServerHandler.func_147362_b();
+        TestLogin reconnect = login();
+        assertFalse(reconnect.poll());
+        // The deadline must also advance through network ticks with no waiter polls or snapshot creation.
+        for (int i = 0; i < 4; i++) {
+            beginNetworkTick();
+        }
+        assertFalse(reconnect.poll());
+        assertEquals(4, networkHooks.hodgepodge$getLoginSessionIndex().getSessions(PLAYER_UUID).waited(0));
+        verify(manager, never()).closeChannel(any());
+
+        // Installing the player resumes world ticking and gives the ordinary kick its own full grace period.
+        addPlayer(arriving);
+        paused = false;
+        beginNetworkTick();
+        assertFalse(reconnect.poll());
+        for (int i = 0; i < 4; i++) {
+            beginNetworkTick();
+            assertFalse(reconnect.poll());
+        }
+        verify(manager, never()).closeChannel(any());
+        beginNetworkTick();
+        assertFalse(reconnect.poll());
+        verify(manager, times(1)).closeChannel(any());
+        verify(arriving.playerNetServerHandler, times(1)).kickPlayerFromServer(anyString());
+        assertFalse(reconnect.rejected);
+        assertFalse(LoginSessionState.isPreWorldClose(manager));
+        assertTrue(savedPlayers.isEmpty());
+        disconnect(arriving);
+        assertTrue(reconnect.poll());
+        assertEquals(Collections.singletonList(arriving), savedPlayers);
+        assertEquals(1006, server.getTickCounter());
     }
 
     @Test
@@ -350,7 +415,7 @@ class LoginSessionBarrierTest {
         NetworkManager manager = handler.func_147362_b();
         arriving.playerNetServerHandler = null;
         TestLogin login = login();
-        for (tick = 0; tick <= 5; tick++) {
+        for (; tick <= 5; beginNetworkTick()) {
             assertFalse(login.poll());
         }
         verify(manager, times(1)).closeChannel(any());
@@ -414,7 +479,7 @@ class LoginSessionBarrierTest {
         for (NetworkManager manager : blockers) {
             verify(manager, times(3)).getNetHandler();
         }
-        tick++;
+        beginNetworkTick();
         for (TestLogin waiter : waiters) {
             assertFalse(waiter.poll());
         }
@@ -432,7 +497,7 @@ class LoginSessionBarrierTest {
         EntityPlayerMP arriving = player(true, false);
         TestLogin first = login();
         TestLogin second = login();
-        for (tick = 0; tick < 59; tick++) {
+        for (; tick < 59; beginNetworkTick()) {
             assertFalse(first.poll());
             assertFalse(second.poll());
         }
@@ -545,7 +610,9 @@ class LoginSessionBarrierTest {
     }
 
     private void beginNetworkTick() throws Exception {
-        tick++;
+        if (!paused) {
+            tick++;
+        }
         Method beginTick = MixinNetworkSystem_LoginSessionIndex.class
                 .getDeclaredMethod("hodgepodge$discardPreviousTick", CallbackInfo.class);
         beginTick.setAccessible(true);

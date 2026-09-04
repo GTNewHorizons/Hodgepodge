@@ -35,8 +35,13 @@ public class MixinNetworkSystem_LoginSessionIndex implements LoginSessionIndex.P
     @Unique
     private LoginSessionIndex hodgepodge$loginSessionIndex;
 
+    @Unique
+    private int hodgepodge$networkTick;
+
     @Inject(method = "networkTick", at = @At("HEAD"), require = 1)
     private void hodgepodge$discardPreviousTick(CallbackInfo ci) {
+        // ServerUtilities can keep networking active while pausing MinecraftServer's tick counter.
+        this.hodgepodge$networkTick++;
         // Do not retain disconnected players indefinitely when no more login attempts arrive.
         this.hodgepodge$loginSessionIndex = null;
     }
@@ -44,7 +49,10 @@ public class MixinNetworkSystem_LoginSessionIndex implements LoginSessionIndex.P
     @Override
     public LoginSessionIndex hodgepodge$getLoginSessionIndex() {
         if (this.hodgepodge$loginSessionIndex == null) {
-            this.hodgepodge$loginSessionIndex = new LoginSessionIndex(this.mcServer, this.networkManagers);
+            this.hodgepodge$loginSessionIndex = new LoginSessionIndex(
+                    this.mcServer,
+                    this.networkManagers,
+                    this.hodgepodge$networkTick);
         }
         return this.hodgepodge$loginSessionIndex;
     }

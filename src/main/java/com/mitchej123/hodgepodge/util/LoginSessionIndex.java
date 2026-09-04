@@ -21,7 +21,7 @@ import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.mixins.interfaces.LoginSessionState;
 
 /**
- * Server-thread-only, lazy snapshot shared by all login waiters in one server tick. Full scans cost O(C + P), with
+ * Server-thread-only, lazy snapshot shared by all login waiters in one network tick. Full scans cost O(C + P), with
  * constant-time UUID lookup and shared blocker processing. Lifecycle changes refresh only the affected UUID bucket.
  */
 public final class LoginSessionIndex {
@@ -36,28 +36,26 @@ public final class LoginSessionIndex {
 
     private final MinecraftServer server;
     private final List<NetworkManager> managers;
+    private final int tick;
     private final Set<NetworkManager> tracked = new HashSet<>();
     private final Map<NetworkManager, UUID> connectionUuids = new HashMap<>();
     private final Map<UUID, Sessions> byUuid = new HashMap<>();
     private boolean initialized;
-    private int tick;
 
-    public LoginSessionIndex(MinecraftServer server, List<NetworkManager> managers) {
+    public LoginSessionIndex(MinecraftServer server, List<NetworkManager> managers, int networkTick) {
         this.server = server;
         this.managers = managers;
+        // NetworkSystem replaces this snapshot at each network tick, even while the world is paused.
+        this.tick = networkTick;
     }
 
     public Sessions getSessions(UUID uuid) {
-        if (!isCurrent()) {
+        if (!initialized) {
             rebuild();
         }
         final Sessions sessions = bucket(uuid);
         sessions.prepare();
         return sessions;
-    }
-
-    private boolean isCurrent() {
-        return initialized && tick == server.getTickCounter();
     }
 
     private Sessions bucket(UUID uuid) {
@@ -68,7 +66,6 @@ public final class LoginSessionIndex {
         tracked.clear();
         connectionUuids.clear();
         byUuid.clear();
-        tick = server.getTickCounter();
         // networkTick already holds this monitor. Netty cannot register a connection during the snapshot.
         synchronized (managers) {
             for (NetworkManager manager : managers) {
@@ -107,7 +104,7 @@ public final class LoginSessionIndex {
         if (handler != null) {
             LoginSessionState.markPlayerInstalled(handler.func_147362_b());
         }
-        if (isCurrent()) {
+        if (initialized) {
             final Sessions sessions = bucket(player.getUniqueID());
             sessions.players.add(player);
             sessions.prepared = false;
@@ -115,7 +112,7 @@ public final class LoginSessionIndex {
     }
 
     public void playerRemoved(EntityPlayerMP player) {
-        if (isCurrent()) {
+        if (initialized) {
             final Sessions sessions = bucket(player.getUniqueID());
             sessions.players.remove(player);
             sessions.prepared = false;
@@ -124,7 +121,7 @@ public final class LoginSessionIndex {
 
     /** Release only after onDisconnect has had its chance to save and remove the player. */
     public void connectionRemoved(NetworkManager manager) {
-        if (isCurrent()) {
+        if (initialized) {
             tracked.remove(manager);
             final UUID uuid = connectionUuids.remove(manager);
             if (uuid != null) {
