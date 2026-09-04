@@ -10,6 +10,7 @@ import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
@@ -250,6 +251,25 @@ class LoginSessionLifecycleTest {
         public void onNetworkDisconnect(FMLNetworkEvent.ServerDisconnectionFromClientEvent event) {
             disconnectPosts++;
             throw new IllegalStateException("disconnect listener failed");
+        }
+
+        public void testDeniedDuplicateDoesNotKickPreviousSession() throws Exception {
+            EntityPlayerMP previous = player(true);
+            NetworkManager previousManager = previous.playerNetServerHandler.func_147362_b();
+            doReturn("Denied by admission check").when(scm).allowUserToConnect(any(), any());
+            NetworkManager replacement = login();
+            network.networkTick();
+            network.networkTick();
+
+            assertFalse(replacement.isChannelOpen());
+            assertEquals("Denied by admission check", replacement.getExitMessage().getUnformattedText());
+            assertNull(LoginSessionState.getAcceptedUuid(replacement));
+            assertTrue(previousManager.isChannelOpen());
+            assertFalse(LoginSessionState.isSuperseded(previousManager));
+            assertTrue(scm.playerEntityList.contains(previous));
+            verify(previous.playerNetServerHandler, never()).kickPlayerFromServer(any());
+            assertTrue(sequence.isEmpty(), "A denied login must not create a player or log out the existing one");
+            assertTrue(saveOverrides.isEmpty());
         }
 
         public void testReconnectWaitsForRealSaveAndCursorAndCraftingCleanup() throws Exception {
