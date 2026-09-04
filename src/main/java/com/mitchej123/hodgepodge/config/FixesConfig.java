@@ -222,6 +222,19 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixPotionLimit;
 
+    @Config.Comment({
+            "Show potion durations longer than 27 minutes correctly instead of freezing at 27:18 or showing **:**.",
+            "The vanilla effect packet truncates the duration to a short, so the real value is sent in a separate Hodgepodge packet.",
+            "Requires the mod on both sides; vanilla clients keep the vanilla behaviour." })
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixLongPotionDuration;
+
+    @Config.Comment("Display timers longer than an hour as h:mm:ss instead of vanilla's unbounded mm:ss")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixLongTimerFormat;
+
     @Config.Comment("Fix game window becoming not resizable after toggling fullscrean in any way")
     @Config.DefaultBoolean(true)
     public static boolean fixResizableFullscreen;
