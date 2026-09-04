@@ -85,7 +85,7 @@ public final class LoginSessionState {
         }
     }
 
-    /** Tags a forced close so logout can be skipped if this connection never installed a player. */
+    /** Tags a superseded session so any close skips logout unless it installed a player. */
     public static void markPreWorldClose(NetworkManager manager) {
         manager.channel().attr(PRE_WORLD_CLOSE).set(Boolean.TRUE);
     }

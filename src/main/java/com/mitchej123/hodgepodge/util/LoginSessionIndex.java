@@ -191,19 +191,18 @@ public final class LoginSessionIndex {
                 for (NetworkManager manager : connections) {
                     LoginSessionState.markSuperseded(manager, tick);
                     final boolean livePlayer = live.contains(manager);
+                    // Protect natural closes during the grace period too. Installation history preserves real logouts.
+                    if (!livePlayer) {
+                        LoginSessionState.markPreWorldClose(manager);
+                    }
                     if (livePlayer && LoginSessionState.markKicked(manager, tick)) {
                         ((NetHandlerPlayServer) manager.getNetHandler()).kickPlayerFromServer(KICK_REASON);
                     }
                     final int closingFor = tick - (livePlayer ? LoginSessionState.getKickedTick(manager)
                             : LoginSessionState.getSupersededTick(manager));
                     closingTicks = Math.min(closingTicks, closingFor);
-                    // A missing player may be an unfinished handshake or a session already logged out by a mod.
-                    // Installation history keeps the latter's final logout/save enabled.
                     if (closingFor >= FORCE_CLOSE_AFTER && manager.isChannelOpen()
                             && LoginSessionState.requestClose(manager)) {
-                        if (!livePlayer) {
-                            LoginSessionState.markPreWorldClose(manager);
-                        }
                         manager.closeChannel(new ChatComponentText(KICK_REASON));
                     }
                 }

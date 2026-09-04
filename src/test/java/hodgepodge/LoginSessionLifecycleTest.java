@@ -335,6 +335,28 @@ class LoginSessionLifecycleTest {
             assertEquals(0, server.getTickCounter(), "Network deadlines also work while world ticking is paused");
         }
 
+        public void testSupersededHandshakeClosingEarlySkipsLogout() throws Exception {
+            EntityPlayerMP arriving = player(false);
+            NetworkManager manager = arriving.playerNetServerHandler.func_147362_b();
+            arriving.playerNetServerHandler = null;
+            when(server.isSinglePlayer()).thenReturn(true);
+            when(server.getServerOwner()).thenReturn("test-player");
+            NetworkManager replacement = login();
+            network.networkTick();
+            assertTrue(manager.isChannelOpen());
+            assertNull(LoginSessionState.getAcceptedUuid(replacement));
+
+            // The client can cancel before the barrier's five-tick forced close.
+            manager.closeChannel(new ChatComponentText("Client cancelled handshake"));
+            network.networkTick();
+            assertEquals(Arrays.asList("replacement created"), sequence);
+            assertTrue(savedInventory.isEmpty());
+            assertTrue(saveOverrides.isEmpty(), "Never enter the integrated-server host NBT save override");
+            assertFalse(arriving.isDead);
+            verify(server, never()).initiateShutdown();
+            assertEquals(PLAYER_UUID, LoginSessionState.getAcceptedUuid(replacement));
+        }
+
         public void testWaitersShareGraceWhenHandshakeCompletesBeforeForcedClose() throws Exception {
             EntityPlayerMP arriving = player(false);
             NetHandlerPlayServer handler = arriving.playerNetServerHandler;
@@ -344,6 +366,7 @@ class LoginSessionLifecycleTest {
             NetworkManager second = login();
             for (int i = 0; i < 4; i++) network.networkTick();
             assertTrue(manager.isChannelOpen());
+            assertTrue(LoginSessionState.isPreWorldClose(manager));
             verify(handler, never()).kickPlayerFromServer(any());
 
             // FML's main-thread completion packet may install the player before the forced-close deadline.
