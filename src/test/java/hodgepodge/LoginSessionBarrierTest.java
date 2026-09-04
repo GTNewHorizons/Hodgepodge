@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
@@ -45,7 +44,6 @@ import org.mockito.MockedStatic;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.mitchej123.hodgepodge.mixins.early.fml.MixinNetworkDispatcher_LoginSessionState;
 import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinNetHandlerLoginServer_AwaitPreviousSession;
 import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinNetHandlerPlayServer_PreWorldDisconnect;
 import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinNetworkSystem_LoginSessionIndex;
@@ -54,12 +52,14 @@ import com.mitchej123.hodgepodge.mixins.interfaces.LoginSessionState;
 import com.mitchej123.hodgepodge.util.LoginSessionIndex;
 import com.mojang.authlib.GameProfile;
 
-import cpw.mods.fml.common.eventhandler.Event;
-import cpw.mods.fml.common.eventhandler.EventBus;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.embedded.EmbeddedChannel;
 
+/**
+ * Isolated index bookkeeping and fault-injection tests. Transport and lifecycle callbacks are controlled here;
+ * LoginSessionLifecycleTest exercises the real transformed methods and network tick ordering.
+ */
 class LoginSessionBarrierTest {
 
     private static final UUID PLAYER_UUID = UUID.fromString("11111111-1111-1111-1111-111111111111");
@@ -112,55 +112,6 @@ class LoginSessionBarrierTest {
             serverLookup.close();
         }
         channels.forEach(Channel::close);
-    }
-
-    @Test
-    void ordinaryReconnectKicksOnceAndWaitsForSaveAndRemoval() throws Exception {
-        EntityPlayerMP previous = player(true, true);
-        TestLogin login = login();
-        assertFalse(login.poll());
-        beginNetworkTick();
-        assertFalse(login.poll());
-        verify(previous.playerNetServerHandler, times(1)).kickPlayerFromServer(anyString());
-        disconnect(previous);
-        assertTrue(login.poll());
-        assertEquals(Collections.singletonList(previous), savedPlayers);
-        assertEquals(PLAYER_UUID, LoginSessionState.getAcceptedUuid(login.field_147333_a));
-    }
-
-    @Test
-    void earlyLogoutWithOpenConnectionStillSavesInventoryBeforeReconnect() throws Exception {
-        EntityPlayerMP previous = player(true, true);
-        NetworkManager manager = previous.playerNetServerHandler.func_147362_b();
-        AtomicInteger inventory = new AtomicInteger(64);
-        List<Integer> savedInventory = new ArrayList<>();
-        IPlayerFileData playerData = mock(IPlayerFileData.class);
-        doAnswer(call -> {
-            savedInventory.add(inventory.get());
-            return null;
-        }).when(playerData).writePlayerData(previous);
-        setField(ServerConfigurationManager.class, scm, "playerNBTManagerObj", playerData);
-
-        // ServerUtilities' AFK cleanup logs the player out without closing their connection.
-        previous.playerNetServerHandler.onDisconnect(new ChatComponentText("AFK"));
-        assertEquals(Collections.singletonList(64), savedInventory);
-        assertTrue(managers.contains(manager));
-        assertTrue(players.isEmpty());
-        beginNetworkTick();
-
-        TestLogin reconnect = login();
-        assertFalse(reconnect.poll());
-        // The open connection can still process queued inventory/drop packets after the first save.
-        inventory.set(0);
-        for (int i = 0; i < 5; i++) {
-            beginNetworkTick();
-            assertFalse(reconnect.poll());
-        }
-        verify(manager, times(1)).closeChannel(any());
-        disconnect(previous);
-        assertTrue(reconnect.poll());
-        assertEquals(2, savedInventory.size());
-        assertEquals(0, savedInventory.get(1));
     }
 
     @Test
@@ -242,86 +193,6 @@ class LoginSessionBarrierTest {
     }
 
     @Test
-    void waitersShareKickDeadlineAfterHandshakeCompletes() throws Exception {
-        EntityPlayerMP arriving = player(true, false);
-        NetworkManager previousManager = arriving.playerNetServerHandler.func_147362_b();
-        TestLogin first = login();
-        TestLogin second = login();
-        for (; tick < 4; beginNetworkTick()) {
-            assertFalse(first.poll());
-            assertFalse(second.poll());
-        }
-        addPlayer(arriving);
-        assertFalse(first.poll());
-        assertFalse(second.poll());
-        assertFalse(first.rejected);
-        assertFalse(second.rejected);
-        verify(previousManager, never()).closeChannel(any());
-        for (beginNetworkTick(); tick < 9; beginNetworkTick()) {
-            assertFalse(first.poll());
-            assertFalse(second.poll());
-        }
-        verify(previousManager, never()).closeChannel(any());
-        for (; tick < 64; beginNetworkTick()) {
-            assertFalse(first.poll());
-            assertFalse(second.poll());
-            assertFalse(first.rejected);
-            assertFalse(second.rejected);
-        }
-        assertFalse(first.poll());
-        assertFalse(second.poll());
-        assertTrue(first.rejected);
-        assertTrue(second.rejected);
-        verify(arriving.playerNetServerHandler, times(1)).kickPlayerFromServer(anyString());
-        verify(previousManager, times(1)).closeChannel(any());
-        assertFalse(LoginSessionState.isPreWorldClose(previousManager));
-    }
-
-    @Test
-    void acceptedHandshakeIsClosedAndReplacementProceedsAfterRemoval() throws Exception {
-        NetworkManager arriving = manager();
-        managers.add(arriving);
-        LoginSessionState.setAcceptedUuid(arriving, PLAYER_UUID);
-        TestLogin login = login();
-        for (; tick < 5; beginNetworkTick()) {
-            assertFalse(login.poll());
-        }
-        verify(arriving, never()).closeChannel(any());
-        assertFalse(login.poll());
-        verify(arriving, times(1)).closeChannel(any());
-        assertTrue(LoginSessionState.isPreWorldClose(arriving));
-        managers.remove(arriving);
-        networkHooks.hodgepodge$getLoginSessionIndex().connectionRemoved(arriving);
-        assertTrue(login.poll());
-        assertFalse(login.rejected);
-    }
-
-    @Test
-    void pausedNetworkTicksAdvanceSharedDeadlinesAcrossSnapshotResets() throws Exception {
-        // ServerUtilities keeps servicing networking while cancelling the tick that advances this counter.
-        tick = 1000;
-        paused = true;
-        EntityPlayerMP arriving = player(true, false);
-        NetworkManager manager = arriving.playerNetServerHandler.func_147362_b();
-        TestLogin first = login();
-        TestLogin second = login();
-        for (int elapsed = 0; elapsed <= 60; elapsed++) {
-            if (elapsed > 0) {
-                beginNetworkTick();
-            }
-            assertFalse(first.poll());
-            assertFalse(second.poll());
-            assertEquals(elapsed, networkHooks.hodgepodge$getLoginSessionIndex().getSessions(PLAYER_UUID).waited(0));
-            verify(manager, times(elapsed >= 5 ? 1 : 0)).closeChannel(any());
-            assertEquals(elapsed == 60, first.rejected);
-            assertEquals(elapsed == 60, second.rejected);
-        }
-        assertEquals(1000, server.getTickCounter());
-        assertTrue(LoginSessionState.isPreWorldClose(manager));
-        assertTrue(savedPlayers.isEmpty());
-    }
-
-    @Test
     void resumingServerPreservesKickGraceAndFinalSave() throws Exception {
         tick = 1000;
         paused = true;
@@ -381,57 +252,6 @@ class LoginSessionBarrierTest {
         assertTrue(LoginSessionState.blockPlayerSave(manager));
         assertFalse(LoginSessionState.blockPlayerSave(manager));
         assertTrue(LoginSessionState.isPlayerSaveBlocked(manager));
-    }
-
-    @Test
-    void closePostedBeforeSupersessionIsNotPostedAgain() throws Exception {
-        NetworkManager manager = manager();
-        MixinNetworkDispatcher_LoginSessionState mixin = new MixinNetworkDispatcher_LoginSessionState() {};
-        mixin.manager = manager;
-        Method hook = MixinNetworkDispatcher_LoginSessionState.class
-                .getDeclaredMethod("hodgepodge$finishSupersededClose", EventBus.class, Event.class, Operation.class);
-        hook.setAccessible(true);
-        AtomicInteger posts = new AtomicInteger();
-        Operation<Boolean> post = args -> {
-            posts.incrementAndGet();
-            throw new IllegalStateException("disconnect listener failed");
-        };
-
-        InvocationTargetException failure = assertThrows(
-                InvocationTargetException.class,
-                () -> hook.invoke(mixin, mock(EventBus.class), mock(Event.class), post));
-        assertTrue(failure.getCause() instanceof IllegalStateException);
-        assertEquals(1, posts.get());
-
-        LoginSessionState.markSuperseded(manager, tick);
-        assertFalse((boolean) hook.invoke(mixin, mock(EventBus.class), mock(Event.class), post));
-        assertEquals(1, posts.get());
-    }
-
-    @Test
-    void forcedHandshakeCloseSkipsLogoutOnlyUntilPlayerEntersWorld() throws Exception {
-        EntityPlayerMP arriving = player(true, false);
-        NetHandlerPlayServer handler = arriving.playerNetServerHandler;
-        NetworkManager manager = handler.func_147362_b();
-        arriving.playerNetServerHandler = null;
-        TestLogin login = login();
-        for (; tick <= 5; beginNetworkTick()) {
-            assertFalse(login.poll());
-        }
-        verify(manager, times(1)).closeChannel(any());
-        assertTrue(preWorldLogoutCancelled(manager, arriving));
-
-        arriving.playerNetServerHandler = handler;
-        addPlayer(arriving);
-        assertFalse(preWorldLogoutCancelled(manager, arriving));
-
-        // Installation can win the race with the asynchronous close, followed by an early mod logout.
-        removePlayer(arriving);
-        beginNetworkTick();
-        assertFalse(preWorldLogoutCancelled(manager, arriving));
-        disconnect(arriving);
-        assertTrue(login.poll());
-        assertEquals(Collections.singletonList(arriving), savedPlayers);
     }
 
     @Test
@@ -497,7 +317,8 @@ class LoginSessionBarrierTest {
         EntityPlayerMP arriving = player(true, false);
         TestLogin first = login();
         TestLogin second = login();
-        for (; tick < 59; beginNetworkTick()) {
+        // Installation must precede the five-tick forced close; a handshake cannot complete on a closed channel.
+        for (; tick < 4; beginNetworkTick()) {
             assertFalse(first.poll());
             assertFalse(second.poll());
         }
@@ -508,7 +329,7 @@ class LoginSessionBarrierTest {
         assertFalse(first.rejected);
         assertFalse(second.rejected);
         verify(arriving.playerNetServerHandler, times(1)).kickPlayerFromServer(anyString());
-        verify(arriving.playerNetServerHandler.func_147362_b(), times(1)).closeChannel(any());
+        verify(arriving.playerNetServerHandler.func_147362_b(), never()).closeChannel(any());
         assertEquals(0, LoginSessionState.getSupersededTick(arriving.playerNetServerHandler.func_147362_b()));
         assertEquals(tick, LoginSessionState.getKickedTick(arriving.playerNetServerHandler.func_147362_b()));
     }
