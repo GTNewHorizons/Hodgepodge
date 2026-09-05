@@ -145,6 +145,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixHugeChatKick;
 
+    @Config.Comment("Send a translatable message instead of a hardcoded English one when rejecting logins while the server is still starting")
+    @Config.DefaultBoolean(true)
+    public static boolean fixHandshakeStartingKickTranslatable;
+
     @Config.Comment("Fix the bug that makes fireballs stop moving when chunk unloads")
     @Config.DefaultBoolean(true)
     public static boolean fixImmobileFireballs;
