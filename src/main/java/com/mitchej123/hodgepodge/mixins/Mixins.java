@@ -1829,8 +1829,13 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
     FIX_FILING_CABINET_DUPE(new MixinBuilder("Caps hotkey'd stacks to their maximum stack size in filing cabinets")
-            .addCommonMixins("extrautilities.MixinContainerFilingCabinet")
+            .addCommonMixins("extrautilities.MixinContainerFilingCabinetDupe")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFilingCabinetDupe)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
+    FIX_FILING_CABINET_VOIDING(new MixinBuilder("Fixes shift clicking items from filing cabinets voiding what was left down to a stack")
+            .addCommonMixins("extrautilities.MixinContainerFilingCabinetShiftClick")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFilingCabinetShiftClick)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
     FIX_FILTER_DUPE(new MixinBuilder("Prevent hotkeying other items onto item filters while they are open")

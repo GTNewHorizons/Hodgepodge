@@ -714,6 +714,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesFilingCabinetDupe;
 
+    @Config.Comment("Fixes shift clicking items from filing cabinets voiding what was left down to a stack")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesFilingCabinetShiftClick;
+
     @Config.Comment("Prevent hotkeying other items onto item filters while they are open")
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesFilterDupe;
