@@ -364,6 +364,12 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinEntityLivingDrop")
             .setApplyIf(() -> TweaksConfig.dropPickedLootOnDespawn)
             .setPhase(Phase.EARLY)),
+    FIX_UNLOCALIZED_DISCONNECT_MESSAGES(new MixinBuilder("Localize vanilla disconnect messages")
+            .addCommonMixins(
+                    "minecraft.MixinNetHandlerPlayServer_LocalizedKick",
+                    "minecraft.MixinNetHandlerLoginServer_LocalizedKick")
+            .setApplyIf(() -> FixesConfig.fixUnlocalizedDisconnectMessages)
+            .setPhase(Phase.EARLY)),
     FIX_HOPPER_HIT_BOX(new MixinBuilder("Fix Vanilla Hopper hit box")
             .addCommonMixins("minecraft.MixinBlockHopper")
             .setApplyIf(() -> FixesConfig.fixHopperHitBox)
@@ -409,6 +415,10 @@ public enum Mixins implements IMixins {
     FIX_HUGE_CHAT_KICK(new MixinBuilder()
             .addCommonMixins("minecraft.packets.MixinS02PacketChat_FixHugeChatKick")
             .setApplyIf(() -> FixesConfig.fixHugeChatKick)
+            .setPhase(Phase.EARLY)),
+    FIX_HANDSHAKE_STARTING_KICK_TRANSLATABLE(new MixinBuilder("Send a translatable message instead of a hardcoded English one when rejecting logins while the server is still starting")
+            .addCommonMixins("minecraft.MixinNetHandlerHandshakeTCP_TranslatableKick")
+            .setApplyIf(() -> FixesConfig.fixHandshakeStartingKickTranslatable)
             .setPhase(Phase.EARLY)),
     FIX_BOGUS_INTEGRATED_SERVER_NPE(new MixinBuilder("Fix bogus FMLProxyPacket NPEs on integrated server crashes")
             .addCommonMixins(

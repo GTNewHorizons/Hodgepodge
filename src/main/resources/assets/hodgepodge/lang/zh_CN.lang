@@ -76,3 +76,25 @@ hodgepodge.debug.help.etfuturum=F3 + F4 = [Et-Futurum-Requiem] 打开游戏模�
 hodgepodge.debug.help.nei.1=%s = [NEI] 打开生物生成覆盖层
 hodgepodge.debug.help.nei.2=%s = [NEI] 打开区块覆盖层
 
+hodgepodge.disconnect.server_shutdown=服务器已关闭
+hodgepodge.disconnect.idle=你已挂机太久！
+hodgepodge.disconnect.illegal_stance=非法的姿态
+hodgepodge.disconnect.illegal_position=非法的位置
+hodgepodge.disconnect.flying=本服务器未开启飞行
+hodgepodge.disconnect.illegal_characters=聊天中包含非法字符
+hodgepodge.disconnect.invalid_entity=尝试攻击无效的实体
+hodgepodge.disconnect.hardcore_death=你已死亡，游戏结束！
+hodgepodge.disconnect.logged_in_elsewhere=你已在其他位置登录
+hodgepodge.disconnect.not_whitelisted=你不在本服务器的白名单中！
+hodgepodge.disconnect.server_full=服务器已满！
+hodgepodge.disconnect.name_taken=该名称已被占用。
+hodgepodge.disconnect.login_timeout=登录耗时过长
+hodgepodge.disconnect.banned=你已被本服务器封禁。
+hodgepodge.disconnect.ip_banned=你的 IP 已被封禁。
+hodgepodge.disconnect.server_starting=服务器仍在启动中！请稍后再重新连接。
+hodgepodge.disconnect.session_cleanup_pending=你的上一个会话仍在清理中，请稍后重新连接
+hodgepodge.disconnect.session_cleanup_failed=无法安全清理你的上一个会话。请联系服务器管理员。
+
+hodgepodge.chat.huge_message.logged=§c有人试图向你发送会导致你掉线的超大聊天消息。请联系服务器管理员了解详情。反馈时请提供以下信息：事件 ID %s§c。原始消息开头：%s
+hodgepodge.chat.huge_message.unlogged=§c有人试图向你发送会导致你掉线的超大聊天消息。如果你无法确定来源且该情况反复出现，请让服务器管理员在 HodgePodge 中开启 logHugeChat。原始消息开头：%s
+
