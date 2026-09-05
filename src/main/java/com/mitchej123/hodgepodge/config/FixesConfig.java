@@ -237,6 +237,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixRconThreading;
 
+    @Config.Comment("Fix vanilla disconnect messages being sent as hardcoded English text instead of translation keys")
+    @Config.DefaultBoolean(true)
+    public static boolean fixUnlocalizedDisconnectMessages;
+
     @Config.Comment("Fix exiting fullscreen when you tab out of the game")
     @Config.DefaultBoolean(true)
     public static boolean fixUnfocusedFullscreen;

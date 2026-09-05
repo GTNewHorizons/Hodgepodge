@@ -75,3 +75,19 @@ hodgepodge.debug.help.9=F3 + S/T = Перезагрузить набор рес�
 hodgepodge.debug.help.etfuturum=F3 + F4 = [Et-Futurum-Requiem] Открыть переключатель игрового режима
 hodgepodge.debug.help.nei.1=%s = [NEI] Открыть оверлей появления мобов
 hodgepodge.debug.help.nei.2=%s = [NEI] Открыть оверлей чанка
+
+hodgepodge.disconnect.server_shutdown=Сервер закрыт
+hodgepodge.disconnect.idle=Вы слишком долго бездействовали!
+hodgepodge.disconnect.illegal_stance=Недопустимая поза
+hodgepodge.disconnect.illegal_position=Недопустимая позиция
+hodgepodge.disconnect.flying=Полёт на этом сервере запрещён
+hodgepodge.disconnect.illegal_characters=Недопустимые символы в чате
+hodgepodge.disconnect.invalid_entity=Попытка атаковать несуществующее существо
+hodgepodge.disconnect.hardcore_death=Вы погибли. Игра окончена!
+hodgepodge.disconnect.logged_in_elsewhere=Вы вошли в игру с другого устройства
+hodgepodge.disconnect.not_whitelisted=Вас нет в белом списке этого сервера!
+hodgepodge.disconnect.server_full=Сервер переполнен!
+hodgepodge.disconnect.name_taken=Это имя уже занято.
+hodgepodge.disconnect.login_timeout=Вход занял слишком много времени
+hodgepodge.disconnect.banned=Вы заблокированы на этом сервере.
+hodgepodge.disconnect.ip_banned=Ваш IP-адрес заблокирован.

@@ -67,3 +67,19 @@ hodgepodge.debug.help.9=F3 + S/T = Znovu načíst balíčky zdrojů
 hodgepodge.debug.help.etfuturum=F3 + F4 = [Et-Futurum-Requiem] Otevřít přepínač herních režimů
 hodgepodge.debug.help.nei.1=%s = [NEI] Otevřít překrytí rození stvoření
 hodgepodge.debug.help.nei.2=%s = [NEI] Otevřít překrytí oblastí
+
+hodgepodge.disconnect.server_shutdown=Server byl uzavřen
+hodgepodge.disconnect.idle=Byl jsi příliš dlouho nečinný!
+hodgepodge.disconnect.illegal_stance=Neplatný postoj
+hodgepodge.disconnect.illegal_position=Neplatná pozice
+hodgepodge.disconnect.flying=Létání není na tomto serveru povoleno
+hodgepodge.disconnect.illegal_characters=Neplatné znaky v chatu
+hodgepodge.disconnect.invalid_entity=Pokus o útok na neplatnou entitu
+hodgepodge.disconnect.hardcore_death=Zemřel jsi. Konec hry!
+hodgepodge.disconnect.logged_in_elsewhere=Přihlásil ses z jiného místa
+hodgepodge.disconnect.not_whitelisted=Nejsi na seznamu povolených hráčů tohoto serveru!
+hodgepodge.disconnect.server_full=Server je plný!
+hodgepodge.disconnect.name_taken=Toto jméno je již obsazené.
+hodgepodge.disconnect.login_timeout=Přihlášení trvalo příliš dlouho
+hodgepodge.disconnect.banned=Byl jsi zabanován na tomto serveru.
+hodgepodge.disconnect.ip_banned=Tvá IP adresa byla zabanována.

@@ -353,6 +353,12 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinEntityLivingDrop")
             .setApplyIf(() -> TweaksConfig.dropPickedLootOnDespawn)
             .setPhase(Phase.EARLY)),
+    FIX_UNLOCALIZED_DISCONNECT_MESSAGES(new MixinBuilder("Localize vanilla disconnect messages")
+            .addCommonMixins(
+                    "minecraft.MixinNetHandlerPlayServer_LocalizedKick",
+                    "minecraft.MixinNetHandlerLoginServer_LocalizedKick")
+            .setApplyIf(() -> FixesConfig.fixUnlocalizedDisconnectMessages)
+            .setPhase(Phase.EARLY)),
     FIX_HOPPER_HIT_BOX(new MixinBuilder("Fix Vanilla Hopper hit box")
             .addCommonMixins("minecraft.MixinBlockHopper")
             .setApplyIf(() -> FixesConfig.fixHopperHitBox)

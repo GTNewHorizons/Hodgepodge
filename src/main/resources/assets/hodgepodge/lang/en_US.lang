@@ -75,3 +75,19 @@ hodgepodge.debug.help.9=F3 + S/T = Reload resource packs
 hodgepodge.debug.help.etfuturum=F3 + F4 = [Et-Futurum-Requiem] Open game mode switcher
 hodgepodge.debug.help.nei.1=%s = [NEI] Open Mob Spawning Overlay
 hodgepodge.debug.help.nei.2=%s = [NEI] Open Chunk Overlay
+
+hodgepodge.disconnect.server_shutdown=Server closed
+hodgepodge.disconnect.idle=You have been idle for too long!
+hodgepodge.disconnect.illegal_stance=Illegal stance
+hodgepodge.disconnect.illegal_position=Illegal position
+hodgepodge.disconnect.flying=Flying is not enabled on this server
+hodgepodge.disconnect.illegal_characters=Illegal characters in chat
+hodgepodge.disconnect.invalid_entity=Attempting to attack an invalid entity
+hodgepodge.disconnect.hardcore_death=You have died. Game over, man, it's game over!
+hodgepodge.disconnect.logged_in_elsewhere=You logged in from another location
+hodgepodge.disconnect.not_whitelisted=You are not white-listed on this server!
+hodgepodge.disconnect.server_full=The server is full!
+hodgepodge.disconnect.name_taken=That name is already taken.
+hodgepodge.disconnect.login_timeout=Took too long to log in
+hodgepodge.disconnect.banned=You are banned from this server.
+hodgepodge.disconnect.ip_banned=You have been IP banned.
