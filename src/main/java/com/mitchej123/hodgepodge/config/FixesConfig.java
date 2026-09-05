@@ -498,6 +498,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixSaveFileWrittenToExistingDirectory;
 
+    @Config.Comment("Fix a crash in the Superflat world customization screen when a layer's block has no registered ItemBlock")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixFlatWorldLayerMissingItemBlockCrash;
+
     @Config.Comment("Fix a crash caused when a mod tries to send a chat message to a FakePlayer")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
