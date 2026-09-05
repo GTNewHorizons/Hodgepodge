@@ -6,6 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.IChatComponent.Serializer;
 
@@ -44,7 +45,11 @@ public abstract class MixinS02PacketChat_FixHugeChatKick {
                 String incidentId = "" + System.currentTimeMillis() + ThreadLocalRandom.current().nextInt(1000);
                 LOGGER.info("HUGE chat message caught. Incident ID {}. Serialized message {}.", incidentId, s);
                 bytes = Serializer.func_150696_a /* componentToJson */ (
-                        new ChatComponentTranslation("hodgepodge.chat.huge_message.logged", incidentId, messageStart))
+                        new ChatComponentTranslation(
+                                "hodgepodge.chat.huge_message.logged",
+                                // Formatting codes do not carry over into an argument, it is a component of its own
+                                EnumChatFormatting.RED.toString() + EnumChatFormatting.UNDERLINE + incidentId,
+                                messageStart))
                         .getBytes(StandardCharsets.UTF_8);
             } else {
                 LOGGER.info("HUGE chat message caught. Details are not logged here as requested in config.");

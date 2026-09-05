@@ -36,8 +36,8 @@ hodgepodge.soundsmenu.refreshsounds=Refresh Sounds
 hodgepodge.bed_respawn.msg=Respawn point set
 hodgepodge.menu.mod_options=Mod Options...
 
-hodgepodge.chat.huge_message.logged=§cSomeone tried to send you a huge chat message that would kick you. Ask your server admin to see details. Please provide these info while reporting: Incident ID §n%s§r. Start of original message: %s
-hodgepodge.chat.huge_message.unlogged=§cSomeone tried to send you a huge chat message that would kick you. Ask your server admin to turn on logHugeChat in HodgePodge if you cannot identify the source of this and this keeps happening. §rStart of original message: %s
+hodgepodge.chat.huge_message.logged=§cSomeone tried to send you a huge chat message that would kick you. Ask your server admin to see details. Please provide these info while reporting: Incident ID %s§c. Start of original message: %s
+hodgepodge.chat.huge_message.unlogged=§cSomeone tried to send you a huge chat message that would kick you. Ask your server admin to turn on logHugeChat in HodgePodge if you cannot identify the source of this and this keeps happening. Start of original message: %s
 
 bettermodlist.sort.normal=Normal
 bettermodlist.sort.a_to_z=A-Z
