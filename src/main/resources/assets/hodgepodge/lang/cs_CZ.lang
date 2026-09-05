@@ -83,3 +83,7 @@ hodgepodge.disconnect.name_taken=Toto jméno je již obsazené.
 hodgepodge.disconnect.login_timeout=Přihlášení trvalo příliš dlouho
 hodgepodge.disconnect.banned=Byl jsi zabanován na tomto serveru.
 hodgepodge.disconnect.ip_banned=Tvá IP adresa byla zabanována.
+hodgepodge.disconnect.server_starting=Server se stále spouští! Před opětovným připojením chvíli počkej.
+
+hodgepodge.chat.huge_message.logged=§cNěkdo se ti pokusil poslat obrovskou zprávu do chatu, která by tě odpojila. Požádej administrátora serveru o podrobnosti. Při hlášení uveď tyto údaje: ID incidentu §n%s§r. Začátek původní zprávy: %s
+hodgepodge.chat.huge_message.unlogged=§cNěkdo se ti pokusil poslat obrovskou zprávu do chatu, která by tě odpojila. Pokud zdroj nedokážeš určit a opakuje se to, požádej administrátora serveru o zapnutí logHugeChat v HodgePodge. §rZačátek původní zprávy: %s

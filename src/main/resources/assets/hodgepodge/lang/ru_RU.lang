@@ -36,7 +36,6 @@ hodgepodge.soundsmenu.refreshsounds=Обновить звуки
 hodgepodge.bed_respawn.msg=Установить точку респауна
 hodgepodge.menu.mod_options=Настройки модов...
 
-hodgepodge.multiplayer.disconnect.server_starting=Сервер ещё запускается! Подождите перед повторным подключением.
 hodgepodge.chat.huge_message.logged=§cКто-то попытался отправить вам огромное сообщение в чат, которое выкинуло бы вас с сервера. Обратитесь к администратору сервера за подробностями. При обращении укажите эти данные: идентификатор инцидента §n%s§r. Начало исходного сообщения: %s
 hodgepodge.chat.huge_message.unlogged=§cКто-то попытался отправить вам огромное сообщение в чат, которое выкинуло бы вас с сервера. Если вы не можете определить источник и это повторяется, попросите администратора сервера включить logHugeChat в HodgePodge. §rНачало исходного сообщения: %s
 
@@ -95,3 +94,4 @@ hodgepodge.disconnect.name_taken=Это имя уже занято.
 hodgepodge.disconnect.login_timeout=Вход занял слишком много времени
 hodgepodge.disconnect.banned=Вы заблокированы на этом сервере.
 hodgepodge.disconnect.ip_banned=Ваш IP-адрес заблокирован.
+hodgepodge.disconnect.server_starting=Сервер ещё запускается! Подождите перед повторным подключением.
