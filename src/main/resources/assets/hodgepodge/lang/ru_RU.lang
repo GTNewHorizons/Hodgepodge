@@ -95,3 +95,5 @@ hodgepodge.disconnect.login_timeout=Вход занял слишком мног�
 hodgepodge.disconnect.banned=Вы заблокированы на этом сервере.
 hodgepodge.disconnect.ip_banned=Ваш IP-адрес заблокирован.
 hodgepodge.disconnect.server_starting=Сервер ещё запускается! Подождите перед повторным подключением.
+hodgepodge.disconnect.session_cleanup_pending=Ваша предыдущая сессия ещё завершается, переподключитесь через мгновение
+hodgepodge.disconnect.session_cleanup_failed=Не удалось безопасно завершить вашу предыдущую сессию. Обратитесь к администратору сервера.

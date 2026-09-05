@@ -28,7 +28,7 @@ public abstract class MixinNetHandlerLoginServer_LocalizedKick {
      * Same as the in game kick path, but for the ones sent while the player is still logging in (whitelist, full
      * server, login timeout).
      */
-    @Inject(method = "func_147322_a", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "func_147322_a", at = @At("HEAD"), cancellable = true, require = 1)
     private void hodgepodge$localizedLoginKick(String reason, CallbackInfo ci) {
         final IChatComponent message = DisconnectMessageHooks.localize(reason);
         if (message == null) {

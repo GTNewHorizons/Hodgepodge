@@ -29,7 +29,7 @@ public abstract class MixinNetHandlerHandshakeTCP_TranslatableKick {
     @Final
     private NetworkManager field_147386_b;
 
-    @Inject(method = "func_147383_a", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "processHandshake", at = @At("HEAD"), cancellable = true, require = 1)
     private void hodgepodge$translatableStartingKick(C00Handshake packet, CallbackInfo ci) {
         if (!FMLCommonHandler.instance().shouldAllowPlayerLogins()) {
             IChatComponent message = new ChatComponentTranslation("hodgepodge.disconnect.server_starting");

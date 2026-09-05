@@ -113,3 +113,5 @@ hodgepodge.disconnect.login_timeout=Took too long to log in
 hodgepodge.disconnect.banned=You are banned from this server.
 hodgepodge.disconnect.ip_banned=You have been IP banned.
 hodgepodge.disconnect.server_starting=Server is still starting! Please wait before reconnecting.
+hodgepodge.disconnect.session_cleanup_pending=Your previous session is still being cleaned up, please reconnect in a moment
+hodgepodge.disconnect.session_cleanup_failed=Your previous session could not be cleaned up safely. Please contact a server administrator.

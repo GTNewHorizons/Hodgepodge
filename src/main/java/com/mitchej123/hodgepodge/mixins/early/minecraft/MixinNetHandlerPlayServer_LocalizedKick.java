@@ -22,7 +22,7 @@ public abstract class MixinNetHandlerPlayServer_LocalizedKick {
      * Send known vanilla kick reasons as a translation component, so the client renders them in its own language.
      * Anything else is left to vanilla.
      */
-    @Inject(method = "kickPlayerFromServer", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "kickPlayerFromServer", at = @At("HEAD"), cancellable = true, require = 1)
     private void hodgepodge$localizedKick(String reason, CallbackInfo ci) {
         final IChatComponent message = DisconnectMessageHooks.localize(reason);
         if (message == null) {

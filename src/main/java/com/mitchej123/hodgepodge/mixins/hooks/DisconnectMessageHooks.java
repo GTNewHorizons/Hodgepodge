@@ -35,6 +35,13 @@ public class DisconnectMessageHooks {
         KEYS.put("That name is already taken.", "hodgepodge.disconnect.name_taken");
         // NetHandlerLoginServer
         KEYS.put("Took too long to log in", "hodgepodge.disconnect.login_timeout");
+        // MixinNetHandlerLoginServer_AwaitPreviousSession
+        KEYS.put(
+                "Your previous session is still being cleaned up, please reconnect in a moment",
+                "hodgepodge.disconnect.session_cleanup_pending");
+        KEYS.put(
+                "Your previous session could not be cleaned up safely. Please contact a server administrator.",
+                "hodgepodge.disconnect.session_cleanup_failed");
         // CommandBanPlayer / CommandBanIp
         KEYS.put("You are banned from this server.", "hodgepodge.disconnect.banned");
         KEYS.put("You have been IP banned.", "hodgepodge.disconnect.ip_banned");
