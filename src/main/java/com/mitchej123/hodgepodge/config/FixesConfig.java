@@ -173,6 +173,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixNetHandlerLoginServerOfflineMode;
 
+    @Config.Comment("Hold back a login until any earlier session for the same UUID has finished leaving the world, "
+            + "instead of letting both exist at once and duplicating the player's inventory")
+    @Config.DefaultBoolean(true)
+    public static boolean fixPlayerCloningOnReconnect;
+
     @Config.Comment("Prevents crash if server sends itemStack with index larger than client's container")
     @Config.DefaultBoolean(true)
     public static boolean fixNetHandlerPlayClientHandleSetSlot;
@@ -555,6 +560,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean raiseMissingItemsFPS;
+
+    @Config.Comment("Fix block hit delay after game mode changed from creative to survival.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBlockHitDelay;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -595,6 +605,10 @@ public class FixesConfig {
     @Config.Comment("Fix Bibliocraft packet exploits")
     @Config.DefaultBoolean(true)
     public static boolean fixBibliocraftPackets;
+
+    @Config.Comment("Fix Bibliocraft armor stands breaking their other half without checking if the other half is an Armor Stand.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBibliocraftArmorStandBreak;
 
     @Config.Comment("Fix Bibliocraft path sanitization")
     @Config.DefaultBoolean(true)
@@ -817,6 +831,10 @@ public class FixesConfig {
     @Config.Comment("Fix IC2 filled tin cans not running logic on both client and server")
     @Config.DefaultBoolean(true)
     public static boolean fixIc2TinCan;
+
+    @Config.Comment("Fix IC2 rubber saplings consuming bone meal twice and allowing the stack size to underflow")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2RubberSaplingBonemeal;
 
     @Config.Comment("Fix EndlessIds incompatibility with IC2")
     @Config.DefaultBoolean(true)

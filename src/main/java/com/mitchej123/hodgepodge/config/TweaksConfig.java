@@ -16,6 +16,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean reloadSoundsButton;
 
+    @Config.Comment("Adds a button in the sounds menu for Hodgepodge's sound enhancements")
+    @Config.DefaultBoolean(true)
+    public static boolean soundEnhancementsButton;
+
     @Config.Comment("Adds system info to the F3 overlay (Java version and vendor; GPU name; OpenGL version; CPU cores; OS name, version and architecture)")
     @Config.DefaultBoolean(true)
     public static boolean addSystemInfo;

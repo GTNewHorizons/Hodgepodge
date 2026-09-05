@@ -106,6 +106,17 @@ public enum Mixins implements IMixins {
             .addServerMixins("minecraft.MixinNetHandlerLoginServer_OfflineMode")
             .setApplyIf(() -> FixesConfig.fixNetHandlerLoginServerOfflineMode)
             .setPhase(Phase.EARLY)),
+    FIX_PLAYER_CLONING_ON_RECONNECT(new MixinBuilder("Wait for an earlier session for the same UUID to leave the world before accepting a login")
+            // Thermos moves logout saving/removal to disconnect(), outside the vanilla hook targets.
+            .addExcludedMod(TargetedMod.BUKKIT)
+            .addCommonMixins(
+                    "minecraft.MixinNetHandlerLoginServer_AwaitPreviousSession",
+                    "minecraft.MixinNetHandlerPlayServer_PreWorldDisconnect",
+                    "minecraft.MixinServerConfigurationManager_LoginSessionSave",
+                    "fml.MixinNetworkDispatcher_LoginSessionState",
+                    "minecraft.MixinNetworkSystem_LoginSessionIndex")
+            .setApplyIf(() -> FixesConfig.fixPlayerCloningOnReconnect)
+            .setPhase(Phase.EARLY)),
     FIX_INVENTORY_POTION_EFFECT_NUMERALS(new MixinBuilder("Fix potion effects level not displaying properly above a certain value")
             .addClientMixins(
                     "minecraft.MixinInventoryEffectRenderer_FixPotionEffectNumerals",
@@ -917,6 +928,7 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.fastload.MixinChunkProviderServer_FastUnload")
             .setApplyIf(() -> SpeedupsConfig.speedupChunkUnload)
             .addExcludedMod(TargetedMod.BUKKIT)
+            .addExcludedMod(TargetedMod.ULTRAMINE)
             .setPhase(Phase.EARLY)),
     ENTITY_CHUNK_LOAD_GUARD(new MixinBuilder("Prevent entity ticks from triggering chunk generation")
             .addCommonMixins(
@@ -1048,6 +1060,10 @@ public enum Mixins implements IMixins {
                     "minecraft.tiledescriptions.MixinPlayerInstance",
                     "forge.tiledescriptions.MixinForgeHooks")
             .setApplyIf(() -> SpeedupsConfig.batchDescriptionPacketsMixins)
+            .setPhase(Phase.EARLY)),
+    SPEEDUP_TILE_DESCRIPTION_PACKETS_NBT(new MixinBuilder("Optimize S35PacketUpdateTileEntity Array Packets")
+            .addCommonMixins("minecraft.packets.MixinS35PacketUpdateTileEntity_ByteArray")
+            .setApplyIf(() -> SpeedupsConfig.directTileEntityArraySerialization)
             .setPhase(Phase.EARLY)),
     HIDE_DEPRECATED_ID_NOTICE(new MixinBuilder()
             .addClientMixins("minecraft.MixinHideDeprecatedIdNotice")
@@ -1183,6 +1199,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinMinecraft_FMLQueryFPS")
             .setApplyIf(() -> FixesConfig.raiseMissingItemsFPS)
             .setPhase(Phase.EARLY)),
+    FIX_BLOCK_HIT_DELAY(new MixinBuilder()
+            .addClientMixins("minecraft.MixinPlayerControllerMP_BlockHitDelay")
+            .setApplyIf(() -> FixesConfig.fixBlockHitDelay)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments
@@ -1299,6 +1319,11 @@ public enum Mixins implements IMixins {
     IC2_TIN_CAN(new MixinBuilder("Fix IC2 filled tin cans not running logic on both client and server")
             .addCommonMixins("ic2.MixinIc2TinCan")
             .setApplyIf(() -> FixesConfig.fixIc2TinCan)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
+    IC2_RUBBER_SAPLING_BONEMEAL_FIX(new MixinBuilder("Prevent IC2 rubber saplings from consuming bone meal twice")
+            .addCommonMixins("ic2.MixinBlockRubSapling")
+            .setApplyIf(() -> FixesConfig.fixIc2RubberSaplingBonemeal)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.LATE)),
     IC2_EID_COMPAT(new MixinBuilder("Fix EndlessIds incompatibility with IC2")
@@ -1959,8 +1984,15 @@ public enum Mixins implements IMixins {
 
     // Various Exploits/Fixes
     BIBLIOCRAFT_PACKET_FIX(new MixinBuilder("Packet Fix")
-            .addCommonMixins("bibliocraft.MixinBibliocraftPatchPacketExploits")
+            .addCommonMixins(
+                    "bibliocraft.MixinBibliocraftPatchPacketExploits",
+                    "bibliocraft.MixinContainerFancySign")
             .setApplyIf(() -> FixesConfig.fixBibliocraftPackets)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
+            .setPhase(Phase.LATE)),
+    BIBLIOCRAFT_ARMOR_STAND_BREAK_FIX(new MixinBuilder("Bibliocraft Armor Stand on-break-block fix")
+            .addCommonMixins("bibliocraft.MixinBlockArmorStand_CheckedBreak")
+            .setApplyIf(() -> FixesConfig.fixBibliocraftArmorStandBreak)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
     BIBLIOCRAFT_PATH_SANITIZATION_FIX(new MixinBuilder("Path sanitization fix")
