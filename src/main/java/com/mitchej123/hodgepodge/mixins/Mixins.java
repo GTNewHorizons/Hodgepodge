@@ -1193,6 +1193,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinPlayerControllerMP_BlockHitDelay")
             .setApplyIf(() -> FixesConfig.fixBlockHitDelay)
             .setPhase(Phase.EARLY)),
+    OPTIMIZE_RESOURCE_PACK_PATH(new MixinBuilder("Avoid String.format overhead when resolving resource pack paths")
+            .addClientMixins("minecraft.MixinAbstractResourcePack")
+            .setApplyIf(() -> SpeedupsConfig.optimizeResourcePackPath)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments
