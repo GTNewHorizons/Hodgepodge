@@ -1,0 +1,95 @@
+key.hodgepodge.category=Hodgepodge
+key.fastBlockPlacing.desc=高速ブロック設置
+key.fastBlockPlacing.enabled=§f高速ブロック設置 §a有効
+key.fastBlockPlacing.disabled=§f高速ブロック設置 §c無効
+
+tile.dirt.name=土
+tile.sapling.name=苗木
+tile.sand.name=砂
+tile.flower1.name=タンポポ
+tile.flower2.name=ポピー
+tile.stoneSlab.name=石ハーフブロック
+tile.monsterStoneEgg.name=ストーンモンスターエッグ
+tile.woodSlab.name=木材ハーフブロック
+tile.cobbleWall.name=丸石の壁
+tile.quartzBlock.name=ネザー水晶ブロック
+tile.clayHardenedStained.name=色付き粘土
+tile.woolCarpet.name=カーペット
+tile.doublePlant.name=ヒマワリ
+
+item.dyePowder.name=染料
+item.skull.name=スケルトンの頭蓋骨
+item.fish.name=生魚
+
+entity.Skeleton.wither.name=ウィザースケルトン
+entity.MinecartRideable.name=トロッコ
+entity.MinecartChest.name=チェスト付きトロッコ
+entity.MinecartFurnace.name=かまど付きトロッコ
+entity.MinecartTNT.name=TNT付きトロッコ
+entity.MinecartHopper.name=ホッパー付きトロッコ
+entity.MinecartCommandBlock.name=コマンドブロック付きトロッコ
+
+commands.time.get=現在のワールド時間は %s (時刻: %s)
+commands.time.usageWithGet=/time <set|add> <value> OR /time get
+
+hodgepodge.soundsmenu.refreshsounds=サウンドの再読み込み
+hodgepodge.soundsmenu.enhancements=サウンド機能設定...
+hodgepodge.soundsmenu.enhancements.title=サウンド機能設定
+hodgepodge.soundsmenu.enhancements.lwjgl3ify=HRTF、出力制限、およびステレオ空間化機能にはlwjgl3ify (Java 17以降) が必要です。
+hodgepodge.soundsmenu.enhancements.reload=サウンドにリバーブを適用するには、サウンドを再読み込みする必要があります。
+hodgepodge.soundsmenu.option=%s: %s
+hodgepodge.soundsmenu.hrtf=ヘッドホンのHRTF
+hodgepodge.soundsmenu.hrtf.tooltip=ヘッドホン専用の音声処理を使用し、音が上下前後から聞こえるようにします。ヘッドホンでの使用に最適です (スピーカーでは音が薄くなる場合があります) 。デフォルトではOpenALのデバイス設定に従います。lwjgl3ifyが必要です。
+hodgepodge.soundsmenu.output_limiter=出力制限
+hodgepodge.soundsmenu.output_limiter.tooltip=クリッピングが発生する際に最終的なミックス音量を下げ、大きな音が多数重なった際の耳障りな音を防ぎます。デフォルトではOpenALのデバイス設定に従います。lwjgl3ifyが必要です。
+hodgepodge.soundsmenu.environmental_reverb=環境によるリバーブ
+hodgepodge.soundsmenu.environmental_reverb.tooltip=周囲の閉塞の程度に応じて音にエコーを加え、洞窟内や屋内での音が反響するようにします。適用するにはサウンドを再読み込みする必要があります。
+hodgepodge.soundsmenu.reverb_strength=リバーブの強さ
+hodgepodge.soundsmenu.reverb_strength.tooltip=環境によるリバーブ (エコー) の強さを調整します。この設定の変更はリアルタイムで反映されます。デフォルト: 30%%。
+hodgepodge.soundsmenu.downmix_stereo=ステレオのダウンミックス
+hodgepodge.soundsmenu.downmix_stereo.tooltip=位置情報付きのステレオ効果音を読み込み時にモノラルへ変換します。デコード後のメモリ使用量が半分になり、古いOpenAL環境でも3D空間への配置が可能になります。ストリーミング再生される音楽やレコードの音声は変更されません。適用するにはサウンドを再読み込みする必要があります。
+hodgepodge.soundsmenu.spatialize_stereo=ステレオの空間化
+hodgepodge.soundsmenu.spatialize_stereo.tooltip=位置情報付きのステレオ効果音を維持しつつ、新しいOpenALによる3D配置を可能にします。lwjgl3ifyが必要であり、対応している場合はステレオのダウンミックスよりも優先されます。適用するにはサウンドを再読み込みする必要があります。
+hodgepodge.soundsmenu.default=デフォルト
+hodgepodge.bed_respawn.msg=リスポーン地点が設定されました
+hodgepodge.menu.mod_options=Mod設定...
+
+bettermodlist.sort.normal=通常
+bettermodlist.sort.a_to_z=A-Z
+bettermodlist.sort.z_to_a=Z-A
+bettermodlist.gui.modlistinfo1=なんてこった! すべてが違う!
+bettermodlist.gui.modlistinfo2=新しいレイアウト By HodgePodge
+
+hodgepodge.debug.advanced_tooltips.enabled=高度な情報: §a表示
+hodgepodge.debug.advanced_tooltips.disabled=高度な情報: §c非表示
+hodgepodge.debug.hitboxes.enabled=当たり判定: §a表示
+hodgepodge.debug.hitboxes.disabled=当たり判定: §c非表示
+hodgepodge.debug.pause_focus.enabled=フォーカスが外れたときにポーズ: §a有効
+hodgepodge.debug.pause_focus.disabled=フォーカスが外れたときにポーズ: §c無効
+hodgepodge.debug.reload_chunks.message=すべてのチャンクを再読み込みしました
+hodgepodge.debug.reload_pack.message=%s秒でリソースパックが再読み込みされました
+hodgepodge.debug.crash.count.0=F3 + Cが押されています。6秒以内に離さないとゲームがクラッシュします
+hodgepodge.debug.crash.count.1=あと5秒でクラッシュします...
+hodgepodge.debug.crash.count.2=あと4秒でクラッシュします...
+hodgepodge.debug.crash.count.3=あと3秒でクラッシュします...
+hodgepodge.debug.crash.count.4=あと2秒でクラッシュします...
+hodgepodge.debug.crash.count.5=あと1秒でクラッシュします...
+hodgepodge.debug.crash.count.6=時間切れ。何かキーを押すとゲームがクラッシュします
+hodgepodge.debug.crash.cancel=クラッシュがキャンセルされました
+hodgepodge.debug.copy_location.message=クリップボードに座標をコピーしました
+
+hodgepodge.debug.help.message=キー割り当て:
+hodgepodge.debug.help.0=F3 = デバッグ画面を開く
+hodgepodge.debug.help.1=Shift + F3 = デバッグ画面を開き、プロファイラーのグラフを表示する
+hodgepodge.debug.help.angelica=Alt + F3 = [Angelica] デバッグ画面を開き、FPS/TPSのグラフを表示する
+hodgepodge.debug.help.2=F3 + A = チャンクの再読み込み
+hodgepodge.debug.help.3=F3 + B = 当たり判定の表示
+hodgepodge.debug.help.4=F3 + C = /cofh tpxで座標コピー、または6秒押すとゲームがクラッシュ
+hodgepodge.debug.help.5=F3 + D = [Hodgepodge] チャット欄のクリア
+hodgepodge.debug.help.6=F3 + H = 高度なツールチップ情報の表示
+hodgepodge.debug.help.7=F3 + P = 非アクティブ時の一時停止の切り替え
+hodgepodge.debug.help.8=F3 + Q = [Hodgepodge] このリストの表示
+hodgepodge.debug.help.9=F3 + S/T = リソースパックの再読み込み
+hodgepodge.debug.help.etfuturum=F3 + F4 = [Et-Futurum-Requiem] ゲームモード切り替え画面
+hodgepodge.debug.help.nei.1=%s = [NEI] モブスポーンの表示
+hodgepodge.debug.help.nei.2=%s = [NEI] チャンク境界の表示
