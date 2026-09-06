@@ -13,7 +13,26 @@ import net.minecraft.launchwrapper.LaunchClassLoader;
 public class HodgepodgeLateTweaker implements ITweaker {
 
     @Override
-    public void acceptOptions(List<String> args, File gameDir, File assetsDir, String profile) {}
+    public void acceptOptions(List<String> args, File gameDir, File assetsDir, String profile) {
+        for (int i = 0; i < args.size(); i++) {
+            final String arg = args.get(i);
+            if (!arg.startsWith("--quickPlay")) continue;
+
+            final int eq = arg.indexOf('=');
+            final String key = eq < 0 ? arg : arg.substring(0, eq);
+            String value = eq < 0 ? null : arg.substring(eq + 1);
+            if (value == null && i + 1 < args.size() && !args.get(i + 1).startsWith("-")) {
+                value = args.get(++i);
+            }
+            if (value == null || value.trim().isEmpty()) continue;
+
+            if ("--quickPlaySingleplayer".equals(key)) {
+                Launch.blackboard.put("hodgepodge.quickPlay.singleplayer", value);
+            } else if ("--quickPlayMultiplayer".equals(key)) {
+                Launch.blackboard.put("hodgepodge.quickPlay.multiplayer", value);
+            }
+        }
+    }
 
     @Override
     public void injectIntoClassLoader(LaunchClassLoader classLoader) {}

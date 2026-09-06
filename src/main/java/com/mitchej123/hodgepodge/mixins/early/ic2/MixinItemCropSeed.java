@@ -36,7 +36,7 @@ public class MixinItemCropSeed {
     @ModifyConstant(constant = @Constant(intValue = 1), method = "<init>(Lic2/core/init/InternalName;)V", remap = false)
     private int hodgepodge$getMaxStackSizeFromConfig(int original) {
         final int maxStackSize = TweaksConfig.ic2SeedMaxStackSize;
-        Common.log.info("Setting IC2 seed max stack size to " + maxStackSize);
+        Common.log.info("Setting IC2 seed max stack size to {}", maxStackSize);
         return maxStackSize;
     }
 }

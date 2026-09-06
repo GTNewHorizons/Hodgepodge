@@ -3,6 +3,8 @@ package com.mitchej123.hodgepodge.core.rfb.hooks;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,14 +12,11 @@ import org.apache.logging.log4j.Logger;
 
 import com.mitchej123.hodgepodge.core.shared.FileLogger;
 
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-
 @SuppressWarnings("unused")
 public class EnumValuesHook {
 
     private static final Logger logger = LogManager.getLogger("EnumValuesDebug");
-    private static final Object2IntOpenHashMap<Class<?>> counts = new Object2IntOpenHashMap<>();
+    private static final Map<Class<?>, Integer> counts = new ConcurrentHashMap<>();
     private static final boolean STACKTRACE = Boolean.getBoolean("hodgepodge.logStacktraceEnumValues");
     public static final int THRESHOLD = Integer.getInteger("hodgepodge.logIntervalEnumValues", 500);
 
@@ -43,12 +42,12 @@ public class EnumValuesHook {
     private static void printResults() {
         try (FileLogger logger = new FileLogger("EnumValuesDebug.csv")) {
             logger.log("Enum;Count");
-            List<Object2IntMap.Entry<Class<?>>> sorted = counts.object2IntEntrySet().stream()
-                    .sorted(Comparator.comparingInt(Object2IntMap.Entry::getIntValue)).collect(Collectors.toList());
+            List<Map.Entry<Class<?>, Integer>> sorted = counts.entrySet().stream()
+                    .sorted(Comparator.comparingInt(Map.Entry::getValue)).collect(Collectors.toList());
             Collections.reverse(sorted);
             sorted.forEach(entry -> {
                 final String name = entry.getKey().getName();
-                logger.log(name + ";" + entry.getIntValue());
+                logger.log(name + ";" + entry.getValue());
             });
         } catch (Throwable ignored) {}
     }

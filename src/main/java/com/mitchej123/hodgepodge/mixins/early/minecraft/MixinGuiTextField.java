@@ -32,8 +32,7 @@ public abstract class MixinGuiTextField {
     public abstract String getSelectedText();
 
     @Inject(method = "textboxKeyTyped", at = @At(value = "HEAD"), cancellable = true)
-    private void hodgepodge$addMacCommandKeyShortcuts(char typedChar, int eventKey,
-            CallbackInfoReturnable<Boolean> cir) {
+    private void hodgepodge$addCtrlKeyShortcuts(char typedChar, int eventKey, CallbackInfoReturnable<Boolean> cir) {
         if (this.isFocused && GuiScreen.isCtrlKeyDown()) {
             if (eventKey == Keyboard.KEY_V) {
                 if (this.isEnabled) {

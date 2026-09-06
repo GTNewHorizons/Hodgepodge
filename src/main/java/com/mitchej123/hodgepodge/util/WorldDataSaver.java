@@ -15,6 +15,8 @@ import net.minecraft.world.storage.ThreadedFileIOBase;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.mitchej123.hodgepodge.Common;
+
 public class WorldDataSaver implements IThreadedFileIO {
 
     public static final WorldDataSaver INSTANCE = new WorldDataSaver();
@@ -76,7 +78,7 @@ public class WorldDataSaver implements IThreadedFileIO {
 
         } catch (Exception e) {
             LOGGER.error("Failed to write data to file {}", file, e);
-            e.printStackTrace();
+            Common.log.error(e);
         }
         return true;
     }

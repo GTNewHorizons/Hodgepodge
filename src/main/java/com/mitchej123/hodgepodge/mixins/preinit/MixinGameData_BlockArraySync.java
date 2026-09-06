@@ -40,7 +40,7 @@ public class MixinGameData_BlockArraySync {
 
     @Inject(
             method = "injectWorldIDMap(Ljava/util/Map;Ljava/util/Set;Ljava/util/Map;Ljava/util/Map;Ljava/util/Set;Ljava/util/Set;ZZ)Ljava/util/List;",
-            at = @At("RETURN"))
+            at = @At(value = "INVOKE", target = "Lcpw/mods/fml/common/Loader;fireRemapEvent(Ljava/util/Map;)V"))
     private static void hodgepodge$rebuildBlockArrayOnInject(Map<String, Integer> dataList, Set<Integer> blockedIds,
             Map<String, String> blockAliases, Map<String, String> itemAliases, Set<String> blockSubstitutions,
             Set<String> itemSubstitutions, boolean injectFrozenData, boolean isLocalWorld,

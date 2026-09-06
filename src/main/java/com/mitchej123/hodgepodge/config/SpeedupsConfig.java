@@ -16,6 +16,10 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean fastItemEntityPhysics;
 
+    @Config.Comment("Skip rendering item frame contents farther than 64 blocks and entire frames farther than 96 blocks")
+    @Config.DefaultBoolean(true)
+    public static boolean cullDistantItemFrameContents;
+
     @Config.Comment("Optimize ASMDataTable getAnnotationsFor for faster startup")
     @Config.DefaultBoolean(true)
     public static boolean optimizeASMDataTable;
@@ -81,6 +85,16 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean speedupLeafDecay;
+
+    @Config.Comment("Load texture map icons on multiple threads")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean asyncIconLoading;
+
+    @Config.Comment("Remove icon loading on texture map init")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean removeExtraIconLoad;
 
     @Config.Comment("Skip scheduling falling block ticks when the block below is solid")
     @Config.DefaultBoolean(true)
@@ -189,12 +203,19 @@ public class SpeedupsConfig {
     public static boolean batchDescriptionPacketsMixins;
 
     @Config.Comment("Batch Tile Entity Description S35PacketUpdateTileEntity Packets (Enables Code, Does not require restart)")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     public static boolean batchDescriptionPacketsCode;
 
     @Config.Comment("Tile Entity Packet Batching Blacklist (Fully Qualified Class Names, Does not require restart)")
     @Config.DefaultStringList({})
     public static String[] batchDescriptionBlacklist;
+
+    @Config.Comment({ "Transfer S35PacketUpdateTileEntity array buffers directly without NBT.",
+            "The NBT contained in S35PacketUpdateTileEntity must be of the format {[one character]: [byte array]}",
+            "(e.g. {\"X\": [B;0b, 1b]}) for this to apply for a given TileEntity." })
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean directTileEntityArraySerialization;
 
     @Config.Comment("Pool Inflater/Deflater instances for NBT compression to reduce native cleanup overhead")
     @Config.DefaultBoolean(true)

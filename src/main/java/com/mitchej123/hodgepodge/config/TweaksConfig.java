@@ -16,6 +16,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean reloadSoundsButton;
 
+    @Config.Comment("Adds a button in the sounds menu for Hodgepodge's sound enhancements")
+    @Config.DefaultBoolean(true)
+    public static boolean soundEnhancementsButton;
+
     @Config.Comment("Adds system info to the F3 overlay (Java version and vendor; GPU name; OpenGL version; CPU cores; OS name, version and architecture)")
     @Config.DefaultBoolean(true)
     public static boolean addSystemInfo;
@@ -98,9 +102,9 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean enableDefaultLanPort;
 
-    @Config.Comment("Use CMD key on MacOS to COPY / INSERT / SELECT in text fields (Chat, NEI, Server IP etc.)")
+    @Config.Comment("Use CTRL (CMD on MacOS) to COPY / PASTE / SELECT ALL / CUT in text fields (Chat, NEI, Server IP etc.), fixes these shortcuts not working with some keyboard layouts")
     @Config.DefaultBoolean(true)
-    public static boolean enableMacosCmdShortcuts;
+    public static boolean enableTextFieldCtrlShortcuts;
 
     @Config.Comment("Shows renderer's impact on FPS in vanilla lagometer")
     @Config.DefaultBoolean(true)
@@ -142,6 +146,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean hideCrosshairInThirdPerson;
 
+    @Config.Comment("Stops rendering the crosshair when a GUI screen (e.g. an inventory) is open")
+    @Config.DefaultBoolean(true)
+    public static boolean hideCrosshairInGui;
+
     @Config.Comment("Increase particle limit")
     @Config.DefaultBoolean(true)
     public static boolean increaseParticleLimit;
@@ -174,6 +182,10 @@ public class TweaksConfig {
     @Config.Comment("Doesn't render the black box behind messages when the chat is closed")
     @Config.DefaultBoolean(true)
     public static boolean transparentChat;
+
+    @Config.Comment("Use a custom textured scrollbar")
+    @Config.DefaultBoolean(true)
+    public static boolean texturedScrollbar;
 
     @Config.Comment("Sets the interval for auto saves in ticks (20 ticks = 1 second)")
     @Config.RangeInt(min = 1)
@@ -248,7 +260,7 @@ public class TweaksConfig {
     public static boolean cleanChatLogs = true;
 
     @Config.Comment("Enable extra F1 toggle to hide GUI but keep rendering hand")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean f1ShowHand;
 
@@ -334,6 +346,11 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean removeBOPDonatorEffect;
+
+    @Config.Comment("Add BOP lavenders to the bone meal pool in lavender fields")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean addBOPLavenderToBoneMealPool;
 
     // Cofh
 

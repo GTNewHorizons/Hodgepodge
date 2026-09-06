@@ -157,7 +157,11 @@ public class TileEntityDescriptionBatcher {
                     if (!packets.isEmpty()) {
                         Minecraft.getMinecraft().func_152344_a(() -> {
                             for (S35PacketUpdateTileEntity packet : packets) {
-                                client.handleUpdateTileEntity(packet);
+                                try {
+                                    client.handleUpdateTileEntity(packet);
+                                } catch (Exception e) {
+                                    LOGGER.error("Error handling packet update!", e);
+                                }
                             }
                         });
                     }

@@ -17,10 +17,12 @@ public final class AllocationRateHUD {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onRenderGameOverlayTextEvent(RenderGameOverlayEvent.Text event) {
         if (!Minecraft.getMinecraft().gameSettings.showDebugInfo) {
+            final Minecraft mc = Minecraft.getMinecraft();
+            final FontRenderer fr = mc.fontRenderer;
             final String text = this.updateText();
-            final FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
             final int strWidth = fr.getStringWidth(text);
             fr.drawStringWithShadow(text, event.resolution.getScaledWidth() - strWidth - 2, 2, 0xFFFFFFFF);
+            fr.drawStringWithShadow(String.format("FPS: %d", mc.debugFPS), 2, 2, 0xFFFFFFFF);
         }
     }
 

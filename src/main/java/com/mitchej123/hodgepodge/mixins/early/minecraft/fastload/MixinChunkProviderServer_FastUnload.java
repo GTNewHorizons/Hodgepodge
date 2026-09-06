@@ -26,13 +26,14 @@ import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 @Mixin(ChunkProviderServer.class)
 public class MixinChunkProviderServer_FastUnload {
 
     @Shadow
-    private Set chunksToUnload;
+    private Set<Long> chunksToUnload;
 
     @Shadow
     public LongHashMap loadedChunkHashMap;
@@ -69,7 +70,7 @@ public class MixinChunkProviderServer_FastUnload {
     public boolean unloadQueuedChunks() {
         if (!this.worldObj.levelSaving) {
             final var persistentChunks = this.worldObj.getPersistentChunks();
-            final LongOpenHashSet unloadSet = (LongOpenHashSet) this.chunksToUnload;
+            final LongSet unloadSet = (LongSet) this.chunksToUnload;
             if (!unloadSet.isEmpty() && !persistentChunks.isEmpty()) {
                 for (ChunkCoordIntPair forced : persistentChunks.keySet()) {
                     unloadSet.remove(ChunkPosUtil.toLong(forced.chunkXPos, forced.chunkZPos));

@@ -33,7 +33,7 @@ public class FixesConfig {
     public static boolean fixForgeOptionalInterfaceSignature;
 
     @Config.Comment("Do not flip bottom face textures (1.8+ behavior, see MC-47811)")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     public static boolean fixBottomFaceUV;
 
     @Config.Comment("Fix wrapped chat lines missing colors")
@@ -68,6 +68,10 @@ public class FixesConfig {
     @Config.Comment("Fix duplicate sounds from playing when closing a gui.")
     @Config.DefaultBoolean(true)
     public static boolean fixDuplicateSounds;
+
+    @Config.Comment("Fix vanilla item frame duplication.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixItemFrameDupe;
 
     @Config.Comment("Fix deleting stack when eating mushroom stew")
     @Config.DefaultBoolean(true)
@@ -141,9 +145,17 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixHugeChatKick;
 
+    @Config.Comment("Send a translatable message instead of a hardcoded English one when rejecting logins while the server is still starting")
+    @Config.DefaultBoolean(true)
+    public static boolean fixHandshakeStartingKickTranslatable;
+
     @Config.Comment("Fix the bug that makes fireballs stop moving when chunk unloads")
     @Config.DefaultBoolean(true)
     public static boolean fixImmobileFireballs;
+
+    @Config.Comment("Fix crash in the controls menu when two keybind categories share the same localized name")
+    @Config.DefaultBoolean(true)
+    public static boolean fixKeybindCategorySorting;
 
     @Config.Comment("Fix Sugar Cane inability to replace replaceable blocks indirectly.")
     @Config.DefaultBoolean(true)
@@ -161,6 +173,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixNetHandlerLoginServerOfflineMode;
 
+    @Config.Comment("Hold back a login until any earlier session for the same UUID has finished leaving the world, "
+            + "instead of letting both exist at once and duplicating the player's inventory")
+    @Config.DefaultBoolean(true)
+    public static boolean fixPlayerCloningOnReconnect;
+
     @Config.Comment("Prevents crash if server sends itemStack with index larger than client's container")
     @Config.DefaultBoolean(true)
     public static boolean fixNetHandlerPlayClientHandleSetSlot;
@@ -177,6 +194,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixPerspectiveCamera;
 
+    @Config.Comment("Orient particles from the render view entity instead of the player, so detached cameras (freecam, spectator-likes) do not tilt them (MC-46445)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCameraParticleRotation;
+
     @Config.Comment("Allow some mods to properly fetch the player skin")
     @Config.DefaultBoolean(true)
     public static boolean fixPlayerSkinFetching;
@@ -192,6 +213,14 @@ public class FixesConfig {
     @Config.Comment("Fix crashes with ConcurrentModificationException because of incorrectly iterating over active potions")
     @Config.DefaultBoolean(true)
     public static boolean fixPotionIterating;
+
+    @Config.Comment("Fix potion effect panel rendering glitched when certain items are held on the cursor (Forge GL state bug)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixPotionEffectAlphaTest;
+
+    @Config.Comment("Fix creative tab backgrounds showing black corners when alpha test is left disabled by item rendering (Forge GL state bug)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCreativeTabAlphaTest;
 
     @Config.Comment("Fix potions >= 128")
     @Config.DefaultBoolean(true)
@@ -216,6 +245,10 @@ public class FixesConfig {
     @Config.Comment("Fix RCON Threading by forcing it to run on the main thread")
     @Config.DefaultBoolean(true)
     public static boolean fixRconThreading;
+
+    @Config.Comment("Fix vanilla disconnect messages being sent as hardcoded English text instead of translation keys")
+    @Config.DefaultBoolean(true)
+    public static boolean fixUnlocalizedDisconnectMessages;
 
     @Config.Comment("Fix exiting fullscreen when you tab out of the game")
     @Config.DefaultBoolean(true)
@@ -503,6 +536,35 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean minLootingIsZero;
 
+    @Config.Comment("Prevent Zombies & Skeletons from flickering with fire when exposed to the sun while immune to fire (in particular, Wither Skeletons)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean preventFireImmuneUndeadFlicker;
+
+    @Config.Comment("Fix Villagers only updating out-of-stock state after reopening GUI")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixVillagerTradingDesync;
+
+    @Config.Comment("Fix death messages containing English-localized entity names even on non-English clients.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean entityNameLocalization;
+
+    @Config.Comment("Makes Wither Skeletons not appear as just \"Skeleton\" in death messages and WAILA.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean witherSkeletonSpecialName;
+
+    @Config.Comment("Raise FPS limit in the FML missing items screen (or any other FML StartupQuery).")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean raiseMissingItemsFPS;
+
+    @Config.Comment("Fix block hit delay after game mode changed from creative to survival.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBlockHitDelay;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -543,6 +605,10 @@ public class FixesConfig {
     @Config.Comment("Fix Bibliocraft packet exploits")
     @Config.DefaultBoolean(true)
     public static boolean fixBibliocraftPackets;
+
+    @Config.Comment("Fix Bibliocraft armor stands breaking their other half without checking if the other half is an Armor Stand.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBibliocraftArmorStandBreak;
 
     @Config.Comment("Fix Bibliocraft path sanitization")
     @Config.DefaultBoolean(true)
@@ -765,6 +831,10 @@ public class FixesConfig {
     @Config.Comment("Fix IC2 filled tin cans not running logic on both client and server")
     @Config.DefaultBoolean(true)
     public static boolean fixIc2TinCan;
+
+    @Config.Comment("Fix IC2 rubber saplings consuming bone meal twice and allowing the stack size to underflow")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2RubberSaplingBonemeal;
 
     @Config.Comment("Fix EndlessIds incompatibility with IC2")
     @Config.DefaultBoolean(true)
