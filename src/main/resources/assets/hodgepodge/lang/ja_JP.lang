@@ -15,7 +15,7 @@ tile.cobbleWall.name=丸石の壁
 tile.quartzBlock.name=ネザー水晶ブロック
 tile.clayHardenedStained.name=色付き粘土
 tile.woolCarpet.name=カーペット
-tile.doublePlant.name=ヒマワリ
+tile.doublePlant.name=背の高い植物
 
 item.dyePowder.name=染料
 item.skull.name=スケルトンの頭蓋骨
