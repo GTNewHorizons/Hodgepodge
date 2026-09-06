@@ -36,6 +36,7 @@ public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
         // is not enough. Doing it here rather than off a device-change check also keeps it working on Java 8.
         ReverbSupport.invalidate();
         SoundDeviceTweaks.invalidate();
+        SpatializeSupport.invalidate();
     }
 
     /**
