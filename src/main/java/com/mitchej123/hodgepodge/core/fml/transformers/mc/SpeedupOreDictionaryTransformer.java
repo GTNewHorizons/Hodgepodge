@@ -43,26 +43,21 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
 
     private static final Logger LOGGER = LogManager.getLogger("SpeedupOreDictionaryTransformer");
     private static final String ORE_DICTIONARY = "net/minecraftforge/oredict/OreDictionary";
+    private static final String ITEM_STACK = "net/minecraft/item/ItemStack";
+    private static final String ITEM = "net/minecraft/item/Item";
     private static final String JAVA_HASH_SET = "java/util/HashSet";
     private static final String JAVA_HASH_MAP = "java/util/HashMap";
     private static final String JAVA_MAP = "java/util/Map";
-    private static final String FASTUTIL_INT_OPEN_HASH_SET = "it/unimi/dsi/fastutil/ints/IntOpenHashSet";
+    private static final String FASTUTIL_INT_ARRAY_SET = "it/unimi/dsi/fastutil/ints/IntArraySet";
     private static final String FASTUTIL_INT_COLLECTION = "it/unimi/dsi/fastutil/ints/IntCollection";
     private static final String FASTUTIL_OBJECT_2_INT_HASH_MAP = "it/unimi/dsi/fastutil/objects/Object2IntOpenHashMap";
     private static final String FASTUTIL_INT_2_OBJECT_HASH_MAP = "it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap";
     private static final String INTEGER = "java/lang/Integer";
 
-    private String itemStackClass;
-    private String itemClass;
-
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null) return null;
         if ("net.minecraftforge.oredict.OreDictionary".equals(transformedName)) {
-            boolean isObf = HodgepodgeCore.isObf();
-            this.itemStackClass = isObf ? "add" : "net/minecraft/item/ItemStack";
-            this.itemClass = isObf ? "adb" : "net/minecraft/item/Item";
-            HodgepodgeCore.logASM(LOGGER, "OreDictionary is obfuscated: {" + isObf + "}");
             final byte[] transformedBytes = transformOreDictionary(basicClass);
             HodgepodgeClassDump.dumpClass(transformedName, basicClass, transformedBytes, this);
             return transformedBytes;
@@ -89,10 +84,10 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
             } else if ("getOreID".equals(method.name) && "(Ljava/lang/String;)I".equals(method.desc)) {
                 HodgepodgeCore.logASM(LOGGER,"Transforming OreDictionary.getOreID(String)");
                 modified |= transformGetOreIDStringMethod(method);
-            } else if ("getOreID".equals(method.name) && ("(L" + this.itemStackClass + ";)I").equals(method.desc)) {
+            } else if ("getOreID".equals(method.name) && ("(L" + ITEM_STACK + ";)I").equals(method.desc)) {
                 HodgepodgeCore.logASM(LOGGER,"Transforming OreDictionary.getOreID(ItemStack)");
                 modified |= transformGetOreIDItemStackMethod(method);
-            } else if ("getOreIDs".equals(method.name) && ("(L" + this.itemStackClass + ";)[I").equals(method.desc)) {
+            } else if ("getOreIDs".equals(method.name) && ("(L" + ITEM_STACK + ";)[I").equals(method.desc)) {
                 HodgepodgeCore.logASM(LOGGER,"Transforming OreDictionary.getOreIDs(ItemStack)");
                 modified |= transformGetOreIDsMethod(method);
             } else if ("getOres".equals(method.name) && "(Ljava/lang/String;Z)Ljava/util/List;".equals(method.desc)) {
@@ -101,7 +96,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
             } else if ("getOres".equals(method.name) && "(I)Ljava/util/ArrayList;".equals(method.desc)) {
                 HodgepodgeCore.logASM(LOGGER,"Transforming OreDictionary.getOres(int)");
                 modified |= transformGetOresIntMethod(method);
-            } else if ("registerOreImpl".equals(method.name) && ("(Ljava/lang/String;L" + this.itemStackClass + ";)V").equals(method.desc)) {
+            } else if ("registerOreImpl".equals(method.name) && ("(Ljava/lang/String;L" + ITEM_STACK + ";)V").equals(method.desc)) {
                 HodgepodgeCore.logASM(LOGGER,"Transforming OreDictionary.registerOreImpl(String, ItemStack)");
                 modified |= transformRegisterOreImplMethod(method);
             } else if ("rebakeMap".equals(method.name) && "()V".equals(method.desc)) {
@@ -407,8 +402,8 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
             AbstractInsnNode node = iterator.next();
             
             if (!foundFirstReturn && node instanceof MethodInsnNode getItemMethodNode && getItemMethodNode.getOpcode() == INVOKEVIRTUAL
-                    && getItemMethodNode.owner.equals(itemStackClass) && getItemMethodNode.name.equals("getItem")
-                    && getItemMethodNode.desc.equals("()L" + itemClass + ";")) 
+                    && getItemMethodNode.owner.equals(ITEM_STACK) && getItemMethodNode.name.equals("getItem")
+                    && getItemMethodNode.desc.equals("()L" + ITEM + ";"))
             {
                 foundFirstReturn = true;
                 modified = true;
@@ -444,10 +439,10 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
                 instructions.insert(node, new FieldInsnNode(GETSTATIC, ORE_DICTIONARY, "EMPTY_INT_ARRAY", "[I"));
             } else if (node.getOpcode() == NEW && node instanceof TypeInsnNode tNode && tNode.desc.equals(JAVA_HASH_SET)) {
                 modified = true;
-                tNode.desc = FASTUTIL_INT_OPEN_HASH_SET;
+                tNode.desc = FASTUTIL_INT_ARRAY_SET;
             } else if (node.getOpcode() == INVOKESPECIAL && node instanceof MethodInsnNode mNode && mNode.owner.equals(JAVA_HASH_SET)) {
                 modified = true;
-                mNode.owner = FASTUTIL_INT_OPEN_HASH_SET;
+                mNode.owner = FASTUTIL_INT_ARRAY_SET;
             } else if (node.getOpcode() == GETSTATIC && node instanceof FieldInsnNode fNode && fNode.owner.equals(ORE_DICTIONARY) && fNode.name.equals("stackToId")) {
                 modified = true;
                 instructions.insert(node, new TypeInsnNode(CHECKCAST, FASTUTIL_INT_2_OBJECT_HASH_MAP));
@@ -466,7 +461,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
             } else if (node.getOpcode() == INVOKEINTERFACE && node instanceof MethodInsnNode methodNode && methodNode.owner.equals("java/util/Set") && methodNode.name.equals("addAll")) {
                 modified = true;
                 methodNode.setOpcode(INVOKEVIRTUAL);
-                methodNode.owner = FASTUTIL_INT_OPEN_HASH_SET;
+                methodNode.owner = FASTUTIL_INT_ARRAY_SET;
                 methodNode.desc = "(L" + FASTUTIL_INT_COLLECTION + ";)Z";
                 methodNode.itf = false;
             }  else if (node.getOpcode() == INVOKEINTERFACE && node instanceof MethodInsnNode methodNode && methodNode.owner.equals("java/util/Set") && methodNode.name.equals("size")) {
@@ -476,7 +471,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
                 AbstractInsnNode loadNode = node.getPrevious();
 
                 InsnList newInstructions = new InsnList();
-                newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_OPEN_HASH_SET, "isEmpty", "()Z", false));
+                newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_ARRAY_SET, "isEmpty", "()Z", false));
                 newInstructions.add(new JumpInsnNode(IFEQ, toIntArrayBeforeReturnLabelNode));
                 newInstructions.add(new FieldInsnNode(GETSTATIC, ORE_DICTIONARY, "EMPTY_INT_ARRAY", "[I"));
                 newInstructions.add(new JumpInsnNode(GOTO, returnLabelNode));
@@ -497,7 +492,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
                 }
                 // Current should be the last ARETURN instruction
                 InsnList insnList = new InsnList();
-                insnList.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_OPEN_HASH_SET, "toIntArray", "()[I", false));
+                insnList.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_ARRAY_SET, "toIntArray", "()[I", false));
                 insnList.add(returnLabelNode);
 
                 instructions.insertBefore(current, insnList);
@@ -522,7 +517,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
      * @return true if transformation was successful, false otherwise
      */
     private boolean overwriteGetOreIDsMethod(MethodNode method) {
-        if (!method.name.equals("getOreIDs") || !method.desc.equals("(L" + itemStackClass + ";)[I")) {
+        if (!method.name.equals("getOreIDs") || !method.desc.equals("(L" + ITEM_STACK + ";)[I")) {
             return false;
         }
 
@@ -557,7 +552,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
         insns.add(new VarInsnNode(ALOAD, 0));
         insns.add(new JumpInsnNode(IFNULL, L1));
         insns.add(new VarInsnNode(ALOAD, 0));
-        insns.add(new MethodInsnNode(INVOKEVIRTUAL, itemStackClass, "getItem", "()L" + itemClass + ";", false));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, ITEM_STACK, "getItem", "()L" + ITEM + ";", false));
         insns.add(new JumpInsnNode(IFNONNULL, L2));
 
         insns.add(L1);
@@ -566,16 +561,16 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
 
         insns.add(L2);
         insns.add(new LineNumberNode(338, L2));
-        insns.add(new TypeInsnNode(NEW, FASTUTIL_INT_OPEN_HASH_SET));
+        insns.add(new TypeInsnNode(NEW, FASTUTIL_INT_ARRAY_SET));
         insns.add(new InsnNode(DUP));
-        insns.add(new MethodInsnNode(INVOKESPECIAL, FASTUTIL_INT_OPEN_HASH_SET, "<init>", "()V", false));
+        insns.add(new MethodInsnNode(INVOKESPECIAL, FASTUTIL_INT_ARRAY_SET, "<init>", "()V", false));
         insns.add(new VarInsnNode(ASTORE, 1));
 
         insns.add(L3);
         insns.add(new LineNumberNode(343, L3));
         insns.add(new VarInsnNode(ALOAD, 0));
-        insns.add(new MethodInsnNode(INVOKEVIRTUAL, itemStackClass, "getItem", "()L" + itemClass + ";", false));
-        insns.add(new FieldInsnNode(GETFIELD, itemClass, "delegate", "Lcpw/mods/fml/common/registry/RegistryDelegate;"));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, ITEM_STACK, "getItem", "()L" + ITEM + ";", false));
+        insns.add(new FieldInsnNode(GETFIELD, ITEM, "delegate", "Lcpw/mods/fml/common/registry/RegistryDelegate;"));
         insns.add(new MethodInsnNode(INVOKEINTERFACE, "cpw/mods/fml/common/registry/RegistryDelegate", "name", "()Ljava/lang/String;", true));
         insns.add(new VarInsnNode(ASTORE, 2));
 
@@ -620,7 +615,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
         insns.add(new JumpInsnNode(IFNULL, L9));
         insns.add(new VarInsnNode(ALOAD, 1));
         insns.add(new VarInsnNode(ALOAD, 4));
-        insns.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_OPEN_HASH_SET, "addAll", "(L" + FASTUTIL_INT_COLLECTION + ";)Z", false));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_ARRAY_SET, "addAll", "(L" + FASTUTIL_INT_COLLECTION + ";)Z", false));
         insns.add(new InsnNode(POP));
 
         insns.add(L9);
@@ -629,7 +624,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
         insns.add(new TypeInsnNode(CHECKCAST, FASTUTIL_INT_2_OBJECT_HASH_MAP));
         insns.add(new VarInsnNode(ILOAD, 3));
         insns.add(new VarInsnNode(ALOAD, 0));
-        insns.add(new MethodInsnNode(INVOKEVIRTUAL, itemStackClass, "getItemDamage", "()I", false));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, ITEM_STACK, "getItemDamage", "()I", false));
         insns.add(new InsnNode(ICONST_1));
         insns.add(new InsnNode(IADD));
         insns.add(new IntInsnNode(BIPUSH, 16));
@@ -645,20 +640,20 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
         insns.add(new JumpInsnNode(IFNULL, L11));
         insns.add(new VarInsnNode(ALOAD, 1));
         insns.add(new VarInsnNode(ALOAD, 4));
-        insns.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_OPEN_HASH_SET, "addAll", "(L" + FASTUTIL_INT_COLLECTION + ";)Z", false));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_ARRAY_SET, "addAll", "(L" + FASTUTIL_INT_COLLECTION + ";)Z", false));
         insns.add(new InsnNode(POP));
 
         insns.add(L11);
         insns.add(new LineNumberNode(359, L11));
         insns.add(new VarInsnNode(ALOAD, 1));
-        insns.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_OPEN_HASH_SET, "isEmpty", "()Z", false));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_ARRAY_SET, "isEmpty", "()Z", false));
         insns.add(new JumpInsnNode(IFEQ, L12));
         insns.add(new FieldInsnNode(GETSTATIC, ORE_DICTIONARY, "EMPTY_INT_ARRAY", "[I"));
         insns.add(new JumpInsnNode(GOTO, L13));
 
         insns.add(L12);
         insns.add(new VarInsnNode(ALOAD, 1));
-        insns.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_OPEN_HASH_SET, "toIntArray", "()[I", false));
+        insns.add(new MethodInsnNode(INVOKEVIRTUAL, FASTUTIL_INT_ARRAY_SET, "toIntArray", "()[I", false));
 
         insns.add(L13);
         insns.add(new InsnNode(ARETURN));
@@ -667,7 +662,7 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
 
         // Set up local variables
         method.localVariables.add(new LocalVariableNode("x", "I", null, L0, L0, 7));
-        method.localVariables.add(new LocalVariableNode("stack", "L" + itemStackClass + ";", null, L0, L14, 0));
+        method.localVariables.add(new LocalVariableNode("stack", "L" + ITEM_STACK + ";", null, L0, L14, 0));
         method.localVariables.add(new LocalVariableNode("set", "Ljava/util/Set;", "Ljava/util/Set<Ljava/lang/Integer;>;", L3, L14, 1));
         method.localVariables.add(new LocalVariableNode("registryName", "Ljava/lang/String;", null, L4, L14, 2));
         method.localVariables.add(new LocalVariableNode("id", "I", null, L7, L14, 3));
@@ -752,7 +747,8 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
                 modified = true;
                 instructions.insertBefore(node, new TypeInsnNode(NEW, "it/unimi/dsi/fastutil/ints/IntArrayList"));
                 instructions.insertBefore(node, new InsnNode(DUP));
-                instructions.insertBefore(node, new MethodInsnNode(INVOKESPECIAL, "it/unimi/dsi/fastutil/ints/IntArrayList", "<init>", "()V", false));
+                instructions.insertBefore(node, new InsnNode(ICONST_2));
+                instructions.insertBefore(node, new MethodInsnNode(INVOKESPECIAL, "it/unimi/dsi/fastutil/ints/IntArrayList", "<init>", "(I)V", false));
                 instructions.remove(node);
             } else if (node.getOpcode() == INVOKEINTERFACE && node instanceof MethodInsnNode methodNode
                     && methodNode.owner.equals(JAVA_MAP) && methodNode.name.equals("put")) {
@@ -796,7 +792,8 @@ public class SpeedupOreDictionaryTransformer implements IClassTransformer, Opcod
                     modified = true;
                     instructions.insertBefore(node, new TypeInsnNode(NEW, "it/unimi/dsi/fastutil/ints/IntArrayList"));
                     instructions.insertBefore(node, new InsnNode(DUP));
-                    instructions.insertBefore(node, new MethodInsnNode(INVOKESPECIAL, "it/unimi/dsi/fastutil/ints/IntArrayList", "<init>", "()V", false));
+                    instructions.insertBefore(node, new InsnNode(ICONST_2));
+                    instructions.insertBefore(node, new MethodInsnNode(INVOKESPECIAL, "it/unimi/dsi/fastutil/ints/IntArrayList", "<init>", "(I)V", false));
                     instructions.remove(node);
                 }
             } else if (node.getOpcode() == INVOKEINTERFACE && node instanceof MethodInsnNode methodNode && methodNode.owner.equals("java/util/List") && methodNode.name.equals("add") && !inIdToStackContext) {
