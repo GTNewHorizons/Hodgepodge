@@ -8,6 +8,7 @@ import paulscode.sound.FilenameURL;
 import paulscode.sound.SoundBuffer;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemException;
+import paulscode.sound.Source;
 import paulscode.sound.libraries.ChannelLWJGLOpenAL;
 import paulscode.sound.libraries.LibraryLWJGLOpenAL;
 
@@ -27,6 +28,9 @@ import paulscode.sound.libraries.LibraryLWJGLOpenAL;
  * </ul>
  */
 public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
+
+    // Paulscode serializes library commands; this is only set during its synchronous raw-data feed.
+    private Source feedingRawSource;
 
     public LibraryHodgepodgeOpenAL() throws SoundSystemException {
         super();
@@ -77,7 +81,7 @@ public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
      * <p>
      * SourceLWJGLOpenAL calls Channel.play() after both sides of the channel assignment are set, for normal sounds and
      * file streams alike. Streams are handed to the preload worker afterwards, so their later direct alSourcePlay calls
-     * retain these settings. No source selection, buffering, or playback state is changed here.
+     * retain these settings. Raw streams instead start directly inside feedRawAudioData().
      */
     @Override
     protected Channel createChannel(int type) {
@@ -89,6 +93,21 @@ public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
 
             @Override
             public void play() {
+                configureRouting();
+                super.play();
+            }
+
+            @Override
+            public int feedRawAudioData(byte[] buffer) {
+                // Library assigns attachedSource after feeding, but the feed itself can already start playback.
+                if (feedingRawSource != null && feedingRawSource.channel == this) {
+                    attachedSource = feedingRawSource;
+                }
+                configureRouting();
+                return super.feedRawAudioData(buffer);
+            }
+
+            private void configureRouting() {
                 // A previous owner can retain a stale channel reference after the channel is reassigned.
                 if (attachedSource != null && attachedSource.channel == this && ALSource != null) {
                     final int alSource = ALSource.get(0);
@@ -96,8 +115,24 @@ public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
                     SpatializeSupport.apply(alSource, positional);
                     ReverbSupport.route(alSource, positional);
                 }
-                super.play();
             }
         };
+    }
+
+    @Override
+    public int feedRawAudioData(Source source, byte[] buffer) {
+        // As in Library.play(), discard a stale channel reference so Source closes a reassigned channel first.
+        if (source != null && source.rawDataStream
+                && source.active()
+                && source.channel != null
+                && source.channel.attachedSource != source) {
+            source.channel = null;
+        }
+        feedingRawSource = source;
+        try {
+            return super.feedRawAudioData(source, buffer);
+        } finally {
+            feedingRawSource = null;
+        }
     }
 }
