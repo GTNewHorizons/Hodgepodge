@@ -9,6 +9,7 @@ import net.minecraft.client.resources.I18n;
 import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.client.handlers.ReloadSoundsGui;
+import com.mitchej123.hodgepodge.client.sound.OutputDeviceSupport;
 import com.mitchej123.hodgepodge.config.SoundConfig;
 import com.mitchej123.hodgepodge.config.SoundConfig.Tristate;
 
@@ -23,10 +24,12 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
     private static final int SPATIALIZE_BUTTON_ID = 4;
     private static final int RELOAD_BUTTON_ID = 5;
     private static final int REVERB_STRENGTH_SLIDER_ID = 6;
+    private static final int OUTPUT_DEVICE_BUTTON_ID = 7;
     private static final int DONE_BUTTON_ID = 200;
 
     private final GuiScreen parent;
     private final boolean deviceTweaksAvailable = Compat.isLwjgl3ifyPresent();
+    private final boolean outputDeviceAvailable = OutputDeviceSupport.available();
     private GuiSlider reverbStrengthSlider;
     private boolean reverbStrengthDirty;
 
@@ -71,6 +74,9 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
         GuiButton spatialize = new GuiButton(SPATIALIZE_BUTTON_ID, left + 160, top + 48, 150, 20, spatializeText());
         spatialize.enabled = deviceTweaksAvailable;
         buttonList.add(spatialize);
+        GuiButton outputDevice = new GuiButton(OUTPUT_DEVICE_BUTTON_ID, left, top + 72, 310, 20, outputDeviceText());
+        outputDevice.enabled = outputDeviceAvailable;
+        buttonList.add(outputDevice);
 
         buttonList.add(
                 new GuiButton(
@@ -112,6 +118,7 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
                 button.displayString = spatializeText();
                 save();
             }
+            case OUTPUT_DEVICE_BUTTON_ID -> mc.displayGuiScreen(new OutputDeviceSelectionGui(this));
             case RELOAD_BUTTON_ID -> ReloadSoundsGui.reloadSounds();
             case DONE_BUTTON_ID -> mc.displayGuiScreen(parent);
         }
@@ -152,14 +159,14 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
                     fontRendererObj,
                     I18n.format("hodgepodge.soundsmenu.enhancements.lwjgl3ify"),
                     width / 2,
-                    height / 6 + 108,
+                    height / 6 + 120,
                     0xA0A0A0);
         }
         drawCenteredString(
                 fontRendererObj,
                 I18n.format("hodgepodge.soundsmenu.enhancements.reload"),
                 width / 2,
-                height / 6 + (deviceTweaksAvailable ? 108 : 120),
+                height / 6 + (deviceTweaksAvailable ? 132 : 144),
                 0xA0A0A0);
         super.drawScreen(mouseX, mouseY, partialTicks);
 
@@ -204,6 +211,16 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
         return booleanOptionText("hodgepodge.soundsmenu.spatialize_stereo", SoundConfig.spatializeStereoSounds);
     }
 
+    private String outputDeviceText() {
+        String device = SoundConfig.outputDevice.isEmpty() ? I18n.format("hodgepodge.soundsmenu.output_device.default")
+                : OutputDeviceSupport.displayName(SoundConfig.outputDevice);
+        String text = I18n
+                .format("hodgepodge.soundsmenu.option", I18n.format("hodgepodge.soundsmenu.output_device"), device);
+        String suffix = "...";
+        return fontRendererObj.getStringWidth(text) <= 300 ? text
+                : fontRendererObj.trimStringToWidth(text, 300 - fontRendererObj.getStringWidth(suffix)) + suffix;
+    }
+
     private static String booleanOptionText(String name, boolean value) {
         return I18n.format(
                 "hodgepodge.soundsmenu.option",
@@ -235,6 +252,7 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
             case REVERB_STRENGTH_SLIDER_ID -> "hodgepodge.soundsmenu.reverb_strength.tooltip";
             case DOWNMIX_BUTTON_ID -> "hodgepodge.soundsmenu.downmix_stereo.tooltip";
             case SPATIALIZE_BUTTON_ID -> "hodgepodge.soundsmenu.spatialize_stereo.tooltip";
+            case OUTPUT_DEVICE_BUTTON_ID -> "hodgepodge.soundsmenu.output_device.tooltip";
             default -> null;
         };
     }

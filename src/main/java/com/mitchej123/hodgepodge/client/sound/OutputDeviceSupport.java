@@ -1,0 +1,218 @@
+package com.mitchej123.hodgepodge.client.sound;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.Compat;
+import com.mitchej123.hodgepodge.config.SoundConfig;
+
+/** Selects and recovers OpenAL Soft output devices without rebuilding the sound system. */
+public final class OutputDeviceSupport {
+
+    public static final String SYSTEM_DEFAULT = "";
+
+    private static final int ALC_DEFAULT_ALL_DEVICES_SPECIFIER = 0x1012;
+    private static final int ALC_ALL_DEVICES_SPECIFIER = 0x1013;
+    private static final int ALC_CONNECTED = 0x313;
+    private static final String OPENAL_SOFT_DEVICE_PREFIX = "OpenAL Soft on ";
+    private static final long POLL_INTERVAL_MS = 1000L;
+    private static final long RETRY_INTERVAL_MS = 5000L;
+
+    private static final AtomicInteger reloads = new AtomicInteger();
+    private static int seenReload;
+    private static Method isCreated;
+    private static Method getDevice;
+    private static Field deviceHandle;
+    private static Method isExtensionPresent;
+    private static Method getString;
+    private static Method getStringPointer;
+    private static Method getInteger;
+    private static Method reopenDevice;
+    private static Method readByte;
+    private static Method readUtf8;
+    private static boolean methodsResolved;
+    private static boolean warned;
+    private static String activeTarget;
+    private static String activeSystemDefault;
+    private static long nextPoll;
+    private static long nextRetry;
+
+    private OutputDeviceSupport() {}
+
+    static void invalidate() {
+        reloads.incrementAndGet();
+    }
+
+    public static boolean takesOwnership() {
+        return SoundConfig.manageOutputDevices && available();
+    }
+
+    public static boolean available() {
+        if (!SoundConfig.manageOutputDevices || !Compat.isLwjgl3ifyPresent()) return false;
+        try {
+            resolveMethods();
+            long device = currentDevice();
+            return device != 0L && (Boolean) isExtensionPresent.invoke(null, device, "ALC_SOFT_reopen_device");
+        } catch (Throwable t) {
+            warnOnce("Could not access OpenAL output devices", t);
+            return false;
+        }
+    }
+
+    /** Returns current playback endpoints. The empty string represents the system default. */
+    public static List<String> devices() {
+        List<String> devices = new ArrayList<>();
+        devices.add(SYSTEM_DEFAULT);
+        if (!available()) return devices;
+        try {
+            long address = (Long) getStringPointer.invoke(null, 0L, ALC_ALL_DEVICES_SPECIFIER);
+            while (address != 0L && (Byte) readByte.invoke(null, address) != 0) {
+                String name = (String) readUtf8.invoke(null, address);
+                devices.add(name);
+                address += name.getBytes(StandardCharsets.UTF_8).length + 1L;
+            }
+        } catch (Throwable t) {
+            warnOnce("Could not enumerate OpenAL output devices", t);
+        }
+        return devices;
+    }
+
+    /** Switches immediately. The caller should save the preference only when this succeeds. */
+    public static boolean select(String requestedDevice) {
+        String requested = requestedDevice == null ? SYSTEM_DEFAULT : requestedDevice;
+        if (!available()) return false;
+        try {
+            return reopen(requested);
+        } catch (Throwable t) {
+            Common.log.warn("Could not switch OpenAL output device to {}", displayName(requested), t);
+            return false;
+        }
+    }
+
+    /** Polls because system event callbacks are not guaranteed on every OpenAL backend. Client thread only. */
+    public static void tick() {
+        if (!SoundConfig.manageOutputDevices || !Compat.isLwjgl3ifyPresent()) return;
+        long now = System.currentTimeMillis();
+        if (now < nextPoll) return;
+        nextPoll = now + POLL_INTERVAL_MS;
+        try {
+            consumeInvalidate();
+            if (!available()) return;
+
+            long device = currentDevice();
+            String desired = SoundConfig.outputDevice == null ? SYSTEM_DEFAULT : SoundConfig.outputDevice;
+            List<String> devices = devices();
+            String target = desired.isEmpty() || devices.contains(desired) ? desired : SYSTEM_DEFAULT;
+            String current = string(device, ALC_ALL_DEVICES_SPECIFIER);
+            String systemDefault = string(0L, ALC_DEFAULT_ALL_DEVICES_SPECIFIER);
+            boolean connected = isConnected(device);
+
+            if (activeTarget == null && connected) {
+                if (target.isEmpty()) {
+                    activeTarget = SYSTEM_DEFAULT;
+                    activeSystemDefault = systemDefault;
+                } else if (current.equals(target)) {
+                    activeTarget = target;
+                }
+            }
+
+            boolean needsSwitch = !connected || activeTarget != null && !activeTarget.equals(target);
+            if (activeTarget == null && !target.isEmpty()) needsSwitch |= !current.equals(target);
+            if (target.isEmpty() && activeSystemDefault != null) {
+                needsSwitch |= !activeSystemDefault.equals(systemDefault);
+            }
+
+            if (needsSwitch && now >= nextRetry) {
+                if (!reopen(target)) nextRetry = now + RETRY_INTERVAL_MS;
+            }
+        } catch (Throwable t) {
+            warnOnce("Could not monitor the OpenAL output device", t);
+        }
+    }
+
+    public static String displayName(String device) {
+        if (device == null || device.isEmpty()) return "System Default";
+        return device.startsWith(OPENAL_SOFT_DEVICE_PREFIX) ? device.substring(OPENAL_SOFT_DEVICE_PREFIX.length())
+                : device;
+    }
+
+    private static boolean reopen(String requested) throws Exception {
+        long device = currentDevice();
+        String argument = requested.isEmpty() ? null : requested;
+        boolean ok = (Boolean) reopenDevice.invoke(null, device, argument, null);
+        if (!ok) {
+            Common.log.warn("OpenAL refused output device {}", displayName(requested));
+            return false;
+        }
+        if (!isConnected(device)) {
+            Common.log.warn("OpenAL output device {} opened but failed to start", displayName(requested));
+            return false;
+        }
+        String activeDevice = string(device, ALC_ALL_DEVICES_SPECIFIER);
+        activeTarget = requested;
+        activeSystemDefault = requested.isEmpty() ? string(0L, ALC_DEFAULT_ALL_DEVICES_SPECIFIER) : null;
+        nextRetry = 0L;
+        SoundDeviceTweaks.invalidate();
+        Common.log.info("OpenAL output device: {}", activeDevice);
+        return true;
+    }
+
+    private static void consumeInvalidate() {
+        int current = reloads.get();
+        if (current == seenReload) return;
+        seenReload = current;
+        activeTarget = null;
+        activeSystemDefault = null;
+        nextRetry = 0L;
+        warned = false;
+    }
+
+    private static boolean isConnected(long device) throws Exception {
+        int[] connected = { 1 };
+        getInteger.invoke(null, device, ALC_CONNECTED, connected);
+        return connected[0] != 0;
+    }
+
+    private static long currentDevice() throws Exception {
+        if (!(Boolean) isCreated.invoke(null)) return 0L;
+        Object device = getDevice.invoke(null);
+        if (device == null) return 0L;
+        return deviceHandle.getLong(device);
+    }
+
+    private static String string(long device, int name) throws Exception {
+        String value = (String) getString.invoke(null, device, name);
+        return value == null ? "" : value;
+    }
+
+    private static void resolveMethods() throws Exception {
+        if (methodsResolved) return;
+        Class<?> al = Class.forName("org.lwjglx.openal.AL");
+        Class<?> alc10 = Class.forName("org.lwjgl.openal.ALC10");
+        Class<?> memory = Class.forName("org.lwjgl.system.MemoryUtil");
+        isCreated = al.getMethod("isCreated");
+        getDevice = al.getMethod("getDevice");
+        deviceHandle = Class.forName("org.lwjglx.openal.ALCdevice").getField("device");
+        isExtensionPresent = alc10.getMethod("alcIsExtensionPresent", long.class, CharSequence.class);
+        getString = alc10.getMethod("alcGetString", long.class, int.class);
+        getStringPointer = alc10.getMethod("nalcGetString", long.class, int.class);
+        getInteger = alc10.getMethod("alcGetIntegerv", long.class, int.class, int[].class);
+        reopenDevice = Class.forName("org.lwjgl.openal.SOFTReopenDevice")
+                .getMethod("alcReopenDeviceSOFT", long.class, CharSequence.class, int[].class);
+        readByte = memory.getMethod("memGetByte", long.class);
+        readUtf8 = memory.getMethod("memUTF8", long.class);
+        methodsResolved = true;
+    }
+
+    private static void warnOnce(String message, Throwable t) {
+        if (warned) return;
+        warned = true;
+        Common.log.warn(message + "; leaving output unchanged", t);
+    }
+
+}
