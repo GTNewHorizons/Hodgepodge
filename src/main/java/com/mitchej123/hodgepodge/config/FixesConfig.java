@@ -145,6 +145,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixHugeChatKick;
 
+    @Config.Comment("Send a translatable message instead of a hardcoded English one when rejecting logins while the server is still starting")
+    @Config.DefaultBoolean(true)
+    public static boolean fixHandshakeStartingKickTranslatable;
+
     @Config.Comment("Fix the bug that makes fireballs stop moving when chunk unloads")
     @Config.DefaultBoolean(true)
     public static boolean fixImmobileFireballs;
@@ -168,6 +172,11 @@ public class FixesConfig {
     @Config.Comment("Allows the server to assign the logged in UUID to the same username when online_mode is false")
     @Config.DefaultBoolean(true)
     public static boolean fixNetHandlerLoginServerOfflineMode;
+
+    @Config.Comment("Hold back a login until any earlier session for the same UUID has finished leaving the world, "
+            + "instead of letting both exist at once and duplicating the player's inventory")
+    @Config.DefaultBoolean(true)
+    public static boolean fixPlayerCloningOnReconnect;
 
     @Config.Comment("Prevents crash if server sends itemStack with index larger than client's container")
     @Config.DefaultBoolean(true)
@@ -236,6 +245,10 @@ public class FixesConfig {
     @Config.Comment("Fix RCON Threading by forcing it to run on the main thread")
     @Config.DefaultBoolean(true)
     public static boolean fixRconThreading;
+
+    @Config.Comment("Fix vanilla disconnect messages being sent as hardcoded English text instead of translation keys")
+    @Config.DefaultBoolean(true)
+    public static boolean fixUnlocalizedDisconnectMessages;
 
     @Config.Comment("Fix exiting fullscreen when you tab out of the game")
     @Config.DefaultBoolean(true)

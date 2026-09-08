@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.client.sound;
 import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.config.SoundConfig;
 
+import paulscode.sound.Channel;
 import paulscode.sound.FilenameURL;
 import paulscode.sound.SoundBuffer;
 import paulscode.sound.SoundSystemConfig;
@@ -20,14 +21,16 @@ import paulscode.sound.libraries.LibraryLWJGLOpenAL;
  * <li><b>Release redundant decoded data.</b> {@code loadSound} keeps the decoded PCM in a Java {@code byte[]} after
  * uploading it to OpenAL. Nothing reads the heap copy afterwards, so it is released here. See
  * {@link #loadSound(FilenameURL)}.</li>
- * <li><b>Stereo sounds cannot be positioned.</b> OpenAL skips its 3D pipeline for multi-channel buffers unless asked
- * not to. {@link #play(Source)} sets AL_SOURCE_SPATIALIZE_SOFT per source, which lets stereo sounds keep their width
- * instead of being downmixed. See {@link SpatializeSupport}.</li>
- * <li><b>Environmental reverb needs a per-source send.</b> {@link #play(Source)} also routes positional sources through
- * the shared effect slot and clears that state when a pooled channel is reused. See {@link ReverbSupport}.</li>
+ * <li><b>World and UI sounds need different routing.</b> {@link #createChannel(int)} configures positional stereo and
+ * direct UI/music playback before a channel starts. See {@link SpatializeSupport}.</li>
+ * <li><b>Environmental reverb needs a per-source send.</b> The channel also routes positional sources through the
+ * shared effect slot and clears that state when reused. See {@link ReverbSupport}.</li>
  * </ul>
  */
 public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
+
+    // Paulscode serializes library commands; this is only set during its synchronous raw-data feed.
+    private Source feedingRawSource;
 
     public LibraryHodgepodgeOpenAL() throws SoundSystemException {
         super();
@@ -36,6 +39,7 @@ public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
         // is not enough. Doing it here rather than off a device-change check also keeps it working on Java 8.
         ReverbSupport.invalidate();
         SoundDeviceTweaks.invalidate();
+        SpatializeSupport.invalidate();
     }
 
     /**
@@ -73,24 +77,62 @@ public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
     }
 
     /**
-     * Configures the source once it has a channel; Paulscode attaches it inside super.play().
+     * Keeps Paulscode's source allocation and failure handling, but configures routing before playback starts.
      * <p>
-     * The {@code attachedSource} check is not optional. {@code play()} can return without assigning a channel. The
-     * source may be inactive, already playing, or every channel may be busy. Meanwhile, {@code source.channel} can
-     * still point at a channel {@code getNextChannel} has since handed to a different source, since it reassigns
-     * without clearing the previous owner's reference. Paulscode guards every one of its own AL accesses the same way.
+     * SourceLWJGLOpenAL calls Channel.play() after both sides of the channel assignment are set, for normal sounds and
+     * file streams alike. Streams are handed to the preload worker afterwards, so their later direct alSourcePlay calls
+     * retain these settings. Raw streams instead start directly inside feedRawAudioData().
      */
     @Override
-    public void play(Source source) {
-        super.play(source);
-        if (source == null || !(source.channel instanceof ChannelLWJGLOpenAL channel)) return;
-        if (channel.attachedSource != source || channel.ALSource == null) return;
+    protected Channel createChannel(int type) {
+        final Channel channel = super.createChannel(type);
+        if (!(channel instanceof ChannelLWJGLOpenAL openAL)) return channel;
 
-        final int alSource = channel.ALSource.get(0);
-        // Channels are pooled, so both of these must be written on every attach, not just when switching on -
-        // otherwise a UI click inherits the settings of whatever world sound used the channel last.
-        final boolean positional = source.attModel != SoundSystemConfig.ATTENUATION_NONE;
-        SpatializeSupport.apply(alSource, positional);
-        ReverbSupport.route(alSource, positional);
+        // The stock constructor only stores the source handle; the replacement owns its normal cleanup.
+        return new ChannelLWJGLOpenAL(type, openAL.ALSource) {
+
+            @Override
+            public void play() {
+                configureRouting();
+                super.play();
+            }
+
+            @Override
+            public int feedRawAudioData(byte[] buffer) {
+                // Library assigns attachedSource after feeding, but the feed itself can already start playback.
+                if (feedingRawSource != null && feedingRawSource.channel == this) {
+                    attachedSource = feedingRawSource;
+                }
+                configureRouting();
+                return super.feedRawAudioData(buffer);
+            }
+
+            private void configureRouting() {
+                // A previous owner can retain a stale channel reference after the channel is reassigned.
+                if (attachedSource != null && attachedSource.channel == this && ALSource != null) {
+                    final int alSource = ALSource.get(0);
+                    final boolean positional = attachedSource.attModel != SoundSystemConfig.ATTENUATION_NONE;
+                    SpatializeSupport.apply(alSource, positional);
+                    ReverbSupport.route(alSource, positional);
+                }
+            }
+        };
+    }
+
+    @Override
+    public int feedRawAudioData(Source source, byte[] buffer) {
+        // As in Library.play(), discard a stale channel reference so Source closes a reassigned channel first.
+        if (source != null && source.rawDataStream
+                && source.active()
+                && source.channel != null
+                && source.channel.attachedSource != source) {
+            source.channel = null;
+        }
+        feedingRawSource = source;
+        try {
+            return super.feedRawAudioData(source, buffer);
+        } finally {
+            feedingRawSource = null;
+        }
     }
 }
