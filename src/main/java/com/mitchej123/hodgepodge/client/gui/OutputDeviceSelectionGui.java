@@ -20,6 +20,7 @@ public class OutputDeviceSelectionGui extends GuiScreen {
     private final GuiScreen parent;
     private DeviceList list;
     private String error;
+    private int refreshTicks;
 
     public OutputDeviceSelectionGui(GuiScreen parent) {
         this.parent = parent;
@@ -40,6 +41,15 @@ public class OutputDeviceSelectionGui extends GuiScreen {
     protected void keyTyped(char typedChar, int keyCode) {
         if (keyCode == 1) mc.displayGuiScreen(parent);
         else super.keyTyped(typedChar, keyCode);
+    }
+
+    @Override
+    public void updateScreen() {
+        super.updateScreen();
+        if (++refreshTicks >= 20) {
+            refreshTicks = 0;
+            list.refresh();
+        }
     }
 
     @Override
@@ -73,6 +83,14 @@ public class OutputDeviceSelectionGui extends GuiScreen {
                     OutputDeviceSelectionGui.this.height - 56,
                     22);
             this.devices = devices;
+        }
+
+        void refresh() {
+            List<String> current = OutputDeviceSupport.devices();
+            if (!devices.equals(current)) {
+                devices.clear();
+                devices.addAll(current);
+            }
         }
 
         @Override

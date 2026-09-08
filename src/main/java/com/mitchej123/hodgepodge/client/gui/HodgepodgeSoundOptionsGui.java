@@ -29,9 +29,10 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
 
     private final GuiScreen parent;
     private final boolean deviceTweaksAvailable = Compat.isLwjgl3ifyPresent();
-    private final boolean outputDeviceAvailable = OutputDeviceSupport.available();
     private GuiSlider reverbStrengthSlider;
+    private GuiButton outputDeviceButton;
     private boolean reverbStrengthDirty;
+    private int availabilityRefreshTicks;
 
     public HodgepodgeSoundOptionsGui(GuiScreen parent) {
         this.parent = parent;
@@ -74,9 +75,9 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
         GuiButton spatialize = new GuiButton(SPATIALIZE_BUTTON_ID, left + 160, top + 48, 150, 20, spatializeText());
         spatialize.enabled = deviceTweaksAvailable;
         buttonList.add(spatialize);
-        GuiButton outputDevice = new GuiButton(OUTPUT_DEVICE_BUTTON_ID, left, top + 72, 310, 20, outputDeviceText());
-        outputDevice.enabled = outputDeviceAvailable;
-        buttonList.add(outputDevice);
+        outputDeviceButton = new GuiButton(OUTPUT_DEVICE_BUTTON_ID, left, top + 72, 310, 20, outputDeviceText());
+        outputDeviceButton.enabled = OutputDeviceSupport.available();
+        buttonList.add(outputDeviceButton);
 
         buttonList.add(
                 new GuiButton(
@@ -134,6 +135,15 @@ public class HodgepodgeSoundOptionsGui extends GuiScreen {
     @Override
     public void onGuiClosed() {
         saveReverbStrength();
+    }
+
+    @Override
+    public void updateScreen() {
+        super.updateScreen();
+        if (++availabilityRefreshTicks >= 20) {
+            availabilityRefreshTicks = 0;
+            outputDeviceButton.enabled = OutputDeviceSupport.available();
+        }
     }
 
     @Override

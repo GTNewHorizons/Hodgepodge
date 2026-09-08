@@ -114,15 +114,17 @@ public final class OutputDeviceSupport {
 
             if (activeTarget == null && connected) {
                 if (target.isEmpty()) {
-                    activeTarget = SYSTEM_DEFAULT;
-                    activeSystemDefault = systemDefault;
+                    if (current.equals(systemDefault)) {
+                        activeTarget = SYSTEM_DEFAULT;
+                        activeSystemDefault = systemDefault;
+                    }
                 } else if (current.equals(target)) {
                     activeTarget = target;
                 }
             }
 
             boolean needsSwitch = !connected || activeTarget != null && !activeTarget.equals(target);
-            if (activeTarget == null && !target.isEmpty()) needsSwitch |= !current.equals(target);
+            if (activeTarget == null) needsSwitch |= !current.equals(target.isEmpty() ? systemDefault : target);
             if (target.isEmpty() && activeSystemDefault != null) {
                 needsSwitch |= !activeSystemDefault.equals(systemDefault);
             }
