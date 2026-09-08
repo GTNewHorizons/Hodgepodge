@@ -141,8 +141,14 @@ public class SoundConfig {
             "Let Hodgepodge manage the OpenAL output device, including following system-default changes and recovering from disconnects.",
             "Requires lwjgl3ify and ALC_SOFT_reopen_device; otherwise this is ignored. Restart after changing this option." })
     @Config.RequiresMcRestart
-    @Config.DefaultBoolean(true)
-    public static boolean manageOutputDevices;
+    public static OutputDeviceManagement outputDeviceManagement = new OutputDeviceManagement();
+
+    public static class OutputDeviceManagement {
+
+        @Config.Comment("Enables output device selection and recovery.")
+        @Config.DefaultBoolean(true)
+        public boolean enabled;
+    }
 
     @Config.Comment({
             "OpenAL output device name. Empty follows the system default and switches when the default changes.",

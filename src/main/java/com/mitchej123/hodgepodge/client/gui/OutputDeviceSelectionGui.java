@@ -101,6 +101,10 @@ public class OutputDeviceSelectionGui extends GuiScreen {
         @Override
         protected void elementClicked(int index, boolean doubleClick, int mouseX, int mouseY) {
             String selected = devices.get(index);
+            if (selected.equals(SoundConfig.outputDevice)) {
+                error = null;
+                return;
+            }
             if (!OutputDeviceSupport.select(selected)) {
                 error = "hodgepodge.soundsmenu.output_device.failed";
                 return;

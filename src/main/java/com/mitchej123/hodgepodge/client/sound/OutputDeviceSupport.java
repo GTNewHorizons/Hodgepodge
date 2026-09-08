@@ -21,6 +21,7 @@ public final class OutputDeviceSupport {
     private static final int ALC_CONNECTED = 0x313;
     private static final String OPENAL_SOFT_DEVICE_PREFIX = "OpenAL Soft on ";
     private static final long POLL_INTERVAL_MS = 1000L;
+    private static final long ENUMERATION_INTERVAL_MS = 5000L;
     private static final long RETRY_INTERVAL_MS = 5000L;
 
     private static final AtomicInteger reloads = new AtomicInteger();
@@ -39,7 +40,9 @@ public final class OutputDeviceSupport {
     private static boolean warned;
     private static String activeTarget;
     private static String activeSystemDefault;
+    private static List<String> cachedDevices;
     private static long nextPoll;
+    private static long nextEnumeration;
     private static long nextRetry;
 
     private OutputDeviceSupport() {}
@@ -49,11 +52,11 @@ public final class OutputDeviceSupport {
     }
 
     public static boolean takesOwnership() {
-        return SoundConfig.manageOutputDevices && available();
+        return SoundConfig.outputDeviceManagement.enabled && available();
     }
 
     public static boolean available() {
-        if (!SoundConfig.manageOutputDevices || !Compat.isLwjgl3ifyPresent()) return false;
+        if (!SoundConfig.outputDeviceManagement.enabled || !Compat.isLwjgl3ifyPresent()) return false;
         try {
             resolveMethods();
             long device = currentDevice();
@@ -66,6 +69,11 @@ public final class OutputDeviceSupport {
 
     /** Returns current playback endpoints. The empty string represents the system default. */
     public static List<String> devices() {
+        long now = System.currentTimeMillis();
+        if (cachedDevices != null && now < nextEnumeration) {
+            return new ArrayList<>(cachedDevices);
+        }
+
         List<String> devices = new ArrayList<>();
         devices.add(SYSTEM_DEFAULT);
         if (!available()) return devices;
@@ -79,7 +87,9 @@ public final class OutputDeviceSupport {
         } catch (Throwable t) {
             warnOnce("Could not enumerate OpenAL output devices", t);
         }
-        return devices;
+        cachedDevices = devices;
+        nextEnumeration = now + ENUMERATION_INTERVAL_MS;
+        return new ArrayList<>(devices);
     }
 
     /** Switches immediately. The caller should save the preference only when this succeeds. */
@@ -96,7 +106,7 @@ public final class OutputDeviceSupport {
 
     /** Polls because system event callbacks are not guaranteed on every OpenAL backend. Client thread only. */
     public static void tick() {
-        if (!SoundConfig.manageOutputDevices || !Compat.isLwjgl3ifyPresent()) return;
+        if (!SoundConfig.outputDeviceManagement.enabled || !Compat.isLwjgl3ifyPresent()) return;
         long now = System.currentTimeMillis();
         if (now < nextPoll) return;
         nextPoll = now + POLL_INTERVAL_MS;
@@ -105,12 +115,12 @@ public final class OutputDeviceSupport {
             if (!available()) return;
 
             long device = currentDevice();
+            boolean connected = isConnected(device);
             String desired = SoundConfig.outputDevice == null ? SYSTEM_DEFAULT : SoundConfig.outputDevice;
             List<String> devices = devices();
             String target = desired.isEmpty() || devices.contains(desired) ? desired : SYSTEM_DEFAULT;
             String current = string(device, ALC_ALL_DEVICES_SPECIFIER);
             String systemDefault = string(0L, ALC_DEFAULT_ALL_DEVICES_SPECIFIER);
-            boolean connected = isConnected(device);
 
             if (activeTarget == null && connected) {
                 if (target.isEmpty()) {
@@ -170,7 +180,9 @@ public final class OutputDeviceSupport {
         seenReload = current;
         activeTarget = null;
         activeSystemDefault = null;
+        cachedDevices = null;
         nextRetry = 0L;
+        nextEnumeration = 0L;
         warned = false;
     }
 
