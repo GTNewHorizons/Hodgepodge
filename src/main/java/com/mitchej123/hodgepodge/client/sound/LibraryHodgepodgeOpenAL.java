@@ -38,6 +38,7 @@ public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
         // This is the reliable signal: a recreated device can land on the same native pointer, so comparing handles
         // is not enough. Doing it here rather than off a device-change check also keeps it working on Java 8.
         ReverbSupport.invalidate();
+        OutputDeviceSupport.invalidate();
         SoundDeviceTweaks.invalidate();
         SpatializeSupport.invalidate();
     }
