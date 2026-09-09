@@ -161,7 +161,7 @@ public enum Mixins implements IMixins {
             .addClientMixins("archaicfix.MixinSoundDeviceThread")
             .addRequiredMod(TargetedMod.ARCHAICFIX)
             .addRequiredMod(TargetedMod.LWJGL3IFY)
-            .setApplyIf(() -> SoundConfig.outputDeviceManagement.enabled)
+            .setApplyIf(() -> SoundConfig.manageOutputDevicesAtStartup)
             .setPhase(Phase.LATE)),
     THROTTLE_ITEMPICKUPEVENT(new MixinBuilder("Throttle Item Pickup Event")
             .addCommonMixins("minecraft.MixinEntityPlayer_ThrottlePickup")

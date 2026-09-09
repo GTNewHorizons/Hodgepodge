@@ -20,9 +20,9 @@ public final class OutputDeviceSupport {
     private static final int ALC_ALL_DEVICES_SPECIFIER = 0x1013;
     private static final int ALC_CONNECTED = 0x313;
     private static final String OPENAL_SOFT_DEVICE_PREFIX = "OpenAL Soft on ";
-    private static final long POLL_INTERVAL_MS = 1000L;
-    private static final long ENUMERATION_INTERVAL_MS = 5000L;
-    private static final long RETRY_INTERVAL_MS = 5000L;
+    private static final long POLL_INTERVAL_NANOS = 1_000_000_000L;
+    private static final long ENUMERATION_INTERVAL_NANOS = 5_000_000_000L;
+    private static final long RETRY_INTERVAL_NANOS = 5_000_000_000L;
 
     private static final AtomicInteger reloads = new AtomicInteger();
     private static int seenReload;
@@ -41,6 +41,7 @@ public final class OutputDeviceSupport {
     private static String activeTarget;
     private static String activeSystemDefault;
     private static List<String> cachedDevices;
+    private static boolean deviceEnumerationValid;
     private static long nextPoll;
     private static long nextEnumeration;
     private static long nextRetry;
@@ -52,11 +53,11 @@ public final class OutputDeviceSupport {
     }
 
     public static boolean takesOwnership() {
-        return SoundConfig.outputDeviceManagement.enabled && available();
+        return SoundConfig.manageOutputDevicesAtStartup && available();
     }
 
     public static boolean available() {
-        if (!SoundConfig.outputDeviceManagement.enabled || !Compat.isLwjgl3ifyPresent()) return false;
+        if (!SoundConfig.manageOutputDevicesAtStartup || !Compat.isLwjgl3ifyPresent()) return false;
         try {
             resolveMethods();
             long device = currentDevice();
@@ -69,8 +70,8 @@ public final class OutputDeviceSupport {
 
     /** Returns current playback endpoints. The empty string represents the system default. */
     public static List<String> devices() {
-        long now = System.currentTimeMillis();
-        if (cachedDevices != null && now < nextEnumeration) {
+        long now = System.nanoTime();
+        if (cachedDevices != null && nextEnumeration != 0L && now - nextEnumeration < 0L) {
             return new ArrayList<>(cachedDevices);
         }
 
@@ -79,16 +80,22 @@ public final class OutputDeviceSupport {
         if (!available()) return devices;
         try {
             long address = (Long) getStringPointer.invoke(null, 0L, ALC_ALL_DEVICES_SPECIFIER);
+            if (address == 0L) throw new IllegalStateException("OpenAL returned no output devices");
             while (address != 0L && (Byte) readByte.invoke(null, address) != 0) {
                 String name = (String) readUtf8.invoke(null, address);
                 devices.add(name);
                 address += name.getBytes(StandardCharsets.UTF_8).length + 1L;
             }
+            if (devices.size() == 1) throw new IllegalStateException("OpenAL returned no output devices");
         } catch (Throwable t) {
             warnOnce("Could not enumerate OpenAL output devices", t);
+            nextEnumeration = now + RETRY_INTERVAL_NANOS;
+            if (cachedDevices == null) cachedDevices = devices;
+            return new ArrayList<>(cachedDevices);
         }
         cachedDevices = devices;
-        nextEnumeration = now + ENUMERATION_INTERVAL_MS;
+        deviceEnumerationValid = true;
+        nextEnumeration = now + ENUMERATION_INTERVAL_NANOS;
         return new ArrayList<>(devices);
     }
 
@@ -106,10 +113,10 @@ public final class OutputDeviceSupport {
 
     /** Polls because system event callbacks are not guaranteed on every OpenAL backend. Client thread only. */
     public static void tick() {
-        if (!SoundConfig.outputDeviceManagement.enabled || !Compat.isLwjgl3ifyPresent()) return;
-        long now = System.currentTimeMillis();
-        if (now < nextPoll) return;
-        nextPoll = now + POLL_INTERVAL_MS;
+        if (!SoundConfig.manageOutputDevicesAtStartup || !Compat.isLwjgl3ifyPresent()) return;
+        long now = System.nanoTime();
+        if (nextPoll != 0L && now - nextPoll < 0L) return;
+        nextPoll = now + POLL_INTERVAL_NANOS;
         try {
             consumeInvalidate();
             if (!available()) return;
@@ -118,7 +125,8 @@ public final class OutputDeviceSupport {
             boolean connected = isConnected(device);
             String desired = SoundConfig.outputDevice == null ? SYSTEM_DEFAULT : SoundConfig.outputDevice;
             List<String> devices = devices();
-            String target = desired.isEmpty() || devices.contains(desired) ? desired : SYSTEM_DEFAULT;
+            String target = desired.isEmpty() || !deviceEnumerationValid || devices.contains(desired) ? desired
+                    : SYSTEM_DEFAULT;
             String current = string(device, ALC_ALL_DEVICES_SPECIFIER);
             String systemDefault = string(0L, ALC_DEFAULT_ALL_DEVICES_SPECIFIER);
 
@@ -139,8 +147,8 @@ public final class OutputDeviceSupport {
                 needsSwitch |= !activeSystemDefault.equals(systemDefault);
             }
 
-            if (needsSwitch && now >= nextRetry) {
-                if (!reopen(target)) nextRetry = now + RETRY_INTERVAL_MS;
+            if (needsSwitch && (nextRetry == 0L || now - nextRetry >= 0L)) {
+                if (!reopen(target)) nextRetry = now + RETRY_INTERVAL_NANOS;
             }
         } catch (Throwable t) {
             warnOnce("Could not monitor the OpenAL output device", t);
@@ -181,6 +189,7 @@ public final class OutputDeviceSupport {
         activeTarget = null;
         activeSystemDefault = null;
         cachedDevices = null;
+        deviceEnumerationValid = false;
         nextRetry = 0L;
         nextEnumeration = 0L;
         warned = false;
@@ -204,7 +213,7 @@ public final class OutputDeviceSupport {
         return value == null ? "" : value;
     }
 
-    private static void resolveMethods() throws Exception {
+    private static synchronized void resolveMethods() throws Exception {
         if (methodsResolved) return;
         Class<?> al = Class.forName("org.lwjglx.openal.AL");
         Class<?> alc10 = Class.forName("org.lwjgl.openal.ALC10");

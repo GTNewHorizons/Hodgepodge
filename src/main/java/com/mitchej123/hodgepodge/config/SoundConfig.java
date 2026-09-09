@@ -143,6 +143,9 @@ public class SoundConfig {
     @Config.RequiresMcRestart
     public static OutputDeviceManagement outputDeviceManagement = new OutputDeviceManagement();
 
+    @Config.Ignore
+    public static boolean manageOutputDevicesAtStartup;
+
     public static class OutputDeviceManagement {
 
         @Config.Comment("Enables output device selection and recovery.")
