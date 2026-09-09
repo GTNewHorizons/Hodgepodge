@@ -77,7 +77,7 @@ public final class OutputDeviceSupport {
 
         List<String> devices = new ArrayList<>();
         devices.add(SYSTEM_DEFAULT);
-        if (!available()) return devices;
+        if (!available()) return enumerationFailed(now, devices);
         try {
             long address = (Long) getStringPointer.invoke(null, 0L, ALC_ALL_DEVICES_SPECIFIER);
             if (address == 0L) throw new IllegalStateException("OpenAL returned no output devices");
@@ -89,9 +89,7 @@ public final class OutputDeviceSupport {
             if (devices.size() == 1) throw new IllegalStateException("OpenAL returned no output devices");
         } catch (Throwable t) {
             warnOnce("Could not enumerate OpenAL output devices", t);
-            nextEnumeration = now + RETRY_INTERVAL_NANOS;
-            if (cachedDevices == null) cachedDevices = devices;
-            return new ArrayList<>(cachedDevices);
+            return enumerationFailed(now, devices);
         }
         cachedDevices = devices;
         deviceEnumerationValid = true;
@@ -125,9 +123,10 @@ public final class OutputDeviceSupport {
             boolean connected = isConnected(device);
             String desired = SoundConfig.outputDevice == null ? SYSTEM_DEFAULT : SoundConfig.outputDevice;
             List<String> devices = devices();
-            String target = desired.isEmpty() || !deviceEnumerationValid || devices.contains(desired) ? desired
-                    : SYSTEM_DEFAULT;
             String current = string(device, ALC_ALL_DEVICES_SPECIFIER);
+            boolean desiredAvailable = deviceEnumerationValid ? devices.contains(desired)
+                    : connected && desired.equals(current);
+            String target = desired.isEmpty() || desiredAvailable ? desired : SYSTEM_DEFAULT;
             String systemDefault = string(0L, ALC_DEFAULT_ALL_DEVICES_SPECIFIER);
 
             if (activeTarget == null && connected) {
@@ -211,6 +210,13 @@ public final class OutputDeviceSupport {
     private static String string(long device, int name) throws Exception {
         String value = (String) getString.invoke(null, device, name);
         return value == null ? "" : value;
+    }
+
+    private static List<String> enumerationFailed(long now, List<String> fallback) {
+        deviceEnumerationValid = false;
+        nextEnumeration = now + RETRY_INTERVAL_NANOS;
+        if (cachedDevices == null) cachedDevices = fallback;
+        return new ArrayList<>(cachedDevices);
     }
 
     private static synchronized void resolveMethods() throws Exception {
