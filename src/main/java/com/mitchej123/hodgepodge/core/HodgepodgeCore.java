@@ -59,6 +59,7 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
             ConfigurationManager.registerConfig(SpeedupsConfig.class);
             ConfigurationManager.registerConfig(TweaksConfig.class);
             ConfigurationManager.registerConfig(SoundConfig.class);
+            SoundConfig.manageOutputDevicesAtStartup = SoundConfig.outputDeviceManagement.enabled;
             if (TweaksConfig.enableTagCompoundStringPooling || TweaksConfig.enableNBTStringPooling) {
                 StringPooler.setupPooler();
             }
