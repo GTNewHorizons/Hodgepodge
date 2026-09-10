@@ -3,6 +3,7 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,9 +21,7 @@ public class MixinFurnaceSaveItemBurnTimeToNBT {
             method = "readFromNBT",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/tileentity/TileEntityFurnace;getItemBurnTime(Lnet/minecraft/item/ItemStack;)I"
-            )
-    )
+                    target = "Lnet/minecraft/tileentity/TileEntityFurnace;getItemBurnTime(Lnet/minecraft/item/ItemStack;)I"))
     private int readFromNBTItemBurnTime(ItemStack stack, NBTTagCompound compound) {
         return compound.getInteger("ItemBurnTime");
     }
