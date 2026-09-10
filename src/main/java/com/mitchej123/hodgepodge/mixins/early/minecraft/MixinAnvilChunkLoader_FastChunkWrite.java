@@ -38,7 +38,8 @@ public class MixinAnvilChunkLoader_FastChunkWrite {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/nbt/CompressedStreamTools;write(Lnet/minecraft/nbt/NBTTagCompound;Ljava/io/DataOutput;)V"))
-    private void hodgepodge$batchedNBTWrite(NBTTagCompound nbt, DataOutput dataOutput) throws IOException {
+    // The file IO thread and save-all flush can serialize chunks on the same loader concurrently.
+    private synchronized void hodgepodge$batchedNBTWrite(NBTTagCompound nbt, DataOutput dataOutput) throws IOException {
         // Write to a reused buffer to avoid multiple allocations and resizes
         hodgepodge$nbtBuffer.reset();
         CompressedStreamTools.func_150663_a(nbt, hodgepodge$nbtDataOutput);
