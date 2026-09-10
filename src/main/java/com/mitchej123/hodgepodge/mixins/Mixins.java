@@ -1214,6 +1214,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinAbstractResourcePack")
             .setApplyIf(() -> SpeedupsConfig.optimizeResourcePackPath)
             .setPhase(Phase.EARLY)),
+    FURNACE_SAVE_ITEM_BURN_TIME_TO_NBT(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinFurnaceSaveItemBurnTimeToNBT")
+            .setApplyIf(() -> FixesConfig.furnaceSaveItemBurnTimeToNBT)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments

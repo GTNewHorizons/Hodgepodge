@@ -565,6 +565,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixBlockHitDelay;
+
+    @Config.Comment("Fix Furnace doesn't save current item burn time to NBT.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean furnaceSaveItemBurnTimeToNBT;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
