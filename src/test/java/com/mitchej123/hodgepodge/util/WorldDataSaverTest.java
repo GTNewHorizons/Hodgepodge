@@ -29,6 +29,17 @@ class WorldDataSaverTest {
     Path temporary;
 
     @Test
+    void replacementPreservesPosixPermissions() throws Exception {
+        Path target = Files.createFile(temporary.resolve("permissions.dat"));
+        org.junit.jupiter.api.Assumptions.assumeTrue(Files.getFileStore(target).supportsFileAttributeView("posix"));
+        java.util.Set<java.nio.file.attribute.PosixFilePermission> permissions = java.nio.file.attribute.PosixFilePermissions
+                .fromString("rw-rw----");
+        Files.setPosixFilePermissions(target, permissions);
+        WorldDataSaver.writeData(target.toFile(), tag("replacement"), false, false);
+        assertEquals(permissions, Files.getPosixFilePermissions(target));
+    }
+
+    @Test
     void saveQueuedDuringRemovalGetsANewDrainTask() throws Exception {
         TestSaver saver = new TestSaver();
         File file = temporary.resolve("data.dat").toFile();

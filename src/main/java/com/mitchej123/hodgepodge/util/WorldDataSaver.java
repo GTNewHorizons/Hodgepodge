@@ -10,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -161,10 +163,20 @@ public class WorldDataSaver implements IThreadedFileIO {
         Path target = file.toPath().toAbsolutePath();
         Path parent = target.getParent();
         Files.createDirectories(parent);
-        Path temporary = Files.createTempFile(parent, "." + file.getName() + "-", ".tmp");
+        boolean posix = Files.getFileAttributeView(parent, PosixFileAttributeView.class) != null;
+        Path temporary = posix
+                ? Files.createTempFile(
+                        parent,
+                        "." + file.getName() + "-",
+                        ".tmp",
+                        PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rw-rw-rw-")))
+                : Files.createTempFile(parent, "." + file.getName() + "-", ".tmp");
         Path old = target.resolveSibling(file.getName() + "_old");
         Path oldTemporary = null;
         try {
+            if (posix && Files.exists(target)) {
+                Files.setPosixFilePermissions(temporary, Files.getPosixFilePermissions(target));
+            }
             try (FileOutputStream output = new FileOutputStream(temporary.toFile())) {
                 output.write(bytes.toByteArray());
                 output.getFD().sync();
