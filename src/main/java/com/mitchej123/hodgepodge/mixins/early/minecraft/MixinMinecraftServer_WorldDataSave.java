@@ -13,6 +13,7 @@ import com.mitchej123.hodgepodge.util.WorldDataSaver;
 public class MixinMinecraftServer_WorldDataSave {
 
     // Run before serverStopped becomes true, including when stopServer throws during crash shutdown.
+    // Stay after stopServer: ServerUtilities restores saving at its HEAD, then shutdown queues the final saves.
     @WrapOperation(
             method = "run",
             remap = false,
