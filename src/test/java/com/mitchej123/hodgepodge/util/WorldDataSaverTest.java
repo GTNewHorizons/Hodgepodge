@@ -107,6 +107,34 @@ class WorldDataSaverTest {
         }
     }
 
+    @Test
+    void closedSessionCannotOverwriteARestoredFile() throws Exception {
+        TestSaver saver = new TestSaver();
+        Path target = Files.createDirectory(temporary.resolve("map.dat"));
+        Path blocker = Files.write(target.resolve("keep"), new byte[] { 1 });
+        saver.saveData(target.toFile(), tag("old-session"), false, false);
+        saver.closeSession();
+        Files.delete(blocker);
+        Files.delete(target);
+        WorldDataSaver.writeData(target.toFile(), tag("restored"), false, false);
+        saver.saveData(temporary.resolve("other-world.dat").toFile(), tag("new-session"), false, false);
+        saver.flush();
+        assertEquals("restored", CompressedStreamTools.read(target.toFile()).getString("value"));
+    }
+
+    @Test
+    void flushDrainsPendingWritesAndReportsFailures() throws Exception {
+        TestSaver saver = new TestSaver();
+        File saved = temporary.resolve("saved.dat").toFile();
+        saver.saveData(saved, tag("saved"), false, false);
+        saver.flush();
+        assertEquals("saved", CompressedStreamTools.read(saved).getString("value"));
+        Path blocked = Files.createDirectory(temporary.resolve("blocked"));
+        Files.write(blocked.resolve("keep"), new byte[] { 1 });
+        saver.saveData(blocked.toFile(), tag("failed"), false, false);
+        assertThrows(IOException.class, saver::flush);
+    }
+
     private static NBTTagCompound tag(String value) {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("value", value);
@@ -120,6 +148,14 @@ class WorldDataSaverTest {
         @Override
         protected void queueIO(IThreadedFileIO task) {
             if (!tasks.contains(task)) tasks.add(task);
+        }
+
+        @Override
+        protected void awaitIO() {
+            for (IThreadedFileIO task : new ArrayList<>(tasks)) {
+                while (task.writeNextIO()) {}
+                tasks.remove(task);
+            }
         }
     }
 }

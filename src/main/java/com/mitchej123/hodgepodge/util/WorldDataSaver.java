@@ -102,6 +102,52 @@ public class WorldDataSaver implements IThreadedFileIO {
         ThreadedFileIOBase.threadedIOInstance.queueIO(task);
     }
 
+    protected void awaitIO() throws InterruptedException {
+        ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+    }
+
+    public void flush() throws InterruptedException, IOException {
+        awaitIO();
+        synchronized (pendingData) {
+            if (!failedData.isEmpty()) {
+                failedData.forEach(pendingData::putIfAbsent);
+                failedData.clear();
+                if (!queued) {
+                    queued = true;
+                    queueIO(new DrainTask());
+                }
+            }
+        }
+        awaitIO();
+        synchronized (pendingData) {
+            if (!failedData.isEmpty()) throw new IOException("World data could not be saved: " + failedData.keySet());
+        }
+    }
+
+    public void closeSession() {
+        boolean interrupted = false;
+        try {
+            while (true) {
+                try {
+                    flush();
+                    break;
+                } catch (InterruptedException e) {
+                    interrupted = true;
+                } catch (IOException e) {
+                    LOGGER.error(
+                            "Closing world with unsaved data; these writes will not be replayed in another session",
+                            e);
+                    break;
+                }
+            }
+            synchronized (pendingData) {
+                failedData.clear();
+            }
+        } finally {
+            if (interrupted) Thread.currentThread().interrupt();
+        }
+    }
+
     static void writeData(File file, NBTTagCompound data, boolean compressed, boolean backup) throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         if (compressed) {
