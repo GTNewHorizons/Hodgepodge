@@ -277,7 +277,7 @@ class LoginSessionLifecycleTest {
                         net.minecraft.nbt.CompressedStreamTools.read(blocked.toFile()).getString("value"));
             } finally {
                 saver.closeSession();
-                java.nio.file.Files.deleteIfExists(blocker);
+                if (java.nio.file.Files.isDirectory(blocked)) java.nio.file.Files.deleteIfExists(blocker);
                 java.nio.file.Files.deleteIfExists(blocked);
                 java.nio.file.Files.deleteIfExists(file);
                 java.nio.file.Files.delete(root);
