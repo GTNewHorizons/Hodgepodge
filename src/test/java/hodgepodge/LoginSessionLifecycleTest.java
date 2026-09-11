@@ -126,6 +126,7 @@ class LoginSessionLifecycleTest {
         MixinBootstrap.init();
         MixinExtrasBootstrap.init();
         Mixins.addConfiguration("mixins.hodgepodge.login-test.json");
+        Mixins.addConfiguration("mixins.hodgepodge.world-save-test.json");
         Method phase = MixinEnvironment.class.getDeclaredMethod("gotoPhase", MixinEnvironment.Phase.class);
         phase.setAccessible(true);
         phase.invoke(null, MixinEnvironment.Phase.DEFAULT);
@@ -235,6 +236,52 @@ class LoginSessionLifecycleTest {
             if (serverLookup != null) serverLookup.close();
             if (fmlLookup != null) fmlLookup.close();
             if (loaderLookup != null) loaderLookup.close();
+        }
+
+        public void testWorldDataFlushAndCrashShutdown() throws Exception {
+            java.nio.file.Path root = java.nio.file.Files.createTempDirectory("hodgepodge-world-save-");
+            java.nio.file.Path file = root.resolve("data.dat");
+            java.nio.file.Path blocked = root.resolve("map.dat");
+            java.nio.file.Path blocker = blocked.resolve("keep");
+            com.mitchej123.hodgepodge.util.WorldDataSaver saver = com.mitchej123.hodgepodge.util.WorldDataSaver.INSTANCE;
+            net.minecraft.nbt.NBTTagCompound data = new net.minecraft.nbt.NBTTagCompound();
+            data.setString("value", "saved");
+            server.worldServers = new WorldServer[] { world };
+            try {
+                saver.saveData(file.toFile(), data, false, false);
+                new net.minecraft.command.server.CommandSaveAll()
+                        .processCommand(mock(net.minecraft.command.ICommandSender.class), new String[] { "flush" });
+                assertEquals("saved", net.minecraft.nbt.CompressedStreamTools.read(file.toFile()).getString("value"));
+
+                java.nio.file.Files.createDirectory(blocked);
+                java.nio.file.Files.write(blocker, new byte[] { 1 });
+                saver.saveData(blocked.toFile(), data, false, false);
+                assertThrows(
+                        net.minecraft.command.CommandException.class,
+                        () -> new net.minecraft.command.server.CommandSaveAll().processCommand(
+                                mock(net.minecraft.command.ICommandSender.class),
+                                new String[] { "flush" }));
+                org.mockito.Mockito.doThrow(new IllegalStateException("injected shutdown failure")).when(server)
+                        .stopServer();
+                doCallRealMethod().when(server).run();
+                server.run();
+                java.nio.file.Files.delete(blocker);
+                java.nio.file.Files.delete(blocked);
+                net.minecraft.nbt.NBTTagCompound restored = new net.minecraft.nbt.NBTTagCompound();
+                restored.setString("value", "restored");
+                net.minecraft.nbt.CompressedStreamTools.write(restored, blocked.toFile());
+                saver.saveData(file.toFile(), data, false, false);
+                saver.flush();
+                assertEquals(
+                        "restored",
+                        net.minecraft.nbt.CompressedStreamTools.read(blocked.toFile()).getString("value"));
+            } finally {
+                saver.closeSession();
+                java.nio.file.Files.deleteIfExists(blocker);
+                java.nio.file.Files.deleteIfExists(blocked);
+                java.nio.file.Files.deleteIfExists(file);
+                java.nio.file.Files.delete(root);
+            }
         }
 
         @SubscribeEvent
