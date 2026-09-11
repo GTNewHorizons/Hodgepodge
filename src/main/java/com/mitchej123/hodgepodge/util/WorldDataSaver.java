@@ -1,8 +1,15 @@
 package com.mitchej123.hodgepodge.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.Collections;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -38,7 +45,9 @@ public class WorldDataSaver implements IThreadedFileIO {
 
     protected WorldDataSaver() {}
 
-    private final Map<File, WrappedNBTTagCompound> pendingData = Collections.synchronizedMap(new LinkedHashMap<>());
+    private final Map<File, WrappedNBTTagCompound> pendingData = new LinkedHashMap<>();
+    private final Map<File, WrappedNBTTagCompound> failedData = new LinkedHashMap<>();
+    private boolean queued;
 
     @Override
     public boolean writeNextIO() {
@@ -50,6 +59,7 @@ public class WorldDataSaver implements IThreadedFileIO {
         synchronized (pendingData) {
             Iterator<Map.Entry<File, WrappedNBTTagCompound>> it = pendingData.entrySet().iterator();
             if (!it.hasNext()) {
+                queued = false;
                 return false;
             }
             Map.Entry<File, WrappedNBTTagCompound> entry = it.next();
@@ -61,22 +71,15 @@ public class WorldDataSaver implements IThreadedFileIO {
             it.remove();
 
         }
-        if (backup) {
-            final File backupFile = new File(file.getParentFile(), file.getName() + "_old");
-            if (backupFile.exists()) {
-                backupFile.delete();
-            }
-            file.renameTo(backupFile);
-        }
-
         try {
-            if (compressed) {
-                try (FileOutputStream fileoutputstream = new FileOutputStream(file)) {
-                    CompressedStreamTools.writeCompressed(data, fileoutputstream);
-                }
-            } else CompressedStreamTools.write(data, file);
-
+            writeData(file, data, compressed, backup);
+            synchronized (pendingData) {
+                failedData.remove(file);
+            }
         } catch (Exception e) {
+            synchronized (pendingData) {
+                if (!pendingData.containsKey(file)) failedData.put(file, wrapped);
+            }
             LOGGER.error("Failed to write data to file {}", file, e);
             Common.log.error(e);
         }
@@ -85,11 +88,65 @@ public class WorldDataSaver implements IThreadedFileIO {
 
     public void saveData(File file, NBTTagCompound parentTag, boolean compressed, boolean backup) {
         WrappedNBTTagCompound wrapped = new WrappedNBTTagCompound(parentTag, compressed, backup);
-        if (pendingData.containsKey(file)) {
-            pendingData.replace(file, wrapped);
-        } else {
+        synchronized (pendingData) {
+            failedData.forEach(pendingData::putIfAbsent);
+            failedData.clear();
             pendingData.put(file, wrapped);
+            if (queued) return;
+            queued = true;
+            queueIO(new DrainTask());
         }
-        ThreadedFileIOBase.threadedIOInstance.queueIO(this);
+    }
+
+    protected void queueIO(IThreadedFileIO task) {
+        ThreadedFileIOBase.threadedIOInstance.queueIO(task);
+    }
+
+    static void writeData(File file, NBTTagCompound data, boolean compressed, boolean backup) throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        if (compressed) {
+            CompressedStreamTools.writeCompressed(data, bytes);
+        } else {
+            try (DataOutputStream output = new DataOutputStream(bytes)) {
+                CompressedStreamTools.write(data, output);
+            }
+        }
+
+        Path target = file.toPath().toAbsolutePath();
+        Path parent = target.getParent();
+        Files.createDirectories(parent);
+        Path temporary = Files.createTempFile(parent, "." + file.getName() + "-", ".tmp");
+        Path old = target.resolveSibling(file.getName() + "_old");
+        Path oldTemporary = null;
+        try {
+            try (FileOutputStream output = new FileOutputStream(temporary.toFile())) {
+                output.write(bytes.toByteArray());
+                output.getFD().sync();
+            }
+            if (backup && Files.exists(target)) {
+                oldTemporary = Files.createTempFile(parent, "." + file.getName() + "-old-", ".tmp");
+                Files.copy(
+                        target,
+                        oldTemporary,
+                        StandardCopyOption.REPLACE_EXISTING,
+                        StandardCopyOption.COPY_ATTRIBUTES);
+                try (FileChannel channel = FileChannel.open(oldTemporary, StandardOpenOption.WRITE)) {
+                    channel.force(true);
+                }
+                Files.move(oldTemporary, old, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+            }
+            Files.move(temporary, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        } finally {
+            if (oldTemporary != null) Files.deleteIfExists(oldTemporary);
+            Files.deleteIfExists(temporary);
+        }
+    }
+
+    private final class DrainTask implements IThreadedFileIO {
+
+        @Override
+        public boolean writeNextIO() {
+            return WorldDataSaver.this.writeNextIO();
+        }
     }
 }
