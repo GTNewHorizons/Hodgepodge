@@ -164,6 +164,7 @@ public class WorldDataSaver implements IThreadedFileIO {
         Path parent = target.getParent();
         Files.createDirectories(parent);
         boolean posix = Files.getFileAttributeView(parent, PosixFileAttributeView.class) != null;
+        // Initial POSIX permissions are filtered by umask; replacements keep the target's existing mode below.
         Path temporary = posix
                 ? Files.createTempFile(
                         parent,
