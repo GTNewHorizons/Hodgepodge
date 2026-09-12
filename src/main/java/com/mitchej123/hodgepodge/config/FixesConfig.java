@@ -297,7 +297,7 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean remove2MBChunkLimit;
 
-    @Config.Comment("Change the way received packet processing is limited from a count limit to a time limit")
+    @Config.Comment("Change incoming packet processing from a fixed 1001 packet limit to a time limit allowing for potentially more packets to be processed")
     @Config.DefaultBoolean(true)
     public static boolean changeReceivedPacketCountLimitToTimeLimit;
 
