@@ -1214,6 +1214,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinAbstractResourcePack")
             .setApplyIf(() -> SpeedupsConfig.optimizeResourcePackPath)
             .setPhase(Phase.EARLY)),
+    TRACK_INCOMING_PACKETS(new MixinBuilder("Track incoming packets for /packetstats")
+            .addClientMixins("debug.MixinNetworkManager_TrackIncomingPackets")
+            .setApplyIf(() -> DebugConfig.trackIncomingPackets)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments
