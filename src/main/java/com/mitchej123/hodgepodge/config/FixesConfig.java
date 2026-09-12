@@ -297,6 +297,15 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean remove2MBChunkLimit;
 
+    @Config.Comment("Change incoming packet processing from a fixed 1001 packet limit to a time limit allowing for potentially more packets to be processed")
+    @Config.DefaultBoolean(true)
+    public static boolean changeReceivedPacketCountLimitToTimeLimit;
+
+    @Config.Comment("Max time spent processing received packets in nanoseconds (1ms = 1_000_000ns)")
+    @Config.RangeInt(min = 1_000, max = 50_000_000)
+    @Config.DefaultInt(5_000_000)
+    public static int receivedPacketTimeLimit;
+
     @Config.Comment("Disable the creative search tab since it can be very laggy in large modpacks")
     @Config.DefaultBoolean(true)
     public static boolean removeCreativeSearchTab;
