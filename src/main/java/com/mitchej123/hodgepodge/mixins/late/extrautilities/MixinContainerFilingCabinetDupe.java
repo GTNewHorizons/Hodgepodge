@@ -20,7 +20,7 @@ import com.rwtema.extrautils.gui.ContainerFilingCabinet;
 import invtweaks.api.container.ContainerSection;
 
 @Mixin(value = ContainerFilingCabinet.class)
-public abstract class MixinContainerFilingCabinet extends Container {
+public abstract class MixinContainerFilingCabinetDupe extends Container {
 
     @Shadow(remap = false)
     public abstract Map<ContainerSection, List<Slot>> getSlots();
