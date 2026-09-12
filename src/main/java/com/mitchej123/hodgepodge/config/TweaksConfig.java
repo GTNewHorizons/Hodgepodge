@@ -330,6 +330,12 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean thirstyTankContainer;
 
+    // Bibliocraft
+
+    @Config.Comment("Automate automation of Enchanted Plates at the Typesetting Table (requires EnderIO or Automagy for XP containers)")
+    @Config.DefaultBoolean(true)
+    public static boolean automateBibliocraftEnchantedPlates;
+
     // Biomes O' Plenty
 
     @Config.Comment("Allow 5 Fir Sapling planted together ('+' shape) to grow to a big fir tree")
