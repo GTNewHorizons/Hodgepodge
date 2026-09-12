@@ -1997,7 +1997,8 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.ENDLESSIDS)
             .setPhase(Phase.LATE)),
 
-    // Various Exploits/Fixes
+    // BiblioCraft
+
     BIBLIOCRAFT_PACKET_FIX(new MixinBuilder("Packet Fix")
             .addCommonMixins(
                     "bibliocraft.MixinBibliocraftPatchPacketExploits",
@@ -2046,6 +2047,14 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> MemoryConfig.leaks.fixBibliocraftTESRWorldLeak)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
+    BIBLIOCRAFT_BETTER_PRINTING_PRESS_AUTOMATION(new MixinBuilder("Better Printing Press automation")
+            .addCommonMixins("bibliocraft.MixinBiblioCraftPrintPress")
+            .setApplyIf(() -> TweaksConfig.betterPrintingPressAutomation)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
+            .setPhase(Phase.LATE)),
+
+    // Various Exploits/Fixes
+
     ZTONES_PACKET_FIX(new MixinBuilder("Packet Fix")
             .addCommonMixins("ztones.MixinZtonesPatchPacketExploits")
             .setApplyIf(() -> FixesConfig.fixZTonesPackets)
