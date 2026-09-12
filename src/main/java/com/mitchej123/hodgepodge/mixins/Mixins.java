@@ -1217,6 +1217,13 @@ public enum Mixins implements IMixins {
     FURNACE_SAVE_ITEM_BURN_TIME_TO_NBT(new MixinBuilder()
             .addCommonMixins("minecraft.MixinFurnaceSaveItemBurnTimeToNBT")
             .setApplyIf(() -> FixesConfig.furnaceSaveItemBurnTimeToNBT)
+    TRACK_INCOMING_PACKETS(new MixinBuilder("Track incoming packets for /packetstats")
+            .addClientMixins("debug.MixinNetworkManager_TrackIncomingPackets")
+            .setApplyIf(() -> DebugConfig.trackIncomingPackets)
+            .setPhase(Phase.EARLY)),
+    CHANGE_RECEIVED_PACKET_COUNT_LIMIT_TO_TIME_LIMIT(new MixinBuilder("Change received packet count limit to time limit")
+            .addClientMixins("minecraft.packets.MixinNetworkManager_ReceivedProcessingLimit")
+            .setApplyIf(() -> FixesConfig.changeReceivedPacketCountLimitToTimeLimit)
             .setPhase(Phase.EARLY)),
     // endregion
 
