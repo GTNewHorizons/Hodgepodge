@@ -55,7 +55,7 @@ public class EnumValuesTransformer implements RfbClassTransformer, Opcodes {
     }
 
     @Override
-    public void transformClass(@NotNull ExtensibleClassLoader classLoader, @NotNull Context context,
+    public boolean transformClassIfNeeded(@NotNull ExtensibleClassLoader classLoader, @NotNull Context context,
             @Nullable Manifest manifest, @NotNull String className, @NotNull ClassNodeHandle classNode) {
         final ClassNode cn = classNode.getNode();
         assert cn != null;
@@ -65,6 +65,13 @@ public class EnumValuesTransformer implements RfbClassTransformer, Opcodes {
             classNode.computeFrames();
             HodgepodgeClassDump.dumpBytecode(className, classNode, this);
         }
+        return changed;
+    }
+
+    @Override
+    public void transformClass(@NotNull ExtensibleClassLoader classLoader, @NotNull Context context,
+            @Nullable Manifest manifest, @NotNull String className, @NotNull ClassNodeHandle classNode) {
+        transformClassIfNeeded(classLoader, context, manifest, className, classNode);
     }
 
     private static boolean transformClassNode(ClassNode cn) {
