@@ -10,9 +10,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalLongRef;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 
 @Mixin(MapGenStructure.class)
@@ -21,22 +22,20 @@ public class MixinMapGenStructure {
     @Shadow
     protected Map<Long, StructureStart> structureMap = new Long2ObjectOpenHashMap<>();
 
-    private long hodgepodge$localRef;
-
     @Redirect(
             method = "func_151538_a",
             at = @At(value = "INVOKE", target = "Ljava/lang/Long;valueOf(J)Ljava/lang/Long;"))
-    private Long hodgepodge$nukeBox(long l) {
-        hodgepodge$localRef = l;
+    private Long hodgepodge$nukeBox(long l, @Share("unboxedLong") LocalLongRef unboxedLong) {
+        unboxedLong.set(l);
         return null;
     }
 
-    @WrapOperation(
+    @Redirect(
             method = "func_151538_a",
             at = @At(value = "INVOKE", target = "Ljava/util/Map;containsKey(Ljava/lang/Object;)Z"))
     private boolean hodgepodge$primitiveContains(Map<Long, StructureStart> instance, Object o,
-            Operation<Boolean> original) {
-        return ((Long2ObjectOpenHashMap<StructureStart>) structureMap).containsKey(hodgepodge$localRef);
+            @Share("unboxedLong") LocalLongRef unboxedLong) {
+        return ((Long2ObjectMap<StructureStart>) structureMap).containsKey(unboxedLong.get());
     }
 
     @Redirect(
@@ -45,7 +44,8 @@ public class MixinMapGenStructure {
                     value = "INVOKE",
                     target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
                     ordinal = 0))
-    private Object hodgepodge$primitiveContains(Map<Long, StructureStart> instance, Object k, Object v) {
-        return ((Long2ObjectOpenHashMap<StructureStart>) structureMap).put(hodgepodge$localRef, (StructureStart) v);
+    private Object hodgepodge$primitiveContains(Map<Long, StructureStart> instance, Object k, Object v,
+            @Share("unboxedLong") LocalLongRef unboxedLong) {
+        return ((Long2ObjectMap<StructureStart>) structureMap).put(unboxedLong.get(), (StructureStart) v);
     }
 }
