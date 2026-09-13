@@ -166,9 +166,6 @@ public class WorldDataSaver implements IThreadedFileIO {
         Path old = target.resolveSibling(file.getName() + "_old");
         Path oldTemporary = null;
         try {
-            if (posix && Files.exists(target)) {
-                Files.setPosixFilePermissions(temporary, Files.getPosixFilePermissions(target));
-            }
             try (FileOutputStream output = new FileOutputStream(temporary.toFile())) {
                 if (compressed) {
                     CompressedStreamTools.writeCompressed(data, output);
@@ -181,6 +178,10 @@ public class WorldDataSaver implements IThreadedFileIO {
             // writeCompressed closes the stream it is given, so sync through a fresh handle.
             try (FileChannel channel = FileChannel.open(temporary, StandardOpenOption.WRITE)) {
                 channel.force(true);
+            }
+            // After writing: a target mode without owner write would otherwise block our own open.
+            if (posix && Files.exists(target)) {
+                Files.setPosixFilePermissions(temporary, Files.getPosixFilePermissions(target));
             }
             if (backup && Files.exists(target)) {
                 oldTemporary = Files.createTempFile(parent, "." + file.getName() + "-old-", ".tmp");

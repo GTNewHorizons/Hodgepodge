@@ -41,6 +41,13 @@ class WorldDataSaverTest {
         Files.setPosixFilePermissions(target, permissions);
         WorldDataSaver.writeData(target.toFile(), tag("replacement"), false, false);
         assertEquals(permissions, Files.getPosixFilePermissions(target));
+
+        java.util.Set<java.nio.file.attribute.PosixFilePermission> readOnlyOwner = java.nio.file.attribute.PosixFilePermissions
+                .fromString("r--rw-rw-");
+        Files.setPosixFilePermissions(target, readOnlyOwner);
+        WorldDataSaver.writeData(target.toFile(), tag("read-only-owner"), false, false);
+        assertEquals(readOnlyOwner, Files.getPosixFilePermissions(target));
+        assertEquals("read-only-owner", CompressedStreamTools.read(target.toFile()).getString("value"));
     }
 
     @Test
