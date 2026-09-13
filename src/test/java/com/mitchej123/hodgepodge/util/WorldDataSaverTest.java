@@ -52,6 +52,13 @@ class WorldDataSaverTest {
         WorldDataSaver.writeData(target.toFile(), tag("read-only-owner"), false, false);
         assertEquals(readOnlyOwner, Files.getPosixFilePermissions(target));
         assertEquals("read-only-owner", CompressedStreamTools.read(target.toFile()).getString("value"));
+
+        WorldDataSaver.writeData(target.toFile(), tag("backup-replacement"), false, true);
+        Path old = target.resolveSibling(target.getFileName() + "_old");
+        assertEquals(readOnlyOwner, Files.getPosixFilePermissions(target));
+        assertEquals(readOnlyOwner, Files.getPosixFilePermissions(old));
+        assertEquals("backup-replacement", CompressedStreamTools.read(target.toFile()).getString("value"));
+        assertEquals("read-only-owner", CompressedStreamTools.read(old.toFile()).getString("value"));
     }
 
     @Test

@@ -11,10 +11,13 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.PosixFileAttributeView;
+import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -184,14 +187,24 @@ public class WorldDataSaver implements IThreadedFileIO {
                 Files.setPosixFilePermissions(temporary, Files.getPosixFilePermissions(target));
             }
             if (backup && Files.exists(target)) {
+                Set<PosixFilePermission> oldPermissions = posix ? Files.getPosixFilePermissions(target) : null;
                 oldTemporary = Files.createTempFile(parent, "." + file.getName() + "-old-", ".tmp");
                 Files.copy(
                         target,
                         oldTemporary,
                         StandardCopyOption.REPLACE_EXISTING,
                         StandardCopyOption.COPY_ATTRIBUTES);
+                if (oldPermissions != null && !oldPermissions.contains(PosixFilePermission.OWNER_WRITE)) {
+                    Set<PosixFilePermission> writablePermissions = EnumSet.noneOf(PosixFilePermission.class);
+                    writablePermissions.addAll(oldPermissions);
+                    writablePermissions.add(PosixFilePermission.OWNER_WRITE);
+                    Files.setPosixFilePermissions(oldTemporary, writablePermissions);
+                }
                 try (FileChannel channel = FileChannel.open(oldTemporary, StandardOpenOption.WRITE)) {
                     channel.force(true);
+                }
+                if (oldPermissions != null) {
+                    Files.setPosixFilePermissions(oldTemporary, oldPermissions);
                 }
                 Files.move(oldTemporary, old, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
             }
