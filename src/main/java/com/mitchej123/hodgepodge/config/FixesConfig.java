@@ -575,7 +575,7 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixBlockHitDelay;
 
-    @Config.Comment("Fix Furnace doesn't save current item burn time to NBT.")
+    @Config.Comment("Make the Furnace save the max burn time of the current fuel to NBT, so WAILA can determine the percent fuel remaining.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean furnaceSaveItemBurnTimeToNBT;
