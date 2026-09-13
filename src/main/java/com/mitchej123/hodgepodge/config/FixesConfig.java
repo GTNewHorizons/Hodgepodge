@@ -574,6 +574,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixBlockHitDelay;
+
+    @Config.Comment("Make the Furnace save the max burn time of the current fuel to NBT, so WAILA can determine the percent fuel remaining.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean furnaceSaveItemBurnTimeToNBT;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
