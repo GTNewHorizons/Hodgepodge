@@ -580,6 +580,8 @@ public enum Mixins implements IMixins {
             .addCommonMixins(
                     "minecraft.MixinMapStorage_threadedIO",
                     "minecraft.MixinSaveHandler_threadedIO",
+                    "minecraft.MixinMinecraftServer_WorldDataSave",
+                    "minecraft.MixinCommandSaveAll_WorldDataSave",
                     "minecraft.MixinScoreboardSaveData_threadedIO",
                     "minecraft.MixinVillageCollection_threadedIO",
                     "minecraft.MixinMapData_threadedIO",
