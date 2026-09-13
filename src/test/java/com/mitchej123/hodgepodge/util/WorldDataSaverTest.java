@@ -15,10 +15,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.storage.IThreadedFileIO;
+import net.minecraft.world.storage.ThreadedFileIOBase;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -48,6 +52,67 @@ class WorldDataSaverTest {
         WorldDataSaver.writeData(target.toFile(), tag("read-only-owner"), false, false);
         assertEquals(readOnlyOwner, Files.getPosixFilePermissions(target));
         assertEquals("read-only-owner", CompressedStreamTools.read(target.toFile()).getString("value"));
+    }
+
+    @Test
+    void backupReplacementFailureKeepsTheTargetAndClearsTemporaries() throws Exception {
+        Path directory = Files.createDirectory(temporary.resolve("backup-failure"));
+        Path target = directory.resolve("data.dat");
+        CompressedStreamTools.write(tag("original"), target.toFile());
+        Path blocked = Files.createDirectory(directory.resolve("data.dat_old"));
+        Files.write(blocked.resolve("keep"), new byte[] { 1 });
+
+        assertThrows(
+                IOException.class,
+                () -> WorldDataSaver.writeData(target.toFile(), tag("replacement"), false, true));
+        assertEquals("original", CompressedStreamTools.read(target.toFile()).getString("value"));
+        try (java.util.stream.Stream<Path> leftovers = Files.list(directory)) {
+            assertFalse(leftovers.anyMatch(path -> path.getFileName().toString().endsWith(".tmp")));
+        }
+    }
+
+    @Test
+    void flushWaitsForQueuedWorkToFinish() throws Exception {
+        CountDownLatch started = new CountDownLatch(1);
+        CountDownLatch release = new CountDownLatch(1);
+        ThreadedFileIOBase.threadedIOInstance.queueIO(new IThreadedFileIO() {
+
+            private boolean done;
+
+            @Override
+            public boolean writeNextIO() {
+                if (done) return false;
+                started.countDown();
+                try {
+                    release.await();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                done = true;
+                return true;
+            }
+        });
+        assertTrue(started.await(5, TimeUnit.SECONDS));
+
+        AtomicBoolean returned = new AtomicBoolean();
+        CountDownLatch flushing = new CountDownLatch(1);
+        Thread flusher = new Thread(() -> {
+            flushing.countDown();
+            try {
+                WorldDataSaver.INSTANCE.flush();
+                returned.set(true);
+            } catch (Exception ignored) {}
+        });
+        flusher.start();
+        try {
+            assertTrue(flushing.await(5, TimeUnit.SECONDS));
+            flusher.join(200);
+            assertTrue(flusher.isAlive(), "flush returned while work was still queued");
+        } finally {
+            release.countDown();
+        }
+        flusher.join(TimeUnit.SECONDS.toMillis(5));
+        assertTrue(returned.get());
     }
 
     @Test
