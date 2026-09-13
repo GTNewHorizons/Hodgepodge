@@ -1,6 +1,6 @@
 package com.mitchej123.hodgepodge.util;
 
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -151,15 +151,6 @@ public class WorldDataSaver implements IThreadedFileIO {
     }
 
     static void writeData(File file, NBTTagCompound data, boolean compressed, boolean backup) throws IOException {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        if (compressed) {
-            CompressedStreamTools.writeCompressed(data, bytes);
-        } else {
-            try (DataOutputStream output = new DataOutputStream(bytes)) {
-                CompressedStreamTools.write(data, output);
-            }
-        }
-
         Path target = file.toPath().toAbsolutePath();
         Path parent = target.getParent();
         Files.createDirectories(parent);
@@ -179,8 +170,17 @@ public class WorldDataSaver implements IThreadedFileIO {
                 Files.setPosixFilePermissions(temporary, Files.getPosixFilePermissions(target));
             }
             try (FileOutputStream output = new FileOutputStream(temporary.toFile())) {
-                output.write(bytes.toByteArray());
-                output.getFD().sync();
+                if (compressed) {
+                    CompressedStreamTools.writeCompressed(data, output);
+                } else {
+                    try (DataOutputStream stream = new DataOutputStream(new BufferedOutputStream(output))) {
+                        CompressedStreamTools.write(data, stream);
+                    }
+                }
+            }
+            // writeCompressed closes the stream it is given, so sync through a fresh handle.
+            try (FileChannel channel = FileChannel.open(temporary, StandardOpenOption.WRITE)) {
+                channel.force(true);
             }
             if (backup && Files.exists(target)) {
                 oldTemporary = Files.createTempFile(parent, "." + file.getName() + "-old-", ".tmp");
