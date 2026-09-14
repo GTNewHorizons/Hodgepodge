@@ -39,8 +39,7 @@ public class MixinTileEntityFurnace_FixFuelOverflow {
                     value = "FIELD",
                     target = "Lnet/minecraft/tileentity/TileEntityFurnace;furnaceBurnTime:I",
                     opcode = Opcodes.PUTFIELD))
-    private void hodgepodge$readBurnTime(TileEntityFurnace instance, int value,
-            @Local(argsOnly = true) NBTTagCompound compound) {
+    private void hodgepodge$readBurnTime(TileEntityFurnace instance, int value, NBTTagCompound compound) {
         instance.furnaceBurnTime = compound.getInteger("BurnTime");
     }
 }
