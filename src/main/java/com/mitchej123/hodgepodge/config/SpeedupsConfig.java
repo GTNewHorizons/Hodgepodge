@@ -8,8 +8,7 @@ import com.gtnewhorizon.gtnhlib.config.Config;
 @Config.RequiresMcRestart
 public class SpeedupsConfig {
 
-    // Minecraft
-
+    // region Minecraft
     @Config.Comment({
             "Improves the performance of items significantly by not checking collisions against other entities for them. (Adapted from FalseTweaks)" })
     @Config.DefaultBoolean(true)
@@ -246,6 +245,12 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean optimizeWavefrontObjectModelLoading;
+
+    @Config.Comment("Avoid String.format overhead when resolving resource pack paths")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean optimizeResourcePackPath;
+    // endregion
 
     // Biomes O' Plenty
 

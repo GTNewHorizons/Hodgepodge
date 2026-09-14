@@ -8,6 +8,7 @@ import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.MemoryConfig;
+import com.mitchej123.hodgepodge.config.SoundConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 
@@ -106,6 +107,17 @@ public enum Mixins implements IMixins {
             .addServerMixins("minecraft.MixinNetHandlerLoginServer_OfflineMode")
             .setApplyIf(() -> FixesConfig.fixNetHandlerLoginServerOfflineMode)
             .setPhase(Phase.EARLY)),
+    FIX_PLAYER_CLONING_ON_RECONNECT(new MixinBuilder("Wait for an earlier session for the same UUID to leave the world before accepting a login")
+            // Thermos moves logout saving/removal to disconnect(), outside the vanilla hook targets.
+            .addExcludedMod(TargetedMod.BUKKIT)
+            .addCommonMixins(
+                    "minecraft.MixinNetHandlerLoginServer_AwaitPreviousSession",
+                    "minecraft.MixinNetHandlerPlayServer_PreWorldDisconnect",
+                    "minecraft.MixinServerConfigurationManager_LoginSessionSave",
+                    "fml.MixinNetworkDispatcher_LoginSessionState",
+                    "minecraft.MixinNetworkSystem_LoginSessionIndex")
+            .setApplyIf(() -> FixesConfig.fixPlayerCloningOnReconnect)
+            .setPhase(Phase.EARLY)),
     FIX_INVENTORY_POTION_EFFECT_NUMERALS(new MixinBuilder("Fix potion effects level not displaying properly above a certain value")
             .addClientMixins(
                     "minecraft.MixinInventoryEffectRenderer_FixPotionEffectNumerals",
@@ -145,6 +157,12 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinSoundManagerLibraryLoader")
             .setApplyIf(() -> FixesConfig.logarithmicVolumeControl)
             .setPhase(Phase.EARLY)),
+    REPLACE_ARCHAICFIX_SOUND_DEVICE_RECOVERY(new MixinBuilder()
+            .addClientMixins("archaicfix.MixinSoundDeviceThread")
+            .addRequiredMod(TargetedMod.ARCHAICFIX)
+            .addRequiredMod(TargetedMod.LWJGL3IFY)
+            .setApplyIf(() -> SoundConfig.manageOutputDevicesAtStartup)
+            .setPhase(Phase.LATE)),
     THROTTLE_ITEMPICKUPEVENT(new MixinBuilder("Throttle Item Pickup Event")
             .addCommonMixins("minecraft.MixinEntityPlayer_ThrottlePickup")
             .setApplyIf(() -> FixesConfig.throttleItemPickupEvent)
@@ -357,6 +375,12 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinEntityLivingDrop")
             .setApplyIf(() -> TweaksConfig.dropPickedLootOnDespawn)
             .setPhase(Phase.EARLY)),
+    FIX_UNLOCALIZED_DISCONNECT_MESSAGES(new MixinBuilder("Localize vanilla disconnect messages")
+            .addCommonMixins(
+                    "minecraft.MixinNetHandlerPlayServer_LocalizedKick",
+                    "minecraft.MixinNetHandlerLoginServer_LocalizedKick")
+            .setApplyIf(() -> FixesConfig.fixUnlocalizedDisconnectMessages)
+            .setPhase(Phase.EARLY)),
     FIX_HOPPER_HIT_BOX(new MixinBuilder("Fix Vanilla Hopper hit box")
             .addCommonMixins("minecraft.MixinBlockHopper")
             .setApplyIf(() -> FixesConfig.fixHopperHitBox)
@@ -402,6 +426,10 @@ public enum Mixins implements IMixins {
     FIX_HUGE_CHAT_KICK(new MixinBuilder()
             .addCommonMixins("minecraft.packets.MixinS02PacketChat_FixHugeChatKick")
             .setApplyIf(() -> FixesConfig.fixHugeChatKick)
+            .setPhase(Phase.EARLY)),
+    FIX_HANDSHAKE_STARTING_KICK_TRANSLATABLE(new MixinBuilder("Send a translatable message instead of a hardcoded English one when rejecting logins while the server is still starting")
+            .addCommonMixins("minecraft.MixinNetHandlerHandshakeTCP_TranslatableKick")
+            .setApplyIf(() -> FixesConfig.fixHandshakeStartingKickTranslatable)
             .setPhase(Phase.EARLY)),
     FIX_BOGUS_INTEGRATED_SERVER_NPE(new MixinBuilder("Fix bogus FMLProxyPacket NPEs on integrated server crashes")
             .addCommonMixins(
@@ -1185,6 +1213,22 @@ public enum Mixins implements IMixins {
     FIX_BLOCK_HIT_DELAY(new MixinBuilder()
             .addClientMixins("minecraft.MixinPlayerControllerMP_BlockHitDelay")
             .setApplyIf(() -> FixesConfig.fixBlockHitDelay)
+            .setPhase(Phase.EARLY)),
+    OPTIMIZE_RESOURCE_PACK_PATH(new MixinBuilder("Avoid String.format overhead when resolving resource pack paths")
+            .addClientMixins("minecraft.MixinAbstractResourcePack")
+            .setApplyIf(() -> SpeedupsConfig.optimizeResourcePackPath)
+            .setPhase(Phase.EARLY)),
+    FURNACE_SAVE_ITEM_BURN_TIME_TO_NBT(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinFurnaceSaveItemBurnTimeToNBT")
+            .setApplyIf(() -> FixesConfig.furnaceSaveItemBurnTimeToNBT)
+            .setPhase(Phase.EARLY)),
+    TRACK_INCOMING_PACKETS(new MixinBuilder("Track incoming packets for /packetstats")
+            .addClientMixins("debug.MixinNetworkManager_TrackIncomingPackets")
+            .setApplyIf(() -> DebugConfig.trackIncomingPackets)
+            .setPhase(Phase.EARLY)),
+    CHANGE_RECEIVED_PACKET_COUNT_LIMIT_TO_TIME_LIMIT(new MixinBuilder("Change received packet count limit to time limit")
+            .addClientMixins("minecraft.packets.MixinNetworkManager_ReceivedProcessingLimit")
+            .setApplyIf(() -> FixesConfig.changeReceivedPacketCountLimitToTimeLimit)
             .setPhase(Phase.EARLY)),
     // endregion
 
@@ -1976,6 +2020,11 @@ public enum Mixins implements IMixins {
     BIBLIOCRAFT_ARMOR_STAND_BREAK_FIX(new MixinBuilder("Bibliocraft Armor Stand on-break-block fix")
             .addCommonMixins("bibliocraft.MixinBlockArmorStand_CheckedBreak")
             .setApplyIf(() -> FixesConfig.fixBibliocraftArmorStandBreak)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
+            .setPhase(Phase.LATE)),
+    BIBLIOCRAFT_ARMOR_STAND_MARK_DIRTY(new MixinBuilder("Mark the Bibliocraft Armor Stand to save when its inventory is modified")
+            .addCommonMixins("bibliocraft.MixinTileEntityArmorStand_MarkDirty")
+            .setApplyIf(() -> FixesConfig.bibliocraftArmorStandMarkDirty)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
     BIBLIOCRAFT_PATH_SANITIZATION_FIX(new MixinBuilder("Path sanitization fix")

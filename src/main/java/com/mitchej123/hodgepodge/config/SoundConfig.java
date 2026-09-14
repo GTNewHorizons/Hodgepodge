@@ -137,6 +137,28 @@ public class SoundConfig {
     @Config.DefaultEnum("DEFAULT")
     public static Tristate outputLimiter;
 
+    @Config.Comment({
+            "Let Hodgepodge manage the OpenAL output device, including following system-default changes and recovering from disconnects.",
+            "Requires lwjgl3ify and ALC_SOFT_reopen_device; otherwise this is ignored. Restart after changing this option." })
+    @Config.RequiresMcRestart
+    public static OutputDeviceManagement outputDeviceManagement = new OutputDeviceManagement();
+
+    @Config.Ignore
+    public static boolean manageOutputDevicesAtStartup;
+
+    public static class OutputDeviceManagement {
+
+        @Config.Comment("Enables output device selection and recovery.")
+        @Config.DefaultBoolean(true)
+        public boolean enabled;
+    }
+
+    @Config.Comment({
+            "OpenAL output device name. Empty follows the system default and switches when the default changes.",
+            "Use the in-game Sound Enhancements menu instead of editing this value by hand." })
+    @Config.DefaultString("")
+    public static String outputDevice;
+
     public static void apply() {
         SoundSystemConfig.setNumberNormalChannels(numberNormalChannels);
         SoundSystemConfig.setNumberStreamingChannels(numberStreamingChannels);

@@ -149,6 +149,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixHugeChatKick;
 
+    @Config.Comment("Send a translatable message instead of a hardcoded English one when rejecting logins while the server is still starting")
+    @Config.DefaultBoolean(true)
+    public static boolean fixHandshakeStartingKickTranslatable;
+
     @Config.Comment("Fix the bug that makes fireballs stop moving when chunk unloads")
     @Config.DefaultBoolean(true)
     public static boolean fixImmobileFireballs;
@@ -172,6 +176,11 @@ public class FixesConfig {
     @Config.Comment("Allows the server to assign the logged in UUID to the same username when online_mode is false")
     @Config.DefaultBoolean(true)
     public static boolean fixNetHandlerLoginServerOfflineMode;
+
+    @Config.Comment("Hold back a login until any earlier session for the same UUID has finished leaving the world, "
+            + "instead of letting both exist at once and duplicating the player's inventory")
+    @Config.DefaultBoolean(true)
+    public static boolean fixPlayerCloningOnReconnect;
 
     @Config.Comment("Prevents crash if server sends itemStack with index larger than client's container")
     @Config.DefaultBoolean(true)
@@ -241,6 +250,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixRconThreading;
 
+    @Config.Comment("Fix vanilla disconnect messages being sent as hardcoded English text instead of translation keys")
+    @Config.DefaultBoolean(true)
+    public static boolean fixUnlocalizedDisconnectMessages;
+
     @Config.Comment("Fix exiting fullscreen when you tab out of the game")
     @Config.DefaultBoolean(true)
     public static boolean fixUnfocusedFullscreen;
@@ -287,6 +300,15 @@ public class FixesConfig {
     @Config.Comment("Spigot-style extended chunk format to remove the 2MB chunk size limit")
     @Config.DefaultBoolean(true)
     public static boolean remove2MBChunkLimit;
+
+    @Config.Comment("Change incoming packet processing from a fixed 1001 packet limit to a time limit allowing for potentially more packets to be processed")
+    @Config.DefaultBoolean(true)
+    public static boolean changeReceivedPacketCountLimitToTimeLimit;
+
+    @Config.Comment("Max time spent processing received packets in nanoseconds (1ms = 1_000_000ns)")
+    @Config.RangeInt(min = 1_000, max = 50_000_000)
+    @Config.DefaultInt(5_000_000)
+    public static int receivedPacketTimeLimit;
 
     @Config.Comment("Disable the creative search tab since it can be very laggy in large modpacks")
     @Config.DefaultBoolean(true)
@@ -556,6 +578,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixBlockHitDelay;
+
+    @Config.Comment("Make the Furnace save the max burn time of the current fuel to NBT, so WAILA can determine the percent fuel remaining.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean furnaceSaveItemBurnTimeToNBT;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -600,6 +627,12 @@ public class FixesConfig {
     @Config.Comment("Fix Bibliocraft armor stands breaking their other half without checking if the other half is an Armor Stand.")
     @Config.DefaultBoolean(true)
     public static boolean fixBibliocraftArmorStandBreak;
+
+    @Config.Comment("""
+            Mark the Bibliocraft Armor Stand to save when its inventory is modified without going through its GUI (hoppers or shift-right-clicking),
+            preventing the items on the armor stand from rolling back on save (and potentially duplicating / voiding.)""")
+    @Config.DefaultBoolean(true)
+    public static boolean bibliocraftArmorStandMarkDirty;
 
     @Config.Comment("Fix Bibliocraft path sanitization")
     @Config.DefaultBoolean(true)

@@ -50,9 +50,17 @@ hodgepodge.soundsmenu.downmix_stereo=Stereo Downmix
 hodgepodge.soundsmenu.downmix_stereo.tooltip=Converts positional stereo sound effects to mono as they load. This halves their decoded memory and lets older OpenAL position them in 3D. Streaming music and records are unchanged. Refresh sounds to rebuild cached audio.
 hodgepodge.soundsmenu.spatialize_stereo=Stereo Spatialization
 hodgepodge.soundsmenu.spatialize_stereo.tooltip=Keeps positional sounds stereo while allowing newer OpenAL to place them in 3D. Requires lwjgl3ify and takes priority over Stereo Downmix when supported. Refresh sounds after changing it.
+hodgepodge.soundsmenu.output_device=Output Device
+hodgepodge.soundsmenu.output_device.title=Select Output Device
+hodgepodge.soundsmenu.output_device.default=System Default
+hodgepodge.soundsmenu.output_device.tooltip=Selects an OpenAL playback device. System Default follows operating-system changes. Requires lwjgl3ify and modern OpenAL Soft.
+hodgepodge.soundsmenu.output_device.failed=Could not switch to that output device.
 hodgepodge.soundsmenu.default=DEFAULT
 hodgepodge.bed_respawn.msg=Respawn point set
 hodgepodge.menu.mod_options=Mod Options...
+
+hodgepodge.chat.huge_message.logged=§cSomeone tried to send you a huge chat message that would kick you. Ask your server admin to see details. Please provide these info while reporting: Incident ID %s§c. Start of original message: %s
+hodgepodge.chat.huge_message.unlogged=§cSomeone tried to send you a huge chat message that would kick you. Ask your server admin to turn on logHugeChat in HodgePodge if you cannot identify the source of this and this keeps happening. Start of original message: %s
 
 bettermodlist.sort.normal=Normal
 bettermodlist.sort.a_to_z=A-Z
@@ -93,3 +101,22 @@ hodgepodge.debug.help.9=F3 + S/T = Reload resource packs
 hodgepodge.debug.help.etfuturum=F3 + F4 = [Et-Futurum-Requiem] Open game mode switcher
 hodgepodge.debug.help.nei.1=%s = [NEI] Open Mob Spawning Overlay
 hodgepodge.debug.help.nei.2=%s = [NEI] Open Chunk Overlay
+
+hodgepodge.disconnect.server_shutdown=Server closed
+hodgepodge.disconnect.idle=You have been idle for too long!
+hodgepodge.disconnect.illegal_stance=Illegal stance
+hodgepodge.disconnect.illegal_position=Illegal position
+hodgepodge.disconnect.flying=Flying is not enabled on this server
+hodgepodge.disconnect.illegal_characters=Illegal characters in chat
+hodgepodge.disconnect.invalid_entity=Attempting to attack an invalid entity
+hodgepodge.disconnect.hardcore_death=You have died. Game over, man, it's game over!
+hodgepodge.disconnect.logged_in_elsewhere=You logged in from another location
+hodgepodge.disconnect.not_whitelisted=You are not white-listed on this server!
+hodgepodge.disconnect.server_full=The server is full!
+hodgepodge.disconnect.name_taken=That name is already taken.
+hodgepodge.disconnect.login_timeout=Took too long to log in
+hodgepodge.disconnect.banned=You are banned from this server.
+hodgepodge.disconnect.ip_banned=You have been IP banned.
+hodgepodge.disconnect.server_starting=Server is still starting! Please wait before reconnecting.
+hodgepodge.disconnect.session_cleanup_pending=Your previous session is still being cleaned up, please reconnect in a moment
+hodgepodge.disconnect.session_cleanup_failed=Your previous session could not be cleaned up safely. Please contact a server administrator.
