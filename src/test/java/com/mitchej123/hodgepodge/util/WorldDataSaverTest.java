@@ -116,25 +116,6 @@ class WorldDataSaverTest {
     void flushWaitsForQueuedWorkToFinish() throws Exception {
         CountDownLatch started = new CountDownLatch(1);
         CountDownLatch release = new CountDownLatch(1);
-        ThreadedFileIOBase.threadedIOInstance.queueIO(new IThreadedFileIO() {
-
-            private boolean done;
-
-            @Override
-            public boolean writeNextIO() {
-                if (done) return false;
-                started.countDown();
-                try {
-                    release.await();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-                done = true;
-                return true;
-            }
-        });
-        assertTrue(started.await(5, TimeUnit.SECONDS));
-
         AtomicBoolean returned = new AtomicBoolean();
         CountDownLatch flushing = new CountDownLatch(1);
         Thread flusher = new Thread(() -> {
@@ -144,15 +125,38 @@ class WorldDataSaverTest {
                 returned.set(true);
             } catch (Exception ignored) {}
         });
-        flusher.start();
         try {
+            ThreadedFileIOBase.threadedIOInstance.queueIO(new IThreadedFileIO() {
+
+                private boolean done;
+
+                @Override
+                public boolean writeNextIO() {
+                    if (done) return false;
+                    started.countDown();
+                    try {
+                        release.await();
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                    done = true;
+                    return true;
+                }
+            });
+            assertTrue(started.await(5, TimeUnit.SECONDS));
+            flusher.start();
             assertTrue(flushing.await(5, TimeUnit.SECONDS));
             flusher.join(200);
             assertTrue(flusher.isAlive(), "flush returned while work was still queued");
         } finally {
             release.countDown();
+            flusher.join(TimeUnit.SECONDS.toMillis(5));
+            if (flusher.isAlive()) {
+                flusher.interrupt();
+                flusher.join(TimeUnit.SECONDS.toMillis(5));
+            }
         }
-        flusher.join(TimeUnit.SECONDS.toMillis(5));
+        assertFalse(flusher.isAlive());
         assertTrue(returned.get());
     }
 
