@@ -62,6 +62,40 @@ class WorldDataSaverTest {
     }
 
     @Test
+    void replacementIsPrivateWhileBeingSerialized() throws Exception {
+        Path target = Files.createFile(temporary.resolve("private.dat"));
+        org.junit.jupiter.api.Assumptions.assumeTrue(Files.getFileStore(target).supportsFileAttributeView("posix"));
+        java.util.Set<java.nio.file.attribute.PosixFilePermission> permissions = java.nio.file.attribute.PosixFilePermissions
+                .fromString("r--------");
+        Files.setPosixFilePermissions(target, permissions);
+        AtomicBoolean inspected = new AtomicBoolean();
+        NBTTagCompound data = new NBTTagCompound() {
+
+            @Override
+            public byte getId() {
+                try (java.util.stream.Stream<Path> files = Files.list(temporary)) {
+                    Path staged = files.filter(path -> path.getFileName().toString().endsWith(".tmp")).findFirst()
+                            .get();
+                    assertEquals(
+                            java.nio.file.attribute.PosixFilePermissions.fromString("rw-------"),
+                            Files.getPosixFilePermissions(staged));
+                    inspected.set(true);
+                } catch (IOException e) {
+                    throw new AssertionError(e);
+                }
+                return super.getId();
+            }
+        };
+        data.setString("value", "private");
+        for (boolean compressed : new boolean[] { false, true }) {
+            inspected.set(false);
+            WorldDataSaver.writeData(target.toFile(), data, compressed, false);
+            assertTrue(inspected.get());
+            assertEquals(permissions, Files.getPosixFilePermissions(target));
+        }
+    }
+
+    @Test
     void backupReplacementFailureKeepsTheTargetAndClearsTemporaries() throws Exception {
         Path directory = Files.createDirectory(temporary.resolve("backup-failure"));
         Path target = directory.resolve("data.dat");
