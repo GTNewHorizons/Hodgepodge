@@ -238,6 +238,72 @@ class LoginSessionLifecycleTest {
             if (loaderLookup != null) loaderLookup.close();
         }
 
+        public void testChunkWorkSubmittedDuringQueueRetirement() throws Exception {
+            java.nio.file.Path root = java.nio.file.Files.createTempDirectory("chunk-queue-race-");
+            java.util.concurrent.CountDownLatch idle = new java.util.concurrent.CountDownLatch(1);
+            java.util.concurrent.CountDownLatch release = new java.util.concurrent.CountDownLatch(1);
+            class Loader extends net.minecraft.world.chunk.storage.AnvilChunkLoader {
+
+                private boolean paused;
+
+                Loader() {
+                    super(root.toFile());
+                }
+
+                void enqueue(int x) {
+                    net.minecraft.nbt.NBTTagCompound tag = new net.minecraft.nbt.NBTTagCompound();
+                    tag.setInteger("value", x);
+                    addChunkToPending(new net.minecraft.world.ChunkCoordIntPair(x, 0), tag);
+                }
+
+                @Override
+                public boolean writeNextIO() {
+                    boolean more = super.writeNextIO();
+                    if (!more && !paused) {
+                        paused = true;
+                        idle.countDown();
+                        try {
+                            if (!release.await(10, java.util.concurrent.TimeUnit.SECONDS))
+                                throw new AssertionError("Producer timed out");
+                        } catch (InterruptedException e) {
+                            throw new AssertionError(e);
+                        }
+                    }
+                    return more;
+                }
+            }
+            Loader loader = new Loader();
+            try {
+                loader.enqueue(0);
+                try {
+                    assertTrue(idle.await(10, java.util.concurrent.TimeUnit.SECONDS));
+                    loader.enqueue(1);
+                } finally {
+                    release.countDown();
+                }
+                net.minecraft.world.storage.ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+                // Also cover resubmission after a completed drain.
+                loader.enqueue(2);
+                net.minecraft.world.storage.ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+                for (int x = 0; x < 3; x++) {
+                    try (java.io.DataInputStream input = net.minecraft.world.chunk.storage.RegionFileCache
+                            .getChunkInputStream(root.toFile(), x, 0)) {
+                        org.junit.jupiter.api.Assertions.assertNotNull(input, "Missing chunk " + x);
+                        assertEquals(x, net.minecraft.nbt.CompressedStreamTools.read(input).getInteger("value"));
+                    }
+                }
+            } finally {
+                release.countDown();
+                net.minecraft.world.chunk.storage.RegionFileCache.clearRegionFileReferences();
+                try (java.util.stream.Stream<java.nio.file.Path> paths = java.nio.file.Files.walk(root)) {
+                    for (java.nio.file.Path path : paths.sorted(java.util.Comparator.reverseOrder())
+                            .collect(java.util.stream.Collectors.toList())) {
+                        java.nio.file.Files.deleteIfExists(path);
+                    }
+                }
+            }
+        }
+
         public void testWorldDataFlushAndCrashShutdown() throws Exception {
             java.nio.file.Path root = java.nio.file.Files.createTempDirectory("hodgepodge-world-save-");
             java.nio.file.Path file = root.resolve("data.dat");

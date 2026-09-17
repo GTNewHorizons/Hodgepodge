@@ -5,6 +5,7 @@
   "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinAnvilChunkLoader_SaveQueue",
     "MixinMinecraftServer_WorldDataSave",
     "MixinCommandSaveAll_WorldDataSave"
   ]
