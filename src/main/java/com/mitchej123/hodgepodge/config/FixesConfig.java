@@ -8,6 +8,10 @@ public class FixesConfig {
 
     /* ====== Minecraft fixes start ===== */
 
+    @Config.Comment("Prevent pending chunk saves from losing their place in the file IO queue")
+    @Config.DefaultBoolean(true)
+    public static boolean fixChunkSaveQueueRace;
+
     @Config.Comment("Fix Vanilla IOOBE when rendering chunks at a distance larger than 16")
     @Config.DefaultBoolean(true)
     public static boolean fixVanillaIOOBERenderDistance;

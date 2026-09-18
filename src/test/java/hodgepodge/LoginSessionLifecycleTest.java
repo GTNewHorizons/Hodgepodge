@@ -126,6 +126,7 @@ class LoginSessionLifecycleTest {
         MixinBootstrap.init();
         MixinExtrasBootstrap.init();
         Mixins.addConfiguration("mixins.hodgepodge.login-test.json");
+        Mixins.addConfiguration("mixins.hodgepodge.world-save-test.json");
         Method phase = MixinEnvironment.class.getDeclaredMethod("gotoPhase", MixinEnvironment.Phase.class);
         phase.setAccessible(true);
         phase.invoke(null, MixinEnvironment.Phase.DEFAULT);
@@ -235,6 +236,141 @@ class LoginSessionLifecycleTest {
             if (serverLookup != null) serverLookup.close();
             if (fmlLookup != null) fmlLookup.close();
             if (loaderLookup != null) loaderLookup.close();
+        }
+
+        public void testChunkWorkSubmittedDuringQueueRetirement() throws Exception {
+            checkChunkQueueRetirement(new java.util.concurrent.CountDownLatch(1), false);
+        }
+
+        public void testChunkQueueCallbackTimeoutKeepsWorkerAlive() throws Exception {
+            java.util.concurrent.CountDownLatch release = mock(java.util.concurrent.CountDownLatch.class);
+            when(release.await(10, java.util.concurrent.TimeUnit.SECONDS)).thenReturn(false);
+            checkChunkQueueRetirement(release, true);
+        }
+
+        public void testChunkQueueCallbackInterruptionKeepsWorkerAlive() throws Exception {
+            java.util.concurrent.CountDownLatch release = mock(java.util.concurrent.CountDownLatch.class);
+            when(release.await(10, java.util.concurrent.TimeUnit.SECONDS)).thenThrow(new InterruptedException());
+            checkChunkQueueRetirement(release, true);
+        }
+
+        private void checkChunkQueueRetirement(java.util.concurrent.CountDownLatch release, boolean expectFailure)
+                throws Exception {
+            java.nio.file.Path root = java.nio.file.Files.createTempDirectory("chunk-queue-race-");
+            java.util.concurrent.CountDownLatch idle = new java.util.concurrent.CountDownLatch(1);
+            java.util.concurrent.atomic.AtomicReference<Throwable> callbackFailure = new java.util.concurrent.atomic.AtomicReference<>();
+            class Loader extends net.minecraft.world.chunk.storage.AnvilChunkLoader {
+
+                private boolean paused;
+
+                Loader() {
+                    super(root.toFile());
+                }
+
+                void enqueue(int x) {
+                    net.minecraft.nbt.NBTTagCompound tag = new net.minecraft.nbt.NBTTagCompound();
+                    tag.setInteger("value", x);
+                    addChunkToPending(new net.minecraft.world.ChunkCoordIntPair(x, 0), tag);
+                }
+
+                @Override
+                public boolean writeNextIO() {
+                    boolean more = super.writeNextIO();
+                    if (!more && !paused) {
+                        paused = true;
+                        idle.countDown();
+                        try {
+                            if (!release.await(10, java.util.concurrent.TimeUnit.SECONDS))
+                                callbackFailure.set(new AssertionError("Producer timed out"));
+                        } catch (InterruptedException e) {
+                            callbackFailure.set(e);
+                        }
+                    }
+                    return more;
+                }
+            }
+            Loader loader = new Loader();
+            try {
+                loader.enqueue(0);
+                try {
+                    assertTrue(idle.await(10, java.util.concurrent.TimeUnit.SECONDS));
+                    loader.enqueue(1);
+                } finally {
+                    release.countDown();
+                }
+                net.minecraft.world.storage.ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+                if (expectFailure) {
+                    org.junit.jupiter.api.Assertions.assertNotNull(callbackFailure.get());
+                } else {
+                    assertNull(callbackFailure.get(), () -> "I/O callback failed: " + callbackFailure.get());
+                }
+                // Also cover resubmission after a completed drain.
+                loader.enqueue(2);
+                net.minecraft.world.storage.ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+                for (int x = 0; x < 3; x++) {
+                    try (java.io.DataInputStream input = net.minecraft.world.chunk.storage.RegionFileCache
+                            .getChunkInputStream(root.toFile(), x, 0)) {
+                        org.junit.jupiter.api.Assertions.assertNotNull(input, "Missing chunk " + x);
+                        assertEquals(x, net.minecraft.nbt.CompressedStreamTools.read(input).getInteger("value"));
+                    }
+                }
+            } finally {
+                release.countDown();
+                net.minecraft.world.storage.ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+                net.minecraft.world.chunk.storage.RegionFileCache.clearRegionFileReferences();
+                try (java.util.stream.Stream<java.nio.file.Path> paths = java.nio.file.Files.walk(root)) {
+                    for (java.nio.file.Path path : paths.sorted(java.util.Comparator.reverseOrder())
+                            .collect(java.util.stream.Collectors.toList())) {
+                        java.nio.file.Files.deleteIfExists(path);
+                    }
+                }
+            }
+        }
+
+        public void testWorldDataFlushAndCrashShutdown() throws Exception {
+            java.nio.file.Path root = java.nio.file.Files.createTempDirectory("hodgepodge-world-save-");
+            java.nio.file.Path file = root.resolve("data.dat");
+            java.nio.file.Path blocked = root.resolve("map.dat");
+            java.nio.file.Path blocker = blocked.resolve("keep");
+            com.mitchej123.hodgepodge.util.WorldDataSaver saver = com.mitchej123.hodgepodge.util.WorldDataSaver.INSTANCE;
+            net.minecraft.nbt.NBTTagCompound data = new net.minecraft.nbt.NBTTagCompound();
+            data.setString("value", "saved");
+            server.worldServers = new WorldServer[] { world };
+            try {
+                saver.saveData(file.toFile(), data, false, false);
+                new net.minecraft.command.server.CommandSaveAll()
+                        .processCommand(mock(net.minecraft.command.ICommandSender.class), new String[] { "flush" });
+                assertEquals("saved", net.minecraft.nbt.CompressedStreamTools.read(file.toFile()).getString("value"));
+
+                java.nio.file.Files.createDirectory(blocked);
+                java.nio.file.Files.write(blocker, new byte[] { 1 });
+                saver.saveData(blocked.toFile(), data, false, false);
+                assertThrows(
+                        net.minecraft.command.CommandException.class,
+                        () -> new net.minecraft.command.server.CommandSaveAll().processCommand(
+                                mock(net.minecraft.command.ICommandSender.class),
+                                new String[] { "flush" }));
+                org.mockito.Mockito.doThrow(new IllegalStateException("injected shutdown failure")).when(server)
+                        .stopServer();
+                doCallRealMethod().when(server).run();
+                server.run();
+                java.nio.file.Files.delete(blocker);
+                java.nio.file.Files.delete(blocked);
+                net.minecraft.nbt.NBTTagCompound restored = new net.minecraft.nbt.NBTTagCompound();
+                restored.setString("value", "restored");
+                net.minecraft.nbt.CompressedStreamTools.write(restored, blocked.toFile());
+                saver.saveData(file.toFile(), data, false, false);
+                saver.flush();
+                assertEquals(
+                        "restored",
+                        net.minecraft.nbt.CompressedStreamTools.read(blocked.toFile()).getString("value"));
+            } finally {
+                saver.closeSession();
+                if (java.nio.file.Files.isDirectory(blocked)) java.nio.file.Files.deleteIfExists(blocker);
+                java.nio.file.Files.deleteIfExists(blocked);
+                java.nio.file.Files.deleteIfExists(file);
+                java.nio.file.Files.delete(root);
+            }
         }
 
         @SubscribeEvent
