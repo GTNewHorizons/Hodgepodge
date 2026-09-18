@@ -239,9 +239,26 @@ class LoginSessionLifecycleTest {
         }
 
         public void testChunkWorkSubmittedDuringQueueRetirement() throws Exception {
+            checkChunkQueueRetirement(new java.util.concurrent.CountDownLatch(1), false);
+        }
+
+        public void testChunkQueueCallbackTimeoutKeepsWorkerAlive() throws Exception {
+            java.util.concurrent.CountDownLatch release = mock(java.util.concurrent.CountDownLatch.class);
+            when(release.await(10, java.util.concurrent.TimeUnit.SECONDS)).thenReturn(false);
+            checkChunkQueueRetirement(release, true);
+        }
+
+        public void testChunkQueueCallbackInterruptionKeepsWorkerAlive() throws Exception {
+            java.util.concurrent.CountDownLatch release = mock(java.util.concurrent.CountDownLatch.class);
+            when(release.await(10, java.util.concurrent.TimeUnit.SECONDS)).thenThrow(new InterruptedException());
+            checkChunkQueueRetirement(release, true);
+        }
+
+        private void checkChunkQueueRetirement(java.util.concurrent.CountDownLatch release, boolean expectFailure)
+                throws Exception {
             java.nio.file.Path root = java.nio.file.Files.createTempDirectory("chunk-queue-race-");
             java.util.concurrent.CountDownLatch idle = new java.util.concurrent.CountDownLatch(1);
-            java.util.concurrent.CountDownLatch release = new java.util.concurrent.CountDownLatch(1);
+            java.util.concurrent.atomic.AtomicReference<Throwable> callbackFailure = new java.util.concurrent.atomic.AtomicReference<>();
             class Loader extends net.minecraft.world.chunk.storage.AnvilChunkLoader {
 
                 private boolean paused;
@@ -264,9 +281,9 @@ class LoginSessionLifecycleTest {
                         idle.countDown();
                         try {
                             if (!release.await(10, java.util.concurrent.TimeUnit.SECONDS))
-                                throw new AssertionError("Producer timed out");
+                                callbackFailure.set(new AssertionError("Producer timed out"));
                         } catch (InterruptedException e) {
-                            throw new AssertionError(e);
+                            callbackFailure.set(e);
                         }
                     }
                     return more;
@@ -282,6 +299,11 @@ class LoginSessionLifecycleTest {
                     release.countDown();
                 }
                 net.minecraft.world.storage.ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+                if (expectFailure) {
+                    org.junit.jupiter.api.Assertions.assertNotNull(callbackFailure.get());
+                } else {
+                    assertNull(callbackFailure.get(), () -> "I/O callback failed: " + callbackFailure.get());
+                }
                 // Also cover resubmission after a completed drain.
                 loader.enqueue(2);
                 net.minecraft.world.storage.ThreadedFileIOBase.threadedIOInstance.waitForFinish();
@@ -294,6 +316,7 @@ class LoginSessionLifecycleTest {
                 }
             } finally {
                 release.countDown();
+                net.minecraft.world.storage.ThreadedFileIOBase.threadedIOInstance.waitForFinish();
                 net.minecraft.world.chunk.storage.RegionFileCache.clearRegionFileReferences();
                 try (java.util.stream.Stream<java.nio.file.Path> paths = java.nio.file.Files.walk(root)) {
                     for (java.nio.file.Path path : paths.sorted(java.util.Comparator.reverseOrder())
