@@ -8,6 +8,10 @@ public class FixesConfig {
 
     /* ====== Minecraft fixes start ===== */
 
+    @Config.Comment("Prevent pending chunk saves from losing their place in the file IO queue")
+    @Config.DefaultBoolean(true)
+    public static boolean fixChunkSaveQueueRace;
+
     @Config.Comment("Fix Vanilla IOOBE when rendering chunks at a distance larger than 16")
     @Config.DefaultBoolean(true)
     public static boolean fixVanillaIOOBERenderDistance;
@@ -112,6 +116,10 @@ public class FixesConfig {
     @Config.Comment("Fix vanilla issue where player sounds register as animal sounds")
     @Config.DefaultBoolean(true)
     public static boolean fixFriendlyCreatureSounds;
+
+    @Config.Comment("Fix vanilla furnaces' burn time overflowing from long burn time fuel")
+    @Config.DefaultBoolean(true)
+    public static boolean fixFuelOverflow;
 
     @Config.Comment("Fix Volume Slider is ineffective until reaching the lower end")
     @Config.DefaultBoolean(true)
