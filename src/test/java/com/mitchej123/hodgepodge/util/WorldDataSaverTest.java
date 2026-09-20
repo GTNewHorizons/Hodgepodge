@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -31,6 +32,44 @@ class WorldDataSaverTest {
 
     @TempDir
     Path temporary;
+
+    @Test
+    void unchangedChunkTicketsSkipWritesButRespectDiskChanges() throws Exception {
+        TestSaver saver = new TestSaver();
+        Path target = temporary.resolve("forcedchunks.dat");
+        saver.saveData(target.toFile(), tag("first"), false, false);
+        assertFalse(Files.exists(target), "saving must remain on the IO worker");
+        saver.flush();
+        byte[] original = Files.readAllBytes(target);
+        FileTime sentinel = FileTime.fromMillis(1_000_000L);
+        Files.setLastModifiedTime(target, sentinel);
+        saver.saveData(target.toFile(), tag("first"), false, false);
+        saver.flush();
+        assertEquals(sentinel, Files.getLastModifiedTime(target));
+        assertArrayEquals(original, Files.readAllBytes(target));
+
+        saver.saveData(target.toFile(), tag("other"), false, false);
+        saver.flush();
+        assertEquals("other", CompressedStreamTools.read(target.toFile()).getString("value"));
+
+        // The same queued data must repair shorter, longer and same-size different contents.
+        for (byte[] changed : new byte[][] { new byte[1], new byte[original.length + 1], original }) {
+            Files.write(target, changed);
+            saver.saveData(target.toFile(), tag("other"), false, false);
+            saver.flush();
+            assertEquals("other", CompressedStreamTools.read(target.toFile()).getString("value"));
+        }
+        Files.delete(target);
+        saver.saveData(target.toFile(), tag("other"), false, false);
+        saver.flush();
+        assertEquals("other", CompressedStreamTools.read(target.toFile()).getString("value"));
+
+        byte[] saved = Files.readAllBytes(target);
+        assertThrows(NullPointerException.class, () -> WorldDataSaver.writeData(target.toFile(), null, false, false));
+        assertArrayEquals(saved, Files.readAllBytes(target));
+        WorldDataSaver.writeData(target.toFile(), tag("other"), false, true);
+        assertArrayEquals(saved, Files.readAllBytes(temporary.resolve("forcedchunks.dat_old")));
+    }
 
     @Test
     void replacementPreservesPosixPermissions() throws Exception {
@@ -203,7 +242,7 @@ class WorldDataSaverTest {
     @Test
     void failedWriteIsRetriedOnTheNextSaveEvent() throws Exception {
         TestSaver saver = new TestSaver();
-        Path target = Files.createDirectory(temporary.resolve("blocked.dat"));
+        Path target = Files.createDirectory(temporary.resolve("forcedchunks.dat"));
         Path blocker = Files.write(target.resolve("keep"), new byte[] { 1 });
         saver.saveData(target.toFile(), tag("retried"), false, false);
         IThreadedFileIO first = saver.tasks.get(0);

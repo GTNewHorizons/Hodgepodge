@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge.util;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,6 +28,7 @@ import net.minecraft.world.storage.ThreadedFileIOBase;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.io.ByteSource;
 import com.mitchej123.hodgepodge.Common;
 
 public class WorldDataSaver implements IThreadedFileIO {
@@ -155,6 +157,23 @@ public class WorldDataSaver implements IThreadedFileIO {
 
     static void writeData(File file, NBTTagCompound data, boolean compressed, boolean backup) throws IOException {
         Path target = file.toPath().toAbsolutePath();
+        ByteArrayOutputStream serialized = null;
+        // Forge submits every dimension on every save, even when its chunk tickets have not changed.
+        // Compare on the IO worker against disk so deletions and restored files are respected.
+        if (!compressed && !backup && file.getName().equals("forcedchunks.dat")) {
+            serialized = new ByteArrayOutputStream();
+            try (DataOutputStream stream = new DataOutputStream(serialized)) {
+                CompressedStreamTools.write(data, stream);
+            }
+            boolean unchanged = false;
+            try {
+                unchanged = com.google.common.io.Files.asByteSource(file)
+                        .contentEquals(ByteSource.wrap(serialized.toByteArray()));
+            } catch (IOException ignored) {
+                // Missing or unreadable files still go through the normal write and retry path.
+            }
+            if (unchanged) return;
+        }
         Path parent = target.getParent();
         Files.createDirectories(parent);
         boolean posix = Files.getFileAttributeView(parent, PosixFileAttributeView.class) != null;
@@ -172,7 +191,9 @@ public class WorldDataSaver implements IThreadedFileIO {
         Path oldTemporary = null;
         try {
             try (FileOutputStream output = new FileOutputStream(temporary.toFile())) {
-                if (compressed) {
+                if (serialized != null) {
+                    serialized.writeTo(output);
+                } else if (compressed) {
                     CompressedStreamTools.writeCompressed(data, output);
                 } else {
                     try (DataOutputStream stream = new DataOutputStream(new BufferedOutputStream(output))) {
