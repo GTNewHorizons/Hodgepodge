@@ -20,7 +20,7 @@ public abstract class MixinGuiInventory_MoveCraftingGrid extends InventoryEffect
     @Unique
     private static final ResourceLocation hodgepodge$INVENTORY_TEXTURE = new ResourceLocation(
             "hodgepodge",
-            "textures/gui/inventoryNew.png");
+            "textures/gui/inventory_new.png");
 
     private MixinGuiInventory_MoveCraftingGrid(Container container) {
         super(container);
@@ -39,7 +39,8 @@ public abstract class MixinGuiInventory_MoveCraftingGrid extends InventoryEffect
             method = "drawGuiContainerForegroundLayer",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/FontRenderer;drawString(Ljava/lang/String;III)I"))
+                    target = "Lnet/minecraft/client/gui/FontRenderer;drawString(Ljava/lang/String;III)I",
+                    ordinal = 0))
     private int hodgepodge$moveCraftingTitle(FontRenderer fontRenderer, String text, int x, int y, int color,
             Operation<Integer> original) {
         return original.call(fontRenderer, text, x + 2, y - 4, color);

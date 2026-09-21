@@ -1178,8 +1178,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.clipPlayerRenderInGuis)
             .setPhase(Phase.EARLY)),
     MOVE_INVENTORY_CRAFTING_GRID(new MixinBuilder("Moves the player inventory crafting grid and uses a new inventory texture")
-            .addClientMixins("minecraft.MixinGuiInventory_MoveCraftingGrid")
-            .addCommonMixins("minecraft.MixinContainerPlayer_MoveCraftingGrid")
+            .addClientMixins("minecraft.MixinGuiInventory_MoveCraftingGrid", "minecraft.MixinContainerPlayer_MoveCraftingGrid")
             .setApplyIf(() -> TweaksConfig.moveInventoryCraftingGrid)
             .setPhase(Phase.EARLY)),
     FIX_NEGATIVE_LOOTING_CRASH(new MixinBuilder()
