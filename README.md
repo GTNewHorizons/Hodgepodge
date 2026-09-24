@@ -28,6 +28,7 @@ Hodgepodge is LGPL-3.
 
 ### Base Minecraft
 
+- Difficulty can be selected when creating a world and is saved per world, with a lock button in singleplayer options; dimensions can still override their live difficulty.
 - Enchantments and amplified potions use arabic numerals (1, 5, 9) instead of roman numerals (I, V, IX).
 - Minecraft Realms button is disabled.
 - Hostile mobs that pick up dropped items drop those items when despawning.

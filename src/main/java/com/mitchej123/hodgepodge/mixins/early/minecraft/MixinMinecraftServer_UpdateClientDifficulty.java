@@ -24,7 +24,6 @@ public abstract class MixinMinecraftServer_UpdateClientDifficulty {
                     opcode = Opcodes.PUTFIELD))
     private void informPlayerDifficulty(WorldServer instance, EnumDifficulty value, Operation<Void> original) {
         original.call(instance, value);
-
         NetworkHandler.instance.sendToDimension(new MessageChangeDifficulty(value), instance.provider.dimensionId);
     }
 }
