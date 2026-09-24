@@ -13,4 +13,5 @@ jobs:
     with:
       workspace: setupDecompWorkspace
       timeout: 180
+      external-deps-inclusion: true
     secrets: inherit

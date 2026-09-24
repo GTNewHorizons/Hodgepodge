@@ -27,8 +27,7 @@ public class MixinHttpUtil {
             serversocket = new ServerSocket(TweaksConfig.defaultLanPort);
         } catch (SecurityException securityException) {
             // Assign an automatically allocated port number
-            Common.log.warn(
-                    String.format("Designated port %s is already in use, using automatically assigned instead", port));
+            Common.log.warn("Designated port {} is already in use, using automatically assigned instead", port);
             serversocket = new ServerSocket(0);
         } finally {
             if (serversocket != null) {
