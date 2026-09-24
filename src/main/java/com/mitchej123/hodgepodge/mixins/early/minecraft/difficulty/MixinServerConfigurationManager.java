@@ -16,6 +16,7 @@ import com.mitchej123.hodgepodge.net.NetworkHandler;
 @Mixin(ServerConfigurationManager.class)
 public abstract class MixinServerConfigurationManager {
 
+    // Vanilla calls this on login, respawn, and dimension changes.
     @Inject(method = "updateTimeAndWeatherForPlayer", at = @At("TAIL"))
     private void syncDifficulty(EntityPlayerMP player, WorldServer world, CallbackInfo ci) {
         if (world.getWorldInfo() instanceof IWorldDifficulty info) {
