@@ -18,22 +18,18 @@ public abstract class MixinDerivedWorldInfo extends MixinWorldInfo {
     private WorldInfo theWorldInfo;
 
     @Override
-    public EnumDifficulty getDifficulty() {
-        return ((IWorldDifficulty) this.theWorldInfo).getDifficulty();
+    public EnumDifficulty hodgepodge$getDifficulty() {
+        return ((IWorldDifficulty) this.theWorldInfo).hodgepodge$getDifficulty();
     }
 
     @Override
-    public void setDifficulty(EnumDifficulty difficulty) {
-        // no-op — the overworld's WorldInfo is the authority
+    public void hodgepodge$setDifficulty(EnumDifficulty difficulty) {}
+
+    @Override
+    public boolean hodgepodge$isDifficultyLocked() {
+        return ((IWorldDifficulty) this.theWorldInfo).hodgepodge$isDifficultyLocked();
     }
 
     @Override
-    public boolean isDifficultyLocked() {
-        return ((IWorldDifficulty) this.theWorldInfo).isDifficultyLocked();
-    }
-
-    @Override
-    public void setDifficultyLocked(boolean locked) {
-        // no-op — lock state is owned by the overworld
-    }
+    public void hodgepodge$setDifficultyLocked(boolean locked) {}
 }

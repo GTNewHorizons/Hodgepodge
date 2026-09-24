@@ -14,24 +14,28 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class MessageServerDifficulty implements IPacket {
 
     public EnumDifficulty difficulty;
+    public EnumDifficulty savedDifficulty;
     public boolean locked;
 
     public MessageServerDifficulty() {}
 
-    public MessageServerDifficulty(EnumDifficulty difficulty, boolean locked) {
+    public MessageServerDifficulty(EnumDifficulty difficulty, EnumDifficulty savedDifficulty, boolean locked) {
         this.difficulty = difficulty;
+        this.savedDifficulty = savedDifficulty;
         this.locked = locked;
     }
 
     @Override
     public void encode(PacketBuffer buf) {
         buf.writeByte(difficulty.getDifficultyId());
+        buf.writeByte(savedDifficulty.getDifficultyId());
         buf.writeBoolean(locked);
     }
 
     @Override
     public void decode(PacketBuffer buf) {
         difficulty = EnumDifficulty.getDifficultyEnum(buf.readUnsignedByte());
+        savedDifficulty = EnumDifficulty.getDifficultyEnum(buf.readUnsignedByte());
         locked = buf.readBoolean();
     }
 
@@ -42,12 +46,11 @@ public class MessageServerDifficulty implements IPacket {
         if (mc.theWorld == null) return null;
 
         mc.theWorld.difficultySetting = difficulty;
-        mc.gameSettings.difficulty = difficulty;
 
-        // sync the client with the server
-        IWorldDifficulty pwd = (IWorldDifficulty) mc.theWorld.getWorldInfo();
-        pwd.setDifficulty(difficulty);
-        pwd.setDifficultyLocked(locked);
+        if (mc.theWorld.getWorldInfo() instanceof IWorldDifficulty worldInfo) {
+            worldInfo.hodgepodge$setDifficulty(savedDifficulty);
+            worldInfo.hodgepodge$setDifficultyLocked(locked);
+        }
 
         return null;
     }

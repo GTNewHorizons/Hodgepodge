@@ -17,62 +17,61 @@ import com.mitchej123.hodgepodge.mixins.interfaces.IWorldDifficulty;
 public abstract class MixinWorldInfo implements IWorldDifficulty {
 
     @Unique
-    private EnumDifficulty difficulty;
+    private EnumDifficulty hodgepodge$difficulty;
 
     @Unique
-    private boolean difficultyLocked;
+    private boolean hodgepodge$difficultyLocked;
 
     @Override
-    public EnumDifficulty getDifficulty() {
-        return this.difficulty;
+    public EnumDifficulty hodgepodge$getDifficulty() {
+        return this.hodgepodge$difficulty;
     }
 
     @Override
-    public void setDifficulty(EnumDifficulty difficulty) {
-        this.difficulty = difficulty;
+    public void hodgepodge$setDifficulty(EnumDifficulty difficulty) {
+        this.hodgepodge$difficulty = difficulty;
     }
 
     @Override
-    public boolean isDifficultyLocked() {
-        return this.difficultyLocked;
+    public boolean hodgepodge$isDifficultyLocked() {
+        return this.hodgepodge$difficultyLocked;
     }
 
     @Override
-    public void setDifficultyLocked(boolean locked) {
-        this.difficultyLocked = locked;
+    public void hodgepodge$setDifficultyLocked(boolean locked) {
+        this.hodgepodge$difficultyLocked = locked;
     }
 
-    // when creating a new world always default to normal
     @Inject(method = "<init>(Lnet/minecraft/world/WorldSettings;Ljava/lang/String;)V", at = @At("RETURN"))
     private void onNewWorld(WorldSettings settings, String name, CallbackInfo ci) {
-        this.difficulty = EnumDifficulty.NORMAL;
+        IWorldDifficulty source = (IWorldDifficulty) (Object) settings;
+        this.hodgepodge$difficulty = settings.getHardcoreEnabled() ? EnumDifficulty.HARD
+                : source.hodgepodge$getDifficulty();
+        this.hodgepodge$difficultyLocked = source.hodgepodge$isDifficultyLocked();
     }
 
     @Inject(method = "<init>(Lnet/minecraft/nbt/NBTTagCompound;)V", at = @At("RETURN"))
     private void onLoad(NBTTagCompound nbt, CallbackInfo ci) {
         if (nbt.hasKey("Difficulty", 99)) {
-            this.difficulty = EnumDifficulty.getDifficultyEnum(nbt.getByte("Difficulty"));
+            this.hodgepodge$difficulty = EnumDifficulty.getDifficultyEnum(nbt.getByte("Difficulty"));
         }
 
-        if (nbt.hasKey("DifficultyLocked", 1)) {
-            this.difficultyLocked = nbt.getBoolean("DifficultyLocked");
-        }
+        this.hodgepodge$difficultyLocked = nbt.getBoolean("DifficultyLocked");
     }
 
     @Inject(method = "<init>(Lnet/minecraft/world/storage/WorldInfo;)V", at = @At("RETURN"))
     private void onCopyConstructor(WorldInfo original, CallbackInfo ci) {
         IWorldDifficulty bridge = (IWorldDifficulty) original;
-        this.setDifficulty(bridge.getDifficulty());
-        this.setDifficultyLocked(bridge.isDifficultyLocked());
+        this.hodgepodge$difficulty = bridge.hodgepodge$getDifficulty();
+        this.hodgepodge$difficultyLocked = bridge.hodgepodge$isDifficultyLocked();
     }
 
     @Inject(method = "updateTagCompound", at = @At("TAIL"))
     private void onSave(NBTTagCompound nbt, NBTTagCompound playerNbt, CallbackInfo ci) {
-        if (this.difficulty != null) {
-            nbt.setByte("Difficulty", (byte) this.difficulty.getDifficultyId());
+        if (this.hodgepodge$difficulty != null) {
+            nbt.setByte("Difficulty", (byte) this.hodgepodge$difficulty.getDifficultyId());
         }
 
-        nbt.setBoolean("DifficultyLocked", this.difficultyLocked);
+        nbt.setBoolean("DifficultyLocked", this.hodgepodge$difficultyLocked);
     }
-
 }

@@ -23,7 +23,7 @@ public class GuiDifficultyLockButton extends GuiButton {
     }
 
     public boolean isLocked() {
-        return !this.locked;
+        return this.locked;
     }
 
     public void setLocked(boolean lockedIn) {

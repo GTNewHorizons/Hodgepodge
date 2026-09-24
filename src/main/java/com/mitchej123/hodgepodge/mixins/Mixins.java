@@ -1098,6 +1098,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinItemRenderer_FixInstantItemSwitch")
             .setApplyIf(() -> FixesConfig.fixInstantHandItemTextureSwitch)
             .setPhase(Phase.EARLY)),
+    SEND_DIFFICULTY_CHANGE_TO_CLIENT(new MixinBuilder("Sync difficulty changes to players in each dimension")
+            .addCommonMixins("minecraft.MixinMinecraftServer_UpdateClientDifficulty")
+            .setApplyIf(() -> FixesConfig.updateClientDifficultyOnServer && !TweaksConfig.perWorldDifficulty)
+            .setPhase(Phase.EARLY)),
     MAINTAIN_SLIME_HEALTH(new MixinBuilder("Prevent slimes from resetting to max health when loaded from NBT")
             .setApplyIf(() -> FixesConfig.maintainSlimeHealth)
             .addCommonMixins("minecraft.MixinEntitySlime_MaintainHealth")
@@ -1151,13 +1155,16 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> MemoryConfig.leaks.fixForgePlayerFactoryLeak)
             .setPhase(Phase.EARLY)),
     PER_WORLD_DIFFICULTY(new MixinBuilder()
-            .addCommonMixins("minecraft.difficulty.MixinIntegratedServer",
+            .addCommonMixins("minecraft.difficulty.MixinDedicatedServer",
+                    "minecraft.difficulty.MixinEntityPlayerMP",
+                    "minecraft.difficulty.MixinIntegratedServer",
                     "minecraft.difficulty.MixinMinecraftServer",
                     "minecraft.difficulty.MixinServerConfigurationManager",
                     "minecraft.difficulty.MixinDerivedWorldInfo",
-                    "minecraft.difficulty.MixinWorldInfo")
-            .addClientMixins("minecraft.difficulty.MixinGuiOptions",
-                    "minecraft.difficulty.MixinNetHandlerPlayClient")
+                    "minecraft.difficulty.MixinWorldInfo",
+                    "minecraft.difficulty.MixinWorldSettings")
+            .addClientMixins("minecraft.difficulty.MixinGuiCreateWorld",
+                    "minecraft.difficulty.MixinGuiOptions")
             .setApplyIf(() -> TweaksConfig.perWorldDifficulty)
             .setPhase(Phase.EARLY)),
     INTERN_ASMDATATABLE_STRINGS(new MixinBuilder()

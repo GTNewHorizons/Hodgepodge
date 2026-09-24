@@ -4,10 +4,9 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNoCallback;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.world.EnumDifficulty;
 
 import org.spongepowered.asm.lib.Opcodes;
@@ -31,7 +30,6 @@ public abstract class MixinGuiOptions extends GuiScreen implements GuiYesNoCallb
     @Unique
     private GuiButton hodgepodge$difficultyButton = null;
 
-    // remove the GameSettings.Options.DIFFICULTY from the main menu options
     @WrapOperation(
             method = "initGui",
             at = @At(
@@ -42,12 +40,12 @@ public abstract class MixinGuiOptions extends GuiScreen implements GuiYesNoCallb
         return new GameSettings.Options[] { GameSettings.Options.FOV };
     }
 
-    // add the DIFFICULTY button when the world is loaded
     @Inject(method = "initGui", at = @At("RETURN"))
     private void onInitGui(CallbackInfo ci) {
         if (this.mc.theWorld != null) {
-            final IWorldDifficulty pwd = (IWorldDifficulty) mc.theWorld.getWorldInfo();
-            EnumDifficulty enumdifficulty = pwd.getDifficulty();
+            final IWorldDifficulty worldInfo = (IWorldDifficulty) mc.theWorld.getWorldInfo();
+            EnumDifficulty difficulty = worldInfo.hodgepodge$getDifficulty();
+            if (difficulty == null) difficulty = mc.theWorld.difficultySetting;
             final int x = this.width / 2 + 5;
             final int y = this.height / 6 - 12;
 
@@ -57,7 +55,7 @@ public abstract class MixinGuiOptions extends GuiScreen implements GuiYesNoCallb
                     y,
                     150,
                     20,
-                    this.hodgepodge$getDifficultyText(enumdifficulty));
+                    this.hodgepodge$getDifficultyText(difficulty));
             this.buttonList.add(this.hodgepodge$difficultyButton);
 
             if (this.mc.isSingleplayer() && !this.mc.theWorld.getWorldInfo().isHardcoreModeEnabled()) {
@@ -68,9 +66,9 @@ public abstract class MixinGuiOptions extends GuiScreen implements GuiYesNoCallb
                         this.hodgepodge$difficultyButton.yPosition);
                 this.buttonList.add(hodgepodge$lockButton);
 
-                hodgepodge$lockButton.setLocked(pwd.isDifficultyLocked());
-                hodgepodge$lockButton.enabled = hodgepodge$lockButton.isLocked();
-                this.hodgepodge$difficultyButton.enabled = hodgepodge$lockButton.isLocked();
+                hodgepodge$lockButton.setLocked(worldInfo.hodgepodge$isDifficultyLocked());
+                hodgepodge$lockButton.enabled = !hodgepodge$lockButton.isLocked();
+                this.hodgepodge$difficultyButton.enabled = !hodgepodge$lockButton.isLocked();
             } else {
                 this.hodgepodge$difficultyButton.enabled = false;
             }
@@ -79,14 +77,15 @@ public abstract class MixinGuiOptions extends GuiScreen implements GuiYesNoCallb
 
     @Inject(method = "actionPerformed", at = @At("TAIL"))
     private void onActionPerformed(GuiButton button, CallbackInfo ci) {
-        if (mc.theWorld == null) return;
+        if (mc.theWorld == null || !button.enabled) return;
 
-        final IWorldDifficulty pwd = (IWorldDifficulty) mc.theWorld.getWorldInfo();
+        final IWorldDifficulty worldInfo = (IWorldDifficulty) mc.theWorld.getWorldInfo();
 
         if (button.id == 108) {
-            final EnumDifficulty next = EnumDifficulty.getDifficultyEnum(pwd.getDifficulty().getDifficultyId() + 1);
-            pwd.setDifficulty(next);
-            mc.gameSettings.difficulty = next;
+            final EnumDifficulty next = EnumDifficulty
+                    .getDifficultyEnum(mc.theWorld.difficultySetting.getDifficultyId() + 1);
+            worldInfo.hodgepodge$setDifficulty(next);
+            mc.theWorld.difficultySetting = next;
             this.hodgepodge$difficultyButton.displayString = this.hodgepodge$getDifficultyText(next);
             NetworkHandler.instance.sendToServer(new MessageSetDifficulty(next, false));
         }
@@ -94,12 +93,13 @@ public abstract class MixinGuiOptions extends GuiScreen implements GuiYesNoCallb
         if (button.id == 109) {
             mc.displayGuiScreen(
                     new GuiYesNoMultiline(
-                            hodgepodge$asYesNoCallback(),
+                            this,
                             new ChatComponentTranslation("difficulty.lock.title").getFormattedText(),
                             new ChatComponentTranslation(
                                     "difficulty.lock.question",
-                                    new ChatComponentTranslation(pwd.getDifficulty().getDifficultyResourceKey()))
-                                            .getFormattedText(),
+                                    new ChatComponentTranslation(
+                                            worldInfo.hodgepodge$getDifficulty().getDifficultyResourceKey()))
+                                                    .getFormattedText(),
                             109));
         }
     }
@@ -108,31 +108,16 @@ public abstract class MixinGuiOptions extends GuiScreen implements GuiYesNoCallb
     public void confirmClicked(boolean result, int id) {
 
         if (id == 109 && result && this.mc.theWorld != null) {
-            final IWorldDifficulty pwd = (IWorldDifficulty) mc.theWorld.getWorldInfo();
-            pwd.setDifficultyLocked(true);
-            NetworkHandler.instance.sendToServer(new MessageSetDifficulty(pwd.getDifficulty(), true));
+            final IWorldDifficulty worldInfo = (IWorldDifficulty) mc.theWorld.getWorldInfo();
+            worldInfo.hodgepodge$setDifficultyLocked(true);
+            NetworkHandler.instance.sendToServer(new MessageSetDifficulty(worldInfo.hodgepodge$getDifficulty(), true));
         }
 
-        this.mc.displayGuiScreen(hodgepodge$asGuiScreen());
+        this.mc.displayGuiScreen(this);
     }
 
     @Unique
-    public String hodgepodge$getDifficultyText(EnumDifficulty difficulty) {
-
-        IChatComponent difficultyText = new ChatComponentText("");
-        difficultyText.appendSibling(new ChatComponentTranslation("options.difficulty"));
-        difficultyText.appendText(": ");
-        difficultyText.appendSibling(new ChatComponentTranslation(difficulty.getDifficultyResourceKey()));
-        return difficultyText.getFormattedText();
-    }
-
-    @Unique
-    private GuiYesNoCallback hodgepodge$asYesNoCallback() {
-        return (GuiYesNoCallback) (Object) this;
-    }
-
-    @Unique
-    private GuiScreen hodgepodge$asGuiScreen() {
-        return (GuiScreen) (Object) this;
+    private String hodgepodge$getDifficultyText(EnumDifficulty difficulty) {
+        return I18n.format("options.difficulty") + ": " + I18n.format(difficulty.getDifficultyResourceKey());
     }
 }

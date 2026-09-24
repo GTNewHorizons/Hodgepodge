@@ -11,6 +11,7 @@ public class NetworkHandler {
     public static void init() {
         instance.toClient(new MessageConfigSync());
         instance.toClient(new BatchedDescriptionPacket());
+        instance.toClient(new MessageChangeDifficulty());
         instance.toClient(new MessageServerDifficulty());
         instance.toServer(new MessageSetDifficulty());
     }

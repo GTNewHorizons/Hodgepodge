@@ -4,11 +4,11 @@ import net.minecraft.world.EnumDifficulty;
 
 public interface IWorldDifficulty {
 
-    EnumDifficulty getDifficulty();
+    EnumDifficulty hodgepodge$getDifficulty();
 
-    void setDifficulty(EnumDifficulty difficulty);
+    void hodgepodge$setDifficulty(EnumDifficulty difficulty);
 
-    boolean isDifficultyLocked();
+    boolean hodgepodge$isDifficultyLocked();
 
-    void setDifficultyLocked(boolean locked);
+    void hodgepodge$setDifficultyLocked(boolean locked);
 }

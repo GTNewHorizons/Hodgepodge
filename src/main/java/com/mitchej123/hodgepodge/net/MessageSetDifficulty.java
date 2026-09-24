@@ -36,24 +36,28 @@ public class MessageSetDifficulty implements IPacket {
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
         final MinecraftServer server = MinecraftServer.getServer();
-        if (server == null) return null;
+        if (server == null || !server.isSinglePlayer()
+                || server.worldServers.length == 0
+                || !server.getServerOwner().equals(handler.playerEntity.getCommandSenderName()))
+            return null;
 
-        // send the difficulty changes from the client to the server
-        // used for changing the difficulty from the options button
-        server.func_147139_a(this.difficulty);
+        WorldServer overworld = server.worldServers[0];
+        if (overworld == null || !(overworld.getWorldInfo() instanceof IWorldDifficulty info)
+                || info.hodgepodge$isDifficultyLocked()
+                || overworld.getWorldInfo().isHardcoreModeEnabled())
+            return null;
 
         if (this.locked) {
+            info.hodgepodge$setDifficultyLocked(true);
             for (WorldServer world : server.worldServers) {
-                if (world == null) continue;
-                if (world.getWorldInfo() instanceof IWorldDifficulty worldDifficulty) {
-                    worldDifficulty.setDifficultyLocked(true);
-                }
-                if (world.provider != null) {
+                if (world != null) {
                     NetworkHandler.instance.sendToDimension(
-                            new MessageServerDifficulty(this.difficulty, true),
+                            new MessageServerDifficulty(world.difficultySetting, info.hodgepodge$getDifficulty(), true),
                             world.provider.dimensionId);
                 }
             }
+        } else {
+            server.func_147139_a(this.difficulty);
         }
         return null;
     }
