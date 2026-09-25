@@ -638,6 +638,12 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean bibliocraftArmorStandMarkDirty;
 
+    @Config.Comment("""
+            Mark Bibliocraft inventories (shelves, tables, bookcases, racks, ...) to save when their contents are changed without going through their GUI (e.g. right-clicking an item onto them),
+            preventing the items from being lost on save.""")
+    @Config.DefaultBoolean(true)
+    public static boolean bibliocraftInventoriesMarkDirty;
+
     @Config.Comment("Fix Bibliocraft path sanitization")
     @Config.DefaultBoolean(true)
     public static boolean fixBibliocraftPathSanitization;
