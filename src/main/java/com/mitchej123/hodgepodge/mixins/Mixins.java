@@ -2037,6 +2037,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.bibliocraftArmorStandMarkDirty)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
+    BIBLIOCRAFT_INVENTORIES_MARK_DIRTY(new MixinBuilder("Mark Bibliocraft inventories to save when they are modified")
+            .addCommonMixins("bibliocraft.MixinBibliocraftInventories_MarkDirty")
+            .setApplyIf(() -> FixesConfig.bibliocraftInventoriesMarkDirty)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
+            .setPhase(Phase.LATE)),
     BIBLIOCRAFT_PATH_SANITIZATION_FIX(new MixinBuilder("Path sanitization fix")
             .addCommonMixins("bibliocraft.MixinPathSanitization")
             .setApplyIf(() -> FixesConfig.fixBibliocraftPathSanitization)
