@@ -3,12 +3,12 @@ package com.mitchej123.hodgepodge.client.biomesoplenty;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.mixins.late.biomesoplenty.AccessorFogHandler;
 
@@ -56,7 +56,7 @@ public class BOPFogHandler {
                     try {
                         sleep(1000);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Common.log.error(e);
                     }
                 }
                 if (ticks.get() > 0) {
@@ -68,7 +68,7 @@ public class BOPFogHandler {
                         for (int x = -distance; x <= distance; x++) {
                             for (int z = -distance; z <= distance; z++) {
 
-                                EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+                                EntityLivingBase player = Minecraft.getMinecraft().renderViewEntity;
                                 int playerX = MathHelper.floor_double(player.posX);
                                 int playerY = MathHelper.floor_double(player.posY);
                                 int playerZ = MathHelper.floor_double(player.posZ);
@@ -115,8 +115,8 @@ public class BOPFogHandler {
                         float farPlaneDistanceScaleBiome = (0.1f * (1.0f - fpDistanceBiomeFogAvg)
                                 + 0.75f * fpDistanceBiomeFogAvg);
 
-                        AccessorFogHandler.setFogX(Minecraft.getMinecraft().thePlayer.posX);
-                        AccessorFogHandler.setFogZ(Minecraft.getMinecraft().thePlayer.posZ);
+                        AccessorFogHandler.setFogX(Minecraft.getMinecraft().renderViewEntity.posX);
+                        AccessorFogHandler.setFogZ(Minecraft.getMinecraft().renderViewEntity.posZ);
                         farPlaneDistanceScale = (farPlaneDistanceScaleBiome * weightBiomeFog + 0.75f * weightDefault)
                                 / weightMixed;
                         AccessorFogHandler.setFogFarPlaneDistance(Math.min(farPlaneDistance, farPlaneDistanceM));
@@ -124,7 +124,7 @@ public class BOPFogHandler {
                         AccessorFogHandler.setFogInit(true);
 
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Common.log.error(e);
                     }
 
                     ticks.decrementAndGet();
@@ -133,7 +133,7 @@ public class BOPFogHandler {
                     try {
                         sleep(1000);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Common.log.error(e);
                     }
                 }
             }

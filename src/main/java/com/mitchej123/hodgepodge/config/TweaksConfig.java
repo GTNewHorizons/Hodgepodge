@@ -16,6 +16,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean reloadSoundsButton;
 
+    @Config.Comment("Adds a button in the sounds menu for Hodgepodge's sound enhancements")
+    @Config.DefaultBoolean(true)
+    public static boolean soundEnhancementsButton;
+
     @Config.Comment("Adds system info to the F3 overlay (Java version and vendor; GPU name; OpenGL version; CPU cores; OS name, version and architecture)")
     @Config.DefaultBoolean(true)
     public static boolean addSystemInfo;
@@ -98,9 +102,9 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean enableDefaultLanPort;
 
-    @Config.Comment("Use CMD key on MacOS to COPY / INSERT / SELECT in text fields (Chat, NEI, Server IP etc.)")
+    @Config.Comment("Use CTRL (CMD on MacOS) to COPY / PASTE / SELECT ALL / CUT in text fields (Chat, NEI, Server IP etc.), fixes these shortcuts not working with some keyboard layouts")
     @Config.DefaultBoolean(true)
-    public static boolean enableMacosCmdShortcuts;
+    public static boolean enableTextFieldCtrlShortcuts;
 
     @Config.Comment("Shows renderer's impact on FPS in vanilla lagometer")
     @Config.DefaultBoolean(true)
@@ -137,6 +141,11 @@ public class TweaksConfig {
     @Config.Comment("Show potion effect icons in inventory screens")
     @Config.DefaultBoolean(true)
     public static boolean showInventoryEffectIcons;
+
+    @Config.Comment("Uses a new player inventory texture and moves the 2x2 crafting grid, its output slot and the crafting title 2 pixels right and 4 pixels up.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean moveInventoryCraftingGrid;
 
     @Config.Comment("Stops rendering the crosshair when you are playing in third person")
     @Config.DefaultBoolean(true)
@@ -178,6 +187,10 @@ public class TweaksConfig {
     @Config.Comment("Doesn't render the black box behind messages when the chat is closed")
     @Config.DefaultBoolean(true)
     public static boolean transparentChat;
+
+    @Config.Comment("Use a custom textured scrollbar")
+    @Config.DefaultBoolean(true)
+    public static boolean texturedScrollbar;
 
     @Config.Comment("Sets the interval for auto saves in ticks (20 ticks = 1 second)")
     @Config.RangeInt(min = 1)

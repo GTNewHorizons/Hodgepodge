@@ -17,6 +17,9 @@ public class MixinGuiIngameForge_CrosshairGuiOpen extends GuiIngame {
     public void hodgepodge$hideCrosshairInGui(int width, int height, Operation<Void> original) {
         if (mc.currentScreen == null || mc.currentScreen instanceof GuiChat) {
             original.call(width, height);
+        } else {
+            // Preserve the texture bind that Forge's boss bar relies on.
+            mc.getTextureManager().bindTexture(icons);
         }
     }
 

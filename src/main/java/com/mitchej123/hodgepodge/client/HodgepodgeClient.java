@@ -14,6 +14,7 @@ import com.mitchej123.hodgepodge.client.handlers.ClientKeyListener;
 import com.mitchej123.hodgepodge.client.handlers.ReloadSoundsGui;
 import com.mitchej123.hodgepodge.commands.AllocationsCommand;
 import com.mitchej123.hodgepodge.commands.DumpTextureAtlasCommand;
+import com.mitchej123.hodgepodge.commands.PacketStatsCommand;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.SoundConfig;
@@ -48,14 +49,15 @@ public class HodgepodgeClient {
         if (TweaksConfig.enableDefaultLanPort) {
             if (TweaksConfig.defaultLanPort < 0 || TweaksConfig.defaultLanPort > 65535) {
                 Common.log.error(
-                        String.format(
-                                "Default LAN port number must be in range of 0-65535, but %s was given. Defaulting to 0.",
-                                TweaksConfig.defaultLanPort));
+                        "Default LAN port number must be in range of 0-65535, but {} was given. Defaulting to 0.",
+                        TweaksConfig.defaultLanPort);
                 TweaksConfig.defaultLanPort = 0;
             }
         }
 
         FMLCommonHandler.instance().bus().register(ClientTicker.INSTANCE);
+
+        QuickPlay.registerIfRequested();
 
         MinecraftForge.EVENT_BUS.register(new ReloadSoundsGui());
 
@@ -67,6 +69,7 @@ public class HodgepodgeClient {
 
         ClientCommandHandler.instance.registerCommand(new AllocationsCommand());
         ClientCommandHandler.instance.registerCommand(new DumpTextureAtlasCommand());
+        ClientCommandHandler.instance.registerCommand(new PacketStatsCommand());
 
         FMLCommonHandler.instance().bus().register(new ClientKeyListener());
 
