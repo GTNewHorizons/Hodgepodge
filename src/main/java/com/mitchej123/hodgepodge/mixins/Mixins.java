@@ -1901,6 +1901,15 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFilingCabinetDupe)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
+    FIX_SKIP_HIDDEN_FILING_CABINET_SLOTS(new MixinBuilder("Skip rendering hidden filing cabinet slots")
+            .addClientMixins("minecraft.MixinGuiContainer_FilingCabinet")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFilingCabinetScrolling)
+            .setPhase(Phase.EARLY)),
+    IMPROVE_FILING_CABINET_GUI(new MixinBuilder("GUI with less lag, bugfixes, and vertical scrolling")
+            .addClientMixins("extrautilities.MixinGuiFilingCabinet")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFilingCabinetScrolling)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
     FIX_FILTER_DUPE(new MixinBuilder("Prevent hotkeying other items onto item filters while they are open")
             .addCommonMixins("extrautilities.MixinContainerFilter")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFilterDupe)
