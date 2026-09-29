@@ -137,6 +137,19 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
     }
 
     /**
+     * Check the tick lists after the vanilla loop replayed ticksToRemove
+     */
+    @Inject(
+            method = "tickUpdates",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/profiler/Profiler;startSection(Ljava/lang/String;)V",
+                    ordinal = 1))
+    private void hodgepodge$afterReplay(boolean p_72955_1_, CallbackInfoReturnable<Boolean> cir) {
+        hodgepodge$getSimulationDistanceHelper().afterReplay();
+    }
+
+    /**
      * Cache whether the current chunk is outside of simulation distance or not
      */
     @WrapOperation(
