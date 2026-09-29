@@ -663,6 +663,10 @@ public class FixesConfig {
 
     // Biomes O' Plenty
 
+    @Config.Comment("Make Biomes O' Plenty emerald generation respect its OreGeneration config")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBOPEmeraldGeneration;
+
     @Config.Comment("Removes duplicate Fermenter and Squeezer recipes and flower registration")
     @Config.DefaultBoolean(true)
     public static boolean deduplicateForestryCompatInBOP;
