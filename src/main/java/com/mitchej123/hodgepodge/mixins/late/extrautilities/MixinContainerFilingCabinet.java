@@ -15,6 +15,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.rwtema.extrautils.gui.ContainerFilingCabinet;
 
 import invtweaks.api.container.ContainerSection;
@@ -27,6 +30,21 @@ public abstract class MixinContainerFilingCabinet extends Container {
 
     @Unique
     private ItemStack hodgepodge$buffer;
+
+    @WrapOperation(
+            method = "transferStackInSlot",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lcom/rwtema/extrautils/gui/ContainerFilingCabinet;mergeItemStack(Lnet/minecraft/item/ItemStack;IIZ)Z",
+                    ordinal = 0))
+    private boolean hodgepodge$restoreFailedTransfer(ContainerFilingCabinet container, ItemStack stack, int start,
+            int end, boolean reverse, Operation<Boolean> original, @Local(ordinal = 0) ItemStack originalStack) {
+        boolean transferred = original.call(container, stack, start, end, reverse);
+        if (!transferred) {
+            stack.stackSize = originalStack.stackSize;
+        }
+        return transferred;
+    }
 
     @Inject(
             method = "slotClick",

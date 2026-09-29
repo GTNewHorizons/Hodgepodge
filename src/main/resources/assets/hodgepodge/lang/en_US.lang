@@ -3,6 +3,8 @@ key.fastBlockPlacing.desc=Fast Block Placing
 key.fastBlockPlacing.enabled=§fFast Block Placing §aEnabled
 key.fastBlockPlacing.disabled=§fFast Block Placing §cDisabled
 
+extrautils:filing.cabinet=Filing Cabinet
+
 tile.dirt.name=Dirt
 tile.sapling.name=Sapling
 tile.sand.name=Sand
