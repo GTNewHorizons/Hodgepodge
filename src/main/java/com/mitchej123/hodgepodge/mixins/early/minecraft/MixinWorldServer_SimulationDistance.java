@@ -137,6 +137,16 @@ public abstract class MixinWorldServer_SimulationDistance extends World implemen
     }
 
     /**
+     * Disable the HashSet removal while replaying ticksToRemove. We already removed those ticks ourselves, so this can
+     * only hit a different, equal (pos + block) tick that was scheduled after ours got queued, e.g. by a chunk that was
+     * unloaded and loaded again before the next tickUpdates. It would stay in the TreeSet and desync the lists.
+     */
+    @Redirect(method = "tickUpdates", at = @At(value = "INVOKE", target = "Ljava/util/Set;remove(Ljava/lang/Object;)Z"))
+    private boolean hodgepodge$disableReplayHashRemove(Set<NextTickListEntry> instance, Object e) {
+        return false;
+    }
+
+    /**
      * Check the tick lists after the vanilla loop replayed ticksToRemove
      */
     @Inject(
