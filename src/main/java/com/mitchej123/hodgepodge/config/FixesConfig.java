@@ -28,6 +28,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean enlargePotionArray;
 
+    @Config.Comment("Fix sleeping in beds at Y >= 128 moving players into the void on multiplayer")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBedHeightOverflow;
+
     @Config.Comment("Fix bogus FMLProxyPacket NPEs on integrated server crashes.")
     @Config.DefaultBoolean(true)
     public static boolean fixBogusIntegratedServerNPEs;
