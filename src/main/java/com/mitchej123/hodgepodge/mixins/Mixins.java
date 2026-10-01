@@ -11,6 +11,7 @@ import com.mitchej123.hodgepodge.config.MemoryConfig;
 import com.mitchej123.hodgepodge.config.SoundConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
+import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
 
 public enum Mixins implements IMixins {
 
@@ -875,6 +876,12 @@ public enum Mixins implements IMixins {
     MEMORY_FIXES_CLIENT(new MixinBuilder()
             .addClientMixins("memory.MixinFMLClientHandler")
             .setApplyIf(() -> MemoryConfig.allocs.clearFMLTextureErrors)
+            .setPhase(Phase.EARLY)),
+    ASYNC_FML_FILE_LOG(new MixinBuilder("Async FML file log: drain before hard exit, durable after crash report")
+            .addCommonMixins(
+                    "fml.MixinFMLCommonHandler_DrainAsyncLog",
+                    "minecraft.MixinCrashReport_DurableAsyncLog")
+            .setApplyIf(() -> !EarlyConfig.noAsyncFmlFileLog)
             .setPhase(Phase.EARLY)),
     FAST_RANDOM(new MixinBuilder("Replaces uses of stdlib Random with a faster one")
             .addCommonMixins(
