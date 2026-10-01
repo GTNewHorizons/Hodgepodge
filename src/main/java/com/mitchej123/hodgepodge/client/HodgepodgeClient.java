@@ -17,7 +17,6 @@ import com.mitchej123.hodgepodge.commands.DumpTextureAtlasCommand;
 import com.mitchej123.hodgepodge.commands.PacketStatsCommand;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
-import com.mitchej123.hodgepodge.config.SoundConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.mixins.hooks.ClientLeaksCleaningHook;
 import com.mitchej123.hodgepodge.util.FontRenderingCompat;
@@ -93,8 +92,6 @@ public class HodgepodgeClient {
             // removes the popup that BOP shows on first world gen
             MinecraftForge.EVENT_BUS.unregister(WorldTypeMessageEventHandler.instance);
         }
-
-        SoundConfig.apply();
     }
 
     public enum AnimationMode {
