@@ -12,6 +12,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixChunkSaveQueueRace;
 
+    @Config.Comment("Prevent a chunk from being loaded from disk (outdated, or regenerated if never saved) while its newer save is being written")
+    @Config.DefaultBoolean(true)
+    public static boolean fixChunkLoadDuringSave;
+
     @Config.Comment("Fix Vanilla IOOBE when rendering chunks at a distance larger than 16")
     @Config.DefaultBoolean(true)
     public static boolean fixVanillaIOOBERenderDistance;
