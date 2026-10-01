@@ -71,36 +71,38 @@ public abstract class MixinAnvilChunkLoader_LoadDuringSave {
         }
     }
 
-    @Inject(method = "loadChunk__Async", at = @At("HEAD"), cancellable = true, remap = false)
-    private void hodgepodge$loadInFlight(World world, int x, int z, CallbackInfoReturnable<Object[]> cir) {
-        ChunkCoordIntPair coords = new ChunkCoordIntPair(x, z);
-        NBTTagCompound nbt = null;
+    /**
+     * The newest save of a chunk that is not on disk yet: pending first, then in flight. Both are checked under one
+     * lock acquisition so a chunk moving from pending to in flight can't be missed. If this returns null, the chunk is
+     * in neither place and can't enter them while it is unloaded, so vanilla's own lookup and disk read are safe.
+     */
+    @Unique
+    private NBTTagCompound hodgepodge$findUnwritten(ChunkCoordIntPair coords) {
         synchronized (syncLockObject) {
-            if (hodgepodge$inFlight.isEmpty()) return;
-            // Look at the pending list and the in-flight map under one lock, so the chunk can't move between them.
             if (pendingAnvilChunksCoordinates.contains(coords)) {
                 for (Object o : chunksToRemove) {
                     AccessorAnvilChunkLoaderPendingChunk pending = (AccessorAnvilChunkLoaderPendingChunk) o;
                     if (coords.equals(pending.hodgepodge$getChunkCoordinate())) {
-                        nbt = pending.hodgepodge$getNbtTags();
-                        break;
+                        return pending.hodgepodge$getNbtTags();
                     }
                 }
             }
-            if (nbt == null) {
-                nbt = hodgepodge$inFlight.get(coords);
-                if (nbt == null) return;
-            }
+            return hodgepodge$inFlight.get(coords);
         }
-        cir.setReturnValue(checkedReadChunkFromNBT__Async(world, x, z, nbt));
+    }
+
+    @Inject(method = "loadChunk__Async", at = @At("HEAD"), cancellable = true, remap = false)
+    private void hodgepodge$loadInFlight(World world, int x, int z, CallbackInfoReturnable<Object[]> cir) {
+        NBTTagCompound nbt = hodgepodge$findUnwritten(new ChunkCoordIntPair(x, z));
+        if (nbt != null) {
+            cir.setReturnValue(checkedReadChunkFromNBT__Async(world, x, z, nbt));
+        }
     }
 
     @Inject(method = "chunkExists", at = @At("HEAD"), cancellable = true, remap = false)
     private void hodgepodge$existsInFlight(World world, int x, int z, CallbackInfoReturnable<Boolean> cir) {
-        synchronized (syncLockObject) {
-            if (!hodgepodge$inFlight.isEmpty() && hodgepodge$inFlight.containsKey(new ChunkCoordIntPair(x, z))) {
-                cir.setReturnValue(true);
-            }
+        if (hodgepodge$findUnwritten(new ChunkCoordIntPair(x, z)) != null) {
+            cir.setReturnValue(true);
         }
     }
 }
