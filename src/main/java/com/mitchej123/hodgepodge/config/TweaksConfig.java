@@ -142,6 +142,11 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean showInventoryEffectIcons;
 
+    @Config.Comment("Uses a new player inventory texture and moves the 2x2 crafting grid, its output slot and the crafting title 2 pixels right and 4 pixels up.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean moveInventoryCraftingGrid;
+
     @Config.Comment("Stops rendering the crosshair when you are playing in third person")
     @Config.DefaultBoolean(true)
     public static boolean hideCrosshairInThirdPerson;

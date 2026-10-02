@@ -1138,6 +1138,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiCreateWorld_NotWriteToExistDir")
             .setApplyIf(() -> FixesConfig.fixSaveFileWrittenToExistingDirectory)
             .setPhase(Phase.EARLY)),
+    FIX_FLAT_WORLD_LAYER_MISSING_ITEM_BLOCK_CRASH(new MixinBuilder()
+            .addClientMixins("minecraft.MixinGuiCreateFlatWorld_FixItemCrash")
+            .setApplyIf(() -> FixesConfig.fixFlatWorldLayerMissingItemBlockCrash)
+            .setPhase(Phase.EARLY)),
     FIX_FAKE_PLAYER_CHAT_CRASH(new MixinBuilder()
             .addCommonMixins("forge.MixinFakePlayer")
             .setApplyIf(() -> FixesConfig.fixFakePlayerChatCrash)
@@ -1176,6 +1180,10 @@ public enum Mixins implements IMixins {
     CLIP_PLAYER_IN_INVENTORY(new MixinBuilder()
             .addClientMixins("minecraft.MixinGuiInventory_ClipPlayer", "minecraft.MixinGuiContainerCreative_ClipPlayer", "minecraft.MixinGuiScreenHorseInventory_ClipPlayer")
             .setApplyIf(() -> FixesConfig.clipPlayerRenderInGuis)
+            .setPhase(Phase.EARLY)),
+    MOVE_INVENTORY_CRAFTING_GRID(new MixinBuilder("Moves the player inventory crafting grid and uses a new inventory texture")
+            .addClientMixins("minecraft.MixinGuiInventory_MoveCraftingGrid", "minecraft.MixinContainerPlayer_MoveCraftingGrid")
+            .setApplyIf(() -> TweaksConfig.moveInventoryCraftingGrid)
             .setPhase(Phase.EARLY)),
     FIX_NEGATIVE_LOOTING_CRASH(new MixinBuilder()
             .addCommonMixins("minecraft.crashfixes.MixinEnchantmentHelper")
