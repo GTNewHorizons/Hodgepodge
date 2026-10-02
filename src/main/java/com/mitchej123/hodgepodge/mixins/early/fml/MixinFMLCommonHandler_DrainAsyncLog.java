@@ -12,6 +12,8 @@ import cpw.mods.fml.common.FMLCommonHandler;
 @Mixin(value = FMLCommonHandler.class, remap = false)
 public class MixinFMLCommonHandler_DrainAsyncLog {
 
+    // TerminalTransformer may already have rewritten halt() to runtimeHaltCalled(), depending on
+    // transformer order, so match both.
     @Inject(
             method = "exitJava",
             at = { @At(value = "INVOKE", target = "Ljava/lang/Runtime;halt(I)V"), @At(

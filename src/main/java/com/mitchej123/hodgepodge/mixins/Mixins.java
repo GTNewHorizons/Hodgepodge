@@ -877,10 +877,8 @@ public enum Mixins implements IMixins {
             .addClientMixins("memory.MixinFMLClientHandler")
             .setApplyIf(() -> MemoryConfig.allocs.clearFMLTextureErrors)
             .setPhase(Phase.EARLY)),
-    ASYNC_FML_FILE_LOG(new MixinBuilder("Async FML file log: drain before hard exit, durable after crash report")
-            .addCommonMixins(
-                    "fml.MixinFMLCommonHandler_DrainAsyncLog",
-                    "minecraft.MixinCrashReport_DurableAsyncLog")
+    ASYNC_FML_FILE_LOG(new MixinBuilder("Async FML file log: drain before hard exit")
+            .addCommonMixins("fml.MixinFMLCommonHandler_DrainAsyncLog")
             .setApplyIf(() -> !EarlyConfig.noAsyncFmlFileLog)
             .setPhase(Phase.EARLY)),
     FAST_RANDOM(new MixinBuilder("Replaces uses of stdlib Random with a faster one")

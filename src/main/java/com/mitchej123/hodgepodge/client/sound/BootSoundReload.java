@@ -1,11 +1,10 @@
 package com.mitchej123.hodgepodge.client.sound;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mitchej123.hodgepodge.Common;
 
-import paulscode.sound.Library;
 import paulscode.sound.SoundSystemConfig;
 
 /** Keeps the engine through the post-load resource reload when a restart would rebuild it identically. */
@@ -18,12 +17,20 @@ public final class BootSoundReload {
     }
 
     private static volatile boolean bootDone;
-    private static volatile boolean inBootRefresh;
+    private static boolean inBootRefresh;
     private static volatile Engine engine;
     private static volatile boolean soundCreated;
     private static volatile List<Object> configAtStart;
 
     private BootSoundReload() {}
+
+    static void reset() {
+        bootDone = false;
+        inBootRefresh = false;
+        engine = null;
+        soundCreated = false;
+        configAtStart = null;
+    }
 
     public static void beginBootRefresh() {
         inBootRefresh = true;
@@ -63,7 +70,7 @@ public final class BootSoundReload {
         return false;
     }
 
-    private static String restartReason(boolean loaded) {
+    static String restartReason(boolean loaded) {
         final Engine current = engine;
         if (!loaded) return "engine not loaded";
         if (current == null) return "engine not tracked";
@@ -72,33 +79,16 @@ public final class BootSoundReload {
         return current.hodgepodge$restartReason();
     }
 
-    public static String libraryReason(Class<?> library) {
-        if (library == null) return "sound library not initialized";
-        if (library == Library.class) return "sound library fell back to silent mode";
-        final List<?> configured = SoundSystemConfig.getLibraries();
-        if (configured == null || !configured.contains(library)) return "sound library not in the configured list";
-        return null;
-    }
-
+    // Libraries and codecs are what other mods swap; the rest is SoundSystemSettings.
+    // Never master gain or logger: the engine writes those itself.
     static List<Object> snapshotConfig() {
+        final List<Object> out = new ArrayList<>();
         final List<?> libraries = SoundSystemConfig.getLibraries();
-        return Arrays.asList(
-                libraries == null ? "[]" : libraries.toString(),
-                codecClass("ogg"),
-                codecClass("wav"),
-                SoundSystemConfig.getNumberNormalChannels(),
-                SoundSystemConfig.getNumberStreamingChannels(),
-                SoundSystemConfig.getDefaultAttenuation(),
-                SoundSystemConfig.getDefaultRolloff(),
-                SoundSystemConfig.getDopplerFactor(),
-                SoundSystemConfig.getDopplerVelocity(),
-                SoundSystemConfig.getDefaultFadeDistance(),
-                SoundSystemConfig.getStreamingBufferSize(),
-                SoundSystemConfig.getNumberStreamingBuffers(),
-                SoundSystemConfig.getStreamQueueFormatsMatch(),
-                SoundSystemConfig.getMaxFileSize(),
-                SoundSystemConfig.getFileChunkSize(),
-                SoundSystemConfig.getOverrideMIDISynthesizer());
+        out.add(libraries == null ? "[]" : libraries.toString());
+        out.add(codecClass("ogg"));
+        out.add(codecClass("wav"));
+        SoundSystemSettings.snapshot(out);
+        return out;
     }
 
     private static Class<?> codecClass(String extension) {

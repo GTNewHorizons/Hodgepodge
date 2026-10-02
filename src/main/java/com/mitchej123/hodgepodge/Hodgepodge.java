@@ -85,6 +85,7 @@ public class Hodgepodge {
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
+        // Re-wraps contexts a log4j reconfigure reset since the coremod ran.
         if (!EarlyConfig.noAsyncFmlFileLog) AsyncFmlFileLog.install();
         if (event.getSide() == Side.CLIENT) {
             HodgepodgeClient.postInit();

@@ -26,11 +26,11 @@ public abstract class MixinSoundSystemStarterThread_BootReload extends SoundSyst
     public String hodgepodge$restartReason() {
         synchronized (SoundSystemConfig.THREAD_SYNC) {
             final Library library = soundLibrary;
-            final String reason = BootSoundReload.libraryReason(library == null ? null : library.getClass());
-            if (reason != null) return reason;
-            final Map<?, ?> sources = library.getSources();
+            if (!(library instanceof LibraryHodgepodgeOpenAL ours)) {
+                return "sound library is " + (library == null ? "not initialized" : library.getClass().getName());
+            }
+            final Map<?, ?> sources = ours.getSources();
             if (sources != null && !sources.isEmpty()) return "sources already created";
-            if (!(library instanceof LibraryHodgepodgeOpenAL ours)) return "sound buffers not inspectable";
             if (ours.hasDecodedBuffers()) return "sound buffers already decoded";
             return null;
         }

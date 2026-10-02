@@ -71,10 +71,7 @@ class AsyncFmlFileLogTest {
 
     @AfterEach
     void tearDown() {
-        for (Gate g : gates) {
-            g.hold = false;
-            g.open.countDown();
-        }
+        for (Gate g : gates) g.open.countDown();
         for (LoggerContext ctx : contexts) ctx.stop();
         ThreadContext.clear();
         System.clearProperty(DIR_PROP);
@@ -98,15 +95,11 @@ class AsyncFmlFileLogTest {
             List<String> actual = records(asyncDir.resolve(file));
             assertFalse(expected.isEmpty(), file);
             Map<String, List<String>> expectedByThread = byThread(expected);
-            assertEquals(expectedByThread.keySet(), byThread(actual).keySet(), file);
+            Map<String, List<String>> actualByThread = byThread(actual);
+            assertEquals(expectedByThread.keySet(), actualByThread.keySet(), file);
             for (Map.Entry<String, List<String>> e : expectedByThread.entrySet()) {
-                assertEquals(e.getValue(), byThread(actual).get(e.getKey()), file + " thread " + e.getKey());
+                assertEquals(e.getValue(), actualByThread.get(e.getKey()), file + " thread " + e.getKey());
             }
-            List<String> sortedExpected = new ArrayList<>(expected);
-            List<String> sortedActual = new ArrayList<>(actual);
-            Collections.sort(sortedExpected);
-            Collections.sort(sortedActual);
-            assertEquals(sortedExpected, sortedActual, file);
         }
     }
 
@@ -172,106 +165,14 @@ class AsyncFmlFileLogTest {
     }
 
     @Test
-    void durableModeMakesAppendsSynchronous() throws Exception {
-        Path dir = tmp.resolve("durable");
-        LoggerContext ctx = newContext(dir);
-        slowSink(ctx);
-        assertTrue(install(ctx));
-        Logger log = ctx.getLogger("durable");
-        int n = 100;
-        logSeqs(log, 0, n);
-        AsyncFmlFileLog.enterDurableMode(Collections.singletonList(ctx));
-        assertEquals(range(n), mine(dir));
-        log.debug("seq {}", n);
-        assertEquals(range(n + 1), mine(dir));
-    }
-
-    @Test
-    void durableModeOnStalledSinkIsBounded() throws Exception {
-        Stalled s = stalled("durable-stall");
-        assertTrue(install(s.ctx));
-        logSeqs(s.log, 0, 10);
-        long enterMs = assertTimeoutPreemptively(
-                Duration.ofSeconds(10),
-                () -> elapsedMs(() -> AsyncFmlFileLog.enterDurableMode(Collections.singletonList(s.ctx))));
-        assertTrue(enterMs < 3 * STALL_MS, "enterDurableMode took " + enterMs + "ms");
-        long laterMs = elapsedMs(() -> { for (int i = 10; i < 110; i++) s.log.info("seq {}", i); });
-        assertTrue(laterMs < STALL_MS / 4, "durable appends waited again: " + laterMs + "ms");
-    }
-
-    @Test
-    void durableWindowExpires() throws Exception {
-        Path dir = tmp.resolve("window");
-        LoggerContext ctx = newContext(dir);
-        Logger log = ctx.getLogger("window");
-        log.debug("warmup");
-        Gate gate = slowSink(ctx);
-        long windowMs = 200;
-        List<LoggerContext> list = Collections.singletonList(ctx);
-        assertFalse(
-                AsyncFmlFileLog
-                        .install(list, AsyncFmlFileLog.SOFT_CAP, TimeUnit.MILLISECONDS.toNanos(windowMs), STALL_NS)
-                        .isEmpty());
-        long entered = System.nanoTime();
-        AsyncFmlFileLog.enterDurableMode(list);
-        log.debug("seq {}", 0);
-        assertEquals(range(1), mine(dir));
-        Thread.sleep(Math.max(0, windowMs + 200 - TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - entered)));
-        gate.hold = true;
-        long ms = elapsedMs(() -> log.debug("seq {}", 1));
-        assertTrue(ms < STALL_MS / 4, "append still durable after the window: " + ms + "ms");
-        assertEquals(range(1), mine(dir));
-    }
-
-    @Test
-    void durableWithConcurrentProducers() throws Exception {
-        Path dir = tmp.resolve("durable-mt");
-        LoggerContext ctx = newContext(dir);
-        slowSink(ctx);
-        List<LoggerContext> list = Collections.singletonList(ctx);
-        assertTrue(install(list));
-        AsyncFmlFileLog.enterDurableMode(list);
-        Path file = dir.resolve(JUNK_FILE);
-        int n = 100;
-        CountDownLatch go = new CountDownLatch(1);
-        ConcurrentLinkedQueue<Throwable> errors = new ConcurrentLinkedQueue<>();
-        List<Thread> threads = new ArrayList<>();
-        for (int p = 0; p < 4; p++) {
-            Logger log = ctx.getLogger("durable." + p);
-            String name = "durable-" + p;
-            Thread t = new Thread(() -> {
-                try {
-                    go.await();
-                    for (int i = 0; i < n; i++) {
-                        log.debug("seq {}", i);
-                        assertEquals(range(i + 1), seqs(file, name), name + " after seq " + i);
-                    }
-                } catch (Throwable e) {
-                    errors.add(e);
-                }
-            }, name);
-            threads.add(t);
-            t.start();
-        }
-        go.countDown();
-        for (Thread t : threads) {
-            t.join(30_000);
-            assertFalse(t.isAlive(), t.getName());
-        }
-        assertTrue(errors.isEmpty(), () -> errors.peek().toString());
-    }
-
-    @Test
-    void durableWaitOnInterruptedThreadDoesNotSpin() throws Exception {
-        Path dir = tmp.resolve("durable-intr");
+    void throttledProducerOnInterruptedThreadDoesNotSpin() throws Exception {
+        Path dir = tmp.resolve("throttle-intr");
         LoggerContext ctx = newContext(dir);
         Gate gate = slowSink(ctx);
         gate.delayNs = TimeUnit.MILLISECONDS.toNanos(20);
-        List<LoggerContext> list = Collections.singletonList(ctx);
-        assertTrue(install(list));
-        AsyncFmlFileLog.enterDurableMode(list);
-        Logger log = ctx.getLogger("durable-intr");
-        Path file = dir.resolve(JUNK_FILE);
+        // softCap 1: every append after the first waits for the previous write.
+        assertTrue(install(Collections.singletonList(ctx), 1));
+        Logger log = ctx.getLogger("throttle-intr");
         ThreadMXBean mx = ManagementFactory.getThreadMXBean();
         int n = 10;
         long[] cpuWall = new long[2];
@@ -286,7 +187,6 @@ class AsyncFmlFileLogTest {
                 cpuWall[1] = System.nanoTime() - wall0;
                 cpuWall[0] = cpu0 < 0 ? -1 : mx.getCurrentThreadCpuTime() - cpu0;
                 stillInterrupted.set(Thread.currentThread().isInterrupted());
-                assertEquals(range(n), seqs(file, "interrupted"));
             } catch (Throwable e) {
                 errors.add(e);
             }
@@ -296,11 +196,14 @@ class AsyncFmlFileLogTest {
         assertFalse(t.isAlive());
         assertTrue(errors.isEmpty(), () -> errors.peek().toString());
         assertTrue(stillInterrupted.get(), "interrupt flag lost");
+        assertTrue(cpuWall[1] >= TimeUnit.MILLISECONDS.toNanos(100), "producer never waited: " + cpuWall[1] + "ns");
         if (cpuWall[0] >= 0) {
             assertTrue(
                     cpuWall[0] < cpuWall[1] / 2,
                     "cpu " + cpuWall[0] / 1_000_000 + "ms of wall " + cpuWall[1] / 1_000_000 + "ms");
         }
+        ctx.stop();
+        assertEquals(range(n), seqs(dir.resolve(JUNK_FILE), "interrupted"));
     }
 
     @Test
@@ -575,7 +478,7 @@ class AsyncFmlFileLogTest {
     }
 
     private static boolean install(List<LoggerContext> list, int softCap) {
-        return !AsyncFmlFileLog.install(list, softCap, AsyncFmlFileLog.DURABLE_NS, STALL_NS).isEmpty();
+        return !AsyncFmlFileLog.install(list, softCap, STALL_NS).isEmpty();
     }
 
     private LoggerContext newContext(Path dir) {
@@ -693,7 +596,7 @@ class AsyncFmlFileLogTest {
                         ThreadContext.remove("mod");
                     }
                     case 5 -> b.error("param thrown {}", i, boom(i));
-                    case 6 -> a.debug(new ObjectMessage("object " + i));
+                    case 6 -> a.debug(new ObjectMessage("object " + i), boom(i));
                     default -> b.trace("three {} {} {}", id, i, null);
                 }
             }
@@ -709,7 +612,6 @@ class AsyncFmlFileLogTest {
         final CountDownLatch open = new CountDownLatch(1);
         final CountDownLatch entered = new CountDownLatch(1);
         volatile long delayNs;
-        volatile boolean hold;
 
         @Override
         public Result filter(LogEvent event) {
@@ -723,9 +625,10 @@ class AsyncFmlFileLogTest {
                     interrupted = true;
                 }
             }
-            while (hold) LockSupport.parkNanos(TimeUnit.MILLISECONDS.toNanos(1));
             if (interrupted) Thread.currentThread().interrupt();
-            if (delayNs > 0) LockSupport.parkNanos(delayNs);
+            // Deadline loop: a leftover unpark permit must not shorten the delay.
+            final long end = System.nanoTime() + delayNs;
+            for (long left = delayNs; left > 0; left = end - System.nanoTime()) LockSupport.parkNanos(left);
             return Result.NEUTRAL;
         }
     }

@@ -43,7 +43,6 @@ public final class AsyncFmlFileLog {
     static final long STALL_NS = 100_000_000L;
     static final long PARK_NS = 50_000L;
     static final long SPIN_NS = 20_000L;
-    static final long DURABLE_NS = 30_000_000_000L;
 
     private static final int RUNNING = 0;
     private static final int STOPPING = 1;
@@ -54,14 +53,15 @@ public final class AsyncFmlFileLog {
     public static void install() {
         try {
             if (!linkedToLaunchLog4j()) return;
-            final List<String> wrapped = install(resolve(LogManager.getFactory()), SOFT_CAP, DURABLE_NS, STALL_NS);
-            LOGGER.info("Async FmlFile log: wrapped {}", wrapped);
+            final List<String> wrapped = install(resolve(LogManager.getFactory()), SOFT_CAP, STALL_NS);
+            if (wrapped.isEmpty()) LOGGER.debug("Async FmlFile log: nothing to wrap");
+            else LOGGER.info("Async FmlFile log: wrapped {}", wrapped);
         } catch (Throwable t) {
             LOGGER.warn("Async FmlFile log install failed", t);
         }
     }
 
-    static List<String> install(List<LoggerContext> contexts, int softCap, long durableNs, long stallNs) {
+    static List<String> install(List<LoggerContext> contexts, int softCap, long stallNs) {
         final List<LoggerContext> targets = new ArrayList<>();
         Core core = null;
         for (LoggerContext ctx : contexts) {
@@ -75,7 +75,7 @@ public final class AsyncFmlFileLog {
         final List<String> wrapped = new ArrayList<>();
         if (targets.isEmpty()) return wrapped;
         final boolean created = core == null;
-        if (created) core = new Core(softCap, durableNs, stallNs);
+        if (created) core = new Core(softCap, stallNs);
         for (LoggerContext ctx : targets) {
             try {
                 wrap(ctx, core);
@@ -84,34 +84,19 @@ public final class AsyncFmlFileLog {
                 LOGGER.warn("Failed to wrap FmlFile appender of context {}", ctx.getName(), t);
             }
         }
-        if (created) core.close();
+        if (created) core.closeIfUnused();
         return wrapped;
     }
 
     public static void stopAll() {
-        forEachOurs(null, "stop", Appender::stop);
+        forEachOurs("stop", Appender::stop);
     }
 
-    public static void enterDurableMode() {
-        enterDurableMode(null);
-    }
-
-    static void enterDurableMode(List<LoggerContext> contexts) {
-        final boolean[] latched = new boolean[1];
-        forEachOurs(contexts, "enterDurableMode", a -> latched[0] |= a.core.enterDurable());
+    // NOTE: Must not throw - exit path.
+    private static void forEachOurs(String what, Consumer<Appender> action) {
         try {
-            if (latched[0]) LOGGER.info("Async FmlFile log: crash report saved, logging is durable for a while");
-        } catch (Throwable ignored) {}
-    }
-
-    // NOTE: Must not throw - exit and crash paths.
-    private static void forEachOurs(List<LoggerContext> contexts, String what, Consumer<Appender> action) {
-        try {
-            if (contexts == null) {
-                if (!linkedToLaunchLog4j()) return;
-                contexts = resolve(LogManager.getFactory());
-            }
-            for (LoggerContext ctx : contexts) {
+            if (!linkedToLaunchLog4j()) return;
+            for (LoggerContext ctx : resolve(LogManager.getFactory())) {
                 try {
                     final Appender ours = ours(ctx);
                     if (ours != null) action.accept(ours);
@@ -201,13 +186,29 @@ public final class AsyncFmlFileLog {
         final Message m = e.getMessage();
         final Class<?> mc = m == null ? null : m.getClass();
         final boolean safe = mc == null || mc == SimpleMessage.class || mc == ParameterizedMessage.class;
-        if (safe && e instanceof Log4jLogEvent) return e;
+        final Message pinned = safe ? m : new SimpleMessage(m.getFormattedMessage());
+        if (e instanceof Log4jLogEvent l) {
+            if (safe) return e;
+            // The Throwable constructor would build a second ThrowableProxy.
+            return Log4jLogEvent.createEvent(
+                    e.getLoggerName(),
+                    e.getMarker(),
+                    e.getFQCN(),
+                    e.getLevel(),
+                    pinned,
+                    l.getThrownProxy(),
+                    e.getContextMap(),
+                    e.getContextStack(),
+                    thread,
+                    null,
+                    e.getMillis());
+        }
         return new Log4jLogEvent(
                 e.getLoggerName(),
                 e.getMarker(),
                 e.getFQCN(),
                 e.getLevel(),
-                safe ? m : new SimpleMessage(m.getFormattedMessage()),
+                pinned,
                 e.getThrown(),
                 e.getContextMap(),
                 e.getContextStack(),
@@ -230,7 +231,6 @@ public final class AsyncFmlFileLog {
 
         final LogEvent event;
         final Appender owner;
-        volatile boolean done;
 
         Item(LogEvent event, Appender owner) {
             this.event = event;
@@ -247,22 +247,19 @@ public final class AsyncFmlFileLog {
         final Item sentinel = new Item(null, null);
         final int softCap;
         final long hardCap;
-        final long durableNs;
         final long stallNs;
         final Thread worker;
         volatile boolean parked;
         volatile long written;
         volatile long stalledAt = -1;
-        volatile long durableUntil;
         volatile long stopStalledAt = -1;
         private long droppedReported;
         private long lostThrough;
         private boolean closed;
 
-        Core(int softCap, long durableNs, long stallNs) {
+        Core(int softCap, long stallNs) {
             this.softCap = softCap;
             this.hardCap = 2L * softCap;
-            this.durableNs = durableNs;
             this.stallNs = stallNs;
             worker = new Thread(this, THREAD);
             worker.setDaemon(true);
@@ -314,7 +311,6 @@ public final class AsyncFmlFileLog {
                     owner.routing.getHandler().error("Async FmlFile log worker failed", t);
                 } catch (Throwable ignored) {}
             } finally {
-                item.done = true;
                 written++;
             }
         }
@@ -352,10 +348,10 @@ public final class AsyncFmlFileLog {
         }
 
         synchronized void detach(Appender a) {
-            if (appenders.remove(a) && appenders.isEmpty()) close();
+            if (appenders.remove(a) && appenders.isEmpty()) closeIfUnused();
         }
 
-        synchronized void close() {
+        synchronized void closeIfUnused() {
             if (closed || !appenders.isEmpty()) return;
             closed = true;
             queue.offer(sentinel);
@@ -368,11 +364,6 @@ public final class AsyncFmlFileLog {
             lostThrough = ticket;
             dropped.addAndGet(n);
             return n;
-        }
-
-        boolean durable() {
-            final long until = durableUntil;
-            return until != 0 && System.nanoTime() - until < 0;
         }
 
         boolean overHardCap() {
@@ -389,14 +380,6 @@ public final class AsyncFmlFileLog {
         // Never calls the sink directly: the worker may be stuck on a loader monitor while holding the manager's.
         void awaitWritten(BooleanSupplier done) {
             if (written != stalledAt && !awaitProgress(done, true)) stalledAt = written;
-        }
-
-        boolean enterDurable() {
-            final boolean wasOff = !durable();
-            durableUntil = System.nanoTime() + durableNs;
-            final long ticket = reserved.get();
-            if (Thread.currentThread() != worker) awaitWritten(() -> written >= ticket);
-            return wasOff;
         }
 
         boolean awaitProgress(BooleanSupplier done, boolean resetOnWrite) {
@@ -453,15 +436,10 @@ public final class AsyncFmlFileLog {
             inFlight.incrementAndGet();
             if (accepting) {
                 core.reserved.incrementAndGet();
-                final Item item = new Item(pinned, this);
-                core.queue.offer(item);
+                core.queue.offer(new Item(pinned, this));
                 if (core.parked) LockSupport.unpark(core.worker);
                 inFlight.decrementAndGet();
-                if (core.durable()) {
-                    core.awaitWritten(() -> item.done);
-                } else {
-                    core.throttle();
-                }
+                core.throttle();
                 return;
             }
             inFlight.decrementAndGet();

@@ -1,7 +1,10 @@
 package com.mitchej123.hodgepodge.client.sound;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -22,6 +25,7 @@ class BootSoundReloadTest {
 
     @BeforeEach
     void saveConfig() {
+        BootSoundReload.reset();
         final LinkedList<?> libraries = SoundSystemConfig.getLibraries();
         savedLibraries = new ArrayList<>();
         if (libraries != null) for (Object library : libraries) savedLibraries.add((Class<?>) library);
@@ -37,6 +41,7 @@ class BootSoundReloadTest {
         }
         for (Class<?> library : savedLibraries) SoundSystemConfig.addLibrary(library);
         if (savedOggCodec != null) SoundSystemConfig.setCodec("ogg", savedOggCodec);
+        BootSoundReload.reset();
     }
 
     @Test
@@ -61,5 +66,51 @@ class BootSoundReloadTest {
         final List<Object> jorbis = BootSoundReload.snapshotConfig();
         SoundSystemConfig.setCodec("ogg", CodecWav.class);
         assertNotEquals(jorbis, BootSoundReload.snapshotConfig());
+    }
+
+    @Test
+    void keepsOnlyDuringBootRefresh() {
+        BootSoundReload.onEngineStarting();
+        BootSoundReload.onEngineConstructed(() -> null);
+        assertFalse(BootSoundReload.shouldKeepEngine(true));
+        BootSoundReload.beginBootRefresh();
+        assertTrue(BootSoundReload.shouldKeepEngine(true));
+        assertFalse(BootSoundReload.shouldKeepEngine(false));
+        BootSoundReload.endBootRefresh();
+        assertFalse(BootSoundReload.shouldKeepEngine(true));
+    }
+
+    @Test
+    void restartReasonFollowsEngineState() {
+        final String[] engineReason = new String[1];
+        assertEquals("engine not loaded", BootSoundReload.restartReason(false));
+        assertEquals("engine not tracked", BootSoundReload.restartReason(true));
+
+        BootSoundReload.onEngineStarting();
+        BootSoundReload.onEngineConstructed(() -> engineReason[0]);
+        assertNull(BootSoundReload.restartReason(true));
+
+        engineReason[0] = "sources already created";
+        assertEquals("sources already created", BootSoundReload.restartReason(true));
+        engineReason[0] = null;
+
+        BootSoundReload.onSoundCreated();
+        assertEquals("sounds already created", BootSoundReload.restartReason(true));
+        BootSoundReload.onEngineStarting();
+        assertNull(BootSoundReload.restartReason(true));
+
+        final int normal = SoundSystemConfig.getNumberNormalChannels();
+        try {
+            SoundSystemConfig.setNumberNormalChannels(normal + 1);
+            assertEquals("sound config changed since start", BootSoundReload.restartReason(true));
+        } finally {
+            SoundSystemConfig.setNumberNormalChannels(normal);
+        }
+        assertNull(BootSoundReload.restartReason(true));
+
+        BootSoundReload.endBootRefresh();
+        BootSoundReload.onEngineStarting();
+        BootSoundReload.onEngineConstructed(() -> null);
+        assertEquals("engine not tracked", BootSoundReload.restartReason(true));
     }
 }

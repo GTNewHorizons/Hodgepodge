@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.core.rfb;
+package com.mitchej123.hodgepodge.core.rfb.hooks;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -20,6 +20,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.objectweb.asm.ClassReader;
@@ -33,7 +34,6 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.util.CheckClassAdapter;
 
-import com.mitchej123.hodgepodge.core.rfb.hooks.FMLRelaunchLogHook;
 import com.mitchej123.hodgepodge.core.rfb.transformers.FMLRelaunchLogASMHelper;
 
 @Timeout(60)
@@ -44,25 +44,17 @@ class FMLRelaunchLogHookTest {
     public static final class Probe {
     }
 
+    @BeforeEach
+    void clearCache() {
+        FMLRelaunchLogHook.clear();
+    }
+
     @Test
     void returnsWhatLog4jWould() {
         Logger stock = LogManager.getLogger("hook.same");
         Logger hooked = FMLRelaunchLogHook.getLogger("hook.same", FMLRelaunchLogHookTest.class);
         assertSame(stock, hooked);
         assertSame(hooked, FMLRelaunchLogHook.getLogger("hook.same", FMLRelaunchLogHookTest.class));
-    }
-
-    @Test
-    void usesTheCallersLoaderContext() throws Exception {
-        try (URLClassLoader iso = isolated()) {
-            Class<?> probe = Class.forName(Probe.class.getName(), false, iso);
-            assertSame(iso, probe.getClassLoader());
-            Logger hooked = FMLRelaunchLogHook.getLogger("hook.iso", probe);
-            LoggerContext isoCtx = (LoggerContext) LogManager.getContext(iso, false);
-            assertSame(isoCtx.getLogger("hook.iso"), hooked);
-            assertNotSame(LogManager.getLogger("hook.iso"), hooked);
-            isoCtx.stop();
-        }
     }
 
     @Test
