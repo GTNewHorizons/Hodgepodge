@@ -1577,6 +1577,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixPerspectiveCamera)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
+    FIX_BOP_EMERALD_GENERATION(new MixinBuilder()
+            .addCommonMixins("biomesoplenty.MixinBiomeEmeraldGeneration")
+            .setApplyIf(() -> FixesConfig.fixBOPEmeraldGeneration)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
     DEDUPLICATE_FORESTRY_COMPAT_IN_BOP(new MixinBuilder()
             .addCommonMixins("biomesoplenty.MixinForestryIntegration")
             .setApplyIf(() -> FixesConfig.deduplicateForestryCompatInBOP)
