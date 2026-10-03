@@ -113,18 +113,16 @@ public abstract class MixinPlayerManager_ThrottleChunkGen {
                     final long packed = chunksToLoad.getLong(i);
                     final int x = ChunkPosUtil.getPackedX(packed);
                     final int z = ChunkPosUtil.getPackedZ(packed);
-                    if (cps.chunkExists(x, z) || (acl != null && acl.chunkExists(this.theWorldServer, x, z))) {
-                        final boolean loaded = cps.chunkExists(x, z);
+                    if (cps.chunkExists(x, z)) {
+                        // Already loaded. Re-track orphaned chunks: terrain but never populated.
                         this.getOrCreateChunkWatcher(x, z, true).addPlayer(player);
-                        // Re-track orphaned chunks: loaded in memory with terrain but never populated.
-                        // Only check chunks already loaded. provideChunk on one still loading forces the load
-                        // onto the server thread. MixinChunkIOProvider_TrackPopulation checks the rest.
-                        if (loaded) {
-                            final Chunk chunk = cps.provideChunk(x, z);
-                            if (chunk != null && !chunk.isTerrainPopulated) {
-                                scheduler.trackIfUnpopulated(chunk, x, z);
-                            }
+                        final Chunk chunk = cps.provideChunk(x, z);
+                        if (chunk != null && !chunk.isTerrainPopulated) {
+                            scheduler.trackIfUnpopulated(chunk, x, z);
                         }
+                    } else if (acl != null && acl.chunkExists(this.theWorldServer, x, z)) {
+                        // On disk. Loads async, MixinChunkIOProvider_TrackPopulation tracks it when done.
+                        this.getOrCreateChunkWatcher(x, z, true).addPlayer(player);
                     } else {
                         needsGen.add(packed);
                     }
