@@ -665,6 +665,7 @@ public class FixesConfig {
 
     @Config.Comment("Make Biomes O' Plenty emerald generation respect its OreGeneration config")
     @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
     public static boolean fixBOPEmeraldGeneration;
 
     @Config.Comment("Removes duplicate Fermenter and Squeezer recipes and flower registration")
