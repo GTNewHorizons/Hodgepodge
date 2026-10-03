@@ -422,6 +422,35 @@ class LoginSessionLifecycleTest {
             });
         }
 
+        /** /save-all flush writes on another thread; finishing its own save must not hide the IO thread's one. */
+        public void testFlushWhileIoThreadWritesKeepsBothVisible() throws Exception {
+            withChunkDir(root -> {
+                try {
+                    LoadProbe loader = new LoadProbe(root.toFile());
+                    loader.enqueue(0, 1);
+                    loader.enqueue(1, 1);
+                    net.minecraft.world.storage.ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+                    net.minecraft.world.chunk.storage.RegionFile region = net.minecraft.world.chunk.storage.RegionFileCache
+                            .createOrLoadRegionFile(root.toFile(), 0, 0);
+                    synchronized (region) {
+                        loader.enqueue(0, 2);
+                        awaitInFlight(loader, 0);
+                        // The flush runs on this thread, which holds the region monitor, so it completes its write
+                        // while the IO thread is still stuck in the middle of writing chunk 0.
+                        loader.enqueue(1, 2);
+                        loader.saveExtraData();
+                        assertEquals(2, loader.load(1), "flushed chunk is on disk");
+                        assertEquals(2, loader.load(0), "chunk still being written by the IO thread stays visible");
+                    }
+                    net.minecraft.world.storage.ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+                    assertEquals(2, loader.load(0));
+                    assertEquals(2, loader.load(1));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+
         public void testChunkExistsDuringFirstSave() throws Exception {
             withChunkDir(root -> {
                 try {
