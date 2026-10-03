@@ -584,6 +584,12 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinAnvilChunkLoader_SaveQueue")
             .setApplyIf(() -> FixesConfig.fixChunkSaveQueueRace)
             .setPhase(Phase.EARLY)),
+    FIX_CHUNK_LOAD_DURING_SAVE(new MixinBuilder("Prevent loading an outdated chunk from disk while its newer save is being written")
+            .addCommonMixins(
+                    "minecraft.MixinAnvilChunkLoader_LoadDuringSave",
+                    "minecraft.AccessorAnvilChunkLoaderPendingChunk")
+            .setApplyIf(() -> FixesConfig.fixChunkLoadDuringSave)
+            .setPhase(Phase.EARLY)),
     THREADED_WORLDDATA_SAVING(new MixinBuilder()
             .addCommonMixins(
                     "minecraft.MixinMapStorage_threadedIO",
