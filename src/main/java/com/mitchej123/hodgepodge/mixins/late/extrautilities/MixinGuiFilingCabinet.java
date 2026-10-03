@@ -72,9 +72,8 @@ public abstract class MixinGuiFilingCabinet extends GuiContainer {
     @Override
     public void initGui() {
         int padding = Loader.isModLoaded("NotEnoughItems") ? 42 : 0;
-        hodgepodge$rows = Math.min(
-                (inventorySlots.inventorySlots.size() - 36) / 9,
-                Math.max(3, (height - 115 - padding) / 18));
+        hodgepodge$rows = Math
+                .min((inventorySlots.inventorySlots.size() - 36) / 9, Math.max(3, (height - 115 - padding) / 18));
         xSize = 195;
         ySize = 115 + hodgepodge$rows * 18;
         super.initGui();
