@@ -446,6 +446,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.packets.MixinS01PacketJoinGame_FixDimensionID")
             .setApplyIf(() -> FixesConfig.fixLoginDimensionIDOverflow)
             .setPhase(Phase.EARLY)),
+    FIX_BED_HEIGHT_OVERFLOW(new MixinBuilder("Fix bed height overflowing on multiplayer")
+            .addCommonMixins("minecraft.packets.MixinS0APacketUseBed_FixHeightOverflow")
+            .setApplyIf(() -> FixesConfig.fixBedHeightOverflow)
+            .setPhase(Phase.EARLY)),
     ADD_MEMORY_CLEANING_SHUTDOWN_HOOKS(new MixinBuilder()
             .addCommonMixins("memory.MixinMinecraftServer_ShutdownHook")
             .addClientMixins("memory.MixinMinecraft_ShutdownHook")
@@ -583,6 +587,12 @@ public enum Mixins implements IMixins {
     FIX_CHUNK_SAVE_QUEUE(new MixinBuilder("Prevent chunk saves from being stranded during IO task removal")
             .addCommonMixins("minecraft.MixinAnvilChunkLoader_SaveQueue")
             .setApplyIf(() -> FixesConfig.fixChunkSaveQueueRace)
+            .setPhase(Phase.EARLY)),
+    FIX_CHUNK_LOAD_DURING_SAVE(new MixinBuilder("Prevent loading an outdated chunk from disk while its newer save is being written")
+            .addCommonMixins(
+                    "minecraft.MixinAnvilChunkLoader_LoadDuringSave",
+                    "minecraft.AccessorAnvilChunkLoaderPendingChunk")
+            .setApplyIf(() -> FixesConfig.fixChunkLoadDuringSave)
             .setPhase(Phase.EARLY)),
     THREADED_WORLDDATA_SAVING(new MixinBuilder()
             .addCommonMixins(
