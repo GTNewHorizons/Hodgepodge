@@ -12,6 +12,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixChunkSaveQueueRace;
 
+    @Config.Comment("Prevent a chunk from being loaded from disk (outdated, or regenerated if never saved) while its newer save is being written")
+    @Config.DefaultBoolean(true)
+    public static boolean fixChunkLoadDuringSave;
+
     @Config.Comment("Fix Vanilla IOOBE when rendering chunks at a distance larger than 16")
     @Config.DefaultBoolean(true)
     public static boolean fixVanillaIOOBERenderDistance;
@@ -27,6 +31,10 @@ public class FixesConfig {
     @Config.Comment("Safely enlarge the potion array before other mods")
     @Config.DefaultBoolean(true)
     public static boolean enlargePotionArray;
+
+    @Config.Comment("Fix sleeping in beds at Y >= 128 moving players into the void on multiplayer")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBedHeightOverflow;
 
     @Config.Comment("Fix bogus FMLProxyPacket NPEs on integrated server crashes.")
     @Config.DefaultBoolean(true)
@@ -523,6 +531,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixSaveFileWrittenToExistingDirectory;
 
+    @Config.Comment("Fix a crash in the Superflat world customization screen when a layer's block has no registered ItemBlock")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixFlatWorldLayerMissingItemBlockCrash;
+
     @Config.Comment("Fix a crash caused when a mod tries to send a chat message to a FakePlayer")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -657,6 +670,11 @@ public class FixesConfig {
     public static boolean fixBibliowoodsForestryRecipes;
 
     // Biomes O' Plenty
+
+    @Config.Comment("Make Biomes O' Plenty emerald generation respect its OreGeneration config")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBOPEmeraldGeneration;
 
     @Config.Comment("Removes duplicate Fermenter and Squeezer recipes and flower registration")
     @Config.DefaultBoolean(true)
