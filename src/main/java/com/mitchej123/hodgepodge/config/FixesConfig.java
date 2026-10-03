@@ -646,10 +646,10 @@ public class FixesConfig {
     public static boolean fixBibliocraftArmorStandBreak;
 
     @Config.Comment("""
-            Mark the Bibliocraft Armor Stand to save when its inventory is modified without going through its GUI (hoppers or shift-right-clicking),
-            preventing the items on the armor stand from rolling back on save (and potentially duplicating / voiding.)""")
+            Mark Bibliocraft inventories (armor stands, shelves, tables, bookcases, racks, ...) to save when their contents are changed without going through their GUI
+            (e.g. right-clicking an item onto them, hoppers or shift-right-clicking), preventing the items from rolling back on save (and potentially duplicating / voiding).""")
     @Config.DefaultBoolean(true)
-    public static boolean bibliocraftArmorStandMarkDirty;
+    public static boolean bibliocraftInventoriesMarkDirty;
 
     @Config.Comment("Fix Bibliocraft path sanitization")
     @Config.DefaultBoolean(true)
