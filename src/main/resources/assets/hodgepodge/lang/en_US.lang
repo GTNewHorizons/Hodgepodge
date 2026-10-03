@@ -120,3 +120,6 @@ hodgepodge.disconnect.ip_banned=You have been IP banned.
 hodgepodge.disconnect.server_starting=Server is still starting! Please wait before reconnecting.
 hodgepodge.disconnect.session_cleanup_pending=Your previous session is still being cleaned up, please reconnect in a moment
 hodgepodge.disconnect.session_cleanup_failed=Your previous session could not be cleaned up safely. Please contact a server administrator.
+
+difficulty.lock.title=Lock World Difficulty
+difficulty.lock.question=Are you sure you want to lock the difficulty of this world? This will set this world to always be %1$s, and you will never be able to change that again.
