@@ -12,6 +12,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixChunkSaveQueueRace;
 
+    @Config.Comment("Prevent a chunk from being loaded from disk (outdated, or regenerated if never saved) while its newer save is being written")
+    @Config.DefaultBoolean(true)
+    public static boolean fixChunkLoadDuringSave;
+
     @Config.Comment("Fix Vanilla IOOBE when rendering chunks at a distance larger than 16")
     @Config.DefaultBoolean(true)
     public static boolean fixVanillaIOOBERenderDistance;
@@ -27,6 +31,10 @@ public class FixesConfig {
     @Config.Comment("Safely enlarge the potion array before other mods")
     @Config.DefaultBoolean(true)
     public static boolean enlargePotionArray;
+
+    @Config.Comment("Fix sleeping in beds at Y >= 128 moving players into the void on multiplayer")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBedHeightOverflow;
 
     @Config.Comment("Fix bogus FMLProxyPacket NPEs on integrated server crashes.")
     @Config.DefaultBoolean(true)
@@ -638,10 +646,10 @@ public class FixesConfig {
     public static boolean fixBibliocraftArmorStandBreak;
 
     @Config.Comment("""
-            Mark the Bibliocraft Armor Stand to save when its inventory is modified without going through its GUI (hoppers or shift-right-clicking),
-            preventing the items on the armor stand from rolling back on save (and potentially duplicating / voiding.)""")
+            Mark Bibliocraft inventories (armor stands, shelves, tables, bookcases, racks, ...) to save when their contents are changed without going through their GUI
+            (e.g. right-clicking an item onto them, hoppers or shift-right-clicking), preventing the items from rolling back on save (and potentially duplicating / voiding).""")
     @Config.DefaultBoolean(true)
-    public static boolean bibliocraftArmorStandMarkDirty;
+    public static boolean bibliocraftInventoriesMarkDirty;
 
     @Config.Comment("Fix Bibliocraft path sanitization")
     @Config.DefaultBoolean(true)
@@ -662,6 +670,11 @@ public class FixesConfig {
     public static boolean fixBibliowoodsForestryRecipes;
 
     // Biomes O' Plenty
+
+    @Config.Comment("Make Biomes O' Plenty emerald generation respect its OreGeneration config")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBOPEmeraldGeneration;
 
     @Config.Comment("Removes duplicate Fermenter and Squeezer recipes and flower registration")
     @Config.DefaultBoolean(true)
