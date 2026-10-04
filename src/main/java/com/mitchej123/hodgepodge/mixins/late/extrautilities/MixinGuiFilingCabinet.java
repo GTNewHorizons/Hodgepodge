@@ -5,7 +5,6 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -95,22 +94,17 @@ public abstract class MixinGuiFilingCabinet extends GuiContainer {
             method = "sortItems",
             at = @At(value = "INVOKE", target = "Ljava/util/Collections;sort(Ljava/util/List;Ljava/util/Comparator;)V"),
             remap = false)
-    private void hodgepodge$sortCachedTooltips(List<Slot> slots, Comparator<Slot> comparator) {
+    private void hodgepodge$sortWithoutTooltips(List<Slot> slots, Comparator<Slot> comparator) {
         Map<Slot, String> keys = new IdentityHashMap<>();
-        EntityClientPlayerMP player = mc.thePlayer;
-        boolean sneaking = player.movementInput.sneak;
-        try {
-            player.movementInput.sneak = false;
-            for (Slot slot : slots) {
-                ItemStack stack = slot.getStack();
-                if (stack != null) {
-                    keys.put(slot, String.join("\n", stack.getTooltip(player, true)) + "\n");
-                }
+        for (Slot slot : slots) {
+            ItemStack stack = slot.getStack();
+            if (stack != null) {
+                keys.put(slot, stack.getDisplayName());
             }
-        } finally {
-            player.movementInput.sneak = sneaking;
         }
-        slots.sort(Comparator.comparing(keys::get, Comparator.nullsLast(Comparator.naturalOrder())));
+        slots.sort(
+                Comparator.comparing((Slot slot) -> keys.get(slot), Comparator.nullsLast(Comparator.naturalOrder()))
+                        .thenComparingInt(slot -> slot.slotNumber));
     }
 
     @Inject(
