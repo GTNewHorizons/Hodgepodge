@@ -261,6 +261,17 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinNetHandlerPlayClient_FixEntityAttributesRange")
             .setApplyIf(() -> FixesConfig.fixEntityAttributesRange)
             .setPhase(Phase.EARLY)),
+    FIX_LONG_POTION_DURATION(new MixinBuilder("Fix Potion Durations Longer Than 27 Minutes")
+            .addCommonMixins(
+                    "minecraft.MixinS1DPacketEntityEffect_LongDuration",
+                    "minecraft.MixinNetHandlerPlayServer_LongPotionDuration",
+                    "minecraft.PotionEffectAccessor")
+            .setApplyIf(() -> FixesConfig.fixLongPotionDuration)
+            .setPhase(Phase.EARLY)),
+    FIX_LONG_TIMER_FORMAT(new MixinBuilder("Show Timers Longer Than An Hour As h:mm:ss")
+            .addClientMixins("minecraft.MixinStringUtils_LongTimer")
+            .setApplyIf(() -> FixesConfig.fixLongTimerFormat)
+            .setPhase(Phase.EARLY)),
     ENDERMAN_BLOCK_GRAB_DISABLE(new MixinBuilder("Disable Endermen Grabbing Blocks")
             .addCommonMixins("minecraft.MixinEntityEndermanGrab")
             .setApplyIf(() -> TweaksConfig.endermanBlockGrabDisable)
@@ -450,6 +461,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.packets.MixinS01PacketJoinGame_FixDimensionID")
             .setApplyIf(() -> FixesConfig.fixLoginDimensionIDOverflow)
             .setPhase(Phase.EARLY)),
+    FIX_BED_HEIGHT_OVERFLOW(new MixinBuilder("Fix bed height overflowing on multiplayer")
+            .addCommonMixins("minecraft.packets.MixinS0APacketUseBed_FixHeightOverflow")
+            .setApplyIf(() -> FixesConfig.fixBedHeightOverflow)
+            .setPhase(Phase.EARLY)),
     ADD_MEMORY_CLEANING_SHUTDOWN_HOOKS(new MixinBuilder()
             .addCommonMixins("memory.MixinMinecraftServer_ShutdownHook")
             .addClientMixins("memory.MixinMinecraft_ShutdownHook")
@@ -587,6 +602,12 @@ public enum Mixins implements IMixins {
     FIX_CHUNK_SAVE_QUEUE(new MixinBuilder("Prevent chunk saves from being stranded during IO task removal")
             .addCommonMixins("minecraft.MixinAnvilChunkLoader_SaveQueue")
             .setApplyIf(() -> FixesConfig.fixChunkSaveQueueRace)
+            .setPhase(Phase.EARLY)),
+    FIX_CHUNK_LOAD_DURING_SAVE(new MixinBuilder("Prevent loading an outdated chunk from disk while its newer save is being written")
+            .addCommonMixins(
+                    "minecraft.MixinAnvilChunkLoader_LoadDuringSave",
+                    "minecraft.AccessorAnvilChunkLoaderPendingChunk")
+            .setApplyIf(() -> FixesConfig.fixChunkLoadDuringSave)
             .setPhase(Phase.EARLY)),
     THREADED_WORLDDATA_SAVING(new MixinBuilder()
             .addCommonMixins(
@@ -1277,7 +1298,9 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.EARLY)),
     IC2_REACTOR_DUPE(new MixinBuilder("IC2 Reactor Dupe Fix")
-            .addCommonMixins("ic2.MixinTileEntityReactorChamberElectricNoDupe")
+            .addCommonMixins(
+                    "ic2.MixinTileEntityReactorChamberElectricNoDupe",
+                    "ic2.MixinTileEntityNuclearReactorElectric_RefreshChambers")
             .setApplyIf(() -> FixesConfig.fixIc2ReactorDupe)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.EARLY)),
@@ -1567,6 +1590,11 @@ public enum Mixins implements IMixins {
     FIX_QUICKSAND_XRAY(new MixinBuilder()
             .addCommonMixins("biomesoplenty.MixinBlockMud_FixXray")
             .setApplyIf(() -> FixesConfig.fixPerspectiveCamera)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    FIX_BOP_EMERALD_GENERATION(new MixinBuilder()
+            .addCommonMixins("biomesoplenty.MixinBiomeEmeraldGeneration")
+            .setApplyIf(() -> FixesConfig.fixBOPEmeraldGeneration)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
     DEDUPLICATE_FORESTRY_COMPAT_IN_BOP(new MixinBuilder()
@@ -2040,9 +2068,9 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixBibliocraftArmorStandBreak)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
-    BIBLIOCRAFT_ARMOR_STAND_MARK_DIRTY(new MixinBuilder("Mark the Bibliocraft Armor Stand to save when its inventory is modified")
-            .addCommonMixins("bibliocraft.MixinTileEntityArmorStand_MarkDirty")
-            .setApplyIf(() -> FixesConfig.bibliocraftArmorStandMarkDirty)
+    BIBLIOCRAFT_INVENTORIES_MARK_DIRTY(new MixinBuilder("Mark Bibliocraft inventories to save when they are modified")
+            .addCommonMixins("bibliocraft.MixinBibliocraftInventories_MarkDirty")
+            .setApplyIf(() -> FixesConfig.bibliocraftInventoriesMarkDirty)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
     BIBLIOCRAFT_PATH_SANITIZATION_FIX(new MixinBuilder("Path sanitization fix")
