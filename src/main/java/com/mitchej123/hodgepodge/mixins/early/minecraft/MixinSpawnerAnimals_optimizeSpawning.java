@@ -26,6 +26,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.mixins.hooks.BukkitSpawnHelper;
@@ -200,7 +201,7 @@ public class MixinSpawnerAnimals_optimizeSpawning {
                                         try {
                                             entityLiving = ((SpawnListEntryExt) spawnListEntry).constructEntity(world);
                                         } catch (Exception exception) {
-                                            exception.printStackTrace();
+                                            Common.log.error(exception);
                                             return totalSpawnedEntities;
                                         }
 
@@ -316,7 +317,7 @@ public class MixinSpawnerAnimals_optimizeSpawning {
                         try {
                             entityLiving = ((SpawnListEntryExt) spawnListEntry).constructEntity(world);
                         } catch (Exception exception) {
-                            exception.printStackTrace();
+                            Common.log.error(exception);
                             continue;
                         }
 

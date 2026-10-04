@@ -4,6 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.util.LongHashMap;
 
+import com.mitchej123.hodgepodge.client.sound.OutputDeviceSupport;
+import com.mitchej123.hodgepodge.client.sound.ReverbSupport;
+import com.mitchej123.hodgepodge.client.sound.SoundDeviceTweaks;
 import com.mitchej123.hodgepodge.util.SnapshotLongHashMap;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -23,6 +26,9 @@ public class ClientTicker {
 
             if (ticks % 5 == 0) {
                 debugPieTextOffset++;
+                OutputDeviceSupport.tick();
+                SoundDeviceTweaks.tick();
+                ReverbSupport.tick();
             }
         } else if (event.phase == TickEvent.Phase.END) {
             final Minecraft mc = Minecraft.getMinecraft();

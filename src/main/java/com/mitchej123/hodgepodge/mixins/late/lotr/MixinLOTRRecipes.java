@@ -9,6 +9,8 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
+import com.mitchej123.hodgepodge.Common;
+
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import lotr.common.recipe.LOTRRecipes;
 
@@ -28,7 +30,7 @@ public class MixinLOTRRecipes {
                     .getPrivateValue(FurnaceRecipes.class, FurnaceRecipes.smelting(), 2);
             map.put(new ItemStack(item, 1, 32767), xp);
         } catch (Exception e) {
-            e.printStackTrace();
+            Common.log.error(e);
         }
     }
 }

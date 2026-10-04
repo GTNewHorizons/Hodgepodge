@@ -36,6 +36,9 @@ hodgepodge.soundsmenu.refreshsounds=Обновить звуки
 hodgepodge.bed_respawn.msg=Установить точку респауна
 hodgepodge.menu.mod_options=Настройки модов...
 
+hodgepodge.chat.huge_message.logged=§cКто-то попытался отправить вам огромное сообщение в чат, которое выкинуло бы вас с сервера. Обратитесь к администратору сервера за подробностями. При обращении укажите эти данные: идентификатор инцидента %s§c. Начало исходного сообщения: %s
+hodgepodge.chat.huge_message.unlogged=§cКто-то попытался отправить вам огромное сообщение в чат, которое выкинуло бы вас с сервера. Если вы не можете определить источник и это повторяется, попросите администратора сервера включить logHugeChat в HodgePodge. Начало исходного сообщения: %s
+
 bettermodlist.sort.normal=Обычный
 bettermodlist.sort.a_to_z=A-Z
 bettermodlist.sort.z_to_a=Z-A
@@ -75,3 +78,22 @@ hodgepodge.debug.help.9=F3 + S/T = Перезагрузить набор рес�
 hodgepodge.debug.help.etfuturum=F3 + F4 = [Et-Futurum-Requiem] Открыть переключатель игрового режима
 hodgepodge.debug.help.nei.1=%s = [NEI] Открыть оверлей появления мобов
 hodgepodge.debug.help.nei.2=%s = [NEI] Открыть оверлей чанка
+
+hodgepodge.disconnect.server_shutdown=Сервер закрыт
+hodgepodge.disconnect.idle=Вы слишком долго бездействовали!
+hodgepodge.disconnect.illegal_stance=Недопустимая поза
+hodgepodge.disconnect.illegal_position=Недопустимая позиция
+hodgepodge.disconnect.flying=Полёт на этом сервере запрещён
+hodgepodge.disconnect.illegal_characters=Недопустимые символы в чате
+hodgepodge.disconnect.invalid_entity=Попытка атаковать несуществующее существо
+hodgepodge.disconnect.hardcore_death=Вы погибли. Игра окончена!
+hodgepodge.disconnect.logged_in_elsewhere=Вы вошли в игру с другого устройства
+hodgepodge.disconnect.not_whitelisted=Вас нет в белом списке этого сервера!
+hodgepodge.disconnect.server_full=Сервер переполнен!
+hodgepodge.disconnect.name_taken=Это имя уже занято.
+hodgepodge.disconnect.login_timeout=Вход занял слишком много времени
+hodgepodge.disconnect.banned=Вы заблокированы на этом сервере.
+hodgepodge.disconnect.ip_banned=Ваш IP-адрес заблокирован.
+hodgepodge.disconnect.server_starting=Сервер ещё запускается! Подождите перед повторным подключением.
+hodgepodge.disconnect.session_cleanup_pending=Ваша предыдущая сессия ещё завершается, переподключитесь через мгновение
+hodgepodge.disconnect.session_cleanup_failed=Не удалось безопасно завершить вашу предыдущую сессию. Обратитесь к администратору сервера.

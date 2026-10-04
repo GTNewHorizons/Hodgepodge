@@ -8,6 +8,14 @@ public class FixesConfig {
 
     /* ====== Minecraft fixes start ===== */
 
+    @Config.Comment("Prevent pending chunk saves from losing their place in the file IO queue")
+    @Config.DefaultBoolean(true)
+    public static boolean fixChunkSaveQueueRace;
+
+    @Config.Comment("Prevent a chunk from being loaded from disk (outdated, or regenerated if never saved) while its newer save is being written")
+    @Config.DefaultBoolean(true)
+    public static boolean fixChunkLoadDuringSave;
+
     @Config.Comment("Fix Vanilla IOOBE when rendering chunks at a distance larger than 16")
     @Config.DefaultBoolean(true)
     public static boolean fixVanillaIOOBERenderDistance;
@@ -23,6 +31,10 @@ public class FixesConfig {
     @Config.Comment("Safely enlarge the potion array before other mods")
     @Config.DefaultBoolean(true)
     public static boolean enlargePotionArray;
+
+    @Config.Comment("Fix sleeping in beds at Y >= 128 moving players into the void on multiplayer")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBedHeightOverflow;
 
     @Config.Comment("Fix bogus FMLProxyPacket NPEs on integrated server crashes.")
     @Config.DefaultBoolean(true)
@@ -113,6 +125,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixFriendlyCreatureSounds;
 
+    @Config.Comment("Fix vanilla furnaces' burn time overflowing from long burn time fuel")
+    @Config.DefaultBoolean(true)
+    public static boolean fixFuelOverflow;
+
     @Config.Comment("Fix Volume Slider is ineffective until reaching the lower end")
     @Config.DefaultBoolean(true)
     public static boolean logarithmicVolumeControl;
@@ -145,6 +161,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixHugeChatKick;
 
+    @Config.Comment("Send a translatable message instead of a hardcoded English one when rejecting logins while the server is still starting")
+    @Config.DefaultBoolean(true)
+    public static boolean fixHandshakeStartingKickTranslatable;
+
     @Config.Comment("Fix the bug that makes fireballs stop moving when chunk unloads")
     @Config.DefaultBoolean(true)
     public static boolean fixImmobileFireballs;
@@ -168,6 +188,11 @@ public class FixesConfig {
     @Config.Comment("Allows the server to assign the logged in UUID to the same username when online_mode is false")
     @Config.DefaultBoolean(true)
     public static boolean fixNetHandlerLoginServerOfflineMode;
+
+    @Config.Comment("Hold back a login until any earlier session for the same UUID has finished leaving the world, "
+            + "instead of letting both exist at once and duplicating the player's inventory")
+    @Config.DefaultBoolean(true)
+    public static boolean fixPlayerCloningOnReconnect;
 
     @Config.Comment("Prevents crash if server sends itemStack with index larger than client's container")
     @Config.DefaultBoolean(true)
@@ -250,6 +275,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixRconThreading;
 
+    @Config.Comment("Fix vanilla disconnect messages being sent as hardcoded English text instead of translation keys")
+    @Config.DefaultBoolean(true)
+    public static boolean fixUnlocalizedDisconnectMessages;
+
     @Config.Comment("Fix exiting fullscreen when you tab out of the game")
     @Config.DefaultBoolean(true)
     public static boolean fixUnfocusedFullscreen;
@@ -296,6 +325,15 @@ public class FixesConfig {
     @Config.Comment("Spigot-style extended chunk format to remove the 2MB chunk size limit")
     @Config.DefaultBoolean(true)
     public static boolean remove2MBChunkLimit;
+
+    @Config.Comment("Change incoming packet processing from a fixed 1001 packet limit to a time limit allowing for potentially more packets to be processed")
+    @Config.DefaultBoolean(true)
+    public static boolean changeReceivedPacketCountLimitToTimeLimit;
+
+    @Config.Comment("Max time spent processing received packets in nanoseconds (1ms = 1_000_000ns)")
+    @Config.RangeInt(min = 1_000, max = 50_000_000)
+    @Config.DefaultInt(5_000_000)
+    public static int receivedPacketTimeLimit;
 
     @Config.Comment("Disable the creative search tab since it can be very laggy in large modpacks")
     @Config.DefaultBoolean(true)
@@ -506,6 +544,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixSaveFileWrittenToExistingDirectory;
 
+    @Config.Comment("Fix a crash in the Superflat world customization screen when a layer's block has no registered ItemBlock")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixFlatWorldLayerMissingItemBlockCrash;
+
     @Config.Comment("Fix a crash caused when a mod tries to send a chat message to a FakePlayer")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -560,6 +603,16 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean raiseMissingItemsFPS;
+
+    @Config.Comment("Fix block hit delay after game mode changed from creative to survival.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBlockHitDelay;
+
+    @Config.Comment("Make the Furnace save the max burn time of the current fuel to NBT, so WAILA can determine the percent fuel remaining.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean furnaceSaveItemBurnTimeToNBT;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -601,6 +654,16 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixBibliocraftPackets;
 
+    @Config.Comment("Fix Bibliocraft armor stands breaking their other half without checking if the other half is an Armor Stand.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBibliocraftArmorStandBreak;
+
+    @Config.Comment("""
+            Mark Bibliocraft inventories (armor stands, shelves, tables, bookcases, racks, ...) to save when their contents are changed without going through their GUI
+            (e.g. right-clicking an item onto them, hoppers or shift-right-clicking), preventing the items from rolling back on save (and potentially duplicating / voiding).""")
+    @Config.DefaultBoolean(true)
+    public static boolean bibliocraftInventoriesMarkDirty;
+
     @Config.Comment("Fix Bibliocraft path sanitization")
     @Config.DefaultBoolean(true)
     public static boolean fixBibliocraftPathSanitization;
@@ -620,6 +683,11 @@ public class FixesConfig {
     public static boolean fixBibliowoodsForestryRecipes;
 
     // Biomes O' Plenty
+
+    @Config.Comment("Make Biomes O' Plenty emerald generation respect its OreGeneration config")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBOPEmeraldGeneration;
 
     @Config.Comment("Removes duplicate Fermenter and Squeezer recipes and flower registration")
     @Config.DefaultBoolean(true)
@@ -822,6 +890,10 @@ public class FixesConfig {
     @Config.Comment("Fix IC2 filled tin cans not running logic on both client and server")
     @Config.DefaultBoolean(true)
     public static boolean fixIc2TinCan;
+
+    @Config.Comment("Fix IC2 rubber saplings consuming bone meal twice and allowing the stack size to underflow")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2RubberSaplingBonemeal;
 
     @Config.Comment("Fix EndlessIds incompatibility with IC2")
     @Config.DefaultBoolean(true)

@@ -55,7 +55,7 @@ public class GLErrorLoggingTransformer implements IClassTransformer, Opcodes {
                     default:
                         break label;
                 }
-                logger.debug("Removing GL Error Logging: " + mn.desc);
+                logger.debug("Removing GL Error Logging: {}", mn.desc);
                 mn.visitMaxs(1, maxlocals);
                 final InsnList list = mn.instructions;
                 list.clear();

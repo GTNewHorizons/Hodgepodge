@@ -16,6 +16,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean reloadSoundsButton;
 
+    @Config.Comment("Adds a button in the sounds menu for Hodgepodge's sound enhancements")
+    @Config.DefaultBoolean(true)
+    public static boolean soundEnhancementsButton;
+
     @Config.Comment("Adds system info to the F3 overlay (Java version and vendor; GPU name; OpenGL version; CPU cores; OS name, version and architecture)")
     @Config.DefaultBoolean(true)
     public static boolean addSystemInfo;
@@ -137,6 +141,11 @@ public class TweaksConfig {
     @Config.Comment("Show potion effect icons in inventory screens")
     @Config.DefaultBoolean(true)
     public static boolean showInventoryEffectIcons;
+
+    @Config.Comment("Uses a new player inventory texture and moves the 2x2 crafting grid, its output slot and the crafting title 2 pixels right and 4 pixels up.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean moveInventoryCraftingGrid;
 
     @Config.Comment("Stops rendering the crosshair when you are playing in third person")
     @Config.DefaultBoolean(true)
