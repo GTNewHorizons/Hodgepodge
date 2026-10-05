@@ -60,6 +60,8 @@ public abstract class MixinGuiRepair_ModernLabels extends GuiContainer {
                     target = "Lnet/minecraft/client/gui/FontRenderer;drawString(Ljava/lang/String;III)I",
                     ordinal = 4))
     private int hodgepodge$drawCostText(FontRenderer fontRenderer, String text, int x, int y, int color) {
+        x -= 2;
+        y += 2;
         Gui.drawRect(x - 2, y - 2, x + fontRenderer.getStringWidth(text) + 2, y + 10, 0x4F000000);
         return fontRenderer.drawStringWithShadow(text, x, y, color);
     }
