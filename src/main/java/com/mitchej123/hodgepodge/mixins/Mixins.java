@@ -251,6 +251,10 @@ public enum Mixins implements IMixins {
                     "fml.MixinGuiScrollingList_TexturedScrollbar")
             .setApplyIf(() -> TweaksConfig.texturedScrollbar)
             .setPhase(Phase.EARLY)),
+    MODERN_ANVIL_LABELS(new MixinBuilder("Adds the Inventory label and modern cost text to the anvil GUI")
+            .addClientMixins("minecraft.MixinGuiRepair_ModernLabels")
+            .setApplyIf(() -> TweaksConfig.modernAnvilLabels)
+            .setPhase(Phase.EARLY)),
     CLEAN_CHAT_LOGS(new MixinBuilder()
             .addClientMixins("minecraft.MixinGuiNewChat_CleanChatLogs")
             .setApplyIf(() -> TweaksConfig.cleanChatLogs)
