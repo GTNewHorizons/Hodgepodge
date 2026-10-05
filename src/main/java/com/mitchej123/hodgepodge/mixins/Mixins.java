@@ -743,6 +743,10 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinWorld_FixXray")
             .setApplyIf(() -> FixesConfig.fixPerspectiveCamera)
             .setPhase(Phase.EARLY)),
+    RETURN_CURSOR_STACK(new MixinBuilder("Return cursor stacks and synchronize inventory on container close")
+            .addCommonMixins("minecraft.MixinEntityPlayerMP_ReturnCursorStack")
+            .addClientMixins("minecraft.MixinEntityClientPlayerMP_ReturnCursorStack")
+            .setPhase(Phase.EARLY)),
     DISABLE_CREATIVE_TAB_ALL_SEARCH(new MixinBuilder("Disable the creative tab with search bar")
             .addClientMixins("minecraft.MixinGuiContainerCreative")
             .setApplyIf(() -> FixesConfig.removeCreativeSearchTab)
