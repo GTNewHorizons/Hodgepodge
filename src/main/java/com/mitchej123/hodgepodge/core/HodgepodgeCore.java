@@ -28,6 +28,7 @@ import com.mitchej123.hodgepodge.config.SoundConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.core.fml.AsmTransformers;
+import com.mitchej123.hodgepodge.core.shared.AsyncFmlFileLog;
 import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
 import com.mitchej123.hodgepodge.mixins.Mixins;
 import com.mitchej123.hodgepodge.util.StringPooler;
@@ -45,6 +46,7 @@ public class HodgepodgeCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
     private boolean replaceCoFHCoreAT = false;
 
     public HodgepodgeCore() {
+        if (!EarlyConfig.noAsyncFmlFileLog) AsyncFmlFileLog.install();
         if (!EarlyConfig.noNukeBaseMod) {
             String transformer = "com.mitchej123.hodgepodge.core.fml.transformers.early.ModContainerFactoryTransformer";
             FMLRelaunchLog.finer("Registering transformer %s", transformer);
