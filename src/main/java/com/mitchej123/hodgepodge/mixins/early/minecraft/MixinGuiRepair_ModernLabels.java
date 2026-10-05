@@ -18,8 +18,7 @@ import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 
 /**
  * Makes the anvil labels look like modern vanilla: adds the "Inventory" label and draws the cost text with a drop
- * shadow on a translucent box. The cost text outline is skipped by always taking the unicode branch and cancelling its
- * drawRect calls.
+ * shadow on a translucent box.
  */
 @Mixin(GuiRepair.class)
 public abstract class MixinGuiRepair_ModernLabels extends GuiContainer {
@@ -36,7 +35,7 @@ public abstract class MixinGuiRepair_ModernLabels extends GuiContainer {
                     ordinal = 0,
                     shift = At.Shift.AFTER))
     private void hodgepodge$drawInventoryLabel(int mouseX, int mouseY, CallbackInfo ci) {
-        fontRendererObj.drawString(I18n.format("container.inventory"), 8, ySize - 94, 4210752);
+        fontRendererObj.drawString(I18n.format("container.inventory"), 8, ySize - 94, 0x404040);
     }
 
     @ModifyExpressionValue(
@@ -60,9 +59,7 @@ public abstract class MixinGuiRepair_ModernLabels extends GuiContainer {
                     target = "Lnet/minecraft/client/gui/FontRenderer;drawString(Ljava/lang/String;III)I",
                     ordinal = 4))
     private int hodgepodge$drawCostText(FontRenderer fontRenderer, String text, int x, int y, int color) {
-        x -= 2;
-        y += 2;
-        Gui.drawRect(x - 2, y - 2, x + fontRenderer.getStringWidth(text) + 2, y + 10, 0x4F000000);
-        return fontRenderer.drawStringWithShadow(text, x, y, color);
+        Gui.drawRect(x - 4, y, x + fontRenderer.getStringWidth(text), y + 12, 0x4F000000);
+        return fontRenderer.drawStringWithShadow(text, x - 2, y + 2, color);
     }
 }
