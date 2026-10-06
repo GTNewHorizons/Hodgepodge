@@ -1002,6 +1002,7 @@ public enum Mixins implements IMixins {
             .addCommonMixins(
                     "minecraft.fastload.MixinMinecraftServer_TickStart",
                     "minecraft.fastload.MixinChunkProviderServer_DeferPopulation",
+                    "minecraft.fastload.MixinChunkIOProvider_TrackPopulation",
                     "minecraft.fastload.MixinPlayerManager_ThrottleChunkGen",
                     "minecraft.fastload.MixinChunk_SendWithoutPopulation")
             .setApplyIf(() -> SpeedupsConfig.throttleChunkGeneration)
