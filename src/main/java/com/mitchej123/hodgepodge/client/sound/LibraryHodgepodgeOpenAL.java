@@ -59,6 +59,10 @@ public class LibraryHodgepodgeOpenAL extends LibraryLWJGLOpenAL {
         }
     }
 
+    public boolean hasDecodedBuffers() {
+        return bufferMap != null && !bufferMap.isEmpty();
+    }
+
     /**
      * Releases the heap-side copy of the audio once OpenAL has it.
      * <p>
