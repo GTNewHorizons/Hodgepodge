@@ -781,6 +781,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesFilingCabinetDupe;
 
+    @Config.Comment("Use improved vertical filing cabinet GUI")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesFilingCabinetScrolling;
+
     @Config.Comment("Prevent hotkeying other items onto item filters while they are open")
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesFilterDupe;
