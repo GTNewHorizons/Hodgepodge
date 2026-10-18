@@ -229,6 +229,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiContainerCreative_AlphaTestFix")
             .setApplyIf(() -> FixesConfig.fixCreativeTabAlphaTest)
             .setPhase(Phase.EARLY)),
+    FIX_RENDER_ITEM_ALPHA_TEST_LEAK(new MixinBuilder("Fix Forge leaving GL_ALPHA_TEST disabled after drawing flat items")
+            .addClientMixins("minecraft.MixinRenderItem_AlphaTestLeak")
+            .setApplyIf(() -> FixesConfig.fixRenderItemAlphaTestLeak)
+            .setPhase(Phase.EARLY)),
     FIX_IMMOBILE_FIREBALLS(new MixinBuilder()
             .addCommonMixins("minecraft.MixinEntityFireball")
             .setApplyIf(() -> FixesConfig.fixImmobileFireballs)
