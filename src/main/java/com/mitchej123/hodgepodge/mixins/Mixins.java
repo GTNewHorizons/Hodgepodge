@@ -674,6 +674,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("forge.MixinGuiIngameForge_CrosshairInvertColors")
             .setApplyIf(() -> TweaksConfig.dontInvertCrosshairColor)
             .setPhase(Phase.EARLY)),
+    FIX_HOTBAR_SELECTION_HEIGHT(new MixinBuilder("Draw the full hotbar selection frame")
+            .addClientMixins("forge.MixinGuiIngameForge_HotbarSelectionHeight")
+            .setApplyIf(() -> FixesConfig.fixHotbarSelectionHeight)
+            .setPhase(Phase.EARLY)),
     FIX_OPENGUIHANDLER_WINDOWID(new MixinBuilder("Fix OpenGuiHandler")
             .addCommonMixins("fml.MixinOpenGuiHandler")
             .setApplyIf(() -> FixesConfig.fixForgeOpenGuiHandlerWindowId)
@@ -2065,6 +2069,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixWitcheryEid)
             .addRequiredMod(TargetedMod.WITCHERY)
             .addRequiredMod(TargetedMod.ENDLESSIDS)
+            .setPhase(Phase.LATE)),
+    FIX_WITCHERY_HOTBAR_SELECTION_HEIGHT(new MixinBuilder("Draw the full selection frame on Witchery's vampire hotbar")
+            .addClientMixins("witchery.MixinClientEvents_HotbarSelectionHeight")
+            .setApplyIf(() -> FixesConfig.fixHotbarSelectionHeight)
+            .addRequiredMod(TargetedMod.WITCHERY)
             .setPhase(Phase.LATE)),
 
     // Various Exploits/Fixes
