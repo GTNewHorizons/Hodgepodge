@@ -238,7 +238,7 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixCreativeTabAlphaTest;
 
-    @Config.Comment("Fix transparent HUD pixels turning black after Forge draws flat items (Forge GL state bug)")
+    @Config.Comment("Fix transparent pixels in the XP bar and other HUD textures turning black (Forge GL state bug)")
     @Config.DefaultBoolean(true)
     public static boolean fixRenderItemAlphaTestLeak;
 
