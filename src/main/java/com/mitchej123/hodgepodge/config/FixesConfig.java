@@ -617,6 +617,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean furnaceSaveItemBurnTimeToNBT;
+
+    @Config.Comment("Draw the full hotbar selection frame, which vanilla cuts 2 pixels short. Also applies to Witchery's vampire power bar.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixHotbarSelectionHeight;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
