@@ -238,6 +238,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixCreativeTabAlphaTest;
 
+    @Config.Comment("Fix XP and jump bar transparent pixels turning black when alpha test is left disabled by item rendering (Forge GL state bug)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixXpBarAlphaTest;
+
     @Config.Comment("Fix potions >= 128")
     @Config.DefaultBoolean(true)
     public static boolean fixPotionLimit;
