@@ -1,8 +1,11 @@
 package com.mitchej123.hodgepodge;
 
-import java.util.Set;
+import java.util.IdentityHashMap;
+import java.util.Map;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.ZombieEvent;
@@ -21,11 +24,10 @@ import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 
 public class HodgepodgeEventHandler {
 
-    public static final Set<EntityPlayerMP> playersClosedContainers = new ReferenceOpenHashSet<>();
+    public static final Map<EntityPlayerMP, Boolean> closingContainers = new IdentityHashMap<>();
 
     public void preinit() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -59,12 +61,23 @@ public class HodgepodgeEventHandler {
         if (event.isCanceled()) return;
 
         if (TweaksConfig.avoidDroppingItemsWhenClosing && event.player instanceof EntityPlayerMP
-                && playersClosedContainers.contains(event.player)) {
-            if (event.player.inventory.addItemStackToInventory(event.entityItem.getEntityItem())) {
-                event.player.inventory.setItemStack(null); // empty the item in hand
-                ((EntityPlayerMP) event.player).sendContainerToPlayer(event.player.inventoryContainer);
+                && closingContainers.containsKey(event.player)) {
+            ItemStack stack = event.entityItem.getEntityItem();
+            returnStack(event.player, stack);
+            closingContainers.put((EntityPlayerMP) event.player, true);
+            if (stack.stackSize == 0) {
                 event.setCanceled(true);
             }
+        }
+    }
+
+    public static void returnStack(EntityPlayer player, ItemStack stack) {
+        boolean creative = player.capabilities.isCreativeMode;
+        try {
+            player.capabilities.isCreativeMode = false;
+            player.inventory.addItemStackToInventory(stack);
+        } finally {
+            player.capabilities.isCreativeMode = creative;
         }
     }
 
@@ -72,9 +85,6 @@ public class HodgepodgeEventHandler {
     public void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             ServerThreadLongHashMap.refreshSnapshots();
-            if (TweaksConfig.avoidDroppingItemsWhenClosing && !playersClosedContainers.isEmpty()) {
-                playersClosedContainers.clear();
-            }
         }
     }
 
