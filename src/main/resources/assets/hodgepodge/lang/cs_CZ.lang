@@ -1,0 +1,91 @@
+key.hodgepodge.category=Hodgepodge
+key.fastBlockPlacing.desc=Rychlá stavba bloků 
+key.fastBlockPlacing.enabled=§fRychlá stavba bloků §azapnuta
+key.fastBlockPlacing.disabled=§fRychlá stavba bloků §cvypnuta
+
+tile.dirt.name=Hlína
+tile.sapling.name=Sazenice
+tile.sand.name=Písek
+tile.flower1.name=Květina
+tile.flower2.name=Květina
+tile.stoneSlab.name=Panel
+tile.monsterStoneEgg.name=Vajíčko s rybenkou
+tile.woodSlab.name=Panel
+tile.cobbleWall.name=Zeď
+tile.quartzBlock.name=Křemenný blok
+tile.clayHardenedStained.name=Terakota
+tile.woolCarpet.name=Koberec
+tile.doublePlant.name=Vysoká rostlina
+
+item.dyePowder.name=Barvivo
+item.skull.name=Lebka
+item.fish.name=Ryba
+
+commands.time.get=Aktuální světový čas je %s (čas ve dne: %s)
+commands.time.usageWithGet=/time <set|add> <value> OR /time get
+
+hodgepodge.soundsmenu.refreshsounds=Obnovit zvuky
+hodgepodge.bed_respawn.msg=Počáteční místo nastaveno
+hodgepodge.menu.mod_options=Nastavení modů...
+
+bettermodlist.sort.normal=Normální
+bettermodlist.sort.a_to_z=A-Z
+bettermodlist.sort.z_to_a=Z-A
+bettermodlist.gui.modlistinfo1=OMG vše je jiné!
+bettermodlist.gui.modlistinfo2=Nové rozložení od:
+
+hodgepodge.debug.advanced_tooltips.enabled=Pokročilé popisky itemů: §aZapnuty
+hodgepodge.debug.advanced_tooltips.disabled=Pokročilé popisky itemů: §cVypnuty
+hodgepodge.debug.hitboxes.enabled=Hitboxy: §aZapnuty
+hodgepodge.debug.hitboxes.disabled=Hitboxy: §cVypnuty
+hodgepodge.debug.pause_focus.enabled=Stopnutí hry při ztrátě aktivity: §aZapnuto
+hodgepodge.debug.pause_focus.disabled=Stopnutí hry při ztrátě aktivity: §cVypnuto
+hodgepodge.debug.reload_chunks.message=Znovu načteny všechny oblasti.
+hodgepodge.debug.reload_pack.message=Znovu načteny balíčky zdrojů za %s sekund.
+hodgepodge.debug.crash.count.0=F3 + C je zmáčknuto. Tohle zhroutí hru za 6 sekund, pokud nebudou klávesy uvolněny.
+hodgepodge.debug.crash.count.1=Zhroucení za 5...
+hodgepodge.debug.crash.count.2=Zhroucení za 4...
+hodgepodge.debug.crash.count.3=Zhroucení za 3...
+hodgepodge.debug.crash.count.4=Zhroucení za 2...
+hodgepodge.debug.crash.count.5=Zhroucení za 1...
+hodgepodge.debug.crash.count.6=Čas vypršel, hra se zhroutí po puštění JAKÉKOLIV klávesy.
+hodgepodge.debug.crash.cancel=Zhroucení zrušeno.
+hodgepodge.debug.copy_location.message=Místo bylo zkopírováno do schránky.
+
+hodgepodge.debug.help.message=Klávesové zkratky:
+hodgepodge.debug.help.0=F3 = Otevřít ladící obrazovku
+hodgepodge.debug.help.1=Shift + F3 = Otevřít ladící obrazovku a zobrazit graf výkonu
+hodgepodge.debug.help.angelica=Alt + F3 = [Angelica] Otevřít ladící obrazovku a zobrazit graf FPS/TPS
+hodgepodge.debug.help.2=F3 + A = Znovu načíst oblasti
+hodgepodge.debug.help.3=F3 + B = Zobrazit hitboxy
+hodgepodge.debug.help.4=F3 + C = Zkopírovat lokaci jako /cofh tpx příkaz, nebo držet 6 sekund pro zhroucení hry.
+hodgepodge.debug.help.5=F3 + D = [Hodgepodge] Vyčistit chat
+hodgepodge.debug.help.6=F3 + H = Pokročilé popisky
+hodgepodge.debug.help.7=F3 + P = Stopnutí hry při ztrátě aktivity
+hodgepodge.debug.help.8=F3 + Q = [Hodgepodge] Znovu načíst balíčky zdrojů
+hodgepodge.debug.help.9=F3 + S/T = Znovu načíst balíčky zdrojů
+hodgepodge.debug.help.etfuturum=F3 + F4 = [Et-Futurum-Requiem] Otevřít přepínač herních režimů
+hodgepodge.debug.help.nei.1=%s = [NEI] Otevřít překrytí rození stvoření
+hodgepodge.debug.help.nei.2=%s = [NEI] Otevřít překrytí oblastí
+
+hodgepodge.disconnect.server_shutdown=Server byl uzavřen
+hodgepodge.disconnect.idle=Byl jsi příliš dlouho nečinný!
+hodgepodge.disconnect.illegal_stance=Neplatný postoj
+hodgepodge.disconnect.illegal_position=Neplatná pozice
+hodgepodge.disconnect.flying=Létání není na tomto serveru povoleno
+hodgepodge.disconnect.illegal_characters=Neplatné znaky v chatu
+hodgepodge.disconnect.invalid_entity=Pokus o útok na neplatnou entitu
+hodgepodge.disconnect.hardcore_death=Zemřel jsi. Konec hry!
+hodgepodge.disconnect.logged_in_elsewhere=Přihlásil ses z jiného místa
+hodgepodge.disconnect.not_whitelisted=Nejsi na seznamu povolených hráčů tohoto serveru!
+hodgepodge.disconnect.server_full=Server je plný!
+hodgepodge.disconnect.name_taken=Toto jméno je již obsazené.
+hodgepodge.disconnect.login_timeout=Přihlášení trvalo příliš dlouho
+hodgepodge.disconnect.banned=Byl jsi zabanován na tomto serveru.
+hodgepodge.disconnect.ip_banned=Tvá IP adresa byla zabanována.
+hodgepodge.disconnect.server_starting=Server se stále spouští! Před opětovným připojením chvíli počkej.
+hodgepodge.disconnect.session_cleanup_pending=Tvá předchozí relace se stále ukončuje, za chvíli se připoj znovu
+hodgepodge.disconnect.session_cleanup_failed=Tvou předchozí relaci se nepodařilo bezpečně ukončit. Kontaktuj administrátora serveru.
+
+hodgepodge.chat.huge_message.logged=§cNěkdo se ti pokusil poslat obrovskou zprávu do chatu, která by tě odpojila. Požádej administrátora serveru o podrobnosti. Při hlášení uveď tyto údaje: ID incidentu %s§c. Začátek původní zprávy: %s
+hodgepodge.chat.huge_message.unlogged=§cNěkdo se ti pokusil poslat obrovskou zprávu do chatu, která by tě odpojila. Pokud zdroj nedokážeš určit a opakuje se to, požádej administrátora serveru o zapnutí logHugeChat v HodgePodge. Začátek původní zprávy: %s

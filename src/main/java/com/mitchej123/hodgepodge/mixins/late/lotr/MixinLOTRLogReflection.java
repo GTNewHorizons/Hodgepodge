@@ -7,6 +7,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
+import com.mitchej123.hodgepodge.Common;
+
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import lotr.common.util.LOTRLog;
@@ -29,7 +31,7 @@ public class MixinLOTRLogReflection {
 
         } catch (final Exception e) {
             FMLLog.warning("LOTR: Failed to find logger!");
-            e.printStackTrace();
+            Common.log.error(e);
         }
     }
 }

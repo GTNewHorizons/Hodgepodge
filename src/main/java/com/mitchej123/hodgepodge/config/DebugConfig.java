@@ -26,4 +26,9 @@ public class DebugConfig {
     @Config.DefaultBoolean(false)
     public static boolean showChunkGenDebug;
 
+    @Config.Comment({ "Track incoming client packets for /packetstats.",
+            "When disabled, /packetstats can still inspect the existing receive queue." })
+    @Config.RequiresMcRestart
+    @Config.DefaultBoolean(true)
+    public static boolean trackIncomingPackets;
 }

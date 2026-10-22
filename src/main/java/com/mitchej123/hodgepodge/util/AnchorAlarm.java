@@ -44,7 +44,7 @@ public class AnchorAlarm {
             if (((EntityPlayer) obj).getDisplayName().equals(playerName)) {
                 NBTTagCompound nbt = ((EntityPlayer) obj).getEntityData();
                 if (!nbt.hasKey(NBT_KEY)) {
-                    Common.log.debug("[AnchorDebug] No anchors listed for player " + playerName);
+                    Common.log.debug("[AnchorDebug] No anchors listed for player {}", playerName);
                 } else {
                     byte[] bytes = nbt.getByteArray(NBT_KEY);
                     ByteBuf buf = Unpooled.wrappedBuffer(bytes);
@@ -55,15 +55,12 @@ public class AnchorAlarm {
                         int y = buf.readInt();
                         int z = buf.readInt();
                         Common.log.debug(
-                                "[AnchorDebug] Anchor (" + x
-                                        + ", "
-                                        + y
-                                        + ", "
-                                        + z
-                                        + ") at dim "
-                                        + dim
-                                        + " for player "
-                                        + playerName);
+                                "[AnchorDebug] Anchor ({}, {}, {}) at dim {} for player {}",
+                                x,
+                                y,
+                                z,
+                                dim,
+                                playerName);
                     }
                 }
                 return true;
@@ -85,7 +82,7 @@ public class AnchorAlarm {
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.player instanceof EntityPlayerMP) {
             if (AnchorDebug) {
-                Common.log.debug("[AnchorDebug] Loading anchors for player " + event.player.getDisplayName());
+                Common.log.debug("[AnchorDebug] Loading anchors for player {}", event.player.getDisplayName());
             }
             if (event.player.getEntityData().hasKey(NBT_KEY)) {
                 byte[] bytes = event.player.getEntityData().getByteArray(NBT_KEY);
@@ -102,7 +99,7 @@ public class AnchorAlarm {
                         int z = buf.readInt();
                         WorldServer w = DimensionManager.getWorld(dim);
                         if (w == null) {
-                            if (AnchorDebug) System.out.println("[AnchorDebug] Loading dimension " + dim);
+                            if (AnchorDebug) Common.log.info("[AnchorDebug] Loading dimension {}", dim);
                             DimensionManager.initDimension(dim);
                             w = DimensionManager.getWorld(dim);
                         }
@@ -112,8 +109,8 @@ public class AnchorAlarm {
                             TileEntity t = w.getTileEntity(x, y, z);
                             if (loadedTiles.contains(t)) continue;
                             loadedTiles.add(t);
-                            if (AnchorDebug) System.out.println(
-                                    "[AnchorDebug] Loading anchor at (" + x + ", " + y + ", " + z + ") at dim " + dim);
+                            if (AnchorDebug)
+                                Common.log.info("[AnchorDebug] Loading anchor at ({}, {}, {}) at dim {}", x, y, z, dim);
                             if (t instanceof TileAnchorWorld) {
                                 if (PlayerPlugin.isSamePlayer(
                                         ((TileAnchorWorld) t).getOwner(),
@@ -127,26 +124,22 @@ public class AnchorAlarm {
                                     newbuf.writeInt(y);
                                     newbuf.writeInt(z);
                                 } else if (AnchorDebug) {
-                                    System.out.println(
-                                            "[AnchorDebug] Someone else\'s anchor at (" + x
-                                                    + ", "
-                                                    + y
-                                                    + ", "
-                                                    + z
-                                                    + ") at dim "
-                                                    + dim);
+                                    Common.log.info(
+                                            "[AnchorDebug] Someone else's anchor at ({}, {}, {}) at dim {}",
+                                            x,
+                                            y,
+                                            z,
+                                            dim);
                                 }
                             } else if (AnchorDebug) {
-                                System.out.println(
-                                        "[AnchorDebug] Failed loading anchor at (" + x
-                                                + ", "
-                                                + y
-                                                + ", "
-                                                + z
-                                                + ") at dim "
-                                                + dim);
+                                Common.log.info(
+                                        "[AnchorDebug] Failed loading anchor at ({}, {}, {}) at dim {}",
+                                        x,
+                                        y,
+                                        z,
+                                        dim);
                             }
-                        } else if (AnchorDebug) System.out.println("[AnchorDebug] Failed loading dimension " + dim);
+                        } else if (AnchorDebug) Common.log.info("[AnchorDebug] Failed loading dimension {}", dim);
                     }
                 } catch (IndexOutOfBoundsException ignored) {
                     Common.log.error("Error reading anchor list!");
@@ -156,7 +149,7 @@ public class AnchorAlarm {
                 event.player.getEntityData().setByteArray(NBT_KEY, newbytes);
             } else {
                 if (AnchorDebug)
-                    System.out.println("[AnchorDebug] No listed anchors for player " + event.player.getDisplayName());
+                    Common.log.info("[AnchorDebug] No listed anchors for player {}", event.player.getDisplayName());
             }
         }
     }

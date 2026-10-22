@@ -10,8 +10,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
@@ -28,6 +28,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.core.HodgepodgeCore;
 
 public final class DumpTextureAtlasCommand extends CommandBase {
@@ -52,7 +53,7 @@ public final class DumpTextureAtlasCommand extends CommandBase {
         try {
             dumpAtlas(TextureMap.locationBlocksTexture);
         } catch (Exception e) {
-            e.printStackTrace();
+            Common.log.error(e);
             sender.addChatMessage(
                     new ChatComponentText(
                             EnumChatFormatting.RED
@@ -61,7 +62,7 @@ public final class DumpTextureAtlasCommand extends CommandBase {
         try {
             dumpAtlas(TextureMap.locationItemsTexture);
         } catch (Exception e) {
-            e.printStackTrace();
+            Common.log.error(e);
             sender.addChatMessage(
                     new ChatComponentText(
                             EnumChatFormatting.RED + "Failed to copy the item texture atlas. See logs for more info."));
@@ -90,24 +91,26 @@ public final class DumpTextureAtlasCommand extends CommandBase {
         StringBuilder allEntries = new StringBuilder();
         StringBuilder emptyEntries = new StringBuilder();
         StringBuilder erroredEntries = new StringBuilder();
-        List<String> sprites = new ArrayList<>(mapRegisteredSprites.keySet());
+        ArrayList<Entry<String, TextureAtlasSprite>> sprites = new ArrayList<>(mapRegisteredSprites.entrySet());
 
-        sprites.sort(Comparator.comparing(name -> new ResourceLocation(name).getResourceDomain()));
+        sprites.sort(Comparator.comparing(entry -> new ResourceLocation(entry.getKey()).getResourceDomain()));
 
-        for (String sprite : sprites) {
-            ResourceLocation resourceLocation = completeResourceLocation(basePath, new ResourceLocation(sprite));
-            allEntries.append(resourceLocation).append('\n');
+        for (Entry<String, TextureAtlasSprite> entry : sprites) {
+            String spriteName = entry.getKey();
+            ResourceLocation resourceLocation = completeResourceLocation(basePath, new ResourceLocation(spriteName));
+            String line = formatLine(resourceLocation, entry.getValue());
+            allEntries.append(line).append('\n');
             try {
                 InputStream is = Minecraft.getMinecraft().getResourceManager().getResource(resourceLocation)
                         .getInputStream();
                 BufferedImage image = ImageIO.read(is);
                 if (isImageEmpty(image)) {
-                    emptyEntries.append(resourceLocation).append('\n');
+                    emptyEntries.append(line).append('\n');
                 }
                 is.close();
 
             } catch (Exception e) {
-                erroredEntries.append(resourceLocation).append('\n');
+                erroredEntries.append(line).append('\n');
             }
         }
 
@@ -145,6 +148,17 @@ public final class DumpTextureAtlasCommand extends CommandBase {
                 String.format("%s/%s%s", basePath, location.getResourcePath(), ".png"));
     }
 
+    private static String formatLine(ResourceLocation rl, TextureAtlasSprite sprite) {
+        StringBuilder sb = new StringBuilder(rl.toString()).append(": ");
+        if (sprite == null) {
+            sb.append("NULL");
+        } else {
+            sb.append("x=").append(sprite.getOriginX()).append(",y=").append(sprite.getOriginY()).append(",w=")
+                    .append(sprite.getIconWidth()).append(",h=").append(sprite.getIconHeight());
+        }
+        return sb.toString();
+    }
+
     private static void copyBoundTextureToFile(File file) {
         int width = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
         int height = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
@@ -158,7 +172,7 @@ public final class DumpTextureAtlasCommand extends CommandBase {
         try {
             ImageIO.write(bufferedimage, "png", file);
         } catch (Exception e) {
-            e.printStackTrace();
+            Common.log.error(e);
         }
     }
 }

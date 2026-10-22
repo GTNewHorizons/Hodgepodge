@@ -8,6 +8,7 @@ import com.mitchej123.hodgepodge.config.ASMConfig;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.GeneralConfig;
+import com.mitchej123.hodgepodge.config.SoundConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 
@@ -24,6 +25,7 @@ public class HodgepodgeGuiConfig extends SimpleGuiConfig {
                 FixesConfig.class,
                 GeneralConfig.class,
                 SpeedupsConfig.class,
-                TweaksConfig.class);
+                TweaksConfig.class,
+                SoundConfig.class);
     }
 }
