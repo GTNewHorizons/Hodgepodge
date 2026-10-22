@@ -38,7 +38,7 @@ public class RomanNumerals {
      * returns a readable number
      */
     public static String toRomanLimited(int number, int limit) {
-        if (number > limit) {
+        if (Math.abs(number) > limit) {
             return String.valueOf(number);
         }
         return toRoman(number);
