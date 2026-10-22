@@ -5,16 +5,20 @@ import java.util.List;
 import net.minecraft.client.AnvilConverterException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSelectWorld;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.world.storage.ISaveFormat;
 import net.minecraft.world.storage.SaveFormatComparator;
+import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.common.MinecraftForge;
 
 import com.mitchej123.hodgepodge.Common;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 
@@ -32,6 +36,8 @@ public class QuickPlay {
     private final String world;
     private final String address;
     private boolean fired;
+    private boolean titleOpening;
+    private GuiScreen titleScreen;
 
     private QuickPlay(String world, String address) {
         this.world = world;
@@ -47,7 +53,9 @@ public class QuickPlay {
             Common.log.warn("Quick play: both a world and a server were requested, ignoring the server '{}'", address);
             address = null;
         }
-        FMLCommonHandler.instance().bus().register(new QuickPlay(world, address));
+        final QuickPlay quickPlay = new QuickPlay(world, address);
+        FMLCommonHandler.instance().bus().register(quickPlay);
+        MinecraftForge.EVENT_BUS.register(quickPlay);
     }
 
     // Game args win over JVM args
@@ -57,15 +65,30 @@ public class QuickPlay {
         return value == null || value.trim().isEmpty() ? null : value.trim();
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onGuiOpenFirst(GuiOpenEvent event) {
+        titleOpening = event.gui instanceof GuiMainMenu;
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onGuiOpenLast(GuiOpenEvent event) {
+        if (titleOpening) {
+            titleScreen = event.gui;
+            titleOpening = false;
+        }
+    }
+
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (fired || event.phase != TickEvent.Phase.END) return;
 
         final Minecraft mc = Minecraft.getMinecraft();
-        if (mc.theWorld != null || !(mc.currentScreen instanceof GuiMainMenu)) return;
+        if (mc.theWorld != null || mc.currentScreen == null) return;
+        if (mc.currentScreen != titleScreen && !(mc.currentScreen instanceof GuiMainMenu)) return;
 
         fired = true;
         FMLCommonHandler.instance().bus().unregister(this);
+        MinecraftForge.EVENT_BUS.unregister(this);
 
         if (world != null) {
             loadWorld(mc, world);

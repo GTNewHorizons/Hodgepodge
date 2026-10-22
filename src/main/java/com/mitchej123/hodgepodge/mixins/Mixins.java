@@ -11,6 +11,7 @@ import com.mitchej123.hodgepodge.config.MemoryConfig;
 import com.mitchej123.hodgepodge.config.SoundConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
+import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
 
 public enum Mixins implements IMixins {
 
@@ -157,6 +158,13 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinSoundManagerLibraryLoader")
             .setApplyIf(() -> FixesConfig.logarithmicVolumeControl)
             .setPhase(Phase.EARLY)),
+    KEEP_SOUND_ENGINE_AT_BOOT(new MixinBuilder("Keep the sound engine across the post-load resource reload")
+            .addClientMixins(
+                    "fml.MixinFMLClientHandler_BootSoundRefresh",
+                    "minecraft.MixinSoundManager_KeepBootEngine",
+                    "minecraft.MixinSoundSystemStarterThread_BootReload")
+            .setApplyIf(() -> SpeedupsConfig.keepSoundEngineAtBoot)
+            .setPhase(Phase.EARLY)),
     REPLACE_ARCHAICFIX_SOUND_DEVICE_RECOVERY(new MixinBuilder()
             .addClientMixins("archaicfix.MixinSoundDeviceThread")
             .addRequiredMod(TargetedMod.ARCHAICFIX)
@@ -221,6 +229,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinGuiContainerCreative_AlphaTestFix")
             .setApplyIf(() -> FixesConfig.fixCreativeTabAlphaTest)
             .setPhase(Phase.EARLY)),
+    FIX_XP_BAR_ALPHA_TEST(new MixinBuilder("Fix XP and jump bar black pixels caused by GL_ALPHA_TEST being left disabled")
+            .addClientMixins("forge.MixinGuiIngameForge_AlphaTest")
+            .setApplyIf(() -> FixesConfig.fixXpBarAlphaTest)
+            .setPhase(Phase.EARLY)),
     FIX_IMMOBILE_FIREBALLS(new MixinBuilder()
             .addCommonMixins("minecraft.MixinEntityFireball")
             .setApplyIf(() -> FixesConfig.fixImmobileFireballs)
@@ -243,6 +255,10 @@ public enum Mixins implements IMixins {
                     "fml.MixinGuiScrollingList_TexturedScrollbar")
             .setApplyIf(() -> TweaksConfig.texturedScrollbar)
             .setPhase(Phase.EARLY)),
+    MODERN_ANVIL_LABELS(new MixinBuilder("Adds the Inventory label and modern cost text to the anvil GUI")
+            .addClientMixins("minecraft.MixinGuiRepair_ModernLabels")
+            .setApplyIf(() -> TweaksConfig.modernAnvilLabels)
+            .setPhase(Phase.EARLY)),
     CLEAN_CHAT_LOGS(new MixinBuilder()
             .addClientMixins("minecraft.MixinGuiNewChat_CleanChatLogs")
             .setApplyIf(() -> TweaksConfig.cleanChatLogs)
@@ -256,6 +272,17 @@ public enum Mixins implements IMixins {
     FIX_ENTITY_ATTRIBUTES_RANGE(new MixinBuilder()
             .addClientMixins("minecraft.MixinNetHandlerPlayClient_FixEntityAttributesRange")
             .setApplyIf(() -> FixesConfig.fixEntityAttributesRange)
+            .setPhase(Phase.EARLY)),
+    FIX_LONG_POTION_DURATION(new MixinBuilder("Fix Potion Durations Longer Than 27 Minutes")
+            .addCommonMixins(
+                    "minecraft.MixinS1DPacketEntityEffect_LongDuration",
+                    "minecraft.MixinNetHandlerPlayServer_LongPotionDuration",
+                    "minecraft.PotionEffectAccessor")
+            .setApplyIf(() -> FixesConfig.fixLongPotionDuration)
+            .setPhase(Phase.EARLY)),
+    FIX_LONG_TIMER_FORMAT(new MixinBuilder("Show Timers Longer Than An Hour As h:mm:ss")
+            .addClientMixins("minecraft.MixinStringUtils_LongTimer")
+            .setApplyIf(() -> FixesConfig.fixLongTimerFormat)
             .setPhase(Phase.EARLY)),
     ENDERMAN_BLOCK_GRAB_DISABLE(new MixinBuilder("Disable Endermen Grabbing Blocks")
             .addCommonMixins("minecraft.MixinEntityEndermanGrab")
@@ -446,6 +473,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.packets.MixinS01PacketJoinGame_FixDimensionID")
             .setApplyIf(() -> FixesConfig.fixLoginDimensionIDOverflow)
             .setPhase(Phase.EARLY)),
+    FIX_BED_HEIGHT_OVERFLOW(new MixinBuilder("Fix bed height overflowing on multiplayer")
+            .addCommonMixins("minecraft.packets.MixinS0APacketUseBed_FixHeightOverflow")
+            .setApplyIf(() -> FixesConfig.fixBedHeightOverflow)
+            .setPhase(Phase.EARLY)),
     ADD_MEMORY_CLEANING_SHUTDOWN_HOOKS(new MixinBuilder()
             .addCommonMixins("memory.MixinMinecraftServer_ShutdownHook")
             .addClientMixins("memory.MixinMinecraft_ShutdownHook")
@@ -584,6 +615,12 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinAnvilChunkLoader_SaveQueue")
             .setApplyIf(() -> FixesConfig.fixChunkSaveQueueRace)
             .setPhase(Phase.EARLY)),
+    FIX_CHUNK_LOAD_DURING_SAVE(new MixinBuilder("Prevent loading an outdated chunk from disk while its newer save is being written")
+            .addCommonMixins(
+                    "minecraft.MixinAnvilChunkLoader_LoadDuringSave",
+                    "minecraft.AccessorAnvilChunkLoaderPendingChunk")
+            .setApplyIf(() -> FixesConfig.fixChunkLoadDuringSave)
+            .setPhase(Phase.EARLY)),
     THREADED_WORLDDATA_SAVING(new MixinBuilder()
             .addCommonMixins(
                     "minecraft.MixinMapStorage_threadedIO",
@@ -640,6 +677,10 @@ public enum Mixins implements IMixins {
     DONT_INVERT_CROSSHAIR_COLORS(new MixinBuilder("Don't invert crosshair colors")
             .addClientMixins("forge.MixinGuiIngameForge_CrosshairInvertColors")
             .setApplyIf(() -> TweaksConfig.dontInvertCrosshairColor)
+            .setPhase(Phase.EARLY)),
+    FIX_HOTBAR_SELECTION_HEIGHT(new MixinBuilder("Draw the full hotbar selection frame")
+            .addClientMixins("forge.MixinGuiIngameForge_HotbarSelectionHeight")
+            .setApplyIf(() -> FixesConfig.fixHotbarSelectionHeight)
             .setPhase(Phase.EARLY)),
     FIX_OPENGUIHANDLER_WINDOWID(new MixinBuilder("Fix OpenGuiHandler")
             .addCommonMixins("fml.MixinOpenGuiHandler")
@@ -868,6 +909,10 @@ public enum Mixins implements IMixins {
     MEMORY_FIXES_CLIENT(new MixinBuilder()
             .addClientMixins("memory.MixinFMLClientHandler")
             .setApplyIf(() -> MemoryConfig.allocs.clearFMLTextureErrors)
+            .setPhase(Phase.EARLY)),
+    ASYNC_FML_FILE_LOG(new MixinBuilder("Async FML file log: drain before hard exit")
+            .addCommonMixins("fml.MixinFMLCommonHandler_DrainAsyncLog")
+            .setApplyIf(() -> !EarlyConfig.noAsyncFmlFileLog)
             .setPhase(Phase.EARLY)),
     FAST_RANDOM(new MixinBuilder("Replaces uses of stdlib Random with a faster one")
             .addCommonMixins(
@@ -1273,7 +1318,9 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.EARLY)),
     IC2_REACTOR_DUPE(new MixinBuilder("IC2 Reactor Dupe Fix")
-            .addCommonMixins("ic2.MixinTileEntityReactorChamberElectricNoDupe")
+            .addCommonMixins(
+                    "ic2.MixinTileEntityReactorChamberElectricNoDupe",
+                    "ic2.MixinTileEntityNuclearReactorElectric_RefreshChambers")
             .setApplyIf(() -> FixesConfig.fixIc2ReactorDupe)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.EARLY)),
@@ -1563,6 +1610,11 @@ public enum Mixins implements IMixins {
     FIX_QUICKSAND_XRAY(new MixinBuilder()
             .addCommonMixins("biomesoplenty.MixinBlockMud_FixXray")
             .setApplyIf(() -> FixesConfig.fixPerspectiveCamera)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    FIX_BOP_EMERALD_GENERATION(new MixinBuilder()
+            .addCommonMixins("biomesoplenty.MixinBiomeEmeraldGeneration")
+            .setApplyIf(() -> FixesConfig.fixBOPEmeraldGeneration)
             .addRequiredMod(TargetedMod.BOP)
             .setPhase(Phase.LATE)),
     DEDUPLICATE_FORESTRY_COMPAT_IN_BOP(new MixinBuilder()
@@ -2022,6 +2074,11 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.WITCHERY)
             .addRequiredMod(TargetedMod.ENDLESSIDS)
             .setPhase(Phase.LATE)),
+    FIX_WITCHERY_HOTBAR_SELECTION_HEIGHT(new MixinBuilder("Draw the full selection frame on Witchery's vampire hotbar")
+            .addClientMixins("witchery.MixinClientEvents_HotbarSelectionHeight")
+            .setApplyIf(() -> FixesConfig.fixHotbarSelectionHeight)
+            .addRequiredMod(TargetedMod.WITCHERY)
+            .setPhase(Phase.LATE)),
 
     // Various Exploits/Fixes
     BIBLIOCRAFT_PACKET_FIX(new MixinBuilder("Packet Fix")
@@ -2036,9 +2093,9 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixBibliocraftArmorStandBreak)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
-    BIBLIOCRAFT_ARMOR_STAND_MARK_DIRTY(new MixinBuilder("Mark the Bibliocraft Armor Stand to save when its inventory is modified")
-            .addCommonMixins("bibliocraft.MixinTileEntityArmorStand_MarkDirty")
-            .setApplyIf(() -> FixesConfig.bibliocraftArmorStandMarkDirty)
+    BIBLIOCRAFT_INVENTORIES_MARK_DIRTY(new MixinBuilder("Mark Bibliocraft inventories to save when they are modified")
+            .addCommonMixins("bibliocraft.MixinBibliocraftInventories_MarkDirty")
+            .setApplyIf(() -> FixesConfig.bibliocraftInventoriesMarkDirty)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
     BIBLIOCRAFT_PATH_SANITIZATION_FIX(new MixinBuilder("Path sanitization fix")

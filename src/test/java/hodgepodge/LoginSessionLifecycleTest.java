@@ -327,6 +327,152 @@ class LoginSessionLifecycleTest {
             }
         }
 
+        /** Chunk loader that hands back the NBT a load chose instead of building a Chunk (no World needed). */
+        static class LoadProbe extends net.minecraft.world.chunk.storage.AnvilChunkLoader {
+
+            LoadProbe(java.io.File dir) {
+                super(dir);
+            }
+
+            void enqueue(int x, int value) {
+                net.minecraft.nbt.NBTTagCompound root = new net.minecraft.nbt.NBTTagCompound();
+                net.minecraft.nbt.NBTTagCompound level = new net.minecraft.nbt.NBTTagCompound();
+                level.setInteger("value", value);
+                root.setTag("Level", level);
+                addChunkToPending(new net.minecraft.world.ChunkCoordIntPair(x, 0), root);
+            }
+
+            @Override
+            protected Object[] checkedReadChunkFromNBT__Async(World world, int x, int z,
+                    net.minecraft.nbt.NBTTagCompound nbt) {
+                return new Object[] { null, nbt };
+            }
+
+            /** The value a load would see right now, or -1 if the chunk would be generated. */
+            int load(int x) throws java.io.IOException {
+                Object[] data = loadChunk__Async(null, x, 0);
+                return data == null ? -1
+                        : ((net.minecraft.nbt.NBTTagCompound) data[1]).getCompoundTag("Level").getInteger("value");
+            }
+
+            boolean pending(int x) throws Exception {
+                Field set = net.minecraft.world.chunk.storage.AnvilChunkLoader.class
+                        .getDeclaredField("pendingAnvilChunksCoordinates");
+                Field lock = net.minecraft.world.chunk.storage.AnvilChunkLoader.class
+                        .getDeclaredField("syncLockObject");
+                set.setAccessible(true);
+                lock.setAccessible(true);
+                synchronized (lock.get(this)) {
+                    return ((Set<?>) set.get(this)).contains(new net.minecraft.world.ChunkCoordIntPair(x, 0));
+                }
+            }
+        }
+
+        private void withChunkDir(java.util.function.Consumer<java.nio.file.Path> body) throws Exception {
+            java.nio.file.Path root = java.nio.file.Files.createTempDirectory("chunk-load-during-save-");
+            try {
+                body.accept(root);
+            } finally {
+                net.minecraft.world.storage.ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+                net.minecraft.world.chunk.storage.RegionFileCache.clearRegionFileReferences();
+                try (java.util.stream.Stream<java.nio.file.Path> paths = java.nio.file.Files.walk(root)) {
+                    for (java.nio.file.Path path : paths.sorted(java.util.Comparator.reverseOrder())
+                            .collect(java.util.stream.Collectors.toList())) {
+                        java.nio.file.Files.deleteIfExists(path);
+                    }
+                }
+            }
+        }
+
+        /** Waits until the IO thread has taken chunk x off the pending list (it then blocks writing to the region). */
+        private static void awaitInFlight(LoadProbe loader, int x) throws Exception {
+            long deadline = System.nanoTime() + java.util.concurrent.TimeUnit.SECONDS.toNanos(10);
+            while (loader.pending(x)) {
+                assertTrue(System.nanoTime() < deadline, "IO thread did not pick up chunk " + x);
+                Thread.sleep(1);
+            }
+        }
+
+        public void testChunkLoadDuringSaveReadsTheSaveBeingWritten() throws Exception {
+            withChunkDir(root -> {
+                try {
+                    LoadProbe loader = new LoadProbe(root.toFile());
+                    loader.enqueue(0, 1);
+                    net.minecraft.world.storage.ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+                    assertEquals(1, loader.load(0), "old version on disk");
+
+                    // Holding the region file's monitor stops the IO thread inside the write (RegionFile.write is
+                    // synchronized), i.e. after the chunk left the pending list but before the new data is on disk.
+                    net.minecraft.world.chunk.storage.RegionFile region = net.minecraft.world.chunk.storage.RegionFileCache
+                            .createOrLoadRegionFile(root.toFile(), 0, 0);
+                    synchronized (region) {
+                        loader.enqueue(0, 2);
+                        awaitInFlight(loader, 0);
+                        assertEquals(2, loader.load(0), "load while the save is being written must not read disk");
+
+                        // A newer save queued meanwhile wins over the one being written.
+                        loader.enqueue(0, 3);
+                        assertEquals(3, loader.load(0), "pending save must win over the in-flight one");
+                    }
+                    net.minecraft.world.storage.ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+                    assertEquals(3, loader.load(0), "newest version on disk after the writes");
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+
+        /** /save-all flush writes on another thread; finishing its own save must not hide the IO thread's one. */
+        public void testFlushWhileIoThreadWritesKeepsBothVisible() throws Exception {
+            withChunkDir(root -> {
+                try {
+                    LoadProbe loader = new LoadProbe(root.toFile());
+                    loader.enqueue(0, 1);
+                    loader.enqueue(1, 1);
+                    net.minecraft.world.storage.ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+                    net.minecraft.world.chunk.storage.RegionFile region = net.minecraft.world.chunk.storage.RegionFileCache
+                            .createOrLoadRegionFile(root.toFile(), 0, 0);
+                    synchronized (region) {
+                        loader.enqueue(0, 2);
+                        awaitInFlight(loader, 0);
+                        // The flush runs on this thread, which holds the region monitor, so it completes its write
+                        // while the IO thread is still stuck in the middle of writing chunk 0.
+                        loader.enqueue(1, 2);
+                        loader.saveExtraData();
+                        assertEquals(2, loader.load(1), "flushed chunk is on disk");
+                        assertEquals(2, loader.load(0), "chunk still being written by the IO thread stays visible");
+                    }
+                    net.minecraft.world.storage.ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+                    assertEquals(2, loader.load(0));
+                    assertEquals(2, loader.load(1));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+
+        public void testChunkExistsDuringFirstSave() throws Exception {
+            withChunkDir(root -> {
+                try {
+                    LoadProbe loader = new LoadProbe(root.toFile());
+                    assertFalse(loader.chunkExists(null, 5, 0));
+                    // Create the region file first so the IO thread blocks on it, not on the file cache.
+                    loader.enqueue(4, 0);
+                    net.minecraft.world.storage.ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+                    net.minecraft.world.chunk.storage.RegionFile region = net.minecraft.world.chunk.storage.RegionFileCache
+                            .createOrLoadRegionFile(root.toFile(), 5, 0);
+                    synchronized (region) {
+                        loader.enqueue(5, 7);
+                        awaitInFlight(loader, 5);
+                        assertTrue(loader.chunkExists(null, 5, 0), "a chunk being saved for the first time exists");
+                        assertEquals(7, loader.load(5), "and loads instead of being regenerated");
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+
         public void testWorldDataFlushAndCrashShutdown() throws Exception {
             java.nio.file.Path root = java.nio.file.Files.createTempDirectory("hodgepodge-world-save-");
             java.nio.file.Path file = root.resolve("data.dat");
