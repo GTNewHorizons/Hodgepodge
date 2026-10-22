@@ -428,6 +428,11 @@ public class SimulationDistanceHelper {
         }
 
         if (pendingTickListEntriesTreeSet.size() != pendingTickListEntriesHashSet.size()) {
+            Common.log.error(
+                    "Simulation distance: tick lists out of sync at worldTime {}: TreeSet {} vs HashSet {}",
+                    world.getTotalWorldTime(),
+                    pendingTickListEntriesTreeSet.size(),
+                    pendingTickListEntriesHashSet.size());
             throw new IllegalStateException("TickNextTick list out of sync");
         }
 
@@ -449,6 +454,32 @@ public class SimulationDistanceHelper {
                 }
             }
         }
+    }
+
+    /**
+     * Called after the vanilla loop replayed ticksToRemove. The replay doesn't touch the sets anymore, so they must
+     * still be in sync here.
+     */
+    public void afterReplay() {
+        if (pendingTickListEntriesTreeSet.size() == pendingTickListEntriesHashSet.size()) {
+            return;
+        }
+        StringBuilder missing = new StringBuilder();
+        int missingCount = 0;
+        for (NextTickListEntry entry : pendingTickListEntriesTreeSet) {
+            if (!pendingTickListEntriesHashSet.contains(entry)) {
+                missingCount++;
+                missing.append("\n    ").append(entry);
+            }
+        }
+        World world = worldRef.get();
+        Common.log.error(
+                "Simulation distance: tick lists out of sync after replaying removals at worldTime {}: TreeSet {} vs HashSet {}. {} ticks only in the TreeSet:{}",
+                world == null ? -1 : world.getTotalWorldTime(),
+                pendingTickListEntriesTreeSet.size(),
+                pendingTickListEntriesHashSet.size(),
+                missingCount,
+                missing);
     }
 
     public void setServerVariables(TreeSet<NextTickListEntry> pendingTickListEntriesTreeSet,
