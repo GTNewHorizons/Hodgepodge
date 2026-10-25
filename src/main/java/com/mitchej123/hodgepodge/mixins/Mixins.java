@@ -1983,6 +1983,15 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesEnderCollectorCrash)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
+    FIX_DIVISION_SIGIL_ACTIVATION(new MixinBuilder("Fix Division Sigil not activating with enchantment tables and beacons from other mods")
+            .addCommonMixins(
+                    "extrautilities.MixinEventHandlerServer",
+                    "extrautilities.MixinEventHandlerSiege",
+                    "extrautilities.MixinItemDivisionSigil")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesDivisionSigilActivation)
+            .addExcludedMod(TargetedMod.ARCHAICFIX)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
 
     // Gliby's Voice Chat
     FIX_GLIBYS_VC_THREAD_SHUTDOWN(new MixinBuilder("Fix Gliby's voice chat not shutting down its threads cleanly")
