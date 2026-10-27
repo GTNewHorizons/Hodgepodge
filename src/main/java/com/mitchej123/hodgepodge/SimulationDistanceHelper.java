@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -24,8 +23,10 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeChunkManager;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.mixins.interfaces.PendingBlockUpdateIndex;
+import com.mitchej123.hodgepodge.mixins.interfaces.SimulationDistanceTicket;
 import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -40,23 +41,27 @@ import it.unimi.dsi.fastutil.objects.ObjectAVLTreeSet;
 public class SimulationDistanceHelper {
 
     /**
-     * Tickets whose forced chunks should not be simulated. Weak, so released tickets don't need to be removed.
-     */
-    private static final Set<ForgeChunkManager.Ticket> nonSimulatingTickets = Collections
-            .newSetFromMap(Collections.synchronizedMap(new WeakHashMap<>()));
-
-    /**
      * Set whether the chunks forced by the given ticket are simulated, they are by default. Useful for tickets that
      * only keep chunks loaded temporarily, e.g. for world generation. Chunks within simulation distance of a player or
      * forced by another, simulated ticket are still simulated. Takes effect on the next world tick, can be called from
      * any thread.
      */
     public static void setTicketSimulation(ForgeChunkManager.Ticket ticket, boolean simulate) {
-        if (simulate) {
-            nonSimulatingTickets.remove(ticket);
-        } else {
-            nonSimulatingTickets.add(ticket);
+        if (!FixesConfig.addSimulationDistance_WIP) {
+            return;
         }
+        ((SimulationDistanceTicket) ticket).hodgepodge$setSimulationDisabled(!simulate);
+    }
+
+    /**
+     * Whether the chunks forced by the given ticket are simulated, see
+     * {@link #setTicketSimulation(ForgeChunkManager.Ticket, boolean)}.
+     */
+    public static boolean isTicketSimulated(ForgeChunkManager.Ticket ticket) {
+        if (!FixesConfig.addSimulationDistance_WIP) {
+            return true;
+        }
+        return !((SimulationDistanceTicket) ticket).hodgepodge$isSimulationDisabled();
     }
 
     private static boolean preventChunkSimulationWarningLogged = false;
@@ -269,7 +274,7 @@ public class SimulationDistanceHelper {
         forcedChunksMap.clear();
         for (Map.Entry<ChunkCoordIntPair, ForgeChunkManager.Ticket> entry : ForgeChunkManager
                 .getPersistentChunksFor(world).entries()) {
-            if (nonSimulatingTickets.contains(entry.getValue())) {
+            if (!isTicketSimulated(entry.getValue())) {
                 continue;
             }
             ChunkCoordIntPair key = entry.getKey();
