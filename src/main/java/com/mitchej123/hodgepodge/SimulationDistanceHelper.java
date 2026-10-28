@@ -110,7 +110,7 @@ public class SimulationDistanceHelper {
     private final boolean isServer;
 
     /**
-     * Cache of forced chunks. Profiler says that is faster.
+     * Cache of tickable forced chunks. Profiler says that is faster.
      */
     private final LongOpenHashSet forcedChunksMap = new LongOpenHashSet();
 
