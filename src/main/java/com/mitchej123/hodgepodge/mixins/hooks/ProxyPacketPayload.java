@@ -16,12 +16,13 @@ public final class ProxyPacketPayload {
     /**
      * The payload's backing array without its unused capacity, the zeros after the written bytes. Everything up to the
      * writer index is kept as before, including bytes before the reader index. The array is returned unchanged if
-     * nothing follows the written bytes or if anything after them is not zero.
+     * nothing follows the written bytes, if anything after them is not zero, or if nothing was written: a client to
+     * server payload of length 0 arrives as null and fails in FML, so empty payloads keep their zeros.
      */
     public static byte[] withoutUnusedCapacity(ByteBuf payload) {
         final byte[] array = payload.array();
         final int end = payload.arrayOffset() + payload.writerIndex();
-        if (end >= array.length) {
+        if (end <= 0 || end >= array.length) {
             return array;
         }
         for (int i = end; i < array.length; i++) {
