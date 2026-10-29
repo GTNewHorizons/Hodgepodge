@@ -70,7 +70,8 @@ public enum Mixins implements IMixins {
             .addCommonMixins(
                     "minecraft.MixinWorld_SimulationDistance",
                     "minecraft.MixinWorldServer_SimulationDistance",
-                    "minecraft.MixinChunk_SimulationDistance")
+                    "minecraft.MixinChunk_SimulationDistance",
+                    "forge.MixinForgeChunkManagerTicket_SimulationDistance")
             .setApplyIf(() -> FixesConfig.addSimulationDistance_WIP)
             .setPhase(Phase.EARLY)),
     FIX_RCON_THREADING(new MixinBuilder("Fix RCON Threading by forcing it to run on the main thread")
