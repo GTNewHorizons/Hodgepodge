@@ -18,6 +18,8 @@ public final class AllocationRateHUD {
     private static final int AVERAGE_SECONDS = 10;
     /** com.sun.management.ThreadMXBean#getTotalThreadAllocatedBytes (Java 14+), or null if unavailable */
     private static final MethodHandle TOTAL_ALLOCATED_BYTES = findTotalAllocatedBytes();
+    /** A longer gap means the text was not drawn, so older rates are stale */
+    private static final long MAX_GAP_NANOS = 2_000_000_000L;
 
     private long lastUpdateTime = System.nanoTime();
     private long lastBytes = readAllocatedBytes();
@@ -40,7 +42,12 @@ public final class AllocationRateHUD {
 
     public String updateText() {
         final long currentTime = System.nanoTime();
-        if (currentTime - lastUpdateTime >= 1_000_000_000L) {
+        if (currentTime - lastUpdateTime > MAX_GAP_NANOS) {
+            count = 0;
+            lastBytes = readAllocatedBytes();
+            lastUpdateTime = currentTime;
+            cachedText = "Allocation rate: ...";
+        } else if (currentTime - lastUpdateTime >= 1_000_000_000L) {
             final long currentBytes = readAllocatedBytes();
             final long memDiff = currentBytes - lastBytes;
             final double seconds = (currentTime - lastUpdateTime) / 1_000_000_000.0;
