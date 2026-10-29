@@ -10,6 +10,8 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
+import com.mitchej123.hodgepodge.Compat;
+
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
@@ -26,7 +28,7 @@ public final class AllocationRateHUD {
     // Ring of the last per-second rates; order does not matter for the average
     private final int[] rates = new int[AVERAGE_SECONDS];
     private int count = 0;
-    private String cachedText = "";
+    private String cachedText = "Allocation rate: ...";
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onRenderGameOverlayTextEvent(RenderGameOverlayEvent.Text event) {
@@ -84,6 +86,11 @@ public final class AllocationRateHUD {
     }
 
     private static MethodHandle findTotalAllocatedBytes() {
+        // Only lwjgl3ify runs us on Java 17+; Java 8u has backports of this method that misreport, e.g. 17x the real
+        // allocation on 8u504
+        if (!Compat.isLwjgl3ifyPresent()) {
+            return null;
+        }
         try {
             final Object bean = ManagementFactory.getThreadMXBean();
             final Class<?> sunBean = Class.forName("com.sun.management.ThreadMXBean");
@@ -99,7 +106,7 @@ public final class AllocationRateHUD {
             }
             return handle;
         } catch (Throwable t) {
-            // Java 8-13 or a JVM without com.sun.management
+            // A JVM without com.sun.management
             return null;
         }
     }
