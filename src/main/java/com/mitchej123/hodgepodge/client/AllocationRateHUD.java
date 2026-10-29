@@ -15,11 +15,15 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public final class AllocationRateHUD {
 
+    private static final int AVERAGE_SECONDS = 10;
     /** com.sun.management.ThreadMXBean#getTotalThreadAllocatedBytes (Java 14+), or null if unavailable */
     private static final MethodHandle TOTAL_ALLOCATED_BYTES = findTotalAllocatedBytes();
 
     private long lastUpdateTime = System.nanoTime();
     private long lastBytes = readAllocatedBytes();
+    // Ring of the last per-second rates; order does not matter for the average
+    private final int[] rates = new int[AVERAGE_SECONDS];
+    private int count = 0;
     private String cachedText = "";
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -41,7 +45,18 @@ public final class AllocationRateHUD {
             final long memDiff = currentBytes - lastBytes;
             final double seconds = (currentTime - lastUpdateTime) / 1_000_000_000.0;
             final int allocationRate = MathHelper.floor_double(memDiff / seconds / (1024.0 * 1024.0));
-            cachedText = String.format("Allocation rate: %s MB/s", allocationRate);
+            rates[count % rates.length] = allocationRate;
+            count++;
+            final int filled = Math.min(count, rates.length);
+            long sum = 0;
+            for (int i = 0; i < filled; i++) {
+                sum += rates[i];
+            }
+            cachedText = String.format(
+                    "Allocation rate: %s MB/s (%ds avg: %d MB/s)",
+                    allocationRate,
+                    AVERAGE_SECONDS,
+                    sum / filled);
             lastBytes = currentBytes;
             lastUpdateTime = currentTime;
         }
