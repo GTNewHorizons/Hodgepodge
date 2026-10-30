@@ -9,13 +9,13 @@ import net.minecraft.world.gen.ChunkProviderServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mitchej123.hodgepodge.mixins.hooks.ChunkGenScheduler;
 
 /**
- * Bukkit variant of EntityGuard.
+ * Bukkit variant of EntityGuard. Wraps the loadChunk call so loaded chunks skip the check.
  */
 @Mixin(ChunkProviderServer.class)
 public class MixinChunkProviderServer_EntityGuard_Bukkit {
@@ -29,21 +29,19 @@ public class MixinChunkProviderServer_EntityGuard_Bukkit {
     @Shadow
     public IChunkLoader currentChunkLoader;
 
-    @Inject(method = "provideChunk(II)Lnet/minecraft/world/chunk/Chunk;", at = @At("HEAD"), cancellable = true)
-    private void hodgepodge$blockDuringEntityTicks(int x, int z, CallbackInfoReturnable<Chunk> cir) {
-        if (!ChunkGenScheduler.isBlocked() || this.worldObj.findingSpawnPoint) return;
-
-        // Let already-loaded chunks through to Thermos's full provideChunk logic
-        ChunkProviderServer self = (ChunkProviderServer) (Object) this;
-        if (self.chunkExists(x, z)) return;
-
-        // Allow disk loads (cheap), only block generation (expensive)
-        if (this.currentChunkLoader instanceof AnvilChunkLoader acl && acl.chunkExists(this.worldObj, x, z)) {
-            return;
+    @WrapOperation(
+            method = "provideChunk(II)Lnet/minecraft/world/chunk/Chunk;",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/gen/ChunkProviderServer;loadChunk(II)Lnet/minecraft/world/chunk/Chunk;"))
+    private Chunk hodgepodge$blockDuringEntityTicks(ChunkProviderServer self, int x, int z, Operation<Chunk> original) {
+        if (ChunkGenScheduler.isBlocked() && !this.worldObj.findingSpawnPoint) {
+            // Allow disk loads (cheap), only block generation (expensive)
+            if (!(this.currentChunkLoader instanceof AnvilChunkLoader acl && acl.chunkExists(this.worldObj, x, z))) {
+                ChunkGenScheduler.incrementBlockedLoadCount();
+                return this.defaultEmptyChunk;
+            }
         }
-
-        // Not on disk -- block generation
-        ChunkGenScheduler.incrementBlockedLoadCount();
-        cir.setReturnValue(this.defaultEmptyChunk);
+        return original.call(self, x, z);
     }
 }
