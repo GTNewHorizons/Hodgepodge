@@ -40,6 +40,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixBogusIntegratedServerNPEs;
 
+    @Config.Comment("Send only the written bytes of FML proxy packets. FML sends the whole backing array of a packet's buffer, so mods that pass an untrimmed buffer also send its unused capacity as zeros (up to the next power of two, at least 256 bytes per packet).")
+    @Config.DefaultBoolean(true)
+    public static boolean fixProxyPacketPadding;
+
     @Config.Comment("Patch Forge's @Optional.Interface processor to also strip Signature attribute entries (fixes TypeNotPresentException from Class.getGenericInterfaces when an optional interface's mod is missing)")
     @Config.DefaultBoolean(true)
     public static boolean fixForgeOptionalInterfaceSignature;
