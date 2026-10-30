@@ -1,5 +1,6 @@
 package com.mitchej123.hodgepodge.config;
 
+import com.enderio.core.common.config.annot.Comment;
 import com.gtnewhorizon.gtnhlib.config.Config;
 
 @Config(modid = "hodgepodge", category = "fixes")
@@ -465,6 +466,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixFenceRightClick;
+
+    @Comment("Fix arrow forgetting its owner upon relogging (MC-59626) to allow enchantments and HEE charms to work")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixArrowOwnerTracking;
 
     @Config.Comment("Use correct egg particles instead of snowball ones (MC-7807)")
     @Config.DefaultBoolean(true)
