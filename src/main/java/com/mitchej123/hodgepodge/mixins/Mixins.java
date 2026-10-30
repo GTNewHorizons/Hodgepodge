@@ -166,6 +166,11 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinSoundSystemStarterThread_BootReload")
             .setApplyIf(() -> SpeedupsConfig.keepSoundEngineAtBoot)
             .setPhase(Phase.EARLY)),
+    INITIAL_OPENAL_OUTPUT_DEVICE(new MixinBuilder()
+            .addClientMixins("paulscode.MixinLibraryLWJGLOpenAL")
+            .addRequiredMod(TargetedMod.LWJGL3IFY)
+            .setApplyIf(() -> SoundConfig.manageOutputDevicesAtStartup)
+            .setPhase(Phase.EARLY)),
     REPLACE_ARCHAICFIX_SOUND_DEVICE_RECOVERY(new MixinBuilder()
             .addClientMixins("archaicfix.MixinSoundDeviceThread")
             .addRequiredMod(TargetedMod.ARCHAICFIX)
