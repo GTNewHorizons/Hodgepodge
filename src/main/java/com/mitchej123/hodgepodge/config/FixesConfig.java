@@ -77,6 +77,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixDimensionChangeAttributes;
 
+    @Config.Comment("Fix a stale player copy left behind when entering the End, which can make the player fall through an empty world after leaving it")
+    @Config.DefaultBoolean(true)
+    public static boolean fixEndGhostPlayer;
+
     @Config.Comment("Fix duplicate sounds from playing when closing a gui.")
     @Config.DefaultBoolean(true)
     public static boolean fixDuplicateSounds;
