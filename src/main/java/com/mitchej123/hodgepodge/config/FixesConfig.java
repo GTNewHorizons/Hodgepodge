@@ -822,6 +822,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesEnderCollectorCrash;
 
+    @Config.Comment("Fix Division Sigil not activating with enchantment tables and beacons from other mods")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesDivisionSigilActivation;
+
     // Galacticraft
 
     @Config.Comment("Fix time commands with Galacticraft")
