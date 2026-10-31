@@ -233,6 +233,11 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean betterModList;
 
+    @Config.Comment("Handle mouse input of scrolling lists (GuiSlot, GuiScrollingList) in mouse events instead of drawScreen, and keep the scroll bar drag anchored to the pressed point")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixScrollingLists;
+
     @Config.Comment({ "Controls the default sorting on the mod list GUI.", "0 - Default sort (load order)",
             "1 - A to Z sort", "2 - Z to A sort" })
     @Config.RangeInt(min = 0, max = 2)

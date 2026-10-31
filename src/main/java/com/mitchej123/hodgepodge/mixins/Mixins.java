@@ -1082,6 +1082,17 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.betterModList)
             .addExcludedMod(TargetedMod.ENDERCORE_WITH_MODLIST)
             .setPhase(Phase.EARLY)),
+    SCROLL_LIST_API(new MixinBuilder("Expose GuiScrollingList scroll state through IScrollList")
+            .addClientMixins("fml.MixinGuiScrollingList_ScrollList")
+            .setApplyIf(() -> TweaksConfig.betterModList || TweaksConfig.fixScrollingLists)
+            .setPhase(Phase.EARLY)),
+    FIX_SCROLLING_LISTS(new MixinBuilder("Handle scrolling list input in mouse events and anchor scroll bar drag to the pressed point")
+            .addClientMixins(
+                    "minecraft.MixinGuiScreen_ScrollInput",
+                    "minecraft.MixinGuiSlot_ScrollInput",
+                    "fml.MixinGuiScrollingList_ScrollInput")
+            .setApplyIf(() -> TweaksConfig.fixScrollingLists)
+            .setPhase(Phase.EARLY)),
     FIX_EGG_PARTICLE(new MixinBuilder("Use correct egg particles instead of snowball ones (MC-7807)")
             .addClientMixins("minecraft.MixinEntityEgg")
             .setApplyIf(() -> FixesConfig.fixEggParticles)
