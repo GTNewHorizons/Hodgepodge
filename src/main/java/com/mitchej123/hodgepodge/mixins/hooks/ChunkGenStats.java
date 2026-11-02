@@ -8,12 +8,14 @@ public class ChunkGenStats {
     private int snapTerrainGenCount, snapPopCount;
     private int snapNeighborFills, snapStuckCount, snapResendRetries;
     private double snapBudgetUsedMs, snapBudgetAvailMs;
-    private int snapBlockedLoads;
+    private int snapBlockedLoads, snapPopulationLoads;
     private boolean snapInDebt;
 
     private int neighborFillCount;
     private int stuckCount;
     private int resendRetryCount;
+    private int blockedLoadCount;
+    private int populationLoadCount;
 
     ChunkGenStats(int dimId, ChunkGenBudget budget) {
         this.budget = budget;
@@ -31,8 +33,16 @@ public class ChunkGenStats {
         resendRetryCount++;
     }
 
-    public void recordTick(int genQueue, int popQueue, int terrainStatusCount, int blockedLoads, int terrainGenCount,
-            long terrainNanos, int popCount, long popNanos, long actualNanos, long tickBudgetNanos, boolean inDebt) {
+    public void incrementBlockedLoads() {
+        blockedLoadCount++;
+    }
+
+    public void incrementPopulationLoads() {
+        populationLoadCount++;
+    }
+
+    public void recordTick(int genQueue, int popQueue, int terrainStatusCount, int terrainGenCount, long terrainNanos,
+            int popCount, long popNanos, long actualNanos, long tickBudgetNanos, boolean inDebt) {
         final double budgetUsedMs = actualNanos / 1_000_000.0;
         final double budgetAvailMs = tickBudgetNanos / 1_000_000.0;
         final int fills = resetNeighborFillCount();
@@ -49,7 +59,10 @@ public class ChunkGenStats {
         this.snapResendRetries = resendRetries;
         this.snapBudgetUsedMs = budgetUsedMs;
         this.snapBudgetAvailMs = budgetAvailMs;
-        this.snapBlockedLoads = blockedLoads;
+        this.snapBlockedLoads = blockedLoadCount;
+        this.snapPopulationLoads = populationLoadCount;
+        blockedLoadCount = 0;
+        populationLoadCount = 0;
         this.snapInDebt = inDebt;
     }
 
@@ -109,6 +122,10 @@ public class ChunkGenStats {
 
     public int getSnapBlockedLoads() {
         return snapBlockedLoads;
+    }
+
+    public int getSnapPopulationLoads() {
+        return snapPopulationLoads;
     }
 
     public int getSnapPipelineBacklog() {
