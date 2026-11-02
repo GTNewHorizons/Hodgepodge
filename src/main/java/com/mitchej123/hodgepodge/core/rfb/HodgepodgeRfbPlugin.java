@@ -12,6 +12,7 @@ import com.gtnewhorizons.retrofuturabootstrap.api.RfbClassTransformer;
 import com.gtnewhorizons.retrofuturabootstrap.api.RfbPlugin;
 import com.mitchej123.hodgepodge.core.rfb.transformers.ConfigParsingTimeTransformer;
 import com.mitchej123.hodgepodge.core.rfb.transformers.EnumValuesTransformer;
+import com.mitchej123.hodgepodge.core.rfb.transformers.FMLRelaunchLogLoggerCacheTransformer;
 import com.mitchej123.hodgepodge.core.rfb.transformers.ForgeConfigurationTransformer;
 import com.mitchej123.hodgepodge.core.rfb.transformers.ForgeEventSubscriptionTransformer;
 import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
@@ -31,6 +32,9 @@ public class HodgepodgeRfbPlugin implements RfbPlugin {
         }
         if (!EarlyConfig.noFasterForgeEventTransformer) {
             list.add(new ForgeEventSubscriptionTransformer());
+        }
+        if (!EarlyConfig.noFmlRelaunchLogLoggerCache) {
+            list.add(new FMLRelaunchLogLoggerCacheTransformer());
         }
         if (EarlyConfig.debugLogConfigParsingTimes) {
             list.add(new ConfigParsingTimeTransformer());

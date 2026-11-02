@@ -28,9 +28,10 @@ public class PooledGzipOutputStream extends DeflaterOutputStream {
 
     private final CRC32 crc = new CRC32();
     private int size;
+    private boolean closed;
 
     private PooledGzipOutputStream(ByteArrayOutputStream out, Deflater deflater) throws IOException {
-        super(out, deflater, 512, true);
+        super(out, deflater, 512);
         out.write(GZIP_HEADER);
     }
 
@@ -39,21 +40,14 @@ public class PooledGzipOutputStream extends DeflaterOutputStream {
         Deflater deflater = DEFLATER_POOL.get();
         deflater.reset();
 
-        try (PooledGzipOutputStream gzos = new PooledGzipOutputStream(baos, deflater);
-                DataOutputStream dos = new DataOutputStream(gzos)) {
+        try (DataOutputStream dos = new DataOutputStream(new PooledGzipOutputStream(baos, deflater))) {
             CompressedStreamTools.func_150663_a/* writeTag */(nbt, dos);
         }
 
         return baos.toByteArray();
     }
 
-    @Override
-    public void write(int b) throws IOException {
-        super.write(b);
-        crc.update(b);
-        size++;
-    }
-
+    // No write(int) override: DeflaterOutputStream.write(int) already delegates here, so it would count bytes twice.
     @Override
     public void write(byte[] buf, int off, int len) throws IOException {
         super.write(buf, off, len);
@@ -63,6 +57,8 @@ public class PooledGzipOutputStream extends DeflaterOutputStream {
 
     @Override
     public void close() throws IOException {
+        if (closed) return;
+        closed = true;
         finish();
         writeTrailer();
         out.close();

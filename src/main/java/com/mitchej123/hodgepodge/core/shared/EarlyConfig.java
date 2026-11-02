@@ -24,6 +24,8 @@ public final class EarlyConfig {
     public static final boolean noNukeBaseMod;
     public static final boolean noLeanerForgeConfiguration;
     public static final boolean noFasterForgeEventTransformer;
+    public static final boolean noFmlRelaunchLogLoggerCache;
+    public static final boolean noAsyncFmlFileLog;
     public static final boolean debugLogConfigParsingTimes = Boolean.getBoolean("hodgepodge.logConfigTimes");
     public static final boolean debugEnumValuesSpam = Boolean.getBoolean("hodgepodge.logEnumValues");
     public static final boolean dumpASMClass = Boolean.getBoolean("hodgepodge.dumpClass");
@@ -42,14 +44,11 @@ public final class EarlyConfig {
             LOGGER.debug("No existing configuration file. Will use defaults");
         }
         // =========== Config Definitions ===========
-        noNukeBaseMod = Boolean.parseBoolean(config.getProperty("noNukeBaseMod"));
-        config.setProperty("noNukeBaseMod", String.valueOf(noNukeBaseMod));
-
-        noLeanerForgeConfiguration = Boolean.parseBoolean(config.getProperty("noLeanerForgeConfiguration"));
-        config.setProperty("noLeanerForgeConfiguration", String.valueOf(noLeanerForgeConfiguration));
-
-        noFasterForgeEventTransformer = Boolean.parseBoolean(config.getProperty("noFasterForgeEventTransformer"));
-        config.setProperty("noFasterForgeEventTransformer", String.valueOf(noFasterForgeEventTransformer));
+        noNukeBaseMod = flag(config, "noNukeBaseMod");
+        noLeanerForgeConfiguration = flag(config, "noLeanerForgeConfiguration");
+        noFasterForgeEventTransformer = flag(config, "noFasterForgeEventTransformer");
+        noFmlRelaunchLogLoggerCache = flag(config, "noFmlRelaunchLogLoggerCache");
+        noAsyncFmlFileLog = flag(config, "noAsyncFmlFileLog");
         // ==========================================
 
         // create config folder if it doesn't exist to prevent printed exception on first boot
@@ -67,5 +66,11 @@ public final class EarlyConfig {
         } catch (IOException e) {
             LOGGER.error("Error writing configuration file. Will use defaults", e);
         }
+    }
+
+    private static boolean flag(Properties config, String key) {
+        boolean value = Boolean.parseBoolean(config.getProperty(key));
+        config.setProperty(key, String.valueOf(value));
+        return value;
     }
 }

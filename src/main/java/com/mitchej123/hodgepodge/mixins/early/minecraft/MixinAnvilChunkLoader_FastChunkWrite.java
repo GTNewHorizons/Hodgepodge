@@ -39,20 +39,26 @@ public class MixinAnvilChunkLoader_FastChunkWrite {
                     value = "INVOKE",
                     target = "Lnet/minecraft/nbt/CompressedStreamTools;write(Lnet/minecraft/nbt/NBTTagCompound;Ljava/io/DataOutput;)V"))
     private void hodgepodge$batchedNBTWrite(NBTTagCompound nbt, DataOutput dataOutput) throws IOException {
-        // Write to a reused buffer to avoid multiple allocations and resizes
-        hodgepodge$nbtBuffer.reset();
-        CompressedStreamTools.func_150663_a(nbt, hodgepodge$nbtDataOutput);
-        dataOutput.write(hodgepodge$nbtBuffer.toByteArray());
+        final byte[] serializedNbt;
+        // The file IO thread and save-all flush share these buffers, including their resize bookkeeping.
+        synchronized (this) {
+            // Write to a reused buffer to avoid multiple allocations and resizes
+            hodgepodge$nbtBuffer.reset();
+            CompressedStreamTools.func_150663_a(nbt, hodgepodge$nbtDataOutput);
+            serializedNbt = hodgepodge$nbtBuffer.toByteArray();
 
-        // Shrink if we've seen a streak of smaller chunks
-        if (hodgepodge$nbtBuffer.size() < hodgepodge$SHRINK_THRESHOLD) {
-            if (++hodgepodge$smallWriteStreak >= hodgepodge$SHRINK_AFTER_STREAK) {
-                hodgepodge$nbtBuffer = new ByteArrayOutputStream(hodgepodge$DEFAULT_BUFFER_SIZE);
-                hodgepodge$nbtDataOutput = new DataOutputStream(hodgepodge$nbtBuffer);
+            // Shrink if we've seen a streak of smaller chunks
+            if (hodgepodge$nbtBuffer.size() < hodgepodge$SHRINK_THRESHOLD) {
+                if (++hodgepodge$smallWriteStreak >= hodgepodge$SHRINK_AFTER_STREAK) {
+                    hodgepodge$nbtBuffer = new ByteArrayOutputStream(hodgepodge$DEFAULT_BUFFER_SIZE);
+                    hodgepodge$nbtDataOutput = new DataOutputStream(hodgepodge$nbtBuffer);
+                    hodgepodge$smallWriteStreak = 0;
+                }
+            } else {
                 hodgepodge$smallWriteStreak = 0;
             }
-        } else {
-            hodgepodge$smallWriteStreak = 0;
         }
+        // Compression uses its own copy and can proceed without blocking another chunk's serialization.
+        dataOutput.write(serializedNbt);
     }
 }
