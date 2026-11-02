@@ -42,8 +42,9 @@ public class ChunkGenDebugHandler {
                         s.getSnapPopCount()));
         event.left.add(
                 String.format(
-                        "[ChunkGen] blocked: %4d  stuck: %4d  fills: %4d  debt: %7.1fms",
+                        "[ChunkGen] blocked: %4d  popLoads: %4d  stuck: %4d  fills: %4d  debt: %7.1fms",
                         s.getSnapBlockedLoads(),
+                        s.getSnapPopulationLoads(),
                         s.getSnapStuckCount(),
                         s.getSnapNeighborFills(),
                         s.getDebtMs()));

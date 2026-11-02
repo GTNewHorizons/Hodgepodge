@@ -79,6 +79,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.mockito:mockito-core:5.+")
+    testRuntimeOnly("it.unimi.dsi:fastutil:8.5.18")
 }
 
 // Replace when RFG support deobfuscation from notch mappings
