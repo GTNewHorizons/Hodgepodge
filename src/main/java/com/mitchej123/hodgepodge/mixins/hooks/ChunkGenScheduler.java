@@ -14,6 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.LongHashMap;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.AnvilChunkLoader;
@@ -38,7 +39,6 @@ public class ChunkGenScheduler {
     private static boolean chunkLoadBlocked = false;
     private static volatile boolean tickingStarted = false;
     private static long serverTickStartNanos;
-    private static int blockedLoadCount = 0;
 
     private static final Int2ObjectMap<ChunkGenScheduler> dimensions = new Int2ObjectOpenHashMap<>();
     private final LongSet pendingGenSet = new LongOpenHashSet();
@@ -71,7 +71,6 @@ public class ChunkGenScheduler {
         tickingStarted = true;
         serverTickStartNanos = System.nanoTime();
         chunkLoadBlocked = true;
-        blockedLoadCount = 0;
     }
 
     public static boolean hasTickingStarted() {
@@ -90,14 +89,16 @@ public class ChunkGenScheduler {
         return chunkLoadBlocked;
     }
 
-    public static void incrementBlockedLoadCount() {
-        blockedLoadCount++;
+    public static void recordBlockedLoad(World world) {
+        final ChunkGenScheduler scheduler = dimensions.get(world.provider.dimensionId);
+        if (scheduler != null) scheduler.stats.incrementBlockedLoads();
     }
 
-    private static int resetBlockedLoadCount() {
-        final int c = blockedLoadCount;
-        blockedLoadCount = 0;
-        return c;
+    public static boolean admitPopulationLoad(World world) {
+        final ChunkGenScheduler scheduler = dimensions.get(world.provider.dimensionId);
+        if (scheduler == null || scheduler.populationDepth == 0) return false;
+        scheduler.stats.incrementPopulationLoads();
+        return true;
     }
 
     public static ChunkGenScheduler forDimension(int dimId) {
@@ -153,15 +154,7 @@ public class ChunkGenScheduler {
         populationDepth--;
     }
 
-    public void deferChunkPopulation(Chunk chunk, int x, int z) {
-        trackTerrain(chunk, x, z);
-    }
-
     public void trackIfUnpopulated(Chunk chunk, int x, int z) {
-        trackTerrain(chunk, x, z);
-    }
-
-    private void trackTerrain(Chunk chunk, int x, int z) {
         if (!chunk.isTerrainPopulated) {
             final long key = ChunkPosUtil.toLong(x, z);
             if (!statusMap.containsKey(key)) {
@@ -215,7 +208,7 @@ public class ChunkGenScheduler {
 
         final long configBudgetNanos = (long) SpeedupsConfig.chunkGenBudgetMs * 1_000_000L;
         if (pendingGenSet.isEmpty() && populationQueue.isEmpty()) {
-            stats.recordTick(0, 0, 0, resetBlockedLoadCount(), 0, 0, 0, 0, 0, configBudgetNanos, false);
+            stats.recordTick(0, 0, 0, 0, 0, 0, 0, 0, configBudgetNanos, false);
             return;
         }
 
@@ -283,7 +276,6 @@ public class ChunkGenScheduler {
                 pendingGenSet.size(),
                 populationQueue.size(),
                 getTerrainStatusCount(),
-                resetBlockedLoadCount(),
                 totalTerrainGen,
                 terrainNanos,
                 popProcessed,
@@ -399,78 +391,73 @@ public class ChunkGenScheduler {
         final LongHashMap loadedChunkHashMap = cps.loadedChunkHashMap;
         int processed = 0;
         final long startNanos = System.nanoTime();
-        populationDepth++;
-        try {
-            int write = 0;
-            int i;
-            for (i = 0; i < populationQueue.size(); i++) {
-                final long key = populationQueue.getLong(i);
-                final byte status = statusMap.get(key);
+        int write = 0;
+        int i;
+        for (i = 0; i < populationQueue.size(); i++) {
+            final long key = populationQueue.getLong(i);
+            final byte status = statusMap.get(key);
 
-                if (status == POPULATED) {
-                    final int cx = ChunkPosUtil.getPackedX(key);
-                    final int cz = ChunkPosUtil.getPackedZ(key);
-                    if (!isWithinChunkRange(world, cx, cz, viewDist)) {
-                        removeStatus(key);
-                        continue;
-                    }
-                    if (queueResend(world, cps, cx, cz, viewDist)) {
-                        removeStatus(key);
-                    } else {
-                        populationQueue.set(write++, key);
-                        stats.incrementResendRetry();
-                    }
-                    continue;
-                }
-
-                if (status != TERRAIN) {
-                    removeStatus(key);
-                    continue;
-                }
-
+            if (status == POPULATED) {
                 final int cx = ChunkPosUtil.getPackedX(key);
                 final int cz = ChunkPosUtil.getPackedZ(key);
-                final Chunk chunk = (Chunk) loadedChunkHashMap.getValueByKey(key);
-                if (chunk == null || chunk.isTerrainPopulated) {
+                if (!isWithinChunkRange(world, cx, cz, viewDist)) {
                     removeStatus(key);
                     continue;
                 }
-
-                if (!has3x3Terrain(loadedChunkHashMap, cx, cz)) {
-                    populationQueue.set(write++, key);
-                    continue;
-                }
-
-                // At least one always processes to prevent stall
-                if (processed > 0) {
-                    final long remaining = budgetNanos - (System.nanoTime() - startNanos);
-                    if (remaining <= 0 || !budget.canAffordPopulate(remaining)) {
-                        populationQueue.set(write++, key);
-                        for (int j = i + 1; j < populationQueue.size(); j++) {
-                            populationQueue.set(write++, populationQueue.getLong(j));
-                        }
-                        break;
-                    }
-                }
-
-                final long before = System.nanoTime();
-                cps.populate(cps, cx, cz);
-                budget.recordPopulate(System.nanoTime() - before);
-
                 if (queueResend(world, cps, cx, cz, viewDist)) {
                     removeStatus(key);
                 } else {
-                    statusMap.put(key, POPULATED);
-                    terrainCount--;
                     populationQueue.set(write++, key);
+                    stats.incrementResendRetry();
                 }
-                processed++;
+                continue;
             }
-            if (write < populationQueue.size()) {
-                populationQueue.removeElements(write, populationQueue.size());
+
+            if (status != TERRAIN) {
+                removeStatus(key);
+                continue;
             }
-        } finally {
-            populationDepth--;
+
+            final int cx = ChunkPosUtil.getPackedX(key);
+            final int cz = ChunkPosUtil.getPackedZ(key);
+            final Chunk chunk = (Chunk) loadedChunkHashMap.getValueByKey(key);
+            if (chunk == null || chunk.isTerrainPopulated) {
+                removeStatus(key);
+                continue;
+            }
+
+            if (!has3x3Terrain(loadedChunkHashMap, cx, cz)) {
+                populationQueue.set(write++, key);
+                continue;
+            }
+
+            // At least one always processes to prevent stall
+            if (processed > 0) {
+                final long remaining = budgetNanos - (System.nanoTime() - startNanos);
+                if (remaining <= 0 || !budget.canAffordPopulate(remaining)) {
+                    populationQueue.set(write++, key);
+                    for (int j = i + 1; j < populationQueue.size(); j++) {
+                        populationQueue.set(write++, populationQueue.getLong(j));
+                    }
+                    break;
+                }
+            }
+
+            final long before = System.nanoTime();
+            cps.populate(cps, cx, cz);
+            budget.recordPopulate(System.nanoTime() - before);
+
+            if (queueResend(world, cps, cx, cz, viewDist)) {
+                removeStatus(key);
+            } else {
+                statusMap.put(key, POPULATED);
+                terrainCount--;
+                populationQueue.set(write++, key);
+            }
+            processed++;
+        }
+        if (write < populationQueue.size()) {
+            populationQueue.removeElements(write, populationQueue.size());
         }
         return processed;
     }
@@ -622,12 +609,7 @@ public class ChunkGenScheduler {
             return;
         }
 
-        populationDepth++;
-        try {
-            cps.populate(cps, cx, cz);
-        } finally {
-            populationDepth--;
-        }
+        cps.populate(cps, cx, cz);
 
         queueResend(world, cps, cx, cz, viewDist);
         removeStatus(bestKey);
