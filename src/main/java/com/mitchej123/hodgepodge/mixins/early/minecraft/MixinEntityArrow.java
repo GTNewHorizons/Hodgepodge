@@ -70,10 +70,9 @@ public abstract class MixinEntityArrow extends Entity implements IArrowOwnerUUID
     @Inject(
             method = "onUpdate",
             at = @At(
-                    value = "FIELD",
-                    target = "Lnet/minecraft/util/MovingObjectPosition;entityHit:Lnet/minecraft/entity/Entity;",
-                    ordinal = 0,
-                    shift = At.Shift.AFTER))
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/entity/projectile/EntityArrow;getIsCritical()Z",
+                    ordinal = 0))
     public void hodgepodge$restoreOwner(CallbackInfo ci) {
         if (this.shootingEntity == null && this.hodgepodge$cachedOwnerUUID != null) {
             // 1. Search for the owner player
