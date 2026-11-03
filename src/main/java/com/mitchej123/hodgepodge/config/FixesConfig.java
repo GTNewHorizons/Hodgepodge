@@ -475,7 +475,7 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixArrowOwner;
 
-    @Config.Comment("Fix TiC projectile forgetting its owner upon owner reloading to allow enchantments and HEE charms to work")
+    @Config.Comment("Fix TiC projectile forgetting its owner upon owner reloading to allow enchantments and HEE charms to work. Requires FixArrowOwner.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixArrowOwnerTiC;

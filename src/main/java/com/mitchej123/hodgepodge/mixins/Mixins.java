@@ -1086,7 +1086,7 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinEntityArrow")
             .setApplyIf(() -> FixesConfig.fixArrowOwner)
             .setPhase(Phase.EARLY)),
-    FIX_ARROW_OWNER_TRACKING_TIC(new MixinBuilder("Fix TiC projectile forgetting its owner upon owner reloading to allow enchantments and HEE charms to work")
+    FIX_ARROW_OWNER_TRACKING_TIC(new MixinBuilder("Fix TiC projectile forgetting its owner upon owner reloading to allow enchantments and HEE charms to work. Requires FixArrowOwner.")
             .addCommonMixins("tconstruct.MixinProjectileBase")
             .setApplyIf(() -> FixesConfig.fixArrowOwnerTiC)
             .addRequiredMod(TargetedMod.TINKERSCONSTRUCT)
