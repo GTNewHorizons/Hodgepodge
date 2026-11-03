@@ -37,13 +37,14 @@ public class MixinChunkProviderServer_EntityGuard_Bukkit {
         ChunkProviderServer self = (ChunkProviderServer) (Object) this;
         if (self.chunkExists(x, z)) return;
 
-        // Allow disk loads (cheap), only block generation (expensive)
-        if (this.currentChunkLoader instanceof AnvilChunkLoader acl && acl.chunkExists(this.worldObj, x, z)) {
+        // Allow disk loads (cheap) and generation for a running population; block other generation (expensive)
+        if (this.currentChunkLoader instanceof AnvilChunkLoader acl && acl.chunkExists(this.worldObj, x, z)
+                || ChunkGenScheduler.admitPopulationLoad(this.worldObj)) {
             return;
         }
 
         // Not on disk -- block generation
-        ChunkGenScheduler.incrementBlockedLoadCount();
+        ChunkGenScheduler.recordBlockedLoad(this.worldObj);
         cir.setReturnValue(this.defaultEmptyChunk);
     }
 }
