@@ -20,15 +20,37 @@ import com.mitchej123.hodgepodge.mixins.interfaces.IArrowOwnerUUID;
 @Mixin(EntityArrow.class)
 public abstract class MixinEntityArrow extends Entity implements IArrowOwnerUUID {
 
-    private MixinEntityArrow(World worldIn) {
-        super(worldIn);
-    }
-
     @Shadow
     public Entity shootingEntity;
 
     @Unique
     private UUID hodgepodge$cachedOwnerUUID;
+
+    @Inject(method = "writeEntityToNBT", at = @At("HEAD"))
+    private void hodgepodge$writeOwnerToNBT(NBTTagCompound tagCompound, CallbackInfo ci) {
+        this.hodgepodge$writeShooterUUID(tagCompound, this.hodgepodge$getShootingEntity());
+    }
+
+    @Inject(method = "readEntityFromNBT", at = @At("HEAD"))
+    private void hodgepodge$readOwnerFromNBT(NBTTagCompound tagCompound, CallbackInfo ci) {
+        this.hodgepodge$readShooterUUID(tagCompound);
+    }
+
+    /*
+     * Called only when the arrow hits an entity. If injected elsewhere and it runs unconditionally, it may cause an
+     * overhead as onUpdate is called for every loaded arrow per tick. The caveat is that this late injection makes the
+     * self-fire prevention (ent != this.shootingEntity || this.ticksInAir >= 5) to always fail before the restoration,
+     * which results in more situations where players get hit by arrows. But those are mostly when an arrow has just
+     * unstucked out of a block / bounced off on an entity, and that seem natural to me.
+     */
+    @Inject(
+            method = "onUpdate",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/MovingObjectPosition;<init>(Lnet/minecraft/entity/Entity;)V"))
+    public void hodgepodge$restoreOwner(CallbackInfo ci) {
+        this.hodgepodge$restoreOwner();
+    }
 
     @Override
     public UUID hodgepodge$getCachedOwnerUUID() {
@@ -40,59 +62,22 @@ public abstract class MixinEntityArrow extends Entity implements IArrowOwnerUUID
         this.hodgepodge$cachedOwnerUUID = uuid;
     }
 
-    @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
-    public void hodgepodge$writeShooterUUID(NBTTagCompound tagCompound, CallbackInfo ci) {
-        UUID uuid = this.shootingEntity != null ? this.shootingEntity.getUniqueID() : this.hodgepodge$cachedOwnerUUID;
-
-        if (uuid != null) {
-            tagCompound.setLong("OwnerUUIDMost", uuid.getMostSignificantBits());
-            tagCompound.setLong("OwnerUUIDLeast", uuid.getLeastSignificantBits());
-        }
+    @Override
+    public Entity hodgepodge$getShootingEntity() {
+        return this.shootingEntity;
     }
 
-    // Don't attempt to resolve the owner here, as the owner may not be loaded yet
-    @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
-    public void hodgepodge$readShooterUUID(NBTTagCompound tagCompound, CallbackInfo ci) {
-        if (tagCompound.hasKey("OwnerUUIDMost", 99)) {
-            this.hodgepodge$cachedOwnerUUID = new UUID(
-                    tagCompound.getLong("OwnerUUIDMost"),
-                    tagCompound.getLong("OwnerUUIDLeast"));
-        }
+    @Override
+    public void hodgepodge$setShootingEntity(Entity entity) {
+        this.shootingEntity = entity;
     }
 
-    /*
-     * Called only when the arrow hits an entity; it's injected right after it passes the first hitEntity != null check.
-     * If injected elsewhere and it runs unconditionally, it may cause an overhead as onUpdate is called every tick per
-     * arrow. The caveat is that the safety check (ent != this.shootingEntity || this.ticksInAir >= 5), which is the
-     * only point where restored shootingEntity won't be used, will always return true even if the ticksInAir < 5
-     * (mostly when it's unstuck and falling out of the block / bounces off of an entity), but this seems natural to me.
-     */
-    @Inject(
-            method = "onUpdate",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/entity/projectile/EntityArrow;getIsCritical()Z",
-                    ordinal = 0))
-    public void hodgepodge$restoreOwner(CallbackInfo ci) {
-        if (this.shootingEntity == null && this.hodgepodge$cachedOwnerUUID != null) {
-            // 1. Search for the owner player
-            Entity entity = this.worldObj.func_152378_a(this.hodgepodge$cachedOwnerUUID);
+    @Override
+    public World hodgepodge$getWorldObj() {
+        return this.worldObj;
+    }
 
-            // 2. If can't find a player, search for the general owner entity
-            if (entity == null) {
-                // I really wanted to use WorldServer.getEntityFromUuid() here, but it's 1.8+ only...
-                for (Entity ent : this.worldObj.loadedEntityList) {
-                    if (ent.getUniqueID().equals(this.hodgepodge$cachedOwnerUUID)) {
-                        entity = ent;
-                        break;
-                    }
-                }
-            }
-
-            if (entity != null) {
-                this.shootingEntity = entity;
-                this.hodgepodge$cachedOwnerUUID = null;
-            }
-        }
+    private MixinEntityArrow(World worldIn) {
+        super(worldIn);
     }
 }

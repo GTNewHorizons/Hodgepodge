@@ -1,8 +1,5 @@
 package com.mitchej123.hodgepodge.mixins.late.tconstruct;
 
-import java.util.UUID;
-
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.world.World;
 
@@ -18,36 +15,19 @@ import tconstruct.library.entity.ProjectileBase;
 // Fix TiC projectile not saving its owner at all, thus being unable to restore its owner after the owner has been
 // reloaded
 @Mixin(ProjectileBase.class)
-public abstract class MixinProjectileBase extends EntityArrow {
-
-    private MixinProjectileBase(World worldIn) {
-        super(worldIn);
-    }
+public abstract class MixinProjectileBase extends EntityArrow implements IArrowOwnerUUID {
 
     @Inject(method = "onHitEntity", at = @At("HEAD"), remap = false)
     public void hodgepodge$restoreOwner(CallbackInfo ci) {
-        IArrowOwnerUUID arrow = (IArrowOwnerUUID) this;
-        UUID cachedUUID = arrow.hodgepodge$getCachedOwnerUUID();
+        this.hodgepodge$restoreOwner();
+    }
 
-        if (this.shootingEntity == null && cachedUUID != null) {
-            // 1. Search for the owner player
-            Entity entity = this.worldObj.func_152378_a(cachedUUID);
+    @Override
+    public boolean hodgepodge$allowEntityFallback() {
+        return false; // Mobs cannot use TiC range weaponry
+    }
 
-            // 2. If can't find a player, search for the general owner entity
-            if (entity == null) {
-                // I really wanted to use WorldServer.getEntityFromUuid() here, but it's 1.8+ only...
-                for (Entity ent : this.worldObj.loadedEntityList) {
-                    if (ent.getUniqueID().equals(cachedUUID)) {
-                        entity = ent;
-                        break;
-                    }
-                }
-            }
-
-            if (entity != null) {
-                this.shootingEntity = entity;
-                arrow.hodgepodge$setCachedOwnerUUID(null);
-            }
-        }
+    private MixinProjectileBase(World worldIn) {
+        super(worldIn);
     }
 }
