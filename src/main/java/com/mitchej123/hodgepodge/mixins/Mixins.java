@@ -470,6 +470,10 @@ public enum Mixins implements IMixins {
                     "minecraft.NetworkManagerAccessor")
             .setApplyIf(() -> FixesConfig.fixBogusIntegratedServerNPEs)
             .setPhase(Phase.EARLY)),
+    FIX_PROXY_PACKET_PADDING(new MixinBuilder("Send only the written bytes of FML proxy packets, not their buffer's unused capacity")
+            .addCommonMixins("fml.MixinFMLProxyPacket_TrimPayload")
+            .setApplyIf(() -> FixesConfig.fixProxyPacketPadding)
+            .setPhase(Phase.EARLY)),
     FIX_LAG_ON_INVENTORY_SYNC(new MixinBuilder("Fix inventory sync lag")
             .addCommonMixins("minecraft.MixinInventoryCrafting")
             .setApplyIf(() -> FixesConfig.fixInventorySyncLag)
