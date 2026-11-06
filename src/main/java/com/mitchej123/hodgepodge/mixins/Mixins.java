@@ -216,6 +216,13 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinInventoryEffectRenderer_TogglePotionIcons")
             .setApplyIf(() -> !TweaksConfig.showInventoryEffectIcons)
             .setPhase(Phase.EARLY)),
+    INFINITE_POTION_DURATION(new MixinBuilder("Treat a potion effect duration of -1 as infinite")
+            .addCommonMixins("minecraft.MixinPotionEffect_InfiniteDuration")
+            .addClientMixins(
+                    "minecraft.MixinPotion_InfiniteDuration",
+                    "minecraft.MixinEntityRenderer_InfiniteNightVision")
+            .setApplyIf(() -> TweaksConfig.infinitePotionDuration)
+            .setPhase(Phase.EARLY)),
     FIX_POTION_EFFECT_RENDERING(new MixinBuilder()
             .addClientMixins(
                     "minecraft.MixinInventoryEffectRenderer_PotionEffectRendering",
