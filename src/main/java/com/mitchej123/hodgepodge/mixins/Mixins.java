@@ -1015,7 +1015,8 @@ public enum Mixins implements IMixins {
                     "minecraft.fastload.MixinMinecraftServer_TickStart",
                     "minecraft.fastload.MixinChunkProviderServer_DeferPopulation",
                     "minecraft.fastload.MixinPlayerManager_ThrottleChunkGen",
-                    "minecraft.fastload.MixinChunk_SendWithoutPopulation")
+                    "minecraft.fastload.MixinChunk_SendWithoutPopulation",
+                    "minecraft.fastload.MixinChunk_KeepPlayersOnUnload")
             .setApplyIf(() -> SpeedupsConfig.throttleChunkGeneration)
             .setPhase(Phase.EARLY)),
     FAST_CHUNK_SENDING(new MixinBuilder("Removes hard caps on chunk sending speed")
