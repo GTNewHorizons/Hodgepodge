@@ -130,6 +130,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean improvedRedstoneWireHitbox;
 
+    @Config.Comment("Give blocks like stairs, fences, walls and anvils shaped selection outlines and hit areas.")
+    @Config.DefaultBoolean(true)
+    public static boolean shapedBlockOutlines;
+
     @Config.Comment("Allow players on your server to use fast block placement")
     @Config.DefaultBoolean(true)
     public static boolean fastBlockPlacingServerSide;
