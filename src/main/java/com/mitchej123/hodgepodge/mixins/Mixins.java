@@ -1935,6 +1935,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFluidRetrievalNode)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
+    FIX_FILING_CABINET_RENDERING(new MixinBuilder("Fix Filing Cabinet rendering of enchanted items")
+            .addClientMixins("extrautilities.MixinGuiFilingCabinet")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFilingCabinetEnchantedRendering)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
     FIX_FILING_CABINET_DUPE(new MixinBuilder("Caps hotkey'd stacks to their maximum stack size in filing cabinets")
             .addCommonMixins("extrautilities.MixinContainerFilingCabinet")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesFilingCabinetDupe)
