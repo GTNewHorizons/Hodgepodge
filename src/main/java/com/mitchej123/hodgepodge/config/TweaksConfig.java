@@ -142,6 +142,11 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean showInventoryEffectIcons;
 
+    @Config.Comment("Treat a potion effect duration of -1 as infinite, like newer Minecraft versions. The effect never expires until removed and shows an infinity symbol instead of a timer. Mods must opt in by applying -1")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean infinitePotionDuration;
+
     @Config.Comment("Uses a new player inventory texture and moves the 2x2 crafting grid, its output slot and the crafting title 2 pixels right and 4 pixels up.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
