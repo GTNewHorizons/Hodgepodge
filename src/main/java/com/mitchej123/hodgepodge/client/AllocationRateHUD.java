@@ -1,18 +1,34 @@
 package com.mitchej123.hodgepodge.client;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.management.ManagementFactory;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+
+import com.mitchej123.hodgepodge.Compat;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public final class AllocationRateHUD {
 
+    private static final int AVERAGE_SECONDS = 10;
+    /** com.sun.management.ThreadMXBean#getTotalThreadAllocatedBytes (Java 14+), or null if unavailable */
+    private static final MethodHandle TOTAL_ALLOCATED_BYTES = findTotalAllocatedBytes();
+    /** A longer gap means the text was not drawn, so older rates are stale */
+    private static final long MAX_GAP_NANOS = 2_000_000_000L;
+
     private long lastUpdateTime = System.nanoTime();
-    private long lastFreeMemory = Runtime.getRuntime().freeMemory();
-    private String cachedText = "";
+    private long lastBytes = readAllocatedBytes();
+    // Ring of the last per-second rates; order does not matter for the average
+    private final int[] rates = new int[AVERAGE_SECONDS];
+    private int count = 0;
+    private String cachedText = "Allocation rate: ...";
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onRenderGameOverlayTextEvent(RenderGameOverlayEvent.Text event) {
@@ -28,15 +44,70 @@ public final class AllocationRateHUD {
 
     public String updateText() {
         final long currentTime = System.nanoTime();
-        if (currentTime - lastUpdateTime >= 1_000_000_000L) {
-            final long currentFreeMemory = Runtime.getRuntime().freeMemory();
-            final long memDiff = lastFreeMemory - currentFreeMemory;
+        if (currentTime - lastUpdateTime > MAX_GAP_NANOS) {
+            count = 0;
+            lastBytes = readAllocatedBytes();
+            lastUpdateTime = currentTime;
+            cachedText = "Allocation rate: ...";
+        } else if (currentTime - lastUpdateTime >= 1_000_000_000L) {
+            final long currentBytes = readAllocatedBytes();
+            final long memDiff = currentBytes - lastBytes;
             final double seconds = (currentTime - lastUpdateTime) / 1_000_000_000.0;
             final int allocationRate = MathHelper.floor_double(memDiff / seconds / (1024.0 * 1024.0));
-            cachedText = String.format("Allocation rate: %s MB/s", allocationRate);
-            lastFreeMemory = currentFreeMemory;
+            rates[count % rates.length] = allocationRate;
+            count++;
+            final int filled = Math.min(count, rates.length);
+            long sum = 0;
+            for (int i = 0; i < filled; i++) {
+                sum += rates[i];
+            }
+            cachedText = String.format(
+                    "Allocation rate: %s MB/s (%ds avg: %d MB/s)",
+                    allocationRate,
+                    AVERAGE_SECONDS,
+                    sum / filled);
+            lastBytes = currentBytes;
             lastUpdateTime = currentTime;
         }
         return cachedText;
+    }
+
+    /**
+     * Bytes allocated so far. Java 14+ has an exact counter; on older versions the negated free heap is used, which
+     * only follows allocation between GCs (a GC frees memory and makes the difference negative).
+     */
+    private static long readAllocatedBytes() {
+        if (TOTAL_ALLOCATED_BYTES != null) {
+            try {
+                return (long) TOTAL_ALLOCATED_BYTES.invokeExact();
+            } catch (Throwable ignored) {}
+        }
+        return -Runtime.getRuntime().freeMemory();
+    }
+
+    private static MethodHandle findTotalAllocatedBytes() {
+        // Only lwjgl3ify runs us on Java 17+; Java 8u has backports of this method that misreport, e.g. 17x the real
+        // allocation on 8u504
+        if (!Compat.isLwjgl3ifyPresent()) {
+            return null;
+        }
+        try {
+            final Object bean = ManagementFactory.getThreadMXBean();
+            final Class<?> sunBean = Class.forName("com.sun.management.ThreadMXBean");
+            if (!sunBean.isInstance(bean)) {
+                return null;
+            }
+            final MethodHandle handle = MethodHandles.publicLookup()
+                    .findVirtual(sunBean, "getTotalThreadAllocatedBytes", MethodType.methodType(long.class))
+                    .bindTo(bean);
+            // Returns -1 when allocation measurement is unsupported or disabled
+            if ((long) handle.invokeExact() < 0) {
+                return null;
+            }
+            return handle;
+        } catch (Throwable t) {
+            // A JVM without com.sun.management
+            return null;
+        }
     }
 }
