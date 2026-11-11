@@ -273,6 +273,25 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean f1ShowHand;
 
+    @Config.Comment("""
+            Merge mob drops before they spawn as entities to prevent lag spikes caused by heavy mob drops at a high looting level.
+            0 - RESPECT_MAX_STACK_SIZE - Merge drops up to the vanilla stack size limit, which is at most 64.
+            1 - FORCE_MERGE_INTO_ONE - Spawn each item type as a single item entity. This bypasses the vanilla stack size limit.
+            WARNING: Item entities with stackSize greater than 127 will be voided when unloaded! This is because stackSize is an int, while Count NBT is a byte. (1 sign bit + 7 bits)
+            2 - HYBRID - Use #0 if the total number of items to be spawned is less than the mergeMobDropsModeHybridThreshold. Otherwise, use #1.
+            3 - HYBRID_AVARITIA - Similar to HYBRID, but spawn Avaritia matter clusters instead of switching to #1 and apply #1 to a remainder. Falls back to HYBRID when the Avaritia is not installed.""")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean mergeMobDrops;
+    @Config.Comment("The mode used in mergeMobDrops")
+    @Config.RangeInt(min = 0, max = 3)
+    @Config.DefaultInt(3)
+    public static int mergeMobDropsMode;
+    @Config.Comment("The threshold used by HYBRID and HYBRID_AVARITIA modes in mergeMobDrops.")
+    @Config.RangeInt(min = 64 * 64, max = 64 * 256)
+    @Config.DefaultInt(4096)
+    public static int mergeMobDropsModeHybridThreshold;
+
     // NBT String Pooling
 
     @Config.Comment("Enable string pooling for NBT TagCompound Keys")
