@@ -505,7 +505,6 @@ public enum Mixins implements IMixins {
     FIX_REDSTONE_TORCH_WORLD_LEAK(new MixinBuilder("Fix world leak in redstone torch")
             .addCommonMixins("memory.MixinBlockRedstoneTorch")
             .setApplyIf(() -> MemoryConfig.leaks.fixRedstoneTorchWorldLeak)
-            .addExcludedMod(TargetedMod.BUGTORCH)
             .setPhase(Phase.EARLY)),
     FIX_WORLD_MAP_STORAGE_LEAK(new MixinBuilder()
             .addCommonMixins("memory.WorldAccessor_ClearMapStorage")
@@ -2015,6 +2014,15 @@ public enum Mixins implements IMixins {
     FIX_ENDER_COLLECTOR_CRASH(new MixinBuilder("Prevent Extra Utilities Ender Collector from inserting into auto-dropping Blocks that create a crash-loop")
             .addCommonMixins("extrautilities.MixinTileEnderCollector")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesEnderCollectorCrash)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
+    FIX_DIVISION_SIGIL_ACTIVATION(new MixinBuilder("Fix Division Sigil not activating with enchantment tables and beacons from other mods")
+            .addCommonMixins(
+                    "extrautilities.MixinEventHandlerServer",
+                    "extrautilities.MixinEventHandlerSiege",
+                    "extrautilities.MixinItemDivisionSigil")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesDivisionSigilActivation)
+            .addExcludedMod(TargetedMod.ARCHAICFIX)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
 
