@@ -626,7 +626,7 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixHotbarSelectionHeight;
-    
+
     @Config.Comment("Fire a keyboard event when mouse buttons are pressed (makes mouse button bindings work across all mods that only check for keyboard input)")
     @Config.DefaultBoolean(true)
     public static boolean fixMouseButtonBindings;
