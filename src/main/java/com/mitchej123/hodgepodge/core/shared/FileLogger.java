@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 
 import net.minecraft.launchwrapper.Launch;
 
+import com.mitchej123.hodgepodge.Common;
+
 public final class FileLogger implements AutoCloseable {
 
     private final SimpleDateFormat dateFormat;
@@ -47,13 +49,13 @@ public final class FileLogger implements AutoCloseable {
                 // noinspection ResultOfMethodCallIgnored
                 logFile.createNewFile();
             } catch (IOException e) {
-                e.printStackTrace();
+                Common.log.error(e);
             }
         }
         try {
             printStream = new PrintStream(new FileOutputStream(logFile, true));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Common.log.error(e);
         }
     }
 

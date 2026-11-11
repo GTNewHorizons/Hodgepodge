@@ -16,6 +16,8 @@ public class Compat {
 
     private static boolean isGT5Present;
 
+    private static boolean isLwjgl3ifyPresent;
+
     private static boolean isIC2CropPluginPresent;
 
     private static boolean isThaumcraftPresent;
@@ -32,13 +34,16 @@ public class Compat {
     private static boolean isTravellersGearPresent;
     private static boolean isIC2Present;
 
+    private static boolean isSupernovaPresent;
+    private static boolean isCubicChunksPresent;
+
     static void init(Side side) {
         isClient = side == Side.CLIENT;
 
         isNeiPresent = Loader.isModLoaded("NotEnoughItems");
         if (isClient) {
             try {
-                Method isBookmarkPanelHiddenMethod = Class.forName("codechicken.nei.NEIClientConfig")
+                final Method isBookmarkPanelHiddenMethod = Class.forName("codechicken.nei.NEIClientConfig")
                         .getMethod("isBookmarkPanelHidden");
                 if (Modifier.isStatic(isBookmarkPanelHiddenMethod.getModifiers())
                         && isBookmarkPanelHiddenMethod.getReturnType().equals(boolean.class)) {
@@ -48,6 +53,8 @@ public class Compat {
         }
 
         isGT5Present = Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi");
+
+        isLwjgl3ifyPresent = Loader.isModLoaded("lwjgl3ify");
 
         isIC2CropPluginPresent = Loader.isModLoaded("Ic2Nei");
 
@@ -70,6 +77,10 @@ public class Compat {
         isTravellersGearPresent = Loader.isModLoaded("TravellersGear");
 
         isIC2Present = Loader.isModLoaded("IC2");
+
+        isSupernovaPresent = Loader.isModLoaded("supernova");
+
+        isCubicChunksPresent = Loader.isModLoaded("cubicchunks");
     }
 
     /**
@@ -87,6 +98,13 @@ public class Compat {
      */
     public static boolean isGT5Present() {
         return isGT5Present;
+    }
+
+    /**
+     * Cannot be used before pre-init phase.
+     */
+    public static boolean isLwjgl3ifyPresent() {
+        return isLwjgl3ifyPresent;
     }
 
     /**
@@ -164,5 +182,19 @@ public class Compat {
      */
     public static boolean isIC2Present() {
         return isIC2Present;
+    }
+
+    /**
+     * Cannot be used before pre-init phase.
+     */
+    public static boolean isSupernovaPresent() {
+        return isSupernovaPresent;
+    }
+
+    /**
+     * Cannot be used before pre-init phase.
+     */
+    public static boolean isCubicChunksPresent() {
+        return isCubicChunksPresent;
     }
 }

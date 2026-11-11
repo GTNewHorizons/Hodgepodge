@@ -22,4 +22,13 @@ public class DebugConfig {
     @Config.DefaultInt(0)
     public static int renderDebugMode;
 
+    @Config.Comment("Show chunk generation stats on the F3 debug screen (left side). Singleplayer only.")
+    @Config.DefaultBoolean(false)
+    public static boolean showChunkGenDebug;
+
+    @Config.Comment({ "Track incoming client packets for /packetstats.",
+            "When disabled, /packetstats can still inspect the existing receive queue." })
+    @Config.RequiresMcRestart
+    @Config.DefaultBoolean(true)
+    public static boolean trackIncomingPackets;
 }

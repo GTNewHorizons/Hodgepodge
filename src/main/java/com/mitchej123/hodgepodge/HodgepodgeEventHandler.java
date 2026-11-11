@@ -8,11 +8,14 @@ import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.ZombieEvent;
 
 import com.mitchej123.hodgepodge.config.FixesConfig;
+import com.mitchej123.hodgepodge.config.SoundConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.net.MessageConfigSync;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
+import com.mitchej123.hodgepodge.util.ServerThreadLongHashMap;
 import com.mitchej123.hodgepodge.util.TravellersGear;
 
+import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -67,9 +70,11 @@ public class HodgepodgeEventHandler {
 
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && TweaksConfig.avoidDroppingItemsWhenClosing
-                && !playersClosedContainers.isEmpty()) {
-            playersClosedContainers.clear();
+        if (event.phase == TickEvent.Phase.END) {
+            ServerThreadLongHashMap.refreshSnapshots();
+            if (TweaksConfig.avoidDroppingItemsWhenClosing && !playersClosedContainers.isEmpty()) {
+                playersClosedContainers.clear();
+            }
         }
     }
 
@@ -78,6 +83,13 @@ public class HodgepodgeEventHandler {
         if (FixesConfig.fixDimensionChangeAttributes && event.player instanceof EntityPlayerMP player) {
             // fixes xp when changing dimensions
             player.addExperienceLevel(0);
+        }
+    }
+
+    @SubscribeEvent
+    public void onConfigChange(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.modID.equals("hodgepodge")) {
+            SoundConfig.apply();
         }
     }
 

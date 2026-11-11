@@ -10,6 +10,10 @@ public class ASMConfig {
     @Config.DefaultBoolean(true)
     public static boolean cofhWorldTransformer;
 
+    @Config.Comment("Disable CoFH Access Transformer and use Forge AT instead to improve transforming performance")
+    @Config.DefaultBoolean(true)
+    public static boolean disableCoFHAccessTransformer;
+
     @Config.Comment("Speedup progressbar")
     @Config.DefaultBoolean(true)
     public static boolean speedupProgressBar;
@@ -37,11 +41,6 @@ public class ASMConfig {
     @Config.Comment("Speedup OreDictionary")
     @Config.DefaultBoolean(true)
     public static boolean speedupOreDictionary;
-
-    @Config.Comment("Embeds the block ID into Block itself, massively accelerating block ID lookups. [EXPERIMENTAL]")
-    @Config.DefaultBoolean(false)
-    @Config.RequiresMcRestart
-    public static boolean embedID_experimental;
 
     @Config.Comment("Disable BoP fog modifications")
     @Config.DefaultBoolean(false)

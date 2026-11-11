@@ -14,5 +14,7 @@ public class NetworkHandler {
     public static void init() {
         instance.registerMessage(MessageConfigSync.class, MessageConfigSync.class, 0, Side.CLIENT);
         instance.registerMessage(BatchedDescriptionHandler.class, BatchedDescriptionPacket.class, 1, Side.CLIENT);
+        instance.registerMessage(MessageChangeDifficulty.class, MessageChangeDifficulty.class, 2, Side.CLIENT);
+        instance.registerMessage(MessagePotionDuration.class, MessagePotionDuration.class, 3, Side.CLIENT);
     }
 }

@@ -32,11 +32,6 @@ public abstract class MixinWorld_SimulationDistance implements ISimulationDistan
         return hodgepodge$simulationDistanceHelper;
     }
 
-    @Override
-    public void hodgepodge$preventChunkSimulation(long packedChunkPos, boolean prevent) {
-        hodgepodge$simulationDistanceHelper.preventChunkSimulation(packedChunkPos, prevent);
-    }
-
     /**
      * Reset internal cache on start of tick
      */

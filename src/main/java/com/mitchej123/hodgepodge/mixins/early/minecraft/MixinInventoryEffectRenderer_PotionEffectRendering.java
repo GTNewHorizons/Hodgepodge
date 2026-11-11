@@ -4,36 +4,46 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.inventory.Container;
 
+import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 import com.mitchej123.hodgepodge.Compat;
+import com.mitchej123.hodgepodge.mixins.interfaces.InventoryEffectRendererExt;
 
 @Mixin(InventoryEffectRenderer.class)
-public abstract class MixinInventoryEffectRenderer_PotionEffectRendering extends GuiContainer {
+public abstract class MixinInventoryEffectRenderer_PotionEffectRendering extends GuiContainer
+        implements InventoryEffectRendererExt {
 
     @Shadow
     private void func_147044_g() {}
 
     /**
      * @author Alexdoru
-     * @reason Fix the bug that renders the potion effects above the tooltips from items in NEI Fix the vanilla bug that
-     *         doesn't render the potion effects that you get while your inventory is opened
+     * @reason Suppress vanilla's post-drawScreen call to func_147044_g (gated on field_147045_u which is only set at
+     *         initGui, missing effects gained while the GUI is open). When the NEI panel is visible the panel is
+     *         pre-rendered here before super.drawScreen so drawDefaultBackground's dark overlay naturally covers it,
+     *         matching the original "background" appearance. Otherwise rendering is deferred to
+     *         MixinGuiContainer_PotionEffectRendering for correct z-ordering before the cursor item and tooltips.
      */
     @Overwrite
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        boolean leftPanelHidden = !Compat.isNeiLeftPanelVisible();
-        if (leftPanelHidden) {
-            super.drawScreen(mouseX, mouseY, partialTicks);
-        }
-        if (!this.mc.thePlayer.getActivePotionEffects().isEmpty()) {
+        if (Compat.isNeiLeftPanelVisible() && !this.mc.thePlayer.getActivePotionEffects().isEmpty()) {
             this.func_147044_g();
         }
-        if (leftPanelHidden) {
-            return;
-        }
         super.drawScreen(mouseX, mouseY, partialTicks);
+    }
+
+    @Override
+    public void hp$renderPotionPanelForeground() {
+        if (Compat.isNeiLeftPanelVisible()) return;
+        if (!this.mc.thePlayer.getActivePotionEffects().isEmpty()) {
+            GL11.glPushMatrix();
+            GL11.glTranslatef(-this.guiLeft, -this.guiTop, 0.0F);
+            this.func_147044_g();
+            GL11.glPopMatrix();
+        }
     }
 
     /* Forced to have constructor matching super */

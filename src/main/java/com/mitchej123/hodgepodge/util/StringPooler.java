@@ -19,12 +19,13 @@ public class StringPooler {
         if (INSTANCE != null) {
             throw new IllegalStateException("Pooler already set up");
         }
-        LOGGER.info("Setting up string pooler: " + switch (TweaksConfig.stringPoolMode) {
+        String label = switch (TweaksConfig.stringPoolMode) {
             case 0 -> " (JVM)";
             case 1 -> " (Guava strong)";
             case 2 -> " (Guava weak)";
             default -> " (unknown)";
-        });
+        };
+        LOGGER.info("Setting up string pooler: {}", label);
 
         INSTANCE = switch (TweaksConfig.stringPoolMode) {
             case 0 -> new StringPooler();

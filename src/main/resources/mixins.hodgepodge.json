@@ -1,6 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8.3-GTNH",
+  "mixinextras": {"minVersion": "0.5.0"},
   "refmap": "mixins.hodgepodge.refmap.json",
   "target": "@env(PREINIT)",
   "compatibilityLevel": "JAVA_8",

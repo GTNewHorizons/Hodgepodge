@@ -3,12 +3,13 @@ package com.mitchej123.hodgepodge.core.shared;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Properties;
 
 import net.minecraft.launchwrapper.Launch;
@@ -22,33 +23,54 @@ public final class EarlyConfig {
 
     public static final boolean noNukeBaseMod;
     public static final boolean noLeanerForgeConfiguration;
-    public static final boolean debugLogConfigParsingTimes;
-    public static final boolean dumpASMClass;
+    public static final boolean noFasterForgeEventTransformer;
+    public static final boolean noFmlRelaunchLogLoggerCache;
+    public static final boolean noAsyncFmlFileLog;
+    public static final boolean debugLogConfigParsingTimes = Boolean.getBoolean("hodgepodge.logConfigTimes");
+    public static final boolean debugEnumValuesSpam = Boolean.getBoolean("hodgepodge.logEnumValues");
+    public static final boolean dumpASMClass = Boolean.getBoolean("hodgepodge.dumpClass");
 
     static {
         Properties config = new Properties();
         File configLocation = new File(Launch.minecraftHome, "config/hodgepodgeEarly.properties");
-        try (Reader r = new BufferedReader(new FileReader(configLocation))) {
-            config.load(r);
-        } catch (FileNotFoundException e) {
+
+        if (configLocation.exists()) {
+            try (Reader r = new BufferedReader(new FileReader(configLocation))) {
+                config.load(r);
+            } catch (IOException e) {
+                LOGGER.error("Error reading configuration file. Will use defaults", e);
+            }
+        } else {
             LOGGER.debug("No existing configuration file. Will use defaults");
-        } catch (IOException e) {
-            LOGGER.error("Error reading configuration file. Will use defaults", e);
         }
         // =========== Config Definitions ===========
-        noNukeBaseMod = Boolean.parseBoolean(config.getProperty("noNukeBaseMod"));
-        config.setProperty("noNukeBaseMod", String.valueOf(noNukeBaseMod));
-        noLeanerForgeConfiguration = Boolean.parseBoolean(config.getProperty("noLeanerForgeConfiguration"));
-        config.setProperty("noLeanerForgeConfiguration", String.valueOf(noLeanerForgeConfiguration));
-        debugLogConfigParsingTimes = Boolean.getBoolean("hodgepodge.logConfigTimes");
-        dumpASMClass = Boolean.getBoolean("hodgepodge.dumpClass");
+        noNukeBaseMod = flag(config, "noNukeBaseMod");
+        noLeanerForgeConfiguration = flag(config, "noLeanerForgeConfiguration");
+        noFasterForgeEventTransformer = flag(config, "noFasterForgeEventTransformer");
+        noFmlRelaunchLogLoggerCache = flag(config, "noFmlRelaunchLogLoggerCache");
+        noAsyncFmlFileLog = flag(config, "noAsyncFmlFileLog");
         // ==========================================
+
+        // create config folder if it doesn't exist to prevent printed exception on first boot
+        Path configDir = configLocation.toPath().getParent();
+        if (!Files.exists(configDir)) {
+            try {
+                Files.createDirectory(configDir);
+            } catch (IOException e) {
+                LOGGER.error("Error creating configuration directory", e);
+            }
+        }
+
         try (Writer r = new BufferedWriter(new FileWriter(configLocation))) {
             config.store(r, "Configuration file for early hodgepodge class transformers");
         } catch (IOException e) {
-            LOGGER.error("Error reading configuration file. Will use defaults", e);
+            LOGGER.error("Error writing configuration file. Will use defaults", e);
         }
     }
 
-    public static void ensureLoaded() {}
+    private static boolean flag(Properties config, String key) {
+        boolean value = Boolean.parseBoolean(config.getProperty(key));
+        config.setProperty(key, String.valueOf(value));
+        return value;
+    }
 }

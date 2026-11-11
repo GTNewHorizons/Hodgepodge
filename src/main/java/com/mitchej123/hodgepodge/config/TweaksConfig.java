@@ -8,9 +8,17 @@ public class TweaksConfig {
 
     // Minecraft
 
+    @Config.Comment("Sign input counts visible characters only, ignoring color format codes like &RRGGBB")
+    @Config.DefaultBoolean(true)
+    public static boolean signInputIgnoresFormatCodes;
+
     @Config.Comment("Adds a button in the sounds menu to reload the sound system without needing to press F3 + S")
     @Config.DefaultBoolean(true)
     public static boolean reloadSoundsButton;
+
+    @Config.Comment("Adds a button in the sounds menu for Hodgepodge's sound enhancements")
+    @Config.DefaultBoolean(true)
+    public static boolean soundEnhancementsButton;
 
     @Config.Comment("Adds system info to the F3 overlay (Java version and vendor; GPU name; OpenGL version; CPU cores; OS name, version and architecture)")
     @Config.DefaultBoolean(true)
@@ -54,6 +62,21 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean compactChat;
 
+    @Config.Comment("Override the vanilla delay between in-game music tracks using musicDelayMinSeconds/musicDelayMaxSeconds.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean configurableMusicDelay;
+
+    @Config.Comment("Minimum delay between in-game music tracks, in seconds. 1.7.10 GAME: 600. Modern GAME: 5. Only applies to long-form music types (game/creative/nether/end), not menu/credits.")
+    @Config.RangeInt(min = 0, max = 3600)
+    @Config.DefaultInt(5)
+    public static int musicDelayMinSeconds;
+
+    @Config.Comment("Maximum delay between in-game music tracks, in seconds. 1.7.10 GAME: 1200. Modern GAME: 300. Clamped to >= musicDelayMinSeconds at use time.")
+    @Config.RangeInt(min = 0, max = 3600)
+    @Config.DefaultInt(300)
+    public static int musicDelayMaxSeconds;
+
     @Config.Comment("Specify default LAN port to open an integrated server on. Set to 0 to always open the server on an automatically allocated port.")
     @Config.RangeInt(min = 0, max = 65535)
     @Config.DefaultInt(25565)
@@ -62,6 +85,10 @@ public class TweaksConfig {
     @Config.Comment("Disable Minecraft Realms button on main menu")
     @Config.DefaultBoolean(true)
     public static boolean disableRealmsButton;
+
+    @Config.Comment("Translate Forge's Mod Options button in the pause menu")
+    @Config.DefaultBoolean(true)
+    public static boolean localizeForgeModOptionsButton;
 
     @Config.Comment("Stop inverting colors of crosshair")
     @Config.DefaultBoolean(false)
@@ -75,9 +102,9 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean enableDefaultLanPort;
 
-    @Config.Comment("Use CMD key on MacOS to COPY / INSERT / SELECT in text fields (Chat, NEI, Server IP etc.)")
+    @Config.Comment("Use CTRL (CMD on MacOS) to COPY / PASTE / SELECT ALL / CUT in text fields (Chat, NEI, Server IP etc.), fixes these shortcuts not working with some keyboard layouts")
     @Config.DefaultBoolean(true)
-    public static boolean enableMacosCmdShortcuts;
+    public static boolean enableTextFieldCtrlShortcuts;
 
     @Config.Comment("Shows renderer's impact on FPS in vanilla lagometer")
     @Config.DefaultBoolean(true)
@@ -99,6 +126,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(false)
     public static boolean fastBlockPlacing;
 
+    @Config.Comment("Add a accurate hitbox to the redstone wire")
+    @Config.DefaultBoolean(true)
+    public static boolean improvedRedstoneWireHitbox;
+
     @Config.Comment("Allow players on your server to use fast block placement")
     @Config.DefaultBoolean(true)
     public static boolean fastBlockPlacingServerSide;
@@ -107,9 +138,22 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixPotionRenderOffset;
 
+    @Config.Comment("Show potion effect icons in inventory screens")
+    @Config.DefaultBoolean(true)
+    public static boolean showInventoryEffectIcons;
+
+    @Config.Comment("Uses a new player inventory texture and moves the 2x2 crafting grid, its output slot and the crafting title 2 pixels right and 4 pixels up.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean moveInventoryCraftingGrid;
+
     @Config.Comment("Stops rendering the crosshair when you are playing in third person")
     @Config.DefaultBoolean(true)
     public static boolean hideCrosshairInThirdPerson;
+
+    @Config.Comment("Stops rendering the crosshair when a GUI screen (e.g. an inventory) is open")
+    @Config.DefaultBoolean(true)
+    public static boolean hideCrosshairInGui;
 
     @Config.Comment("Increase particle limit")
     @Config.DefaultBoolean(true)
@@ -143,6 +187,14 @@ public class TweaksConfig {
     @Config.Comment("Doesn't render the black box behind messages when the chat is closed")
     @Config.DefaultBoolean(true)
     public static boolean transparentChat;
+
+    @Config.Comment("Use a custom textured scrollbar")
+    @Config.DefaultBoolean(true)
+    public static boolean texturedScrollbar;
+
+    @Config.Comment("Draw the anvil enchantment cost text with a normal shadow on a translucent box and add the Inventory label, like modern vanilla")
+    @Config.DefaultBoolean(true)
+    public static boolean modernAnvilLabels;
 
     @Config.Comment("Sets the interval for auto saves in ticks (20 ticks = 1 second)")
     @Config.RangeInt(min = 1)
@@ -195,6 +247,31 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean hideTextureErrors;
+
+    @Config.Comment("Allows players in Creative to eat food.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean allowEatingFoodInCreative;
+
+    @Config.Comment({ "Removes all void fog.", "0 = keep void fog", "1 = disable for DEFAULT worldtype only",
+            "2 = disable for all world types" })
+    @Config.DefaultInt(1)
+    @Config.RangeInt(min = 0, max = 2)
+    public static int disableVoidFog = 1;
+
+    @Config.Comment("The max amount of XP levels an anvil recipe can use.")
+    @Config.DefaultInt(40)
+    public static int anvilMaxLevel = 40;
+
+    @Config.Comment("Removes the color codes from the chat logs")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean cleanChatLogs = true;
+
+    @Config.Comment("Enable extra F1 toggle to hide GUI but keep rendering hand")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean f1ShowHand;
 
     // NBT String Pooling
 
@@ -279,6 +356,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean removeBOPDonatorEffect;
 
+    @Config.Comment("Add BOP lavenders to the bone meal pool in lavender fields")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean addBOPLavenderToBoneMealPool;
+
     // Cofh
 
     @Config.Comment("Improve CoFH's breakBlock method")
@@ -302,7 +384,7 @@ public class TweaksConfig {
     public static boolean hideIc2ReactorSlots;
 
     @Config.Comment("Give IC2 cells containers like GregTech cells do")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     public static boolean ic2CellWithContainer;
 
     @Config.Comment("IC2 seed max stack size")
@@ -432,4 +514,12 @@ public class TweaksConfig {
     @Config.Comment("Remove the notice about numeric ID deprecation that appears when a command uses them")
     @Config.DefaultBoolean(true)
     public static boolean hideDeprecatedIdNotice;
+
+    @Config.Comment("Allow creative tab gui title color via localization key")
+    @Config.DefaultBoolean(true)
+    public static boolean creativeTabLocalizationOverrides;
+
+    @Config.Comment("Makes the int cache size more readable")
+    @Config.DefaultBoolean(true)
+    public static boolean moreReadableIntCacheSize;
 }

@@ -8,6 +8,14 @@ public class FixesConfig {
 
     /* ====== Minecraft fixes start ===== */
 
+    @Config.Comment("Prevent pending chunk saves from losing their place in the file IO queue")
+    @Config.DefaultBoolean(true)
+    public static boolean fixChunkSaveQueueRace;
+
+    @Config.Comment("Prevent a chunk from being loaded from disk (outdated, or regenerated if never saved) while its newer save is being written")
+    @Config.DefaultBoolean(true)
+    public static boolean fixChunkLoadDuringSave;
+
     @Config.Comment("Fix Vanilla IOOBE when rendering chunks at a distance larger than 16")
     @Config.DefaultBoolean(true)
     public static boolean fixVanillaIOOBERenderDistance;
@@ -24,13 +32,34 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean enlargePotionArray;
 
+    @Config.Comment("Fix sleeping in beds at Y >= 128 moving players into the void on multiplayer")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBedHeightOverflow;
+
     @Config.Comment("Fix bogus FMLProxyPacket NPEs on integrated server crashes.")
     @Config.DefaultBoolean(true)
     public static boolean fixBogusIntegratedServerNPEs;
 
+    @Config.Comment("Patch Forge's @Optional.Interface processor to also strip Signature attribute entries (fixes TypeNotPresentException from Class.getGenericInterfaces when an optional interface's mod is missing)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixForgeOptionalInterfaceSignature;
+
+    @Config.Comment("Do not flip bottom face textures (1.8+ behavior, see MC-47811)")
+    @Config.DefaultBoolean(false)
+    public static boolean fixBottomFaceUV;
+
     @Config.Comment("Fix wrapped chat lines missing colors")
     @Config.DefaultBoolean(true)
     public static boolean fixChatWrappedColors;
+
+    @Config.Comment("Fix /say, /tell, /me losing formatting after the first word")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCommandFormattingLoss;
+
+    @Config.Comment("Fix disconnect screen button overlapping long kick messages")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixDisconnectScreenLayout;
 
     @Config.Comment("Prevents crash if server sends container with wrong itemStack size")
     @Config.DefaultBoolean(true)
@@ -48,9 +77,17 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixDimensionChangeAttributes;
 
+    @Config.Comment("Fix a stale player copy left behind when entering the End, which can make the player fall through an empty world after leaving it")
+    @Config.DefaultBoolean(true)
+    public static boolean fixEndGhostPlayer;
+
     @Config.Comment("Fix duplicate sounds from playing when closing a gui.")
     @Config.DefaultBoolean(true)
     public static boolean fixDuplicateSounds;
+
+    @Config.Comment("Fix vanilla item frame duplication.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixItemFrameDupe;
 
     @Config.Comment("Fix deleting stack when eating mushroom stew")
     @Config.DefaultBoolean(true)
@@ -92,6 +129,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixFriendlyCreatureSounds;
 
+    @Config.Comment("Fix vanilla furnaces' burn time overflowing from long burn time fuel")
+    @Config.DefaultBoolean(true)
+    public static boolean fixFuelOverflow;
+
     @Config.Comment("Fix Volume Slider is ineffective until reaching the lower end")
     @Config.DefaultBoolean(true)
     public static boolean logarithmicVolumeControl;
@@ -124,9 +165,17 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixHugeChatKick;
 
+    @Config.Comment("Send a translatable message instead of a hardcoded English one when rejecting logins while the server is still starting")
+    @Config.DefaultBoolean(true)
+    public static boolean fixHandshakeStartingKickTranslatable;
+
     @Config.Comment("Fix the bug that makes fireballs stop moving when chunk unloads")
     @Config.DefaultBoolean(true)
     public static boolean fixImmobileFireballs;
+
+    @Config.Comment("Fix crash in the controls menu when two keybind categories share the same localized name")
+    @Config.DefaultBoolean(true)
+    public static boolean fixKeybindCategorySorting;
 
     @Config.Comment("Fix Sugar Cane inability to replace replaceable blocks indirectly.")
     @Config.DefaultBoolean(true)
@@ -144,6 +193,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixNetHandlerLoginServerOfflineMode;
 
+    @Config.Comment("Hold back a login until any earlier session for the same UUID has finished leaving the world, "
+            + "instead of letting both exist at once and duplicating the player's inventory")
+    @Config.DefaultBoolean(true)
+    public static boolean fixPlayerCloningOnReconnect;
+
     @Config.Comment("Prevents crash if server sends itemStack with index larger than client's container")
     @Config.DefaultBoolean(true)
     public static boolean fixNetHandlerPlayClientHandleSetSlot;
@@ -159,6 +213,10 @@ public class FixesConfig {
     @Config.Comment("Prevent tall grass and such to affect the perspective camera")
     @Config.DefaultBoolean(true)
     public static boolean fixPerspectiveCamera;
+
+    @Config.Comment("Orient particles from the render view entity instead of the player, so detached cameras (freecam, spectator-likes) do not tilt them (MC-46445)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCameraParticleRotation;
 
     @Config.Comment("Allow some mods to properly fetch the player skin")
     @Config.DefaultBoolean(true)
@@ -176,17 +234,34 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixPotionIterating;
 
+    @Config.Comment("Fix potion effect panel rendering glitched when certain items are held on the cursor (Forge GL state bug)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixPotionEffectAlphaTest;
+
+    @Config.Comment("Fix creative tab backgrounds showing black corners when alpha test is left disabled by item rendering (Forge GL state bug)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixCreativeTabAlphaTest;
+
+    @Config.Comment("Fix XP and jump bar transparent pixels turning black when alpha test is left disabled by item rendering (Forge GL state bug)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixXpBarAlphaTest;
+
     @Config.Comment("Fix potions >= 128")
     @Config.DefaultBoolean(true)
     public static boolean fixPotionLimit;
 
-    @Config.Comment("Fix redstone torch leaking world")
+    @Config.Comment({
+            "Show potion durations longer than 27 minutes correctly instead of freezing at 27:18 or showing **:**.",
+            "The vanilla effect packet truncates the duration to a short, so the real value is sent in a separate Hodgepodge packet.",
+            "Requires the mod on both sides; vanilla clients keep the vanilla behaviour." })
     @Config.DefaultBoolean(true)
-    public static boolean fixRedstoneTorchWorldLeak;
+    @Config.RequiresMcRestart
+    public static boolean fixLongPotionDuration;
 
-    @Config.Comment("Fix EffectRenderer and RenderGlobal leaking world instance when leaving world")
+    @Config.Comment("Display timers longer than an hour as h:mm:ss instead of vanilla's unbounded mm:ss")
     @Config.DefaultBoolean(true)
-    public static boolean fixRenderersWorldLeak;
+    @Config.RequiresMcRestart
+    public static boolean fixLongTimerFormat;
 
     @Config.Comment("Fix game window becoming not resizable after toggling fullscrean in any way")
     @Config.DefaultBoolean(true)
@@ -208,6 +283,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixRconThreading;
 
+    @Config.Comment("Fix vanilla disconnect messages being sent as hardcoded English text instead of translation keys")
+    @Config.DefaultBoolean(true)
+    public static boolean fixUnlocalizedDisconnectMessages;
+
     @Config.Comment("Fix exiting fullscreen when you tab out of the game")
     @Config.DefaultBoolean(true)
     public static boolean fixUnfocusedFullscreen;
@@ -223,14 +302,6 @@ public class FixesConfig {
     @Config.Comment("Fixes village unchecked getBlock() calls")
     @Config.DefaultBoolean(true)
     public static boolean fixVillageUncheckedGetBlock;
-
-    @Config.Comment("Fix WorldServer leaking entities when no players are present in a dimension")
-    @Config.DefaultBoolean(true)
-    public static boolean fixWorldServerLeakingUnloadedEntities;
-
-    @Config.Comment("Fix skin manager leaking client world")
-    @Config.DefaultBoolean(true)
-    public static boolean fixSkinManagerLeakingClientWorld;
 
     @Config.Comment("Increase the maximum network packet size from the default of 2MiB")
     @Config.DefaultBoolean(true)
@@ -262,6 +333,15 @@ public class FixesConfig {
     @Config.Comment("Spigot-style extended chunk format to remove the 2MB chunk size limit")
     @Config.DefaultBoolean(true)
     public static boolean remove2MBChunkLimit;
+
+    @Config.Comment("Change incoming packet processing from a fixed 1001 packet limit to a time limit allowing for potentially more packets to be processed")
+    @Config.DefaultBoolean(true)
+    public static boolean changeReceivedPacketCountLimitToTimeLimit;
+
+    @Config.Comment("Max time spent processing received packets in nanoseconds (1ms = 1_000_000ns)")
+    @Config.RangeInt(min = 1_000, max = 50_000_000)
+    @Config.DefaultInt(5_000_000)
+    public static int receivedPacketTimeLimit;
 
     @Config.Comment("Disable the creative search tab since it can be very laggy in large modpacks")
     @Config.DefaultBoolean(true)
@@ -315,11 +395,16 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixCaseCommands;
 
+    // A stack overflow with water updates happens somewhere above 300 updates with default Java settings
     @Config.Comment("Limit the number of recursive cascading block updates during world generation to prevent stack overflow crashes, set to -1 to disable the limit.")
     @Config.RangeInt(min = -1)
-    @Config.DefaultInt(256) // A stack overflow with water updates happens somewhere above 300 updates with default Java
-                            // settings
+    @Config.DefaultInt(256)
     public static int limitRecursiveBlockUpdateDepth;
+
+    @Config.Comment("Prevent recursive immediate block updates during WorldGenLiquids spring generation")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixWorldGenLiquidsRecursion;
 
     @Config.Comment("Fix the buttons not being centered in the GuiConfirmOpenLink")
     @Config.DefaultBoolean(true)
@@ -350,6 +435,16 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixWrongBlockPlacementDistanceCheck;
 
+    @Config.Comment({ "Override the server-side 'moved too quickly' speed check threshold.",
+            "Vanilla value is 100.0 (squared distance per tick, i.e. 10 blocks/tick in a single axis).",
+            "Increase this if fast-movement items like GraviChestplate + ThaumicBoots trigger the check.",
+            "A value of 200.0 accommodates ~14 blocks/tick and covers known modded items.",
+            "Set to a very large number (e.g. 1.7976931348623157E308) to effectively disable the check.",
+            "Values below 100.0 are ignored and the vanilla default is used instead." })
+    @Config.DefaultDouble(100.0)
+    @Config.RequiresMcRestart
+    public static double movedTooQuicklyThreshold;
+
     @Config.Comment("Fix inventory sync lag: prevents client to check recipes on empty slots. Particularly fixes lag when trying to eat food when full.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -360,36 +455,178 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixEntityAttributesRange;
 
+    @Config.Comment("Fixes items bouncing on stairs and other blocks with odd hitboxes")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixEntityBouncing;
+
     @Config.Comment("Fix Glass Bottles filling with Water from some other Fluid blocks")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixGlassBottleWaterFilling;
+
+    @Config.Comment("Fix the player arm swinging when right clicking a fence")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixFenceRightClick;
 
     @Config.Comment("Use correct egg particles instead of snowball ones (MC-7807)")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixEggParticles;
 
-    @Config.Comment("Fix EventBus keeping object references after unregistering event handlers.")
+    @Config.Comment("Fixes entity having buggy gravity")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean fixEventBusMemoryLeak;
+    public static boolean fixEntityGravity;
 
     @Config.Comment("Render the house character (\u2302 - Unicode index 2302) in the Minecraft font.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixHouseCharRendering;
 
-    @Config.Comment("Remove invalid Entites in chunks.")
+    @Config.Comment("""
+            [Game Breaking Config] Prevents block and entity updates from loading unloaded chunks.
+            This is very likely to break some behaviors in game in favor of better TPS stability.
+            This is intended for server owners facing TPS issues. If you play singleplayer just be
+            sure all your infrastructure is properly chunk loaded. If you are still facing TPS issues
+            make a CPU profile and we'll try to patch the mod causing it.
+            DO NOT report any bugs if you have this enabled.
+            Disable the setting and see if the bug still happens before reporting anything""")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean preventChunkLoadingFromBlockUpdates;
+
+    @Config.Comment("Remove invalid Entities in chunks.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean removeInvalidChunkEntites;
 
-    @Config.Comment("Clears the reference to the minecraft server once it has stopped")
+    @Config.Comment("Fixes pistons with metadata over 5 from crashing worlds when powered.")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean fixMinecraftServerLeak;
+    public static boolean fixInvalidPistonCrashes;
 
+    @Config.Comment("Fix instant item texture switch when switching an item in hand with different NBT")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixInstantHandItemTextureSwitch;
+
+    @Config.Comment("Updates the difficulty on every connected client when the difficulty of the server changes via /difficulty or the difficulty button.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean updateClientDifficultyOnServer;
+
+    @Config.Comment("Fix slimes resetting their health to maximum when being loaded from NBT (world reload, dimension change, etc.)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean maintainSlimeHealth;
+
+    @Config.Comment("Prevent moving mouse cursor to the center when pressing Esc in GUIs")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean preventMouseCenteringOnEscInGUIs;
+
+    @Config.Comment("Fix printed errors about json files when running a server for the first time")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixFileNotFoundExceptionsServerFirstBoot;
+
+    @Config.Comment("Clear stale clicks made on the loading screen and prevent them from firing in the main menu")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean clearStaleLoadingScreenInput;
+
+    @Config.Comment("Fix breaking electric and other special armor when Thorns enchantment is applied")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBreakingSpecialArmorWithThornsEnchantment;
+
+    @Config.Comment("Fix breaking electric and other special armor helmet when a block falls on your head")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBreakingSpecialArmorHelmetOnBlockFall;
+
+    @Config.Comment("Fix Minecraft creating new world in folders that already exists")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixSaveFileWrittenToExistingDirectory;
+
+    @Config.Comment("Fix a crash in the Superflat world customization screen when a layer's block has no registered ItemBlock")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixFlatWorldLayerMissingItemBlockCrash;
+
+    @Config.Comment("Fix a crash caused when a mod tries to send a chat message to a FakePlayer")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixFakePlayerChatCrash;
+
+    @Config.Comment("Fix resetRainAndThunder (called when sleeping) setting rain and thunder timers to 0, which can cause immediate rain on world load if saved at that moment")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixResetRainAndThunder;
+
+    @Config.Comment("Make a deep copy when sending objects from the data watcher to the client in SinglePlayer")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean deepCopyDataWatcherInSP;
+
+    @Config.Comment("Fix the enchant glint being applied multiple times for items with multiple render passes")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixMultipleEnchantGlint;
+
+    @Config.Comment("Prevents the entity rendered in the player inventory GUI and the horse GUI from overflowing their boxes.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean clipPlayerRenderInGuis;
+
+    @Config.Comment("Sets a minimum of 0 for Looting. Negative values still exist, but are treated as 0 for most purposes. Fixes crashes when killing mobs with negative looting, if you somehow manage to achieve it.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean minLootingIsZero;
+
+    @Config.Comment("Prevent Zombies & Skeletons from flickering with fire when exposed to the sun while immune to fire (in particular, Wither Skeletons)")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean preventFireImmuneUndeadFlicker;
+
+    @Config.Comment("Fix Villagers only updating out-of-stock state after reopening GUI")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixVillagerTradingDesync;
+
+    @Config.Comment("Fix death messages containing English-localized entity names even on non-English clients.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean entityNameLocalization;
+
+    @Config.Comment("Makes Wither Skeletons not appear as just \"Skeleton\" in death messages and WAILA.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean witherSkeletonSpecialName;
+
+    @Config.Comment("Raise FPS limit in the FML missing items screen (or any other FML StartupQuery).")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean raiseMissingItemsFPS;
+
+    @Config.Comment("Fix block hit delay after game mode changed from creative to survival.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBlockHitDelay;
+
+    @Config.Comment("Make the Furnace save the max burn time of the current fuel to NBT, so WAILA can determine the percent fuel remaining.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean furnaceSaveItemBurnTimeToNBT;
+
+    @Config.Comment("Draw the full hotbar selection frame, which vanilla cuts 2 pixels short. Also applies to Witchery's vampire power bar.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixHotbarSelectionHeight;
+    
     @Config.Comment("Fire a keyboard event when mouse buttons are pressed (makes mouse button bindings work across all mods that only check for keyboard input)")
     @Config.DefaultBoolean(true)
     public static boolean fixMouseButtonBindings;
@@ -408,10 +645,6 @@ public class FixesConfig {
     @Config.Comment("Remove old/stale/outdated update checks.")
     @Config.DefaultBoolean(true)
     public static boolean removeUpdateChecks;
-
-    @Config.Comment("Enable multiple fixes to reduce RAM usage")
-    @Config.DefaultBoolean(true)
-    public static boolean enableMemoryFixes;
 
     @Config.Comment("Fix broken modlist entries due to wrong mcmod.info files")
     @Config.DefaultBoolean(true)
@@ -439,11 +672,40 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixBibliocraftPackets;
 
+    @Config.Comment("Fix Bibliocraft armor stands breaking their other half without checking if the other half is an Armor Stand.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBibliocraftArmorStandBreak;
+
+    @Config.Comment("""
+            Mark Bibliocraft inventories (armor stands, shelves, tables, bookcases, racks, ...) to save when their contents are changed without going through their GUI
+            (e.g. right-clicking an item onto them, hoppers or shift-right-clicking), preventing the items from rolling back on save (and potentially duplicating / voiding).""")
+    @Config.DefaultBoolean(true)
+    public static boolean bibliocraftInventoriesMarkDirty;
+
     @Config.Comment("Fix Bibliocraft path sanitization")
     @Config.DefaultBoolean(true)
     public static boolean fixBibliocraftPathSanitization;
 
+    @Config.Comment("Don't pause the game when using the Bibliocraft clipboard GUI")
+    @Config.DefaultBoolean(true)
+    public static boolean noPauseGuiClipboard;
+
+    @Config.Comment("Fix Bibliocraft PaintingUtil getting it's own jar path")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBibliocraftPaintingUtilPath;
+
+    // Bibliowoods Forestry
+
+    @Config.Comment("Fix Bibliowoods Forestry recipes")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBibliowoodsForestryRecipes;
+
     // Biomes O' Plenty
+
+    @Config.Comment("Make Biomes O' Plenty emerald generation respect its OreGeneration config")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixBOPEmeraldGeneration;
 
     @Config.Comment("Removes duplicate Fermenter and Squeezer recipes and flower registration")
     @Config.DefaultBoolean(true)
@@ -456,6 +718,18 @@ public class FixesConfig {
     @Config.Comment("Remove the BOP warning on first world generation (ignored when dreamcraft is present)")
     @Config.DefaultBoolean(false)
     public static boolean removeBOPWarning;
+
+    @Config.Comment("Fixes cascading worldgen caused by Biomes O' Plenty Kelp.")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBOPCascadingKelp;
+
+    @Config.Comment("Fix EndlessIds incompatibility with BoP")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBoPEid;
+
+    @Config.Comment("Fix BOP sapling icon showing the wrong type when the growth stage bit is set in meta")
+    @Config.DefaultBoolean(true)
+    public static boolean fixBOPSaplingIcon;
 
     // Candycraft
 
@@ -477,9 +751,9 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixCofhTpxCommand;
 
-    @Config.Comment("Fix CoFH WorldServer leak in main mod class")
+    @Config.Comment("Fix NBTTagSmartByteArray sending null to NBTTagByteArray causing NPE when saving chunks")
     @Config.DefaultBoolean(true)
-    public static boolean fixCoFHWorldLeak;
+    public static boolean fixCofhNullByteArray;
 
     // Extra TiC
 
@@ -557,6 +831,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesEnderCollectorCrash;
 
+    @Config.Comment("Fix Division Sigil not activating with enchantment tables and beacons from other mods")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesDivisionSigilActivation;
+
     // Galacticraft
 
     @Config.Comment("Fix time commands with Galacticraft")
@@ -627,6 +905,22 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixIc2KeybindsInGuis;
 
+    @Config.Comment("Fix IC2 keybinds using hardware key state instead of KeyBinding state, preventing other mods from suppressing keys")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2KeybindsIgnoreKeyState;
+
+    @Config.Comment("Fix IC2 filled tin cans not running logic on both client and server")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2TinCan;
+
+    @Config.Comment("Fix IC2 rubber saplings consuming bone meal twice and allowing the stack size to underflow")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2RubberSaplingBonemeal;
+
+    @Config.Comment("Fix EndlessIds incompatibility with IC2")
+    @Config.DefaultBoolean(true)
+    public static boolean fixIc2Eid;
+
     // Journey Map
 
     @Config.Comment("Prevents journeymap from using illegal character in file paths")
@@ -646,6 +940,10 @@ public class FixesConfig {
     @Config.Comment("Lotr Java 12 compatibility patch")
     @Config.DefaultBoolean(true)
     public static boolean java12LotrCompat;
+
+    @Config.Comment("Set lotr updateLangFiles to false by default, as it is incompatible with the Gradle cache (breaking dev environments) and very rarely needed")
+    @Config.DefaultBoolean(true)
+    public static boolean lotrLanguageHelperDefault;
 
     // Minechem
 
@@ -774,6 +1072,10 @@ public class FixesConfig {
             "such as capturing the Demon in an EnderIO Soul Vial." })
     @Config.DefaultBoolean(true)
     public static boolean fixWitcheryDemonShiftClick;
+
+    @Config.Comment("Fix EndlessIds incompatibility with Witchery")
+    @Config.DefaultBoolean(true)
+    public static boolean fixWitcheryEid;
 
     // Xaero's Minimap
     @Config.Comment("Fixes the player entity dot rendering when arrow is chosen")

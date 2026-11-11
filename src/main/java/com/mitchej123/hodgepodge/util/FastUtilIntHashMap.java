@@ -2,16 +2,12 @@ package com.mitchej123.hodgepodge.util;
 
 import net.minecraft.util.IntHashMap;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
+@SuppressWarnings("unused")
 public class FastUtilIntHashMap extends IntHashMap {
 
-    private final Int2ObjectMap<Object> map;
-
-    public FastUtilIntHashMap() {
-        map = new Int2ObjectOpenHashMap<>();
-    }
+    private final Int2ObjectOpenHashMap<Object> map = new Int2ObjectOpenHashMap<>();
 
     @Override
     public Object lookup(int key) {

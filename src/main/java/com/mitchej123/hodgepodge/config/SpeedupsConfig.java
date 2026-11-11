@@ -1,22 +1,32 @@
 package com.mitchej123.hodgepodge.config;
 
+import java.util.zip.Deflater;
+
 import com.gtnewhorizon.gtnhlib.config.Config;
 
 @Config(modid = "hodgepodge", category = "speedups")
 @Config.RequiresMcRestart
 public class SpeedupsConfig {
 
-    // Minecraft
-
+    // region Minecraft
     @Config.Comment({
             "Improves the performance of items significantly by not checking collisions against other entities for them. (Adapted from FalseTweaks)" })
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fastItemEntityPhysics;
 
+    @Config.Comment("Skip rendering item frame contents farther than 64 blocks and entire frames farther than 96 blocks")
+    @Config.DefaultBoolean(true)
+    public static boolean cullDistantItemFrameContents;
+
     @Config.Comment("Optimize ASMDataTable getAnnotationsFor for faster startup")
     @Config.DefaultBoolean(true)
     public static boolean optimizeASMDataTable;
+
+    @Config.Comment("Reduce regex overhead when scanning jar entries for class files during FML mod discovery")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean optimizeJarDiscovererRegexOverhead;
 
     @Config.Comment("Optimize texture loading")
     @Config.DefaultBoolean(true)
@@ -30,9 +40,18 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean speedupChunkCoordinatesHashCode;
 
-    @Config.Comment("Speed up grass block random ticking")
+    @Config.Comment("Prevents Vanilla blocks from loading chunks when ticking\n"
+            + "Cocoa, Crop, Fire, Grass, Vine, Farmland, Mushroom, Mycelium, Sapling, Stem, Torch")
     @Config.DefaultBoolean(true)
-    public static boolean speedupGrassBlockRandomTicking;
+    public static boolean preventLoadingChunksWhenTickingBlocks;
+
+    @Config.Comment("Prevents flowing liquids from loading chunks")
+    @Config.DefaultBoolean(true)
+    public static boolean preventLoadingChunksWhenLiquidsFlow;
+
+    @Config.Comment("Prevents Vanilla entities from loading chunks when pathfinding")
+    @Config.DefaultBoolean(true)
+    public static boolean preventLoadingChunksWhenPathfinding;
 
     @Config.Comment("Speedup Vanilla Furnace recipe lookup")
     @Config.DefaultBoolean(true)
@@ -61,7 +80,82 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean unboxMapGen;
 
-    @Config.Comment("Removes hard caps on chunk handling speed. Experimental and probably incompatible with hybrid servers!")
+    @Config.Comment("BFS leaf decay with early exit on nearby logs, replacing vanilla's full scan")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupLeafDecay;
+
+    @Config.Comment("Load texture map icons on multiple threads")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean asyncIconLoading;
+
+    @Config.Comment("Remove icon loading on texture map init")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean removeExtraIconLoad;
+
+    @Config.Comment("Skip scheduling falling block ticks when the block below is solid")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean skipUselessFallingBlockTicks;
+
+    @Config.Comment("Spatial index for pending block updates, accelerates chunk saving and unloading")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupPendingTickLookup;
+
+    @Config.Comment("Optimized chunk unloading with fastutil collections and batched removal")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupChunkUnload;
+
+    @Config.Comment("Spread chunk generation across ticks to reduce server stalls when players move through ungenerated terrain. ")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean throttleChunkGeneration;
+
+    @Config.Comment("Maximum deferred chunk generations per player per tick. "
+            + "Higher values fill terrain faster but increase per-tick lag from worldgen. [Requires throttleChunkGeneration]")
+    @Config.DefaultInt(4)
+    @Config.RangeInt(min = 1, max = 20)
+    public static int maxChunkGenPerPlayerPerTick;
+
+    @Config.Comment("Time budget in milliseconds for chunk generation per tick. "
+            + "Actual budget is min(this, remaining tick time to 50ms). "
+            + "Generation is skipped when recent operations suggest the budget would be exceeded. "
+            + "0 = no time limit (count-based only). [Requires throttleChunkGeneration]")
+    @Config.DefaultInt(20)
+    @Config.RangeInt(min = 0, max = 50)
+    public static int chunkGenBudgetMs;
+
+    @Config.Comment("Prevent entity ticks and random ticks from triggering chunk generation. "
+            + "Missing chunks return empty air blocks during blocked phases; the scheduler loads them shortly after. "
+            + "[Requires throttleChunkGeneration]")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean preventEntityChunkLoading;
+
+    @Config.Comment("When to amortize chunk generation overruns by tracking time debt and skipping generation until the debt is paid down. "
+            + "Smooths out server tick times when single chunks exceed the time budget. "
+            + "DedicatedServerOnly enables on multiplayer servers but not singleplayer/LAN. [Requires throttleChunkGeneration]")
+    @Config.DefaultEnum("DedicatedServerOnly")
+    public static AmortizeMode amortizeChunkGenOverruns;
+
+    public enum AmortizeMode {
+
+        Always,
+        DedicatedServerOnly,
+        Never
+    }
+
+    @Config.Comment("Ticks before a visible chunk hole is force-processed regardless of budget. "
+            + "Only applies to chunks within view distance of a player. 0 = disabled.")
+    @Config.DefaultInt(100)
+    @Config.RangeInt(min = 0, max = 1200)
+    public static int forcePopulateAgeTicks;
+
+    @Config.Comment("Removes hard caps on chunk sending and unloading speed. Experimental and probably incompatible with hybrid servers!")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean fastChunkHandling;
@@ -78,6 +172,11 @@ public class SpeedupsConfig {
     @Config.RangeInt(min = 100)
     public static int maxUnloadSpeed;
 
+    @Config.Comment("Accelerate Block.getBlockById() and Block.getIdFromBlock().")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fastBlockLookup;
+
     @Config.Comment("Optimize mob spawning")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -87,25 +186,14 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     public static boolean limitMobSpawningToViewDistance;
 
-    @Config.Comment("Prevents chunk loads caused by lava blocks")
+    @Config.Comment("Skip mob spawning in chunks with pending lighting updates (requires Supernova)")
     @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean lavaChunkLoading;
+    public static boolean skipSpawningWithPendingLight;
 
     @Config.Comment("Speed up the vanilla method to remove formatting codes")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean speedupRemoveFormatting;
-
-    @Config.Comment("Cache last matching recipes in crafting manager")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean cacheLastMatchingRecipe;
-
-    @Config.Comment("Cache size for the last matching recipes in crafting manager")
-    @Config.DefaultInt(64)
-    @Config.RequiresMcRestart
-    public static int recipeCacheSize;
 
     // I split these in two so that you can disable batching at runtime to diagnose problems
     @Config.Comment("Batch Tile Entity Description S35PacketUpdateTileEntity Packets (Enables Mixins, Requires Restart)")
@@ -114,18 +202,77 @@ public class SpeedupsConfig {
     public static boolean batchDescriptionPacketsMixins;
 
     @Config.Comment("Batch Tile Entity Description S35PacketUpdateTileEntity Packets (Enables Code, Does not require restart)")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     public static boolean batchDescriptionPacketsCode;
 
     @Config.Comment("Tile Entity Packet Batching Blacklist (Fully Qualified Class Names, Does not require restart)")
     @Config.DefaultStringList({})
     public static String[] batchDescriptionBlacklist;
 
+    @Config.Comment({ "Transfer S35PacketUpdateTileEntity array buffers directly without NBT.",
+            "The NBT contained in S35PacketUpdateTileEntity must be of the format {[one character]: [byte array]}",
+            "(e.g. {\"X\": [B;0b, 1b]}) for this to apply for a given TileEntity." })
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean directTileEntityArraySerialization;
+
+    @Config.Comment("Pool Inflater/Deflater instances for NBT compression to reduce native cleanup overhead")
+    @Config.DefaultBoolean(true)
+    public static boolean poolZlibInstances;
+
+    @Config.Comment("Optimize chunk compression with reused deflater and batched writes")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupChunkCompression;
+
+    @Config.Comment("Compression level for chunk saving. " + Deflater.DEFAULT_COMPRESSION
+            + "=default, "
+            + Deflater.NO_COMPRESSION
+            + "=none, "
+            + Deflater.BEST_SPEED
+            + "=fastest, "
+            + Deflater.BEST_COMPRESSION
+            + "=smallest.")
+    @Config.DefaultInt(Deflater.DEFAULT_COMPRESSION)
+    @Config.RangeInt(min = Deflater.DEFAULT_COMPRESSION, max = Deflater.BEST_COMPRESSION)
+    public static int chunkCompressionLevel;
+
+    @Config.Comment("Parse batched tile entity NBT asynchronously on the client")
+    @Config.DefaultBoolean(true)
+    public static boolean asyncBatchedNBTParsing;
+
+    @Config.Comment("Reduce regex overhead when loading object models")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean optimizeWavefrontObjectModelLoading;
+
+    @Config.Comment("Avoid String.format overhead when resolving resource pack paths")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean optimizeResourcePackPath;
+
+    @Config.Comment({
+            "Keep the sound engine across the resource reload at the end of mod loading instead of restarting it.",
+            "Only when no sound has been created yet and the sound config is unchanged. Later reloads are unaffected." })
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean keepSoundEngineAtBoot;
+    // endregion
+
     // Biomes O' Plenty
 
     @Config.Comment("Speedup biome fog rendering in BiomesOPlenty")
     @Config.DefaultBoolean(true)
     public static boolean speedupBOPFogHandling;
+
+    @Config.Comment("Use fast atan2 approximation for BOP Pixie entity yaw calculation")
+    @Config.DefaultBoolean(true)
+    public static boolean speedupBOPEntityPixie;
+
+    @Config.Comment("Cache allocations in BOP biome decoration to avoid per-chunk object creation and reflection")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean speedupBOPBiomeDecoration;
 
     // VoxelMap
 
