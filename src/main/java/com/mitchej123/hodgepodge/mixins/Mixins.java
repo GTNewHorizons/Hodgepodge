@@ -1888,6 +1888,11 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.EXTRATIC)
             .setPhase(Phase.LATE)),
     // Extra Utilities
+    FIX_EXTRA_UTILITIES_RENDERBLOCK_LEAK(new MixinBuilder()
+            .addClientMixins("extrautilities.leaks.MixinRenderBlockConnectedTextures")
+            .setApplyIf(() -> MemoryConfig.leaks.fixExtraUtilitiesConnectedTexturesLeak)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
     FIX_EXTRA_UTILITIES_UNENCHANTING(new MixinBuilder("Fix Exu Unenchanting")
             .addCommonMixins("extrautilities.MixinRecipeUnEnchanting")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesUnEnchanting)
