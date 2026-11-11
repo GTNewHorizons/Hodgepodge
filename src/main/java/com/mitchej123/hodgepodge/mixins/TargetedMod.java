@@ -17,6 +17,7 @@ public enum TargetedMod implements ITargetMod {
             .setModId("angelica").testModVersion("angelica", version -> isVersionLessThan(version, "2.1.58"))),
     ARCHAICFIX("org.embeddedt.archaicfix.ArchaicCore", "archaicfix"),
     AUTOMAGY("Automagy"),
+    BATTLEGEAR2("battlegear2"),
     BAUBLES("Baubles"),
     BETTERHUD("hud"),
     BIBLIOCRAFT("BiblioCraft"),

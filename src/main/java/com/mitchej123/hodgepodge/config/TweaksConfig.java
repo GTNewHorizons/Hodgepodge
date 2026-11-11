@@ -233,6 +233,11 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean betterModList;
 
+    @Config.Comment("Handle mouse input of scrolling lists (GuiSlot, GuiScrollingList) in mouse events instead of drawScreen, and keep the scroll bar drag anchored to the pressed point")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixScrollingLists;
+
     @Config.Comment({ "Controls the default sorting on the mod list GUI.", "0 - Default sort (load order)",
             "1 - A to Z sort", "2 - Z to A sort" })
     @Config.RangeInt(min = 0, max = 2)
@@ -272,6 +277,25 @@ public class TweaksConfig {
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean f1ShowHand;
+
+    @Config.Comment("""
+            Merge mob drops before they spawn as entities to prevent lag spikes caused by heavy mob drops at a high looting level.
+            0 - RESPECT_MAX_STACK_SIZE - Merge drops up to the vanilla stack size limit, which is at most 64.
+            1 - FORCE_MERGE_INTO_ONE - Spawn each item type as a single item entity. This bypasses the vanilla stack size limit.
+            WARNING: Item entities with stackSize greater than 127 will be voided when unloaded! This is because stackSize is an int, while Count NBT is a byte. (1 sign bit + 7 bits)
+            2 - HYBRID - Use #0 if the total number of items to be spawned is less than the mergeMobDropsModeHybridThreshold. Otherwise, use #1.
+            3 - HYBRID_AVARITIA - Similar to HYBRID, but spawn Avaritia matter clusters instead of switching to #1. Falls back to HYBRID when the Avaritia is not installed.""")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean mergeMobDrops;
+    @Config.Comment("The mode used in mergeMobDrops")
+    @Config.RangeInt(min = 0, max = 3)
+    @Config.DefaultInt(3)
+    public static int mergeMobDropsMode;
+    @Config.Comment("The threshold used by HYBRID and HYBRID_AVARITIA modes in mergeMobDrops.")
+    @Config.RangeInt(min = 64 * 16, max = 64 * 256)
+    @Config.DefaultInt(64 * 64)
+    public static int mergeMobDropsModeHybridThreshold;
 
     // NBT String Pooling
 

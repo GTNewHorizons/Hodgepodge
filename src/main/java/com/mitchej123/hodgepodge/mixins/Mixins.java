@@ -166,6 +166,11 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinSoundSystemStarterThread_BootReload")
             .setApplyIf(() -> SpeedupsConfig.keepSoundEngineAtBoot)
             .setPhase(Phase.EARLY)),
+    INITIAL_OPENAL_OUTPUT_DEVICE(new MixinBuilder()
+            .addClientMixins("paulscode.MixinLibraryLWJGLOpenAL")
+            .addRequiredMod(TargetedMod.LWJGL3IFY)
+            .setApplyIf(() -> SoundConfig.manageOutputDevicesAtStartup)
+            .setPhase(Phase.EARLY)),
     REPLACE_ARCHAICFIX_SOUND_DEVICE_RECOVERY(new MixinBuilder()
             .addClientMixins("archaicfix.MixinSoundDeviceThread")
             .addRequiredMod(TargetedMod.ARCHAICFIX)
@@ -505,7 +510,6 @@ public enum Mixins implements IMixins {
     FIX_REDSTONE_TORCH_WORLD_LEAK(new MixinBuilder("Fix world leak in redstone torch")
             .addCommonMixins("memory.MixinBlockRedstoneTorch")
             .setApplyIf(() -> MemoryConfig.leaks.fixRedstoneTorchWorldLeak)
-            .addExcludedMod(TargetedMod.BUGTORCH)
             .setPhase(Phase.EARLY)),
     FIX_WORLD_MAP_STORAGE_LEAK(new MixinBuilder()
             .addCommonMixins("memory.WorldAccessor_ClearMapStorage")
@@ -641,6 +645,7 @@ public enum Mixins implements IMixins {
     DONT_SLEEP_ON_THREADED_IO(new MixinBuilder("Don't sleep on threaded IO")
             .addCommonMixins("minecraft.MixinThreadedFileIOBase_noSleep")
             .setApplyIf(() -> TweaksConfig.dontSleepOnThreadedIO)
+            .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
     OPTIMIZE_MOB_SPAWNING(new MixinBuilder()
             .addCommonMixins(
@@ -767,6 +772,10 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinBlock_FixXray",
                     "minecraft.MixinWorld_FixXray")
             .setApplyIf(() -> FixesConfig.fixPerspectiveCamera)
+            .setPhase(Phase.EARLY)),
+    RETURN_CURSOR_STACK(new MixinBuilder("Return cursor stacks and synchronize inventory on container close")
+            .addCommonMixins("minecraft.MixinEntityPlayerMP_ReturnCursorStack")
+            .addClientMixins("minecraft.MixinEntityClientPlayerMP_ReturnCursorStack")
             .setPhase(Phase.EARLY)),
     DISABLE_CREATIVE_TAB_ALL_SEARCH(new MixinBuilder("Disable the creative tab with search bar")
             .addClientMixins("minecraft.MixinGuiContainerCreative")
@@ -1082,6 +1091,21 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> TweaksConfig.betterModList)
             .addExcludedMod(TargetedMod.ENDERCORE_WITH_MODLIST)
             .setPhase(Phase.EARLY)),
+    SCROLL_LIST_API(new MixinBuilder("Expose GuiScrollingList scroll state through IScrollList")
+            .addClientMixins("fml.MixinGuiScrollingList_ScrollList")
+            .setApplyIf(() -> TweaksConfig.betterModList || TweaksConfig.fixScrollingLists)
+            .setPhase(Phase.EARLY)),
+    FIX_SCROLLING_LISTS(new MixinBuilder("Handle scrolling list input in mouse events and anchor scroll bar drag to the pressed point")
+            .addClientMixins(
+                    "minecraft.MixinGuiScreen_ScrollInput",
+                    "minecraft.MixinGuiSlot_ScrollInput",
+                    "fml.MixinGuiScrollingList_ScrollInput")
+            .setApplyIf(() -> TweaksConfig.fixScrollingLists)
+            .setPhase(Phase.EARLY)),
+    FIX_ARROW_OWNER(new MixinBuilder("Fix arrow forgetting its owner upon owner reloading (MC-59626) to allow enchantments and HEE charms to work")
+            .addCommonMixins("minecraft.MixinEntityArrow")
+            .setApplyIf(() -> FixesConfig.fixArrowOwner)
+            .setPhase(Phase.EARLY)),
     FIX_EGG_PARTICLE(new MixinBuilder("Use correct egg particles instead of snowball ones (MC-7807)")
             .addClientMixins("minecraft.MixinEntityEgg")
             .setApplyIf(() -> FixesConfig.fixEggParticles)
@@ -1293,6 +1317,28 @@ public enum Mixins implements IMixins {
     CHANGE_RECEIVED_PACKET_COUNT_LIMIT_TO_TIME_LIMIT(new MixinBuilder("Change received packet count limit to time limit")
             .addClientMixins("minecraft.packets.MixinNetworkManager_ReceivedProcessingLimit")
             .setApplyIf(() -> FixesConfig.changeReceivedPacketCountLimitToTimeLimit)
+            .setPhase(Phase.EARLY)),
+    MERGE_MOB_DROPS(new MixinBuilder("Merge mob drops before they spawn as entities")
+            .addCommonMixins(
+                "minecraft.mergemobdrops.MixinEntity_MergeMobDrops",
+                "minecraft.mergemobdrops.MixinEntityLiving_MergeMobDrops",
+                "minecraft.mergemobdrops.MixinEntityLivingBase_MergeMobDrops",
+                "minecraft.mergemobdrops.monster.MixinEntityBlaze",
+                "minecraft.mergemobdrops.monster.MixinEntityEnderman",
+                "minecraft.mergemobdrops.monster.MixinEntityGhast",
+                "minecraft.mergemobdrops.monster.MixinEntityIronGolem",
+                "minecraft.mergemobdrops.monster.MixinEntityMagmaCube",
+                "minecraft.mergemobdrops.monster.MixinEntityWitch",
+                "minecraft.mergemobdrops.monster.MixinEntityPigZombie",
+                "minecraft.mergemobdrops.monster.MixinEntitySkeleton",
+                "minecraft.mergemobdrops.monster.MixinEntitySnowman",
+                "minecraft.mergemobdrops.passive.MixinEntityChicken",
+                "minecraft.mergemobdrops.passive.MixinEntityCow",
+                "minecraft.mergemobdrops.passive.MixinEntityPig",
+                "minecraft.mergemobdrops.passive.MixinEntitySheep",
+                "minecraft.mergemobdrops.passive.MixinEntitySquid"
+            )
+            .setApplyIf(() -> TweaksConfig.mergeMobDrops)
             .setPhase(Phase.EARLY)),
     // endregion
 
@@ -1767,6 +1813,13 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.AUTOMAGY)
             .setPhase(Phase.LATE)),
 
+    // Mine & Blade Battlegear 2
+    BOW_LUCK_MERGE_MOB_DROPS_COMPAT(new MixinBuilder("Make the bow luck enchantment compatible with mergeMobDrops without changing its bonus")
+            .addCommonMixins("battlegear2.MixinBattlemodeHookContainerClass")
+            .setApplyIf(() -> TweaksConfig.mergeMobDrops)
+            .addRequiredMod(TargetedMod.BATTLEGEAR2)
+            .setPhase(Phase.LATE)),
+
     // Better HUD
     FIX_BETTERHUD_ARMOR_BAR(new MixinBuilder("Fix better HUD armor display breaking with skulls")
             .addCommonMixins("betterhud.MixinSkullDurabilityDisplay")
@@ -1889,6 +1942,13 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.EXTRATIC)
             .setPhase(Phase.LATE)),
     // Extra Utilities
+    FIX_EXTRA_UTILITIES_RENDERBLOCK_LEAK(new MixinBuilder()
+            .addClientMixins(
+                    "extrautilities.leaks.MixinRenderBlockConnectedTextures",
+                    "extrautilities.leaks.MixinConnectedTextureMicroMaterial")
+            .setApplyIf(() -> MemoryConfig.leaks.fixExtraUtilitiesConnectedTexturesLeak)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
     FIX_EXTRA_UTILITIES_UNENCHANTING(new MixinBuilder("Fix Exu Unenchanting")
             .addCommonMixins("extrautilities.MixinRecipeUnEnchanting")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesUnEnchanting)
@@ -1986,6 +2046,15 @@ public enum Mixins implements IMixins {
     FIX_ENDER_COLLECTOR_CRASH(new MixinBuilder("Prevent Extra Utilities Ender Collector from inserting into auto-dropping Blocks that create a crash-loop")
             .addCommonMixins("extrautilities.MixinTileEnderCollector")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesEnderCollectorCrash)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
+    FIX_DIVISION_SIGIL_ACTIVATION(new MixinBuilder("Fix Division Sigil not activating with enchantment tables and beacons from other mods")
+            .addCommonMixins(
+                    "extrautilities.MixinEventHandlerServer",
+                    "extrautilities.MixinEventHandlerSiege",
+                    "extrautilities.MixinItemDivisionSigil")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesDivisionSigilActivation)
+            .addExcludedMod(TargetedMod.ARCHAICFIX)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
 
