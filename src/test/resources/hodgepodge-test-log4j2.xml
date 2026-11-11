@@ -17,10 +17,11 @@
                 <OnStartupTriggeringPolicy />
             </Policies>
         </RollingRandomAccessFile>
+        <!-- Routed appenders need their own name: sharing "FmlFile" leaves their files open after stop, which breaks @TempDir cleanup on Windows. -->
         <Routing name="FmlFile">
             <Routes pattern="$${ctx:side}">
                 <Route>
-                    <RollingRandomAccessFile name="FmlFile" fileName="${sys:hodgepodge.test.logdir}/logs/fml-${ctx:side}-latest.log" filePattern="${sys:hodgepodge.test.logdir}/logs/fml-${ctx:side}-%i.log">
+                    <RollingRandomAccessFile name="FmlFileRouted" fileName="${sys:hodgepodge.test.logdir}/logs/fml-${ctx:side}-latest.log" filePattern="${sys:hodgepodge.test.logdir}/logs/fml-${ctx:side}-%i.log">
                         <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level] [%logger/%X{mod}]: %msg%n" />
                         <DefaultRolloverStrategy max="3" fileIndex="max" />
                         <Policies>
@@ -29,7 +30,7 @@
                     </RollingRandomAccessFile>
                 </Route>
                 <Route key="$${ctx:side}">
-                    <RandomAccessFile name="FmlFile" fileName="${sys:hodgepodge.test.logdir}/logs/fml-junk-earlystartup.log" >
+                    <RandomAccessFile name="FmlFileRouted" fileName="${sys:hodgepodge.test.logdir}/logs/fml-junk-earlystartup.log" >
                         <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level] [%logger]: %msg%n" />
                     </RandomAccessFile>
                 </Route>
