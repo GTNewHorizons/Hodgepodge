@@ -1144,6 +1144,18 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.MixinBlockRedstoneWire_Hitbox")
             .setApplyIf(() -> TweaksConfig.improvedRedstoneWireHitbox)
             .setPhase(Phase.EARLY)),
+    SHAPED_BLOCK_OUTLINES(new MixinBuilder("Shaped selection outlines and hit areas for vanilla blocks, some collision")
+            .addCommonMixins(
+                    "minecraft.outlineshapes.MixinBlockAnvil_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockDragonEgg_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockEndPortalFrame_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockFence_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockHopper_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockStairs_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockWall_OutlineShape",
+                    "minecraft.outlineshapes.MixinCollisionShapedBlocks_OutlineShape")
+            .setApplyIf(() -> TweaksConfig.shapedBlockOutlines)
+            .setPhase(Phase.EARLY)),
     FIX_INSTANT_HAND_ITEM_TEXTURE_SWITCH(new MixinBuilder()
             .addClientMixins("minecraft.MixinItemRenderer_FixInstantItemSwitch")
             .setApplyIf(() -> FixesConfig.fixInstantHandItemTextureSwitch)
