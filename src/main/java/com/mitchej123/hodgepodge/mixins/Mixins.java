@@ -505,7 +505,6 @@ public enum Mixins implements IMixins {
     FIX_REDSTONE_TORCH_WORLD_LEAK(new MixinBuilder("Fix world leak in redstone torch")
             .addCommonMixins("memory.MixinBlockRedstoneTorch")
             .setApplyIf(() -> MemoryConfig.leaks.fixRedstoneTorchWorldLeak)
-            .addExcludedMod(TargetedMod.BUGTORCH)
             .setPhase(Phase.EARLY)),
     FIX_WORLD_MAP_STORAGE_LEAK(new MixinBuilder()
             .addCommonMixins("memory.WorldAccessor_ClearMapStorage")
@@ -1294,6 +1293,28 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.packets.MixinNetworkManager_ReceivedProcessingLimit")
             .setApplyIf(() -> FixesConfig.changeReceivedPacketCountLimitToTimeLimit)
             .setPhase(Phase.EARLY)),
+    MERGE_MOB_DROPS(new MixinBuilder("Merge mob drops before they spawn as entities")
+            .addCommonMixins(
+                "minecraft.mergemobdrops.MixinEntity_MergeMobDrops",
+                "minecraft.mergemobdrops.MixinEntityLiving_MergeMobDrops",
+                "minecraft.mergemobdrops.MixinEntityLivingBase_MergeMobDrops",
+                "minecraft.mergemobdrops.monster.MixinEntityBlaze",
+                "minecraft.mergemobdrops.monster.MixinEntityEnderman",
+                "minecraft.mergemobdrops.monster.MixinEntityGhast",
+                "minecraft.mergemobdrops.monster.MixinEntityIronGolem",
+                "minecraft.mergemobdrops.monster.MixinEntityMagmaCube",
+                "minecraft.mergemobdrops.monster.MixinEntityWitch",
+                "minecraft.mergemobdrops.monster.MixinEntityPigZombie",
+                "minecraft.mergemobdrops.monster.MixinEntitySkeleton",
+                "minecraft.mergemobdrops.monster.MixinEntitySnowman",
+                "minecraft.mergemobdrops.passive.MixinEntityChicken",
+                "minecraft.mergemobdrops.passive.MixinEntityCow",
+                "minecraft.mergemobdrops.passive.MixinEntityPig",
+                "minecraft.mergemobdrops.passive.MixinEntitySheep",
+                "minecraft.mergemobdrops.passive.MixinEntitySquid"
+            )
+            .setApplyIf(() -> TweaksConfig.mergeMobDrops)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments
@@ -1767,6 +1788,13 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.AUTOMAGY)
             .setPhase(Phase.LATE)),
 
+    // Mine & Blade Battlegear 2
+    BOW_LUCK_MERGE_MOB_DROPS_COMPAT(new MixinBuilder("Make the bow luck enchantment compatible with mergeMobDrops without changing its bonus")
+            .addCommonMixins("battlegear2.MixinBattlemodeHookContainerClass")
+            .setApplyIf(() -> TweaksConfig.mergeMobDrops)
+            .addRequiredMod(TargetedMod.BATTLEGEAR2)
+            .setPhase(Phase.LATE)),
+
     // Better HUD
     FIX_BETTERHUD_ARMOR_BAR(new MixinBuilder("Fix better HUD armor display breaking with skulls")
             .addCommonMixins("betterhud.MixinSkullDurabilityDisplay")
@@ -1986,6 +2014,15 @@ public enum Mixins implements IMixins {
     FIX_ENDER_COLLECTOR_CRASH(new MixinBuilder("Prevent Extra Utilities Ender Collector from inserting into auto-dropping Blocks that create a crash-loop")
             .addCommonMixins("extrautilities.MixinTileEnderCollector")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesEnderCollectorCrash)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
+    FIX_DIVISION_SIGIL_ACTIVATION(new MixinBuilder("Fix Division Sigil not activating with enchantment tables and beacons from other mods")
+            .addCommonMixins(
+                    "extrautilities.MixinEventHandlerServer",
+                    "extrautilities.MixinEventHandlerSiege",
+                    "extrautilities.MixinItemDivisionSigil")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesDivisionSigilActivation)
+            .addExcludedMod(TargetedMod.ARCHAICFIX)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
 

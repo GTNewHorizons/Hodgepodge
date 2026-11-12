@@ -29,6 +29,8 @@ dependencies {
     transformedModCompileOnly("com.github.GTNewHorizons:MrTJPCore:1.3.7:dev") // Do not update, fixed afterwards
     transformedModCompileOnly("com.github.GTNewHorizons:Railcraft:9.17.34:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
     transformedModCompileOnly("com.github.GTNewHorizons:TinkersConstruct:1.14.119-GTNH:dev")
+    transformedModCompileOnly('com.github.GTNewHorizons:Battlegear2-for-Backhand:1.7.0-backhand:dev')
+    transformedModCompileOnly('com.github.GTNewHorizons:Avaritia:2.0:dev')
     transformedModCompileOnly(rfg.deobf("curse.maven:bibliocraft-228027:2423369"))
     transformedModCompileOnly(rfg.deobf("curse.maven:bibliocraft-bibliowoods-forestry-edition-228363:2229574"))
     transformedModCompileOnly(rfg.deobf("curse.maven:biomes-o-plenty-220318:2499612"))
@@ -79,6 +81,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.mockito:mockito-core:5.+")
+    testRuntimeOnly("it.unimi.dsi:fastutil:8.5.18")
 }
 
 // Replace when RFG support deobfuscation from notch mappings
