@@ -470,6 +470,21 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixFenceRightClick;
 
+    @Config.Comment("Fix arrow forgetting its owner upon owner reloading (MC-59626) to allow enchantments and HEE charms to work")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixArrowOwner;
+
+    @Config.Comment("Fix TiC projectile forgetting its owner upon owner reloading to allow enchantments and HEE charms to work. Requires FixArrowOwner")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixArrowOwnerTiC;
+
+    @Config.Comment("Fix Witchery bolt forgetting its owner upon owner reloading to allow enchantments and HEE charms to work")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixArrowOwnerWitchery;
+
     @Config.Comment("Use correct egg particles instead of snowball ones (MC-7807)")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
