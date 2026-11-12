@@ -790,6 +790,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesFluidRetrievalNode;
 
+    @Config.Comment("Fix Filing Cabinet rendering of enchanted items")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesFilingCabinetEnchantedRendering;
+
     @Config.Comment("Caps hotkey'd stacks to their maximum stack size in filing cabinets")
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesFilingCabinetDupe;
