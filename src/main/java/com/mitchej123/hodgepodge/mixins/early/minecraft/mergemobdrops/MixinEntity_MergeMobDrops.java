@@ -22,7 +22,14 @@ public abstract class MixinEntity_MergeMobDrops {
     @Inject(method = "dropItem", at = @At("HEAD"), cancellable = true)
     public EntityItem hodgepodge$dropItem(Item item, int count, CallbackInfoReturnable<EntityItem> cir) {
         ItemStack stack = new ItemStack(item, count, 0);
+<<<<<<< HEAD
         MobDropsContainerContext.add(stack);
+=======
+
+        if (MobDropsContainerContext.isCollecting()) {
+            MobDropsContainerContext.add(stack);
+        }
+>>>>>>> 788be5e9ed7467381286ae22d9b54ab0ed911d94
         cir.setReturnValue(null);
         return null;
     }
@@ -30,7 +37,13 @@ public abstract class MixinEntity_MergeMobDrops {
     @Inject(method = "entityDropItem", at = @At("HEAD"), cancellable = true)
     public EntityItem hodgepodge$entityDropItem(ItemStack stack, float offsetY,
             CallbackInfoReturnable<EntityItem> cir) {
+<<<<<<< HEAD
         MobDropsContainerContext.add(stack);
+=======
+        if (MobDropsContainerContext.isCollecting()) {
+            MobDropsContainerContext.add(stack);
+        }
+>>>>>>> 788be5e9ed7467381286ae22d9b54ab0ed911d94
         cir.setReturnValue(null);
         return null;
     }
