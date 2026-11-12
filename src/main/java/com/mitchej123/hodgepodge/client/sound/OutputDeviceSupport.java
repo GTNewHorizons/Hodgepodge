@@ -68,6 +68,40 @@ public final class OutputDeviceSupport {
         }
     }
 
+    /** Returns playback devices. Return null if enumeration is unavailable. */
+    private static List<String> enumeratePlaybackDevices() throws Exception {
+        Class.forName("org.lwjgl.openal.ALC");
+        resolveMethods();
+
+        boolean supported = (Boolean) isExtensionPresent.invoke(null, 0L, "ALC_ENUMERATE_ALL_EXT");
+        if (!supported) return null;
+
+        long address = (Long) getStringPointer.invoke(null, 0L, ALC_ALL_DEVICES_SPECIFIER);
+        if (address == 0L) return null;
+
+        List<String> result = new ArrayList<>();
+        while (address != 0L && (Byte) readByte.invoke(null, address) != 0) {
+            String name = (String) readUtf8.invoke(null, address);
+            result.add(name);
+            address += name.getBytes(StandardCharsets.UTF_8).length + 1L;
+        }
+
+        return result.isEmpty() ? null : result;
+    }
+
+    public static String resolveStartupDevice(String preferred) {
+        if (!SoundConfig.manageOutputDevicesAtStartup || !Compat.isLwjgl3ifyPresent() || preferred == null) return null;
+
+        try {
+            List<String> devices = enumeratePlaybackDevices();
+            if (devices == null) return SYSTEM_DEFAULT;
+            if (devices.contains(preferred)) return preferred;
+            return SYSTEM_DEFAULT;
+        } catch (Throwable t) {
+            return SYSTEM_DEFAULT;
+        }
+    }
+
     /** Returns current playback endpoints. The empty string represents the system default. */
     public static List<String> devices() {
         long now = System.nanoTime();
@@ -79,14 +113,9 @@ public final class OutputDeviceSupport {
         devices.add(SYSTEM_DEFAULT);
         if (!available()) return enumerationFailed(now, devices);
         try {
-            long address = (Long) getStringPointer.invoke(null, 0L, ALC_ALL_DEVICES_SPECIFIER);
-            if (address == 0L) throw new IllegalStateException("OpenAL returned no output devices");
-            while (address != 0L && (Byte) readByte.invoke(null, address) != 0) {
-                String name = (String) readUtf8.invoke(null, address);
-                devices.add(name);
-                address += name.getBytes(StandardCharsets.UTF_8).length + 1L;
-            }
-            if (devices.size() == 1) throw new IllegalStateException("OpenAL returned no output devices");
+            List<String> enumerated = enumeratePlaybackDevices();
+            if (enumerated == null) throw new IllegalStateException("OpenAL returned no output devices");
+            devices.addAll(enumerated);
         } catch (Throwable t) {
             warnOnce("Could not enumerate OpenAL output devices", t);
             return enumerationFailed(now, devices);
