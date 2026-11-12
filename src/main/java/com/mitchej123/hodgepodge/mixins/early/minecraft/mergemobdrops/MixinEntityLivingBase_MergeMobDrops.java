@@ -3,7 +3,6 @@ package com.mitchej123.hodgepodge.mixins.early.minecraft.mergemobdrops;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,19 +17,6 @@ import net.minecraftforge.common.ForgeHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-=======
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.world.World;
-
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
->>>>>>> 788be5e9ed7467381286ae22d9b54ab0ed911d94
 
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.util.MergeMobDropsCompatHandler;
@@ -38,7 +24,6 @@ import com.mitchej123.hodgepodge.util.MobDropsContainerContext;
 
 import cpw.mods.fml.common.Loader;
 
-<<<<<<< HEAD
 @Mixin(EntityLivingBase.class)
 public abstract class MixinEntityLivingBase_MergeMobDrops extends Entity {
 
@@ -142,43 +127,6 @@ public abstract class MixinEntityLivingBase_MergeMobDrops extends Entity {
             }
         }
         this.worldObj.setEntityState(this, (byte) 3);
-=======
-// Merge mob drops with the help of MixinEntityLiving_MergeMobDrops. See TweaksConfig.mergeMobDrops
-@Mixin(EntityLivingBase.class)
-public abstract class MixinEntityLivingBase_MergeMobDrops extends Entity {
-
-    @Inject(
-            method = "onDeath",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/EntityLivingBase;func_146066_aG()Z" // canDropLoot()
-            ))
-    public void hodgepodge$startCollectingMobDrops(DamageSource cause, CallbackInfo ci) {
-        MobDropsContainerContext.start();
-    }
-
-    @Inject(
-            method = "onDeath",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/World;setEntityState(Lnet/minecraft/entity/Entity;B)V"))
-    public void hodgepodge$mergeAndDispatchMobDrops(DamageSource cause, CallbackInfo ci) {
-        List<ItemStack> drops = MobDropsContainerContext.end();
-
-        if (this.worldObj.isRemote || drops == null || drops.isEmpty()) {
-            return;
-        }
-
-        /* ====== Compatibility patches start ===== */
-
-        // Apply Battlegear2 bow loot enchantment equivalent
-        MergeMobDropsCompatHandler.applyBowLuck(cause, drops);
-
-        /* ====== Compatibility patches end ===== */
-
-        mergeMobDrops(drops);
-
-        // In vanilla Entity.entityDropItem does this, but currently it's nuked by MixinEntity_MergeMobDrops
-        dispatchMobDrops(drops);
->>>>>>> 788be5e9ed7467381286ae22d9b54ab0ed911d94
     }
 
     private void mergeMobDrops(List<ItemStack> drops) {
@@ -215,7 +163,6 @@ public abstract class MixinEntityLivingBase_MergeMobDrops extends Entity {
             if (mode == 2 || mode == 3) return;
         }
 
-<<<<<<< HEAD
         // RESPECT_MAX_STACK_SIZE || HYBRID choosing it || HYBRID_AVARITIA choosing it
         if (mode == 0 || mode == 2 || mode == 3) {
             /*
@@ -223,15 +170,6 @@ public abstract class MixinEntityLivingBase_MergeMobDrops extends Entity {
              * threshold/64 (stackables) + 4 (equipments) + 2 (several rare drops)
              */
             List<ItemStack> fragmentedDrops = new ArrayList<>(threshold / 64 + 6);
-=======
-        // RESPECT_MAX_STACK_SIZE || HYBRID choosing it
-        if (mode == 0 || mode == 2) {
-            /*
-             * 72 is to prevent memory reallocations as the array grows. Estimation logic: 4096/64 (stackables) + 4
-             * (equipments) + 4 (several rare drops)
-             */
-            List<ItemStack> fragmentedDrops = new ArrayList<>(72);
->>>>>>> 788be5e9ed7467381286ae22d9b54ab0ed911d94
 
             for (ItemStack drop : drops) {
                 if (drop == null) continue;
@@ -254,7 +192,6 @@ public abstract class MixinEntityLivingBase_MergeMobDrops extends Entity {
         }
     }
 
-<<<<<<< HEAD
     @Shadow
     public abstract EntityLivingBase func_94060_bK();
 
@@ -281,17 +218,6 @@ public abstract class MixinEntityLivingBase_MergeMobDrops extends Entity {
 
     @Shadow
     protected int recentlyHit;
-=======
-    private void dispatchMobDrops(List<ItemStack> drops) {
-        for (ItemStack drop : drops) {
-            if (drop != null) {
-                EntityItem entityItem = new EntityItem(this.worldObj, this.posX, this.posY, this.posZ, drop);
-                entityItem.delayBeforeCanPickup = 10;
-                this.worldObj.spawnEntityInWorld(entityItem);
-            }
-        }
-    }
->>>>>>> 788be5e9ed7467381286ae22d9b54ab0ed911d94
 
     private MixinEntityLivingBase_MergeMobDrops(World worldIn) {
         super(worldIn);

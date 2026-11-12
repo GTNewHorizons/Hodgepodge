@@ -42,15 +42,9 @@ public class MergeMobDropsCompatHandler {
             if (lvl > 0) {
                 for (ItemStack drop : drops) {
                     /*
-<<<<<<< HEAD
                      * This is not a typo nor a different logic, since the original bow luck logic exploits the fact
                      * that the vanilla dispatches item entites only with stackSize == 1, but now the drops have been
                      * merged by the mode == 1 (FORCE_MERGE_INTO_ONE) at the time when the enchantment applies
-=======
-                     * This is not a typo nor a different logic, since the bow luck multiplies mob drops up to its max
-                     * stack size, and drops have been merged by the mode == 1 (FORCE_MERGE_INTO_ONE) at the time when
-                     * the enchantment applies
->>>>>>> 788be5e9ed7467381286ae22d9b54ab0ed911d94
                      */
                     if (drop != null && drop.getMaxStackSize() >= lvl + 1) {
                         drop.stackSize *= lvl + 1;
