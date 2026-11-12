@@ -2153,6 +2153,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixZTonesPackets)
             .addRequiredMod(TargetedMod.ZTONES)
             .setPhase(Phase.LATE)),
+    ZTONES_CYCLE_KEY(new MixinBuilder("Cycle ZTones blocks with a dedicated keybind instead of Alt and Ctrl")
+            .addClientMixins("ztones.MixinEventHandler_CycleKey")
+            .setApplyIf(() -> TweaksConfig.ztonesCycleKeybind)
+            .addRequiredMod(TargetedMod.ZTONES)
+            .setPhase(Phase.LATE)),
     ASP_RECIPE_FIX(new MixinBuilder("MT Core recipe fix")
             .addCommonMixins("advancedsolarpanels.MixinAdvancedSolarPanel")
             .addRequiredMod(TargetedMod.ADVANCED_SOLAR_PANELS)

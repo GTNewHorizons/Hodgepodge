@@ -2,6 +2,7 @@ key.hodgepodge.category=Hodgepodge
 key.fastBlockPlacing.desc=Fast Block Placing
 key.fastBlockPlacing.enabled=§fFast Block Placing §aEnabled
 key.fastBlockPlacing.disabled=§fFast Block Placing §cDisabled
+key.ztonesCycle.desc=Cycle ZTones Blocks
 
 tile.dirt.name=Dirt
 tile.sapling.name=Sapling
