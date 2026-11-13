@@ -142,7 +142,7 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean showInventoryEffectIcons;
 
-    @Config.Comment("Treat a potion effect duration of -1 as infinite, like newer Minecraft versions. The effect never expires until removed and shows an infinity symbol instead of a timer. Mods must opt in by applying -1")
+    @Config.Comment("Treat a potion effect duration of -1 as infinite, like newer Minecraft versions. The effect never expires until removed and shows an infinity symbol instead of a timer. Mods must opt in by applying -1. Needed on the server, the client side display works without it")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean infinitePotionDuration;
