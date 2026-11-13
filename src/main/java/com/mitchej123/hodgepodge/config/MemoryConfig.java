@@ -120,6 +120,11 @@ public class MemoryConfig {
         @Config.DefaultBoolean(true)
         @Config.RequiresMcRestart
         public boolean fixForgePlayerFactoryLeak;
+
+        @Config.Comment("Fix Extra Utilities connected textures renderer leaking world instance when leaving world")
+        @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
+        public boolean fixExtraUtilitiesConnectedTexturesLeak;
     }
 
     public static class AllocationFixes {
