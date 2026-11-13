@@ -123,6 +123,7 @@ public class MemoryConfig {
 
         @Config.Comment("Fix Extra Utilities connected textures renderer leaking world instance when leaving world")
         @Config.DefaultBoolean(true)
+        @Config.RequiresMcRestart
         public boolean fixExtraUtilitiesConnectedTexturesLeak;
     }
 
