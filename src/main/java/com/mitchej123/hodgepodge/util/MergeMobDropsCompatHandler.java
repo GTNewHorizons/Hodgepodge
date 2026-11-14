@@ -11,7 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.util.FakePlayer;
 
-import cpw.mods.fml.common.Loader;
 import fox.spiteful.avaritia.items.ItemMatterCluster;
 import fox.spiteful.avaritia.items.ItemStackWrapper;
 import mods.battlegear2.api.EnchantmentHelper;
@@ -23,10 +22,6 @@ public class MergeMobDropsCompatHandler {
 
     // Bow luck equivalent compatible with MixinEntityLivingBase_MergeMobDrops
     public static void applyBowLuck(DamageSource source, List<ItemStack> drops) {
-        if (!Loader.isModLoaded("battlegear2")) {
-            return;
-        }
-
         if (BaseEnchantment.bowLoot.isPresent() && source.isProjectile()
                 && source.getEntity() instanceof EntityLivingBase) {
             EntityLivingBase shooter = (EntityLivingBase) source.getEntity();
@@ -55,7 +50,7 @@ public class MergeMobDropsCompatHandler {
     }
 
     // Pack mob drops into Avaritia matter clusters
-    public static void convertToClusters(List<ItemStack> drops) {
+    public static void convertToClusters(List<ItemStack> drops, int threshold) {
         /*
          * 256 is to prevent memory reallocations as the array grows. Don't ask how one can get this high...actually
          * there's a hint right above hehe
@@ -89,15 +84,19 @@ public class MergeMobDropsCompatHandler {
             }
         }
 
-        /*
-         * Apply mode == 1 (FORCE_MERGE_INTO_ONE) to the remainder (leftover items that didn't reach
-         * MAX_NORMAL_CAPACITY)
-         */
         if (!currentMap.isEmpty()) {
-            for (Map.Entry<ItemStackWrapper, Integer> entry : currentMap.entrySet()) {
-                ItemStack remainderStack = entry.getKey().stack.copy();
-                remainderStack.stackSize = entry.getValue();
-                result.add(remainderStack);
+            if (currentCount > threshold) {
+                result.add(ItemMatterCluster.makeCluster(currentMap));
+            } else {
+                /*
+                 * Apply mode == 1 (FORCE_MERGE_INTO_ONE) to the remainder (leftover items that didn't reach
+                 * mergeMobDropsModeHybridThreshold)
+                 */
+                for (Map.Entry<ItemStackWrapper, Integer> entry : currentMap.entrySet()) {
+                    ItemStack remainderStack = entry.getKey().stack.copy();
+                    remainderStack.stackSize = entry.getValue();
+                    result.add(remainderStack);
+                }
             }
         }
         drops.clear();

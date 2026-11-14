@@ -1298,6 +1298,7 @@ public enum Mixins implements IMixins {
                 "minecraft.mergemobdrops.MixinEntity_MergeMobDrops",
                 "minecraft.mergemobdrops.MixinEntityLiving_MergeMobDrops",
                 "minecraft.mergemobdrops.MixinEntityLivingBase_MergeMobDrops",
+                "forge.MixinForgeHooks_MergeMobDrops",
                 "minecraft.mergemobdrops.monster.MixinEntityBlaze",
                 "minecraft.mergemobdrops.monster.MixinEntityEnderman",
                 "minecraft.mergemobdrops.monster.MixinEntityGhast",

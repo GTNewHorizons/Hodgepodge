@@ -14,6 +14,10 @@ public class MobDropsContainerContext {
         drops = new ArrayList<>();
     }
 
+    public static boolean isCollecting() {
+        return (drops != null);
+    }
+
     public static void add(ItemStack stack) {
         drops.add(stack);
     }

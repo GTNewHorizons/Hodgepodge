@@ -22,6 +22,7 @@ public abstract class MixinEntityLiving_MergeMobDrops extends Entity {
     @Overwrite
     protected void dropFewItems(boolean recentlyHit, int lootingLevel) {
         Item item = this.getDropItem();
+
         if (item == null) {
             return;
         }
