@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.util.FakePlayer;
 
+import cpw.mods.fml.common.Optional;
 import fox.spiteful.avaritia.items.ItemMatterCluster;
 import fox.spiteful.avaritia.items.ItemStackWrapper;
 import mods.battlegear2.api.EnchantmentHelper;
@@ -21,6 +22,7 @@ import xonin.backhand.api.core.BackhandUtils;
 public class MergeMobDropsCompatHandler {
 
     // Bow luck equivalent compatible with MixinEntityLivingBase_MergeMobDrops
+    @Optional.Method(modid = "battlegear2")
     public static void applyBowLuck(DamageSource source, List<ItemStack> drops) {
         if (BaseEnchantment.bowLoot.isPresent() && source.isProjectile()
                 && source.getEntity() instanceof EntityLivingBase) {
@@ -50,6 +52,7 @@ public class MergeMobDropsCompatHandler {
     }
 
     // Pack mob drops into Avaritia matter clusters
+    @Optional.Method(modid = "Avaritia")
     public static void convertToClusters(List<ItemStack> drops, int threshold) {
         /*
          * 256 is to prevent memory reallocations as the array grows. Don't ask how one can get this high...actually
@@ -85,7 +88,7 @@ public class MergeMobDropsCompatHandler {
         }
 
         if (!currentMap.isEmpty()) {
-            if (currentCount > threshold) {
+            if (currentCount >= threshold) {
                 result.add(ItemMatterCluster.makeCluster(currentMap));
             } else {
                 /*

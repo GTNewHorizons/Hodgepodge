@@ -42,10 +42,11 @@ public abstract class MixinForgeHooks_MergeMobDrops {
 
         /* ====== Compatibility patches start ===== */
 
+        // Apply Battlegear2 bow luck enchantment equivalent
         if (Loader.isModLoaded("battlegear2")) {
-            // Apply Battlegear2 bow luck enchantment equivalent
             MergeMobDropsCompatHandler.applyBowLuck(source, drops);
         }
+
         /* ====== Compatibility patches end ===== */
 
         mergeMobDrops(drops);
