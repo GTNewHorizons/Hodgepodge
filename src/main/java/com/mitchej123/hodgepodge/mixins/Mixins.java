@@ -1085,16 +1085,6 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinEntityArrow")
             .setApplyIf(() -> FixesConfig.fixArrowOwner)
             .setPhase(Phase.EARLY)),
-    FIX_ARROW_OWNER_TIC(new MixinBuilder("Fix TiC projectile forgetting its owner upon owner reloading to allow enchantments and HEE charms to work. Requires FixArrowOwner")
-            .addCommonMixins("tconstruct.MixinProjectileBase")
-            .setApplyIf(() -> FixesConfig.fixArrowOwnerTiC)
-            .addRequiredMod(TargetedMod.TINKERSCONSTRUCT)
-            .setPhase(Phase.LATE)),
-    FIX_ARROW_OWNER_WITCHERY(new MixinBuilder("Fix Witchery bolt forgetting its owner upon owner reloading to allow enchantments and HEE charms to work")
-            .addCommonMixins("witchery.MixinEntityBolt")
-            .setApplyIf(() -> FixesConfig.fixArrowOwnerWitchery)
-            .addRequiredMod(TargetedMod.WITCHERY)
-            .setPhase(Phase.LATE)),
     FIX_EGG_PARTICLE(new MixinBuilder("Use correct egg particles instead of snowball ones (MC-7807)")
             .addClientMixins("minecraft.MixinEntityEgg")
             .setApplyIf(() -> FixesConfig.fixEggParticles)
