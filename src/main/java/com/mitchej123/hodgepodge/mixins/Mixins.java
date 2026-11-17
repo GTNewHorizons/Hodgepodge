@@ -640,6 +640,7 @@ public enum Mixins implements IMixins {
     DONT_SLEEP_ON_THREADED_IO(new MixinBuilder("Don't sleep on threaded IO")
             .addCommonMixins("minecraft.MixinThreadedFileIOBase_noSleep")
             .setApplyIf(() -> TweaksConfig.dontSleepOnThreadedIO)
+            .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
     OPTIMIZE_MOB_SPAWNING(new MixinBuilder()
             .addCommonMixins(
@@ -1989,6 +1990,15 @@ public enum Mixins implements IMixins {
     FIX_ENDER_COLLECTOR_CRASH(new MixinBuilder("Prevent Extra Utilities Ender Collector from inserting into auto-dropping Blocks that create a crash-loop")
             .addCommonMixins("extrautilities.MixinTileEnderCollector")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesEnderCollectorCrash)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
+    FIX_DIVISION_SIGIL_ACTIVATION(new MixinBuilder("Fix Division Sigil not activating with enchantment tables and beacons from other mods")
+            .addCommonMixins(
+                    "extrautilities.MixinEventHandlerServer",
+                    "extrautilities.MixinEventHandlerSiege",
+                    "extrautilities.MixinItemDivisionSigil")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesDivisionSigilActivation)
+            .addExcludedMod(TargetedMod.ARCHAICFIX)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
 
