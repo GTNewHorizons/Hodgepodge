@@ -16,7 +16,7 @@ import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
 /**
  * Returns EmptyChunk for missing chunks while the scheduler has chunk loads blocked (most of the tick — everything
- * outside the scheduler's own generation window). Already-loaded chunks pass through normally.
+ * outside the scheduler's own generation window). Loaded chunks, disk loads and loads inside a population pass through.
  */
 @Mixin(value = ChunkProviderServer.class, priority = 500)
 public class MixinChunkProviderServer_EntityGuard {
@@ -52,12 +52,13 @@ public class MixinChunkProviderServer_EntityGuard {
             return chunk;
         }
 
-        // Entity guard: when blocked, don't trigger chunk generation for missing chunks, but allow loading from disk
+        // Entity guard: when blocked, generate missing chunks only for a running population; disk loads are allowed
         if (ChunkGenScheduler.isBlocked() && !this.worldObj.findingSpawnPoint) {
-            if (this.currentChunkLoader instanceof AnvilChunkLoader acl && acl.chunkExists(this.worldObj, x, z)) {
+            if (this.currentChunkLoader instanceof AnvilChunkLoader acl && acl.chunkExists(this.worldObj, x, z)
+                    || ChunkGenScheduler.admitPopulationLoad(this.worldObj)) {
                 return this.loadChunk(x, z);
             }
-            ChunkGenScheduler.incrementBlockedLoadCount();
+            ChunkGenScheduler.recordBlockedLoad(this.worldObj);
             return this.defaultEmptyChunk;
         }
 
