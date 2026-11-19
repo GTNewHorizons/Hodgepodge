@@ -424,6 +424,10 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinEntityPlayerMP")
             .setApplyIf(() -> FixesConfig.fixDimensionChangeAttributes)
             .setPhase(Phase.EARLY)),
+    FIX_END_GHOST_PLAYER(new MixinBuilder("Fix stale player copy left in the old world when entering the End")
+            .addCommonMixins("minecraft.MixinServerConfigurationManager_FixEndGhostPlayer")
+            .setApplyIf(() -> FixesConfig.fixEndGhostPlayer)
+            .setPhase(Phase.EARLY)),
     CONFIGURABLE_PORTAL_RATIO(new MixinBuilder("Make Nether portal travel ratio configurable")
             .addCommonMixins("minecraft.MixinWorldProviderHell")
             .setPhase(Phase.EARLY)),
