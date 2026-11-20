@@ -11,7 +11,7 @@ import mods.battlegear2.BattlemodeHookContainerClass;
 
 /*
  * If TweaksConfig.mergeMobDrops = true, cancel the original bow luck logic and restore it using the
- * MergeMobDropsCompatHandler.applyBowLuck for compat
+ * MergeMobDropsHelper.applyBowLuck for compat
  */
 @Mixin(BattlemodeHookContainerClass.class)
 public abstract class MixinBattlemodeHookContainerClass {

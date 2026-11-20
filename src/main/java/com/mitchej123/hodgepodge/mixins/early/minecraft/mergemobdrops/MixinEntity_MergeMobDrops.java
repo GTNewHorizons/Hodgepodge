@@ -12,17 +12,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.mitchej123.hodgepodge.util.MobDropsContainerContext;
 
 /*
- * If it's called inside EntityLivingBase.onDeath, cancel subsequent calls leading to spawnEntityInWorld(entityItem) and
- * send an ItemStack to the container class. See TweaksConfig.mergeMobDrops and Mixins.MERGE_MOB_DROPS for more info
+ * If called inside EntityLivingBase.onDeath, cancel subsequent calls leading to spawnEntityInWorld(entityItem) and send
+ * an ItemStack to the container class. See TweaksConfig.mergeMobDrops and Mixins.MERGE_MOB_DROPS for more info
  */
 @Mixin(Entity.class)
 public abstract class MixinEntity_MergeMobDrops {
 
     @Inject(method = "entityDropItem", at = @At("HEAD"), cancellable = true)
-    public void hodgepodge$accumulateEntityDropItem(ItemStack stack, float offsetY,
-            CallbackInfoReturnable<EntityItem> cir) {
+    public void accumulateEntityDropItem(ItemStack stack, float offsetY, CallbackInfoReturnable<EntityItem> cir) {
         if (MobDropsContainerContext.isCollecting()) {
-            MobDropsContainerContext.add(stack);
+            MobDropsContainerContext.add(stack, offsetY);
             cir.setReturnValue(null);
             return;
         }
