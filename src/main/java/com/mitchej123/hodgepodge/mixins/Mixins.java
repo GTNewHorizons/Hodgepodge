@@ -1889,7 +1889,9 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.LATE)),
     // Extra Utilities
     FIX_EXTRA_UTILITIES_RENDERBLOCK_LEAK(new MixinBuilder()
-            .addClientMixins("extrautilities.leaks.MixinRenderBlockConnectedTextures")
+            .addClientMixins(
+                    "extrautilities.leaks.MixinRenderBlockConnectedTextures",
+                    "extrautilities.leaks.MixinConnectedTextureMicroMaterial")
             .setApplyIf(() -> MemoryConfig.leaks.fixExtraUtilitiesConnectedTexturesLeak)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
