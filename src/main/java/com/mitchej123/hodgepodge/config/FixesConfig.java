@@ -77,6 +77,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixDimensionChangeAttributes;
 
+    @Config.Comment("Fix a stale player copy left behind when entering the End, which can make the player fall through an empty world after leaving it")
+    @Config.DefaultBoolean(true)
+    public static boolean fixEndGhostPlayer;
+
     @Config.Comment("Fix duplicate sounds from playing when closing a gui.")
     @Config.DefaultBoolean(true)
     public static boolean fixDuplicateSounds;
@@ -237,6 +241,10 @@ public class FixesConfig {
     @Config.Comment("Fix creative tab backgrounds showing black corners when alpha test is left disabled by item rendering (Forge GL state bug)")
     @Config.DefaultBoolean(true)
     public static boolean fixCreativeTabAlphaTest;
+
+    @Config.Comment("Fix XP and jump bar transparent pixels turning black when alpha test is left disabled by item rendering (Forge GL state bug)")
+    @Config.DefaultBoolean(true)
+    public static boolean fixXpBarAlphaTest;
 
     @Config.Comment("Fix potions >= 128")
     @Config.DefaultBoolean(true)
@@ -462,6 +470,11 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixFenceRightClick;
 
+    @Config.Comment("Fix arrow forgetting its owner upon owner reloading (MC-59626) to allow enchantments and HEE charms to work")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixArrowOwner;
+
     @Config.Comment("Use correct egg particles instead of snowball ones (MC-7807)")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -613,6 +626,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean furnaceSaveItemBurnTimeToNBT;
+
+    @Config.Comment("Draw the full hotbar selection frame, which vanilla cuts 2 pixels short. Also applies to Witchery's vampire power bar.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixHotbarSelectionHeight;
     /* ====== Minecraft fixes end ===== */
 
     // bukkit fixes
@@ -812,6 +830,10 @@ public class FixesConfig {
     @Config.Comment("Prevent Extra Utilities Ender Collector from inserting into auto-dropping Blocks that create a crash-loop")
     @Config.DefaultBoolean(true)
     public static boolean fixExtraUtilitiesEnderCollectorCrash;
+
+    @Config.Comment("Fix Division Sigil not activating with enchantment tables and beacons from other mods")
+    @Config.DefaultBoolean(true)
+    public static boolean fixExtraUtilitiesDivisionSigilActivation;
 
     // Galacticraft
 
