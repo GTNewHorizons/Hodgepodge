@@ -70,7 +70,8 @@ public enum Mixins implements IMixins {
             .addCommonMixins(
                     "minecraft.MixinWorld_SimulationDistance",
                     "minecraft.MixinWorldServer_SimulationDistance",
-                    "minecraft.MixinChunk_SimulationDistance")
+                    "minecraft.MixinChunk_SimulationDistance",
+                    "forge.MixinForgeChunkManagerTicket_SimulationDistance")
             .setApplyIf(() -> FixesConfig.addSimulationDistance_WIP)
             .setPhase(Phase.EARLY)),
     FIX_RCON_THREADING(new MixinBuilder("Fix RCON Threading by forcing it to run on the main thread")
@@ -428,6 +429,10 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinEntityPlayerMP")
             .setApplyIf(() -> FixesConfig.fixDimensionChangeAttributes)
             .setPhase(Phase.EARLY)),
+    FIX_END_GHOST_PLAYER(new MixinBuilder("Fix stale player copy left in the old world when entering the End")
+            .addCommonMixins("minecraft.MixinServerConfigurationManager_FixEndGhostPlayer")
+            .setApplyIf(() -> FixesConfig.fixEndGhostPlayer)
+            .setPhase(Phase.EARLY)),
     CONFIGURABLE_PORTAL_RATIO(new MixinBuilder("Make Nether portal travel ratio configurable")
             .addCommonMixins("minecraft.MixinWorldProviderHell")
             .setPhase(Phase.EARLY)),
@@ -505,7 +510,6 @@ public enum Mixins implements IMixins {
     FIX_REDSTONE_TORCH_WORLD_LEAK(new MixinBuilder("Fix world leak in redstone torch")
             .addCommonMixins("memory.MixinBlockRedstoneTorch")
             .setApplyIf(() -> MemoryConfig.leaks.fixRedstoneTorchWorldLeak)
-            .addExcludedMod(TargetedMod.BUGTORCH)
             .setPhase(Phase.EARLY)),
     FIX_WORLD_MAP_STORAGE_LEAK(new MixinBuilder()
             .addCommonMixins("memory.WorldAccessor_ClearMapStorage")
@@ -641,6 +645,7 @@ public enum Mixins implements IMixins {
     DONT_SLEEP_ON_THREADED_IO(new MixinBuilder("Don't sleep on threaded IO")
             .addCommonMixins("minecraft.MixinThreadedFileIOBase_noSleep")
             .setApplyIf(() -> TweaksConfig.dontSleepOnThreadedIO)
+            .addExcludedMod(TargetedMod.BUKKIT)
             .setPhase(Phase.EARLY)),
     OPTIMIZE_MOB_SPAWNING(new MixinBuilder()
             .addCommonMixins(
@@ -1081,6 +1086,10 @@ public enum Mixins implements IMixins {
                     "fml.AccessorGuiSlotModList")
             .setApplyIf(() -> TweaksConfig.betterModList)
             .addExcludedMod(TargetedMod.ENDERCORE_WITH_MODLIST)
+            .setPhase(Phase.EARLY)),
+    FIX_ARROW_OWNER(new MixinBuilder("Fix arrow forgetting its owner upon owner reloading (MC-59626) to allow enchantments and HEE charms to work")
+            .addCommonMixins("minecraft.MixinEntityArrow")
+            .setApplyIf(() -> FixesConfig.fixArrowOwner)
             .setPhase(Phase.EARLY)),
     FIX_EGG_PARTICLE(new MixinBuilder("Use correct egg particles instead of snowball ones (MC-7807)")
             .addClientMixins("minecraft.MixinEntityEgg")
@@ -1986,6 +1995,15 @@ public enum Mixins implements IMixins {
     FIX_ENDER_COLLECTOR_CRASH(new MixinBuilder("Prevent Extra Utilities Ender Collector from inserting into auto-dropping Blocks that create a crash-loop")
             .addCommonMixins("extrautilities.MixinTileEnderCollector")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesEnderCollectorCrash)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
+    FIX_DIVISION_SIGIL_ACTIVATION(new MixinBuilder("Fix Division Sigil not activating with enchantment tables and beacons from other mods")
+            .addCommonMixins(
+                    "extrautilities.MixinEventHandlerServer",
+                    "extrautilities.MixinEventHandlerSiege",
+                    "extrautilities.MixinItemDivisionSigil")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesDivisionSigilActivation)
+            .addExcludedMod(TargetedMod.ARCHAICFIX)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
 
