@@ -10,16 +10,4 @@ public interface AccessorGuiScrollingList {
 
     @Accessor(value = "selectedIndex", remap = false)
     void hodgepodge$setSelectedIndex(int index);
-
-    @Accessor(value = "bottom", remap = false)
-    int hodgepodge$getBottom();
-
-    @Accessor(value = "right", remap = false)
-    int hodgepodge$getRight();
-
-    @Accessor(value = "scrollDistance", remap = false)
-    float hodgepodge$getScrollDistance();
-
-    @Accessor(value = "scrollDistance", remap = false)
-    void hodgepodge$setScrollDistance(float distance);
 }
