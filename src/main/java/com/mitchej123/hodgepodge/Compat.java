@@ -37,6 +37,9 @@ public class Compat {
     private static boolean isSupernovaPresent;
     private static boolean isCubicChunksPresent;
 
+    private static boolean isEnderIoPresent;
+    private static boolean isAutomagyPresent;
+
     static void init(Side side) {
         isClient = side == Side.CLIENT;
 
@@ -81,6 +84,10 @@ public class Compat {
         isSupernovaPresent = Loader.isModLoaded("supernova");
 
         isCubicChunksPresent = Loader.isModLoaded("cubicchunks");
+
+        isEnderIoPresent = Loader.isModLoaded("EnderIO");
+
+        isAutomagyPresent = Loader.isModLoaded("Automagy");
     }
 
     /**
@@ -196,5 +203,19 @@ public class Compat {
      */
     public static boolean isCubicChunksPresent() {
         return isCubicChunksPresent;
+    }
+
+    /**
+     * Cannot be used before pre-init phase.
+     */
+    public static boolean isEnderIoPresent() {
+        return isEnderIoPresent;
+    }
+
+    /**
+     * Cannot be used before pre-init phase.
+     */
+    public static boolean isAutomagyPresent() {
+        return isAutomagyPresent;
     }
 }
