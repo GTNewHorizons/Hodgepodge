@@ -42,6 +42,7 @@ Hodgepodge is LGPL-3.
 - Water opacity is reduced from 3 to 1 to match modern Minecraft versions.
 - When a container is closed, items are placed in the player's inventory instead of dropped.
 - You no longer see your own potion particle effects.
+- A potion effect with duration -1 is infinite, like in newer Minecraft versions. It never expires until removed and shows ∞ instead of a timer.
 
 ### Base Minecraft, default off
 - Night vision can be changed to not have the blueish sky tint.
