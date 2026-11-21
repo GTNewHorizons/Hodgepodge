@@ -479,6 +479,12 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean changeCacheFileExtension;
 
+    // ZTones
+
+    @Config.Comment("Z-Tones block cycling uses a dedicated keybind instead of the Alt and Ctrl keys")
+    @Config.DefaultBoolean(true)
+    public static boolean ztonesCycleKeybind;
+
     // Chunk generation and population config
 
     @Config.Comment("Disable terrain generation for new generated chunks (all blocks become air, biomes remain)")
