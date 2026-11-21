@@ -312,9 +312,15 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
         return sb.toString();
     }
 
+    @Unique
+    private boolean hodgepodge$ampCodesActive() {
+        return FontRenderingCompat.editsAmpCodesAtomically((GuiTextField) (Object) this);
+    }
+
     @Inject(method = "drawTextBox", at = @At("HEAD"))
     private void hodgepodge$preprocessOnDrawHead(CallbackInfo ci) {
         hodgepodge$swapped = false;
+        if (!hodgepodge$ampCodesActive()) return;
         String preprocessed = hodgepodge$safePreprocess(this.text);
         if (preprocessed.equals(this.text)) {
             return;
@@ -666,7 +672,7 @@ public abstract class MixinGuiTextField_FixColorScroll extends Gui {
 
     @Inject(method = "textboxKeyTyped", at = @At("HEAD"), cancellable = true)
     private void hodgepodge$formatAwareCursorNav(char typedChar, int keyCode, CallbackInfoReturnable<Boolean> cir) {
-        if (!this.isFocused || !FontRenderingCompat.HAS_PREPROCESS_TEXT) return;
+        if (!this.isFocused || !hodgepodge$ampCodesActive()) return;
         if (this.text == null || this.text.indexOf('&') == -1) return;
 
         if (keyCode == 203 || keyCode == 205) { // LEFT or RIGHT
