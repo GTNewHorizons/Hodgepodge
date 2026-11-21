@@ -26,16 +26,14 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.mixins.interfaces.PendingBlockUpdateIndex;
+import com.mitchej123.hodgepodge.mixins.interfaces.SimulationDistanceTicket;
 import com.mitchej123.hodgepodge.util.ChunkPosUtil;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
-import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectAVLTreeSet;
@@ -43,14 +41,44 @@ import it.unimi.dsi.fastutil.objects.ObjectAVLTreeSet;
 public class SimulationDistanceHelper {
 
     /**
-     * Mark a chunk as no to be simulated, or reset that state. Not thread safe!
+     * Set whether the chunks forced by the given ticket are simulated, they are by default. Useful for tickets that
+     * only keep chunks loaded temporarily, e.g. for world generation. Chunks within simulation distance of a player or
+     * forced by another, simulated ticket are still simulated. Takes effect on the next world tick, can be called from
+     * any thread.
      */
-    public static void preventChunkSimulation(World world, long packedChunkPos, boolean prevent) {
+    public static void setTicketSimulation(ForgeChunkManager.Ticket ticket, boolean simulate) {
         if (!FixesConfig.addSimulationDistance_WIP) {
             return;
         }
-        ISimulationDistanceWorld mixin = (ISimulationDistanceWorld) world;
-        mixin.hodgepodge$preventChunkSimulation(packedChunkPos, prevent);
+        ((SimulationDistanceTicket) ticket).hodgepodge$setSimulationDisabled(!simulate);
+    }
+
+    /**
+     * Whether the chunks forced by the given ticket are simulated, see
+     * {@link #setTicketSimulation(ForgeChunkManager.Ticket, boolean)}.
+     */
+    public static boolean isTicketSimulated(ForgeChunkManager.Ticket ticket) {
+        if (!FixesConfig.addSimulationDistance_WIP) {
+            return true;
+        }
+        return !((SimulationDistanceTicket) ticket).hodgepodge$isSimulationDisabled();
+    }
+
+    private static boolean preventChunkSimulationWarningLogged = false;
+
+    /**
+     * No longer does anything, only kept so older versions of mods calling it don't crash.
+     *
+     * @deprecated use {@link #setTicketSimulation(ForgeChunkManager.Ticket, boolean)} instead
+     */
+    @Deprecated
+    public static void preventChunkSimulation(World world, long packedChunkPos, boolean prevent) {
+        if (!preventChunkSimulationWarningLogged) {
+            preventChunkSimulationWarningLogged = true;
+            Common.log.warn(
+                    "SimulationDistanceHelper.preventChunkSimulation is no longer supported and does nothing, use setTicketSimulation instead",
+                    new Throwable("Called from"));
+        }
     }
 
     public static int getSimulationDistance() {
@@ -82,18 +110,7 @@ public class SimulationDistanceHelper {
     private final boolean isServer;
 
     /**
-     * Chunks that should not be ticked
-     */
-    private final Long2ByteOpenHashMap noTickChunks = new Long2ByteOpenHashMap();
-
-    /**
-     * Changes to the chunks that should not be ticked. Needed since we only update the real map once a tick. Reason is
-     * that forced chunks are also cached and updated once a tick, we want both in sync.
-     */
-    private final LongBooleanArrayList noTickChunksChanges = new LongBooleanArrayList();
-
-    /**
-     * Cache of forced chunks. Profiler says that is faster.
+     * Cache of tickable forced chunks. Profiler says that is faster.
      */
     private final LongOpenHashSet forcedChunksMap = new LongOpenHashSet();
 
@@ -140,10 +157,6 @@ public class SimulationDistanceHelper {
      */
     private final Stack<NextTickListEntry> ticksToRemove = new Stack<>();
 
-    public void preventChunkSimulation(long packedChunkPos, boolean prevent) {
-        noTickChunksChanges.add(packedChunkPos, prevent);
-    }
-
     public Stack<NextTickListEntry> getTicksToRemove() {
         return ticksToRemove;
     }
@@ -178,7 +191,6 @@ public class SimulationDistanceHelper {
         long key = ChunkPosUtil.toLong(x, z);
         return cacheShouldProcessTick.computeIfAbsent(key, k -> {
             if (closeToPlayer(k)) return true;
-            if (noTickChunks.containsKey(k)) return false;
             return forcedChunksMap.contains(k);
         });
     }
@@ -193,21 +205,6 @@ public class SimulationDistanceHelper {
             }
         }
         return chunks;
-    }
-
-    private void mergeNoTickChunkChanges() {
-        for (int i = 0; i < noTickChunksChanges.size(); i++) {
-            long key = noTickChunksChanges.getLong(i);
-            boolean prevent = noTickChunksChanges.getBoolean(i);
-            byte value = noTickChunks.getOrDefault(key, (byte) 0);
-            value += (byte) (prevent ? 1 : -1);
-            if (value > 0) {
-                noTickChunks.put(key, value);
-            } else {
-                noTickChunks.remove(key);
-            }
-        }
-        noTickChunksChanges.clear();
     }
 
     private void checkForAddedChunks(LongOpenHashSet forcedChunksOld) {
@@ -269,15 +266,18 @@ public class SimulationDistanceHelper {
             return;
         }
 
-        mergeNoTickChunkChanges();
-
         // Processing cache is only valid for one tick
         cacheShouldProcessTick.clear();
 
         // Reset forced chunk cache
         LongOpenHashSet forcedChunksOld = new LongOpenHashSet(forcedChunksMap);
         forcedChunksMap.clear();
-        for (ChunkCoordIntPair key : ForgeChunkManager.getPersistentChunksFor(world).keys()) {
+        for (Map.Entry<ChunkCoordIntPair, ForgeChunkManager.Ticket> entry : ForgeChunkManager
+                .getPersistentChunksFor(world).entries()) {
+            if (!isTicketSimulated(entry.getValue())) {
+                continue;
+            }
+            ChunkCoordIntPair key = entry.getKey();
             forcedChunksMap.add(ChunkCoordIntPair.chunkXZ2Int(key.chunkXPos, key.chunkZPos));
         }
 
@@ -492,33 +492,5 @@ public class SimulationDistanceHelper {
     public boolean isReadyToAdd() {
         // Only need to check one set
         return pendingTickListEntriesTreeSet != null;
-    }
-
-    static class LongBooleanArrayList {
-
-        private final LongArrayList longs = new LongArrayList();
-        private final BooleanArrayList booleans = new BooleanArrayList();
-
-        public void add(long packedChunkPos, boolean prevent) {
-            longs.add(packedChunkPos);
-            booleans.add(prevent);
-        }
-
-        public int size() {
-            return longs.size();
-        }
-
-        public long getLong(int i) {
-            return longs.getLong(i);
-        }
-
-        public boolean getBoolean(int i) {
-            return booleans.getBoolean(i);
-        }
-
-        public void clear() {
-            longs.clear();
-            booleans.clear();
-        }
     }
 }
