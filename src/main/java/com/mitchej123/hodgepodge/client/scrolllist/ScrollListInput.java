@@ -13,7 +13,6 @@ public final class ScrollListInput {
     private static final int BAR_WIDTH = 6;
     private static final float WHEEL_STEP = 30f;
     private static final float WHEEL_EASE_MS = 60f;
-    private static final long STALE_MS = 1000L;
     private static final List<IScrollList> LISTS = new ArrayList<>();
     private static GuiScreen screen;
 
@@ -36,21 +35,27 @@ public final class ScrollListInput {
         private float easeTarget;
     }
 
+    /** Input is handled between frames, so the lists drawn in the last frame are the ones on screen. */
+    public static void onFrameStart() {
+        LISTS.clear();
+    }
+
     /** Called at the start of the list drawScreen. */
     public static void onDraw(IScrollList list, int mouseY) {
-        Minecraft mc = Minecraft.getMinecraft();
-        long now = Minecraft.getSystemTime();
-        if (mc.currentScreen != screen) {
-            LISTS.clear();
-            screen = mc.currentScreen;
-        }
         State state = list.hodgepodge$getState();
+        long now = Minecraft.getSystemTime();
         long frameMs = now - state.lastDraw;
+
+        screen = Minecraft.getMinecraft().currentScreen;
         state.lastDraw = now;
+
         if (!LISTS.contains(list)) {
             LISTS.add(list);
         }
-        LISTS.removeIf(l -> now - l.hodgepodge$getState().lastDraw > STALE_MS);
+
+        if (!Mouse.isButtonDown(0)) {
+            state.mode = Mode.NONE;
+        }
         drag(list, state, mouseY);
         ease(list, state, frameMs);
     }
@@ -80,11 +85,6 @@ public final class ScrollListInput {
     /** Called at the start of GuiScreen.handleMouseInput. */
     public static void onMouseEvent(GuiScreen gui) {
         if (gui != screen) return;
-        if (Mouse.getEventButton() == 0 && !Mouse.getEventButtonState()) {
-            for (IScrollList list : LISTS) {
-                list.hodgepodge$getState().mode = Mode.NONE;
-            }
-        }
         int wheel = Mouse.getEventDWheel();
         if (wheel != 0) {
             int x = eventX(gui);
