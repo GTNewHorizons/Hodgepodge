@@ -41,17 +41,4 @@ public abstract class MixinContainerFilingCabinetShiftClick extends Container {
             @Local(name = "itemstack") ItemStack itemstack) {
         return itemstack;
     }
-
-    // since mergeItemStack sets the size of the ItemStack to 0, use the outer "m" variable to decrease the original
-    // ItemStack's size
-    @Redirect(
-            method = "transferStackInSlot",
-            at = @At(
-                    value = "FIELD",
-                    target = "Lnet/minecraft/item/ItemStack;stackSize:I",
-                    opcode = Opcodes.PUTFIELD,
-                    ordinal = 1))
-    private void hodgepodge$decreaseStackSizeCorrectly(ItemStack itemstack1, int m, @Local(name = "m") int m_outer) {
-        itemstack1.stackSize -= m_outer;
-    }
 }
