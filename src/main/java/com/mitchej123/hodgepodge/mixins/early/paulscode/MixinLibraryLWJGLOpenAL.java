@@ -1,12 +1,12 @@
 package com.mitchej123.hodgepodge.mixins.early.paulscode;
 
-import com.mitchej123.hodgepodge.Common;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.client.sound.OutputDeviceSupport;
 import com.mitchej123.hodgepodge.config.SoundConfig;
 
@@ -34,8 +34,10 @@ public abstract class MixinLibraryLWJGLOpenAL {
         try {
             AL.create(selected, 44100, 60, false);
         } catch (LWJGLException e) {
-            Common.log.warn("Could not initialize configured device {}, falling back to system default",
-                    OutputDeviceSupport.displayName(selected), e);
+            Common.log.warn(
+                    "Could not initialize configured device {}, falling back to system default",
+                    OutputDeviceSupport.displayName(selected),
+                    e);
             AL.create();
         }
     }
