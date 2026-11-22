@@ -79,6 +79,12 @@ public class MixinWorldServer_PendingTickIndex implements PendingBlockUpdateInde
             method = "tickUpdates",
             at = @At(value = "INVOKE", target = "Ljava/util/TreeSet;remove(Ljava/lang/Object;)Z"))
     private boolean hodgepodge$onTickRemoved(TreeSet<NextTickListEntry> instance, Object e) {
+        // The bucket matches by equals (pos + block), the TreeSet by compareTo (including tickEntryID). Only touch the
+        // bucket if this exact entry was pending, otherwise an equal, newer entry would be dropped from the index.
+        // Happens when simulation distance replays removals it already did.
+        if (!instance.remove(e)) {
+            return false;
+        }
         final var tickIndex = hodgepodge$getTickIndex();
         final NextTickListEntry entry = (NextTickListEntry) e;
         final long key = ChunkPosUtil.toLong(entry.xCoord >> 4, entry.zCoord >> 4);
@@ -87,7 +93,7 @@ public class MixinWorldServer_PendingTickIndex implements PendingBlockUpdateInde
             bucket.remove(entry);
             if (bucket.isEmpty()) tickIndex.remove(key);
         }
-        return instance.remove(entry);
+        return true;
     }
 
     /**

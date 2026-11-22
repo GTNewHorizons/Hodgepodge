@@ -3,10 +3,12 @@ package com.mitchej123.hodgepodge.client.sound;
 import net.minecraftforge.client.event.sound.SoundSetupEvent;
 import net.minecraftforge.common.MinecraftForge;
 
+import com.mitchej123.hodgepodge.config.SoundConfig;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 /**
- * Installs our codec and sound library.
+ * Installs our codec and sound library and applies SoundConfig.
  * <p>
  * Minecraft registers the stock ones in the SoundManager constructor and fires SoundSetupEvent on the very next line,
  * which is the seam Forge provides for exactly this. It happens before the SoundSystem is constructed, so ours are in
@@ -22,5 +24,6 @@ public class SoundSetupHandler {
     public void onSoundSetup(SoundSetupEvent event) {
         LibraryHodgepodgeOpenAL.register();
         DownmixingOggCodec.register();
+        SoundConfig.apply();
     }
 }

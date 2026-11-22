@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.config;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 import com.mitchej123.hodgepodge.Common;
+import com.mitchej123.hodgepodge.client.sound.SoundSystemSettings;
 
 import paulscode.sound.SoundSystemConfig;
 
@@ -17,11 +18,13 @@ public class SoundConfig {
 
     @Config.Comment({ "Maximum number of normal (non-streaming) channels available for simultaneous sound effects.",
             "OpenAL Soft defaults to 256 sources unless overridden. If fewer are available, Paulscode creates as many channels as it can.",
+            "Not lowered below a count another mod requested.",
             "Takes effect after 'Reload Sounds' in the sound options, or a restart." })
     @Config.DefaultInt(64)
     public static int numberNormalChannels;
 
     @Config.Comment({ "Maximum number of streaming channels: music, records, and other streamed audio playing at once.",
+            "Not lowered below a count another mod requested.",
             "Takes effect after 'Reload Sounds' in the sound options, or a restart." })
     @Config.DefaultInt(8)
     public static int numberStreamingChannels;
@@ -137,20 +140,33 @@ public class SoundConfig {
     @Config.DefaultEnum("DEFAULT")
     public static Tristate outputLimiter;
 
+    @Config.Comment({
+            "Let Hodgepodge manage the OpenAL output device, including following system-default changes and recovering from disconnects.",
+            "Requires lwjgl3ify and ALC_SOFT_reopen_device; otherwise this is ignored. Restart after changing this option." })
+    @Config.RequiresMcRestart
+    public static OutputDeviceManagement outputDeviceManagement = new OutputDeviceManagement();
+
+    @Config.Ignore
+    public static boolean manageOutputDevicesAtStartup;
+
+    public static class OutputDeviceManagement {
+
+        @Config.Comment("Enables output device selection and recovery.")
+        @Config.DefaultBoolean(true)
+        public boolean enabled;
+    }
+
+    @Config.Comment({
+            "OpenAL output device name. Empty follows the system default and switches when the default changes.",
+            "Use the in-game Sound Enhancements menu instead of editing this value by hand." })
+    @Config.DefaultString("")
+    public static String outputDevice;
+
     public static void apply() {
-        SoundSystemConfig.setNumberNormalChannels(numberNormalChannels);
-        SoundSystemConfig.setNumberStreamingChannels(numberStreamingChannels);
-        SoundSystemConfig.setDefaultAttenuation(defaultAttenuationModel.ordinal());
-        SoundSystemConfig.setDefaultRolloff(defaultRolloffFactor);
-        SoundSystemConfig.setDopplerFactor(dopplerFactor);
-        SoundSystemConfig.setDopplerVelocity(dopplerVelocity);
-        SoundSystemConfig.setDefaultFadeDistance(defaultFadeDistance);
-        SoundSystemConfig.setStreamingBufferSize(streamingBufferSize);
-        SoundSystemConfig.setNumberStreamingBuffers(numberStreamingBuffers);
-        SoundSystemConfig.setStreamQueueFormatsMatch(streamQueueFormatsMatch);
-        SoundSystemConfig.setMaxFileSize(maxFileSize);
-        SoundSystemConfig.setFileChunkSize(fileChunkSize);
-        SoundSystemConfig.setOverrideMIDISynthesizer(overrideMIDISynthesizer);
-        Common.log.warn("Sound Config Applied");
+        SoundSystemSettings.apply();
+        Common.log.info(
+                "Sound config applied: {} normal, {} streaming channels",
+                SoundSystemConfig.getNumberNormalChannels(),
+                SoundSystemConfig.getNumberStreamingChannels());
     }
 }

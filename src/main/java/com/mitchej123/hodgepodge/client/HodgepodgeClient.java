@@ -14,6 +14,7 @@ import com.mitchej123.hodgepodge.client.handlers.ClientKeyListener;
 import com.mitchej123.hodgepodge.client.handlers.ReloadSoundsGui;
 import com.mitchej123.hodgepodge.commands.AllocationsCommand;
 import com.mitchej123.hodgepodge.commands.DumpTextureAtlasCommand;
+import com.mitchej123.hodgepodge.commands.PacketStatsCommand;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.SoundConfig;
@@ -68,6 +69,7 @@ public class HodgepodgeClient {
 
         ClientCommandHandler.instance.registerCommand(new AllocationsCommand());
         ClientCommandHandler.instance.registerCommand(new DumpTextureAtlasCommand());
+        ClientCommandHandler.instance.registerCommand(new PacketStatsCommand());
 
         FMLCommonHandler.instance().bus().register(new ClientKeyListener());
 

@@ -7,6 +7,8 @@ import com.mitchej123.hodgepodge.client.sound.SoundSetupHandler;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
+import com.mitchej123.hodgepodge.core.shared.AsyncFmlFileLog;
+import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
 import com.mitchej123.hodgepodge.mixins.hooks.ASMDataStringPooler;
 import com.mitchej123.hodgepodge.mixins.hooks.ChunkGenScheduler;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
@@ -83,6 +85,8 @@ public class Hodgepodge {
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
+        // Re-wraps contexts a log4j reconfigure reset since the coremod ran.
+        if (!EarlyConfig.noAsyncFmlFileLog) AsyncFmlFileLog.install();
         if (event.getSide() == Side.CLIENT) {
             HodgepodgeClient.postInit();
         }

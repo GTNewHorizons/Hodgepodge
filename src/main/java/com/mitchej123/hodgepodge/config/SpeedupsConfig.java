@@ -250,6 +250,13 @@ public class SpeedupsConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean optimizeResourcePackPath;
+
+    @Config.Comment({
+            "Keep the sound engine across the resource reload at the end of mod loading instead of restarting it.",
+            "Only when no sound has been created yet and the sound config is unchanged. Later reloads are unaffected." })
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean keepSoundEngineAtBoot;
     // endregion
 
     // Biomes O' Plenty

@@ -4,6 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.util.LongHashMap;
 
+import com.mitchej123.hodgepodge.client.scrolllist.ScrollListInput;
+import com.mitchej123.hodgepodge.client.sound.OutputDeviceSupport;
 import com.mitchej123.hodgepodge.client.sound.ReverbSupport;
 import com.mitchej123.hodgepodge.client.sound.SoundDeviceTweaks;
 import com.mitchej123.hodgepodge.util.SnapshotLongHashMap;
@@ -25,6 +27,7 @@ public class ClientTicker {
 
             if (ticks % 5 == 0) {
                 debugPieTextOffset++;
+                OutputDeviceSupport.tick();
                 SoundDeviceTweaks.tick();
                 ReverbSupport.tick();
             }
@@ -36,6 +39,13 @@ public class ClientTicker {
                     snap.publishSnapshot();
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onRenderTick(TickEvent.RenderTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) {
+            ScrollListInput.onFrameStart();
         }
     }
 

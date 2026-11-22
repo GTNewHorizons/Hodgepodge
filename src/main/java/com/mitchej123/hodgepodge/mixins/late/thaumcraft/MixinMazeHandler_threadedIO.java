@@ -29,7 +29,7 @@ public class MixinMazeHandler_threadedIO {
     public static void saveMaze(World world) {
         NBTTagCompound tag = writeNBT();
         NBTTagCompound parentTag = new NBTTagCompound();
-        parentTag.setTag("data", tag);
+        parentTag.setTag("Data", tag);
         final String filename;
 
         // Adds support for Salis Arcana updating the labyrinth file format

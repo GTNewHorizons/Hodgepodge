@@ -142,6 +142,11 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean showInventoryEffectIcons;
 
+    @Config.Comment("Uses a new player inventory texture and moves the 2x2 crafting grid, its output slot and the crafting title 2 pixels right and 4 pixels up.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean moveInventoryCraftingGrid;
+
     @Config.Comment("Stops rendering the crosshair when you are playing in third person")
     @Config.DefaultBoolean(true)
     public static boolean hideCrosshairInThirdPerson;
@@ -187,6 +192,10 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean texturedScrollbar;
 
+    @Config.Comment("Draw the anvil enchantment cost text with a normal shadow on a translucent box and add the Inventory label, like modern vanilla")
+    @Config.DefaultBoolean(true)
+    public static boolean modernAnvilLabels;
+
     @Config.Comment("Sets the interval for auto saves in ticks (20 ticks = 1 second)")
     @Config.RangeInt(min = 1)
     @Config.DefaultInt(900)
@@ -223,6 +232,11 @@ public class TweaksConfig {
     @Config.Comment("Better ModList")
     @Config.DefaultBoolean(true)
     public static boolean betterModList;
+
+    @Config.Comment("Handle mouse input of scrolling lists (GuiSlot, GuiScrollingList) in mouse events instead of drawScreen, and keep the scroll bar drag anchored to the pressed point")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixScrollingLists;
 
     @Config.Comment({ "Controls the default sorting on the mod list GUI.", "0 - Default sort (load order)",
             "1 - A to Z sort", "2 - Z to A sort" })
