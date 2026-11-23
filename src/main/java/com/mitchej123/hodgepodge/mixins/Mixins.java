@@ -1378,6 +1378,577 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)),
     LOCALIZE_IC2_NEI_TITLES(new MixinBuilder("Localize IC2 NEI recipe handler titles")
             .addClientMixins("ic2.MixinIc2NeiHandlerTitles").addRequiredMod(TargetedMod.IC2).setPhase(Phase.LATE)),
+    IC2_HOVER_MODE_FIX(new MixinBuilder()
+            .addCommonMixins("ic2.MixinIc2QuantumSuitHoverMode")
+            .setApplyIf(() -> FixesConfig.fixIc2HoverMode)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
+    IC2_ARMOR_LAG_FIX(new MixinBuilder()
+            .addCommonMixins(
+                    "ic2.MixinElectricItemManager",
+                    "ic2.MixinIC2ArmorHazmat",
+                    "ic2.MixinIC2ArmorJetpack",
+                    "ic2.MixinIC2ArmorNanoSuit",
+                    "ic2.MixinIC2ArmorNightvisionGoggles",
+                    "ic2.MixinIC2ArmorQuantumSuit",
+                    "ic2.MixinIC2ArmorSolarHelmet",
+                    "ic2.MixinIC2ArmorStaticBoots")
+            .setApplyIf(() -> FixesConfig.fixIc2ArmorLag)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
+    IC2_CROP_TRAMPLING_FIX(new MixinBuilder()
+            .addCommonMixins("ic2.MixinIC2TileEntityCrop")
+            .setApplyIf(() -> FixesConfig.fixIc2CropTrampling)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
+    IC2_SYNC_REACTORS(new MixinBuilder("Synchronize IC2 reactors for more consistent operation")
+            .addCommonMixins(
+                    "ic2.sync.MixinTEReactorChamber",
+                    "ic2.sync.MixinTEReactor")
+            .setApplyIf(() -> TweaksConfig.synchronizeIC2Reactors)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
+    IC2_CELL(new MixinBuilder("No IC2 Cell Consumption in tanks")
+            .addCommonMixins("ic2.MixinIC2ItemCell")
+            .setApplyIf(() -> TweaksConfig.ic2CellWithContainer)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
+    IC2_SPEEDUP_REACTOR_SIZE_COMPUTATION(new MixinBuilder()
+            .addCommonMixins(
+                    "ic2.MixinTEReactorCacheReactorSize",
+                    "ic2.MixinDirection_Memory")
+            .setApplyIf(() -> SpeedupsConfig.speedupIC2ReactorSize)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
+    IC2_KEYBINDS_ACTIVATE_IN_GUI_FIX(new MixinBuilder("Prevent Industrialcraft keybinds from activating in GUIs")
+            .addClientMixins("ic2.MixinKeyboardClient_sendKeyUpdate")
+            .setApplyIf(() -> FixesConfig.fixIc2KeybindsInGuis)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
+    IC2_FIX_REACTOR_BLOCK_WORLD_LEAK(new MixinBuilder()
+            .addCommonMixins("ic2.MixinBlockReactorChamber_FixLeak")
+            .setApplyIf(() -> MemoryConfig.leaks.fixIC2BlockReactorLeak)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
+    IC2_KEYBINDS_IGNORE_KEY_STATE(new MixinBuilder("Fix IC2 keybinds using hardware key state instead of KeyBinding state")
+            .addClientMixins("ic2.MixinKeyboardClient_sendKeyUpdate_isKeyDown")
+            .setApplyIf(() -> FixesConfig.fixIc2KeybindsIgnoreKeyState)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
+    IC2_TIN_CAN(new MixinBuilder("Fix IC2 filled tin cans not running logic on both client and server")
+            .addCommonMixins("ic2.MixinIc2TinCan")
+            .setApplyIf(() -> FixesConfig.fixIc2TinCan)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
+    IC2_RUBBER_SAPLING_BONEMEAL_FIX(new MixinBuilder("Prevent IC2 rubber saplings from consuming bone meal twice")
+            .addCommonMixins("ic2.MixinBlockRubSapling")
+            .setApplyIf(() -> FixesConfig.fixIc2RubberSaplingBonemeal)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
+    IC2_EID_COMPAT(new MixinBuilder("Fix EndlessIds incompatibility with IC2")
+            .addCommonMixins("ic2.MixinIC2TileEntityTerra_EIDCompat")
+            .setApplyIf(() -> FixesConfig.fixIc2Eid)
+            .addRequiredMod(TargetedMod.IC2)
+            .addRequiredMod(TargetedMod.ENDLESSIDS)
+            .setPhase(Phase.LATE)),
+    // endregion
+
+
+    // Disable update checkers
+    COFH_CORE_UPDATE_CHECK(new MixinBuilder("Yeet COFH Core Update Check")
+            .addCommonMixins("cofhcore.MixinCoFHCoreUpdateCheck")
+            .setApplyIf(() -> FixesConfig.removeUpdateChecks)
+            .addRequiredMod(TargetedMod.COFH_CORE)
+            .setPhase(Phase.EARLY)),
+    BIBLIOCRAFT_UPDATE_CHECK(new MixinBuilder("Yeet Bibliocraft Update Check")
+            .addClientMixins("bibliocraft.MixinVersionCheck")
+            .setApplyIf(() -> FixesConfig.removeUpdateChecks)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
+            .setPhase(Phase.LATE)),
+    DAMAGE_INDICATORS_UPDATE_CHECK(new MixinBuilder("Yeet Damage Indicators Update Check")
+            .addClientMixins("damageindicators.MixinDIClientProxy")
+            .setApplyIf(() -> FixesConfig.removeUpdateChecks)
+            .addRequiredMod(TargetedMod.DAMAGE_INDICATORS)
+            .setPhase(Phase.LATE)),
+
+    // COFH
+    COFH_REMOVE_TE_CACHE(new MixinBuilder("Remove CoFH tile entity cache")
+            .addCommonMixins("minecraft.MixinWorld_CoFH_TE_Cache")
+            .setApplyIf(() -> ASMConfig.cofhWorldTransformer)
+            .addRequiredMod(TargetedMod.COFH_CORE)
+            .setPhase(Phase.EARLY)),
+    FIX_ORE_DICT_NPE(new MixinBuilder("Fix NPE in OreDictionaryArbiter")
+            .addCommonMixins("cofhcore.MixinOreDictionaryArbiter")
+            .addRequiredMod(TargetedMod.COFH_CORE)
+            .setApplyIf(() -> FixesConfig.fixCofhOreDictNPE)
+            .setPhase(Phase.EARLY)),
+    FIX_ORE_DICT_CME(new MixinBuilder("Fix race condition in CoFH oredict")
+            .addClientMixins("cofhcore.MixinFMLEventHandler")
+            .addRequiredMod(TargetedMod.COFH_CORE)
+            .setApplyIf(() -> FixesConfig.fixCofhOreDictCME)
+            .setPhase(Phase.EARLY)),
+    COFH_IMPROVE_BREAKBLOCK(new MixinBuilder("Improve CoFH breakBlock method to support mods")
+            .addClientMixins("cofhcore.MixinBlockHelper")
+            .addRequiredMod(TargetedMod.COFH_CORE)
+            .setApplyIf(() -> TweaksConfig.improveCofhBreakBlock)
+            .setPhase(Phase.EARLY)),
+    MFR_FIX_COFH_VALIDATE(new MixinBuilder("Remove CoFH TE cache usage from MFR")
+            .addCommonMixins(
+                    "minefactoryreloaded.MixinTileEntityBase",
+                    "minefactoryreloaded.MixinTileEntityRedNetCable")
+            .addRequiredMod(TargetedMod.MINEFACTORY_RELOADED)
+            .setApplyIf(() -> ASMConfig.cofhWorldTransformer)
+            .setPhase(Phase.LATE)),
+    TE_FIX_COFH_VALIDATE(new MixinBuilder("Remove CoFH TE cache usage from TE")
+            .addCommonMixins("thermalexpansion.MixinTileInventoryTileLightFalse")
+            .addRequiredMod(TargetedMod.THERMALEXPANSION)
+            .setApplyIf(() -> ASMConfig.cofhWorldTransformer)
+            .setPhase(Phase.LATE)),
+    COFH_NULL_SMART_BYTE_ARRAY(new MixinBuilder("Fix NBTTagSmartByteArray sending null to NBTTagByteArray causing NPE when saving chunks")
+            .addCommonMixins("cofhcore.MixinNBTTagSmartByteArray")
+            .addRequiredMod(TargetedMod.COFH_CORE)
+            .setApplyIf(() -> FixesConfig.fixCofhNullByteArray)
+            .setPhase(Phase.EARLY)),
+    COFH_COMMAND_TPX_FIX(new MixinBuilder("Fix logic of /cofh tpx")
+            .addCommonMixins("cofhcore.MixinCoFHCommandTpxFix")
+            .setApplyIf(() -> FixesConfig.fixCofhTpxCommand)
+            .addRequiredMod(TargetedMod.COFH_CORE)
+            .setPhase(Phase.EARLY)),
+
+    // Various Exploits/Fixes
+    GC_TIME_COMMAND_FIX(new MixinBuilder("GC Time Fix")
+            .addCommonMixins("minecraft.MixinTimeCommandGalacticraftFix")
+            .setApplyIf(() -> FixesConfig.fixTimeCommandWithGC)
+            .addRequiredMod(TargetedMod.GALACTICRAFT_CORE)
+            .setPhase(Phase.EARLY)),
+
+    // Unbind Keybinds by default
+    UNBIND_KEYS_COFH(new MixinBuilder("Unbind COFH Core keybinds")
+            .addClientMixins("cofhcore.MixinProxyClient")
+            .setApplyIf(() -> TweaksConfig.unbindKeybindsByDefault)
+            .addRequiredMod(TargetedMod.COFH_CORE)
+            .setPhase(Phase.EARLY)),
+
+    // Chunk generation/population
+    DISABLE_CHUNK_TERRAIN_GENERATION(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinChunkProviderServer_DisableTerrain")
+            .setApplyIf(() -> TweaksConfig.disableChunkTerrainGeneration)
+            .addExcludedMod(TargetedMod.ENDLESSIDS)
+            .setPhase(Phase.EARLY)),
+    DISABLE_CHUNK_TERRAIN_GENERATION_ENDLESS_IDS(new MixinBuilder()
+            .addCommonMixins("minecraft.MixinChunkProviderServer_DisableTerrain_EndlessIDs")
+            .setApplyIf(() -> TweaksConfig.disableChunkTerrainGeneration)
+            .addRequiredMod(TargetedMod.ENDLESSIDS)
+            .setPhase(Phase.EARLY)),
+    DISABLE_WORLD_TYPE_CHUNK_POPULATION(new MixinBuilder("Disable chunk population tied to chunk generation (ores/structure)")
+            .addCommonMixins("minecraft.MixinChunkProviderServer_DisablePopulation")
+            .setApplyIf(() -> TweaksConfig.disableWorldTypeChunkPopulation)
+            .setPhase(Phase.EARLY)),
+    DISABLE_MODDED_CHUNK_POPULATION(new MixinBuilder("Disable all other mod chunk population (e.g. Natura clouds")
+            .addCommonMixins("minecraft.MixinChunkProviderServer_DisableModGeneration")
+            .setApplyIf(() -> TweaksConfig.disableModdedChunkPopulation)
+            .setPhase(Phase.EARLY)),
+
+    // Railcraft Anchors
+    WAKE_ANCHORS_ON_LOGIN(new MixinBuilder("Wake passive anchors on login")
+            .addCommonMixins(
+                    "railcraft.MixinTileAnchorPassive",
+                    "railcraft.MixinTileAnchorPersonal")
+            .setApplyIf(() -> TweaksConfig.installAnchorAlarm)
+            .addRequiredMod(TargetedMod.RAILCRAFT)
+            .setPhase(Phase.LATE)),
+
+    // Hunger overhaul
+    HUNGER_OVERHAUL_LOW_STAT_EFFECT(new MixinBuilder("Patch unintended low stat effects")
+            .addCommonMixins("hungeroverhaul.MixinHungerOverhaulLowStatEffect")
+            .setApplyIf(() -> FixesConfig.fixHungerOverhaul)
+            .addRequiredMod(TargetedMod.HUNGER_OVERHAUL)
+            .setPhase(Phase.LATE)),
+    HUNGER_OVERHAUL_REGEN(new MixinBuilder("Patch Regen")
+            .addCommonMixins("hungeroverhaul.MixinHungerOverhaulHealthRegen")
+            .setApplyIf(() -> FixesConfig.fixHungerOverhaul)
+            .addRequiredMod(TargetedMod.HUNGER_OVERHAUL)
+            .setPhase(Phase.LATE)),
+    HUNGER_OVERHAUL_0_HUNGER(new MixinBuilder("Fix some items restore 0 hunger")
+            .addCommonMixins("hungeroverhaul.MixinHungerOverhaulModuleHarvestCraft")
+            .setApplyIf(() -> FixesConfig.fixHungerOverhaulRestore0Hunger)
+            .addRequiredMod(TargetedMod.HUNGER_OVERHAUL)
+            .addRequiredMod(TargetedMod.HARVESTCRAFT)
+            .setPhase(Phase.LATE)),
+
+    // Thaumcraft
+    SPEEDUP_GET_INFUSION_RECIPES(new MixinBuilder()
+            .addCommonMixins("thaumcraft.MixinThaumcraftApi_SpeedupGetInfusionRecipe")
+            .setApplyIf(() -> SpeedupsConfig.speedupThaumGetInfusionRecipes)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
+    THREADED_THAUMCRAFT_MAZE_SAVING(new MixinBuilder()
+            .addCommonMixins("thaumcraft.MixinMazeHandler_threadedIO")
+            .setApplyIf(() -> TweaksConfig.threadedWorldDataSaving)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
+    ADD_CV_SUPPORT_TO_WAND_PEDESTAL(new MixinBuilder("CV Support for Wand Pedestal")
+            .addCommonMixins("thaumcraft.MixinTileWandPedestal")
+            .setApplyIf(() -> TweaksConfig.addCVSupportToWandPedestal)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
+    FIX_ASPECT_SORTING(new MixinBuilder("Fix Thaumcraft Aspects not being sorted by name")
+            .addClientMixins(
+                    "thaumcraft.MixinGuiResearchRecipe",
+                    "thaumcraft.MixinGuiResearchTable",
+                    "thaumcraft.MixinGuiThaumatorium",
+                    "thaumcraft.MixinItem_SortAspectsByName")
+            .setApplyIf(() -> FixesConfig.fixThaumcraftAspectSorting)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
+    FIX_GOLEM_MARKER_LOADING(new MixinBuilder("Fix golem marker loading failure when dimensionId larger than MAX_BYTE")
+            .addCommonMixins(
+                    "thaumcraft.MixinEntityGolemBase",
+                    "thaumcraft.MixinItemGolemBell")
+            .setApplyIf(() -> FixesConfig.fixThaumcraftGolemMarkerLoading)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
+    FIX_WORLD_COORDINATE_HASHING_METHOD(new MixinBuilder("Implement a proper hashing method for WorldCoordinates")
+            .addCommonMixins("thaumcraft.MixinWorldCoordinates")
+            .setApplyIf(() -> FixesConfig.fixThaumcraftWorldCoordinatesHashingMethod)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
+    FIX_MAGICAL_LEAVES_LAG(new MixinBuilder("Fix Thaumcraft leaves frequent ticking")
+            .addCommonMixins(
+                    "thaumcraft.MixinBlockMagicalLeaves",
+                    "thaumcraft.MixinBlockMagicalLog")
+            .setApplyIf(() -> FixesConfig.fixThaumcraftLeavesLag)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
+    FIX_THAUMCRAFT_VIS_DUPLICATION(new MixinBuilder()
+            .addCommonMixins("thaumcraft.MixinTileWandPedestal_VisDuplication")
+            .setApplyIf(() -> FixesConfig.fixWandPedestalVisDuplication)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
+    FIX_NULL_HANDLING_ITEMWISPESSENCE(new MixinBuilder("Fix handling of null stacks in ItemWispEssence")
+            .addCommonMixins("thaumcraft.MixinItemWispEssence_Both")
+            .addClientMixins("thaumcraft.MixinItemWispEssence_Client")
+            .setApplyIf(() -> FixesConfig.fixNullHandlingItemWispEssence)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
+    FIX_THAUMCRAFT_CHECK_FOR_EE3_ITEM(new MixinBuilder()
+            .addCommonMixins("thaumcraft.MixinUtils")
+            .setApplyIf(() -> FixesConfig.fixThaumcraftEE3Check)
+            .addRequiredMod(TargetedMod.THAUMCRAFT)
+            .setPhase(Phase.LATE)),
+
+    // BOP
+    FIX_QUICKSAND_XRAY(new MixinBuilder()
+            .addCommonMixins("biomesoplenty.MixinBlockMud_FixXray")
+            .setApplyIf(() -> FixesConfig.fixPerspectiveCamera)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    FIX_BOP_EMERALD_GENERATION(new MixinBuilder()
+            .addCommonMixins("biomesoplenty.MixinBiomeEmeraldGeneration")
+            .setApplyIf(() -> FixesConfig.fixBOPEmeraldGeneration)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    DEDUPLICATE_FORESTRY_COMPAT_IN_BOP(new MixinBuilder()
+            .addCommonMixins("biomesoplenty.MixinForestryIntegration")
+            .setApplyIf(() -> FixesConfig.deduplicateForestryCompatInBOP)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_BOP_BIOME_FOG(new MixinBuilder()
+            .addClientMixins(
+                    "biomesoplenty.MixinFogHandler",
+                    "biomesoplenty.AccessorFogHandler")
+            .setApplyIf(() -> SpeedupsConfig.speedupBOPFogHandling)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    BIG_FIR_TREES(new MixinBuilder()
+            .addCommonMixins("biomesoplenty.MixinBlockBOPSapling")
+            .setApplyIf(() -> TweaksConfig.makeBigFirsPlantable)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    JAVA12_BOP(new MixinBuilder("BOP Java12-safe reflection")
+            .addCommonMixins("biomesoplenty.MixinBOPBiomes")
+            .addCommonMixins("biomesoplenty.MixinBOPReflectionHelper")
+            .setApplyIf(() -> FixesConfig.java12BopCompat)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    DISABLE_QUICKSAND_GENERATION(new MixinBuilder()
+            .addCommonMixins("biomesoplenty.MixinDisableQuicksandGeneration")
+            .setApplyIf(() -> TweaksConfig.removeBOPQuicksandGeneration)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    DISABLE_DONATOR_EFFECTS(new MixinBuilder()
+            .addCommonMixins(
+                    "biomesoplenty.MixinBOPEventHandler",
+                    "biomesoplenty.MixinTrailManager")
+            .setApplyIf(() -> TweaksConfig.removeBOPDonatorEffect)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_BOP_ENTITY_PIXIE(new MixinBuilder("Use fast atan2 for Pixie yaw calculation")
+            .addCommonMixins("biomesoplenty.MixinEntityPixie_FastAtan2")
+            .setApplyIf(() -> SpeedupsConfig.speedupBOPEntityPixie)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    SPEEDUP_BOP_BIOME_DECORATION(new MixinBuilder("Cache allocations in BOP biome decoration")
+            .addCommonMixins(
+                    "biomesoplenty.MixinRandomForcedPositiveOwned_Reusable",
+                    "biomesoplenty.MixinBOPBiomeDecorator_CacheRandom",
+                    "biomesoplenty.MixinWorldGenBOPFlora_CacheItemStack",
+                    "biomesoplenty.MixinWorldGenBOPTallGrass_CacheItemStack",
+                    "biomesoplenty.MixinBiomeFeatures_CacheFields")
+            .setApplyIf(() -> SpeedupsConfig.speedupBOPBiomeDecoration)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    FIX_BOP_CASCADING_KELP(new MixinBuilder("Fixes cascading worldgen caused by BOP Kelp.")
+            .addCommonMixins("biomesoplenty.MixinWorldGenKelp")
+            .setApplyIf(() -> FixesConfig.fixBOPCascadingKelp)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    BOP_EID_COMPAT(new MixinBuilder("Fix EndlessIds incompatibility with BoP")
+            .addCommonMixins("biomesoplenty.MixinBOPBiomeUtils_EIDCompat")
+            .setApplyIf(() -> FixesConfig.fixBoPEid)
+            .addRequiredMod(TargetedMod.BOP)
+            .addRequiredMod(TargetedMod.ENDLESSIDS)
+            .setPhase(Phase.LATE)),
+    FIX_BOP_SAPLING_ICON(new MixinBuilder("Fix BOP sapling icon when growth stage bit is set in meta")
+            .addCommonMixins("biomesoplenty.MixinBlockBOPColorizedSapling_FixIcon")
+            .setApplyIf(() -> FixesConfig.fixBOPSaplingIcon)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+    ADD_LAVENDER_TO_BONE_MEAL(new MixinBuilder()
+            .addCommonMixins("biomesoplenty.MixinBiomeGenLavenderFields")
+            .setApplyIf(() -> TweaksConfig.addBOPLavenderToBoneMealPool)
+            .addRequiredMod(TargetedMod.BOP)
+            .setPhase(Phase.LATE)),
+
+    // Bibliowood Recipe Fix
+    BIBLIOWOODS_RECIPE_FIX(new MixinBuilder("Fixes Bibliowoods Forestry recipes")
+            .addCommonMixins("bibliowood.forestry.MixinTabRegistry")
+            .setApplyIf(() -> FixesConfig.fixBibliowoodsForestryRecipes)
+            .addRequiredMod(TargetedMod.BIBLIOWOODSFORESTRY)
+            .addExcludedMod(TargetedMod.DREAMCRAFT)
+            .setPhase(Phase.LATE)),
+
+    // Minefactory Reloaded
+    DISARM_SACRED_TREE(new MixinBuilder("Prevents Sacred Rubber Tree Generation")
+            .addCommonMixins("minefactoryreloaded.MixinBlockRubberSapling")
+            .addRequiredMod(TargetedMod.MINEFACTORY_RELOADED)
+            .setApplyIf(() -> FixesConfig.disableMassiveSacredTreeGeneration)
+            .setPhase(Phase.LATE)),
+    MFR_IMPROVE_BLOCKSMASHER(new MixinBuilder("Improve MFR block smasher")
+            .addCommonMixins("minefactoryreloaded.MixinTileEntityBlockSmasher")
+            .addRequiredMod(TargetedMod.MINEFACTORY_RELOADED)
+            .setApplyIf(() -> TweaksConfig.improveMfrBlockSmasher)
+            .setPhase(Phase.LATE)),
+    MFR_IMPROVE_BLOCKBREAKER(new MixinBuilder("Improve MFR block breaker")
+            .addCommonMixins("minefactoryreloaded.MixinTileEntityBlockBreaker")
+            .addRequiredMod(TargetedMod.MINEFACTORY_RELOADED)
+            .setApplyIf(() -> TweaksConfig.improveMfrBlockBreaker)
+            .setPhase(Phase.LATE)),
+
+    // Immersive engineering
+    JAVA12_IMMERSIVE_ENGINERRING(new MixinBuilder("Immersive Engineering Java-12 safe potion array resizing")
+            .addCommonMixins("immersiveengineering.MixinIEPotions")
+            .setApplyIf(() -> FixesConfig.java12ImmersiveEngineeringCompat)
+            .addRequiredMod(TargetedMod.IMMERSIVE_ENGINENEERING)
+            .setPhase(Phase.LATE)),
+    JAVA12_MINE_CHEM(new MixinBuilder("Minechem Java-12 safe potion array resizing")
+            .addCommonMixins("minechem.MixinPotionInjector")
+            .setApplyIf(() -> FixesConfig.java12MineChemCompat)
+            .addRequiredMod(TargetedMod.MINECHEM)
+            .setPhase(Phase.LATE)),
+
+    // Modular Powersuits
+    MPS_PREVENT_RF_ENERGY_SYPHON(new MixinBuilder("Prevent MPS from charging and draining RF from Inventory")
+            .addCommonMixins("mps.MixinElectricAdapterRF")
+            .setApplyIf(() -> TweaksConfig.preventMPSEnergyTransferRF)
+            .addRequiredMod(TargetedMod.MODULARPOWERSUITS)
+            .setPhase(Phase.LATE)),
+    MPS_PREVENT_EU_ENERGY_SYPHON(new MixinBuilder("Prevent MPS from charging and draining EU from Inventory")
+            .addCommonMixins("mps.MixinElectricAdapterEU")
+            .setApplyIf(() -> TweaksConfig.preventMPSEnergyTransferEU)
+            .addRequiredMod(TargetedMod.MODULARPOWERSUITS)
+            .setPhase(Phase.LATE)),
+    MPS_PREVENT_ME_ENERGY_SYPHON(new MixinBuilder("Prevent MPS from charging and draining ME from Inventory")
+            .addCommonMixins("mps.MixinElectricAdapterME")
+            .setApplyIf(() -> TweaksConfig.preventMPSEnergyTransferME)
+            .addRequiredMod(TargetedMod.MODULARPOWERSUITS)
+            .setPhase(Phase.LATE)),
+
+    // MrTJPCore (Project Red)
+    FIX_HUD_LIGHTING_GLITCH(new MixinBuilder("HUD Lighting glitch")
+            .addCommonMixins("mrtjpcore.MixinFXEngine")
+            .setApplyIf(() -> TweaksConfig.fixHudLightingGlitch)
+            .addRequiredMod(TargetedMod.MRTJPCORE_V_BEFORE_113)
+            .setPhase(Phase.LATE)),
+    FIX_POPPING_OFF(new MixinBuilder()
+            .addCommonMixins("mrtjpcore.MixinPlacementLib")
+            .setApplyIf(() -> TweaksConfig.fixComponentsPoppingOff)
+            .addRequiredMod(TargetedMod.MRTJPCORE_V_BEFORE_113)
+            .setPhase(Phase.LATE)),
+
+    // Automagy
+    IMPLEMENTS_CONTAINER_FOR_THIRSTY_TANK(new MixinBuilder("Thirsty Tank Container")
+            .addCommonMixins("automagy.MixinItemBlockThirstyTank")
+            .setApplyIf(() -> TweaksConfig.thirstyTankContainer)
+            .addRequiredMod(TargetedMod.AUTOMAGY)
+            .setPhase(Phase.LATE)),
+
+    // Better HUD
+    FIX_BETTERHUD_ARMOR_BAR(new MixinBuilder("Fix better HUD armor display breaking with skulls")
+            .addCommonMixins("betterhud.MixinSkullDurabilityDisplay")
+            .setApplyIf(() -> FixesConfig.fixBetterHUDArmorDisplay)
+            .addRequiredMod(TargetedMod.BETTERHUD)
+            .setPhase(Phase.LATE)),
+    FIX_BETTERHUD_HEARTS_FREEZE(new MixinBuilder("Fix better HUD freezing the game when trying to render high amounts of hp")
+            .addCommonMixins("betterhud.MixinHealthRender")
+            .setApplyIf(() -> FixesConfig.fixBetterHUDHPDisplay)
+            .addRequiredMod(TargetedMod.BETTERHUD)
+            .setPhase(Phase.LATE)),
+
+    // ProjectE
+    FIX_FURNACE_ITERATION(new MixinBuilder("Speedup Furnaces")
+            .addCommonMixins("projecte.MixinObjHandler")
+            .setApplyIf(() -> SpeedupsConfig.speedupVanillaFurnace)
+            .addRequiredMod(TargetedMod.PROJECTE)
+            .setPhase(Phase.LATE)),
+
+    // LOTR
+    FIX_LOTR_FURNACE_ERROR(new MixinBuilder("Patches lotr to work with the vanilla furnace speedup")
+            .addCommonMixins("lotr.MixinLOTRRecipes")
+            .setApplyIf(() -> SpeedupsConfig.speedupVanillaFurnace)
+            .addRequiredMod(TargetedMod.GTNHLIB)
+            .addRequiredMod(TargetedMod.LOTR)
+            .setPhase(Phase.LATE)),
+    FIX_LOTR_JAVA12(new MixinBuilder("Fix lotr java 12+ compat")
+            .addCommonMixins(
+                    "lotr.MixinLOTRLogReflection",
+                    "lotr.MixinRedirectHuornAI",
+                    "lotr.MixinRemoveUnlockFinalField")
+            .setApplyIf(() -> FixesConfig.java12LotrCompat)
+            .addRequiredMod(TargetedMod.LOTR)
+            .setPhase(Phase.LATE)),
+    DISABLE_LOTR_LANG_HELPER_BY_DEFAULT(new MixinBuilder("Set lotr language helper to false by default")
+            .addCommonMixins("lotr.MixinLOTRConfig")
+            .setApplyIf(() -> FixesConfig.lotrLanguageHelperDefault)
+            .addRequiredMod(TargetedMod.LOTR)
+            .setPhase(Phase.LATE)
+    ),
+
+    // Journeymap
+    FIX_JOURNEYMAP_KEYBINDS(new MixinBuilder()
+            .addClientMixins("journeymap.MixinConstants")
+            .setApplyIf(() -> FixesConfig.fixJourneymapKeybinds)
+            .addRequiredMod(TargetedMod.JOURNEYMAP)
+            .setPhase(Phase.LATE)),
+    FIX_JOURNEYMAP_ILLEGAL_FILE_PATH_CHARACTER(new MixinBuilder()
+            .addClientMixins("journeymap.MixinWorldData")
+            .setApplyIf(() -> FixesConfig.fixJourneymapFilePath)
+            .addRequiredMod(TargetedMod.JOURNEYMAP)
+            .setPhase(Phase.LATE)),
+    FIX_JOURNEYMAP_JUMPY_SCROLLING(new MixinBuilder("Fix Journeymap jumpy scrolling in the waypoint manager")
+            .addClientMixins("journeymap.MixinWaypointManager")
+            .setApplyIf(() -> FixesConfig.fixJourneymapJumpyScrolling)
+            .addRequiredMod(TargetedMod.JOURNEYMAP)
+            .setPhase(Phase.LATE)),
+
+    // Xaero's World Map
+    FIX_XAEROS_WORLDMAP_SCROLL(new MixinBuilder("Fix Xaero's World Map map screen scrolling")
+            .addClientMixins("xaeroworldmap.MixinGuiMap")
+            .setApplyIf(() -> FixesConfig.fixXaerosWorldMapScroll)
+            .addRequiredMod(TargetedMod.XAEROWORLDMAP)
+            .addRequiredMod(TargetedMod.LWJGL3IFY)
+            .setPhase(Phase.LATE)),
+
+    // Xaero's Minimap
+    FIX_XAEROS_MINIMAP_ENTITYDOT(new MixinBuilder("Fix Xaero's Minimap player entity dot rendering when arrow is chosen")
+            .addClientMixins("xaerominimap.MixinMinimapRenderer")
+            .setApplyIf(() -> FixesConfig.fixXaerosMinimapEntityDot)
+            .addRequiredMod(TargetedMod.XAEROMINIMAP)
+            .setPhase(Phase.LATE)),
+
+    // Pam's Harvest the Nether
+    FIX_IGNIS_FRUIT_AABB(new MixinBuilder("Ignis Fruit")
+            .addCommonMixins("harvestthenether.MixinBlockPamFruit")
+            .setApplyIf(() -> FixesConfig.fixIgnisFruitAABB)
+            .addRequiredMod(TargetedMod.HARVESTTHENETHER)
+            .setPhase(Phase.LATE)),
+    FIX_NETHER_LEAVES_FACE_RENDERING(new MixinBuilder("Nether Leaves")
+            .addClientMixins("harvestthenether.MixinBlockNetherLeaves")
+            .setApplyIf(() -> FixesConfig.fixNetherLeavesFaceRendering)
+            .addRequiredMod(TargetedMod.HARVESTTHENETHER)
+            .setPhase(Phase.LATE)),
+    FIX_NETHER_SEED_PLANT_BLOCK_NULL(
+            new MixinBuilder("Nether Seeds")
+                    .addCommonMixins("harvestthenether.MixinItemNetherSeed")
+                    .setApplyIf(() -> FixesConfig.fixNetherSeedPlantBlockNull)
+                    .addRequiredMod(TargetedMod.HARVESTTHENETHER)
+                    .setPhase(Phase.LATE)),
+
+    // Potion Render Offset Fixes - Various Mods
+    FIX_BAUBLES_INVENTORY_OFFSET_WITH_POTIONS(new MixinBuilder("Baubles Inventory with Potions")
+            .addClientMixins("baubles.MixinGuiEvents")
+            .setApplyIf(() -> TweaksConfig.fixPotionRenderOffset)
+            .addRequiredMod(TargetedMod.BAUBLES)
+            .setPhase(Phase.LATE)),
+    FIX_GALACTICRAFT_INVENTORY_OFFSET_WITH_POTIONS(new MixinBuilder("Galacticraft Inventory with Potions")
+            .addClientMixins("galacticraftcore.MixinGuiExtendedInventory")
+            .setApplyIf(() -> TweaksConfig.fixPotionRenderOffset)
+            .addRequiredMod(TargetedMod.GALACTICRAFT_CORE)
+            .setPhase(Phase.LATE)),
+    FIX_TRAVELLERSGEAR_INVENTORY_OFFSET_WITH_POTIONS(new MixinBuilder("Travelers Gear with Potions")
+            .addClientMixins("travellersgear.MixinClientProxy")
+            .setApplyIf(() -> TweaksConfig.fixPotionRenderOffset)
+            .addRequiredMod(TargetedMod.TRAVELLERSGEAR)
+            .setPhase(Phase.LATE)),
+    FIX_TINKER_POTION_EFFECT_OFFSET(new MixinBuilder("Prevents the inventory from shifting when the player has active potion effects")
+            .addRequiredMod(TargetedMod.TINKERSCONSTRUCT)
+            .setApplyIf(() -> TweaksConfig.fixPotionRenderOffset)
+            .addClientMixins("tconstruct.MixinTabRegistry")
+            .setPhase(Phase.LATE)),
+
+    // Extra Tinkers
+    Fix_EXTRATIC_TECONFLICT(new MixinBuilder("Disable ExtraTic's Integration with Metallurgy 3 Precious Materials Module: [Brass, Silver, Electrum & Platinum]")
+            .addCommonMixins(
+                    "extratic.MixinPartsHandler",
+                    "extratic.MixinRecipeHandler")
+            .setApplyIf(() -> FixesConfig.fixExtraTiCTEConflict)
+            .addRequiredMod(TargetedMod.EXTRATIC)
+            .setPhase(Phase.LATE)),
+    // Extra Utilities
+    FIX_EXTRA_UTILITIES_RENDERBLOCK_LEAK(new MixinBuilder()
+            .addClientMixins(
+                    "extrautilities.leaks.MixinRenderBlockConnectedTextures",
+                    "extrautilities.leaks.MixinConnectedTextureMicroMaterial")
+            .setApplyIf(() -> MemoryConfig.leaks.fixExtraUtilitiesConnectedTexturesLeak)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
+    FIX_EXTRA_UTILITIES_UNENCHANTING(new MixinBuilder("Fix Exu Unenchanting")
+            .addCommonMixins("extrautilities.MixinRecipeUnEnchanting")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesUnEnchanting)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
+    FIX_EXTRA_UTILITIES_REPAIR_COST(new MixinBuilder("Fix Exu spikes losing NBT tags (other than enchantments) when being placed on the ground")
+            .addCommonMixins(
+                    "extrautilities.MixinBlockSpike_PreserveNBT",
+                    "extrautilities.MixinTileEntityEnchantedSpike_PreserveNBT")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesPreserveSpikeNBT)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
+    DISABLE_AID_SPAWN_XU_SPIKES(new MixinBuilder("Fixes the vanilla zombie aid spawn triggering when killed by Extra Utilities Spikes")
+            .addCommonMixins("extrautilities.MixinBlockSpike")
+            .setApplyIf(() -> TweaksConfig.disableAidSpawnByXUSpikes)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
+    FIX_EXTRA_UTILITIES_TRANSPARENT_ITEM_RENDER(new MixinBuilder("Fix extra utilities item rendering for transparent items")
+            .addClientMixins("extrautilities.MixinTransparentItemRender")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesItemRendering)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
+    FIX_DRUM_EATING_CELLS(new MixinBuilder("Fix extra utilities drums eating ic2 cells and forestry capsules")
+            .addCommonMixins("extrautilities.MixinBlockDrum")
+            .setApplyIf(() -> FixesConfig.fixExtraUtilitiesDrumEatingCells)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
     LOCALIZE_EXTRA_UTILITIES_NEI_TITLES(new MixinBuilder("Localize Extra Utilities NEI recipe handler titles")
             .addClientMixins("extrautilities.MixinExuNeiHandlerTitles").addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
