@@ -1294,6 +1294,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.packets.MixinNetworkManager_ReceivedProcessingLimit")
             .setApplyIf(() -> FixesConfig.changeReceivedPacketCountLimitToTimeLimit)
             .setPhase(Phase.EARLY)),
+    DROP_SINGLE_XP_ORB(new MixinBuilder("Always drop a single xp orb instead of subdividing into multiple")
+            .addClientMixins("minecraft.MixinEntityXPOrb_DropSingleOrb")
+            .setApplyIf(() -> TweaksConfig.dropSingleXpOrb)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments

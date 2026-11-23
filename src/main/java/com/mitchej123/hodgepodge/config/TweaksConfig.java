@@ -273,6 +273,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean f1ShowHand;
 
+    @Config.Comment("Always drop a single xp orb instead of subdividing into multiple")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean dropSingleXpOrb;
+
     // NBT String Pooling
 
     @Config.Comment("Enable string pooling for NBT TagCompound Keys")
