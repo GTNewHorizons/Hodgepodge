@@ -428,6 +428,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinServerConfigurationManager_FixEndGhostPlayer")
             .setApplyIf(() -> FixesConfig.fixEndGhostPlayer)
             .setPhase(Phase.EARLY)),
+    FIX_PLAYER_TRACKING_AFTER_TELEPORT(new MixinBuilder("Fix missing players after distant teleports")
+            .addCommonMixins("minecraft.MixinEntityTrackerEntry_PlayerTrackingRange")
+            .setApplyIf(() -> FixesConfig.fixPlayerTrackingAfterTeleport)
+            .setPhase(Phase.EARLY)),
     CONFIGURABLE_PORTAL_RATIO(new MixinBuilder("Make Nether portal travel ratio configurable")
             .addCommonMixins("minecraft.MixinWorldProviderHell")
             .setPhase(Phase.EARLY)),
