@@ -24,12 +24,14 @@ public class MixinEntityTrackerEntry_PlayerTrackingRange {
     public Entity myEntity;
 
     // The server can send the destination chunk before the tracker updates the encoded player position
+    // Later reads must keep the encoded position for the spawn adjustment
     @ModifyExpressionValue(
             method = "tryStartWachingThis",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/entity/EntityTrackerEntry;lastScaledXPosition:I",
-                    opcode = Opcodes.GETFIELD))
+                    opcode = Opcodes.GETFIELD,
+                    ordinal = 0))
     private int hodgepodge$useCurrentPlayerX(int encodedX) {
         return myEntity instanceof EntityPlayerMP ? MathHelper.floor_double(myEntity.posX * hodgepodge$POSITION_SCALE)
                 : encodedX;
@@ -40,7 +42,8 @@ public class MixinEntityTrackerEntry_PlayerTrackingRange {
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/entity/EntityTrackerEntry;lastScaledZPosition:I",
-                    opcode = Opcodes.GETFIELD))
+                    opcode = Opcodes.GETFIELD,
+                    ordinal = 0))
     private int hodgepodge$useCurrentPlayerZ(int encodedZ) {
         return myEntity instanceof EntityPlayerMP ? MathHelper.floor_double(myEntity.posZ * hodgepodge$POSITION_SCALE)
                 : encodedZ;
