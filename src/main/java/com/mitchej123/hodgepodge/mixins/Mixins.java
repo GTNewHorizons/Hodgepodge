@@ -1376,6 +1376,15 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixIc2ResourcePackTranslation)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.EARLY)),
+    LOCALIZE_IC2_NEI_TITLES(new MixinBuilder("Localize IC2 NEI recipe handler titles")
+            .addClientMixins(
+                    "ic2.MixinIc2NeiAdvRecipeHandler",
+                    "ic2.MixinIc2NeiFluidCannerRecipeHandler",
+                    "ic2.MixinIc2NeiScrapboxRecipeHandler",
+                    "ic2.MixinIc2NeiSolidCannerRecipeHandler")
+            .setApplyIf(() -> TweaksConfig.localizeIc2NeiTitles)
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
     IC2_HOVER_MODE_FIX(new MixinBuilder()
             .addCommonMixins("ic2.MixinIc2QuantumSuitHoverMode")
             .setApplyIf(() -> FixesConfig.fixIc2HoverMode)
@@ -1945,6 +1954,14 @@ public enum Mixins implements IMixins {
     FIX_DRUM_EATING_CELLS(new MixinBuilder("Fix extra utilities drums eating ic2 cells and forestry capsules")
             .addCommonMixins("extrautilities.MixinBlockDrum")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesDrumEatingCells)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
+    LOCALIZE_EXTRA_UTILITIES_NEI_TITLES(new MixinBuilder("Localize Extra Utilities NEI recipe handler titles")
+            .addClientMixins(
+                    "extrautilities.MixinExuNeiEnderConstructorHandler",
+                    "extrautilities.MixinExuNeiFMPMicroBlocksHandler",
+                    "extrautilities.MixinExuNeiMicroBlocksHandler")
+            .setApplyIf(() -> TweaksConfig.localizeExtraUtilitiesNeiTitles)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
     FIX_GREENSCREEN_MICROBLOCKS(new MixinBuilder("Fix extra utilities Lapis Caelestis microblocks")

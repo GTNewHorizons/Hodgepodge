@@ -374,11 +374,19 @@ public class TweaksConfig {
 
     // Extra Utilities
 
+    @Config.Comment("Localize the NEI recipe handler titles of Extra Utilities (they are hardcoded English strings)")
+    @Config.DefaultBoolean(true)
+    public static boolean localizeExtraUtilitiesNeiTitles;
+
     @Config.Comment("Disables the spawn of zombie aid when zombie is killed by Extra Utilities Spikes, since it can spawn them too far.")
     @Config.DefaultBoolean(true)
     public static boolean disableAidSpawnByXUSpikes;
 
     // Industrialcraft
+
+    @Config.Comment("Localize the NEI recipe handler titles of IC2 (they are hardcoded English strings)")
+    @Config.DefaultBoolean(true)
+    public static boolean localizeIc2NeiTitles;
 
     @Config.Comment("Display fluid localized name in IC2 fluid cell tooltip")
     @Config.DefaultBoolean(true)
