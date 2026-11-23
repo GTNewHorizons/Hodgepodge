@@ -1,6 +1,7 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft;
 
 import net.minecraft.entity.item.EntityXPOrb;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
