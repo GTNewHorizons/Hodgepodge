@@ -1294,6 +1294,10 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.packets.MixinNetworkManager_ReceivedProcessingLimit")
             .setApplyIf(() -> FixesConfig.changeReceivedPacketCountLimitToTimeLimit)
             .setPhase(Phase.EARLY)),
+    DISABLE_PARTICLE_COLLISIONS(new MixinBuilder("Disable collisions for all EntityFX particles for performance")
+            .addClientMixins("minecraft.MixinEntityFX_DisableCollisions")
+            .setApplyIf(() -> TweaksConfig.disableParticleCollisions)
+            .setPhase(Phase.EARLY)),
     // endregion
 
     // region Ic2 adjustments

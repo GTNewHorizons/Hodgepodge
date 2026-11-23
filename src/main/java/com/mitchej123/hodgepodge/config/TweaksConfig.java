@@ -273,6 +273,11 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean f1ShowHand;
 
+    @Config.Comment("Disable collisions for all EntityFX particles for performance")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean disableParticleCollisions;
+
     // NBT String Pooling
 
     @Config.Comment("Enable string pooling for NBT TagCompound Keys")
