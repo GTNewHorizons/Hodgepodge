@@ -34,7 +34,7 @@ commands.time.usageWithGet=/time <set|add> <value> ИЛИ /time get
 
 hodgepodge.soundsmenu.refreshsounds=Обновить звуки
 hodgepodge.bed_respawn.msg=Установить точку респауна
-hodgepodge.menu.mod_options=Настройки модов...
+fml.menu.modoptions=Настройки модов...
 
 hodgepodge.chat.huge_message.logged=§cКто-то попытался отправить вам огромное сообщение в чат, которое выкинуло бы вас с сервера. Обратитесь к администратору сервера за подробностями. При обращении укажите эти данные: идентификатор инцидента %s§c. Начало исходного сообщения: %s
 hodgepodge.chat.huge_message.unlogged=§cКто-то попытался отправить вам огромное сообщение в чат, которое выкинуло бы вас с сервера. Если вы не можете определить источник и это повторяется, попросите администратора сервера включить logHugeChat в HodgePodge. Начало исходного сообщения: %s
@@ -97,3 +97,22 @@ hodgepodge.disconnect.ip_banned=Ваш IP-адрес заблокирован.
 hodgepodge.disconnect.server_starting=Сервер ещё запускается! Подождите перед повторным подключением.
 hodgepodge.disconnect.session_cleanup_pending=Ваша предыдущая сессия ещё завершается, переподключитесь через мгновение
 hodgepodge.disconnect.session_cleanup_failed=Не удалось безопасно завершить вашу предыдущую сессию. Обратитесь к администратору сервера.
+
+fml.configgui.gameRestartTitle=Требуется перезапуск Minecraft
+fml.configgui.gameRestartRequired=Чтобы все изменённые настройки вступили в силу, перезапустите Minecraft.
+fml.configgui.confirmRestartMessage=Понятно
+fml.configgui.applyGlobally=Применить глобально
+fml.configgui.sampletext=Пример текста
+fml.configgui.tooltip.addNewEntryAbove=Добавить строку выше
+fml.configgui.tooltip.applyGlobally=Отменить изменения или восстановить значения по умолчанию во всех разделах.
+fml.configgui.tooltip.removeEntry=Удалить строку
+fml.configgui.tooltip.resetAll=Восстановить все значения по умолчанию. Если включено «Применить глобально», значения во вложенных разделах тоже будут сброшены.
+fml.configgui.tooltip.resetToDefault=Восстановить значение по умолчанию
+fml.configgui.tooltip.undoAll=Отменить все изменения. Если включено «Применить глобально», изменения во вложенных разделах тоже будут отменены.
+fml.configgui.tooltip.undoChanges=Отменить изменения
+fml.configgui.tooltip.default=[по умолчанию: %s]
+fml.configgui.tooltip.defaultNumeric=[диапазон: %s ~ %s, по умолчанию: %s]
+
+fml.menu.mods=Моды
+fml.menu.mods.normal=Обычный
+fml.menu.mods.search=Поиск:
