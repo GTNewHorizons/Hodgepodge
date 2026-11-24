@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.mitchej123.hodgepodge.mixins.early.minecraft.NetworkManagerAccessor;
+import com.mitchej123.hodgepodge.mixins.early.minecraft.network.NetworkManagerAccessor;
 import com.mitchej123.hodgepodge.mixins.hooks.NetworkDispatcherFallbackLookup;
 
 import cpw.mods.fml.common.FMLCommonHandler;

@@ -4,7 +4,7 @@ import net.minecraft.world.World;
 
 import org.spongepowered.asm.mixin.Mixin;
 
-import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinBlock_FixXray;
+import com.mitchej123.hodgepodge.mixins.early.minecraft.block.MixinBlock_FixXray;
 
 import biomesoplenty.common.blocks.BlockMud;
 
