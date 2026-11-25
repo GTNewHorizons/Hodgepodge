@@ -44,10 +44,10 @@ import org.mockito.MockedStatic;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinNetHandlerLoginServer_AwaitPreviousSession;
-import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinNetHandlerPlayServer_PreWorldDisconnect;
-import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinNetworkSystem_LoginSessionIndex;
-import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinServerConfigurationManager_LoginSessionSave;
+import com.mitchej123.hodgepodge.mixins.early.minecraft.network.MixinNetHandlerLoginServer_AwaitPreviousSession;
+import com.mitchej123.hodgepodge.mixins.early.minecraft.network.MixinNetHandlerPlayServer_PreWorldDisconnect;
+import com.mitchej123.hodgepodge.mixins.early.minecraft.network.MixinNetworkSystem_LoginSessionIndex;
+import com.mitchej123.hodgepodge.mixins.early.minecraft.server.MixinServerConfigurationManager_LoginSessionSave;
 import com.mitchej123.hodgepodge.mixins.interfaces.LoginSessionState;
 import com.mitchej123.hodgepodge.util.LoginSessionIndex;
 import com.mojang.authlib.GameProfile;

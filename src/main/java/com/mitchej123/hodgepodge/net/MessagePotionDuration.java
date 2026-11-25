@@ -6,7 +6,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
-import com.mitchej123.hodgepodge.mixins.early.minecraft.PotionEffectAccessor;
+import com.mitchej123.hodgepodge.mixins.early.minecraft.potion.PotionEffectAccessor;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
