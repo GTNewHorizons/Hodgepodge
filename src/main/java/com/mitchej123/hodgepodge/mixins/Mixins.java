@@ -1324,7 +1324,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.changeReceivedPacketCountLimitToTimeLimit)
             .setPhase(Phase.EARLY)),
     FIX_MOUSE_BUTTON_BINDINGS(new MixinBuilder()
-            .addClientMixins("minecraft.MixinMinecraft_KeyInputEventOnMouseButton")
+            .addClientMixins("minecraft.client.MixinMinecraft_KeyInputEventOnMouseButton")
             .setApplyIf(() -> FixesConfig.fixMouseButtonBindings)
             .setPhase(Phase.EARLY)),
     // endregion
