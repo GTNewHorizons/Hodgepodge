@@ -38,6 +38,7 @@ public final class ScrollListInput {
     /** Input is handled between frames, so the lists drawn in the last frame are the ones on screen. */
     public static void onFrameStart() {
         LISTS.clear();
+        screen = null;
     }
 
     /** Called at the start of the list drawScreen. */
