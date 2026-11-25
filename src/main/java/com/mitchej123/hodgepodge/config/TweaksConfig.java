@@ -274,7 +274,7 @@ public class TweaksConfig {
     public static boolean f1ShowHand;
 
     @Config.Comment("Always drop a single xp orb instead of subdividing into multiple")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean dropSingleXpOrb;
 
