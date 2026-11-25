@@ -137,6 +137,9 @@ public enum Mixins implements IMixins {
     LOCALIZE_FORGE_MODS_BUTTON(new MixinBuilder("Allow translating Forge's Mods button in the main menu")
             .addClientMixins("minecraft.MixinGuiMainMenu_LocalizeModsButton")
             .setPhase(Phase.EARLY)),
+    LOCALIZE_FORGE_MOD_LIST(new MixinBuilder("Localize the Forge mod list")
+            .addClientMixins("fml.MixinGuiModList_Localize", "fml.MixinGuiSlotModList_Localize")
+            .setPhase(Phase.EARLY)),
     LOCALIZE_FORGE_MOD_OPTIONS_BUTTON(new MixinBuilder("Allow translating Forge's Mod Options button in pause menu")
             .addClientMixins("minecraft.MixinGuiIngameMenu_LocalizeModOptionsButton")
             .setApplyIf(() -> TweaksConfig.localizeForgeModOptionsButton)
