@@ -166,6 +166,11 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinSoundSystemStarterThread_BootReload")
             .setApplyIf(() -> SpeedupsConfig.keepSoundEngineAtBoot)
             .setPhase(Phase.EARLY)),
+    INITIAL_OPENAL_OUTPUT_DEVICE(new MixinBuilder()
+            .addClientMixins("paulscode.MixinLibraryLWJGLOpenAL")
+            .addRequiredMod(TargetedMod.LWJGL3IFY)
+            .setApplyIf(() -> SoundConfig.manageOutputDevicesAtStartup)
+            .setPhase(Phase.EARLY)),
     REPLACE_ARCHAICFIX_SOUND_DEVICE_RECOVERY(new MixinBuilder()
             .addClientMixins("archaicfix.MixinSoundDeviceThread")
             .addRequiredMod(TargetedMod.ARCHAICFIX)
@@ -427,6 +432,10 @@ public enum Mixins implements IMixins {
     FIX_END_GHOST_PLAYER(new MixinBuilder("Fix stale player copy left in the old world when entering the End")
             .addCommonMixins("minecraft.MixinServerConfigurationManager_FixEndGhostPlayer")
             .setApplyIf(() -> FixesConfig.fixEndGhostPlayer)
+            .setPhase(Phase.EARLY)),
+    FIX_PLAYER_TRACKING_AFTER_TELEPORT(new MixinBuilder("Fix missing players after distant teleports")
+            .addCommonMixins("minecraft.MixinEntityTrackerEntry_PlayerTrackingRange")
+            .setApplyIf(() -> FixesConfig.fixPlayerTrackingAfterTeleport)
             .setPhase(Phase.EARLY)),
     CONFIGURABLE_PORTAL_RATIO(new MixinBuilder("Make Nether portal travel ratio configurable")
             .addCommonMixins("minecraft.MixinWorldProviderHell")
@@ -768,6 +777,10 @@ public enum Mixins implements IMixins {
                     "minecraft.MixinWorld_FixXray")
             .setApplyIf(() -> FixesConfig.fixPerspectiveCamera)
             .setPhase(Phase.EARLY)),
+    RETURN_CURSOR_STACK(new MixinBuilder("Return cursor stacks and synchronize inventory on container close")
+            .addCommonMixins("minecraft.MixinEntityPlayerMP_ReturnCursorStack")
+            .addClientMixins("minecraft.MixinEntityClientPlayerMP_ReturnCursorStack")
+            .setPhase(Phase.EARLY)),
     DISABLE_CREATIVE_TAB_ALL_SEARCH(new MixinBuilder("Disable the creative tab with search bar")
             .addClientMixins("minecraft.MixinGuiContainerCreative")
             .setApplyIf(() -> FixesConfig.removeCreativeSearchTab)
@@ -1081,6 +1094,17 @@ public enum Mixins implements IMixins {
                     "fml.AccessorGuiSlotModList")
             .setApplyIf(() -> TweaksConfig.betterModList)
             .addExcludedMod(TargetedMod.ENDERCORE_WITH_MODLIST)
+            .setPhase(Phase.EARLY)),
+    SCROLL_LIST_API(new MixinBuilder("Expose GuiScrollingList scroll state through IScrollList")
+            .addClientMixins("fml.MixinGuiScrollingList_ScrollList")
+            .setApplyIf(() -> TweaksConfig.betterModList || TweaksConfig.fixScrollingLists)
+            .setPhase(Phase.EARLY)),
+    FIX_SCROLLING_LISTS(new MixinBuilder("Handle scrolling list input in mouse events and anchor scroll bar drag to the pressed point")
+            .addClientMixins(
+                    "minecraft.MixinGuiScreen_ScrollInput",
+                    "minecraft.MixinGuiSlot_ScrollInput",
+                    "fml.MixinGuiScrollingList_ScrollInput")
+            .setApplyIf(() -> TweaksConfig.fixScrollingLists)
             .setPhase(Phase.EARLY)),
     FIX_ARROW_OWNER(new MixinBuilder("Fix arrow forgetting its owner upon owner reloading (MC-59626) to allow enchantments and HEE charms to work")
             .addCommonMixins("minecraft.MixinEntityArrow")
@@ -1893,6 +1917,13 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.EXTRATIC)
             .setPhase(Phase.LATE)),
     // Extra Utilities
+    FIX_EXTRA_UTILITIES_RENDERBLOCK_LEAK(new MixinBuilder()
+            .addClientMixins(
+                    "extrautilities.leaks.MixinRenderBlockConnectedTextures",
+                    "extrautilities.leaks.MixinConnectedTextureMicroMaterial")
+            .setApplyIf(() -> MemoryConfig.leaks.fixExtraUtilitiesConnectedTexturesLeak)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
     FIX_EXTRA_UTILITIES_UNENCHANTING(new MixinBuilder("Fix Exu Unenchanting")
             .addCommonMixins("extrautilities.MixinRecipeUnEnchanting")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesUnEnchanting)
