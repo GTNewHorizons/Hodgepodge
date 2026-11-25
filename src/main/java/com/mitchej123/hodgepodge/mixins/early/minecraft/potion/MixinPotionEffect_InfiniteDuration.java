@@ -1,6 +1,5 @@
 package com.mitchej123.hodgepodge.mixins.early.minecraft.potion;
 
-import com.mitchej123.hodgepodge.mixins.early.minecraft.entity.EntityLivingBaseAccessor;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -14,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.mitchej123.hodgepodge.mixins.early.minecraft.entity.EntityLivingBaseAccessor;
 import com.mitchej123.hodgepodge.mixins.interfaces.PotionEffectHiddenExt;
 import com.mitchej123.hodgepodge.util.InfinitePotionDuration;
 
