@@ -24,7 +24,7 @@ public class MixinPotionEffect {
     @Inject(method = "<init>(IIIZ)V", at = @At("RETURN"))
     public void hodgepodge$primaryConstructor(int p_i1576_1_, int p_i1576_2_, int p_i1576_3_, boolean p_i1576_4_,
             CallbackInfo ci) {
-        this.potionID = p_i1576_1_ & 0xff;
+        this.potionID = p_i1576_1_ < 0 ? p_i1576_1_ & 0xff : p_i1576_1_;
     }
 
     /**
