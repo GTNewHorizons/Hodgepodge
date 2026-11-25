@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft;
+package com.mitchej123.hodgepodge.mixins.early.minecraft.gui;
 
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.resources.I18n;
