@@ -1324,7 +1324,7 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.changeReceivedPacketCountLimitToTimeLimit)
             .setPhase(Phase.EARLY)),
     DROP_SINGLE_XP_ORB(new MixinBuilder("Always drop a single xp orb instead of subdividing into multiple")
-            .addCommonMixins("minecraft.MixinEntityXPOrb_DropSingleOrb")
+            .addCommonMixins("minecraft.entity.MixinEntityXPOrb_DropSingleOrb")
             .setApplyIf(() -> TweaksConfig.dropSingleXpOrb)
             .setPhase(Phase.EARLY)),
     // endregion

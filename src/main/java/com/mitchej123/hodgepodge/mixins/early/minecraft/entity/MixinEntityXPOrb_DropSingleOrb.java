@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft;
+package com.mitchej123.hodgepodge.mixins.early.minecraft.entity;
 
 import net.minecraft.entity.item.EntityXPOrb;
 
