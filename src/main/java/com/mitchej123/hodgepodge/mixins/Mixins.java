@@ -807,11 +807,11 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixDisconnectScreenLayout)
             .setPhase(Phase.EARLY)),
     FIX_CHAT_NEWLINES(new MixinBuilder("Fix newline characters in chat messages not rendering as line breaks")
-            .addClientMixins("minecraft.MixinGuiNewChat_FixChatNewlines")
+            .addClientMixins("minecraft.gui.MixinGuiNewChat_FixChatNewlines")
             .setApplyIf(() -> FixesConfig.fixChatNewlines)
             .setPhase(Phase.EARLY)),
     FIX_FONT_RENDERER_NEWLINES(new MixinBuilder("Fix newline characters in drawString not rendering as line breaks")
-            .addClientMixins("minecraft.MixinFontRenderer_NewlineSupport")
+            .addClientMixins("minecraft.gui.MixinFontRenderer_NewlineSupport")
             .setApplyIf(() -> FixesConfig.fixFontRendererNewlines)
             .setPhase(Phase.EARLY)),
     COMPACT_CHAT(new MixinBuilder()
