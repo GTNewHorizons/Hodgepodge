@@ -8,6 +8,7 @@ import java.util.Locale;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -212,7 +213,7 @@ public class MixinGuiModList extends GuiScreen {
     @Inject(method = "drawScreen", at = @At("TAIL"))
     public void onDrawScreen(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         // Draw the search label and text field
-        String text = "Search:";
+        String text = I18n.format("fml.menu.mods.search");
         int x = ((10 + hodgepodge$listRight) / 2) - (fontRendererObj.getStringWidth(text) / 2);
         fontRendererObj.drawString(text, x, hodgepodge$listBottom + 5, 0xFFFFFF);
         hodgepodge$search.drawTextBox();

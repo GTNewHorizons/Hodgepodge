@@ -114,5 +114,4 @@ fml.configgui.tooltip.default=[по умолчанию: %s]
 fml.configgui.tooltip.defaultNumeric=[диапазон: %s ~ %s, по умолчанию: %s]
 
 fml.menu.mods=Моды
-fml.menu.mods.normal=Обычный
 fml.menu.mods.search=Поиск:
