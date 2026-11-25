@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft;
+package com.mitchej123.hodgepodge.mixins.early.minecraft.potion;
 
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;

@@ -1,5 +1,6 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft;
+package com.mitchej123.hodgepodge.mixins.early.minecraft.potion;
 
+import com.mitchej123.hodgepodge.mixins.early.minecraft.entity.EntityLivingBaseAccessor;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
