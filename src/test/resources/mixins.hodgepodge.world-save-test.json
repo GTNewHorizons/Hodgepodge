@@ -5,10 +5,10 @@
   "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinAnvilChunkLoader_SaveQueue",
-    "MixinAnvilChunkLoader_LoadDuringSave",
-    "AccessorAnvilChunkLoaderPendingChunk",
-    "MixinMinecraftServer_WorldDataSave",
-    "MixinCommandSaveAll_WorldDataSave"
+    "storage.MixinAnvilChunkLoader_SaveQueue",
+    "storage.MixinAnvilChunkLoader_LoadDuringSave",
+    "storage.AccessorAnvilChunkLoaderPendingChunk",
+    "server.MixinMinecraftServer_WorldDataSave",
+    "command.MixinCommandSaveAll_WorldDataSave"
   ]
 }
