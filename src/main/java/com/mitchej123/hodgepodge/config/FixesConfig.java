@@ -81,6 +81,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixEndGhostPlayer;
 
+    @Config.Comment("Use current player positions for entity tracking range checks so teleported players become visible")
+    @Config.DefaultBoolean(true)
+    public static boolean fixPlayerTrackingAfterTeleport;
+
     @Config.Comment("Fix duplicate sounds from playing when closing a gui.")
     @Config.DefaultBoolean(true)
     public static boolean fixDuplicateSounds;
@@ -469,6 +473,11 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean fixFenceRightClick;
+
+    @Config.Comment("Fix arrow forgetting its owner upon owner reloading (MC-59626) to allow enchantments and HEE charms to work")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean fixArrowOwner;
 
     @Config.Comment("Use correct egg particles instead of snowball ones (MC-7807)")
     @Config.DefaultBoolean(true)
