@@ -1,4 +1,4 @@
-package com.mitchej123.hodgepodge.mixins.early.minecraft;
+package com.mitchej123.hodgepodge.mixins.early.minecraft.gui;
 
 import java.util.HashMap;
 import java.util.Map;
