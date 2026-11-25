@@ -454,6 +454,7 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)),
     ENLARGE_POTION_ARRAY(new MixinBuilder("Make the Potion array larger")
             .addCommonMixins("minecraft.potion.MixinPotion")
+            .addExcludedMod(TargetedMod.ENDLESSIDS)
             .setApplyIf(() -> FixesConfig.enlargePotionArray)
             .setPhase(Phase.EARLY)),
     FIX_POTION_LIMIT(new MixinBuilder()
