@@ -26,4 +26,25 @@ public class StringUtilsTest {
         }
     }
 
+    @Test
+    void testRemoveExtendedFormattingCodes() {
+        // §x RGB color (14-char sequence decomposes into 7 pairs: §x §F §F §6 §B §4 §A)
+        assertEquals("Coral", StringUtil.removeFormattingCodes("§x§F§F§6§B§4§ACoral"));
+        // §g gradient (30-char sequence: §g + two §x blocks)
+        assertEquals("Fire", StringUtil.removeFormattingCodes("§g§x§F§F§0§0§0§0§x§F§F§D§7§0§0Fire"));
+        // §q rainbow
+        assertEquals("Rainbow", StringUtil.removeFormattingCodes("§qRainbow"));
+        // §z wave
+        assertEquals("Wave", StringUtil.removeFormattingCodes("§zWave"));
+        // §v dinnerbone
+        assertEquals("Flip", StringUtil.removeFormattingCodes("§vFlip"));
+        // Mixed vanilla + extended
+        assertEquals("Hello World!", StringUtil.removeFormattingCodes("§x§F§F§0§0§0§0Hello §qWorld§r!"));
+        // Case-insensitive: uppercase extended codes
+        assertEquals("test", StringUtil.removeFormattingCodes("§Xtest"));
+        assertEquals("test", StringUtil.removeFormattingCodes("§Qtest"));
+        assertEquals("test", StringUtil.removeFormattingCodes("§Ztest"));
+        assertEquals("test", StringUtil.removeFormattingCodes("§Vtest"));
+        assertEquals("test", StringUtil.removeFormattingCodes("§Gtest"));
+    }
 }

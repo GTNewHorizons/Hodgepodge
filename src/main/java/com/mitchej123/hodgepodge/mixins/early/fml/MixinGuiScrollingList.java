@@ -11,12 +11,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mitchej123.hodgepodge.mixins.interfaces.IGuiScrollingList;
-
 import cpw.mods.fml.client.GuiScrollingList;
 
 @Mixin(GuiScrollingList.class)
-public class MixinGuiScrollingList implements IGuiScrollingList {
+public class MixinGuiScrollingList {
 
     @Shadow(remap = false)
     @Final
@@ -37,13 +35,6 @@ public class MixinGuiScrollingList implements IGuiScrollingList {
     @Shadow(remap = false)
     @Final
     protected int left;
-
-    @Shadow(remap = false)
-    @Final
-    private int right;
-
-    @Shadow(remap = false)
-    private int selectedIndex;
 
     @Inject(
             method = "drawScreen",
@@ -67,18 +58,4 @@ public class MixinGuiScrollingList implements IGuiScrollingList {
 
     }
 
-    @Override
-    public int hodgepodge$setSelectedIndex(int index) {
-        return selectedIndex = index;
-    }
-
-    @Override
-    public int hodgepodge$getBottom() {
-        return bottom;
-    }
-
-    @Override
-    public int hodgepodge$getRight() {
-        return right;
-    }
 }

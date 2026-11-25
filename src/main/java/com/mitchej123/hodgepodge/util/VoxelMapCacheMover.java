@@ -61,7 +61,7 @@ public class VoxelMapCacheMover {
                     }
                     this.renamed++;
                 } catch (IOException e) {
-                    Common.log.warn("Failed to change extension of " + file + " to .data", e);
+                    Common.log.warn("Failed to change extension of {} to .data", file, e);
                     this.failed++;
                 }
             } else {

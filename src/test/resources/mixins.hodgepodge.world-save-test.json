@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8.3-GTNH",
+  "package": "com.mitchej123.hodgepodge.mixins.early.minecraft",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "storage.MixinAnvilChunkLoader_SaveQueue",
+    "storage.MixinAnvilChunkLoader_LoadDuringSave",
+    "storage.AccessorAnvilChunkLoaderPendingChunk",
+    "server.MixinMinecraftServer_WorldDataSave",
+    "command.MixinCommandSaveAll_WorldDataSave"
+  ]
+}

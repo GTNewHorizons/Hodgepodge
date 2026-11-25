@@ -8,7 +8,8 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-import cpw.mods.fml.common.Loader;
+import com.mitchej123.hodgepodge.Compat;
+
 import journeymap.client.ui.component.JmUI;
 import journeymap.client.ui.component.ScrollListPane;
 import journeymap.client.ui.waypoint.WaypointManager;
@@ -23,7 +24,7 @@ public abstract class MixinWaypointManager extends JmUI {
     protected int rowHeight;
 
     @Unique
-    private final boolean hasLwjgl3 = Loader.isModLoaded("lwjgl3ify");
+    private final boolean hasLwjgl3 = Compat.isLwjgl3ifyPresent();
 
     /**
      * @author eigenraven

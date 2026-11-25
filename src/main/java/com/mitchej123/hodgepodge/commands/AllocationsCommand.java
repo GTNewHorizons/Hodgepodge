@@ -28,7 +28,7 @@ public final class AllocationsCommand extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (handler == null) {
-            handler = new AllocationRateHUD(false);
+            handler = new AllocationRateHUD();
             MinecraftForge.EVENT_BUS.register(handler);
         } else {
             MinecraftForge.EVENT_BUS.unregister(handler);

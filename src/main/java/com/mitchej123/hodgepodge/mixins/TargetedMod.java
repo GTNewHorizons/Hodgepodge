@@ -13,6 +13,8 @@ public enum TargetedMod implements ITargetMod {
 
     ADVANCED_SOLAR_PANELS("AdvancedSolarPanel"),
     ANGELICA("com.gtnewhorizons.angelica.loading.AngelicaTweaker", "angelica"),
+    ANGELICA_LT_2158(new TargetModBuilder().setTargetClass("com.gtnewhorizons.angelica.AngelicaMod")
+            .setModId("angelica").testModVersion("angelica", version -> isVersionLessThan(version, "2.1.58"))),
     ARCHAICFIX("org.embeddedt.archaicfix.ArchaicCore", "archaicfix"),
     AUTOMAGY("Automagy"),
     BAUBLES("Baubles"),
@@ -31,6 +33,7 @@ public enum TargetedMod implements ITargetMod {
     // transformer that got removed and added via mixin in this mod, so we don't
     // load our mixins if an old version of the mod that contains this class is loaded
     ENDERCORE_WITH_MODLIST(null, null, "com.enderio.core.common.transform.EnderCoreTransformerClient"),
+    ENDLESSIDS("com.falsepattern.endlessids.asm.EndlessIDsCore", "endlessids"),
     ETFURUMREQUIEM("ganymedes01.etfuturum.mixinplugin.EtFuturumEarlyMixins", "etfuturum"),
     EXTRATIC("ExtraTiC"),
     EXTRA_UTILITIES("ExtraUtilities"),
@@ -64,8 +67,11 @@ public enum TargetedMod implements ITargetMod {
     MODERNKEYBINDING(null, null, "committee.nova.mkb.ModernKeyBinding"),
     MODULARPOWERSUITS("powersuits"),
     MORPHEUS("Morpheus"),
-    MRTJPCORE("MrTJPCoreMod"),
+    MRTJPCORE_V_BEFORE_113(new TargetModBuilder().setTargetClass("mrtjp.core.handler.MrTJPCoreMod")
+            .testModVersion("MrTJPCoreMod", version -> isVersionLessThan(version, "1.1.3"))),
     NOTENOUGHITEMS("codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
+    // Target the version not included in angelica
+    NOTFINE("jss.notfine.mixinplugin.NotFineEarlyMixins", null),
     OPTIFINE("optifine.OptiFineForgeTweaker", "Optifine"),
     PORTAL_GUN("PortalGun"),
     PROJECTE("ProjectE"),

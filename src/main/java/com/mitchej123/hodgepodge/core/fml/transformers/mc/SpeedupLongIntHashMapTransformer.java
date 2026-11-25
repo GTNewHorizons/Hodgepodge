@@ -30,6 +30,8 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer, Opco
     private static final String FAST_UTIL_INT_HASH_MAP = "com/mitchej123/hodgepodge/util/FastUtilIntHashMap";
     private static final String CHUNK_PROVIDER_CLIENT = "net.minecraft.client.multiplayer.ChunkProviderClient";
     private static final String CHUNK_PROVIDER_SERVER = "net.minecraft.world.gen.ChunkProviderServer";
+    // if more classes need to be added change this to an array
+    private static final String EXCLUDED_CLASS = "thaumcraft.common.lib.world.dim.TeleporterThaumcraft";
 
     private static final ClassConstantPoolParser cstPoolParser = new ClassConstantPoolParser(
             INT_HASH_MAP,
@@ -44,8 +46,11 @@ public class SpeedupLongIntHashMapTransformer implements IClassTransformer, Opco
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null) return null;
-        if (cstPoolParser.find(basicClass) && !transformedName.startsWith("com.mitchej123.hodgepodge.util")) {
-            return transformBytes(transformedName, basicClass);
+        if (cstPoolParser.find(basicClass)) {
+            if (!transformedName.startsWith("com.mitchej123.hodgepodge.util")
+                    && !EXCLUDED_CLASS.equals(transformedName)) {
+                return transformBytes(transformedName, basicClass);
+            }
         }
         return basicClass;
     }

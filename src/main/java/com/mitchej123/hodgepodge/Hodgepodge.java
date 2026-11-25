@@ -3,9 +3,13 @@ package com.mitchej123.hodgepodge;
 import java.util.Map;
 
 import com.mitchej123.hodgepodge.client.HodgepodgeClient;
+import com.mitchej123.hodgepodge.client.sound.SoundSetupHandler;
 import com.mitchej123.hodgepodge.commands.DebugCommand;
 import com.mitchej123.hodgepodge.config.FixesConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
+import com.mitchej123.hodgepodge.core.shared.AsyncFmlFileLog;
+import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
+import com.mitchej123.hodgepodge.mixins.hooks.ASMDataStringPooler;
 import com.mitchej123.hodgepodge.mixins.hooks.ChunkGenScheduler;
 import com.mitchej123.hodgepodge.net.NetworkHandler;
 import com.mitchej123.hodgepodge.util.AnchorAlarm;
@@ -67,10 +71,13 @@ public class Hodgepodge {
     public void preinit(FMLPreInitializationEvent event) {
         Compat.init(event.getSide());
         EVENT_HANDLER.preinit();
+        // SoundManager posts SoundSetupEvent from its constructor, so register before client startup creates it.
+        if (event.getSide() == Side.CLIENT) SoundSetupHandler.register();
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        ASMDataStringPooler.free();
         FMLCommonHandler.instance().bus().register(ANCHOR_ALARM);
         Common.init();
         NetworkHandler.init();
@@ -78,6 +85,8 @@ public class Hodgepodge {
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
+        // Re-wraps contexts a log4j reconfigure reset since the coremod ran.
+        if (!EarlyConfig.noAsyncFmlFileLog) AsyncFmlFileLog.install();
         if (event.getSide() == Side.CLIENT) {
             HodgepodgeClient.postInit();
         }

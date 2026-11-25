@@ -5,6 +5,7 @@ import java.util.Collections;
 import net.minecraftforge.classloading.FMLForgePlugin;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 import com.mitchej123.hodgepodge.Common;
@@ -12,9 +13,14 @@ import com.mitchej123.hodgepodge.Compat;
 import com.mitchej123.hodgepodge.client.handlers.ClientKeyListener;
 import com.mitchej123.hodgepodge.client.handlers.ReloadSoundsGui;
 import com.mitchej123.hodgepodge.commands.AllocationsCommand;
+import com.mitchej123.hodgepodge.commands.DumpTextureAtlasCommand;
+import com.mitchej123.hodgepodge.commands.PacketStatsCommand;
 import com.mitchej123.hodgepodge.config.DebugConfig;
 import com.mitchej123.hodgepodge.config.FixesConfig;
+import com.mitchej123.hodgepodge.config.SoundConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
+import com.mitchej123.hodgepodge.mixins.hooks.ClientLeaksCleaningHook;
+import com.mitchej123.hodgepodge.util.FontRenderingCompat;
 import com.mitchej123.hodgepodge.util.ManagedEnum;
 
 import biomesoplenty.common.eventhandler.client.gui.WorldTypeMessageEventHandler;
@@ -29,8 +35,10 @@ public class HodgepodgeClient {
 
     public static final ManagedEnum<AnimationMode> animationsMode = new ManagedEnum<>(AnimationMode.VISIBLE_ONLY);
     public static final ManagedEnum<RenderDebugMode> renderDebugMode = new ManagedEnum<>(RenderDebugMode.REDUCED);
+    public static F1State F1_STATE = F1State.SHOW_ALL;
 
     public static void postInit() {
+        FontRenderingCompat.registerFallbackIfNoAngelica();
 
         if (DebugConfig.renderDebug) {
             renderDebugMode.set(DebugConfig.renderDebugMode);
@@ -41,27 +49,27 @@ public class HodgepodgeClient {
         if (TweaksConfig.enableDefaultLanPort) {
             if (TweaksConfig.defaultLanPort < 0 || TweaksConfig.defaultLanPort > 65535) {
                 Common.log.error(
-                        String.format(
-                                "Default LAN port number must be in range of 0-65535, but %s was given. Defaulting to 0.",
-                                TweaksConfig.defaultLanPort));
+                        "Default LAN port number must be in range of 0-65535, but {} was given. Defaulting to 0.",
+                        TweaksConfig.defaultLanPort);
                 TweaksConfig.defaultLanPort = 0;
             }
         }
 
         FMLCommonHandler.instance().bus().register(ClientTicker.INSTANCE);
 
+        QuickPlay.registerIfRequested();
+
         MinecraftForge.EVENT_BUS.register(new ReloadSoundsGui());
 
-        if (TweaksConfig.addSystemInfo) {
-            MinecraftForge.EVENT_BUS.register(DebugScreenHandler.INSTANCE);
-        }
+        MinecraftForge.EVENT_BUS.register(DebugScreenHandler.INSTANCE);
 
         if (DebugConfig.showChunkGenDebug || !FMLForgePlugin.RUNTIME_DEOBF) {
             MinecraftForge.EVENT_BUS.register(ChunkGenDebugHandler.INSTANCE);
         }
 
-        MinecraftForge.EVENT_BUS.register(new AllocationRateHUD(true));
         ClientCommandHandler.instance.registerCommand(new AllocationsCommand());
+        ClientCommandHandler.instance.registerCommand(new DumpTextureAtlasCommand());
+        ClientCommandHandler.instance.registerCommand(new PacketStatsCommand());
 
         FMLCommonHandler.instance().bus().register(new ClientKeyListener());
 
@@ -85,6 +93,8 @@ public class HodgepodgeClient {
             // removes the popup that BOP shows on first world gen
             MinecraftForge.EVENT_BUS.unregister(WorldTypeMessageEventHandler.instance);
         }
+
+        SoundConfig.apply();
     }
 
     public enum AnimationMode {
@@ -102,5 +112,12 @@ public class HodgepodgeClient {
     @SubscribeEvent
     public static void onClientDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         AsyncNBTParser.shutdown();
+    }
+
+    @SubscribeEvent
+    public static void onWorldUnload(WorldEvent.Unload event) {
+        if (event.world.isRemote) {
+            ClientLeaksCleaningHook.onClientWorldUnload();
+        }
     }
 }

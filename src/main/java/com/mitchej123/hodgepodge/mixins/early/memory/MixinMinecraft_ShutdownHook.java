@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mitchej123.hodgepodge.mixins.hooks.AfterClientExitWorldHook;
+import com.mitchej123.hodgepodge.mixins.hooks.ClientLeaksCleaningHook;
 
 @Mixin(Minecraft.class)
 public class MixinMinecraft_ShutdownHook {
@@ -21,6 +21,6 @@ public class MixinMinecraft_ShutdownHook {
                     target = "Lcpw/mods/fml/client/FMLClientHandler;handleClientWorldClosing(Lnet/minecraft/client/multiplayer/WorldClient;)V",
                     shift = At.Shift.AFTER))
     private void runClientStopHook(WorldClient worldClientIn, String loadingMessage, CallbackInfo ci) {
-        AfterClientExitWorldHook.run((Minecraft) ((Object) this));
+        ClientLeaksCleaningHook.onClientExitToMainMenu((Minecraft) ((Object) this));
     }
 }

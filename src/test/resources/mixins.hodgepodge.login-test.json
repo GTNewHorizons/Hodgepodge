@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8.3-GTNH",
+  "package": "com.mitchej123.hodgepodge.mixins.early",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "minecraft.network.MixinNetHandlerLoginServer_AwaitPreviousSession",
+    "minecraft.network.MixinNetHandlerPlayServer_PreWorldDisconnect",
+    "minecraft.server.MixinServerConfigurationManager_LoginSessionSave",
+    "fml.MixinNetworkDispatcher_LoginSessionState",
+    "minecraft.network.MixinNetworkSystem_LoginSessionIndex"
+  ]
+}
