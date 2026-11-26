@@ -229,6 +229,7 @@ public enum Mixins implements IMixins {
     INFINITE_POTION_DURATION_CLIENT(new MixinBuilder("Show infinite potion effects correctly on the client")
             .addClientMixins(
                     "minecraft.potion.MixinPotion_InfiniteDuration",
+                    "minecraft.network.MixinNetHandlerPlayClient_InfinitePotionDuration",
                     "minecraft.render.MixinEntityRenderer_InfiniteDuration",
                     "minecraft.entity.player.MixinEntityPlayerSP_InfiniteNausea")
             .setPhase(Phase.EARLY)),

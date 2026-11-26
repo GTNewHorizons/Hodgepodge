@@ -77,6 +77,7 @@ final class MixinScenarios {
         Mixins.addConfiguration("mixins.hodgepodge.login-test.json");
         Mixins.addConfiguration("mixins.hodgepodge.world-save-test.json");
         Mixins.addConfiguration("mixins.hodgepodge.chunkgen-test.json");
+        Mixins.addConfiguration("mixins.hodgepodge.potion-test.json");
         Method phase = MixinEnvironment.class.getDeclaredMethod("gotoPhase", MixinEnvironment.Phase.class);
         phase.setAccessible(true);
         phase.invoke(null, MixinEnvironment.Phase.DEFAULT);

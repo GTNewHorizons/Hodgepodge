@@ -8,4 +8,6 @@ public interface PotionEffectHiddenExt {
     PotionEffect hodgepodge$getHidden();
 
     void hodgepodge$setHidden(PotionEffect hidden);
+
+    PotionEffect hodgepodge$tickHiddenChain();
 }

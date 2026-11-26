@@ -49,6 +49,17 @@ public class MixinPotionEffect_InfiniteDuration implements PotionEffectHiddenExt
         this.hodgepodge$hidden = hidden;
     }
 
+    @Override
+    public PotionEffect hodgepodge$tickHiddenChain() {
+        if (this.hodgepodge$hidden != null) {
+            this.hodgepodge$hidden = ((PotionEffectHiddenExt) this.hodgepodge$hidden).hodgepodge$tickHiddenChain();
+        }
+        if (this.duration == InfinitePotionDuration.INFINITE || (this.duration > 0 && --this.duration > 0)) {
+            return (PotionEffect) (Object) this;
+        }
+        return this.hodgepodge$hidden;
+    }
+
     @Unique
     private static boolean hodgepodge$isShorter(int duration, int other) {
         return duration != InfinitePotionDuration.INFINITE
@@ -65,7 +76,10 @@ public class MixinPotionEffect_InfiniteDuration implements PotionEffectHiddenExt
     }
 
     @Inject(method = "onUpdate", at = @At("HEAD"), cancellable = true)
-    private void hodgepodge$tickInfinite(EntityLivingBase entity, CallbackInfoReturnable<Boolean> cir) {
+    private void hodgepodge$tickEffect(EntityLivingBase entity, CallbackInfoReturnable<Boolean> cir) {
+        if (!entity.worldObj.isRemote && this.hodgepodge$hidden != null) {
+            this.hodgepodge$hidden = ((PotionEffectHiddenExt) this.hodgepodge$hidden).hodgepodge$tickHiddenChain();
+        }
         if (this.duration != InfinitePotionDuration.INFINITE) return;
         // Potion#isReady relies on a counting duration (regeneration, poison), so give it a tick counter instead.
         // A modded potion that reads the real remaining duration there sees this counter, restarting at 1.
