@@ -6,6 +6,7 @@ import net.minecraft.block.BlockEndPortalFrame;
 import net.minecraft.world.World;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 import com.gtnewhorizon.gtnhlib.api.IBlockWithOutlineShape;
 import com.gtnewhorizon.gtnhlib.api.OutlineShape;
@@ -13,7 +14,9 @@ import com.gtnewhorizon.gtnhlib.api.OutlineShape;
 @Mixin(BlockEndPortalFrame.class)
 public abstract class MixinBlockEndPortalFrame_OutlineShape implements IBlockWithOutlineShape {
 
+    @Unique
     private static final OutlineShape hodgepodge$FRAME = OutlineShape.of(getBoundingBox(0, 0, 0, 1, 0.8125, 1));
+    @Unique
     private static final OutlineShape hodgepodge$FRAME_WITH_EYE = OutlineShape
             .of(getBoundingBox(0, 0, 0, 1, 0.8125, 1), getBoundingBox(0.25, 0.8125, 0.25, 0.75, 1, 0.75));
 

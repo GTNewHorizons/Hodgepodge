@@ -6,6 +6,7 @@ import net.minecraft.block.BlockAnvil;
 import net.minecraft.world.World;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 import com.gtnewhorizon.gtnhlib.api.IBlockWithOutlineShape;
 import com.gtnewhorizon.gtnhlib.api.OutlineShape;
@@ -13,11 +14,13 @@ import com.gtnewhorizon.gtnhlib.api.OutlineShape;
 @Mixin(BlockAnvil.class)
 public abstract class MixinBlockAnvil_OutlineShape implements IBlockWithOutlineShape {
 
+    @Unique
     private static final OutlineShape hodgepodge$ALONG_Z = OutlineShape.of(
             getBoundingBox(0.125, 0, 0.125, 0.875, 0.25, 0.875),
             getBoundingBox(0.25, 0.25, 0.1875, 0.75, 0.3125, 0.8125),
             getBoundingBox(0.375, 0.3125, 0.25, 0.625, 0.625, 0.75),
             getBoundingBox(0.1875, 0.625, 0, 0.8125, 1, 1));
+    @Unique
     private static final OutlineShape hodgepodge$ALONG_X = OutlineShape.of(
             getBoundingBox(0.125, 0, 0.125, 0.875, 0.25, 0.875),
             getBoundingBox(0.1875, 0.25, 0.25, 0.8125, 0.3125, 0.75),

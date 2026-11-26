@@ -5,6 +5,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 import com.gtnewhorizon.gtnhlib.api.IBlockWithOutlineShape;
 import com.gtnewhorizon.gtnhlib.api.OutlineShape;
@@ -12,6 +13,7 @@ import com.gtnewhorizon.gtnhlib.api.OutlineShape;
 @Mixin(BlockDragonEgg.class)
 public abstract class MixinBlockDragonEgg_OutlineShape implements IBlockWithOutlineShape {
 
+    @Unique
     private static final OutlineShape hodgepodge$SHAPE = OutlineShape.of(
             hodgepodge$layer(0, 1, 3),
             hodgepodge$layer(1, 3, 6),
@@ -22,6 +24,7 @@ public abstract class MixinBlockDragonEgg_OutlineShape implements IBlockWithOutl
             hodgepodge$layer(14, 15, 3),
             hodgepodge$layer(15, 16, 2));
 
+    @Unique
     private static AxisAlignedBB hodgepodge$layer(int fromY, int toY, int halfWidth) {
         double min = (8 - halfWidth) / 16.0, max = (8 + halfWidth) / 16.0;
         return AxisAlignedBB.getBoundingBox(min, fromY / 16.0, min, max, toY / 16.0, max);

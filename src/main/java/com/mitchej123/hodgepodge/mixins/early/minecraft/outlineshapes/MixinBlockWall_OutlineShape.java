@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 import com.gtnewhorizon.gtnhlib.api.IBlockWithOutlineShape;
 import com.gtnewhorizon.gtnhlib.api.OutlineShape;
@@ -49,6 +50,7 @@ public abstract class MixinBlockWall_OutlineShape extends Block implements IBloc
         }
     }
 
+    @Unique
     private List<AxisAlignedBB> hodgepodge$parts(IBlockAccess world, int x, int y, int z) {
         boolean west = canConnectWallTo(world, x - 1, y, z), east = canConnectWallTo(world, x + 1, y, z);
         boolean north = canConnectWallTo(world, x, y, z - 1), south = canConnectWallTo(world, x, y, z + 1);
