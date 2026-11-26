@@ -420,10 +420,6 @@ public enum Mixins implements IMixins {
                     "minecraft.network.MixinNetHandlerLoginServer_LocalizedKick")
             .setApplyIf(() -> FixesConfig.fixUnlocalizedDisconnectMessages)
             .setPhase(Phase.EARLY)),
-    FIX_HOPPER_HIT_BOX(new MixinBuilder("Fix Vanilla Hopper hit box")
-            .addCommonMixins("minecraft.block.MixinBlockHopper")
-            .setApplyIf(() -> FixesConfig.fixHopperHitBox)
-            .setPhase(Phase.EARLY)),
     TILE_ENTITY_RENDERER_PROFILER(new MixinBuilder()
             .addClientMixins("minecraft.profiler.TileEntityRendererDispatcherMixin")
             .addClientMixins("minecraft.profiler.MinecraftMixin")
