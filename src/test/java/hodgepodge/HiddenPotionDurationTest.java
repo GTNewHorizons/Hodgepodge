@@ -2,6 +2,7 @@ package hodgepodge;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.mockito.MockedStatic;
 
 import com.mitchej123.hodgepodge.mixins.interfaces.PotionEffectHiddenExt;
+import com.mitchej123.hodgepodge.util.InfinitePotionDuration;
 
 import cpw.mods.fml.common.Loader;
 
@@ -71,6 +73,26 @@ class HiddenPotionDurationTest {
             assertTrue(active.onUpdate(entity));
             assertTrue(active.onUpdate(entity));
             assertEquals(0, active.getAmplifier());
+            assertEquals(-1, active.getDuration());
+        }
+
+        public void testRemoveHiddenEffectsPreservesActiveAndUnmatchedEffects() {
+            PotionEffect active = effect(2, 4);
+            PotionEffect first = new PotionEffect(Potion.moveSpeed.id, -1, 3, true);
+            PotionEffect retained = effect(-1, 2);
+            PotionEffect last = new PotionEffect(Potion.moveSpeed.id, -1, 1, true);
+            hidden(active).hodgepodge$setHidden(first);
+            hidden(first).hodgepodge$setHidden(retained);
+            hidden(retained).hodgepodge$setHidden(last);
+
+            assertTrue(InfinitePotionDuration.removeHiddenEffects(active, PotionEffect::getIsAmbient));
+            assertEquals(4, active.getAmplifier());
+            assertEquals(2, active.getDuration());
+            assertSame(retained, hidden(active).hodgepodge$getHidden());
+            assertFalse(InfinitePotionDuration.removeHiddenEffects(active, PotionEffect::getIsAmbient));
+            assertTrue(active.onUpdate(entity));
+            assertTrue(active.onUpdate(entity));
+            assertEquals(2, active.getAmplifier());
             assertEquals(-1, active.getDuration());
         }
 
