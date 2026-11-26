@@ -8,6 +8,7 @@ import java.util.Locale;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,6 +26,7 @@ import com.mitchej123.hodgepodge.Common;
 import com.mitchej123.hodgepodge.Hodgepodge;
 import com.mitchej123.hodgepodge.client.bettermodlist.InfoButton;
 import com.mitchej123.hodgepodge.client.bettermodlist.SortType;
+import com.mitchej123.hodgepodge.client.scrolllist.IScrollList;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 
 import cpw.mods.fml.client.GuiModList;
@@ -75,7 +77,7 @@ public class MixinGuiModList extends GuiScreen {
     public void onInitGuiHead(CallbackInfo ci) {
         // save before the new GuiSlotModList is constructed
         if (modList != null) {
-            hodgepodge$savedScrollDistance = hodgepodge$GuiScrollingList().hodgepodge$getScrollDistance();
+            hodgepodge$savedScrollDistance = hodgepodge$ScrollList().hodgepodge$getScroll();
         }
     }
 
@@ -83,8 +85,8 @@ public class MixinGuiModList extends GuiScreen {
     @Inject(method = "initGui", at = @At("TAIL"))
     public void onInitGui(CallbackInfo ci) {
         // Initialize search box
-        hodgepodge$listBottom = hodgepodge$GuiScrollingList().hodgepodge$getBottom();
-        hodgepodge$listRight = hodgepodge$GuiScrollingList().hodgepodge$getRight();
+        hodgepodge$listBottom = hodgepodge$ScrollList().hodgepodge$getBottom();
+        hodgepodge$listRight = hodgepodge$ScrollList().hodgepodge$getRight();
 
         hodgepodge$search = new GuiTextField(this.fontRendererObj, 12, hodgepodge$listBottom + 17, listWidth - 4, 14);
         hodgepodge$search.setFocused(true);
@@ -119,7 +121,7 @@ public class MixinGuiModList extends GuiScreen {
         hodgepodge$sorted = false;
         hodgepodge$reloadMods();
         hodgepodge$updateButtonStates();
-        hodgepodge$GuiScrollingList().hodgepodge$setScrollDistance(hodgepodge$savedScrollDistance);
+        hodgepodge$ScrollList().hodgepodge$setScroll(hodgepodge$savedScrollDistance);
     }
 
     @WrapOperation(
@@ -211,7 +213,7 @@ public class MixinGuiModList extends GuiScreen {
     @Inject(method = "drawScreen", at = @At("TAIL"))
     public void onDrawScreen(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         // Draw the search label and text field
-        String text = "Search:";
+        String text = I18n.format("fml.menu.mods.search");
         int x = ((10 + hodgepodge$listRight) / 2) - (fontRendererObj.getStringWidth(text) / 2);
         fontRendererObj.drawString(text, x, hodgepodge$listBottom + 5, 0xFFFFFF);
         hodgepodge$search.drawTextBox();
@@ -270,13 +272,17 @@ public class MixinGuiModList extends GuiScreen {
 
     @Unique
     private void hodgepodge$scrollToSelected(int index) {
-        float targetScroll = index * 35;
-        hodgepodge$GuiScrollingList().hodgepodge$setScrollDistance(targetScroll);
+        hodgepodge$ScrollList().hodgepodge$setScroll(index * 35);
     }
 
     @Unique
     private GuiModList hodgepodge$GuiModList() {
         return (GuiModList) (Object) this;
+    }
+
+    @Unique
+    private IScrollList hodgepodge$ScrollList() {
+        return (IScrollList) this.modList;
     }
 
     @Unique

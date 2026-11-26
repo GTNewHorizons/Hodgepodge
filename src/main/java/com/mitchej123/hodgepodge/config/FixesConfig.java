@@ -81,6 +81,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixEndGhostPlayer;
 
+    @Config.Comment("Use current player positions for entity tracking range checks so teleported players become visible")
+    @Config.DefaultBoolean(true)
+    public static boolean fixPlayerTrackingAfterTeleport;
+
     @Config.Comment("Fix duplicate sounds from playing when closing a gui.")
     @Config.DefaultBoolean(true)
     public static boolean fixDuplicateSounds;
