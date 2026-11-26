@@ -26,9 +26,6 @@ public final class EarlyConfig {
     public static final boolean noFasterForgeEventTransformer;
     public static final boolean noFmlRelaunchLogLoggerCache;
     public static final boolean noAsyncFmlFileLog;
-    public static final boolean debugLogConfigParsingTimes = Boolean.getBoolean("hodgepodge.logConfigTimes");
-    public static final boolean debugEnumValuesSpam = Boolean.getBoolean("hodgepodge.logEnumValues");
-    public static final boolean dumpASMClass = Boolean.getBoolean("hodgepodge.dumpClass");
 
     static {
         Properties config = new Properties();

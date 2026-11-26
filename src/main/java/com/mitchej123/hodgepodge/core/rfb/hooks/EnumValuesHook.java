@@ -11,13 +11,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mitchej123.hodgepodge.core.shared.FileLogger;
+import com.mitchej123.hodgepodge.core.shared.HodgepodgeProperties;
 
 @SuppressWarnings("unused")
 public class EnumValuesHook {
 
     private static final Logger logger = LogManager.getLogger("EnumValuesDebug");
     private static final Map<Class<?>, Integer> counts = new ConcurrentHashMap<>();
-    private static final boolean STACKTRACE = Boolean.getBoolean("hodgepodge.logStacktraceEnumValues");
     public static final int THRESHOLD = Integer.getInteger("hodgepodge.logIntervalEnumValues", 500);
 
     static {
@@ -32,7 +32,7 @@ public class EnumValuesHook {
         counts.put(clazz, total);
         String msg = String
                 .format("%s.values() copied %d entries, total %d copies!", clazz.getName(), THRESHOLD, total);
-        if (STACKTRACE) {
+        if (HodgepodgeProperties.LOG_STACKTRACE_ENUM_VALUES) {
             logger.warn(msg, new Exception());
         } else {
             logger.warn(msg);

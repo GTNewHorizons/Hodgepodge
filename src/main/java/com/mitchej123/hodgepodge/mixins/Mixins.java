@@ -12,6 +12,7 @@ import com.mitchej123.hodgepodge.config.SoundConfig;
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
 import com.mitchej123.hodgepodge.config.TweaksConfig;
 import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
+import com.mitchej123.hodgepodge.core.shared.HodgepodgeProperties;
 
 public enum Mixins implements IMixins {
 
@@ -1132,11 +1133,11 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)),
     DEBUG_EVENT_REGISTRATION(new MixinBuilder()
             .addCommonMixins("debug.MixinEventBus_DebugRegistration")
-            .setApplyIf(() -> Boolean.getBoolean("hodgepodge.logEventTimes"))
+            .setApplyIf(() -> HodgepodgeProperties.LOG_EVENT_TIMES)
             .setPhase(Phase.EARLY)),
     DEBUG_DUMP_TEXTURES_SIZES(new MixinBuilder()
             .addClientMixins("debug.MixinDynamicTexture", "debug.MixinTextureAtlasSprite")
-            .setApplyIf(() -> Boolean.getBoolean("hodgepodge.debugtextures"))
+            .setApplyIf(() -> HodgepodgeProperties.DEBUG_TEXTURES)
             .setPhase(Phase.EARLY)),
     FIX_HOUSE_CHAR_RENDERING(new MixinBuilder()
             .addClientMixins("minecraft.render.MixinFontRenderer_House")
