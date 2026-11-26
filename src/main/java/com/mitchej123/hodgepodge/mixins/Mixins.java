@@ -420,10 +420,6 @@ public enum Mixins implements IMixins {
                     "minecraft.network.MixinNetHandlerLoginServer_LocalizedKick")
             .setApplyIf(() -> FixesConfig.fixUnlocalizedDisconnectMessages)
             .setPhase(Phase.EARLY)),
-    FIX_HOPPER_HIT_BOX(new MixinBuilder("Fix Vanilla Hopper hit box")
-            .addCommonMixins("minecraft.block.MixinBlockHopper")
-            .setApplyIf(() -> FixesConfig.fixHopperHitBox)
-            .setPhase(Phase.EARLY)),
     TILE_ENTITY_RENDERER_PROFILER(new MixinBuilder()
             .addClientMixins("minecraft.profiler.TileEntityRendererDispatcherMixin")
             .addClientMixins("minecraft.profiler.MinecraftMixin")
@@ -1178,6 +1174,18 @@ public enum Mixins implements IMixins {
     IMPROVE_REDSTONE_HITBOX(new MixinBuilder("Add a accurate hitbox to the redstone wire")
             .addClientMixins("minecraft.block.MixinBlockRedstoneWire_Hitbox")
             .setApplyIf(() -> TweaksConfig.improvedRedstoneWireHitbox)
+            .setPhase(Phase.EARLY)),
+    SHAPED_BLOCK_OUTLINES(new MixinBuilder("Shaped selection outlines and hit areas for vanilla blocks, some collision")
+            .addCommonMixins(
+                    "minecraft.outlineshapes.MixinBlockAnvil_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockDragonEgg_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockEndPortalFrame_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockFence_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockHopper_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockStairs_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockWall_OutlineShape",
+                    "minecraft.outlineshapes.MixinCollisionShapedBlocks_OutlineShape")
+            .setApplyIf(() -> TweaksConfig.shapedBlockOutlines)
             .setPhase(Phase.EARLY)),
     FIX_INSTANT_HAND_ITEM_TEXTURE_SWITCH(new MixinBuilder()
             .addClientMixins("minecraft.render.MixinItemRenderer_FixInstantItemSwitch")

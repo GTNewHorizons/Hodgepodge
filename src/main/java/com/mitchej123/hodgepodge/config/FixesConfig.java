@@ -157,10 +157,6 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixHasteArmSwing;
 
-    @Config.Comment("Fix vanilla Hopper hit box")
-    @Config.DefaultBoolean(true)
-    public static boolean fixHopperHitBox;
-
     @Config.Comment("Fix Drawer + Hopper voiding items")
     @Config.DefaultBoolean(true)
     public static boolean fixHopperVoidingItems;
