@@ -113,7 +113,11 @@ public abstract class MixinGuiConfig extends GuiScreen {
     private void hodgepodge$renderSearchBar(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         hodgepodge$searchBar.drawTextBox();
         if (!hodgepodge$searchBar.isFocused() && hodgepodge$searchBar.getText().isEmpty()) {
-            fontRendererObj.drawString("Search...", hodgepodge$searchBar.xPosition + 2, 8, -1);
+            fontRendererObj.drawString(
+                    StatCollector.translateToLocal("hodgepodge.config.search"),
+                    hodgepodge$searchBar.xPosition + 2,
+                    8,
+                    -1);
         }
     }
 
