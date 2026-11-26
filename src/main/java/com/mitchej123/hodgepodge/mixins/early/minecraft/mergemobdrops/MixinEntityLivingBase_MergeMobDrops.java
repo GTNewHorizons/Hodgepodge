@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mitchej123.hodgepodge.mixins.interfaces.IMobDropsContextHolder;
-import com.mitchej123.hodgepodge.util.MergeMobDropsHelper;
+import com.mitchej123.hodgepodge.util.MergeDropsHelper;
 import com.mitchej123.hodgepodge.util.MobDropsContainerContext;
 
 import cpw.mods.fml.common.Loader;
@@ -57,12 +57,12 @@ public abstract class MixinEntityLivingBase_MergeMobDrops extends Entity impleme
 
         // Apply Battlegear2 bow luck enchantment equivalent
         if (Loader.isModLoaded("battlegear2")) {
-            MergeMobDropsHelper.applyBowLuck(source, ctx.drops);
+            MergeDropsHelper.applyBowLuck(source, ctx.drops);
         }
 
         /* ====== Compatibility patches end ===== */
 
-        MergeMobDropsHelper.mergeMobDrops(ctx);
+        MergeDropsHelper.mergeMobDrops(ctx);
 
         // Convert to entities
         int len = ctx.drops.size();

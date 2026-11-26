@@ -23,7 +23,50 @@ import mods.battlegear2.api.core.IBattlePlayer;
 import mods.battlegear2.enchantments.BaseEnchantment;
 import xonin.backhand.api.core.BackhandUtils;
 
-public class MergeMobDropsHelper {
+public class MergeDropsHelper {
+
+    public static void mergeMobDrops(MobDropsContainerContext ctx) {
+        int mode = TweaksConfig.mergeMobDropsMode;
+
+        // FORCE_MERGE_INTO_ONE
+        if (mode == 1) return; // Assuming dropItem/entityDropItem calls were already merged
+
+        // Check if the threshold is breached
+        boolean isAboveThreshold = false;
+        int totalCount = 0;
+        int threshold = TweaksConfig.mergeMobDropsModeHybridThreshold;
+        for (ItemStack drop : ctx.drops) {
+            totalCount += drop.stackSize;
+
+            if (totalCount >= threshold) {
+                isAboveThreshold = true;
+                break; // Early escape
+            }
+        }
+
+        if (isAboveThreshold) {
+            // HYBRID_AVARITIA
+            if (mode == 3 && Loader.isModLoaded("Avaritia")) {
+                /*
+                 * Ensuring the capacity is to prevent memory reallocations as the array grows. Don't ask how one can
+                 * get this high...actually there's a hint right below hehe
+                 */
+                convertToClusters(ctx.drops, 256);
+                Arrays.fill(ctx.offsets, 0.0f); // ignore offsets for clusters
+                return;
+            }
+
+            // HYBRID || HYBRID_AVARITIA without Avaritia, choosing FORCE_MERGE_INTO_ONE
+            if (mode == 2 || mode == 3) return;
+        }
+
+        // RESPECT_MAX_STACK_SIZE || HYBRID choosing it || HYBRID_AVARITIA choosing it
+        if (mode == 0 || mode == 2 || mode == 3) {
+            // Estimation logic: threshold/64 (stackables) + 4 (equipments) + 2 (several rare drops)
+            respectMaxStackSize(ctx.drops, ctx.offsets, ctx.hasNonZeroOffset, threshold / 64 + 6);
+        }
+
+    }
 
     // Bow luck equivalent compatible with MixinEntityLivingBase_MergeMobDrops
     @Optional.Method(modid = "battlegear2")
@@ -57,12 +100,8 @@ public class MergeMobDropsHelper {
 
     // Pack mob drops into Avaritia matter clusters
     @Optional.Method(modid = "Avaritia")
-    private static void convertToClusters(List<ItemStack> drops) {
-        /*
-         * 256 is to prevent memory reallocations as the array grows. Don't ask how one can get this high...actually
-         * there's a hint right above hehe
-         */
-        List<ItemStack> result = new ArrayList<>(256);
+    public static void convertToClusters(List<ItemStack> drops, int ensuredCapacity) {
+        List<ItemStack> result = new ArrayList<>(ensuredCapacity);
         Map<ItemStackWrapper, Integer> currentMap = new HashMap<>();
         int currentCount = 0; // Tracks how many total items have been packed into the current cluster so far
 
@@ -98,78 +137,39 @@ public class MergeMobDropsHelper {
         drops.addAll(result);
     }
 
-    public static void mergeMobDrops(MobDropsContainerContext ctx) {
-        List<ItemStack> drops = ctx.drops;
-        int mode = TweaksConfig.mergeMobDropsMode;
+    public static void respectMaxStackSize(List<ItemStack> drops, float[] offsets, boolean hasNonZeroOffset,
+            int ensuredCapacity) {
+        List<ItemStack> sDrops = new ArrayList<>(ensuredCapacity); // s is for 'split'
+        float[] sOffsets = hasNonZeroOffset ? new float[ensuredCapacity] : null;
+        int sIndex = 0;
 
-        // FORCE_MERGE_INTO_ONE
-        if (mode == 1) return; // They've already handled in MixinEntityLiving_MergeMobDrops or Mixin<EntityName>
+        for (int i = 0, size = drops.size(); i < size; i++) {
+            ItemStack drop = drops.get(i);
 
-        // Check if the threshold is breached
-        boolean isAboveThreshold = false;
-        int totalCount = 0;
-        int threshold = TweaksConfig.mergeMobDropsModeHybridThreshold;
-        for (ItemStack drop : drops) {
-            totalCount += drop.stackSize;
+            int remaining = drop.stackSize;
+            int maxStackSize = drop.getMaxStackSize();
 
-            if (totalCount >= threshold) {
-                isAboveThreshold = true;
-                break; // Early escape
-            }
-        }
+            while (remaining > 0) {
+                int currentBatchSize = Math.min(remaining, maxStackSize);
+                ItemStack sStack = drop.copy();
+                sStack.stackSize = currentBatchSize;
 
-        if (isAboveThreshold) {
-            // HYBRID_AVARITIA
-            if (mode == 3 && Loader.isModLoaded("Avaritia")) {
-                MergeMobDropsHelper.convertToClusters(drops);
-                Arrays.fill(ctx.offsets, 0.0f); // ignore offsets for clusters
-                return;
-            }
-
-            // HYBRID || HYBRID_AVARITIA without Avaritia, choosing FORCE_MERGE_INTO_ONE
-            if (mode == 2 || mode == 3) return;
-        }
-
-        // RESPECT_MAX_STACK_SIZE || HYBRID choosing it || HYBRID_AVARITIA choosing it
-        if (mode == 0 || mode == 2 || mode == 3) {
-            boolean hasOffsets = ctx.hasNonZeroOffset;
-            int maxDropSize = threshold / 64 + 6;
-            /*
-             * Predefining the size of the array is to prevent memory reallocations it grows. Estimation logic:
-             * threshold/64 (stackables) + 4 (equipments) + 2 (several rare drops)
-             */
-            List<ItemStack> sDrops = new ArrayList<>(maxDropSize); // s is for 'split'
-            float[] sOffsets = hasOffsets ? new float[maxDropSize] : null;
-            int sIndex = 0;
-
-            for (int i = 0, size = drops.size(); i < size; i++) {
-                ItemStack drop = drops.get(i);
-
-                int remaining = drop.stackSize;
-                int maxStackSize = drop.getMaxStackSize();
-
-                while (remaining > 0) {
-                    int currentBatchSize = Math.min(remaining, maxStackSize);
-                    ItemStack sStack = drop.copy();
-                    sStack.stackSize = currentBatchSize;
-
-                    sDrops.add(sStack);
-                    if (hasOffsets) {
-                        if (sOffsets.length <= sIndex) {
-                            sOffsets = Arrays.copyOf(sOffsets, sOffsets.length * 2);
-                        }
-                        sOffsets[sIndex++] = ctx.offsets[i];
+                sDrops.add(sStack);
+                if (hasNonZeroOffset) {
+                    if (sOffsets.length <= sIndex) {
+                        sOffsets = Arrays.copyOf(sOffsets, sOffsets.length * 2);
                     }
-                    remaining -= currentBatchSize;
+                    sOffsets[sIndex++] = offsets[i];
                 }
+                remaining -= currentBatchSize;
             }
+        }
 
-            drops.clear();
-            drops.addAll(sDrops);
+        drops.clear();
+        drops.addAll(sDrops);
 
-            if (hasOffsets) {
-                ctx.offsets = sOffsets;
-            }
+        if (hasNonZeroOffset) {
+            offsets = sOffsets;
         }
     }
 }
