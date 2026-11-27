@@ -1218,7 +1218,8 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)),
     CLEAR_STALE_LOADING_SCREEN_INPUT(new MixinBuilder("Clear stale clicks made on the loading screen and prevent them from firing in the main menu")
             .addClientMixins("minecraft.client.MixinMinecraft_ClearStaleLoadingScreenInput")
-            .setApplyIf(() -> FixesConfig.clearStaleLoadingScreenInput).setPhase(Phase.EARLY)),
+            .setApplyIf(() -> FixesConfig.clearStaleLoadingScreenInput)
+            .setPhase(Phase.EARLY)),
     FIX_BREAKING_SPECIAL_ARMOR_WITH_THORNS_ENCHANTMENT(new MixinBuilder("Fix breaking electric and other special armor when Thorns enchantment is applied")
             .addCommonMixins("minecraft.item.MixinEnchantmentThorns_FixBreakingSpecialArmor")
             .setApplyIf(() -> FixesConfig.fixBreakingSpecialArmorWithThornsEnchantment)
@@ -1399,6 +1400,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixIc2ResourcePackTranslation)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.EARLY)),
+    LOCALIZE_IC2_NEI_TITLES(new MixinBuilder("Localize IC2 NEI recipe handler titles")
+            .addClientMixins("ic2.MixinIc2NeiHandlerTitles")
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
     IC2_HOVER_MODE_FIX(new MixinBuilder()
             .addCommonMixins("ic2.MixinIc2QuantumSuitHoverMode")
             .setApplyIf(() -> FixesConfig.fixIc2HoverMode)
@@ -1968,6 +1973,10 @@ public enum Mixins implements IMixins {
     FIX_DRUM_EATING_CELLS(new MixinBuilder("Fix extra utilities drums eating ic2 cells and forestry capsules")
             .addCommonMixins("extrautilities.MixinBlockDrum")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesDrumEatingCells)
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
+    LOCALIZE_EXTRA_UTILITIES_NEI_TITLES(new MixinBuilder("Localize Extra Utilities NEI recipe handler titles")
+            .addClientMixins("extrautilities.MixinExuNeiHandlerTitles")
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
     FIX_GREENSCREEN_MICROBLOCKS(new MixinBuilder("Fix extra utilities Lapis Caelestis microblocks")
