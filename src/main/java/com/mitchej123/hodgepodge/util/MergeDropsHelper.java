@@ -2,6 +2,7 @@ package com.mitchej123.hodgepodge.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,32 +106,41 @@ public class MergeDropsHelper {
         Map<ItemStackWrapper, Integer> currentMap = new HashMap<>();
         int currentCount = 0; // Tracks how many total items have been packed into the current cluster so far
 
-        for (ItemStack drop : drops) {
+        for (int i = 0, size = drops.size(); i < size; i++) {
+            ItemStack drop = drops.get(i);
             int remainingInStack = drop.stackSize;
             drop.stackSize = 1;
             ItemStackWrapper wrap = new ItemStackWrapper(drop);
             drop.stackSize = remainingInStack;
 
-            while (remainingInStack > 0) {
+            // Dedicated branch for pure clusters. Maximizing # of pure clusters enhances intuitiveness
+            if (remainingInStack >= ItemMatterCluster.MAX_NORMAL_CAPACITY) {
+                int pureClusterCount = remainingInStack / ItemMatterCluster.MAX_NORMAL_CAPACITY;
+                ItemStack pureCluster = ItemMatterCluster.makeCluster(
+                        Collections.singletonMap(wrap, ItemMatterCluster.MAX_NORMAL_CAPACITY));
+                pureCluster.stackSize = pureClusterCount;
+                result.add(pureCluster);
+                remainingInStack %= ItemMatterCluster.MAX_NORMAL_CAPACITY;
+            }
+
+            if (remainingInStack > 0) {
                 int spaceLeft = ItemMatterCluster.MAX_NORMAL_CAPACITY - currentCount;
-                int take = Math.min(remainingInStack, spaceLeft);
-
-                if (take > 0) {
-                    Integer existing = currentMap.get(wrap);
-                    currentMap.put(wrap, existing == null ? take : existing + take);
-                    currentCount += take;
-                    remainingInStack -= take;
-                }
-
-                if (currentCount >= ItemMatterCluster.MAX_NORMAL_CAPACITY) {
+                if (remainingInStack < spaceLeft) {
+                    currentMap.merge(wrap, remainingInStack, Integer::sum);
+                    currentCount += remainingInStack;
+                } else {
+                    currentMap.merge(wrap, spaceLeft, Integer::sum);
                     result.add(ItemMatterCluster.makeCluster(currentMap));
                     currentMap.clear();
-                    currentCount = 0;
+                    currentCount = remainingInStack - spaceLeft;
+                    if (currentCount > 0) {
+                        currentMap.put(wrap, currentCount);
+                    }
                 }
             }
         }
 
-        if (!currentMap.isEmpty()) {
+        if (!currentMap.isEmpty()) { // Non-full cluster
             result.add(ItemMatterCluster.makeCluster(currentMap));
         }
         drops.clear();
