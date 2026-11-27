@@ -2228,7 +2228,7 @@ public enum Mixins implements IMixins {
             .addRequiredMod(TargetedMod.ZTONES)
             .setPhase(Phase.LATE)),
     ZTONES_DISABLE_SCROLL_SWAP(new MixinBuilder("Disable Z-Tones scroll swapping")
-            .addClientMixins("ztones.MixinEventHandler_DisableScrollSwap")
+            .addClientMixins("ztones.MixinCommonProxy_DisableScrollSwap")
             .setApplyIf(() -> TweaksConfig.ztonesDisableScrollSwap)
             .addRequiredMod(TargetedMod.ZTONES)
             .setPhase(Phase.LATE)),
