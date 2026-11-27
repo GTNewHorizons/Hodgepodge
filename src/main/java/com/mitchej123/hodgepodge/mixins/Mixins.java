@@ -415,10 +415,6 @@ public enum Mixins implements IMixins {
                     "minecraft.network.MixinNetHandlerLoginServer_LocalizedKick")
             .setApplyIf(() -> FixesConfig.fixUnlocalizedDisconnectMessages)
             .setPhase(Phase.EARLY)),
-    FIX_HOPPER_HIT_BOX(new MixinBuilder("Fix Vanilla Hopper hit box")
-            .addCommonMixins("minecraft.block.MixinBlockHopper")
-            .setApplyIf(() -> FixesConfig.fixHopperHitBox)
-            .setPhase(Phase.EARLY)),
     TILE_ENTITY_RENDERER_PROFILER(new MixinBuilder()
             .addClientMixins("minecraft.profiler.TileEntityRendererDispatcherMixin")
             .addClientMixins("minecraft.profiler.MinecraftMixin")
@@ -1174,6 +1170,18 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.block.MixinBlockRedstoneWire_Hitbox")
             .setApplyIf(() -> TweaksConfig.improvedRedstoneWireHitbox)
             .setPhase(Phase.EARLY)),
+    SHAPED_BLOCK_OUTLINES(new MixinBuilder("Shaped selection outlines and hit areas for vanilla blocks, some collision")
+            .addCommonMixins(
+                    "minecraft.outlineshapes.MixinBlockAnvil_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockDragonEgg_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockEndPortalFrame_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockFence_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockHopper_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockStairs_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockWall_OutlineShape",
+                    "minecraft.outlineshapes.MixinCollisionShapedBlocks_OutlineShape")
+            .setApplyIf(() -> TweaksConfig.shapedBlockOutlines)
+            .setPhase(Phase.EARLY)),
     FIX_INSTANT_HAND_ITEM_TEXTURE_SWITCH(new MixinBuilder()
             .addClientMixins("minecraft.render.MixinItemRenderer_FixInstantItemSwitch")
             .setApplyIf(() -> FixesConfig.fixInstantHandItemTextureSwitch)
@@ -1205,7 +1213,8 @@ public enum Mixins implements IMixins {
             .setPhase(Phase.EARLY)),
     CLEAR_STALE_LOADING_SCREEN_INPUT(new MixinBuilder("Clear stale clicks made on the loading screen and prevent them from firing in the main menu")
             .addClientMixins("minecraft.client.MixinMinecraft_ClearStaleLoadingScreenInput")
-            .setApplyIf(() -> FixesConfig.clearStaleLoadingScreenInput).setPhase(Phase.EARLY)),
+            .setApplyIf(() -> FixesConfig.clearStaleLoadingScreenInput)
+            .setPhase(Phase.EARLY)),
     FIX_BREAKING_SPECIAL_ARMOR_WITH_THORNS_ENCHANTMENT(new MixinBuilder("Fix breaking electric and other special armor when Thorns enchantment is applied")
             .addCommonMixins("minecraft.item.MixinEnchantmentThorns_FixBreakingSpecialArmor")
             .setApplyIf(() -> FixesConfig.fixBreakingSpecialArmorWithThornsEnchantment)
@@ -1316,6 +1325,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.block.MixinFurnaceSaveItemBurnTimeToNBT")
             .setApplyIf(() -> FixesConfig.furnaceSaveItemBurnTimeToNBT)
             .setPhase(Phase.EARLY)),
+    DISABLE_PARTICLE_COLLISIONS(new MixinBuilder("Disable collisions for all EntityFX particles for performance")
+            .addClientMixins("minecraft.MixinEntityFX_DisableCollisions")
+            .setApplyIf(() -> TweaksConfig.disableParticleCollisions)
+            .setPhase(Phase.EARLY)),
     TRACK_INCOMING_PACKETS(new MixinBuilder("Track incoming packets for /packetstats")
             .addClientMixins("debug.MixinNetworkManager_TrackIncomingPackets")
             .setApplyIf(() -> DebugConfig.trackIncomingPackets)
@@ -1323,6 +1336,10 @@ public enum Mixins implements IMixins {
     CHANGE_RECEIVED_PACKET_COUNT_LIMIT_TO_TIME_LIMIT(new MixinBuilder("Change received packet count limit to time limit")
             .addClientMixins("minecraft.packets.MixinNetworkManager_ReceivedProcessingLimit")
             .setApplyIf(() -> FixesConfig.changeReceivedPacketCountLimitToTimeLimit)
+            .setPhase(Phase.EARLY)),
+    DROP_SINGLE_XP_ORB(new MixinBuilder("Always drop a single xp orb instead of subdividing into multiple")
+            .addCommonMixins("minecraft.entity.MixinEntityXPOrb_DropSingleOrb")
+            .setApplyIf(() -> TweaksConfig.dropSingleXpOrb)
             .setPhase(Phase.EARLY)),
     // endregion
 
@@ -1382,6 +1399,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixIc2ResourcePackTranslation)
             .addRequiredMod(TargetedMod.IC2)
             .setPhase(Phase.EARLY)),
+    LOCALIZE_IC2_NEI_TITLES(new MixinBuilder("Localize IC2 NEI recipe handler titles")
+            .addClientMixins("ic2.MixinIc2NeiHandlerTitles")
+            .addRequiredMod(TargetedMod.IC2)
+            .setPhase(Phase.LATE)),
     IC2_HOVER_MODE_FIX(new MixinBuilder()
             .addCommonMixins("ic2.MixinIc2QuantumSuitHoverMode")
             .setApplyIf(() -> FixesConfig.fixIc2HoverMode)
@@ -1953,6 +1974,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesDrumEatingCells)
             .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
             .setPhase(Phase.LATE)),
+    LOCALIZE_EXTRA_UTILITIES_NEI_TITLES(new MixinBuilder("Localize Extra Utilities NEI recipe handler titles")
+            .addClientMixins("extrautilities.MixinExuNeiHandlerTitles")
+            .addRequiredMod(TargetedMod.EXTRA_UTILITIES)
+            .setPhase(Phase.LATE)),
     FIX_GREENSCREEN_MICROBLOCKS(new MixinBuilder("Fix extra utilities Lapis Caelestis microblocks")
             .addClientMixins("extrautilities.MixinFullBrightMicroMaterial")
             .setApplyIf(() -> FixesConfig.fixExtraUtilitiesGreenscreenMicroblocks)
@@ -2185,9 +2210,35 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> MemoryConfig.leaks.fixBibliocraftTESRWorldLeak)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
+    BIBLIOCRAFT_ITEM_META_FIX(new MixinBuilder()
+            .addCommonMixins("bibliocraft.MixinBibliocraftItem_NameMetaSafety")
+            .addClientMixins("bibliocraft.MixinBibliocraftItem_TooltipMetaSafety")
+            .setApplyIf(() -> FixesConfig.bibliocraftNoCrashOnInvalidMeta)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
+            .setPhase(Phase.LATE)),
+    BIBLIOWOODS_ITEM_META_FIX(new MixinBuilder()
+            .addCommonMixins("bibliowood.forestry.MixinBiblioWoodItem_MetaSafety")
+            .setApplyIf(() -> FixesConfig.bibliowoodsNoCrashOnInvalidMeta)
+            .addRequiredMod(TargetedMod.BIBLIOWOODSFORESTRY)
+            .setPhase(Phase.LATE)),
     ZTONES_PACKET_FIX(new MixinBuilder("Packet Fix")
             .addCommonMixins("ztones.MixinZtonesPatchPacketExploits")
             .setApplyIf(() -> FixesConfig.fixZTonesPackets)
+            .addRequiredMod(TargetedMod.ZTONES)
+            .setPhase(Phase.LATE)),
+    ZTONES_DISABLE_SCROLL_SWAP(new MixinBuilder("Disable Z-Tones scroll swapping")
+            .addClientMixins("ztones.MixinCommonProxy_DisableScrollSwap")
+            .setApplyIf(() -> TweaksConfig.ztonesDisableScrollSwap)
+            .addRequiredMod(TargetedMod.ZTONES)
+            .setPhase(Phase.LATE)),
+    ZTONES_CYCLE_KEY(new MixinBuilder("Z-Tones scroll swapping uses a rebindable key instead of Alt/Ctrl")
+            .addClientMixins("ztones.MixinEventHandler_CycleKey")
+            .setApplyIf(() -> !TweaksConfig.ztonesDisableScrollSwap && TweaksConfig.ztonesCycleKeybind)
+            .addRequiredMod(TargetedMod.ZTONES)
+            .setPhase(Phase.LATE)),
+    ZTONES_REMOVE_SCROLL_TOOLTIP(new MixinBuilder("Remove the outdated Alt/Ctrl+Scroll tooltip from Z-Tones blocks")
+            .addClientMixins("ztones.MixinItemDecoBlocks2_RemoveTooltip")
+            .setApplyIf(() -> TweaksConfig.ztonesDisableScrollSwap || TweaksConfig.ztonesCycleKeybind)
             .addRequiredMod(TargetedMod.ZTONES)
             .setPhase(Phase.LATE)),
     ASP_RECIPE_FIX(new MixinBuilder("MT Core recipe fix")

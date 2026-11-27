@@ -157,10 +157,6 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixHasteArmSwing;
 
-    @Config.Comment("Fix vanilla Hopper hit box")
-    @Config.DefaultBoolean(true)
-    public static boolean fixHopperHitBox;
-
     @Config.Comment("Fix Drawer + Hopper voiding items")
     @Config.DefaultBoolean(true)
     public static boolean fixHopperVoidingItems;
@@ -694,11 +690,21 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixBibliocraftPaintingUtilPath;
 
+    @Config.Comment("Prevent Bibliocraft from crashing the game when it encounters an item with invalid metadata.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean bibliocraftNoCrashOnInvalidMeta;
+
     // Bibliowoods Forestry
 
     @Config.Comment("Fix Bibliowoods Forestry recipes")
     @Config.DefaultBoolean(true)
     public static boolean fixBibliowoodsForestryRecipes;
+
+    @Config.Comment("Prevent Bibliowoods from crashing the game when it encounters an item with invalid metadata.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean bibliowoodsNoCrashOnInvalidMeta;
 
     // Biomes O' Plenty
 
