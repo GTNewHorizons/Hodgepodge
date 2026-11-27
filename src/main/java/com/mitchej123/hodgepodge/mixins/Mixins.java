@@ -191,11 +191,6 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.entity.player.MixinEntityPlayer_ItemThrower")
             .setApplyIf(() -> FixesConfig.addThrowerTagToDroppedItems)
             .setPhase(Phase.EARLY)),
-    SYNC_ITEM_THROWER(new MixinBuilder("Synchonize from server to client the thrower and pickup delay of an item entity")
-            .addCommonMixins("minecraft.packets.MixinS0EPacketSpawnObject_ItemThrower")
-            .addClientMixins("minecraft.network.MixinNetHandlerPlayClient_ItemThrower")
-            .setApplyIf(() -> FixesConfig.syncItemThrower)
-            .setPhase(Phase.EARLY)),
     FIX_PERSPECTIVE_CAMERA(new MixinBuilder("Camera Perspective Fix")
             .addClientMixins("minecraft.render.MixinEntityRenderer")
             .addExcludedMod(TargetedMod.ARCHAICFIX)
