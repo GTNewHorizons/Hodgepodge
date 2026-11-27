@@ -495,7 +495,11 @@ public class TweaksConfig {
 
     // ZTones
 
-    @Config.Comment("Z-Tones block cycling uses a dedicated keybind instead of the Alt and Ctrl keys")
+    @Config.Comment("Disable Z-Tones scroll swapping, along with its keybind and tooltip")
+    @Config.DefaultBoolean(true)
+    public static boolean ztonesDisableScrollSwap;
+
+    @Config.Comment("Z-Tones scroll swapping uses a rebindable key instead of Alt/Ctrl and no longer blocks clicks. Only applies if ztonesDisableScrollSwap is false")
     @Config.DefaultBoolean(true)
     public static boolean ztonesCycleKeybind;
 

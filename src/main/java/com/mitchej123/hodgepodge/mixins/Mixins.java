@@ -2227,9 +2227,19 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> FixesConfig.fixZTonesPackets)
             .addRequiredMod(TargetedMod.ZTONES)
             .setPhase(Phase.LATE)),
-    ZTONES_CYCLE_KEY(new MixinBuilder("Cycle ZTones blocks with a dedicated keybind instead of Alt and Ctrl")
-            .addClientMixins("ztones.MixinEventHandler_CycleKey", "ztones.MixinItemDecoBlocks2_RemoveTooltip")
-            .setApplyIf(() -> TweaksConfig.ztonesCycleKeybind)
+    ZTONES_DISABLE_SCROLL_SWAP(new MixinBuilder("Disable Z-Tones scroll swapping")
+            .addClientMixins("ztones.MixinEventHandler_DisableScrollSwap")
+            .setApplyIf(() -> TweaksConfig.ztonesDisableScrollSwap)
+            .addRequiredMod(TargetedMod.ZTONES)
+            .setPhase(Phase.LATE)),
+    ZTONES_CYCLE_KEY(new MixinBuilder("Z-Tones scroll swapping uses a rebindable key instead of Alt/Ctrl")
+            .addClientMixins("ztones.MixinEventHandler_CycleKey")
+            .setApplyIf(() -> !TweaksConfig.ztonesDisableScrollSwap && TweaksConfig.ztonesCycleKeybind)
+            .addRequiredMod(TargetedMod.ZTONES)
+            .setPhase(Phase.LATE)),
+    ZTONES_REMOVE_SCROLL_TOOLTIP(new MixinBuilder("Remove the outdated Alt/Ctrl+Scroll tooltip from Z-Tones blocks")
+            .addClientMixins("ztones.MixinItemDecoBlocks2_RemoveTooltip")
+            .setApplyIf(() -> TweaksConfig.ztonesDisableScrollSwap || TweaksConfig.ztonesCycleKeybind)
             .addRequiredMod(TargetedMod.ZTONES)
             .setPhase(Phase.LATE)),
     ASP_RECIPE_FIX(new MixinBuilder("MT Core recipe fix")
