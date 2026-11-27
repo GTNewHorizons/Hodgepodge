@@ -12,7 +12,7 @@ configurations {
 }
 
 dependencies {
-    api("com.github.GTNewHorizons:GTNHLib:0.11.54:dev")
+    api("com.github.GTNewHorizons:GTNHLib:0.12.7:dev")
 
     compileOnly("com.gtnewhorizons.retrofuturabootstrap:RetroFuturaBootstrap:1.0.16") { transitive = false }
     compileOnly("com.mitchej123:supernova:0.0.2:api") { transitive = false }
@@ -30,6 +30,7 @@ dependencies {
     transformedModCompileOnly("com.github.GTNewHorizons:Railcraft:9.17.34:dev") { exclude group: "thaumcraft", module: "Thaumcraft" }
     transformedModCompileOnly("com.github.GTNewHorizons:TinkersConstruct:1.14.119-GTNH:dev")
     transformedModCompileOnly(rfg.deobf("curse.maven:bibliocraft-228027:2423369"))
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:ForestryMC:4.12.3:dev") // activate to fully test bibliowoods-forestry-edition
     transformedModCompileOnly(rfg.deobf("curse.maven:bibliocraft-bibliowoods-forestry-edition-228363:2229574"))
     transformedModCompileOnly(rfg.deobf("curse.maven:biomes-o-plenty-220318:2499612"))
     transformedModCompileOnly("curse.maven:cofh-core-69162:2388751")

@@ -19,7 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import org.junit.jupiter.api.Test;
 
-import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinAnvilChunkLoader_FastChunkWrite;
+import com.mitchej123.hodgepodge.mixins.early.minecraft.storage.MixinAnvilChunkLoader_FastChunkWrite;
 
 class ChunkWriteConcurrencyTest {
 
