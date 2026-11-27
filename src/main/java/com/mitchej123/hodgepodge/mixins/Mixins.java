@@ -1077,6 +1077,10 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> SpeedupsConfig.fastItemEntityPhysics)
             .addExcludedMod(TargetedMod.FALSETWEAKS)
             .setPhase(Phase.EARLY)),
+    MERGE_MOB_DROPS(new MixinBuilder()
+            .addCommonMixins("minecraft.entity.MixinEntity_MergeCapturedDrops")
+            .setApplyIf(() -> SpeedupsConfig.mergeMobDrops)
+            .setPhase(Phase.EARLY)),
     CULL_DISTANT_ITEM_FRAME_CONTENTS(new MixinBuilder("Skip rendering distant item frames and their contents")
             .addClientMixins("minecraft.render.MixinRenderItemFrame_CullDistantContents")
             .setApplyIf(() -> SpeedupsConfig.cullDistantItemFrameContents)
