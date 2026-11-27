@@ -2198,6 +2198,17 @@ public enum Mixins implements IMixins {
             .setApplyIf(() -> MemoryConfig.leaks.fixBibliocraftTESRWorldLeak)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
             .setPhase(Phase.LATE)),
+    BIBLIOCRAFT_ITEM_META_FIX(new MixinBuilder()
+            .addCommonMixins("bibliocraft.MixinBibliocraftItem_NameMetaSafety")
+            .addClientMixins("bibliocraft.MixinBibliocraftItem_TooltipMetaSafety")
+            .setApplyIf(() -> FixesConfig.bibliocraftNoCrashOnInvalidMeta)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
+            .setPhase(Phase.LATE)),
+    BIBLIOWOODS_ITEM_META_FIX(new MixinBuilder()
+            .addCommonMixins("bibliowood.forestry.MixinBiblioWoodItem_MetaSafety")
+            .setApplyIf(() -> FixesConfig.bibliowoodsNoCrashOnInvalidMeta)
+            .addRequiredMod(TargetedMod.BIBLIOWOODSFORESTRY)
+            .setPhase(Phase.LATE)),
     ZTONES_PACKET_FIX(new MixinBuilder("Packet Fix")
             .addCommonMixins("ztones.MixinZtonesPatchPacketExploits")
             .setApplyIf(() -> FixesConfig.fixZTonesPackets)
