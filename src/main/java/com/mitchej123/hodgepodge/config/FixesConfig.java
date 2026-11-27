@@ -81,6 +81,10 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixEndGhostPlayer;
 
+    @Config.Comment("Use current player positions for entity tracking range checks so teleported players become visible")
+    @Config.DefaultBoolean(true)
+    public static boolean fixPlayerTrackingAfterTeleport;
+
     @Config.Comment("Fix duplicate sounds from playing when closing a gui.")
     @Config.DefaultBoolean(true)
     public static boolean fixDuplicateSounds;
@@ -152,10 +156,6 @@ public class FixesConfig {
     @Config.Comment("Fix arm not swinging when having too much haste")
     @Config.DefaultBoolean(true)
     public static boolean fixHasteArmSwing;
-
-    @Config.Comment("Fix vanilla Hopper hit box")
-    @Config.DefaultBoolean(true)
-    public static boolean fixHopperHitBox;
 
     @Config.Comment("Fix Drawer + Hopper voiding items")
     @Config.DefaultBoolean(true)
@@ -694,11 +694,21 @@ public class FixesConfig {
     @Config.DefaultBoolean(true)
     public static boolean fixBibliocraftPaintingUtilPath;
 
+    @Config.Comment("Prevent Bibliocraft from crashing the game when it encounters an item with invalid metadata.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean bibliocraftNoCrashOnInvalidMeta;
+
     // Bibliowoods Forestry
 
     @Config.Comment("Fix Bibliowoods Forestry recipes")
     @Config.DefaultBoolean(true)
     public static boolean fixBibliowoodsForestryRecipes;
+
+    @Config.Comment("Prevent Bibliowoods from crashing the game when it encounters an item with invalid metadata.")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean bibliowoodsNoCrashOnInvalidMeta;
 
     // Biomes O' Plenty
 
