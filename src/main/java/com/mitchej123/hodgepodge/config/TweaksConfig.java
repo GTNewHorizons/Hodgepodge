@@ -496,7 +496,7 @@ public class TweaksConfig {
     // ZTones
 
     @Config.Comment("Disable Z-Tones scroll swapping, along with its keybind and tooltip")
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     public static boolean ztonesDisableScrollSwap;
 
     @Config.Comment("Z-Tones scroll swapping uses a rebindable key instead of Alt/Ctrl and no longer blocks clicks. Only applies if ztonesDisableScrollSwap is false")
