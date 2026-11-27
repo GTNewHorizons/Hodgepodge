@@ -3,9 +3,7 @@ package com.mitchej123.hodgepodge.mixins.late.ic2;
 import net.minecraft.util.StatCollector;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import org.spongepowered.asm.mixin.Overwrite;
 
 import ic2.neiIntegration.core.recipehandler.AdvRecipeHandler;
 import ic2.neiIntegration.core.recipehandler.FluidCannerRecipeHandler;
@@ -18,8 +16,12 @@ import ic2.neiIntegration.core.recipehandler.SolidCannerRecipeHandler;
         remap = false)
 public class MixinIc2NeiHandlerTitles {
 
-    @ModifyReturnValue(method = "getRecipeName", at = @At("RETURN"))
-    private String hodgepodge$localizeRecipeName(String original) {
+    /**
+     * @author shironakoushi
+     * @reason Localize the hardcoded NEI recipe title
+     */
+    @Overwrite
+    public String getRecipeName() {
         return StatCollector.translateToLocal("hodgepodge.nei.title." + getClass().getSimpleName());
     }
 }
