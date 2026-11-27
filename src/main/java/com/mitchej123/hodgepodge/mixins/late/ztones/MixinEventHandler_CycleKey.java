@@ -1,20 +1,27 @@
 package com.mitchej123.hodgepodge.mixins.late.ztones;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.MouseEvent;
 
 import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.riciJak.Ztones.handler.EventHandler;
+import com.riciJak.Ztones.handler.PacketHandler;
+import com.riciJak.Ztones.item.block.ItemDecoBlocks2;
+import com.riciJak.Ztones.network.ToggleMetaData;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 @Mixin(value = EventHandler.class, remap = false)
 public class MixinEventHandler_CycleKey {
@@ -30,21 +37,19 @@ public class MixinEventHandler_CycleKey {
         ClientRegistry.registerKeyBinding(hodgepodge$cycleKey);
     }
 
-    // ZTones has this method 4 times, one for L/R Alt/Ctrl, with a proper keybind we only need 1.
-    @Redirect(
-            method = "onMouseEvent",
-            at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Keyboard;isKeyDown(I)Z", ordinal = 0))
-    private boolean hodgepodge$checkCycleKey(int key) {
-        return GameSettings.isKeyDown(hodgepodge$cycleKey);
-    }
-
-    @Redirect(
-            method = "onMouseEvent",
-            at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Keyboard;isKeyDown(I)Z"),
-            slice = @Slice(
-                    from = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Keyboard;isKeyDown(I)Z", ordinal = 1)),
-            require = 3)
-    private boolean hodgepodge$ignoreDefaultKeys(int key) {
-        return false;
+    /**
+     * @author Armisael
+     * @reason Only cancel Scrolls instead of all mouse events. Change hardbound controls to customizable.
+     **/
+    @Overwrite
+    @SubscribeEvent
+    public void onMouseEvent(MouseEvent event) {
+        if (event.dwheel == 0 || !GameSettings.isKeyDown(hodgepodge$cycleKey)) return;
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        ItemStack held = player != null ? player.getHeldItem() : null;
+        if (held != null && held.getItem() instanceof ItemDecoBlocks2) {
+            PacketHandler.sendPacketToServer(new ToggleMetaData(event.dwheel > 0));
+            event.setCanceled(true);
+        }
     }
 }
