@@ -4,6 +4,7 @@ public final class HodgepodgeProperties {
 
     public static final boolean LOG_CONFIG_PARSING_TIMES = Boolean.getBoolean("hodgepodge.logConfigTimes");
     public static final boolean LOG_ENUM_VALUES = Boolean.getBoolean("hodgepodge.logEnumValues");
+    public static final int LOG_ENUM_VALUES_INTERVAL = Integer.getInteger("hodgepodge.logIntervalEnumValues", 500);
     public static final boolean LOG_STACKTRACE_ENUM_VALUES = Boolean.getBoolean("hodgepodge.logStacktraceEnumValues");
     public static final boolean DUMP_ASM_CLASS = Boolean.getBoolean("hodgepodge.dumpClass");
     public static final boolean LOG_EVENT_TIMES = Boolean.getBoolean("hodgepodge.logEventTimes");

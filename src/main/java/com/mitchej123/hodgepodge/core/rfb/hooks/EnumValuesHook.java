@@ -18,7 +18,8 @@ public class EnumValuesHook {
 
     private static final Logger logger = LogManager.getLogger("EnumValuesDebug");
     private static final Map<Class<?>, Integer> counts = new ConcurrentHashMap<>();
-    public static final int THRESHOLD = Integer.getInteger("hodgepodge.logIntervalEnumValues", 500);
+    // public because accessed via ASM
+    public static final int THRESHOLD = HodgepodgeProperties.LOG_ENUM_VALUES_INTERVAL;
 
     static {
         Runtime.getRuntime().addShutdownHook(new Thread(EnumValuesHook::printResults));

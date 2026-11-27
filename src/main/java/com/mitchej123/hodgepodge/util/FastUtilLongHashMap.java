@@ -17,11 +17,16 @@ public class FastUtilLongHashMap extends LongHashMap {
 
     protected void checkOwner() {
         if (HodgepodgeProperties.ASSERT_MAP_THREAD_OWNER && Thread.currentThread() != ownerThread) {
-            throw new IllegalStateException(
-                    "FastUtilLongHashMap accessed from " + Thread.currentThread().getName()
-                            + ", owner is "
-                            + ownerThread.getName());
+            // separate method to reduce bytecode count and help JIT inline the method
+            this.fail();
         }
+    }
+
+    private void fail() {
+        throw new IllegalStateException(
+                "FastUtilLongHashMap accessed from " + Thread.currentThread().getName()
+                        + ", owner is "
+                        + ownerThread.getName());
     }
 
     /** @deprecated Reobfuscated in prod. */
