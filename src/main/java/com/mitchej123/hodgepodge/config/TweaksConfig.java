@@ -498,6 +498,16 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     public static boolean changeCacheFileExtension;
 
+    // ZTones
+
+    @Config.Comment("Disable Z-Tones scroll swapping, along with its keybind and tooltip")
+    @Config.DefaultBoolean(false)
+    public static boolean ztonesDisableScrollSwap;
+
+    @Config.Comment("Z-Tones scroll swapping uses a rebindable key instead of Alt/Ctrl and no longer blocks clicks. Only applies if ztonesDisableScrollSwap is false")
+    @Config.DefaultBoolean(true)
+    public static boolean ztonesCycleKeybind;
+
     // Chunk generation and population config
 
     @Config.Comment("Disable terrain generation for new generated chunks (all blocks become air, biomes remain)")
