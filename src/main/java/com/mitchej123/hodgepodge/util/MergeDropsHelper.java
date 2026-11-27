@@ -50,11 +50,7 @@ public class MergeDropsHelper {
 
         if (isAboveThreshold) {
             if (mode == MergeMobDropsMode.HYBRID_AVARITIA && Loader.isModLoaded("Avaritia")) {
-                /*
-                 * Ensuring the capacity is to prevent memory reallocations as the array grows. Don't ask how one can
-                 * get this high...actually there's a hint right below hehe
-                 */
-                convertToClusters(ctx.drops, 256);
+                convertToClusters(ctx.drops, 10);
                 Arrays.fill(ctx.offsets, 0.0f); // ignore offsets for clusters
                 return;
             }
