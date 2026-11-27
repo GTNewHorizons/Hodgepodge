@@ -1330,6 +1330,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.block.MixinFurnaceSaveItemBurnTimeToNBT")
             .setApplyIf(() -> FixesConfig.furnaceSaveItemBurnTimeToNBT)
             .setPhase(Phase.EARLY)),
+    DISABLE_PARTICLE_COLLISIONS(new MixinBuilder("Disable collisions for all EntityFX particles for performance")
+            .addClientMixins("minecraft.MixinEntityFX_DisableCollisions")
+            .setApplyIf(() -> TweaksConfig.disableParticleCollisions)
+            .setPhase(Phase.EARLY)),
     TRACK_INCOMING_PACKETS(new MixinBuilder("Track incoming packets for /packetstats")
             .addClientMixins("debug.MixinNetworkManager_TrackIncomingPackets")
             .setApplyIf(() -> DebugConfig.trackIncomingPackets)
