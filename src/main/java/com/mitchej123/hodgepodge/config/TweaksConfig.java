@@ -278,7 +278,7 @@ public class TweaksConfig {
     @Config.RequiresMcRestart
     public static boolean f1ShowHand;
 
-    @Config.Comment("Always drop a single xp orb instead of subdividing into multiple")
+    @Config.Comment("Always drop a single xp orb instead of subdividing into multiple, to reduce entity count and lag. Values above 32767 are still split")
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean dropSingleXpOrb;
