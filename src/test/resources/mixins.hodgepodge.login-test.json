@@ -5,10 +5,10 @@
   "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "minecraft.MixinNetHandlerLoginServer_AwaitPreviousSession",
-    "minecraft.MixinNetHandlerPlayServer_PreWorldDisconnect",
-    "minecraft.MixinServerConfigurationManager_LoginSessionSave",
+    "minecraft.network.MixinNetHandlerLoginServer_AwaitPreviousSession",
+    "minecraft.network.MixinNetHandlerPlayServer_PreWorldDisconnect",
+    "minecraft.server.MixinServerConfigurationManager_LoginSessionSave",
     "fml.MixinNetworkDispatcher_LoginSessionState",
-    "minecraft.MixinNetworkSystem_LoginSessionIndex"
+    "minecraft.network.MixinNetworkSystem_LoginSessionIndex"
   ]
 }

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import com.mitchej123.hodgepodge.config.FixesConfig;
-import com.mitchej123.hodgepodge.mixins.early.minecraft.MixinMessageSerializer2;
+import com.mitchej123.hodgepodge.mixins.early.minecraft.network.MixinMessageSerializer2;
 import com.mitchej123.hodgepodge.util.PacketSerializationHelper;
 
 import io.netty.buffer.ByteBuf;
