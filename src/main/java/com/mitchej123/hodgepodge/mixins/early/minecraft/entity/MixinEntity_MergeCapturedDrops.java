@@ -15,6 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Entity.class)
 public abstract class MixinEntity_MergeCapturedDrops {
 
+    @Shadow
+    public double posY;
+
     @Shadow(remap = false) // forge added fields
     public boolean captureDrops;
 
@@ -29,9 +32,13 @@ public abstract class MixinEntity_MergeCapturedDrops {
                 || !itemStackIn.isStackable()) {
             return;
         }
+        final double dropY = this.posY + (double) offsetY;
         // reverse order since the last inserted drop is the most likely to match
         for (int i = this.capturedDrops.size() - 1; i >= 0; i--) {
             final EntityItem entity = this.capturedDrops.get(i);
+            if (entity.posY != dropY) {
+                continue;
+            }
             final ItemStack stack = entity.getEntityItem();
             if (stack != null && !stack.hasTagCompound()
                     && stack.getItem() == itemStackIn.getItem()
