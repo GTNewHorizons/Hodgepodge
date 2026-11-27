@@ -263,6 +263,11 @@ public class TweaksConfig {
     @Config.DefaultInt(40)
     public static int anvilMaxLevel = 40;
 
+    @Config.Comment("Disable collisions for all EntityFX particles for performance")
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean disableParticleCollisions;
+
     @Config.Comment("Removes the color codes from the chat logs")
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -272,11 +277,6 @@ public class TweaksConfig {
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean f1ShowHand;
-
-    @Config.Comment("Disable collisions for all EntityFX particles for performance")
-    @Config.DefaultBoolean(true)
-    @Config.RequiresMcRestart
-    public static boolean disableParticleCollisions;
 
     // NBT String Pooling
 

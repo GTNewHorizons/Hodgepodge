@@ -1286,6 +1286,10 @@ public enum Mixins implements IMixins {
             .addCommonMixins("minecraft.MixinFurnaceSaveItemBurnTimeToNBT")
             .setApplyIf(() -> FixesConfig.furnaceSaveItemBurnTimeToNBT)
             .setPhase(Phase.EARLY)),
+    DISABLE_PARTICLE_COLLISIONS(new MixinBuilder("Disable collisions for all EntityFX particles for performance")
+            .addClientMixins("minecraft.MixinEntityFX_DisableCollisions")
+            .setApplyIf(() -> TweaksConfig.disableParticleCollisions)
+            .setPhase(Phase.EARLY)),
     TRACK_INCOMING_PACKETS(new MixinBuilder("Track incoming packets for /packetstats")
             .addClientMixins("debug.MixinNetworkManager_TrackIncomingPackets")
             .setApplyIf(() -> DebugConfig.trackIncomingPackets)
@@ -1293,10 +1297,6 @@ public enum Mixins implements IMixins {
     CHANGE_RECEIVED_PACKET_COUNT_LIMIT_TO_TIME_LIMIT(new MixinBuilder("Change received packet count limit to time limit")
             .addClientMixins("minecraft.packets.MixinNetworkManager_ReceivedProcessingLimit")
             .setApplyIf(() -> FixesConfig.changeReceivedPacketCountLimitToTimeLimit)
-            .setPhase(Phase.EARLY)),
-    DISABLE_PARTICLE_COLLISIONS(new MixinBuilder("Disable collisions for all EntityFX particles for performance")
-            .addClientMixins("minecraft.MixinEntityFX_DisableCollisions")
-            .setApplyIf(() -> TweaksConfig.disableParticleCollisions)
             .setPhase(Phase.EARLY)),
     // endregion
 
