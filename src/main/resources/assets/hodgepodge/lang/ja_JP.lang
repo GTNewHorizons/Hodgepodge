@@ -52,7 +52,7 @@ hodgepodge.soundsmenu.spatialize_stereo=ステレオの空間化
 hodgepodge.soundsmenu.spatialize_stereo.tooltip=位置情報付きのステレオ効果音を維持しつつ、新しいOpenALによる3D配置を可能にします。lwjgl3ifyが必要であり、対応している場合はステレオのダウンミックスよりも優先されます。適用するにはサウンドを再読み込みする必要があります。
 hodgepodge.soundsmenu.default=デフォルト
 hodgepodge.bed_respawn.msg=リスポーン地点が設定されました
-hodgepodge.menu.mod_options=Mod設定...
+fml.menu.modoptions=Mod設定...
 
 bettermodlist.sort.normal=通常
 bettermodlist.sort.a_to_z=A-Z

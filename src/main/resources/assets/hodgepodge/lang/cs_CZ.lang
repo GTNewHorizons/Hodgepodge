@@ -26,7 +26,7 @@ commands.time.usageWithGet=/time <set|add> <value> OR /time get
 
 hodgepodge.soundsmenu.refreshsounds=Obnovit zvuky
 hodgepodge.bed_respawn.msg=Počáteční místo nastaveno
-hodgepodge.menu.mod_options=Nastavení modů...
+fml.menu.modoptions=Nastavení modů...
 
 bettermodlist.sort.normal=Normální
 bettermodlist.sort.a_to_z=A-Z

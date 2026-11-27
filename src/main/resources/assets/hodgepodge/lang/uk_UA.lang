@@ -52,7 +52,7 @@ hodgepodge.soundsmenu.spatialize_stereo=Просторове стерео
 hodgepodge.soundsmenu.spatialize_stereo.tooltip=Зберігає позиційні звуки в стерео, дозволяючи новішим версіям OpenAL розміщувати їх у 3D. Потребує lwjgl3ify та має пріоритет над зведенням стерео, якщо підтримується. Оновіть звуки після зміни.
 hodgepodge.soundsmenu.default=ТИПОВО
 hodgepodge.bed_respawn.msg=Точку відродження встановлено
-hodgepodge.menu.mod_options=Налаштування модів...
+fml.menu.modoptions=Налаштування модів...
 
 bettermodlist.sort.normal=Типово
 bettermodlist.sort.a_to_z=A-Z

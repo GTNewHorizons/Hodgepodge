@@ -134,6 +134,12 @@ public enum Mixins implements IMixins {
             .addClientMixins("minecraft.gui.MixinGuiMainMenu_DisableRealmsButton")
             .setApplyIf(() -> TweaksConfig.disableRealmsButton)
             .setPhase(Phase.EARLY)),
+    LOCALIZE_FORGE_MODS_BUTTON(new MixinBuilder("Allow translating Forge's Mods button in the main menu")
+            .addClientMixins("minecraft.gui.MixinGuiMainMenu_LocalizeModsButton")
+            .setPhase(Phase.EARLY)),
+    LOCALIZE_FORGE_MOD_LIST(new MixinBuilder("Localize the Forge mod list")
+            .addClientMixins("fml.MixinGuiModList_Localize", "fml.MixinGuiSlotModList_Localize")
+            .setPhase(Phase.EARLY)),
     LOCALIZE_FORGE_MOD_OPTIONS_BUTTON(new MixinBuilder("Allow translating Forge's Mod Options button in pause menu")
             .addClientMixins("minecraft.gui.MixinGuiIngameMenu_LocalizeModOptionsButton")
             .setApplyIf(() -> TweaksConfig.localizeForgeModOptionsButton)
@@ -413,10 +419,6 @@ public enum Mixins implements IMixins {
                     "minecraft.network.MixinNetHandlerPlayServer_LocalizedKick",
                     "minecraft.network.MixinNetHandlerLoginServer_LocalizedKick")
             .setApplyIf(() -> FixesConfig.fixUnlocalizedDisconnectMessages)
-            .setPhase(Phase.EARLY)),
-    FIX_HOPPER_HIT_BOX(new MixinBuilder("Fix Vanilla Hopper hit box")
-            .addCommonMixins("minecraft.block.MixinBlockHopper")
-            .setApplyIf(() -> FixesConfig.fixHopperHitBox)
             .setPhase(Phase.EARLY)),
     TILE_ENTITY_RENDERER_PROFILER(new MixinBuilder()
             .addClientMixins("minecraft.profiler.TileEntityRendererDispatcherMixin")
@@ -1172,6 +1174,18 @@ public enum Mixins implements IMixins {
     IMPROVE_REDSTONE_HITBOX(new MixinBuilder("Add a accurate hitbox to the redstone wire")
             .addClientMixins("minecraft.block.MixinBlockRedstoneWire_Hitbox")
             .setApplyIf(() -> TweaksConfig.improvedRedstoneWireHitbox)
+            .setPhase(Phase.EARLY)),
+    SHAPED_BLOCK_OUTLINES(new MixinBuilder("Shaped selection outlines and hit areas for vanilla blocks, some collision")
+            .addCommonMixins(
+                    "minecraft.outlineshapes.MixinBlockAnvil_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockDragonEgg_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockEndPortalFrame_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockFence_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockHopper_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockStairs_OutlineShape",
+                    "minecraft.outlineshapes.MixinBlockWall_OutlineShape",
+                    "minecraft.outlineshapes.MixinCollisionShapedBlocks_OutlineShape")
+            .setApplyIf(() -> TweaksConfig.shapedBlockOutlines)
             .setPhase(Phase.EARLY)),
     FIX_INSTANT_HAND_ITEM_TEXTURE_SWITCH(new MixinBuilder()
             .addClientMixins("minecraft.render.MixinItemRenderer_FixInstantItemSwitch")
@@ -2187,6 +2201,17 @@ public enum Mixins implements IMixins {
                     "bibliocraft.leaks.MixinTileEntityTypewriterRenderer")
             .setApplyIf(() -> MemoryConfig.leaks.fixBibliocraftTESRWorldLeak)
             .addRequiredMod(TargetedMod.BIBLIOCRAFT)
+            .setPhase(Phase.LATE)),
+    BIBLIOCRAFT_ITEM_META_FIX(new MixinBuilder()
+            .addCommonMixins("bibliocraft.MixinBibliocraftItem_NameMetaSafety")
+            .addClientMixins("bibliocraft.MixinBibliocraftItem_TooltipMetaSafety")
+            .setApplyIf(() -> FixesConfig.bibliocraftNoCrashOnInvalidMeta)
+            .addRequiredMod(TargetedMod.BIBLIOCRAFT)
+            .setPhase(Phase.LATE)),
+    BIBLIOWOODS_ITEM_META_FIX(new MixinBuilder()
+            .addCommonMixins("bibliowood.forestry.MixinBiblioWoodItem_MetaSafety")
+            .setApplyIf(() -> FixesConfig.bibliowoodsNoCrashOnInvalidMeta)
+            .addRequiredMod(TargetedMod.BIBLIOWOODSFORESTRY)
             .setPhase(Phase.LATE)),
     ZTONES_PACKET_FIX(new MixinBuilder("Packet Fix")
             .addCommonMixins("ztones.MixinZtonesPatchPacketExploits")
