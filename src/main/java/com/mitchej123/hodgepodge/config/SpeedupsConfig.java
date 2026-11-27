@@ -15,6 +15,11 @@ public class SpeedupsConfig {
     @Config.RequiresMcRestart
     public static boolean fastItemEntityPhysics;
 
+    @Config.Comment("Merge stacks dropped when killing mobs before they are spawned to reduce lag with high level looting")
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean mergeMobDrops;
+
     @Config.Comment("Skip rendering item frame contents farther than 64 blocks and entire frames farther than 96 blocks")
     @Config.DefaultBoolean(true)
     public static boolean cullDistantItemFrameContents;
