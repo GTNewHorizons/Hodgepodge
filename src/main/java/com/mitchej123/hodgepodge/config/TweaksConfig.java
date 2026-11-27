@@ -288,10 +288,18 @@ public class TweaksConfig {
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
     public static boolean mergeMobDrops;
+
+    public enum MergeMobDropsMode {
+        RESPECT_MAX_STACK_SIZE,
+        FORCE_MERGE_INTO_ONE,
+        HYBRID,
+        HYBRID_AVARITIA
+    }
+
     @Config.Comment("The mode used in mergeMobDrops")
-    @Config.RangeInt(min = 0, max = 3)
-    @Config.DefaultInt(3)
-    public static int mergeMobDropsMode;
+    @Config.DefaultEnum("HYBRID_AVARITIA")
+    public static MergeMobDropsMode mergeMobDropsMode;
+
     @Config.Comment("The threshold used by HYBRID and HYBRID_AVARITIA modes in mergeMobDrops.")
     @Config.RangeInt(min = 64 * 16, max = 64 * 256)
     @Config.DefaultInt(64 * 64)

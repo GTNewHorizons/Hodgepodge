@@ -14,6 +14,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.util.FakePlayer;
 
 import com.mitchej123.hodgepodge.config.TweaksConfig;
+import com.mitchej123.hodgepodge.config.TweaksConfig.MergeMobDropsMode;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
@@ -27,27 +28,28 @@ import xonin.backhand.api.core.BackhandUtils;
 public class MergeDropsHelper {
 
     public static void mergeMobDrops(MobDropsContainerContext ctx) {
-        int mode = TweaksConfig.mergeMobDropsMode;
+        MergeMobDropsMode mode = TweaksConfig.mergeMobDropsMode;
 
-        // FORCE_MERGE_INTO_ONE
-        if (mode == 1) return; // Assuming dropItem/entityDropItem calls were already merged
+        // Assumes dropItem/entityDropItem calls were already merged
+        if (mode == MergeMobDropsMode.FORCE_MERGE_INTO_ONE) return;
 
         // Check if the threshold is breached
-        boolean isAboveThreshold = false;
-        int totalCount = 0;
         int threshold = TweaksConfig.mergeMobDropsModeHybridThreshold;
-        for (ItemStack drop : ctx.drops) {
-            totalCount += drop.stackSize;
+        boolean isAboveThreshold = false;
+        if (mode == MergeMobDropsMode.HYBRID || mode == MergeMobDropsMode.HYBRID_AVARITIA) {
+            int totalCount = 0;
+            for (ItemStack drop : ctx.drops) {
+                totalCount += drop.stackSize;
 
-            if (totalCount >= threshold) {
-                isAboveThreshold = true;
-                break; // Early escape
+                if (totalCount >= threshold) {
+                    isAboveThreshold = true;
+                    break; // Early escape
+                }
             }
         }
 
         if (isAboveThreshold) {
-            // HYBRID_AVARITIA
-            if (mode == 3 && Loader.isModLoaded("Avaritia")) {
+            if (mode == MergeMobDropsMode.HYBRID_AVARITIA && Loader.isModLoaded("Avaritia")) {
                 /*
                  * Ensuring the capacity is to prevent memory reallocations as the array grows. Don't ask how one can
                  * get this high...actually there's a hint right below hehe
@@ -57,12 +59,13 @@ public class MergeDropsHelper {
                 return;
             }
 
-            // HYBRID || HYBRID_AVARITIA without Avaritia, choosing FORCE_MERGE_INTO_ONE
-            if (mode == 2 || mode == 3) return;
+            // choose FORCE_MERGE_INTO_ONE
+            if (mode == MergeMobDropsMode.HYBRID || mode == MergeMobDropsMode.HYBRID_AVARITIA) return;
         }
 
-        // RESPECT_MAX_STACK_SIZE || HYBRID choosing it || HYBRID_AVARITIA choosing it
-        if (mode == 0 || mode == 2 || mode == 3) {
+        // choose RESPECT_MAX_STACK_SIZE
+        if (mode == MergeMobDropsMode.RESPECT_MAX_STACK_SIZE || mode == MergeMobDropsMode.HYBRID
+                || mode == MergeMobDropsMode.HYBRID_AVARITIA) {
             // Estimation logic: threshold/64 (stackables) + 4 (equipments) + 2 (several rare drops)
             respectMaxStackSize(ctx.drops, ctx.offsets, ctx.hasNonZeroOffset, threshold / 64 + 6);
         }
@@ -116,8 +119,8 @@ public class MergeDropsHelper {
             // Dedicated branch for pure clusters. Maximizing # of pure clusters enhances intuitiveness
             if (remainingInStack >= ItemMatterCluster.MAX_NORMAL_CAPACITY) {
                 int pureClusterCount = remainingInStack / ItemMatterCluster.MAX_NORMAL_CAPACITY;
-                ItemStack pureCluster = ItemMatterCluster.makeCluster(
-                        Collections.singletonMap(wrap, ItemMatterCluster.MAX_NORMAL_CAPACITY));
+                ItemStack pureCluster = ItemMatterCluster
+                        .makeCluster(Collections.singletonMap(wrap, ItemMatterCluster.MAX_NORMAL_CAPACITY));
                 pureCluster.stackSize = pureClusterCount;
                 result.add(pureCluster);
                 remainingInStack %= ItemMatterCluster.MAX_NORMAL_CAPACITY;
@@ -140,8 +143,8 @@ public class MergeDropsHelper {
             }
         }
 
-        if (!currentMap.isEmpty()) { // Non-full cluster
-            result.add(ItemMatterCluster.makeCluster(currentMap));
+        if (!currentMap.isEmpty()) {
+            result.add(ItemMatterCluster.makeCluster(currentMap)); // Non-full cluster
         }
         drops.clear();
         drops.addAll(result);
