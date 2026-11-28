@@ -91,8 +91,7 @@ public class MergeDropsHelper {
                      * merged by the mode == 1 (FORCE_MERGE_INTO_ONE) at the time when the enchantment applies
                      */
                     // Allows the lvl > 64 to take effect by removing stackSize check
-                        drop.stackSize *= lvl + 1;
-                    }
+                    drop.stackSize *= lvl + 1;
                 }
             }
         }
