@@ -6,22 +6,27 @@ import net.minecraft.util.LongHashMap;
 
 import org.jetbrains.annotations.ApiStatus;
 
+import com.mitchej123.hodgepodge.core.shared.HodgepodgeProperties;
+
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 
 public class FastUtilLongHashMap extends LongHashMap {
 
     protected final Long2ObjectOpenHashMap<Object> map = new Long2ObjectOpenHashMap<>();
     protected final Thread ownerThread = Thread.currentThread();
-    private static final boolean ASSERT_OWNER = Boolean
-            .parseBoolean(System.getProperty("hodgepodge.assertMapThreadOwner", "false"));
 
     protected void checkOwner() {
-        if (ASSERT_OWNER && Thread.currentThread() != ownerThread) {
-            throw new IllegalStateException(
-                    "FastUtilLongHashMap accessed from " + Thread.currentThread().getName()
-                            + ", owner is "
-                            + ownerThread.getName());
+        if (HodgepodgeProperties.ASSERT_MAP_THREAD_OWNER && Thread.currentThread() != ownerThread) {
+            // separate method to reduce bytecode count and help JIT inline the method
+            this.fail();
         }
+    }
+
+    private void fail() {
+        throw new IllegalStateException(
+                "FastUtilLongHashMap accessed from " + Thread.currentThread().getName()
+                        + ", owner is "
+                        + ownerThread.getName());
     }
 
     /** @deprecated Reobfuscated in prod. */

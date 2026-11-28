@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 import com.mitchej123.hodgepodge.config.SpeedupsConfig;
+import com.mitchej123.hodgepodge.core.shared.HodgepodgeProperties;
 
 public class HodgepodgePreInitMixinPlugin implements IMixinConfigPlugin {
 
@@ -35,7 +36,7 @@ public class HodgepodgePreInitMixinPlugin implements IMixinConfigPlugin {
     @Override
     public List<String> getMixins() {
         List<String> mixins = new ArrayList<>();
-        if (Boolean.getBoolean("hodgepodge.logModTimes")) {
+        if (HodgepodgeProperties.LOG_MOD_TIMES) {
             mixins.add("MixinLoadController_logModTimes");
         }
 

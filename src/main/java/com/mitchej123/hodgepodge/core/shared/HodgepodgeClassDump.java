@@ -6,14 +6,14 @@ import com.gtnewhorizons.retrofuturabootstrap.api.ClassNodeHandle;
 public class HodgepodgeClassDump {
 
     public static void dumpClass(String className, byte[] originalBytes, byte[] transformedBytes, Object transformer) {
-        if (EarlyConfig.dumpASMClass) {
+        if (HodgepodgeProperties.DUMP_ASM_CLASS) {
             ASMUtil.saveAsRawClassFile(originalBytes, className + "_PRE", transformer);
             ASMUtil.saveAsRawClassFile(transformedBytes, className + "_POST", transformer);
         }
     }
 
     public static void dumpClass(String className, ClassNodeHandle classNode, Object transformer) {
-        if (EarlyConfig.dumpASMClass) {
+        if (HodgepodgeProperties.DUMP_ASM_CLASS) {
             final byte[] originalBytes = classNode.getOriginalBytes();
             final byte[] transformedBytes = classNode.computeBytes();
             ASMUtil.saveAsRawClassFile(originalBytes, className + "_PRE", transformer);
@@ -22,7 +22,7 @@ public class HodgepodgeClassDump {
     }
 
     public static void dumpBytecode(String className, ClassNodeHandle classNode, Object transformer) {
-        if (EarlyConfig.dumpASMClass) {
+        if (HodgepodgeProperties.DUMP_ASM_CLASS) {
             final byte[] originalBytes = classNode.getOriginalBytes();
             final byte[] transformedBytes = classNode.computeBytes();
             ASMUtil.saveAsBytecodeFile(originalBytes, className + "_PRE", transformer);

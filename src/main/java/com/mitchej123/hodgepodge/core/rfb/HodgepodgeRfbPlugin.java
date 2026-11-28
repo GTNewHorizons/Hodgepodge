@@ -16,6 +16,7 @@ import com.mitchej123.hodgepodge.core.rfb.transformers.FMLRelaunchLogLoggerCache
 import com.mitchej123.hodgepodge.core.rfb.transformers.ForgeConfigurationTransformer;
 import com.mitchej123.hodgepodge.core.rfb.transformers.ForgeEventSubscriptionTransformer;
 import com.mitchej123.hodgepodge.core.shared.EarlyConfig;
+import com.mitchej123.hodgepodge.core.shared.HodgepodgeProperties;
 
 public class HodgepodgeRfbPlugin implements RfbPlugin {
 
@@ -36,10 +37,10 @@ public class HodgepodgeRfbPlugin implements RfbPlugin {
         if (!EarlyConfig.noFmlRelaunchLogLoggerCache) {
             list.add(new FMLRelaunchLogLoggerCacheTransformer());
         }
-        if (EarlyConfig.debugLogConfigParsingTimes) {
+        if (HodgepodgeProperties.LOG_CONFIG_PARSING_TIMES) {
             list.add(new ConfigParsingTimeTransformer());
         }
-        if (EarlyConfig.debugEnumValuesSpam) {
+        if (HodgepodgeProperties.LOG_ENUM_VALUES) {
             list.add(new EnumValuesTransformer());
         }
         return list.toArray(new RfbClassTransformer[0]);
