@@ -90,7 +90,7 @@ public class MergeDropsHelper {
                      * that the vanilla dispatches item entites only with stackSize == 1, but now the drops have been
                      * merged by the mode == 1 (FORCE_MERGE_INTO_ONE) at the time when the enchantment applies
                      */
-                    if (drop != null && drop.getMaxStackSize() >= lvl + 1) {
+                    // Allows the lvl > 64 to take effect by removing stackSize check
                         drop.stackSize *= lvl + 1;
                     }
                 }
