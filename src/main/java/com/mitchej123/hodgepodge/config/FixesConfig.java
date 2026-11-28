@@ -61,6 +61,14 @@ public class FixesConfig {
     @Config.RequiresMcRestart
     public static boolean fixDisconnectScreenLayout;
 
+    @Config.Comment("Fix newline characters in chat messages not rendering as line breaks")
+    @Config.DefaultBoolean(true)
+    public static boolean fixChatNewlines;
+
+    @Config.Comment("Fix newline characters in drawString not rendering as line breaks")
+    @Config.DefaultBoolean(true)
+    public static boolean fixFontRendererNewlines;
+
     @Config.Comment("Prevents crash if server sends container with wrong itemStack size")
     @Config.DefaultBoolean(true)
     public static boolean fixContainerPutStacksInSlots;
